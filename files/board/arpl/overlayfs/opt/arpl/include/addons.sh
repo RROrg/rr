@@ -58,3 +58,18 @@ function installAddon() {
   rm -rf "${TMP_PATH}/${ADDON}"
   return 0
 }
+
+###############################################################################
+# Untar an addon to correct path
+# 1 - Addon file path
+# Return name of addon on sucess or empty on error
+function untarAddon() {
+  rm -rf "${TMP_PATH}/addon"
+  mkdir -p "${TMP_PATH}/addon"
+  tar xaf "${1}" -C "${TMP_PATH}/addon" || return
+  ADDON=`readConfigKey "name" "${TMP_PATH}/addon/manifest.yml"`
+  [ -z "${ADDON}" ] && return
+  rm -rf "${ADDONS_PATH}/${ADDON}"
+  mv "${TMP_PATH}/addon" "${ADDONS_PATH}/${ADDON}"
+  echo "${ADDON}"
+}

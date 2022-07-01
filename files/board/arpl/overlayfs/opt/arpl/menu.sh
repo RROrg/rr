@@ -175,9 +175,10 @@ function make() {
 
   # Check if all addon exists
   while IFS="=" read ADDON PARAM; do
-    [ -z "${KEY}" ] && continue
+    [ -z "${ADDON}" ] && continue
     if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
-      echo "Addon ${ADDON} not found!"
+      dialog --backtitle "`backtitle`" --title "Error" --aspect 18 \
+        --msgbox "Addon ${ADDON} not found!" 0 0
       return 1
     fi
   done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
@@ -425,6 +426,7 @@ function addonMenu() {
       d "Delete addon(s)" \
       s "Show user addons" \
       m "Show all available addons" \
+      o "Download an addon" \
       e "Exit" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -473,7 +475,7 @@ function addonMenu() {
         [ -z "${ADDON}" ] && continue
         for I in ${ADDON}; do
           unset ADDONS[${I}]
-          deleteConfigKey "addons.${NAME}" "${USER_CONFIG_FILE}"
+          deleteConfigKey "addons.${I}" "${USER_CONFIG_FILE}"
         done
         DIRTY=1
         ;;
@@ -497,6 +499,30 @@ function addonMenu() {
         done < <(availableAddons "${PLATFORM}" "${KVER}")
         dialog --backtitle "`backtitle`" --title "Available addons" \
           --colors --msgbox "${MSG}" 0 0
+        ;;
+      o) dialog --backtitle "`backtitle`" \
+          --inputbox "please enter the URL to download" 0 0 \
+          "https://raw.githubusercontent.com/fbelavenuto/arpl-addons/main/" \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        URL="`<"${TMP_PATH}/resp"`"
+        [ -z "${URL}" ] && continue
+        clear
+        echo "Downloading ${URL}"
+        curl --insecure -L "${URL}" -o "${TMP_PATH}/addon.tgz" --progress-bar
+        if [ $? -ne 0 ]; then
+          dialog --backtitle "`backtitle`" --title "Error downloading" --aspect 18 \
+            --msgbox "Check internet or cache disk space" 0 0
+          return 1
+        fi
+        ADDON="`untarAddon "${TMP_PATH}/addon.tgz"`"
+        if [ -n "${ADDON}" ]; then
+          dialog --backtitle "`backtitle`" --title "Success" --aspect 18 \
+            --msgbox "Addon '${ADDON}' added to loader" 0 0
+        else
+          dialog --backtitle "`backtitle`" --title "Invalid addon" --aspect 18 \
+            --msgbox "File format not recognized!" 0 0
+        fi
         ;;
       e) return ;;
     esac

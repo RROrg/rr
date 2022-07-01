@@ -20,6 +20,8 @@ Another important point is that the loader detects whether or not the CPU has th
 
 I developed a simple patch to no longer display the DUMMY port error on models without device-tree, the user will be able to install without having to worry about it.
 
+Addons can be downloaded and added to the loader.
+
 All code was based on the work of TTG, pocopico, jumkey and others involved in continuing TTG's original redpill-load project.
 
 More information will be added in the future.
