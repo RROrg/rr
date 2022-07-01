@@ -18,6 +18,8 @@ If a model is chosen that uses the Device-tree system to define the HDs, there i
 
 Another important point is that the loader detects whether or not the CPU has the FMA3 instruction and does not display the models that require it. So if the DS918+ and DVA3221 models are not displayed it is because of the CPU's lack of support for FMA instructions.
 
+I developed a simple patch to no longer display the DUMMY port error on models without device-tree, the user will be able to install without having to worry about it.
+
 All code was based on the work of TTG, pocopico, jumkey and others involved in continuing TTG's original redpill-load project.
 
 More information will be added in the future.
