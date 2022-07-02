@@ -7,6 +7,8 @@ function trap_cancel() {
 }
 trap trap_cancel SIGINT SIGTERM
 
+cd `dirname $0`
+
 # Read platforms/kerver version
 echo "Reading platforms"
 declare -A PLATFORMS
@@ -15,6 +17,7 @@ while read PLATFORM KVER; do
 done <../PLATFORMS
 
 # Download toolkits
+mkdir -p cache
 TOOLKIT_VER="7.0"
 for PLATFORM in ${!PLATFORMS[@]}; do
   echo -n "Checking cache/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz... "
