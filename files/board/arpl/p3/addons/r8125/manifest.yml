@@ -1,0 +1,25 @@
+version: 1
+name: r8125
+description: "Driver for RealTek RTL8125 2.5Gigabit PCI-e Ethernet adapter"
+available-for:
+  apollolake-4.4.180:
+    install-script: &script "install.sh"
+    modules: true
+  broadwell-4.4.180:
+    install-script: *script
+    modules: true
+  broadwellnk-4.4.180:
+    install-script: *script
+    modules: true
+  denverton-4.4.180:
+    install-script: *script
+    modules: true
+  geminilake-4.4.180:
+    install-script: *script
+    modules: true
+  v1000-4.4.180:
+    install-script: *script
+    modules: true
+  purley-4.4.180:
+    install-script: *script
+    modules: true

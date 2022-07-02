@@ -1,0 +1,46 @@
+name: Build img
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events
+  push:
+    branches:
+      - "main"
+      - "dev"
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      - name: Build img
+        id: build
+        run: |
+          VERSION=`<VERSION`
+          echo "::set-output name=VERSION::$VERSION"
+          ./compile-lkm.sh
+          ./img-gen.sh
+          mkdir /output
+          cp "arpl-${VERSION}.img.zip" /output
+
+      # Upload img
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: Upload arpl-{{ steps.bulid.outputs.VERSION }}.img.zip
+          path: /output

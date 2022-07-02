@@ -43,4 +43,4 @@ sed -i "s|@@@TOOLKIT_VER@@@|${TOOLKIT_VER}|g" Dockerfile
 # Build
 echo "Building... Drink a coffee and wait!"
 docker image rm syno-compiler >/dev/null 2>&1
-docker buildx build . --load --tag syno-compiler
+docker buildx build . --load --tag fbelavenuto/syno-compiler
