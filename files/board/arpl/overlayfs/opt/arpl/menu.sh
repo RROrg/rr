@@ -502,7 +502,6 @@ function addonMenu() {
         ;;
       o) dialog --backtitle "`backtitle`" \
           --inputbox "please enter the URL to download" 0 0 \
-          "https://raw.githubusercontent.com/fbelavenuto/arpl-addons/main/" \
           2>${TMP_PATH}/resp
         [ $? -ne 0 ] && continue
         URL="`<"${TMP_PATH}/resp"`"

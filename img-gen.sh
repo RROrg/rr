@@ -27,12 +27,12 @@ unzip /tmp/rp-lkms.zip -d files/board/arpl/p3/lkms
 echo "Getting latest Addons"
 TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
 curl -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip
-rm -rf addons
-mkdir -p addons
-unzip /tmp/addons.zip -d addons
+rm -rf /tmp/addons
+mkdir -p /tmp/addons
+unzip /tmp/addons.zip -d /tmp/addons
 DEST_PATH="files/board/arpl/p3/addons"
 echo "Installing addons to ${DEST_PATH}"
-for PKG in `ls addons/*.addon`; do
+for PKG in `ls /tmp/addons/*.addon`; do
   ADDON=`basename ${PKG} | sed 's|.addon||'`
   mkdir -p "${DEST_PATH}/${ADDON}"
   echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
