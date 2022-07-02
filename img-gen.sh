@@ -15,6 +15,12 @@ rm -rf "${BR_VER}/output/target/opt/arpl"
 rm -rf "${BR_VER}/board/arpl/overlayfs"
 rm -rf "${BR_VER}/board/arpl/p1"
 rm -rf "${BR_VER}/board/arpl/p3"
+# Get latest LKMs
+echo "Getting latest LKMs"
+TAG=`curl -s https://api.github.com/repos/fbelavenuto/redpill-lkm/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+curl -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip
+rm -rf files/board/arpl/p3/lkms/*
+unzip /tmp/rp-lkms.zip -d files/board/arpl/p3/lkms
 echo "Copying files"
 cp -Ru files/* "${BR_VER}/"
 VERSION=`cat VERSION`
