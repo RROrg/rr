@@ -29,6 +29,12 @@ jobs:
         with:
           submodules: recursive
 
+      # Install missing buildroot dependency
+      - name: Install dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libelf-dev
+
       - name: Cache buildroot
         id: cache
         uses: actions/cache@v2
@@ -41,8 +47,6 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           git clone https://github.com/buildroot/buildroot.git .buildroot
-          sudo apt-get update
-          sudo apt-get install -y libelf-dev
           # Copy files
           echo "Copying files"
           cp -Ru files/* .buildroot
