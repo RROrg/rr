@@ -103,7 +103,7 @@ jobs:
       # Zip image
       - name: Pack
         shell: bash
-        run: zip -9 "arpl-${VERSION}.img.zip" arpl.img
+        run: zip -9 "arpl-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
 
       # Upload artifact
       - name: Upload
@@ -118,4 +118,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: arpl-{{ steps.build.outputs.VERSION }}.img.zip
+          files: arpl-${{ steps.build.outputs.VERSION }}.img.zip
