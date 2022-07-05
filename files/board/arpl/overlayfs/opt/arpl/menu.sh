@@ -163,6 +163,396 @@ function serialMenu() {
 }
 
 ###############################################################################
+# Detect hardware
+function detectHw() {
+  PLATFORM="`readModelKey "${MODEL}" "platform"`"
+  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
+  # Get modules not needed
+  unset NOTNEEDED
+  declare -A NOTNEEDED
+  while read M; do
+    NOTNEEDED[${M}]="1"
+  done < <(readModelArray "${MODEL}" "builds.${BUILD}.modules-notneeded")
+  unset DEVC DEVN
+  declare -A DEVC
+  declare -A DEVN
+  while read L; do
+    F=` sed -E 's/^([0-9a-z]{2}:[0-9a-z]{2}.[0-9a-z]{1})[^\[]*\[([0-9a-z]{4})\]: (.*)/\1|\2|\3/' <<<"${L}"`
+    PCI="`cut -d'|' -f1 <<<"${F}"`"
+    CLASS="`cut -d'|' -f2 <<<"${F}"`"
+    NAME="`cut -d'|' -f3 <<<"${F}"`"
+    MODULE="`lspci -ks "${PCI}" | awk '/Kernel driver in use/{print$5}'`"
+    [ -z "${MODULE}" ] && continue
+    # If is a virtio module, change id
+    if grep -q "virtio" <<<"$MODULE"; then
+      MODULE="virtio"
+    fi
+    CLASS=${CLASSES[${CLASS}]}                             # Get class name of module
+    [ -z "${CLASS}" ] && continue                          # If no class, skip
+    arrayExistItem "${MODULE}" "${!ADDONS[@]}" && continue # Check if module already added
+    [ -n "${NOTNEEDED[${MODULE}]}" ] && continue           # Check if module is not necessary
+    # Add module to list
+    DEVC[${MODULE}]="${CLASS}"
+    DEVN[${MODULE}]="${NAME}"
+  done < <(lspci -nn)
+  if [ ${#DEVC[@]} -eq 0 ]; then
+    dialog --backtitle "`backtitle`" --aspect 18 \
+      --msgbox "No device detected or already added!" 0 0
+    return
+  fi
+  for MODULE in ${!DEVC[@]}; do
+    CLASS="${DEVC[${MODULE}]}"
+    NAME="${DEVN[${MODULE}]}"
+    TEXT="Found a ${NAME}\nClass ${CLASS}\nModule ${MODULE}\nAccept?"
+    checkAddonExist "${MODULE}" "${PLATFORM}" "${KVER}" || TEXT+="\n\n\Z1PS: Addon for this module not found\Zn"
+    dialog --backtitle "`backtitle`" --title "Found Hardware" \
+      --colors --yesno "${TEXT}" 12 70
+    [ $? -ne 0 ] && continue
+    dialog --backtitle "`backtitle`" --title "params" \
+      --inputbox "Type a opcional params to module" 0 0 \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && continue
+    VALUE="`<${TMP_PATH}/resp`"
+    ADDONS["${MODULE}"]="${VALUE}"
+    writeConfigKey "addons.${MODULE}" "${VALUE}" "${USER_CONFIG_FILE}"
+    DIRTY=1
+  done
+}
+
+###############################################################################
+# Manage addons/drivers
+function addonMenu() {
+  # Read 'platform' and kernel version to check if addon exists
+  PLATFORM="`readModelKey "${MODEL}" "platform"`"
+  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
+  # Read addons from user config
+  unset ADDONS
+  declare -A ADDONS
+  while IFS="=" read KEY VALUE; do
+    [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
+  done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
+  NEXT="h"
+  # Loop menu
+  while true; do
+    dialog --backtitle "`backtitle`" --default-item ${NEXT} \
+      --menu "Choose a option" 0 0 0 \
+      h "Detect hardware" \
+      a "Add an addon" \
+      d "Delete addon(s)" \
+      s "Show user addons" \
+      m "Show all available addons" \
+      o "Download an addon" \
+      e "Exit" \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && return
+    case "`<${TMP_PATH}/resp`" in
+      h)
+        detectHw
+        NEXT='e'
+        ;;
+      a) NEXT='a'
+        rm "${TMP_PATH}/menu"
+        while read ADDON DESC; do
+          arrayExistItem "${ADDON}" "${!ADDONS[@]}" && continue          # Check if addon has already been added
+          echo "${ADDON} \"${DESC}\"" >> "${TMP_PATH}/menu"
+        done < <(availableAddons "${PLATFORM}" "${KVER}")
+        if [ ! -f "${TMP_PATH}/menu" ] ; then 
+          dialog --backtitle "`backtitle`" --msgbox "No available addons to add" 0 0 
+          continue
+        fi
+        dialog --backtitle "`backtitle`" --menu "Select an addon" 0 0 0 \
+          --file "${TMP_PATH}/menu" 2>"${TMP_PATH}/resp"
+        [ $? -ne 0 ] && continue
+        ADDON="`<"${TMP_PATH}/resp"`"
+        [ -z "${ADDON}" ] && continue
+        dialog --backtitle "`backtitle`" --title "params" \
+          --inputbox "Type a opcional params to addon" 0 0 \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        ADDONS[${ADDON}]="`<"${TMP_PATH}/resp"`"
+        writeConfigKey "addons.${ADDON}" "${VALUE}" "${USER_CONFIG_FILE}"
+        DIRTY=1
+        ;;
+      d) NEXT='d'
+        if [ ${#ADDONS[@]} -eq 0 ]; then
+          dialog --backtitle "`backtitle`" --msgbox "No user addons to remove" 0 0 
+          continue
+        fi
+        ITEMS=""
+        for I in "${!ADDONS[@]}"; do
+          ITEMS+="${I} ${I} off "
+        done
+        dialog --backtitle "`backtitle`" --no-tags \
+          --checklist "Select addon to remove" 0 0 0 ${ITEMS} \
+          2>"${TMP_PATH}/resp"
+        [ $? -ne 0 ] && continue
+        ADDON="`<"${TMP_PATH}/resp"`"
+        [ -z "${ADDON}" ] && continue
+        for I in ${ADDON}; do
+          unset ADDONS[${I}]
+          deleteConfigKey "addons.${I}" "${USER_CONFIG_FILE}"
+        done
+        DIRTY=1
+        ;;
+      s) NEXT='s'
+        ITEMS=""
+        for KEY in ${!ADDONS[@]}; do
+          ITEMS+="${KEY}: ${ADDONS[$KEY]}\n"
+        done
+        dialog --backtitle "`backtitle`" --title "User addons" \
+          --msgbox "${ITEMS}" 0 0
+        ;;
+      m) NEXT='m'
+        MSG=""
+        while read MODULE DESC; do
+          if arrayExistItem "${MODULE}" "${!ADDONS[@]}"; then
+            MSG+="\Z4${MODULE}\Zn"
+          else
+            MSG+="${MODULE}"
+          fi
+          MSG+=": \Z5${DESC}\Zn\n"
+        done < <(availableAddons "${PLATFORM}" "${KVER}")
+        dialog --backtitle "`backtitle`" --title "Available addons" \
+          --colors --msgbox "${MSG}" 0 0
+        ;;
+      o) dialog --backtitle "`backtitle`" \
+          --inputbox "please enter the URL to download" 0 0 \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        URL="`<"${TMP_PATH}/resp"`"
+        [ -z "${URL}" ] && continue
+        clear
+        echo "Downloading ${URL}"
+        curl --insecure -L "${URL}" -o "${TMP_PATH}/addon.tgz" --progress-bar
+        if [ $? -ne 0 ]; then
+          dialog --backtitle "`backtitle`" --title "Error downloading" --aspect 18 \
+            --msgbox "Check internet or cache disk space" 0 0
+          return 1
+        fi
+        ADDON="`untarAddon "${TMP_PATH}/addon.tgz"`"
+        if [ -n "${ADDON}" ]; then
+          dialog --backtitle "`backtitle`" --title "Success" --aspect 18 \
+            --msgbox "Addon '${ADDON}' added to loader" 0 0
+        else
+          dialog --backtitle "`backtitle`" --title "Invalid addon" --aspect 18 \
+            --msgbox "File format not recognized!" 0 0
+        fi
+        ;;
+      e) return ;;
+    esac
+  done
+}
+
+###############################################################################
+# Sets variables to configure maxdisks
+# 1 - Number of disks
+function setMaxDisks() {
+  CMDLINE['maxdisks']="${1}"
+  writeConfigKey "cmdline.maxdisks" "${1}" "${USER_CONFIG_FILE}"
+  INTPORTCFG=""
+  for I in `seq 1 ${1}`; do INTPORTCFG+="1"; done
+  INTPORTCFG="0x`printf "%x" "$((2#${INTPORTCFG}))"`"
+  CMDLINE['internalportcfg']="${INTPORTCFG}"
+  writeConfigKey "cmdline.internalportcfg" "${INTPORTCFG}" "${USER_CONFIG_FILE}"
+}
+
+###############################################################################
+function cmdlineMenu() {
+  # Read from user config
+  DT="`readModelKey "${MODEL}" "dt"`"
+  unset CMDLINE
+  declare -A CMDLINE
+  while IFS="=" read KEY VALUE; do
+    [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
+  done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
+  # Loop menu
+  while true; do
+    echo "a \"Add/edit an cmdline item\""                        > "${TMP_PATH}/menu"
+    echo "d \"Delete cmdline item(s)\""                          >> "${TMP_PATH}/menu"
+    echo "s \"Show user cmdline\""                               >> "${TMP_PATH}/menu"
+    echo "m \"Show model/build cmdline\""                        >> "${TMP_PATH}/menu"
+    if [ "${DT}" != "true" ]; then
+      echo "h \"Change maxdisks\""                               >> "${TMP_PATH}/menu"
+      echo "u \"Show SATA(s) # ports and drives\""               >> "${TMP_PATH}/menu"
+    fi
+    echo "e \"Exit\""                                            >> "${TMP_PATH}/menu"
+
+    dialog --backtitle "`backtitle`" --menu "Choose a option" 0 0 0 \
+      --file "${TMP_PATH}/menu" 2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && return
+    case "`<${TMP_PATH}/resp`" in
+      a)
+        dialog --backtitle "`backtitle`" --title "User cmdline" \
+          --inputbox "Type a name of cmdline" 0 0 \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        NAME="`sed 's/://g' <"${TMP_PATH}/resp"`"
+        [ -z "${NAME}" ] && continue
+        dialog --backtitle "`backtitle`" --title "User cmdline" \
+          --inputbox "Type a value of '${NAME}' cmdline" 0 0 "${CMDLINE[${NAME}]}" \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        VALUE="`<"${TMP_PATH}/resp"`"
+        CMDLINE[${NAME}]="${VALUE}"
+        writeConfigKey "cmdline.${NAME}" "${VALUE}" "${USER_CONFIG_FILE}"
+        ;;
+      d)
+        if [ ${#CMDLINE[@]} -eq 0 ]; then
+          dialog --backtitle "`backtitle`" --msgbox "No user cmdline to remove" 0 0 
+          continue
+        fi
+        ITEMS=""
+        for I in "${!CMDLINE[@]}"; do
+          ITEMS+="${I} ${CMDLINE[${I}]} off "
+        done
+        dialog --backtitle "`backtitle`" \
+          --checklist "Select cmdline to remove" 0 0 0 ${ITEMS} \
+          2>"${TMP_PATH}/resp"
+        [ $? -ne 0 ] && continue
+        RESP=`<"${TMP_PATH}/resp"`
+        [ -z "${RESP}" ] && continue
+        for I in ${RESP}; do
+          unset CMDLINE[${I}]
+          deleteConfigKey "cmdline.${I}" "${USER_CONFIG_FILE}"
+        done
+        ;;
+      s)
+        ITEMS=""
+        for KEY in ${!CMDLINE[@]}; do
+          ITEMS+="${KEY}: ${CMDLINE[$KEY]}\n"
+        done
+        dialog --backtitle "`backtitle`" --title "User cmdline" \
+          --aspect 18 --msgbox "${ITEMS}" 0 0
+        ;;
+      m)
+        ITEMS=""
+        while IFS="=" read KEY VALUE; do
+          ITEMS+="${KEY}: ${VALUE}\n"
+        done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
+        dialog --backtitle "`backtitle`" --title "Model/build cmdline" \
+          --aspect 18 --msgbox "${ITEMS}" 0 0
+        ;;
+      h) MODEL_DISKS="`readModelKey "${MODEL}" "disks"`"
+        dialog --backtitle "`backtitle`"  --title "Change max of disks" \
+          --inputbox "${MODEL} disks: ${MODEL_DISKS}\nType the desired number of disks (1-26)" 0 0 \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        VALUE="`<"${TMP_PATH}/resp"`"
+        [ -z "${VALUE}" ] && continue
+        if [ ${VALUE} -ge 1 -a ${VALUE} -le 26 ]; then
+          setMaxDisks ${VALUE}
+        else
+          dialog --backtitle "`backtitle`" --msgbox "Invalid number" 0 0
+        fi
+        ;;
+      u) TEXT=""
+        for PCI in `lspci -d ::106 | awk '{print$1}'`; do
+          NAME=`lspci -s "${PCI}" | sed "s/\ .*://"`
+          TEXT+="\Zb${NAME}\Zn\nPorts: "
+          unset HOSTPORTS
+          declare -A HOSTPORTS
+          while read LINE; do
+            ATAPORT="`echo ${LINE} | grep -o 'ata[0-9]*'`"
+            PORT=`echo ${ATAPORT} | sed 's/ata//'`
+            HOSTPORTS[${PORT}]=`echo ${LINE} | grep -o 'host[0-9]*$'`
+          done < <(ls -l /sys/class/scsi_host | fgrep "${PCI}")
+          while read PORT; do
+            ls -l /sys/block | fgrep -q "${PCI}/ata${PORT}" && ATTACH=1 || ATTACH=0
+            PCMD=`cat /sys/class/scsi_host/${HOSTPORTS[${PORT}]}/ahci_port_cmd`
+            [ "${PCMD}" = "0" ] && DUMMY=1 || DUMMY=0
+            [ ${ATTACH} -eq 1 ] && TEXT+="\Z2\Zb"
+            [ ${DUMMY} -eq 1 ] && TEXT+="\Z1"
+            TEXT+="${PORT}\Zn "
+          done < <(echo ${!HOSTPORTS[@]} | tr ' ' '\n' | sort -n)
+          TEXT+="\n"
+        done
+        TEXT+="\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected."
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
+          --msgbox "${TEXT}" 0 0
+        ;;
+      e) return ;;
+    esac
+  done
+}
+
+###############################################################################
+function synoinfoMenu() {
+  # Read synoinfo from user config
+  unset SYNOINFO
+  declare -A SYNOINFO
+  while IFS="=" read KEY VALUE; do
+    [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
+  done < <(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")
+  # menu loop
+  while true; do
+    dialog --backtitle "`backtitle`" \
+      --menu "Choose a option" 0 0 0 \
+      a "Add/edit an synoinfo item" \
+      d "Delete synoinfo item(s)" \
+      s "Show user synoinfo" \
+      m "Show model/build synoinfo" \
+      e "Exit" \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && return
+    case "`<${TMP_PATH}/resp`" in
+      a)
+        dialog --backtitle "`backtitle`" --title "User synoinfo" \
+          --inputbox "Type a name of synoinfo variable" 0 0 \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        NAME="`sed 's/://g' <"${TMP_PATH}/resp"`"
+        dialog --backtitle "`backtitle`" --title "User synoinfo" \
+          --inputbox "Type a value of '${NAME}' variable" 0 0 "${SYNOINFO[${NAME}]}" \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        VALUE="`<"${TMP_PATH}/resp"`"
+        SYNOINFO[${NAME}]="${VALUE}"
+        writeConfigKey "synoinfo.${NAME}" "${VALUE}" "${USER_CONFIG_FILE}"
+        DIRTY=1
+        ;;
+      d)
+        if [ ${#SYNOINFO[@]} -eq 0 ]; then
+          dialog --backtitle "`backtitle`" --msgbox "No user synoinfo to remove" 0 0 
+          continue
+        fi
+        ITEMS=""
+        for I in "${!SYNOINFO[@]}"; do
+          ITEMS+="${I} ${SYNOINFO[${I}]} off "
+        done
+        dialog --backtitle "`backtitle`" \
+          --checklist "Select synoinfo to remove" 0 0 0 ${ITEMS} \
+          2>"${TMP_PATH}/resp"
+        [ $? -ne 0 ] && continue
+        RESP=`<"${TMP_PATH}/resp"`
+        [ -z "${RESP}" ] && continue
+        for I in ${RESP}; do
+          unset SYNOINFO[${I}]
+          deleteConfigKey "synoinfo.${I}" "${USER_CONFIG_FILE}"
+        done
+        DIRTY=1
+        ;;
+      s)
+        ITEMS=""
+        for KEY in ${!SYNOINFO[@]}; do
+          ITEMS+="${KEY}: ${SYNOINFO[$KEY]}\n"
+        done
+        dialog --backtitle "`backtitle`" --title "User synoinfo" \
+          --aspect 18 --msgbox "${ITEMS}" 0 0
+        ;;
+      m)
+        ITEMS=""
+        while IFS="=" read KEY VALUE; do
+          ITEMS+="${KEY}: ${VALUE}\n"
+        done < <(readModelMap "${MODEL}" "builds.${BUILD}.synoinfo")
+        dialog --backtitle "`backtitle`" --title "Model/build synoinfo" \
+          --aspect 18 --msgbox "${ITEMS}" 0 0
+        ;;
+      e) return ;;
+    esac
+  done
+}
+
+###############################################################################
 # Where the magic happens :D
 function make() {
   clear
@@ -330,7 +720,7 @@ function make() {
       --msgbox "zImage not patched:\n`<"${LOG_FILE}"`" 0 0
     return 1
   fi
-  
+
   /opt/arpl/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
     dialog --backtitle "`backtitle`" --title "Error" --aspect 18 \
@@ -345,390 +735,6 @@ function make() {
   sleep 3
   DIRTY=0
   return 0
-}
-
-###############################################################################
-# Detect hardware
-function detectHw() {
-  PLATFORM="`readModelKey "${MODEL}" "platform"`"
-  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
-  # Get modules not needed
-  unset NOTNEEDED
-  declare -A NOTNEEDED
-  while read M; do
-    NOTNEEDED[${M}]="1"
-  done < <(readModelArray "${MODEL}" "builds.${BUILD}.modules-notneeded")
-  unset DEVC DEVN
-  declare -A DEVC
-  declare -A DEVN
-  while read L; do
-    F=` sed -E 's/^([0-9a-z]{2}:[0-9a-z]{2}.[0-9a-z]{1})[^\[]*\[([0-9a-z]{4})\]: (.*)/\1|\2|\3/' <<<"${L}"`
-    PCI="`cut -d'|' -f1 <<<"${F}"`"
-    CLASS="`cut -d'|' -f2 <<<"${F}"`"
-    NAME="`cut -d'|' -f3 <<<"${F}"`"
-    MODULE="`lspci -ks "${PCI}" | awk '/Kernel driver in use/{print$5}'`"
-    [ -z "${MODULE}" ] && continue
-    # If is a virtio module, change id
-    if grep -q "virtio" <<<"$MODULE"; then
-      MODULE="virtio"
-    fi
-    CLASS=${CLASSES[${CLASS}]}                             # Get class name of module
-    [ -z "${CLASS}" ] && continue                          # If no class, skip
-    arrayExistItem "${MODULE}" "${!ADDONS[@]}" && continue # Check if module already added
-    [ -n "${NOTNEEDED[${MODULE}]}" ] && continue           # Check if module is not necessary
-    # Add module to list
-    DEVC[${MODULE}]="${CLASS}"
-    DEVN[${MODULE}]="${NAME}"
-  done < <(lspci -nn)
-  if [ ${#DEVC[@]} -eq 0 ]; then
-    dialog --backtitle "`backtitle`" --aspect 18 \
-      --msgbox "No device detected or already added!" 0 0
-    return
-  fi
-  for MODULE in ${!DEVC[@]}; do
-    CLASS="${DEVC[${MODULE}]}"
-    NAME="${DEVN[${MODULE}]}"
-    TEXT="Found a ${NAME}\nClass ${CLASS}\nModule ${MODULE}\nAccept?"
-    checkAddonExist "${MODULE}" "${PLATFORM}" "${KVER}" || TEXT+="\n\n\Z1PS: Addon for this module not found\Zn"
-    dialog --backtitle "`backtitle`" --title "Found Hardware" \
-      --colors --yesno "${TEXT}" 12 70
-    [ $? -ne 0 ] && continue
-    dialog --backtitle "`backtitle`" --title "params" \
-      --inputbox "Type a opcional params to module" 0 0 \
-      2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && continue
-    VALUE="`<${TMP_PATH}/resp`"
-    ADDONS["${MODULE}"]="${VALUE}"
-    writeConfigKey "addons.${MODULE}" "${VALUE}" "${USER_CONFIG_FILE}"
-    DIRTY=1
-  done
-}
-
-###############################################################################
-# Manage addons/drivers
-function addonMenu() {
-  # Read 'platform' and kernel version to check if addon exists
-  PLATFORM="`readModelKey "${MODEL}" "platform"`"
-  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
-  # Read addons from user config
-  unset ADDONS
-  declare -A ADDONS
-  while IFS="=" read KEY VALUE; do
-    [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
-  done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
-  NEXT="h"
-  # Loop menu
-  while true; do
-    dialog --backtitle "`backtitle`" --default-item ${NEXT} \
-      --menu "Choose a option" 0 0 0 \
-      h "Detect hardware" \
-      a "Add an addon" \
-      d "Delete addon(s)" \
-      s "Show user addons" \
-      m "Show all available addons" \
-      o "Download an addon" \
-      e "Exit" \
-      2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && return
-    case "`<${TMP_PATH}/resp`" in
-      h) 
-        detectHw
-        NEXT='e'
-        ;;
-      a) NEXT='a'
-        rm "${TMP_PATH}/menu"
-        while read ADDON DESC; do
-          arrayExistItem "${ADDON}" "${!ADDONS[@]}" && continue          # Check if addon has already been added
-          echo "${ADDON} \"${DESC}\"" >> "${TMP_PATH}/menu"
-        done < <(availableAddons "${PLATFORM}" "${KVER}")
-        if [ ! -f "${TMP_PATH}/menu" ] ; then 
-          dialog --backtitle "`backtitle`" --msgbox "No available addons to add" 0 0 
-          continue
-        fi
-        dialog --backtitle "`backtitle`" --menu "Select an addon" 0 0 0 \
-          --file "${TMP_PATH}/menu" 2>"${TMP_PATH}/resp"
-        [ $? -ne 0 ] && continue
-        ADDON="`<"${TMP_PATH}/resp"`"
-        [ -z "${ADDON}" ] && continue
-        dialog --backtitle "`backtitle`" --title "params" \
-          --inputbox "Type a opcional params to addon" 0 0 \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        ADDONS[${ADDON}]="`<"${TMP_PATH}/resp"`"
-        writeConfigKey "addons.${ADDON}" "${VALUE}" "${USER_CONFIG_FILE}"
-        DIRTY=1
-        ;;
-      d) NEXT='d'
-        if [ ${#ADDONS[@]} -eq 0 ]; then
-          dialog --backtitle "`backtitle`" --msgbox "No user addons to remove" 0 0 
-          continue
-        fi
-        ITEMS=""
-        for I in "${!ADDONS[@]}"; do
-          ITEMS+="${I} ${I} off "
-        done
-        dialog --backtitle "`backtitle`" --no-tags \
-          --checklist "Select addon to remove" 0 0 0 ${ITEMS} \
-          2>"${TMP_PATH}/resp"
-        [ $? -ne 0 ] && continue
-        ADDON="`<"${TMP_PATH}/resp"`"
-        [ -z "${ADDON}" ] && continue
-        for I in ${ADDON}; do
-          unset ADDONS[${I}]
-          deleteConfigKey "addons.${I}" "${USER_CONFIG_FILE}"
-        done
-        DIRTY=1
-        ;;
-      s) NEXT='s'
-        ITEMS=""
-        for KEY in ${!ADDONS[@]}; do
-          ITEMS+="${KEY}: ${ADDONS[$KEY]}\n"
-        done
-        dialog --backtitle "`backtitle`" --title "User addons" \
-          --msgbox "${ITEMS}" 0 0
-        ;;
-      m) NEXT='m'
-        MSG=""
-        while read MODULE DESC; do
-          if arrayExistItem "${MODULE}" "${!ADDONS[@]}"; then
-            MSG+="\Z4${MODULE}\Zn"
-          else
-            MSG+="${MODULE}"
-          fi
-          MSG+=": \Z5${DESC}\Zn\n"
-        done < <(availableAddons "${PLATFORM}" "${KVER}")
-        dialog --backtitle "`backtitle`" --title "Available addons" \
-          --colors --msgbox "${MSG}" 0 0
-        ;;
-      o) dialog --backtitle "`backtitle`" \
-          --inputbox "please enter the URL to download" 0 0 \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        URL="`<"${TMP_PATH}/resp"`"
-        [ -z "${URL}" ] && continue
-        clear
-        echo "Downloading ${URL}"
-        curl --insecure -L "${URL}" -o "${TMP_PATH}/addon.tgz" --progress-bar
-        if [ $? -ne 0 ]; then
-          dialog --backtitle "`backtitle`" --title "Error downloading" --aspect 18 \
-            --msgbox "Check internet or cache disk space" 0 0
-          return 1
-        fi
-        ADDON="`untarAddon "${TMP_PATH}/addon.tgz"`"
-        if [ -n "${ADDON}" ]; then
-          dialog --backtitle "`backtitle`" --title "Success" --aspect 18 \
-            --msgbox "Addon '${ADDON}' added to loader" 0 0
-        else
-          dialog --backtitle "`backtitle`" --title "Invalid addon" --aspect 18 \
-            --msgbox "File format not recognized!" 0 0
-        fi
-        ;;
-      e) return ;;
-    esac
-  done
-}
-
-###############################################################################
-function cmdlineMenu() {
-  # Read from user config
-  DT="`readModelKey "${MODEL}" "dt"`"
-  unset CMDLINE
-  declare -A CMDLINE
-  while IFS="=" read KEY VALUE; do
-    [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
-  done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
-  # Loop menu
-  while true; do
-  
-    echo "a \"Add/edit an cmdline item\""                        > "${TMP_PATH}/menu"
-    echo "d \"Delete cmdline item(s)\""                          >> "${TMP_PATH}/menu"
-    echo "s \"Show user cmdline\""                               >> "${TMP_PATH}/menu"
-    echo "m \"Show model/build cmdline\""                        >> "${TMP_PATH}/menu"
-    if [ "${DT}" != "true" ]; then
-      echo "h \"Change maxdisks\""                               >> "${TMP_PATH}/menu"
-      echo "u \"Show SATA(s) # ports and drives\""               >> "${TMP_PATH}/menu"
-    fi
-    echo "e \"Exit\""                                            >> "${TMP_PATH}/menu"
-
-    dialog --backtitle "`backtitle`" --menu "Choose a option" 0 0 0 \
-      --file "${TMP_PATH}/menu" 2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && return
-    case "`<${TMP_PATH}/resp`" in
-      a)
-        dialog --backtitle "`backtitle`" --title "User cmdline" \
-          --inputbox "Type a name of cmdline" 0 0 \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        NAME="`sed 's/://g' <"${TMP_PATH}/resp"`"
-        [ -z "${NAME}" ] continue
-        dialog --backtitle "`backtitle`" --title "User cmdline" \
-          --inputbox "Type a value of '${NAME}' cmdline" 0 0 "${CMDLINE[${NAME}]}" \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        VALUE="`<"${TMP_PATH}/resp"`"
-        CMDLINE[${NAME}]="${VALUE}"
-        writeConfigKey "cmdline.${NAME}" "${VALUE}" "${USER_CONFIG_FILE}"
-        ;;
-      d)
-        if [ ${#CMDLINE[@]} -eq 0 ]; then
-          dialog --backtitle "`backtitle`" --msgbox "No user cmdline to remove" 0 0 
-          continue
-        fi
-        ITEMS=""
-        for I in "${!CMDLINE[@]}"; do
-          ITEMS+="${I} ${CMDLINE[${I}]} off "
-        done
-        dialog --backtitle "`backtitle`" \
-          --checklist "Select cmdline to remove" 0 0 0 ${ITEMS} \
-          2>"${TMP_PATH}/resp"
-        [ $? -ne 0 ] && continue
-        RESP=`<"${TMP_PATH}/resp"`
-        [ -z "${RESP}" ] && continue
-        for I in ${RESP}; do
-          unset CMDLINE[${I}]
-          deleteConfigKey "cmdline.${I}" "${USER_CONFIG_FILE}"
-        done
-        ;;
-      s) 
-        ITEMS=""
-        for KEY in ${!CMDLINE[@]}; do
-          ITEMS+="${KEY}: ${CMDLINE[$KEY]}\n"
-        done
-        dialog --backtitle "`backtitle`" --title "User cmdline" \
-          --aspect 18 --msgbox "${ITEMS}" 0 0
-        ;;
-      m)
-        ITEMS=""
-        while IFS="=" read KEY VALUE; do
-          ITEMS+="${KEY}: ${VALUE}\n"
-        done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
-        dialog --backtitle "`backtitle`" --title "Model/build cmdline" \
-          --aspect 18 --msgbox "${ITEMS}" 0 0
-        ;;
-      h) MODEL_DISKS="`readModelKey "${MODEL}" "disks"`"
-        dialog --backtitle "`backtitle`"  --title "Change max of disks" \
-          --inputbox "${MODEL} disks: ${MODEL_DISKS}\nType the desired number of disks (1-26)" 0 0 \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        VALUE="`<"${TMP_PATH}/resp"`"
-        [ -z "${VALUE}" ] && continue
-        if [ ${VALUE} -ge 1 -a ${VALUE} -le 26 ]; then
-          CMDLINE['maxdisks']="${VALUE}"
-          writeConfigKey "cmdline.maxdisks" "${VALUE}" "${USER_CONFIG_FILE}"
-          INTPORTCFG=""
-          for I in `seq 1 ${VALUE}`; do INTPORTCFG+="1"; done
-          INTPORTCFG=`printf "%x" "$((2#${INTPORTCFG}))"`
-          CMDLINE['internalportcfg']="${INTPORTCFG}"
-          writeConfigKey "cmdline.internalportcfg" "${INTPORTCFG}" "${USER_CONFIG_FILE}"
-        else
-          dialog --backtitle "`backtitle`" --msgbox "Invalid number" 0 0
-        fi
-        ;;
-      u) TEXT=""
-        for PCI in `lspci -d ::106 | awk '{print$1}'`; do
-          NAME=`lspci -s "${PCI}" | sed "s/\ .*://"`
-          TEXT+="\Zb${NAME}\Zn\nPorts: "
-          unset HOSTPORTS
-          declare -A HOSTPORTS
-          while read LINE; do
-            ATAPORT="`echo ${LINE} | grep -o 'ata[0-9]*'`"
-            PORT=`echo ${ATAPORT} | sed 's/ata//'`
-            HOSTPORTS[${PORT}]=`echo ${LINE} | grep -o 'host[0-9]*$'`
-          done < <(ls -l /sys/class/scsi_host | fgrep "${PCI}")
-          while read PORT; do
-            ls -l /sys/block | fgrep -q "${PCI}/ata${PORT}" && ATTACH=1 || ATTACH=0
-            [ `cat /sys/class/scsi_host/${HOSTPORTS[${PORT}]}/ahci_port_cmd` -eq 0 ] && DUMMY=1 || DUMMY=0
-            [ ${ATTACH} -eq 1 ] && TEXT+="\Z2\Zb"
-            [ ${DUMMY} -eq 1 ] && TEXT+="\Z1"
-            TEXT+="${PORT}\Zn "
-          done < <(echo ${!HOSTPORTS[@]} | tr ' ' '\n' | sort -n)
-          TEXT+="\n"
-        done
-        TEXT+="\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected\n"
-        TEXT+="Use this information to assist in creating SataPortMap, DiskIdxMap and sata_remap"
-        dialog --backtitle "`backtitle`" --colors --aspect 18 \
-          --msgbox "${TEXT}" 0 0
-        ;;
-      e) return ;;
-    esac
-  done
-}
-
-###############################################################################
-function synoinfoMenu() {
-  # Read synoinfo from user config
-  unset SYNOINFO
-  declare -A SYNOINFO
-  while IFS="=" read KEY VALUE; do
-    [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
-  done < <(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")
-  # menu loop
-  while true; do
-    dialog --backtitle "`backtitle`" \
-      --menu "Choose a option" 0 0 0 \
-      a "Add/edit an synoinfo item" \
-      d "Delete synoinfo item(s)" \
-      s "Show user synoinfo" \
-      m "Show model/build synoinfo" \
-      e "Exit" \
-      2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && return
-    case "`<${TMP_PATH}/resp`" in
-      a)
-        dialog --backtitle "`backtitle`" --title "User synoinfo" \
-          --inputbox "Type a name of synoinfo variable" 0 0 \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        NAME="`sed 's/://g' <"${TMP_PATH}/resp"`"
-        dialog --backtitle "`backtitle`" --title "User synoinfo" \
-          --inputbox "Type a value of '${NAME}' variable" 0 0 "${SYNOINFO[${NAME}]}" \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        VALUE="`<"${TMP_PATH}/resp"`"
-        SYNOINFO[${NAME}]="${VALUE}"
-        writeConfigKey "synoinfo.${NAME}" "${VALUE}" "${USER_CONFIG_FILE}"
-        DIRTY=1
-        ;;
-      d)
-        if [ ${#SYNOINFO[@]} -eq 0 ]; then
-          dialog --backtitle "`backtitle`" --msgbox "No user synoinfo to remove" 0 0 
-          continue
-        fi
-        ITEMS=""
-        for I in "${!SYNOINFO[@]}"; do
-          ITEMS+="${I} ${SYNOINFO[${I}]} off "
-        done
-        dialog --backtitle "`backtitle`" \
-          --checklist "Select synoinfo to remove" 0 0 0 ${ITEMS} \
-          2>"${TMP_PATH}/resp"
-        [ $? -ne 0 ] && continue
-        RESP=`<"${TMP_PATH}/resp"`
-        [ -z "${RESP}" ] && continue
-        for I in ${RESP}; do
-          unset SYNOINFO[${I}]
-          deleteConfigKey "synoinfo.${I}" "${USER_CONFIG_FILE}"
-        done
-        DIRTY=1
-        ;;
-      s)
-        ITEMS=""
-        for KEY in ${!SYNOINFO[@]}; do
-          ITEMS+="${KEY}: ${SYNOINFO[$KEY]}\n"
-        done
-        dialog --backtitle "`backtitle`" --title "User synoinfo" \
-          --aspect 18 --msgbox "${ITEMS}" 0 0
-        ;;
-      m)
-        ITEMS=""
-        while IFS="=" read KEY VALUE; do
-          ITEMS+="${KEY}: ${VALUE}\n"
-        done < <(readModelMap "${MODEL}" "builds.${BUILD}.synoinfo")
-        dialog --backtitle "`backtitle`" --title "Model/build synoinfo" \
-          --aspect 18 --msgbox "${ITEMS}" 0 0
-        ;;
-      e) return ;;
-    esac
-  done
 }
 
 ###############################################################################

@@ -93,6 +93,7 @@ cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
 # Check if model needs Device-tree dynamic patch
 DT="`readModelKey "${MODEL}" "dt"`"
 [ "${DT}" = "true" ] && ADDONS['qjs-dtb']=""  # Add system addon "qjs-dtb"
+ADDONS['misc']=""  # Add system addon "misc"
 mkdir -p "${RAMDISK_PATH}/addons"
 echo -n "."
 #/proc/sys/kernel/syno_install_flag
