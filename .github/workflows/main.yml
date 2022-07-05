@@ -46,7 +46,7 @@ jobs:
       - name: Prepare buildroot
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          git clone https://github.com/buildroot/buildroot.git .buildroot
+          git clone --single-branch -b 2022.02 https://github.com/buildroot/buildroot.git .buildroot
           # Copy files
           echo "Copying files"
           cp -Ru files/* .buildroot
@@ -118,4 +118,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: arpl-${{ steps.build.outputs.VERSION }}.img.zip
+          files: |
+            arpl-${{ steps.build.outputs.VERSION }}.img.zip
+            .buildroot/output/images/bzImage
+            .buildroot/output/images/rootfs.cpio.xz
