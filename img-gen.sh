@@ -2,19 +2,15 @@
 
 set -e
 
-BR_VER="buildroot-2022.02.2"
-if [ ! -d "${BR_VER}" ]; then
+if [ ! -d .buildroot ]; then
   echo "Downloading buildroot"
-  curl -LO "https://buildroot.org/downloads/${BR_VER}.tar.gz"
-  echo "Extracting buildroot"
-  tar xf "${BR_VER}.tar.gz"
-  rm "${BR_VER}.tar.gz"
+  git clone --single-branch -b 2022.02 https://github.com/buildroot/buildroot.git .buildroot
 fi
 # Remove old files
-rm -rf "${BR_VER}/output/target/opt/arpl"
-rm -rf "${BR_VER}/board/arpl/overlayfs"
-rm -rf "${BR_VER}/board/arpl/p1"
-rm -rf "${BR_VER}/board/arpl/p3"
+rm -rf ".buildroot/output/target/opt/arpl"
+rm -rf ".buildroot/board/arpl/overlayfs"
+rm -rf ".buildroot/board/arpl/p1"
+rm -rf ".buildroot/board/arpl/p3"
 
 # Get latest LKMs
 echo "Getting latest LKMs"
@@ -25,11 +21,15 @@ unzip /tmp/rp-lkms.zip -d files/board/arpl/p3/lkms
 
 # Get latest addons and install its
 echo "Getting latest Addons"
-TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-curl -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip
-rm -rf /tmp/addons
-mkdir -p /tmp/addons
-unzip /tmp/addons.zip -d /tmp/addons
+if [ -d ../arpl-addons ]; then
+  cp ../arpl-addons/*.addon /tmp/addons/
+else
+  TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+  curl -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip
+  rm -rf /tmp/addons
+  mkdir -p /tmp/addons
+  unzip /tmp/addons.zip -d /tmp/addons
+fi
 DEST_PATH="files/board/arpl/p3/addons"
 echo "Installing addons to ${DEST_PATH}"
 for PKG in `ls /tmp/addons/*.addon`; do
@@ -41,11 +41,11 @@ done
 
 # Copy files
 echo "Copying files"
-cp -Ru files/* "${BR_VER}/"
+cp -Ru files/* .buildroot/
 VERSION=`cat VERSION`
 sed 's/^ARPL_VERSION=.*/ARPL_VERSION="'${VERSION}'"/' -i files/board/arpl/overlayfs/opt/arpl/include/consts.sh
 
-cd "${BR_VER}"
+cd .buildroot
 echo "Generating default config"
 make arpl_defconfig
 echo "Version: ${VERSION}"
