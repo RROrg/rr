@@ -75,7 +75,7 @@ writeConfigKey "pid" ${PID} "${USER_CONFIG_FILE}"
 
 # Shows title
 clear
-TITLE="Welcome to Automated Redpill Loader ${ARPL_VERSION}"
+TITLE="Welcome to Automated Redpill Loader v${ARPL_VERSION}"
 printf "\033[1;44m%*s\n" $COLUMNS ""
 printf "\033[1;44m%*s\033[A\n" $COLUMNS ""
 printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE}+$COLUMNS)/2)) "${TITLE}"
