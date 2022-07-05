@@ -315,8 +315,11 @@ function addonMenu() {
         dialog --backtitle "`backtitle`" --title "Available addons" \
           --colors --msgbox "${MSG}" 0 0
         ;;
-      o) dialog --backtitle "`backtitle`" \
-          --inputbox "please enter the URL to download" 0 0 \
+      o)
+        TEXT="please enter the complete URL to download.\n"
+        TEXT+="\Zb(Official addons location: https://github.com/fbelavenuto/arpl-addons/releases)\Zn\n"
+        TEXT+="Ex: https://github.com/fbelavenuto/arpl-addons/releases/download/v0.2/9p.addon"
+        dialog --backtitle "`backtitle`" --aspect 18 --colors --inputbox "${TEXT}" 0 0 \
           2>${TMP_PATH}/resp
         [ $? -ne 0 ] && continue
         URL="`<"${TMP_PATH}/resp"`"
