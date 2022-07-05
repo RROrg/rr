@@ -103,6 +103,8 @@ function modelMenu() {
     rm -f "${MOD_ZIMAGE_FILE}"
     rm -f "${MOD_RDGZ_FILE}"
     DIRTY=1
+    # Remove addons
+    writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
   fi
 }
 
@@ -347,39 +349,24 @@ function addonMenu() {
 }
 
 ###############################################################################
-# Sets variables to configure maxdisks
-# 1 - Number of disks
-function setMaxDisks() {
-  CMDLINE['maxdisks']="${1}"
-  writeConfigKey "cmdline.maxdisks" "${1}" "${USER_CONFIG_FILE}"
-  INTPORTCFG=""
-  for I in `seq 1 ${1}`; do INTPORTCFG+="1"; done
-  INTPORTCFG="0x`printf "%x" "$((2#${INTPORTCFG}))"`"
-  CMDLINE['internalportcfg']="${INTPORTCFG}"
-  writeConfigKey "cmdline.internalportcfg" "${INTPORTCFG}" "${USER_CONFIG_FILE}"
-}
-
-###############################################################################
 function cmdlineMenu() {
-  # Read from user config
+  # Read device-tree flag
   DT="`readModelKey "${MODEL}" "dt"`"
   unset CMDLINE
   declare -A CMDLINE
   while IFS="=" read KEY VALUE; do
     [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
   done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
+  echo "a \"Add/edit an cmdline item\""                        > "${TMP_PATH}/menu"
+  echo "d \"Delete cmdline item(s)\""                          >> "${TMP_PATH}/menu"
+  if [ "${DT}" != "true" ]; then
+    echo "u \"Show SATA(s) # ports and drives\""               >> "${TMP_PATH}/menu"
+  fi
+  echo "s \"Show user cmdline\""                               >> "${TMP_PATH}/menu"
+  echo "m \"Show model/build cmdline\""                        >> "${TMP_PATH}/menu"
+  echo "e \"Exit\""                                            >> "${TMP_PATH}/menu"
   # Loop menu
   while true; do
-    echo "a \"Add/edit an cmdline item\""                        > "${TMP_PATH}/menu"
-    echo "d \"Delete cmdline item(s)\""                          >> "${TMP_PATH}/menu"
-    echo "s \"Show user cmdline\""                               >> "${TMP_PATH}/menu"
-    echo "m \"Show model/build cmdline\""                        >> "${TMP_PATH}/menu"
-    if [ "${DT}" != "true" ]; then
-      echo "h \"Change maxdisks\""                               >> "${TMP_PATH}/menu"
-      echo "u \"Show SATA(s) # ports and drives\""               >> "${TMP_PATH}/menu"
-    fi
-    echo "e \"Exit\""                                            >> "${TMP_PATH}/menu"
-
     dialog --backtitle "`backtitle`" --menu "Choose a option" 0 0 0 \
       --file "${TMP_PATH}/menu" 2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -419,36 +406,8 @@ function cmdlineMenu() {
           deleteConfigKey "cmdline.${I}" "${USER_CONFIG_FILE}"
         done
         ;;
-      s)
-        ITEMS=""
-        for KEY in ${!CMDLINE[@]}; do
-          ITEMS+="${KEY}: ${CMDLINE[$KEY]}\n"
-        done
-        dialog --backtitle "`backtitle`" --title "User cmdline" \
-          --aspect 18 --msgbox "${ITEMS}" 0 0
-        ;;
-      m)
-        ITEMS=""
-        while IFS="=" read KEY VALUE; do
-          ITEMS+="${KEY}: ${VALUE}\n"
-        done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
-        dialog --backtitle "`backtitle`" --title "Model/build cmdline" \
-          --aspect 18 --msgbox "${ITEMS}" 0 0
-        ;;
-      h) MODEL_DISKS="`readModelKey "${MODEL}" "disks"`"
-        dialog --backtitle "`backtitle`"  --title "Change max of disks" \
-          --inputbox "${MODEL} disks: ${MODEL_DISKS}\nType the desired number of disks (1-26)" 0 0 \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        VALUE="`<"${TMP_PATH}/resp"`"
-        [ -z "${VALUE}" ] && continue
-        if [ ${VALUE} -ge 1 -a ${VALUE} -le 26 ]; then
-          setMaxDisks ${VALUE}
-        else
-          dialog --backtitle "`backtitle`" --msgbox "Invalid number" 0 0
-        fi
-        ;;
       u) TEXT=""
+        NUMPORTS=0
         for PCI in `lspci -d ::106 | awk '{print$1}'`; do
           NAME=`lspci -s "${PCI}" | sed "s/\ .*://"`
           TEXT+="\Zb${NAME}\Zn\nPorts: "
@@ -466,12 +425,30 @@ function cmdlineMenu() {
             [ ${ATTACH} -eq 1 ] && TEXT+="\Z2\Zb"
             [ ${DUMMY} -eq 1 ] && TEXT+="\Z1"
             TEXT+="${PORT}\Zn "
+            NUMPORTS=$((${NUMPORTS}+1))
           done < <(echo ${!HOSTPORTS[@]} | tr ' ' '\n' | sort -n)
           TEXT+="\n"
         done
+        TEXT+="\nTotal of ports: ${NUMPORTS}\n"
         TEXT+="\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected."
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "${TEXT}" 0 0
+        ;;
+      s)
+        ITEMS=""
+        for KEY in ${!CMDLINE[@]}; do
+          ITEMS+="${KEY}: ${CMDLINE[$KEY]}\n"
+        done
+        dialog --backtitle "`backtitle`" --title "User cmdline" \
+          --aspect 18 --msgbox "${ITEMS}" 0 0
+        ;;
+      m)
+        ITEMS=""
+        while IFS="=" read KEY VALUE; do
+          ITEMS+="${KEY}: ${VALUE}\n"
+        done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
+        dialog --backtitle "`backtitle`" --title "Model/build cmdline" \
+          --aspect 18 --msgbox "${ITEMS}" 0 0
         ;;
       e) return ;;
     esac
@@ -479,23 +456,42 @@ function cmdlineMenu() {
 }
 
 ###############################################################################
+# Sets variables to configure maxdisks
+# 1 - Number of disks
+function setMaxDisks() {
+  SYNOINFO["maxdisks"]="${1}"
+  writeConfigKey "synoinfo.maxdisks" "${1}" "${USER_CONFIG_FILE}"
+  INTPORTCFG=""
+  for I in `seq 1 ${1}`; do INTPORTCFG+="1"; done
+  INTPORTCFG="0x`printf "%x" "$((2#${INTPORTCFG}))"`"
+  SYNOINFO["internalportcfg"]="${INTPORTCFG}"
+  writeConfigKey "synoinfo.internalportcfg" "${INTPORTCFG}" "${USER_CONFIG_FILE}"
+}
+
+###############################################################################
 function synoinfoMenu() {
+  # Read device-tree flag
+  DT="`readModelKey "${MODEL}" "dt"`"
   # Read synoinfo from user config
   unset SYNOINFO
   declare -A SYNOINFO
   while IFS="=" read KEY VALUE; do
     [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
   done < <(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")
+
+  echo "a \"Add/edit an synoinfo item\""   > "${TMP_PATH}/menu"
+  echo "d \"Delete synoinfo item(s)\""    >> "${TMP_PATH}/menu"
+  if [ "${DT}" != "true" ]; then
+    echo "h \"Change maxdisks\""                               >> "${TMP_PATH}/menu"
+  fi
+  echo "s \"Show user synoinfo\""         >> "${TMP_PATH}/menu"
+  echo "m \"Show model/build synoinfo\""  >> "${TMP_PATH}/menu"
+  echo "e \"Exit\""                       >> "${TMP_PATH}/menu"
+
   # menu loop
   while true; do
-    dialog --backtitle "`backtitle`" \
-      --menu "Choose a option" 0 0 0 \
-      a "Add/edit an synoinfo item" \
-      d "Delete synoinfo item(s)" \
-      s "Show user synoinfo" \
-      m "Show model/build synoinfo" \
-      e "Exit" \
-      2>${TMP_PATH}/resp
+    dialog --backtitle "`backtitle`" --menu "Choose a option" 0 0 0 \
+      --file "${TMP_PATH}/menu" 2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "`<${TMP_PATH}/resp`" in
       a)
@@ -533,6 +529,19 @@ function synoinfoMenu() {
           deleteConfigKey "synoinfo.${I}" "${USER_CONFIG_FILE}"
         done
         DIRTY=1
+        ;;
+      h) MODEL_DISKS="`readModelKey "${MODEL}" "disks"`"
+        dialog --backtitle "`backtitle`"  --title "Change max of disks" \
+          --inputbox "${MODEL} disks: ${MODEL_DISKS}\nType the desired number of disks (1-26)" 0 0 \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        VALUE="`<"${TMP_PATH}/resp"`"
+        [ -z "${VALUE}" ] && continue
+        if [ ${VALUE} -ge 1 -a ${VALUE} -le 26 ]; then
+          setMaxDisks ${VALUE}
+        else
+          dialog --backtitle "`backtitle`" --msgbox "Invalid number" 0 0
+        fi
         ;;
       s)
         ITEMS=""
