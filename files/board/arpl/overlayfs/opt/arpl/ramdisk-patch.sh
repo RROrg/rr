@@ -62,6 +62,15 @@ while read f; do
   (cd "${RAMDISK_PATH}" && patch -p1 < "${PATCH_PATH}/${f}") >>"${LOG_FILE}" 2>&1 || dieLog
 done < <(readModelArray "${MODEL}" "builds.${BUILD}.patch")
 
+# Temporary workaround
+DT="`readModelKey "${MODEL}" "dt"`"
+if [ "${DT}" != "true" ]; then
+  NUMPORTS=$((`ls /sys/class/scsi_host | wc -w`-1))
+  SYNOINFO["maxdisks"]=${NUMPORTS}
+  INTPORTCFG="0x`printf "%x" "$((2**${NUMPORTS}-1))"`"
+  SYNOINFO["internalportcfg"]="${INTPORTCFG}"
+fi
+
 # Patch /etc/synoinfo.conf
 echo -n "."
 for KEY in ${!SYNOINFO[@]}; do
