@@ -22,18 +22,19 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Install missing buildroot dependency
-      - name: Install dependency
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libelf-dev
-
+      # Check cache
       - name: Cache buildroot
         id: cache
         uses: actions/cache@v2
         with:
           path: .buildroot
           key: ${{ runner.os }}-${{ hashFiles('files/configs/arpl_defconfig') }}
+
+      # Install missing buildroot dependency
+      - name: Install dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libelf-dev
 
       # Prepare buildroot for first make (for cache)
       - name: Prepare buildroot
