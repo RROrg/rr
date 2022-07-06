@@ -456,22 +456,7 @@ function cmdlineMenu() {
 }
 
 ###############################################################################
-# Sets variables to configure maxdisks
-# 1 - Number of disks
-function setMaxDisks() {
-  SYNOINFO["maxdisks"]="${1}"
-  writeConfigKey "synoinfo.maxdisks" "${1}" "${USER_CONFIG_FILE}"
-  INTPORTCFG=""
-  for I in `seq 1 ${1}`; do INTPORTCFG+="1"; done
-  INTPORTCFG="0x`printf "%x" "$((2#${INTPORTCFG}))"`"
-  SYNOINFO["internalportcfg"]="${INTPORTCFG}"
-  writeConfigKey "synoinfo.internalportcfg" "${INTPORTCFG}" "${USER_CONFIG_FILE}"
-}
-
-###############################################################################
 function synoinfoMenu() {
-  # Read device-tree flag
-  DT="`readModelKey "${MODEL}" "dt"`"
   # Read synoinfo from user config
   unset SYNOINFO
   declare -A SYNOINFO
@@ -481,9 +466,6 @@ function synoinfoMenu() {
 
   echo "a \"Add/edit an synoinfo item\""   > "${TMP_PATH}/menu"
   echo "d \"Delete synoinfo item(s)\""    >> "${TMP_PATH}/menu"
-  if [ "${DT}" != "true" ]; then
-    echo "h \"Change maxdisks\""                               >> "${TMP_PATH}/menu"
-  fi
   echo "s \"Show user synoinfo\""         >> "${TMP_PATH}/menu"
   echo "m \"Show model/build synoinfo\""  >> "${TMP_PATH}/menu"
   echo "e \"Exit\""                       >> "${TMP_PATH}/menu"
@@ -529,19 +511,6 @@ function synoinfoMenu() {
           deleteConfigKey "synoinfo.${I}" "${USER_CONFIG_FILE}"
         done
         DIRTY=1
-        ;;
-      h) MODEL_DISKS="`readModelKey "${MODEL}" "disks"`"
-        dialog --backtitle "`backtitle`"  --title "Change max of disks" \
-          --inputbox "${MODEL} disks: ${MODEL_DISKS}\nType the desired number of disks (1-26)" 0 0 \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        VALUE="`<"${TMP_PATH}/resp"`"
-        [ -z "${VALUE}" ] && continue
-        if [ ${VALUE} -ge 1 -a ${VALUE} -le 26 ]; then
-          setMaxDisks ${VALUE}
-        else
-          dialog --backtitle "`backtitle`" --msgbox "Invalid number" 0 0
-        fi
         ;;
       s)
         ITEMS=""
