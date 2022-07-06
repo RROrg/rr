@@ -1,0 +1,10 @@
+config BR2_PACKAGE_R8168
+	bool "r8168"
+	depends on BR2_LINUX_KERNEL
+	help
+	  A standalone driver for the RTL8168 Ethernet adapter.
+
+	  https://github.com/fbelavenuto/r8168
+
+comment "r8168 needs a Linux kernel to be built"
+	depends on !BR2_LINUX_KERNEL

@@ -48,7 +48,7 @@ jobs:
           echo "Generating default config"
           make arpl_defconfig
           echo "First make"
-          make
+          make BR2_EXTERNAL=../external
 
       # Build incremental from cache
       - name: Build image
@@ -90,7 +90,7 @@ jobs:
           make arpl_defconfig
           echo "Version: ${VERSION}"
           echo "Building..."
-          make
+          make BR2_EXTERNAL=../external
           cd -
 
       # Zip image
