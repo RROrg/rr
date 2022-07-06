@@ -2,15 +2,17 @@ id: "DS1621+"
 modules-notneeded: &modules-notneeded
   - ahci
   - ata_piix
+  - amd_xgbe
+  - marvell10g
   - i40e
+  - r8168
+  - r8169
   - ixgbe
-  - igb
-  - e1000e
-  - dca
   - etxhci_hcd
   - xhci_hcd
   - ehci-pci
   - uhci_hcd
+  - mv14xx
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
