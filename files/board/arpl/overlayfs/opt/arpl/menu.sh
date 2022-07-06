@@ -774,6 +774,122 @@ function keymapMenu() {
 }
 
 ###############################################################################
+function updateMenu() {
+  while true; do
+    dialog --backtitle "`backtitle`" --menu "Choose a option" 0 0 0 \
+      a "Update arpl" \
+      d "Update addons" \
+      l "Update LKMs" \
+      e "Exit" \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && return
+    case "`<${TMP_PATH}/resp`" in
+      a)
+        dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
+          --infobox "Checking last version" 0 0
+        ACTUALVERSION="v${ARPL_VERSION}"
+        TAG="`curl --insecure -s https://api.github.com/repos/fbelavenuto/arpl/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`"
+        if [ $? -ne 0 -o -z "${TAG}" ]; then
+          dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
+            --msgbox "Error checking new version" 0 0
+          continue
+        fi
+        if [ "${ACTUALVERSION}" = "${TAG}" ]; then
+          dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
+            --yesno "No new version. Actual version is ${ACTUALVERSION}\nForce update?" 0 0
+          [ $? -ne 0 ] && continue
+        fi
+        dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
+          --infobox "Downloading last version ${TAG}" 0 0
+        curl --insecure -s -L "https://github.com/fbelavenuto/arpl/releases/download/${TAG}/bzImage" -o /tmp/bzImage
+        if [ $? -ne 0 ]; then
+          dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
+            --msgbox "Error downloading bzImage" 0 0
+          continue
+        fi
+        curl --insecure -s -L "https://github.com/fbelavenuto/arpl/releases/download/${TAG}/rootfs.cpio.xz" -o /tmp/rootfs.cpio.xz
+        if [ $? -ne 0 ]; then
+          dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
+            --msgbox "Error downloading rootfs.cpio.xz" 0 0
+          continue
+        fi
+        dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
+          --infobox "Installing new files" 0 0
+        mv /tmp/bzImage /mnt/p1/bzImage-arpl
+        mv /tmp/rootfs.cpio.xz /mnt/p1/initrd-arpl
+        dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
+          --yesno "Arpl updated with success to ${TAG}!\nReboot?" 0 0
+        [ $? -ne 0 ] && continue
+        reboot
+        exit
+        ;;
+
+      d)
+        dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
+          --infobox "Checking last version" 0 0
+        TAG=`curl --insecure -s https://api.github.com/repos/fbelavenuto/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+        if [ $? -ne 0 -o -z "${TAG}" ]; then
+          dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
+            --msgbox "Error checking new version" 0 0
+          continue
+        fi
+        dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
+          --infobox "Downloading last version" 0 0
+        curl --insecure -s -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip
+        if [ $? -ne 0 ]; then
+          dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
+            --msgbox "Error downloading new version" 0 0
+          continue
+        fi
+        dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
+          --infobox "Extracting last version" 0 0
+        rm -rf /tmp/addons
+        mkdir -p /tmp/addons
+        unzip /tmp/addons.zip -d /tmp/addons >/dev/null 2>&1
+        dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
+          --infobox "Installing new addons" 0 0
+        DEST_PATH="/mnt/p3/addons"
+        for PKG in `ls /tmp/addons/*.addon`; do
+          ADDON=`basename ${PKG} | sed 's|.addon||'`
+          rm -rf "${DEST_PATH}/${ADDON}"
+          mkdir -p "${DEST_PATH}/${ADDON}"
+          tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}" >/dev/null 2>&1
+        done
+        dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
+          --msgbox "Addons updated with success!" 0 0
+        ;;
+
+      l)
+        dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
+          --infobox "Checking last version" 0 0
+        TAG=`curl --insecure -s https://api.github.com/repos/fbelavenuto/redpill-lkm/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+        if [ $? -ne 0 -o -z "${TAG}" ]; then
+          dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
+            --msgbox "Error checking new version" 0 0
+          continue
+        fi
+        dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
+          --infobox "Downloading last version" 0 0
+        curl --insecure -s -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip
+        if [ $? -ne 0 ]; then
+          dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
+            --msgbox "Error downloading new version" 0 0
+          continue
+        fi
+        dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
+          --infobox "Extracting last version" 0 0
+        rm -rf /mnt/p3/lkms/*
+        unzip /tmp/rp-lkms.zip -d /mnt/p3/lkms >/dev/null 2>&1
+        dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
+          --msgbox "LKMs updated with success!" 0 0
+        ;;
+
+      e) return ;;
+    esac
+  done
+}
+
+###############################################################################
 ###############################################################################
 
 # Main loop
@@ -795,6 +911,7 @@ while true; do
   echo "u \"Edit user config file manually\""         >> "${TMP_PATH}/menu"
   echo "k \"Choose a keymap\" "                       >> "${TMP_PATH}/menu"
   [ ${RAMCACHE} -eq 0 -a -d "${CACHE_PATH}/dl" ] && echo "c \"Clean disk cache\"" >> "${TMP_PATH}/menu"
+  echo "p \"Update menu\""                            >> "${TMP_PATH}/menu"
   echo "e \"Exit\"" >> "${TMP_PATH}/menu"
   dialog --clear --default-item ${NEXT} --backtitle "`backtitle`" --colors \
     --menu "Choose the option" 0 0 0 --file "${TMP_PATH}/menu" \
@@ -817,8 +934,10 @@ while true; do
     k) keymapMenu ;;
     c) dialog --backtitle "`backtitle`" --title "Cleaning" --aspect 18 \
       --prgbox "rm -rfv \"${CACHE_PATH}/dl\"" 0 0 ;;
+    p) updateMenu ;;
     e) break ;;
   esac
 done
 clear
 echo -e "Call \033[1;32mmenu.sh\033[0m to return to menu"
+
