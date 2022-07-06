@@ -2,15 +2,16 @@ id: "DS2422+"
 modules-notneeded: &modules-notneeded
   - ahci
   - ata_piix
+  - amd_xgbe
+  - marvell10g
   - i40e
+  - r8168
   - ixgbe
-  - igb
-  - e1000e
-  - dca
   - etxhci_hcd
   - xhci_hcd
   - ehci-pci
   - uhci_hcd
+  - mv14xx
 synoinfo: &synoinfo
   rss_server: "http://example.com/null.xml"
   rss_server_ssl: "https://example.com/null.xml"

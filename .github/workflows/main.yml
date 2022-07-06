@@ -1,12 +1,7 @@
-name: Build img
+name: Build image
 
 # Controls when the workflow will run
 on:
-
-#  push:
-#    branches:
-#      - main
-#  pull_request:
   
   # When a release is published
   release:
@@ -26,8 +21,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-        with:
-          submodules: recursive
 
       # Install missing buildroot dependency
       - name: Install dependency

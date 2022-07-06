@@ -2,16 +2,18 @@ id: "DVA1622"
 modules-notneeded: &modules-notneeded
   - ahci
   - ata_piix
-  - i40e
-  - ixgbe
-  - igb
-  - e1000e
   - r8168
   - r8169
-  - dca
   - etxhci_hcd
   - xhci_hcd
   - uhci_hcd
+  - i915
+  - drm
+  - fb
+  - fbdev
+  - video
+  - backlight
+  - button
 synoinfo: &synoinfo
   buzzeroffen: "0xffff"
   rss_server: "http://example.com/null.xml"
