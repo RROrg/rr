@@ -41,9 +41,9 @@ done
 
 # Copy files
 echo "Copying files"
-cp -Ru files/* .buildroot/
 VERSION=`cat VERSION`
 sed 's/^ARPL_VERSION=.*/ARPL_VERSION="'${VERSION}'"/' -i files/board/arpl/overlayfs/opt/arpl/include/consts.sh
+cp -Ru files/* .buildroot/
 
 cd .buildroot
 echo "Generating default config"
