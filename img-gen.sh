@@ -50,7 +50,8 @@ echo "Generating default config"
 make arpl_defconfig
 echo "Version: ${VERSION}"
 echo "Building... Drink a coffee and wait!"
-make
+make BR2_EXTERNAL=../external
 cd -
 rm -f *.zip
 zip -9 "arpl-${VERSION}.img.zip" arpl.img
+[ -x test.sh ] && ./test.sh
