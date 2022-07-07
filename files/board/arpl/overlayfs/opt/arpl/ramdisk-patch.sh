@@ -63,13 +63,16 @@ while read f; do
 done < <(readModelArray "${MODEL}" "builds.${BUILD}.patch")
 
 # Temporary workaround
-DT="`readModelKey "${MODEL}" "dt"`"
-if [ "${DT}" != "true" ]; then
-  NUMPORTS=$((`ls /sys/class/scsi_host | wc -w`-1))
-  SYNOINFO["maxdisks"]=${NUMPORTS}
-  INTPORTCFG="0x`printf "%x" "$((2**${NUMPORTS}-1))"`"
-  SYNOINFO["internalportcfg"]="${INTPORTCFG}"
-fi
+# LOADER_DISK="`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1`"
+# BUS=`udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2`
+# DT="`readModelKey "${MODEL}" "dt"`"
+# if [ "${DT}" != "true" ]; then
+#   NUMPORTS=$((`ls /sys/class/scsi_host | wc -w`-1))
+#   [ "${BUS}" = "ata" ] && NUMPORTS=$((${NUMPORTS}-1))
+#   SYNOINFO["maxdisks"]=${NUMPORTS}
+#   INTPORTCFG="0x`printf "%x" "$((2**${NUMPORTS}-1))"`"
+#   SYNOINFO["internalportcfg"]="${INTPORTCFG}"
+# fi
 
 # Patch /etc/synoinfo.conf
 echo -n "."
