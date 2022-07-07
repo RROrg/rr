@@ -25,7 +25,7 @@ jobs:
       # Check cache
       - name: Cache buildroot
         id: cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .buildroot
           key: ${{ runner.os }}-${{ hashFiles('files/configs/arpl_defconfig') }}
