@@ -75,10 +75,13 @@ EFI_BUG="`readModelKey "${MODEL}" "builds.${BUILD}.efi-bug"`"
 LOADER_DISK="`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1`"
 BUS=`udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2`
 
+# Read SATADoM type
+DOM="`readModelKey "${MODEL}" "dom"`"
+
 # Prepare command line
 CMDLINE_LINE=""
 [ ${EFI} -eq 1 ] && CMDLINE_LINE+="withefi "
-[ "${BUS}" = "ata" ] && CMDLINE_LINE+="synoboot_satadom=1 "
+[ "${BUS}" = "ata" ] && CMDLINE_LINE+="synoboot_satadom=${DOM} "
 CMDLINE_LINE+="console=ttyS0,115200n8 earlyprintk log_buf_len=32M earlycon=uart8250,io,0x3f8,115200n8 elevator=elevator root=/dev/md0 loglevel=15"
 for KEY in ${!CMDLINE[@]}; do
   VALUE="${CMDLINE[${KEY}]}"
@@ -92,6 +95,23 @@ CMDLINE_LINE=`echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g'`
 echo -e "Model: \033[1;36m${MODEL}\033[0m"
 echo -e "Build: \033[1;36m${BUILD}\033[0m"
 echo -e "Cmdline:\n\033[1;36m${CMDLINE_LINE}\033[0m"
+
+# Wait for an IP
+COUNT=0
+echo -n "IP: "
+while true; do
+  IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
+  if [ -n "${IP}" ]; then
+    echo -e "\033[1;32m${IP}\033[0m"
+    break
+  elif [ ${COUNT} -eq 8 ]; then
+    echo -e "\033[1;31mERROR\033[0m"
+    break
+  fi
+  COUNT=$((${COUNT}+1))
+  sleep 1
+done
+
 echo -e "\033[1;37mLoading DSM kernel...\033[0m"
 
 # Executes DSM kernel via KEXEC
