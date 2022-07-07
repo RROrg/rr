@@ -30,8 +30,8 @@ jobs:
           path: .buildroot
           key: ${{ runner.os }}-${{ hashFiles('files/configs/arpl_defconfig') }}
 
-      # Install missing buildroot dependency
-      - name: Install dependency
+      # Install  dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libelf-dev
@@ -92,18 +92,23 @@ jobs:
           echo "Building..."
           make BR2_EXTERNAL=../external
           cd -
+          qemu-img convert -O vmdk arpl.img arpl.vmdk
 
       # Zip image
       - name: Pack
         shell: bash
-        run: zip -9 "arpl-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
+        run: |
+          zip -9 "arpl-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
+          zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip" arpl.vmdk
 
       # Upload artifact
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: Image to burn
-          path: arpl.img
+          name: Images
+          path: |
+            arpl.img
+            arpl.vmdk
           retention-days: 1
 
       # Publish a release if is a tag
@@ -113,5 +118,6 @@ jobs:
         with:
           files: |
             arpl-${{ steps.build.outputs.VERSION }}.img.zip
+            arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip
             .buildroot/output/images/bzImage
             .buildroot/output/images/rootfs.cpio.xz
