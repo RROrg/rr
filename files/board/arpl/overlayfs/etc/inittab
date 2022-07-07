@@ -30,7 +30,7 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
 
 # Login in terminals
 ::respawn:/sbin/agetty -a root --noclear tty1
-ttyS0::askfirst:/sbin/agetty -a root ttyS0 115200 vt100
+ttyS0::askfirst:/sbin/agetty -a root ttyS0 115200 linux
 ::respawn:/usr/bin/ttyd login -f root
 
 # Stuff to do for the 3-finger salute
