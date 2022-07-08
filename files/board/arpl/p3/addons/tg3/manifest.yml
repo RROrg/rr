@@ -1,0 +1,25 @@
+version: 1
+name: tg3
+description: "Driver for Broadcom Tigon3 based gigabit Ethernet cards"
+available-for:
+  bromolow-3.10.108:
+    install-script: &script "install.sh"
+    modules: true
+  apollolake-4.4.180:
+    install-script: *script
+    modules: true
+  broadwell-4.4.180:
+    install-script: *script
+    modules: true
+  broadwellnk-4.4.180:
+    install-script: *script
+    modules: true
+  denverton-4.4.180:
+    install-script: *script
+    modules: true
+  geminilake-4.4.180:
+    install-script: *script
+    modules: true
+#  v1000-4.4.180:
+#    install-script: *script
+#    modules: true
