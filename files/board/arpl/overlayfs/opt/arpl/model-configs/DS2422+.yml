@@ -13,6 +13,8 @@ modules-notneeded: &modules-notneeded
   - uhci_hcd
   - mv14xx
 synoinfo: &synoinfo
+  support_disk_compatibility: "no"
+  support_memory_compatibility: "no"
   rss_server: "http://example.com/null.xml"
   rss_server_ssl: "https://example.com/null.xml"
   rss_server_v2: "https://example.com/autoupdate/v2/getList"

@@ -62,18 +62,6 @@ while read f; do
   (cd "${RAMDISK_PATH}" && patch -p1 < "${PATCH_PATH}/${f}") >>"${LOG_FILE}" 2>&1 || dieLog
 done < <(readModelArray "${MODEL}" "builds.${BUILD}.patch")
 
-# Temporary workaround
-# LOADER_DISK="`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1`"
-# BUS=`udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2`
-# DT="`readModelKey "${MODEL}" "dt"`"
-# if [ "${DT}" != "true" ]; then
-#   NUMPORTS=$((`ls /sys/class/scsi_host | wc -w`-1))
-#   [ "${BUS}" = "ata" ] && NUMPORTS=$((${NUMPORTS}-1))
-#   SYNOINFO["maxdisks"]=${NUMPORTS}
-#   INTPORTCFG="0x`printf "%x" "$((2**${NUMPORTS}-1))"`"
-#   SYNOINFO["internalportcfg"]="${INTPORTCFG}"
-# fi
-
 # Patch /etc/synoinfo.conf
 echo -n "."
 for KEY in ${!SYNOINFO[@]}; do
@@ -104,8 +92,11 @@ cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
 # Addons
 # Check if model needs Device-tree dynamic patch
 DT="`readModelKey "${MODEL}" "dt"`"
-[ "${DT}" = "true" ] && ADDONS['qjs-dtb']=""  # Add system addon "qjs-dtb"
+# Add system addon "qjs-dtb" or "maxdisks"
+[ "${DT}" = "true" ] && ADDONS['qjs-dtb']="" || ADDONS['maxdisks']=""
 ADDONS['misc']=""  # Add system addon "misc"
+ADDONS['acpid']=""  # Add system addon "acpid"
+
 mkdir -p "${RAMDISK_PATH}/addons"
 echo -n "."
 #/proc/sys/kernel/syno_install_flag
