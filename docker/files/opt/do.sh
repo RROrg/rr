@@ -19,7 +19,7 @@ function compile-module {
   fi
   echo "Compiling module for ${PLATFORM}-${KVER}..."
   cp -R /input /tmp
-  make -C "/opt/${PLATFORM}" M="/tmp/input" modules
+  make -C "/opt/${PLATFORM}" M="/tmp/input" ${PLATFORM^^}=m modules
   while read F; do
     strip -g "${F}"
     echo "Copying `basename ${F}`"
