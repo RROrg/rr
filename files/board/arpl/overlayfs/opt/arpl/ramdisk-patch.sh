@@ -102,7 +102,7 @@ echo -n "."
 #/proc/sys/kernel/syno_install_flag
 echo "#!/bin/sh" > "${RAMDISK_PATH}/addons/addons.sh"
 echo 'export INSMOD="/sbin/insmod"' >> "${RAMDISK_PATH}/addons/addons.sh"
-echo >> "${RAMDISK_PATH}/addons/addons.sh"
+echo 'echo "addons.sh called with params ${@}"' >> "${RAMDISK_PATH}/addons/addons.sh"
 for ADDON in ${!ADDONS[@]}; do
   PARAMS=${ADDONS[${ADDON}]}
   if ! installAddon ${ADDON}; then
