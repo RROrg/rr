@@ -1,0 +1,11 @@
+--- a/etc/rc
++++ b/etc/rc
+@@ -230,7 +230,7 @@
+ 	/etc.defaults/AHAtasks load_network_modules_junior
+ fi
+ SYNOLoadModules ${NET_MODULES}
+-
++/addons/addons.sh modules
+ 
+ if [ "no" != "$RUN_SYNOBIOS" ]; then
+ 	SYNOLoadModules "synobios"
