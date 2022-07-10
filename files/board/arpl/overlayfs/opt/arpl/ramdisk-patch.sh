@@ -92,8 +92,8 @@ cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
 # Addons
 # Check if model needs Device-tree dynamic patch
 DT="`readModelKey "${MODEL}" "dt"`"
-# Add system addon "qjs-dtb" or "maxdisks"
-[ "${DT}" = "true" ] && ADDONS['qjs-dtb']="" || ADDONS['maxdisks']=""
+# Add system addon "dtbpatch" or "maxdisks"
+[ "${DT}" = "true" ] && ADDONS['dtbpatch']="" || ADDONS['maxdisks']=""
 ADDONS['misc']=""  # Add system addon "misc"
 ADDONS['acpid']=""  # Add system addon "acpid"
 
