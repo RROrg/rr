@@ -3,8 +3,12 @@ name: Build image
 # Controls when the workflow will run
 on:
 
-  # Push and PR
+  # Push
   push:
+    branches:
+      - main
+    tags:
+      - v*
 #  pull_request:
 
   # When a release is published
