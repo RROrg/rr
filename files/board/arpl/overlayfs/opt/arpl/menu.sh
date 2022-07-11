@@ -350,8 +350,6 @@ function addonMenu() {
 
 ###############################################################################
 function cmdlineMenu() {
-  # Read device-tree flag
-  DT="`readModelKey "${MODEL}" "dt"`"
   unset CMDLINE
   declare -A CMDLINE
   while IFS="=" read KEY VALUE; do
@@ -359,11 +357,9 @@ function cmdlineMenu() {
   done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
   echo "a \"Add/edit an cmdline item\""                        > "${TMP_PATH}/menu"
   echo "d \"Delete cmdline item(s)\""                          >> "${TMP_PATH}/menu"
-  if [ "${DT}" != "true" ]; then
-    echo "u \"Show SATA(s) # ports and drives\""               >> "${TMP_PATH}/menu"
-  fi
   echo "s \"Show user cmdline\""                               >> "${TMP_PATH}/menu"
   echo "m \"Show model/build cmdline\""                        >> "${TMP_PATH}/menu"
+  echo "u \"Show SATA(s) # ports and drives\""                 >> "${TMP_PATH}/menu"
   echo "e \"Exit\""                                            >> "${TMP_PATH}/menu"
   # Loop menu
   while true; do
@@ -406,6 +402,22 @@ function cmdlineMenu() {
           deleteConfigKey "cmdline.${I}" "${USER_CONFIG_FILE}"
         done
         ;;
+      s)
+        ITEMS=""
+        for KEY in ${!CMDLINE[@]}; do
+          ITEMS+="${KEY}: ${CMDLINE[$KEY]}\n"
+        done
+        dialog --backtitle "`backtitle`" --title "User cmdline" \
+          --aspect 18 --msgbox "${ITEMS}" 0 0
+        ;;
+      m)
+        ITEMS=""
+        while IFS="=" read KEY VALUE; do
+          ITEMS+="${KEY}: ${VALUE}\n"
+        done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
+        dialog --backtitle "`backtitle`" --title "Model/build cmdline" \
+          --aspect 18 --msgbox "${ITEMS}" 0 0
+        ;;
       u) TEXT=""
         NUMPORTS=0
         for PCI in `lspci -d ::106 | awk '{print$1}'`; do
@@ -433,22 +445,6 @@ function cmdlineMenu() {
         TEXT+="\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected."
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "${TEXT}" 0 0
-        ;;
-      s)
-        ITEMS=""
-        for KEY in ${!CMDLINE[@]}; do
-          ITEMS+="${KEY}: ${CMDLINE[$KEY]}\n"
-        done
-        dialog --backtitle "`backtitle`" --title "User cmdline" \
-          --aspect 18 --msgbox "${ITEMS}" 0 0
-        ;;
-      m)
-        ITEMS=""
-        while IFS="=" read KEY VALUE; do
-          ITEMS+="${KEY}: ${VALUE}\n"
-        done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
-        dialog --backtitle "`backtitle`" --title "Model/build cmdline" \
-          --aspect 18 --msgbox "${ITEMS}" 0 0
         ;;
       e) return ;;
     esac
