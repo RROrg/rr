@@ -20,11 +20,20 @@ done <../PLATFORMS
 mkdir -p cache
 TOOLKIT_VER="7.0"
 for PLATFORM in ${!PLATFORMS[@]}; do
+  KVER="${PLATFORMS[${PLATFORM}]}"
   echo -n "Checking cache/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz... "
   if [ ! -f "cache/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz" ]; then
     URL="https://global.download.synology.com/download/ToolChain/toolkit/${TOOLKIT_VER}/${PLATFORM}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz"
     echo "Downloading ${URL}"
     curl -L "${URL}" -o "cache/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz"
+  else
+    echo "OK"
+  fi
+  echo -n "Checking cache/linux-${KVER}.tar.xz... "
+  if [ ! -f "cache/linux-${KVER}.tar.xz" ]; then
+    URL="https://cdn.kernel.org/pub/linux/kernel/v${KVER:0:1}.x/linux-${KVER}.tar.xz"
+    echo "Downloading ${URL}"
+    curl -L "${URL}" -o "cache/linux-${KVER}.tar.xz"
   else
     echo "OK"
   fi
