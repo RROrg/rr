@@ -5,7 +5,7 @@
  fi
  SYNOLoadModules ${NET_MODULES}
 -
-+/addons/addons.sh modules
++/usr/sbin/depmod -a
  
  if [ "no" != "$RUN_SYNOBIOS" ]; then
  	SYNOLoadModules "synobios"

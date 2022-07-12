@@ -81,13 +81,25 @@ done
 sed -e "/@@@CONFIG-GENERATED@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
 rm "${TMP_PATH}/rp.txt"
 
-# Copying LKM to /usr/lib/modules/rp.ko
-echo -n "."
-cp "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko" "${RAMDISK_PATH}/usr/lib/modules/rp.ko"
-
 # Copying fake modprobe
 echo -n "."
-cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
+#cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
+cp -d ${CACHE_PATH}/kmod     ${RAMDISK_PATH}/usr/sbin
+cp -d ${CACHE_PATH}/depmod   ${RAMDISK_PATH}/usr/sbin
+cp -d ${CACHE_PATH}/insmod   ${RAMDISK_PATH}/usr/sbin
+cp -d ${CACHE_PATH}/lsmod    ${RAMDISK_PATH}/usr/sbin
+cp -d ${CACHE_PATH}/modinfo  ${RAMDISK_PATH}/usr/sbin
+cp -d ${CACHE_PATH}/modprobe ${RAMDISK_PATH}/usr/sbin
+cp -d ${CACHE_PATH}/rmmod    ${RAMDISK_PATH}/usr/sbin
+cp -r ${CACHE_PATH}/modules/4.4.180+ ${RAMDISK_PATH}/lib/modules
+for F in `ls ${RAMDISK_PATH}/lib/modules/*.ko`; do
+  mv ${F} ${RAMDISK_PATH}/lib/modules/4.4.180+/
+  ln -sf 4.4.180+/`basename ${F}` ${F}
+done
+
+# Copying LKM to /usr/lib/modules/rp.ko
+echo -n "."
+cp "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko" "${RAMDISK_PATH}/usr/lib/modules/4.4.180+/elevator-iosched.ko"
 
 # Addons
 # Check if model needs Device-tree dynamic patch
