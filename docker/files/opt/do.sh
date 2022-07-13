@@ -71,7 +71,7 @@ if [ $# -lt 1 ]; then
   exit 1
 fi
 case $1 in
-  bash) bash -l ;;
+  bash) shift; bash -l $@ ;;
   compile-module) compile-module $2 ;;
   compile-lkm) compile-lkm $2 ;;
   compile-drivers) compile-drivers ;;
