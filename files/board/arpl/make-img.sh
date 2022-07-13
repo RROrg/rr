@@ -15,7 +15,7 @@ BOARD_PATH="${CONFIG_DIR}/board/arpl"
 
 echo "Creating image file"
 # Create image zeroed
-dd if="/dev/zero" of="${IMAGE_FILE}" bs=1M count=250 conv=sync 2>/dev/null
+dd if="/dev/zero" of="${IMAGE_FILE}" bs=1M count=300 conv=sync 2>/dev/null
 # Copy grub stage1 to image
 dd if="${BOARD_PATH}/grub.bin" of="${IMAGE_FILE}" conv=notrunc,sync 2>/dev/null
 # Create partitions on image
@@ -25,7 +25,7 @@ echo -e "n\np\n\n\n+100M\nt\n\n0b\nn\np\n\n\n+100M\nn\np\n\n\n\nw" | fdisk "${IM
 sudo umount "${BINARIES_DIR}/p1" 2>/dev/null || true
 sudo umount "${BINARIES_DIR}/p3" 2>/dev/null || true
 # Force unsetup of loop device
-sudSetupo losetup -d "/dev/loop8" 2>/dev/null || true
+sudo losetup -d "/dev/loop8" 2>/dev/null || true
 # Setup the loop8 loop device
 sudo losetup -P "/dev/loop8" "${IMAGE_FILE}"
 # Format partitions

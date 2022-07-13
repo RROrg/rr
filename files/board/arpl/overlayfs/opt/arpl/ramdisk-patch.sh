@@ -81,25 +81,28 @@ done
 sed -e "/@@@CONFIG-GENERATED@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
 rm "${TMP_PATH}/rp.txt"
 
-# Copying fake modprobe
+# Copying modified kmod
 echo -n "."
-#cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
-cp -d ${CACHE_PATH}/kmod     ${RAMDISK_PATH}/usr/sbin
-cp -d ${CACHE_PATH}/depmod   ${RAMDISK_PATH}/usr/sbin
-cp -d ${CACHE_PATH}/insmod   ${RAMDISK_PATH}/usr/sbin
-cp -d ${CACHE_PATH}/lsmod    ${RAMDISK_PATH}/usr/sbin
-cp -d ${CACHE_PATH}/modinfo  ${RAMDISK_PATH}/usr/sbin
-cp -d ${CACHE_PATH}/modprobe ${RAMDISK_PATH}/usr/sbin
-cp -d ${CACHE_PATH}/rmmod    ${RAMDISK_PATH}/usr/sbin
-cp -r ${CACHE_PATH}/modules/4.4.180+ ${RAMDISK_PATH}/lib/modules
-for F in `ls ${RAMDISK_PATH}/lib/modules/*.ko`; do
-  mv ${F} ${RAMDISK_PATH}/lib/modules/4.4.180+/
-  ln -sf 4.4.180+/`basename ${F}` ${F}
-done
+cp /opt/arpl/kmod "${RAMDISK_PATH}/usr/sbin"
+ln -sf kmod       "${RAMDISK_PATH}/usr/sbin/modprobe"
 
-# Copying LKM to /usr/lib/modules/rp.ko
+# Extract modules to ramdisk
+rm -rf "${TMP_PATH}/modules"
+mkdir -p "${TMP_PATH}/modules"
+gzip -dc "${CACHE_PATH}/modules/${PLATFORM}-${KVER}.tgz" | tar xf - -C "${TMP_PATH}/modules"
+for F in `ls "${TMP_PATH}/modules/"*.ko`; do
+  M=`basename ${F}`
+  # Skip existent modules
+  [ -f "${RAMDISK_PATH}/lib/modules/${M}" ] || mv "${F}" "${RAMDISK_PATH}/lib/modules/${M}"
+done
+# Clean
+rm -rf "${TMP_PATH}/modules"
+
 echo -n "."
-cp "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko" "${RAMDISK_PATH}/usr/lib/modules/4.4.180+/elevator-iosched.ko"
+# Copying LKM to /usr/lib/modules
+cp "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko" "${RAMDISK_PATH}/usr/lib/modules/elevator-iosched.ko"
+# Build modules dependencies
+/opt/arpl/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
 
 # Addons
 # Check if model needs Device-tree dynamic patch

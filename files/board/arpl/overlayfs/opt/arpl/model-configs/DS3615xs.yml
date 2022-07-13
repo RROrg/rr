@@ -27,7 +27,7 @@ cmdline: &cmdline
   syno_hdd_detect: 0
 platform: "bromolow"
 serial:
-  prefix: 
+  prefix:
     - "1130"
     - "1230"
     - "1330"
@@ -55,9 +55,7 @@ builds:
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-rc.patch"
       - "ramdisk-common-post-init-script.patch"
-      - "ramdisk-common-network-hosts.patch"
       - "ramdisk-common-disable-disabled-ports.patch"
 
   42661:
@@ -78,7 +76,5 @@ builds:
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
-      - "ramdisk-42661-rc.patch"
       - "ramdisk-42661-post-init-script.patch"
-      - "ramdisk-common-network-hosts.patch"
       - "ramdisk-42661-disable-disabled-ports.patch"

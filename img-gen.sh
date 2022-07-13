@@ -20,24 +20,24 @@ rm -rf files/board/arpl/p3/lkms/*
 unzip /tmp/rp-lkms.zip -d files/board/arpl/p3/lkms
 
 # Get latest addons and install its
-echo "Getting latest Addons"
-mkdir -p /tmp/addons
-if [ -d ../arpl-addons ]; then
-  cp ../arpl-addons/*.addon /tmp/addons/
-else
-  TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-  curl -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip
-  rm -rf /tmp/addons
-  unzip /tmp/addons.zip -d /tmp/addons
-fi
-DEST_PATH="files/board/arpl/p3/addons"
-echo "Installing addons to ${DEST_PATH}"
-for PKG in `ls /tmp/addons/*.addon`; do
-  ADDON=`basename ${PKG} | sed 's|.addon||'`
-  mkdir -p "${DEST_PATH}/${ADDON}"
-  echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
-  tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
-done
+# echo "Getting latest Addons"
+# mkdir -p /tmp/addons
+# if [ -d ../arpl-addons ]; then
+#   cp ../arpl-addons/*.addon /tmp/addons/
+# else
+#   TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+#   curl -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip
+#   rm -rf /tmp/addons
+#   unzip /tmp/addons.zip -d /tmp/addons
+# fi
+# DEST_PATH="files/board/arpl/p3/addons"
+# echo "Installing addons to ${DEST_PATH}"
+# for PKG in `ls /tmp/addons/*.addon`; do
+#   ADDON=`basename ${PKG} | sed 's|.addon||'`
+#   mkdir -p "${DEST_PATH}/${ADDON}"
+#   echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
+#   tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
+# done
 
 # Copy files
 echo "Copying files"
