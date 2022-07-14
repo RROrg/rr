@@ -1,16 +1,4 @@
 id: "DS3615xs"
-modules-notneeded: &modules-notneeded
-  - ahci
-  - ata_piix
-  - i40e
-  - ixgbe
-  - igb
-  - e1000e
-  - dca
-  - etxhci_hcd
-  - xhci_hcd
-  - ehci-pci
-  - uhci_hcd
 synoinfo: &synoinfo
   esataportcfg: "0x0"
   usbportcfg: "0x8700"
@@ -42,7 +30,6 @@ builds:
     kver: "3.10.108"
     rd-compressed: false
     efi-bug: yes
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:
@@ -63,7 +50,6 @@ builds:
     kver: "3.10.108"
     rd-compressed: false
     efi-bug: yes
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:

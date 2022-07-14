@@ -1,14 +1,4 @@
 id: "DS918+"
-modules-notneeded: &modules-notneeded
-  - ahci
-  - ata_piix
-  - r8168
-  - r8169
-  - igb
-  - e1000e
-  - etxhci_hcd
-  - xhci_hcd
-  - uhci_hcd
 synoinfo: &synoinfo
   esataportcfg: "0x00"
   support_led_brightness_adjustment: ""
@@ -48,7 +38,6 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:
@@ -69,7 +58,6 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:

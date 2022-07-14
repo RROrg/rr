@@ -1,8 +1,9 @@
 
-ARPL_VERSION="0.2-alpha3"
+ARPL_VERSION="0.3-alpha1"
 
 # Define paths
 TMP_PATH="/tmp"
+UNTAR_PAT_PATH="${TMP_PATH}/pat"
 RAMDISK_PATH="${TMP_PATH}/ramdisk"
 LOG_FILE="${TMP_PATH}/log.txt"
 

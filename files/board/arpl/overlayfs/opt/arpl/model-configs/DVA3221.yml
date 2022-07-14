@@ -1,15 +1,4 @@
 id: "DVA3221"
-modules-notneeded: &modules-notneeded
-  - ahci
-  - ata_piix
-  - i40e
-  - ixgbe
-  - igb
-  - e1000e
-  - etxhci_hcd
-  - xhci_hcd
-  - ehci-pci
-  - uhci_hcd
 synoinfo: &synoinfo
   esataportcfg: "0x00"
   support_bde_internal_10g: "no"
@@ -48,7 +37,6 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:
@@ -69,7 +57,6 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:
