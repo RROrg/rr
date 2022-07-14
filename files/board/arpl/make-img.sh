@@ -25,7 +25,7 @@ echo -e "n\np\n\n\n+100M\nt\n\n0b\nn\np\n\n\n+100M\nn\np\n\n\n\nw" | fdisk "${IM
 sudo umount "${BINARIES_DIR}/p1" 2>/dev/null || true
 sudo umount "${BINARIES_DIR}/p3" 2>/dev/null || true
 # Force unsetup of loop device
-sudSetupo losetup -d "/dev/loop8" 2>/dev/null || true
+sudo losetup -d "/dev/loop8" 2>/dev/null || true
 # Setup the loop8 loop device
 sudo losetup -P "/dev/loop8" "${IMAGE_FILE}"
 # Format partitions
