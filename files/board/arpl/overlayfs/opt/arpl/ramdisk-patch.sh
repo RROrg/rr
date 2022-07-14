@@ -89,7 +89,7 @@ gzip -dc "${CACHE_PATH}/modules/${PLATFORM}-${KVER}.tgz" | tar xf - -C "${TMP_PA
 for F in `ls "${TMP_PATH}/modules/"*.ko`; do
   M=`basename ${F}`
   # Skip existent modules
-  [ -f "${RAMDISK_PATH}/lib/modules/${M}" ] || mv "${F}" "${RAMDISK_PATH}/lib/modules/${M}"
+  [ -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] || mv "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
 done
 # Clean
 rm -rf "${TMP_PATH}/modules"
@@ -108,8 +108,7 @@ cp "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko" "${RAMDISK_PATH}/usr/lib/modul
 DT="`readModelKey "${MODEL}" "dt"`"
 # Add system addon "dtbpatch" or "maxdisks"
 [ "${DT}" = "true" ] && ADDONS['dtbpatch']="" || ADDONS['maxdisks']=""
-ADDONS['misc']=""  # Add system addon "misc"
-ADDONS['acpid']=""  # Add system addon "acpid"
+# Indispensable eudev system addon
 ADDONS['eudev']=""
 
 echo -n "."

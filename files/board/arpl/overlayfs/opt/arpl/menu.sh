@@ -62,6 +62,7 @@ function modelMenu() {
   while read M; do
     M="`basename ${M}`"
     M="${M::-4}"
+    PLATFORM=`readModelKey "${M}" "platform"`
     # Check id model is compatible with CPU
     COMPATIBLE=1
     for F in `readModelArray "${M}" "flags"`; do
@@ -70,13 +71,10 @@ function modelMenu() {
         break
       fi
     done
-    [ ${COMPATIBLE} -eq 1 ] && ITEMS+="${M} "
+    [ ${COMPATIBLE} -eq 1 ] && ITEMS+="${M} ${PLATFORM} "
   done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
-  dialog --clear --no-items \
-    --backtitle "`backtitle`" \
-    --menu "Choose the model" 0 0 0 \
-    ${ITEMS} \
-    2>${TMP_PATH}/resp
+  dialog --backtitle "`backtitle`" --menu "Choose the model" 0 0 0 \
+    ${ITEMS} 2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
   resp=$(<${TMP_PATH}/resp)
   [ -z "${resp}" ] && return
@@ -91,8 +89,6 @@ function modelMenu() {
     # Delete old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
     DIRTY=1
-    # Remove addons
-    writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
   fi
 }
 
@@ -677,7 +673,7 @@ function updateMenu() {
     dialog --backtitle "`backtitle`" --menu "Choose a option" 0 0 0 \
       a "Update arpl" \
       d "Update addons" \
-      l "Update LKMs" \
+      l "Update Modules/LKMs" \
       e "Exit" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -758,7 +754,20 @@ function updateMenu() {
         ;;
 
       l)
-        dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
+        unset PLATFORMS
+        declare -A PLATFORMS
+        while read M; do
+          M="`basename ${M}`"
+          MODEL="${M::-4}"
+          PLATFORM=`readModelKey "${MODEL}" "platform"`
+          ITEMS="`readConfigEntriesArray "builds" "${MODEL_CONFIG_PATH}/${MODEL}.yml"`"
+          for BUILD in ${ITEMS}; do
+            KVER=`readModelKey "${MODEL}" "builds.${BUILD}.kver"`
+            PLATFORMS["${PLATFORM}-${KVER}"]=""
+          done
+        done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
+
+        dialog --backtitle "`backtitle`" --title "Update Modules/LKMs" --aspect 18 \
           --infobox "Checking last version" 0 0
         TAG=`curl --insecure -s https://api.github.com/repos/fbelavenuto/redpill-lkm/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
         if [ $? -ne 0 -o -z "${TAG}" ]; then
@@ -766,19 +775,29 @@ function updateMenu() {
             --msgbox "Error checking new version" 0 0
           continue
         fi
-        dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
+        dialog --backtitle "`backtitle`" --title "Update Modules/LKMs" --aspect 18 \
           --infobox "Downloading last version" 0 0
         curl --insecure -s -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip
         if [ $? -ne 0 ]; then
-          dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
-            --msgbox "Error downloading new version" 0 0
+          dialog --backtitle "`backtitle`" --title "Update Modules/LKMs" --aspect 18 \
+            --msgbox "Error downloading last version" 0 0
           continue
         fi
-        dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
+        for P in ${!PLATFORMS[@]}; do
+          curl --insecure -s -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/${P}.tgz" -o "/tmp/${P}.tgz"
+          if [ $? -ne 0 ]; then
+            dialog --backtitle "`backtitle`" --title "Update Modules/LKMs" --aspect 18 \
+              --msgbox "Error downloading ${P}.tgz" 0 0
+            continue
+          fi
+          rm "${MODULES_PATH}/${P}.tgz"
+          mv "/tmp/${P}.tgz" "${MODULES_PATH}/${P}.tgz"
+        done
+        dialog --backtitle "`backtitle`" --title "Update Modules/LKMs" --aspect 18 \
           --infobox "Extracting last version" 0 0
-        rm -rf /mnt/p3/lkms/*
-        unzip /tmp/rp-lkms.zip -d /mnt/p3/lkms >/dev/null 2>&1
-        dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
+        rm -rf "${LKM_PATH}/"*
+        unzip /tmp/rp-lkms.zip -d "${LKM_PATH}" >/dev/null 2>&1
+        dialog --backtitle "`backtitle`" --title "Update Modules/LKMs" --aspect 18 \
           --msgbox "LKMs updated with success!" 0 0
         ;;
 
