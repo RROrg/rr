@@ -14,17 +14,6 @@ fi
 # Get actual IP
 IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
 
-# Define classes for hw detection
-declare -A CLASSES
-CLASSES["0100"]="SCSI"
-CLASSES["0106"]="SATA"
-CLASSES["0101"]="IDE"
-CLASSES["0107"]="SAS"
-CLASSES["0200"]="Ethernet"
-CLASSES["0300"]="VGA"
-CLASSES["0c03"]="USB Controller"
-CLASSES["0c04"]="Fiber Channel"
-
 # Dirty flag
 DIRTY=0
 
@@ -165,63 +154,6 @@ function serialMenu() {
 }
 
 ###############################################################################
-# Detect hardware
-function detectHw() {
-  PLATFORM="`readModelKey "${MODEL}" "platform"`"
-  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
-  # Get modules not needed
-  unset NOTNEEDED
-  declare -A NOTNEEDED
-  while read M; do
-    NOTNEEDED[${M}]="1"
-  done < <(readModelArray "${MODEL}" "builds.${BUILD}.modules-notneeded")
-  unset DEVC DEVN
-  declare -A DEVC
-  declare -A DEVN
-  while read L; do
-    F=` sed -E 's/^([0-9a-z]{2}:[0-9a-z]{2}.[0-9a-z]{1})[^\[]*\[([0-9a-z]{4})\]: (.*)/\1|\2|\3/' <<<"${L}"`
-    PCI="`cut -d'|' -f1 <<<"${F}"`"
-    CLASS="`cut -d'|' -f2 <<<"${F}"`"
-    NAME="`cut -d'|' -f3 <<<"${F}"`"
-    MODULE="`lspci -ks "${PCI}" | awk '/Kernel driver in use/{print$5}'`"
-    [ -z "${MODULE}" ] && continue
-    # If is a virtio module, change id
-    if grep -q "virtio" <<<"$MODULE"; then
-      MODULE="virtio"
-    fi
-    CLASS=${CLASSES[${CLASS}]}                             # Get class name of module
-    [ -z "${CLASS}" ] && continue                          # If no class, skip
-    arrayExistItem "${MODULE}" "${!ADDONS[@]}" && continue # Check if module already added
-    [ -n "${NOTNEEDED[${MODULE}]}" ] && continue           # Check if module is not necessary
-    # Add module to list
-    DEVC[${MODULE}]="${CLASS}"
-    DEVN[${MODULE}]="${NAME}"
-  done < <(lspci -nn)
-  if [ ${#DEVC[@]} -eq 0 ]; then
-    dialog --backtitle "`backtitle`" --aspect 18 \
-      --msgbox "No device detected or already added!" 0 0
-    return
-  fi
-  for MODULE in ${!DEVC[@]}; do
-    CLASS="${DEVC[${MODULE}]}"
-    NAME="${DEVN[${MODULE}]}"
-    TEXT="Found a ${NAME}\nClass ${CLASS}\nModule ${MODULE}\nAccept?"
-    checkAddonExist "${MODULE}" "${PLATFORM}" "${KVER}" || TEXT+="\n\n\Z1PS: Addon for this module not found\Zn"
-    dialog --backtitle "`backtitle`" --title "Found Hardware" \
-      --colors --yesno "${TEXT}" 12 70
-    [ $? -ne 0 ] && continue
-    dialog --backtitle "`backtitle`" --title "params" \
-      --inputbox "Type a opcional params to module" 0 0 \
-      2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && continue
-    VALUE="`<${TMP_PATH}/resp`"
-    ADDONS["${MODULE}"]="${VALUE}"
-    writeConfigKey "addons.${MODULE}" "${VALUE}" "${USER_CONFIG_FILE}"
-    DIRTY=1
-  done
-}
-
-###############################################################################
 # Manage addons/drivers
 function addonMenu() {
   # Read 'platform' and kernel version to check if addon exists
@@ -233,25 +165,19 @@ function addonMenu() {
   while IFS="=" read KEY VALUE; do
     [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
   done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
-  NEXT="h"
+  NEXT="a"
   # Loop menu
   while true; do
     dialog --backtitle "`backtitle`" --default-item ${NEXT} \
       --menu "Choose a option" 0 0 0 \
-      h "Detect hardware" \
       a "Add an addon" \
       d "Delete addon(s)" \
       s "Show user addons" \
       m "Show all available addons" \
-      o "Download an addon" \
       e "Exit" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "`<${TMP_PATH}/resp`" in
-      h)
-        detectHw
-        NEXT='e'
-        ;;
       a) NEXT='a'
         rm "${TMP_PATH}/menu"
         while read ADDON DESC; do
@@ -316,32 +242,6 @@ function addonMenu() {
         done < <(availableAddons "${PLATFORM}" "${KVER}")
         dialog --backtitle "`backtitle`" --title "Available addons" \
           --colors --msgbox "${MSG}" 0 0
-        ;;
-      o)
-        TEXT="please enter the complete URL to download.\n"
-        TEXT+="\Zb(Official addons location: https://github.com/fbelavenuto/arpl-addons/releases)\Zn\n"
-        TEXT+="Ex: https://github.com/fbelavenuto/arpl-addons/releases/download/v0.2/9p.addon"
-        dialog --backtitle "`backtitle`" --aspect 18 --colors --inputbox "${TEXT}" 0 0 \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        URL="`<"${TMP_PATH}/resp"`"
-        [ -z "${URL}" ] && continue
-        clear
-        echo "Downloading ${URL}"
-        curl --insecure -L "${URL}" -o "${TMP_PATH}/addon.tgz" --progress-bar
-        if [ $? -ne 0 ]; then
-          dialog --backtitle "`backtitle`" --title "Error downloading" --aspect 18 \
-            --msgbox "Check internet or cache disk space" 0 0
-          return 1
-        fi
-        ADDON="`untarAddon "${TMP_PATH}/addon.tgz"`"
-        if [ -n "${ADDON}" ]; then
-          dialog --backtitle "`backtitle`" --title "Success" --aspect 18 \
-            --msgbox "Addon '${ADDON}' added to loader" 0 0
-        else
-          dialog --backtitle "`backtitle`" --title "Invalid addon" --aspect 18 \
-            --msgbox "File format not recognized!" 0 0
-        fi
         ;;
       e) return ;;
     esac

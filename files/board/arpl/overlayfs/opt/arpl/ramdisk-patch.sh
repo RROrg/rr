@@ -81,11 +81,7 @@ done
 sed -e "/@@@CONFIG-GENERATED@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
 rm "${TMP_PATH}/rp.txt"
 
-# Copying modified kmod
 echo -n "."
-cp /opt/arpl/kmod "${RAMDISK_PATH}/usr/sbin"
-ln -sf kmod       "${RAMDISK_PATH}/usr/sbin/modprobe"
-
 # Extract modules to ramdisk
 rm -rf "${TMP_PATH}/modules"
 mkdir -p "${TMP_PATH}/modules"
@@ -98,11 +94,14 @@ done
 # Clean
 rm -rf "${TMP_PATH}/modules"
 
-echo -n "."
-# Copying LKM to /usr/lib/modules
-cp "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko" "${RAMDISK_PATH}/usr/lib/modules/elevator-iosched.ko"
 # Build modules dependencies
 /opt/arpl/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
+
+echo -n "."
+# Copying fake modprobe
+cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
+# Copying LKM to /usr/lib/modules
+cp "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko" "${RAMDISK_PATH}/usr/lib/modules/rp.ko"
 
 # Addons
 # Check if model needs Device-tree dynamic patch
@@ -111,6 +110,7 @@ DT="`readModelKey "${MODEL}" "dt"`"
 [ "${DT}" = "true" ] && ADDONS['dtbpatch']="" || ADDONS['maxdisks']=""
 ADDONS['misc']=""  # Add system addon "misc"
 ADDONS['acpid']=""  # Add system addon "acpid"
+ADDONS['eudev']=""
 
 mkdir -p "${RAMDISK_PATH}/addons"
 echo -n "."

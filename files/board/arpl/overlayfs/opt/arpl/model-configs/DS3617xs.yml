@@ -1,16 +1,4 @@
 id: "DS3617xs"
-modules-notneeded: &modules-notneeded
-  - ahci
-  - ata_piix
-  - i40e
-  - ixgbe
-  - igb
-  - e1000e
-  - dca
-  - xhci_pci
-  - xhci_hcd
-  - uhci_hcd
-  - mv14xx
 synoinfo: &synoinfo
   esataportcfg: "0x00"
   usbportcfg: "0x8700"
@@ -46,7 +34,6 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:
@@ -67,7 +54,6 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:

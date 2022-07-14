@@ -1,19 +1,4 @@
 id: "DVA1622"
-modules-notneeded: &modules-notneeded
-  - ahci
-  - ata_piix
-  - r8168
-  - r8169
-  - etxhci_hcd
-  - xhci_hcd
-  - uhci_hcd
-  - i915
-  - drm
-  - fb
-  - fbdev
-  - video
-  - backlight
-  - button
 synoinfo: &synoinfo
   buzzeroffen: "0xffff"
   rss_server: "http://example.com/null.xml"
@@ -51,7 +36,6 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:
