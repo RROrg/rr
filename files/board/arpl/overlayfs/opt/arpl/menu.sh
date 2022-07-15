@@ -148,7 +148,7 @@ function serialMenu() {
 }
 
 ###############################################################################
-# Manage addons/drivers
+# Manage addons
 function addonMenu() {
   # Read 'platform' and kernel version to check if addon exists
   PLATFORM="`readModelKey "${MODEL}" "platform"`"
@@ -347,6 +347,8 @@ function cmdlineMenu() {
 
 ###############################################################################
 function synoinfoMenu() {
+  # Get dt flag from model
+  DT="`readModelKey "${MODEL}" "dt"`"
   # Read synoinfo from user config
   unset SYNOINFO
   declare -A SYNOINFO
@@ -356,6 +358,9 @@ function synoinfoMenu() {
 
   echo "a \"Add/edit an synoinfo item\""   > "${TMP_PATH}/menu"
   echo "d \"Delete synoinfo item(s)\""    >> "${TMP_PATH}/menu"
+  if [ "${DT}" != "true" ]; then
+    echo "x \"Set maxdisks manually\""    >> "${TMP_PATH}/menu"
+  fi
   echo "s \"Show user synoinfo\""         >> "${TMP_PATH}/menu"
   echo "m \"Show model/build synoinfo\""  >> "${TMP_PATH}/menu"
   echo "e \"Exit\""                       >> "${TMP_PATH}/menu"
@@ -401,6 +406,15 @@ function synoinfoMenu() {
           deleteConfigKey "synoinfo.${I}" "${USER_CONFIG_FILE}"
         done
         DIRTY=1
+        ;;
+      x)
+        MAXDISKS=`readConfigKey "maxdisks" "${USER_CONFIG_FILE}"`
+        dialog --backtitle "`backtitle`" --title "Maxdisks" \
+          --inputbox "Type a value for maxdisks" 0 0 "${MAXDISKS}" \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        VALUE="`<"${TMP_PATH}/resp"`"
+        [ "${VALUE}" != "${MAXDISKS}" ] && writeConfigKey "maxdisks" "${VALUE}" "${USER_CONFIG_FILE}"
         ;;
       s)
         ITEMS=""
@@ -817,7 +831,7 @@ while true; do
     echo "n \"Choose a Build Number\""                >> "${TMP_PATH}/menu"
     echo "s \"Choose a serial number\""               >> "${TMP_PATH}/menu"
     if [ -n "${BUILD}" ]; then
-      echo "a \"Addons/drivers\""                     >> "${TMP_PATH}/menu"
+      echo "a \"Addons\""                             >> "${TMP_PATH}/menu"
       echo "x \"Cmdline menu\""                       >> "${TMP_PATH}/menu"
       echo "i \"Synoinfo menu\""                      >> "${TMP_PATH}/menu"
       echo "l \"Switch LKM version: \Z4${LKM}\Zn\""   >> "${TMP_PATH}/menu"

@@ -104,10 +104,11 @@ cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
 cp "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko" "${RAMDISK_PATH}/usr/lib/modules/rp.ko"
 
 # Addons
+MAXDISKS=`readConfigKey "maxdisks" "${USER_CONFIG_FILE}"`
 # Check if model needs Device-tree dynamic patch
 DT="`readModelKey "${MODEL}" "dt"`"
 # Add system addon "dtbpatch" or "maxdisks"
-[ "${DT}" = "true" ] && ADDONS['dtbpatch']="" || ADDONS['maxdisks']=""
+[ "${DT}" = "true" ] && ADDONS['dtbpatch']="" || ADDONS['maxdisks']="${MAXDISKS}"
 # Indispensable eudev system addon
 ADDONS['eudev']=""
 
