@@ -5,7 +5,7 @@
  echo "Insert basic USB modules..."
  SYNOLoadModules $USB_MODULES
 +SYNOLoadModules "usb-storage"
-+/addons/addons.sh early
++/addons/addons.sh early; /addons/addons.sh patches
  
  # insert Etron USB3.0 drivers
  
