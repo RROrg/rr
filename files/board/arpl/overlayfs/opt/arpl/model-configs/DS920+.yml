@@ -1,12 +1,4 @@
 id: "DS920+"
-modules-notneeded: &modules-notneeded
-  - ahci
-  - ata_piix
-  - r8168
-  - r8169
-  - etxhci_hcd
-  - xhci_hcd
-  - uhci_hcd
 synoinfo: &synoinfo
   rss_server: "http://example.com/null.xml"
   rss_server_ssl: "https://example.com/null.xml"
@@ -42,7 +34,6 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:
@@ -55,16 +46,13 @@ builds:
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-rc.patch"
       - "ramdisk-common-post-init-script.patch"
-      - "ramdisk-common-network-hosts.patch"
 
   42661:
     ver: "7.1.0"
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:
@@ -77,6 +65,4 @@ builds:
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
-      - "ramdisk-42661-rc.patch"
       - "ramdisk-42661-post-init-script.patch"
-      - "ramdisk-common-network-hosts.patch"

@@ -9,7 +9,8 @@ do
   if [ "$arg" = "elevator-iosched" ]; then
     insmod /usr/lib/modules/rp.ko
     rm /usr/lib/modules/rp.ko
-    rm /sbin/modprobe
+    rm /usr/sbin/modprobe
+    ln -s /usr/bin/kmod /usr/sbin/modprobe
     exit 0
   fi
 done

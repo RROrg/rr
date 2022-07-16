@@ -14,17 +14,6 @@ fi
 # Get actual IP
 IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
 
-# Define classes for hw detection
-declare -A CLASSES
-CLASSES["0100"]="SCSI"
-CLASSES["0106"]="SATA"
-CLASSES["0101"]="IDE"
-CLASSES["0107"]="SAS"
-CLASSES["0200"]="Ethernet"
-CLASSES["0300"]="VGA"
-CLASSES["0c03"]="USB Controller"
-CLASSES["0c04"]="Fiber Channel"
-
 # Dirty flag
 DIRTY=0
 
@@ -73,6 +62,7 @@ function modelMenu() {
   while read M; do
     M="`basename ${M}`"
     M="${M::-4}"
+    PLATFORM=`readModelKey "${M}" "platform"`
     # Check id model is compatible with CPU
     COMPATIBLE=1
     for F in `readModelArray "${M}" "flags"`; do
@@ -81,13 +71,10 @@ function modelMenu() {
         break
       fi
     done
-    [ ${COMPATIBLE} -eq 1 ] && ITEMS+="${M} "
+    [ ${COMPATIBLE} -eq 1 ] && ITEMS+="${M} ${PLATFORM} "
   done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
-  dialog --clear --no-items \
-    --backtitle "`backtitle`" \
-    --menu "Choose the model" 0 0 0 \
-    ${ITEMS} \
-    2>${TMP_PATH}/resp
+  dialog --backtitle "`backtitle`" --menu "Choose the model" 0 0 0 \
+    ${ITEMS} 2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
   resp=$(<${TMP_PATH}/resp)
   [ -z "${resp}" ] && return
@@ -100,11 +87,8 @@ function modelMenu() {
     SN=""
     writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
     # Delete old files
-    rm -f "${MOD_ZIMAGE_FILE}"
-    rm -f "${MOD_RDGZ_FILE}"
+    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
     DIRTY=1
-    # Remove addons
-    writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
   fi
 }
 
@@ -122,8 +106,7 @@ function buildMenu() {
     writeConfigKey "build" "${BUILD}" "${USER_CONFIG_FILE}"
     DIRTY=1
     # Remove old files
-    rm -f "${MOD_ZIMAGE_FILE}"
-    rm -f "${MOD_RDGZ_FILE}"
+    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
   fi
 }
 
@@ -165,64 +148,7 @@ function serialMenu() {
 }
 
 ###############################################################################
-# Detect hardware
-function detectHw() {
-  PLATFORM="`readModelKey "${MODEL}" "platform"`"
-  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
-  # Get modules not needed
-  unset NOTNEEDED
-  declare -A NOTNEEDED
-  while read M; do
-    NOTNEEDED[${M}]="1"
-  done < <(readModelArray "${MODEL}" "builds.${BUILD}.modules-notneeded")
-  unset DEVC DEVN
-  declare -A DEVC
-  declare -A DEVN
-  while read L; do
-    F=` sed -E 's/^([0-9a-z]{2}:[0-9a-z]{2}.[0-9a-z]{1})[^\[]*\[([0-9a-z]{4})\]: (.*)/\1|\2|\3/' <<<"${L}"`
-    PCI="`cut -d'|' -f1 <<<"${F}"`"
-    CLASS="`cut -d'|' -f2 <<<"${F}"`"
-    NAME="`cut -d'|' -f3 <<<"${F}"`"
-    MODULE="`lspci -ks "${PCI}" | awk '/Kernel driver in use/{print$5}'`"
-    [ -z "${MODULE}" ] && continue
-    # If is a virtio module, change id
-    if grep -q "virtio" <<<"$MODULE"; then
-      MODULE="virtio"
-    fi
-    CLASS=${CLASSES[${CLASS}]}                             # Get class name of module
-    [ -z "${CLASS}" ] && continue                          # If no class, skip
-    arrayExistItem "${MODULE}" "${!ADDONS[@]}" && continue # Check if module already added
-    [ -n "${NOTNEEDED[${MODULE}]}" ] && continue           # Check if module is not necessary
-    # Add module to list
-    DEVC[${MODULE}]="${CLASS}"
-    DEVN[${MODULE}]="${NAME}"
-  done < <(lspci -nn)
-  if [ ${#DEVC[@]} -eq 0 ]; then
-    dialog --backtitle "`backtitle`" --aspect 18 \
-      --msgbox "No device detected or already added!" 0 0
-    return
-  fi
-  for MODULE in ${!DEVC[@]}; do
-    CLASS="${DEVC[${MODULE}]}"
-    NAME="${DEVN[${MODULE}]}"
-    TEXT="Found a ${NAME}\nClass ${CLASS}\nModule ${MODULE}\nAccept?"
-    checkAddonExist "${MODULE}" "${PLATFORM}" "${KVER}" || TEXT+="\n\n\Z1PS: Addon for this module not found\Zn"
-    dialog --backtitle "`backtitle`" --title "Found Hardware" \
-      --colors --yesno "${TEXT}" 12 70
-    [ $? -ne 0 ] && continue
-    dialog --backtitle "`backtitle`" --title "params" \
-      --inputbox "Type a opcional params to module" 0 0 \
-      2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && continue
-    VALUE="`<${TMP_PATH}/resp`"
-    ADDONS["${MODULE}"]="${VALUE}"
-    writeConfigKey "addons.${MODULE}" "${VALUE}" "${USER_CONFIG_FILE}"
-    DIRTY=1
-  done
-}
-
-###############################################################################
-# Manage addons/drivers
+# Manage addons
 function addonMenu() {
   # Read 'platform' and kernel version to check if addon exists
   PLATFORM="`readModelKey "${MODEL}" "platform"`"
@@ -233,12 +159,11 @@ function addonMenu() {
   while IFS="=" read KEY VALUE; do
     [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
   done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
-  NEXT="h"
+  NEXT="a"
   # Loop menu
   while true; do
     dialog --backtitle "`backtitle`" --default-item ${NEXT} \
       --menu "Choose a option" 0 0 0 \
-      h "Detect hardware" \
       a "Add an addon" \
       d "Delete addon(s)" \
       s "Show user addons" \
@@ -247,10 +172,6 @@ function addonMenu() {
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "`<${TMP_PATH}/resp`" in
-      h)
-        detectHw
-        NEXT='e'
-        ;;
       a) NEXT='a'
         rm "${TMP_PATH}/menu"
         while read ADDON DESC; do
@@ -426,6 +347,8 @@ function cmdlineMenu() {
 
 ###############################################################################
 function synoinfoMenu() {
+  # Get dt flag from model
+  DT="`readModelKey "${MODEL}" "dt"`"
   # Read synoinfo from user config
   unset SYNOINFO
   declare -A SYNOINFO
@@ -435,6 +358,9 @@ function synoinfoMenu() {
 
   echo "a \"Add/edit an synoinfo item\""   > "${TMP_PATH}/menu"
   echo "d \"Delete synoinfo item(s)\""    >> "${TMP_PATH}/menu"
+  if [ "${DT}" != "true" ]; then
+    echo "x \"Set maxdisks manually\""    >> "${TMP_PATH}/menu"
+  fi
   echo "s \"Show user synoinfo\""         >> "${TMP_PATH}/menu"
   echo "m \"Show model/build synoinfo\""  >> "${TMP_PATH}/menu"
   echo "e \"Exit\""                       >> "${TMP_PATH}/menu"
@@ -481,6 +407,15 @@ function synoinfoMenu() {
         done
         DIRTY=1
         ;;
+      x)
+        MAXDISKS=`readConfigKey "maxdisks" "${USER_CONFIG_FILE}"`
+        dialog --backtitle "`backtitle`" --title "Maxdisks" \
+          --inputbox "Type a value for maxdisks" 0 0 "${MAXDISKS}" \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        VALUE="`<"${TMP_PATH}/resp"`"
+        [ "${VALUE}" != "${MAXDISKS}" ] && writeConfigKey "maxdisks" "${VALUE}" "${USER_CONFIG_FILE}"
+        ;;
       s)
         ITEMS=""
         for KEY in ${!SYNOINFO[@]}; do
@@ -503,25 +438,12 @@ function synoinfoMenu() {
 }
 
 ###############################################################################
-# Where the magic happens :D
-function make() {
-  clear
-  PLATFORM="`readModelKey "${MODEL}" "platform"`"
-  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
+# Extract linux and ramdisk files from the DSM .pat
+function extractDsmFiles() {
   PAT_URL="`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`"
   PAT_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.hash"`"
   RAMDISK_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.ramdisk-hash"`"
   ZIMAGE_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.zimage-hash"`"
-
-  # Check if all addon exists
-  while IFS="=" read ADDON PARAM; do
-    [ -z "${ADDON}" ] && continue
-    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
-      dialog --backtitle "`backtitle`" --title "Error" --aspect 18 \
-        --msgbox "Addon ${ADDON} not found!" 0 0
-      return 1
-    fi
-  done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
 
   if [ ${RAMCACHE} -eq 0 ]; then
     OUT_PATH="${CACHE_PATH}/dl"
@@ -532,7 +454,6 @@ function make() {
   fi
   mkdir -p "${OUT_PATH}"
 
-  UNTAR_PAT_PATH="${TMP_PATH}/pat"
   PAT_FILE="${MODEL}-${BUILD}.pat"
   PAT_PATH="${OUT_PATH}/${PAT_FILE}"
   EXTRACTOR_PATH="${CACHE_PATH}/extractor"
@@ -663,6 +584,24 @@ function make() {
   cp "${UNTAR_PAT_PATH}/zImage"          "${ORI_ZIMAGE_FILE}"
   cp "${UNTAR_PAT_PATH}/rd.gz"           "${ORI_RDGZ_FILE}"
   echo "OK"
+}
+
+function make() {
+  clear
+  PLATFORM="`readModelKey "${MODEL}" "platform"`"
+  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
+
+  # Check if all addon exists
+  while IFS="=" read ADDON PARAM; do
+    [ -z "${ADDON}" ] && continue
+    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
+      dialog --backtitle "`backtitle`" --title "Error" --aspect 18 \
+        --msgbox "Addon ${ADDON} not found!" 0 0
+      return 1
+    fi
+  done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
+
+  [ ! -f "${ORI_ZIMAGE_FILE}" -o ! -f "${ORI_RDGZ_FILE}" ] && extractDsmFiles
 
   /opt/arpl/zimage-patch.sh
   if [ $? -ne 0 ]; then
@@ -749,6 +688,7 @@ function updateMenu() {
       a "Update arpl" \
       d "Update addons" \
       l "Update LKMs" \
+      m "Update modules" \
       e "Exit" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -842,17 +782,52 @@ function updateMenu() {
         curl --insecure -s -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip
         if [ $? -ne 0 ]; then
           dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
-            --msgbox "Error downloading new version" 0 0
+            --msgbox "Error downloading last version" 0 0
           continue
         fi
         dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
           --infobox "Extracting last version" 0 0
-        rm -rf /mnt/p3/lkms/*
-        unzip /tmp/rp-lkms.zip -d /mnt/p3/lkms >/dev/null 2>&1
+        rm -rf "${LKM_PATH}/"*
+        unzip /tmp/rp-lkms.zip -d "${LKM_PATH}" >/dev/null 2>&1
         dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
           --msgbox "LKMs updated with success!" 0 0
         ;;
-
+      m)
+        unset PLATFORMS
+        declare -A PLATFORMS
+        while read M; do
+          M="`basename ${M}`"
+          M="${M::-4}"
+          P=`readModelKey "${M}" "platform"`
+          ITEMS="`readConfigEntriesArray "builds" "${MODEL_CONFIG_PATH}/${M}.yml"`"
+          for B in ${ITEMS}; do
+            KVER=`readModelKey "${M}" "builds.${B}.kver"`
+            PLATFORMS["${P}-${KVER}"]=""
+          done
+        done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
+        dialog --backtitle "`backtitle`" --title "Update Modules" --aspect 18 \
+          --infobox "Checking last version" 0 0
+        TAG=`curl --insecure -s https://api.github.com/repos/fbelavenuto/arpl-modules/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+        if [ $? -ne 0 -o -z "${TAG}" ]; then
+          dialog --backtitle "`backtitle`" --title "Update Modules" --aspect 18 \
+            --msgbox "Error checking new version" 0 0
+          continue
+        fi
+        for P in ${!PLATFORMS[@]}; do
+          dialog --backtitle "`backtitle`" --title "Update Modules" --aspect 18 \
+            --infobox "Downloading ${P} modules" 0 0
+          curl --insecure -s -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/${P}.tgz" -o "/tmp/${P}.tgz"
+          if [ $? -ne 0 ]; then
+            dialog --backtitle "`backtitle`" --title "Update Modules" --aspect 18 \
+              --msgbox "Error downloading ${P}.tgz" 0 0
+            continue
+          fi
+          rm "${MODULES_PATH}/${P}.tgz"
+          mv "/tmp/${P}.tgz" "${MODULES_PATH}/${P}.tgz"
+        done
+        dialog --backtitle "`backtitle`" --title "Update Modules" --aspect 18 \
+          --msgbox "Modules updated with success!" 0 0
+        ;;
       e) return ;;
     esac
   done
@@ -869,7 +844,7 @@ while true; do
     echo "n \"Choose a Build Number\""                >> "${TMP_PATH}/menu"
     echo "s \"Choose a serial number\""               >> "${TMP_PATH}/menu"
     if [ -n "${BUILD}" ]; then
-      echo "a \"Addons/drivers\""                     >> "${TMP_PATH}/menu"
+      echo "a \"Addons\""                             >> "${TMP_PATH}/menu"
       echo "x \"Cmdline menu\""                       >> "${TMP_PATH}/menu"
       echo "i \"Synoinfo menu\""                      >> "${TMP_PATH}/menu"
       echo "l \"Switch LKM version: \Z4${LKM}\Zn\""   >> "${TMP_PATH}/menu"

@@ -21,6 +21,7 @@ unzip /tmp/rp-lkms.zip -d files/board/arpl/p3/lkms
 
 # Get latest addons and install its
 echo "Getting latest Addons"
+rm -Rf /tmp/addons
 mkdir -p /tmp/addons
 if [ -d ../arpl-addons ]; then
   cp ../arpl-addons/*.addon /tmp/addons/
@@ -38,6 +39,24 @@ for PKG in `ls /tmp/addons/*.addon`; do
   echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
   tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
 done
+
+# Get latest modules
+echo "Getting latest modules"
+MODULES_DIR="${PWD}/files/board/arpl/p3/modules"
+if [ -d ../arpl-addons ]; then
+  cd ../arpl-modules
+  for D in `ls -d *-*`; do
+    echo "${D}"
+    (cd ${D} && tar caf "${MODULES_DIR}/${D}.tgz" *.ko)
+  done
+  cd -
+else
+  TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-modules/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+  while read PLATFORM KVER; do
+    FILE="${PLATFORM}-${KVER}"
+    curl -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/${FILE}.tgz" -o "${MODULES_DIR}/${FILE}.tgz"
+  done < PLATFORMS
+fi
 
 # Copy files
 echo "Copying files"

@@ -1,17 +1,4 @@
 id: "DS2422+"
-modules-notneeded: &modules-notneeded
-  - ahci
-  - ata_piix
-  - amd_xgbe
-  - marvell10g
-  - i40e
-  - r8168
-  - ixgbe
-  - etxhci_hcd
-  - xhci_hcd
-  - ehci-pci
-  - uhci_hcd
-  - mv14xx
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
@@ -47,7 +34,6 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
-    modules-notneeded: *modules-notneeded
     cmdline:
       <<: *cmdline
     synoinfo:
@@ -60,7 +46,4 @@ builds:
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-rc.patch"
       - "ramdisk-common-post-init-script.patch"
-      - "ramdisk-common-network-hosts.patch"
-      - "ramdisk-common-disable-disabled-ports.patch"

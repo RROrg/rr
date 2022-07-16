@@ -81,25 +81,39 @@ done
 sed -e "/@@@CONFIG-GENERATED@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
 rm "${TMP_PATH}/rp.txt"
 
-# Copying LKM to /usr/lib/modules/rp.ko
 echo -n "."
+# Extract modules to ramdisk
+rm -rf "${TMP_PATH}/modules"
+mkdir -p "${TMP_PATH}/modules"
+gzip -dc "${CACHE_PATH}/modules/${PLATFORM}-${KVER}.tgz" | tar xf - -C "${TMP_PATH}/modules"
+for F in `ls "${TMP_PATH}/modules/"*.ko`; do
+  M=`basename ${F}`
+  # Skip existent modules
+  [ -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] || mv "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
+done
+# Clean
+rm -rf "${TMP_PATH}/modules"
+
+# Build modules dependencies
+/opt/arpl/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
+
+echo -n "."
+# Copying fake modprobe
+cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
+# Copying LKM to /usr/lib/modules
 cp "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko" "${RAMDISK_PATH}/usr/lib/modules/rp.ko"
 
-# Copying fake modprobe
-echo -n "."
-cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
-
 # Addons
+MAXDISKS=`readConfigKey "maxdisks" "${USER_CONFIG_FILE}"`
 # Check if model needs Device-tree dynamic patch
 DT="`readModelKey "${MODEL}" "dt"`"
 # Add system addon "dtbpatch" or "maxdisks"
-[ "${DT}" = "true" ] && ADDONS['dtbpatch']="" || ADDONS['maxdisks']=""
-ADDONS['misc']=""  # Add system addon "misc"
-ADDONS['acpid']=""  # Add system addon "acpid"
+[ "${DT}" = "true" ] && ADDONS['dtbpatch']="" || ADDONS['maxdisks']="${MAXDISKS}"
+# Indispensable eudev system addon
+ADDONS['eudev']=""
 
-mkdir -p "${RAMDISK_PATH}/addons"
 echo -n "."
-#/proc/sys/kernel/syno_install_flag
+mkdir -p "${RAMDISK_PATH}/addons"
 echo "#!/bin/sh" > "${RAMDISK_PATH}/addons/addons.sh"
 echo 'export INSMOD="/sbin/insmod"' >> "${RAMDISK_PATH}/addons/addons.sh"
 echo 'echo "addons.sh called with params ${@}"' >> "${RAMDISK_PATH}/addons/addons.sh"

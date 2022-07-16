@@ -15,11 +15,11 @@ BOARD_PATH="${CONFIG_DIR}/board/arpl"
 
 echo "Creating image file"
 # Create image zeroed
-dd if="/dev/zero" of="${IMAGE_FILE}" bs=1M count=250 conv=sync 2>/dev/null
+dd if="/dev/zero" of="${IMAGE_FILE}" bs=1M count=300 conv=sync 2>/dev/null
 # Copy grub stage1 to image
 dd if="${BOARD_PATH}/grub.bin" of="${IMAGE_FILE}" conv=notrunc,sync 2>/dev/null
 # Create partitions on image
-echo -e "n\np\n\n\n+100M\na\nt\n\n0b\nn\np\n\n\n+100M\nn\np\n\n\n\nw" | fdisk "${IMAGE_FILE}" >/dev/null
+echo -e "n\np\n\n\n+150M\na\nt\n\n0b\nn\np\n\n\n+50M\nn\np\n\n\n\nw" | fdisk "${IMAGE_FILE}" >/dev/null
 
 # Force umount, ignore errors
 sudo umount "${BINARIES_DIR}/p1" 2>/dev/null || true

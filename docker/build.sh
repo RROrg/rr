@@ -29,14 +29,14 @@ for PLATFORM in ${!PLATFORMS[@]}; do
   else
     echo "OK"
   fi
-  echo -n "Checking cache/linux-${KVER}.tar.xz... "
-  if [ ! -f "cache/linux-${KVER}.tar.xz" ]; then
-    URL="https://cdn.kernel.org/pub/linux/kernel/v${KVER:0:1}.x/linux-${KVER}.tar.xz"
-    echo "Downloading ${URL}"
-    curl -L "${URL}" -o "cache/linux-${KVER}.tar.xz"
-  else
-    echo "OK"
-  fi
+  # echo -n "Checking cache/linux-${KVER}.tar.xz... "
+  # if [ ! -f "cache/linux-${KVER}.tar.xz" ]; then
+  #   URL="https://cdn.kernel.org/pub/linux/kernel/v${KVER:0:1}.x/linux-${KVER}.tar.xz"
+  #   echo "Downloading ${URL}"
+  #   curl -L "${URL}" -o "cache/linux-${KVER}.tar.xz"
+  # else
+  #   echo "OK"
+  # fi
 done
 
 # Generate Dockerfile

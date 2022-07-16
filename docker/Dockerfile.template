@@ -10,7 +10,7 @@ RUN for V in ${PLATFORMS}; do \
         echo "Extracting ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz" && \
         mkdir "/opt/${PLATFORM}" && \
         tar -xaf "/cache/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz" -C "/opt/${PLATFORM}" --strip-components=10 \
-          "usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-7.0/build" && \
+          "usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${TOOLKIT_VER}/build" && \
         echo -e "${PLATFORM}\t${KVER}" >> /opt/platforms && \
         if [ ! -d "/opt/linux-${KVER}" ]; then \
           mkdir "/opt/linux-${KVER}" && \
@@ -27,7 +27,7 @@ ENV SHELL=/bin/bash \
 
 RUN apt update --yes && \
     apt install --yes --no-install-recommends --no-install-suggests \
-      nano curl bc kmod \
+      ca-certificates nano curl bc kmod git \
       build-essential make ncurses-dev libssl-dev autogen automake pkg-config libtool xsltproc gperf && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
