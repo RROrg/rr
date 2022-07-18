@@ -9,12 +9,13 @@ loaderIsConfigured || die "Loader is not configured!"
 
 # Print text centralized, if variable ${COLUMNS} is defined
 clear
+TITLE="Welcome to Automated Redpill Loader v${ARPL_VERSION}"
+printf "\033[1;44m%*s\n" $COLUMNS ""
+printf "\033[1;44m%*s\033[A\n" $COLUMNS ""
+printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE}+$COLUMNS)/2)) "${TITLE}"
+printf "\033[1;44m%*s\033[0m\n" $COLUMNS ""
 TITLE="BOOTING..."
-if [ -z "${COLUMNS}" ]; then
-  echo -e "\033[1;33m${TITLE}\033[0m"
-else
-  printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE}+${COLUMNS})/2)) "${TITLE}"
-fi
+printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE}+${COLUMNS})/2)) "${TITLE}"
 
 # Check if DSM zImage changed, patch it if necessary
 ZIMAGE_HASH="`readConfigKey "zimage-hash" "${USER_CONFIG_FILE}"`"

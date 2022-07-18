@@ -20,3 +20,9 @@ tasks:
     dir: addons
     cmds:
       - ./compile-addons.sh {{.CLI_ARGS}}
+
+  compile-kpatch:
+    dir: kpatch
+    cmds:
+      - make clean all
+      - mv kpatch ../files/board/arpl/overlayfs/opt/arpl/
