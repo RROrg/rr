@@ -180,6 +180,7 @@ function addonMenu() {
         done < <(availableAddons "${PLATFORM}" "${KVER}")
         if [ ! -f "${TMP_PATH}/menu" ] ; then 
           dialog --backtitle "`backtitle`" --msgbox "No available addons to add" 0 0 
+          NEXT="e"
           continue
         fi
         dialog --backtitle "`backtitle`" --menu "Select an addon" 0 0 0 \
@@ -249,12 +250,13 @@ function cmdlineMenu() {
   while IFS="=" read KEY VALUE; do
     [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
   done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
-  echo "a \"Add/edit an cmdline item\""                        > "${TMP_PATH}/menu"
-  echo "d \"Delete cmdline item(s)\""                          >> "${TMP_PATH}/menu"
-  echo "s \"Show user cmdline\""                               >> "${TMP_PATH}/menu"
-  echo "m \"Show model/build cmdline\""                        >> "${TMP_PATH}/menu"
-  echo "u \"Show SATA(s) # ports and drives\""                 >> "${TMP_PATH}/menu"
-  echo "e \"Exit\""                                            >> "${TMP_PATH}/menu"
+  echo "a \"Add/edit an cmdline item\""                         > "${TMP_PATH}/menu"
+  echo "d \"Delete cmdline item(s)\""                           >> "${TMP_PATH}/menu"
+  echo "c \"Define a custom MAC\""                              >> "${TMP_PATH}/menu"
+  echo "s \"Show user cmdline\""                                >> "${TMP_PATH}/menu"
+  echo "m \"Show model/build cmdline\""                         >> "${TMP_PATH}/menu"
+  echo "u \"Show SATA(s) # ports and drives\""                  >> "${TMP_PATH}/menu"
+  echo "e \"Exit\""                                             >> "${TMP_PATH}/menu"
   # Loop menu
   while true; do
     dialog --backtitle "`backtitle`" --menu "Choose a option" 0 0 0 \
@@ -295,6 +297,24 @@ function cmdlineMenu() {
           unset CMDLINE[${I}]
           deleteConfigKey "cmdline.${I}" "${USER_CONFIG_FILE}"
         done
+        ;;
+      c)
+        dialog --backtitle "`backtitle`" --title "User cmdline" \
+          --inputbox "Type a custom MAC address" 0 0 "${CMDLINE['mac1']}"\
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        MAC1="`sed 's/://g' <"${TMP_PATH}/resp"`"
+        if [ -z "${MAC1}" ]; then
+          unset CMDLINE["mac1"]
+          unset CMDLINE["netif_num"]
+          deleteConfigKey "cmdline.mac1" "${USER_CONFIG_FILE}"
+          deleteConfigKey "cmdline.netif_num" "${USER_CONFIG_FILE}"
+        else
+          CMDLINE["mac1"]="${MAC1}"
+          CMDLINE["netif_num"]=1
+          writeConfigKey "cmdline.mac1"      "${MAC1}" "${USER_CONFIG_FILE}"
+          writeConfigKey "cmdline.netif_num" "1"       "${USER_CONFIG_FILE}"
+        fi
         ;;
       s)
         ITEMS=""
