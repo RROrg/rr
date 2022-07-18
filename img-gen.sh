@@ -71,8 +71,8 @@ echo "Version: ${VERSION}"
 echo "Building... Drink a coffee and wait!"
 make BR2_EXTERNAL=../external
 cd -
+qemu-img convert -O vmdk arpl.img arpl.vmdk
+[ -x test.sh ] && ./test.sh
 rm -f *.zip
 zip -9 "arpl-${VERSION}.img.zip" arpl.img
-qemu-img convert -O vmdk arpl.img arpl.vmdk
 zip -9 "arpl-${VERSION}.vmdk.zip" arpl.vmdk
-[ -x test.sh ] && ./test.sh
