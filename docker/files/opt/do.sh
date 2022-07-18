@@ -14,7 +14,7 @@ function compile-module {
     fi
   done </opt/platforms
   if [ $VALID -eq 0 ]; then
-    echo "Platform ${PLATFORM} not found."
+    echo "Platform ${1} not found."
     exit 1
   fi
   echo "Compiling module for ${PLATFORM}-${KVER}..."
