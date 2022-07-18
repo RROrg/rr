@@ -38,7 +38,7 @@ jobs:
           cp -Ru files/* .buildroot
           cd .buildroot
           echo "Generating default config"
-          make arpl_defconfig
+          make BR2_EXTERNAL=../external arpl_defconfig
           echo "First make"
           make BR2_EXTERNAL=../external
 
@@ -54,32 +54,32 @@ jobs:
           rm -rf .buildroot/board/arpl/p1
           rm -rf .buildroot/board/arpl/p3
           # Get latest LKMs
-          echo "Getting latest LKMs"
-          TAG=`curl -s https://api.github.com/repos/fbelavenuto/redpill-lkm/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-          curl -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip
-          rm -rf files/board/arpl/p3/lkms/*
-          unzip /tmp/rp-lkms.zip -d files/board/arpl/p3/lkms
-          # Get latest addons and install its
-          echo "Getting latest Addons"
-          TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-          curl -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip
-          mkdir -p /tmp/addons
-          unzip /tmp/addons.zip -d /tmp/addons
-          DEST_PATH="files/board/arpl/p3/addons"
-          echo "Installing addons to ${DEST_PATH}"
-          for PKG in `ls /tmp/addons/*.addon`; do
-            ADDON=`basename ${PKG} | sed 's|.addon||'`
-            mkdir -p "${DEST_PATH}/${ADDON}"
-            echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
-            tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
-          done
+          # echo "Getting latest LKMs"
+          # TAG=`curl -s https://api.github.com/repos/fbelavenuto/redpill-lkm/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+          # curl -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip
+          # rm -rf files/board/arpl/p3/lkms/*
+          # unzip /tmp/rp-lkms.zip -d files/board/arpl/p3/lkms
+          # # Get latest addons and install its
+          # echo "Getting latest Addons"
+          # TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+          # curl -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip
+          # mkdir -p /tmp/addons
+          # unzip /tmp/addons.zip -d /tmp/addons
+          # DEST_PATH="files/board/arpl/p3/addons"
+          # echo "Installing addons to ${DEST_PATH}"
+          # for PKG in `ls /tmp/addons/*.addon`; do
+          #   ADDON=`basename ${PKG} | sed 's|.addon||'`
+          #   mkdir -p "${DEST_PATH}/${ADDON}"
+          #   echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
+          #   tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
+          # done
           # Copy files
           echo "Copying files"
           sed 's/^ARPL_VERSION=.*/ARPL_VERSION="'${VERSION}'"/' -i files/board/arpl/overlayfs/opt/arpl/include/consts.sh
           cp -Ru files/* .buildroot/
           cd .buildroot
           echo "Generating default config"
-          make arpl_defconfig
+          make BR2_EXTERNAL=../external arpl_defconfig
           echo "Version: ${VERSION}"
           echo "Building..."
           make BR2_EXTERNAL=../external
@@ -92,6 +92,16 @@ jobs:
         run: |
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip" arpl.vmdk
+
+      # Upload artifact
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: Images
+          path: |
+            arpl.img
+            arpl.vmdk
+          retention-days: 1
 
       # Publish a release if is a tag
       - name: Release
