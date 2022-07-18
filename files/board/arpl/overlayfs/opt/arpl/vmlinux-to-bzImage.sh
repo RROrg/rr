@@ -56,8 +56,7 @@ gzip -cd "${SCRIPT_DIR}/zImage_template.gz" > "${ZIMAGE_MOD}"
 dd if="${VMLINUX_MOD}" of="${ZIMAGE_MOD}" bs=16494 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
 file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=15745134 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
 
-RUN_SIZE=$(objdump -h ${VMLINUX_MOD} | sh "${SCRIPT_DIR}/calc_run_size.sh")
+RUN_SIZE=`objdump -h ${VMLINUX_MOD} | sh "${SCRIPT_DIR}/calc_run_size.sh"`
 size_le $RUN_SIZE | dd of=$ZIMAGE_MOD bs=15745210 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
 file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=15745244 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-# cksum $ZIMAGE_MOD # https://blog.box.com/crc32-checksums-the-good-the-bad-and-the-ugly
-size_le $(($((16#$(php "${SCRIPT_DIR}/crc32.php" "${ZIMAGE_MOD}"))) ^ 0xFFFFFFFF)) | dd of="${ZIMAGE_MOD}" conv=notrunc oflag=append >"${LOG_FILE}" 2>&1 || dieLog
+size_le $(($((16#`crc32 "${ZIMAGE_MOD}" | awk '{print$1}'`)) ^ 0xFFFFFFFF)) | dd of="${ZIMAGE_MOD}" conv=notrunc oflag=append >"${LOG_FILE}" 2>&1 || dieLog
