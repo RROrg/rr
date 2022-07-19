@@ -89,7 +89,8 @@ gzip -dc "${CACHE_PATH}/modules/${PLATFORM}-${KVER}.tgz" | tar xf - -C "${TMP_PA
 for F in `ls "${TMP_PATH}/modules/"*.ko`; do
   M=`basename ${F}`
   # Skip existent modules
-  [ -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] || mv "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
+#  [ -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] || mv "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
+  cp "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
 done
 # Clean
 rm -rf "${TMP_PATH}/modules"
