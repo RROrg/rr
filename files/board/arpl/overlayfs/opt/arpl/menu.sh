@@ -315,6 +315,11 @@ function cmdlineMenu() {
           writeConfigKey "cmdline.mac1"      "${MAC1}" "${USER_CONFIG_FILE}"
           writeConfigKey "cmdline.netif_num" "1"       "${USER_CONFIG_FILE}"
         fi
+        /etc/init.d/S30arpl-mac restart 2>&1 | dialog --backtitle "`backtitle`" \
+          --title "User cmdline" --progressbox "Changing mac" 20 70
+        /etc/init.d/S41dhcpcd restart 2>&1 | dialog --backtitle "`backtitle`" \
+          --title "User cmdline" --progressbox "Renewing IP" 20 70
+        IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
         ;;
       s)
         ITEMS=""

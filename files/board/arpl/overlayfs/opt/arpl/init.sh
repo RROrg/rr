@@ -59,6 +59,14 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
 fi
 
+# Set custom MAC if defined
+MAC1=`readConfigKey "cmdline.mac1" "${USER_CONFIG_FILE}"`
+if [ -n "${MAC1}" ]; then
+  MAC="${MAC1:0:2}:${MAC1:2:2}:${MAC1:4:2}:${MAC1:6:2}:${MAC1:8:2}:${MAC1:10:2}"
+  ip link set dev eth0 address ${MAC} >/dev/null 2>&1 && \
+    (/etc/init.d/S41dhcpcd restart >/dev/null 2>&1 &) || true
+fi
+
 # Get the VID/PID if we are in USB
 VID="0x0000"
 PID="0x0000"
