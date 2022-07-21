@@ -49,6 +49,7 @@ if [ -d ../arpl-addons ]; then
     echo "${D}"
     (cd ${D} && tar caf "${MODULES_DIR}/${D}.tgz" *.ko)
   done
+  (cd firmware && tar caf "${MODULES_DIR}/firmware.tgz" *)
   cd -
 else
   TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-modules/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
@@ -56,6 +57,7 @@ else
     FILE="${PLATFORM}-${KVER}"
     curl -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/${FILE}.tgz" -o "${MODULES_DIR}/${FILE}.tgz"
   done < PLATFORMS
+  curl -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/firmware.tgz" -o "${MODULES_DIR}/firmware.tgz"
 fi
 
 # Copy files
