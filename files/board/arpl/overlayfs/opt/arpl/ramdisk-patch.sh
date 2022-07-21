@@ -89,6 +89,8 @@ for F in `ls "${TMP_PATH}/modules/"*.ko`; do
 #  [ -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] || mv "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
   cp "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
 done
+mkdir -p "${RAMDISK_PATH}/usr/lib/firmware"
+gzip -dc "${CACHE_PATH}/modules/firmware.tgz" | tar xf - -C "${RAMDISK_PATH}/usr/lib/firmware"
 # Clean
 rm -rf "${TMP_PATH}/modules"
 
