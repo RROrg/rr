@@ -102,18 +102,19 @@ echo -e "Cmdline:\n\033[1;36m${CMDLINE_LINE}\033[0m"
 
 # Wait for an IP
 COUNT=0
-echo -n "IP: "
+echo -n "IP"
 while true; do
   IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
   if [ -n "${IP}" ]; then
-    echo -e "\033[1;32m${IP}\033[0m"
+    echo -e ": \033[1;32m${IP}\033[0m"
     break
   elif [ ${COUNT} -eq 15 ]; then
-    echo -e "\033[1;31mERROR\033[0m"
+    echo -e ": \033[1;31mERROR\033[0m"
     break
   fi
   COUNT=$((${COUNT}+1))
   sleep 1
+  echo -n "."
 done
 
 echo -e "\033[1;37mLoading DSM kernel...\033[0m"
