@@ -44,10 +44,7 @@ RD_COMPRESSED="`readModelKey "${MODEL}" "builds.${BUILD}.rd-compressed"`"
 declare -A SYNOINFO
 declare -A ADDONS
 
-# Read more config
-while IFS="=" read KEY VALUE; do
-  [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
-done < <(readModelMap "${MODEL}" "builds.${BUILD}.synoinfo")
+# Read synoinfo and addons from config
 while IFS="=" read KEY VALUE; do
   [ -n "${KEY}" ] &&  SYNOINFO["${KEY}"]="${VALUE}"
 done < <(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")

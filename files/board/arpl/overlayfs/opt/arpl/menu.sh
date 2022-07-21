@@ -104,9 +104,14 @@ function buildMenu() {
   if [ "${BUILD}" != "${resp}" ]; then
     BUILD=${resp}
     writeConfigKey "build" "${BUILD}" "${USER_CONFIG_FILE}"
-    DIRTY=1
+    # Delete synoinfo and reload model/build synoinfo
+    writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
+    while IFS="=" read KEY VALUE; do
+      writeConfigKey "synoinfo.${KEY}" "${VALUE}" "${USER_CONFIG_FILE}"
+    done < <(readModelMap "${MODEL}" "builds.${BUILD}.synoinfo")
     # Remove old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
+    DIRTY=1
   fi
 }
 
@@ -386,8 +391,7 @@ function synoinfoMenu() {
   if [ "${DT}" != "true" ]; then
     echo "x \"Set maxdisks manually\""    >> "${TMP_PATH}/menu"
   fi
-  echo "s \"Show user synoinfo\""         >> "${TMP_PATH}/menu"
-  echo "m \"Show model/build synoinfo\""  >> "${TMP_PATH}/menu"
+  echo "s \"Show synoinfo entries\""      >> "${TMP_PATH}/menu"
   echo "e \"Exit\""                       >> "${TMP_PATH}/menu"
 
   # menu loop
@@ -397,13 +401,13 @@ function synoinfoMenu() {
     [ $? -ne 0 ] && return
     case "`<${TMP_PATH}/resp`" in
       a)
-        dialog --backtitle "`backtitle`" --title "User synoinfo" \
-          --inputbox "Type a name of synoinfo variable" 0 0 \
+        dialog --backtitle "`backtitle`" --title "Synoinfo entries" \
+          --inputbox "Type a name of synoinfo entry" 0 0 \
           2>${TMP_PATH}/resp
         [ $? -ne 0 ] && continue
         NAME="`sed 's/://g' <"${TMP_PATH}/resp"`"
-        dialog --backtitle "`backtitle`" --title "User synoinfo" \
-          --inputbox "Type a value of '${NAME}' variable" 0 0 "${SYNOINFO[${NAME}]}" \
+        dialog --backtitle "`backtitle`" --title "Synoinfo entries" \
+          --inputbox "Type a value of '${NAME}' entry" 0 0 "${SYNOINFO[${NAME}]}" \
           2>${TMP_PATH}/resp
         [ $? -ne 0 ] && continue
         VALUE="`<"${TMP_PATH}/resp"`"
@@ -413,7 +417,7 @@ function synoinfoMenu() {
         ;;
       d)
         if [ ${#SYNOINFO[@]} -eq 0 ]; then
-          dialog --backtitle "`backtitle`" --msgbox "No user synoinfo to remove" 0 0 
+          dialog --backtitle "`backtitle`" --msgbox "No synoinfo entries to remove" 0 0 
           continue
         fi
         ITEMS=""
@@ -421,7 +425,7 @@ function synoinfoMenu() {
           ITEMS+="${I} ${SYNOINFO[${I}]} off "
         done
         dialog --backtitle "`backtitle`" \
-          --checklist "Select synoinfo to remove" 0 0 0 ${ITEMS} \
+          --checklist "Select synoinfo entry to remove" 0 0 0 ${ITEMS} \
           2>"${TMP_PATH}/resp"
         [ $? -ne 0 ] && continue
         RESP=`<"${TMP_PATH}/resp"`
@@ -446,15 +450,7 @@ function synoinfoMenu() {
         for KEY in ${!SYNOINFO[@]}; do
           ITEMS+="${KEY}: ${SYNOINFO[$KEY]}\n"
         done
-        dialog --backtitle "`backtitle`" --title "User synoinfo" \
-          --aspect 18 --msgbox "${ITEMS}" 0 0
-        ;;
-      m)
-        ITEMS=""
-        while IFS="=" read KEY VALUE; do
-          ITEMS+="${KEY}: ${VALUE}\n"
-        done < <(readModelMap "${MODEL}" "builds.${BUILD}.synoinfo")
-        dialog --backtitle "`backtitle`" --title "Model/build synoinfo" \
+        dialog --backtitle "`backtitle`" --title "Synoinfo entries" \
           --aspect 18 --msgbox "${ITEMS}" 0 0
         ;;
       e) return ;;

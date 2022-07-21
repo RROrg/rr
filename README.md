@@ -14,7 +14,7 @@ To use this project, download the latest image available and burn it to a USB st
 
 The menu system is dynamic and I hope it is intuitive enough that the user can use it without any problems. Its allows you to choose a model, the existing buildnumber for the chosen model, type or randomly create a serial number, add/remove addons, add/remove/view "cmdline" and "synoinfo" entries, choose the LKM version, create the loader, boot, manually edit the configuration file, choose a keymap, update and exit.
 
-Changing addons and synoinfo entries require re-creating the loader, cmdline entries do not. You can view the "cmdline" and "synoinfo" entries defined for the chosen model, with user-defined entries having higher priority.
+Changing addons and synoinfo entries require re-creating the loader, cmdline entries do not.
 
 There is no need to configure the VID/PID (if using a USB stick) or define the MAC Addresses of the network interfaces. If the user wants to modify the MAC Address of any interface, he must manually add "cmdline" entries in the corresponding menu (set "netif_num" according to "mac1..4" entries).
 
