@@ -784,6 +784,7 @@ function updateMenu() {
           mkdir -p "${DEST_PATH}/${ADDON}"
           tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}" >/dev/null 2>&1
         done
+        DIRTY=1
         dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
           --msgbox "Addons updated with success!" 0 0
         ;;
@@ -809,6 +810,7 @@ function updateMenu() {
           --infobox "Extracting last version" 0 0
         rm -rf "${LKM_PATH}/"*
         unzip /tmp/rp-lkms.zip -d "${LKM_PATH}" >/dev/null 2>&1
+        DIRTY=1
         dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
           --msgbox "LKMs updated with success!" 0 0
         ;;
@@ -845,6 +847,7 @@ function updateMenu() {
           rm "${MODULES_PATH}/${P}.tgz"
           mv "/tmp/${P}.tgz" "${MODULES_PATH}/${P}.tgz"
         done
+        DIRTY=1
         dialog --backtitle "`backtitle`" --title "Update Modules" --aspect 18 \
           --msgbox "Modules updated with success!" 0 0
         ;;

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 function compile-module {
   # Validate
   if [ -z "${1}" ]; then
@@ -19,7 +21,7 @@ function compile-module {
   fi
   echo "Compiling module for ${PLATFORM}-${KVER}..."
   cp -R /input /tmp
-  make -C "/opt/${PLATFORM}" M="/tmp/input" PLATFORM=${PLATFORM^^} modules
+  make -C "/opt/${PLATFORM}" M="/tmp/input" ${PLATFORM^^}-Y=y ${PLATFORM^^}-M=m modules
   while read F; do
     strip -g "${F}"
     echo "Copying `basename ${F}`"
