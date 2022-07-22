@@ -10,7 +10,7 @@ I tried to make the system as user-friendly as possible, to make life easier. Th
 
 To use this project, download the latest image available and burn it to a USB stick or SATA disk-on-module. Set the PC to boot from the burned media and follow the informations on the screen. When booting, the user can call the "menu.sh" command from the computer itself, access via SSH or use the virtual terminal (ttyd) by typing the address provided on the screen (http://(ip):7681). The loader will automatically increase the size of the last partition and use this space as cache if it is larger than 2GiB.
 
-## It is highly recommended to use an SSD for the loader in the case of the option via DoM or a fast USB flash drive
+### It is highly recommended to use an SSD for the loader in the case of the option via DoM or a fast USB flash drive
 
 The menu system is dynamic and I hope it is intuitive enough that the user can use it without any problems. Its allows you to choose a model, the existing buildnumber for the chosen model, type or randomly create a serial number, add/remove addons, add/remove/view "cmdline" and "synoinfo" entries, choose the LKM version, create the loader, boot, manually edit the configuration file, choose a keymap, update and exit.
 
