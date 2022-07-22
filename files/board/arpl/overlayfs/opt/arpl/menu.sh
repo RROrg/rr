@@ -803,12 +803,11 @@ function updateMenu() {
         unzip /tmp/addons.zip -d /tmp/addons >/dev/null 2>&1
         dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
           --infobox "Installing new addons" 0 0
-        DEST_PATH="/mnt/p3/addons"
         for PKG in `ls /tmp/addons/*.addon`; do
           ADDON=`basename ${PKG} | sed 's|.addon||'`
-          rm -rf "${DEST_PATH}/${ADDON}"
-          mkdir -p "${DEST_PATH}/${ADDON}"
-          tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}" >/dev/null 2>&1
+          rm -rf "${ADDONS_PATH}/${ADDON}"
+          mkdir -p "${ADDONS_PATH}/${ADDON}"
+          tar xaf "${PKG}" -C "${ADDONS_PATH}/${ADDON}" >/dev/null 2>&1
         done
         DIRTY=1
         dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \

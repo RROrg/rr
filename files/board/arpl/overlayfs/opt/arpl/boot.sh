@@ -76,7 +76,8 @@ EFI_BUG="`readModelKey "${MODEL}" "builds.${BUILD}.efi-bug"`"
 LOADER_DISK="`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1`"
 BUS=`udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2`
 if [ "${BUS}" = "ata" ]; then
-  SIZE=$((`df -BM | awk '/\/mnt\/p3/{print$2}' | tr 'M' ' '`+300))
+  LOADER_DEVICE_NAME=`echo ${LOADER_DISK} | sed 's|/dev/||'`
+  SIZE=$((`cat /sys/block/${LOADER_DEVICE_NAME}/size`/2048+10))
   # Read SATADoM type
   DOM="`readModelKey "${MODEL}" "dom"`"
 fi
