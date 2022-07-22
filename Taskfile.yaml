@@ -12,15 +12,6 @@ tasks:
     cmds:
       - ./build.sh
 
-  compile-lkms:
-    cmds:
-      - ./compile-lkm.sh
-
-  compile-addons:
-    dir: addons
-    cmds:
-      - ./compile-addons.sh {{.CLI_ARGS}}
-
   compile-kpatch:
     dir: kpatch
     cmds:

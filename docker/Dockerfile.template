@@ -3,20 +3,17 @@ ARG PLATFORMS="@@@PLATFORMS@@@"
 ARG TOOLKIT_VER="@@@TOOLKIT_VER@@@"
 
 # Copy downloaded toolkits
-ADD cache /cache
+ADD cache/$TOOLKIT_VER /cache
 # Extract toolkits
 RUN for V in ${PLATFORMS}; do \
       echo "${V}" | while IFS=':' read PLATFORM KVER; do \
+        echo -e "${PLATFORM}\t${KVER}" >> /opt/platforms && \
         echo "Extracting ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz" && \
         mkdir "/opt/${PLATFORM}" && \
-        tar -xaf "/cache/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz" -C "/opt/${PLATFORM}" --strip-components=10 \
-          "usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${TOOLKIT_VER}/build" && \
-        echo -e "${PLATFORM}\t${KVER}" >> /opt/platforms && \
-        if [ ! -d "/opt/linux-${KVER}" ]; then \
-          mkdir "/opt/linux-${KVER}" && \
-          echo "Extracting linux-${KVER}.tar.xz" && \
-          tar -xaf "/cache/linux-${KVER}.tar.xz" -C "/opt/linux-${KVER}" --strip-components=1; \
-        fi; \
+        tar -xaf "/cache/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz" -C "/opt/${PLATFORM}" --strip-components=9 \
+          "usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${TOOLKIT_VER}" && \
+        echo "Extracting ${PLATFORM}-toolchain.txz" && \
+        tar -xaf "/cache/${PLATFORM}-toolchain.txz" -C "/opt/${PLATFORM}" --strip-components=1; \
       done; \
     done
 

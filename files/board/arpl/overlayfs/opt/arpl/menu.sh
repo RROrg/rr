@@ -173,6 +173,7 @@ function addonMenu() {
       d "Delete addon(s)" \
       s "Show user addons" \
       m "Show all available addons" \
+      o "Download a external addon" \
       e "Exit" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -242,6 +243,30 @@ function addonMenu() {
         done < <(availableAddons "${PLATFORM}" "${KVER}")
         dialog --backtitle "`backtitle`" --title "Available addons" \
           --colors --msgbox "${MSG}" 0 0
+        ;;
+      o)
+        TEXT="please enter the complete URL to download.\n"
+        dialog --backtitle "`backtitle`" --aspect 18 --colors --inputbox "${TEXT}" 0 0 \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        URL="`<"${TMP_PATH}/resp"`"
+        [ -z "${URL}" ] && continue
+        clear
+        echo "Downloading ${URL}"
+        curl --insecure -L "${URL}" -o "${TMP_PATH}/addon.tgz" --progress-bar
+        if [ $? -ne 0 ]; then
+          dialog --backtitle "`backtitle`" --title "Error downloading" --aspect 18 \
+            --msgbox "Check internet, URL or cache disk space" 0 0
+          return 1
+        fi
+        ADDON="`untarAddon "${TMP_PATH}/addon.tgz"`"
+        if [ -n "${ADDON}" ]; then
+          dialog --backtitle "`backtitle`" --title "Success" --aspect 18 \
+            --msgbox "Addon '${ADDON}' added to loader" 0 0
+        else
+          dialog --backtitle "`backtitle`" --title "Invalid addon" --aspect 18 \
+            --msgbox "File format not recognized!" 0 0
+        fi
         ;;
       e) return ;;
     esac
@@ -778,12 +803,11 @@ function updateMenu() {
         unzip /tmp/addons.zip -d /tmp/addons >/dev/null 2>&1
         dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
           --infobox "Installing new addons" 0 0
-        DEST_PATH="/mnt/p3/addons"
         for PKG in `ls /tmp/addons/*.addon`; do
           ADDON=`basename ${PKG} | sed 's|.addon||'`
-          rm -rf "${DEST_PATH}/${ADDON}"
-          mkdir -p "${DEST_PATH}/${ADDON}"
-          tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}" >/dev/null 2>&1
+          rm -rf "${ADDONS_PATH}/${ADDON}"
+          mkdir -p "${ADDONS_PATH}/${ADDON}"
+          tar xaf "${PKG}" -C "${ADDONS_PATH}/${ADDON}" >/dev/null 2>&1
         done
         DIRTY=1
         dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \

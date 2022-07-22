@@ -34,7 +34,6 @@ mount ${LOADER_DISK}1 ${BOOTLOADER_PATH} || die "Can't mount ${BOOTLOADER_PATH}"
 mount ${LOADER_DISK}2 ${SLPART_PATH}     || die "Can't mount ${SLPART_PATH}"
 mount ${LOADER_DISK}3 ${CACHE_PATH}      || die "Can't mount ${CACHE_PATH}"
 
-mkdir -p "${ADDONS_PATH}"
 # Move/link SSH machine keys to/from cache volume
 [ ! -d "${CACHE_PATH}/ssh" ] && cp -R "/etc/ssh" "${CACHE_PATH}/ssh"
 rm -rf "/etc/ssh"
@@ -156,3 +155,7 @@ echo
 echo -e "User config is on \033[1;32m${USER_CONFIG_FILE}\033[0m"
 echo -e "Default SSH Root password is \033[1;31mRedp1lL-1s-4weSomE\033[0m"
 echo
+
+mkdir -p "${ADDONS_PATH}"
+mkdir -p "${LKM_PATH}"
+mkdir -p "${MODULES_PATH}"
