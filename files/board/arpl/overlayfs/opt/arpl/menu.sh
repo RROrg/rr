@@ -109,6 +109,15 @@ function buildMenu() {
     while IFS="=" read KEY VALUE; do
       writeConfigKey "synoinfo.${KEY}" "${VALUE}" "${USER_CONFIG_FILE}"
     done < <(readModelMap "${MODEL}" "builds.${BUILD}.synoinfo")
+    # Check addons
+    PLATFORM="`readModelKey "${MODEL}" "platform"`"
+    KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
+    while IFS="=" read ADDON PARAM; do
+      [ -z "${ADDON}" ] && continue
+      if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
+        deleteConfigKey "addons.${ADDON}" "${USER_CONFIG_FILE}"
+      fi
+    done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
     # Remove old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
     DIRTY=1

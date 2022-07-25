@@ -94,9 +94,6 @@ gzip -dc "${CACHE_PATH}/modules/firmware.tgz" | tar xf - -C "${RAMDISK_PATH}/usr
 # Clean
 rm -rf "${TMP_PATH}/modules"
 
-# Build modules dependencies
-/opt/arpl/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
-
 echo -n "."
 # Copying fake modprobe
 cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
@@ -107,15 +104,22 @@ cp "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko" "${RAMDISK_PATH}/usr/lib/modul
 MAXDISKS=`readConfigKey "maxdisks" "${USER_CONFIG_FILE}"`
 # Check if model needs Device-tree dynamic patch
 DT="`readModelKey "${MODEL}" "dt"`"
-# Add system addon "dtbpatch" or "maxdisks"
-[ "${DT}" = "true" ] && ADDONS['dtbpatch']="" || ADDONS['maxdisks']="${MAXDISKS}"
-# Indispensable eudev system addon
-ADDONS['eudev']=""
 
 echo -n "."
 mkdir -p "${RAMDISK_PATH}/addons"
 echo "#!/bin/sh" > "${RAMDISK_PATH}/addons/addons.sh"
 echo 'echo "addons.sh called with params ${@}"' >> "${RAMDISK_PATH}/addons/addons.sh"
+# Required eudev and dtbpatch/maxdisks
+installAddon eudev
+echo "/addons/eudev.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
+if [ "${DT}" = "true" ]; then
+  installAddon dtbpatch
+  echo "/addons/dtbpatch.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
+else
+  installAddon maxdisks
+  echo "/addons/maxdisks.sh \${1} ${MAXDISKS}" >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
+fi
+# User addons
 for ADDON in ${!ADDONS[@]}; do
   PARAMS=${ADDONS[${ADDON}]}
   if ! installAddon ${ADDON}; then
@@ -125,6 +129,9 @@ for ADDON in ${!ADDONS[@]}; do
   echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 done
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
+
+# Build modules dependencies
+/opt/arpl/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
 
 # Reassembly ramdisk
 echo -n "."
