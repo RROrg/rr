@@ -19,7 +19,7 @@ dd if="/dev/zero" of="${IMAGE_FILE}" bs=1M count=300 conv=sync 2>/dev/null
 # Copy grub stage1 to image
 dd if="${BOARD_PATH}/grub.bin" of="${IMAGE_FILE}" conv=notrunc,sync 2>/dev/null
 # Create partitions on image
-echo -e "n\np\n\n\n+150M\na\nt\n\n0b\nn\np\n\n\n+50M\nn\np\n\n\n\nw" | fdisk "${IMAGE_FILE}" >/dev/null
+echo -e "n\np\n\n\n+50M\na\nt\n\n0b\nn\np\n\n\n+50M\nn\np\n\n\n\nw" | fdisk "${IMAGE_FILE}" >/dev/null
 
 # Force umount, ignore errors
 sudo umount "${BINARIES_DIR}/p1" 2>/dev/null || true
@@ -40,8 +40,8 @@ sudo mount /dev/loop8p1 "${BINARIES_DIR}/p1"
 sudo mount /dev/loop8p3 "${BINARIES_DIR}/p3"
 
 echo "Copying files"
-sudo cp "${BINARIES_DIR}/bzImage"            "${BINARIES_DIR}/p1/bzImage-arpl"
-sudo cp "${BINARIES_DIR}/rootfs.cpio.xz"     "${BINARIES_DIR}/p1/initrd-arpl"
+sudo cp "${BINARIES_DIR}/bzImage"            "${BINARIES_DIR}/p3/bzImage-arpl"
+sudo cp "${BINARIES_DIR}/rootfs.cpio.xz"     "${BINARIES_DIR}/p3/initrd-arpl"
 sudo cp -R "${BOARD_PATH}/p1/"*              "${BINARIES_DIR}/p1"
 sudo cp -R "${BOARD_PATH}/p3/"*              "${BINARIES_DIR}/p3"
 sync
