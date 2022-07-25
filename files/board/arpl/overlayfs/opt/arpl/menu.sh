@@ -430,7 +430,8 @@ function synoinfoMenu() {
           --inputbox "Type a name of synoinfo entry" 0 0 \
           2>${TMP_PATH}/resp
         [ $? -ne 0 ] && continue
-        NAME="`sed 's/://g' <"${TMP_PATH}/resp"`"
+        NAME="`<"${TMP_PATH}/resp"`"
+        [ -z "${NAME}" ] && continue
         dialog --backtitle "`backtitle`" --title "Synoinfo entries" \
           --inputbox "Type a value of '${NAME}' entry" 0 0 "${SYNOINFO[${NAME}]}" \
           2>${TMP_PATH}/resp
