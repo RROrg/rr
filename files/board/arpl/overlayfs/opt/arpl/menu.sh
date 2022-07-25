@@ -770,8 +770,8 @@ function updateMenu() {
         fi
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
           --infobox "Installing new files" 0 0
-        mv /tmp/bzImage /mnt/p1/bzImage-arpl
-        mv /tmp/rootfs.cpio.xz /mnt/p1/initrd-arpl
+        mv /tmp/bzImage "${ARPL_BZIMAGE_FILE}"
+        mv /tmp/rootfs.cpio.xz "${ARPL_RAMDISK_FILE}"
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
           --yesno "Arpl updated with success to ${TAG}!\nReboot?" 0 0
         [ $? -ne 0 ] && continue
