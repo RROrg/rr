@@ -63,6 +63,7 @@ function modelMenu() {
     M="`basename ${M}`"
     M="${M::-4}"
     PLATFORM=`readModelKey "${M}" "platform"`
+    DT="`readModelKey "${M}" "dt"`"
     # Check id model is compatible with CPU
     COMPATIBLE=1
     for F in `readModelArray "${M}" "flags"`; do
@@ -71,9 +72,10 @@ function modelMenu() {
         break
       fi
     done
-    [ ${COMPATIBLE} -eq 1 ] && ITEMS+="${M} ${PLATFORM} "
+    [ "${DT}" = "true" ] && DT="-DT" || DT=""
+    [ ${COMPATIBLE} -eq 1 ] && ITEMS+="${M} \Zb${PLATFORM}${DT}\Zn "
   done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
-  dialog --backtitle "`backtitle`" --menu "Choose the model" 0 0 0 \
+  dialog --backtitle "`backtitle`" --colors --menu "Choose the model" 0 0 0 \
     ${ITEMS} 2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
   resp=$(<${TMP_PATH}/resp)
