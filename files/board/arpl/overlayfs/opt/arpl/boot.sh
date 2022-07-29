@@ -48,6 +48,9 @@ MODEL="`readConfigKey "model" "${USER_CONFIG_FILE}"`"
 BUILD="`readConfigKey "build" "${USER_CONFIG_FILE}"`"
 SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
 
+echo -e "Model: \033[1;36m${MODEL}\033[0m"
+echo -e "Build: \033[1;36m${BUILD}\033[0m"
+
 declare -A CMDLINE
 
 # Fixed values
@@ -82,6 +85,17 @@ if [ "${BUS}" = "ata" ]; then
   DOM="`readModelKey "${MODEL}" "dom"`"
 fi
 
+# Validate netif_num
+NETIF_NUM=${CMDLINE["netif_num"]}
+MACS=0
+for N in `seq 1 4`; do
+  [ -n "${CMDLINE["mac${N}"]}" ] && MACS=$((${MACS}+1))
+done
+if [ ${NETIF_NUM} -ne ${MACS} ]; then
+  echo -e "\033[1;33m*** netif_num is not equal to macX amount, set netif_num to ${MACS} ***\033[0m"
+  CMDLINE["netif_num"]=${MACS}
+fi
+
 # Prepare command line
 CMDLINE_LINE=""
 grep -q "force_junior" /proc/cmdline && CMDLINE_LINE+="force_junior "
@@ -96,9 +110,6 @@ done
 # Escape special chars
 CMDLINE_LINE=`echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g'`
 
-# Inform user
-echo -e "Model: \033[1;36m${MODEL}\033[0m"
-echo -e "Build: \033[1;36m${BUILD}\033[0m"
 echo -e "Cmdline:\n\033[1;36m${CMDLINE_LINE}\033[0m"
 
 # Wait for an IP
@@ -121,7 +132,7 @@ done
 echo -e "\033[1;37mLoading DSM kernel...\033[0m"
 
 # Executes DSM kernel via KEXEC
-history -a
+history -w
 sync
 if [ "${EFI_BUG}" = "yes" -a ${EFI} -eq 1 ]; then
   echo -e "\033[1;33mWarning, running kexec with --noefi param, strange things will happen!!\033[0m"
