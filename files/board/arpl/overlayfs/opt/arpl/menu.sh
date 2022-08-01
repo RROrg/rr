@@ -58,40 +58,53 @@ function backtitle() {
 ###############################################################################
 # Shows available models to user choose one
 function modelMenu() {
-  ITEMS=""
-  while read M; do
-    M="`basename ${M}`"
-    M="${M::-4}"
-    PLATFORM=`readModelKey "${M}" "platform"`
-    DT="`readModelKey "${M}" "dt"`"
-    # Check id model is compatible with CPU
-    COMPATIBLE=1
-    for F in `readModelArray "${M}" "flags"`; do
-      if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
-        COMPATIBLE=0
-        break
+  RESTRICT=1
+  while true; do
+    echo "" > "${TMP_PATH}/menu"
+    FLGNEX=0
+    while read M; do
+      M="`basename ${M}`"
+      M="${M::-4}"
+      PLATFORM=`readModelKey "${M}" "platform"`
+      DT="`readModelKey "${M}" "dt"`"
+      # Check id model is compatible with CPU
+      COMPATIBLE=1
+      if [ ${RESTRICT} -eq 1 ]; then
+        for F in `readModelArray "${M}" "flags"`; do
+          if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
+            COMPATIBLE=0
+            FLGNEX=1
+            break
+          fi
+        done
       fi
-    done
-    [ "${DT}" = "true" ] && DT="-DT" || DT=""
-    [ ${COMPATIBLE} -eq 1 ] && ITEMS+="${M} \Zb${PLATFORM}${DT}\Zn "
-  done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
-  dialog --backtitle "`backtitle`" --colors --menu "Choose the model" 0 0 0 \
-    ${ITEMS} 2>${TMP_PATH}/resp
-  [ $? -ne 0 ] && return
-  resp=$(<${TMP_PATH}/resp)
-  [ -z "${resp}" ] && return
-  # If user change model, clean buildnumber and S/N
-  if [ "${MODEL}" != "${resp}" ]; then
-    MODEL=${resp}
-    writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
-    BUILD=""
-    writeConfigKey "build" "${BUILD}" "${USER_CONFIG_FILE}"
-    SN=""
-    writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
-    # Delete old files
-    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
-    DIRTY=1
-  fi
+      [ "${DT}" = "true" ] && DT="-DT" || DT=""
+      [ ${COMPATIBLE} -eq 1 ] && echo "${M} \"\Zb${PLATFORM}${DT}\Zn\" " >> "${TMP_PATH}/menu"
+    done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
+    [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1Disable flags restriction\Zn\"" >> "${TMP_PATH}/menu"
+    dialog --backtitle "`backtitle`" --colors --menu "Choose the model" 0 0 0 \
+      --file "${TMP_PATH}/menu" 2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && return
+    resp=$(<${TMP_PATH}/resp)
+    [ -z "${resp}" ] && return
+    if [ "${resp}" = "f" ]; then
+      RESTRICT=0
+      continue
+    fi
+    # If user change model, clean buildnumber and S/N
+    if [ "${MODEL}" != "${resp}" ]; then
+      MODEL=${resp}
+      writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
+      BUILD=""
+      writeConfigKey "build" "${BUILD}" "${USER_CONFIG_FILE}"
+      SN=""
+      writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
+      # Delete old files
+      rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
+      DIRTY=1
+    fi
+    break
+  done
 }
 
 ###############################################################################
@@ -326,7 +339,7 @@ function cmdlineMenu() {
         fi
         ITEMS=""
         for I in "${!CMDLINE[@]}"; do
-          ITEMS+="${I} ${CMDLINE[${I}]} off "
+          [ -z "${CMDLINE[${I}]}" ] && ITEMS+="${I} \"\" off " || ITEMS+="${I} ${CMDLINE[${I}]} off "
         done
         dialog --backtitle "`backtitle`" \
           --checklist "Select cmdline to remove" 0 0 0 ${ITEMS} \
@@ -459,7 +472,7 @@ function synoinfoMenu() {
         fi
         ITEMS=""
         for I in "${!SYNOINFO[@]}"; do
-          ITEMS+="${I} ${SYNOINFO[${I}]} off "
+          [ -z "${SYNOINFO[${I}]}" ] && ITEMS+="${I} \"\" off " || ITEMS+="${I} ${SYNOINFO[${I}]} off "
         done
         dialog --backtitle "`backtitle`" \
           --checklist "Select synoinfo entry to remove" 0 0 0 ${ITEMS} \
