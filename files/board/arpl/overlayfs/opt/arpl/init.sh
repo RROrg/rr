@@ -56,6 +56,8 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "cmdline" "{}" "${USER_CONFIG_FILE}"
   writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
   writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
+  writeConfigKey "addons.misc" "" "${USER_CONFIG_FILE}"
+  writeConfigKey "addons.acpid" "" "${USER_CONFIG_FILE}"
 fi
 
 # Set custom MAC if defined
