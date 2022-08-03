@@ -1,11 +1,7 @@
-id: "DS3622xs+"
+id: "DS1520+"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
-  supportraidgroup: "no"
-  supportssdcache: "no"
-  esataportcfg: "0x00"
-  support_bde_internal_10g: "no"
   rss_server: "http://example.com/null.xml"
   rss_server_ssl: "https://example.com/null.xml"
   rss_server_v2: "https://example.com/autoupdate/v2/getList"
@@ -16,22 +12,21 @@ synoinfo: &synoinfo
   myds_region_api_base_url: "https://example.com"
   security_version_server: "https://example.com/smallupdate"
 cmdline: &cmdline
-  syno_hdd_powerup_seq: 0
-  HddHotplug: 0
+  intel_iommu: igfx_off
+  HddEnableDynamicPower: 1
   vender_format_version: 2
-  syno_port_thaw: 1
-  syno_hdd_detect: 0
-platform: "broadwellnk"
-dom: 1
+  synoboot2:
+  syno_ttyS0: "serial,0x3f8"
+  syno_ttyS1: "serial,0x2f8"
+platform: "geminilake"
+dom: 2
 serial:
   prefix:
-    - "2030"
-    - "2040"
-    - "20C0"
-    - "2150"
-  middle: "SQR"
+    - "0000"
+  middle: "XXX"
   suffix: "alpha"
-disks: 12
+disks: 6
+dt: true
 builds:
   42218:
     ver: "7.0.1"
@@ -43,15 +38,14 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
-      hash: "f38329b8cdc5824a8f01fb1e377d3b1b6bd23da365142a01e2158beff5b8a424"
-      ramdisk-hash: "a95d4ab06189460f3b3d13a33e421887b5f3ea09a10535ae0d4c92beb7ff631d"
-      zimage-hash: "06964b68e5ccdedd4363dff3986f99686d3c9cb5225e8e4c3d840a1d9cd1330b"
+      url: "https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS1520%2B_42218.pat"
+      hash: "06947c58f25bd591f7fa3c58ad9473777481bdd7a049b42d1cb585ca01b053ee"
+      ramdisk-hash: "f0a275587c51acdb4d58a7f0d82d70f31e54228d0fbf7575d5d425dae75d1969"
+      zimage-hash: "74d513aaa3e30d8aa4f80e202d94a68a552e9c0472f8470e133ad29080556f55"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
       - "ramdisk-common-post-init-script.patch"
-      - "ramdisk-common-disable-disabled-ports.patch"
 
   42661:
     ver: "7.1.0"
@@ -63,12 +57,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.1/42661-1/DSM_DS3622xs%2B_42661.pat"
-      hash: "53d0a4f1667288b6e890c4fdc48422557ff26ea8a2caede0955c5f45b560cccd"
-      ramdisk-hash: "df8a055d6bc901229f0ba53ed5b4fe024bdf9a1b42f0c32483adefcdac14db4d"
-      zimage-hash: "e073dd84054f652811e0ae1932af2c7cdbd5fb6e5f18f265097072b8af4605e8"
+      url: "https://global.download.synology.com/download/DSM/release/7.1/42661-1/DSM_DS1520%2B_42661.pat"
+      hash: "3a8499c5f72d7241b81781ec741d4019eaa506e6e7a4fd17ce54fb149f6ffae6"
+      ramdisk-hash: "b18f14b8420a217d7b6dd3696786ecccfbe7c325d342475531a68a7df831cffc"
+      zimage-hash: "1d0e5b76e08e3483f6bf06d23b5978ec498b855bde23db1f96f343db4c43337d"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
       - "ramdisk-42661-post-init-script.patch"
-      - "ramdisk-42661-disable-disabled-ports.patch"
