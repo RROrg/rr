@@ -7,15 +7,15 @@ synoinfo: &synoinfo
   esataportcfg: "0x00"
   support_bde_internal_10g: "no"
   support_oob_ctl: "no"
-  rss_server: "http://example.com/null.xml"
-  rss_server_ssl: "https://example.com/null.xml"
-  rss_server_v2: "https://example.com/autoupdate/v2/getList"
-  update_server: "http://example.com/"
-  update_server_ssl: "https://example.com/"
-  small_info_path: "https://example.com/null"
-  updateurl: "http://example.com/"
-  myds_region_api_base_url: "https://example.com"
-  security_version_server: "https://example.com/smallupdate"
+  rss_server: "http://example.com/null.xml"                   # http://update7.synology.com/autoupdate/genRSS.php
+  rss_server_ssl: "https://example.com/null.xml"              # https://update7.synology.com/autoupdate/genRSS.php
+  rss_server_v2: "https://example.com/autoupdate/v2/getList"  # https://update7.synology.com/autoupdate/v2/getList
+  update_server: "http://example.com/"                        # http://update7.synology.com/
+  update_server_ssl: "https://example.com/"                   # https://update7.synology.com/
+  small_info_path: "https://example.com/null"                 # https://update7.synology.com/smallupdate
+  updateurl: "http://example.com/"                            # http://www.synology.com/
+  myds_region_api_base_url: "https://example.com"             # https://account.synology.com/
+  security_version_server: "https://example.com/smallupdate"  # https://update7.synology.com/securityVersion
 cmdline: &cmdline
   syno_hdd_powerup_seq: 0
   HddHotplug: 0
@@ -23,6 +23,7 @@ cmdline: &cmdline
   syno_port_thaw: 1
   syno_hdd_detect: 0
 platform: "broadwellnk"
+unique: "synology_broadwellnk_3622xs+"
 dom: 1
 serial:
   prefix:
