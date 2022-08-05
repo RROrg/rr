@@ -6,14 +6,9 @@ synoinfo: &synoinfo
   supportssdcache: "no"
   esataportcfg: "0x00"
   usbportcfg: "0x8700"
-  rss_server: "http://example.com/null.xml"
-  rss_server_v2: "https://example.com/autoupdate/v2/getList"
-  rss_server_ssl: "https://example.com/null.xml"
-  update_server: "http://example.com/"
-  update_server_ssl: "https://example.com/"
+  rss_server: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.xml"
+  rss_server_ssl: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.xml"
   small_info_path: "https://example.com/null"
-  updateurl: "http://example.com/"
-  myds_region_api_base_url: "https://example.com"
   security_version_server: "https://example.com/smallupdate"
 cmdline: &cmdline
   syno_hdd_powerup_seq: 0
