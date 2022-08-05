@@ -32,7 +32,7 @@ function compile-module {
     echo "Platform ${1} not found."
     exit 1
   fi
-  echo "Compiling module for ${PLATFORM}-${KVER}..."
+  echo -e "Compiling module for \033[7m${PLATFORM}-${KVER}\033[0m..."
   cp -R /input /tmp
   export-vars ${PLATFORM}
   make -C "/opt/${PLATFORM}/build" M="/tmp/input" \
