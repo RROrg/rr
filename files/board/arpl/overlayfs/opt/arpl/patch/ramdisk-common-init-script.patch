@@ -1,6 +1,5 @@
-diff -uN a/linuxrc.syno.impl b/linuxrc.syno.impl
---- a/linuxrc.syno.impl	2022-08-05 10:50:18.011496401 -0300
-+++ b/linuxrc.syno.impl	2022-08-05 11:20:47.861013234 -0300
+--- a/linuxrc.syno.impl
++++ b/linuxrc.syno.impl
 @@ -38,6 +38,8 @@
  UnknownSynoPartitionMigrationFlag="/.unknown_syno_partition_migrate"
  IncompatibleRootDevice="/.incompatible_root_device"
@@ -18,15 +17,15 @@ diff -uN a/linuxrc.syno.impl b/linuxrc.syno.impl
  
  	exit $1
  }
-@@ -156,6 +159,8 @@
+@@ -155,6 +158,8 @@
+ # insert basic USB modules for detect f401/FDT
  echo "Insert basic USB modules..."
  SYNOLoadModules $USB_MODULES
- 
-+/addons/addons.sh modules
 +
++/addons/addons.sh modules
+
  # insert Etron USB3.0 drivers
  
- if [ $KERNEL_VCODE -ge $(KernelVersionCode "3.10") ]; then
 @@ -209,6 +214,8 @@
  		fi
  fi
