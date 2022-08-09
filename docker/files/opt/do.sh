@@ -2,7 +2,8 @@
 
 set -e
 
-function export-vars {
+###############################################################################
+function export-vars() {
   # Validate
   if [ -z "${1}" ]; then
     echo "Use: export-vars <platform>"
@@ -15,6 +16,15 @@ function export-vars {
   export ARCH=x86_64
 }
 
+###############################################################################
+function shell() {
+  cp /opt/${2}/build/System.map /input
+  export-vars $2
+  shift 2
+  bash -l $@
+}
+
+###############################################################################
 function compile-module {
   # Validate
   if [ -z "${1}" ]; then
@@ -44,6 +54,7 @@ function compile-module {
   done < <(find /tmp/input -name \*.ko)
 }
 
+###############################################################################
 function compile-lkm {
   PLATFORM=${1}
   if [ -z "${PLATFORM}" ]; then
@@ -62,6 +73,7 @@ function compile-lkm {
   mv "/tmp/input/redpill.ko" "/output/redpill-prod.ko"
 }
 
+###############################################################################
 # function compile-drivers {
 #   while read platform kver; do
 #     SRC_PATH="/opt/${platform}"
@@ -85,13 +97,17 @@ function compile-lkm {
 #   done </opt/platforms
 # }
 
+###############################################################################
+###############################################################################
+
 if [ $# -lt 1 ]; then
   echo "Use: <command> (<params>)"
+  echo "Commands: bash | shell <platform> | compile-module <platform> | compile-lkm <platform>"
   exit 1
 fi
 case $1 in
   bash) shift && bash -l $@ ;;
-  shell) export-vars $2 && shift 2 && bash -l $@ ;;
+  shell) shell $@ ;;
   compile-module) compile-module $2 ;;
   compile-lkm) compile-lkm $2 ;;
   # compile-drivers) compile-drivers ;;
