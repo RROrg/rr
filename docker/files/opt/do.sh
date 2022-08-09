@@ -18,9 +18,9 @@ function export-vars() {
 
 ###############################################################################
 function shell() {
+  cp /opt/${2}/build/System.map /input
   export-vars $2
   shift 2
-  cp /opt/${1}/build/System.map /input
   bash -l $@
 }
 
