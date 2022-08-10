@@ -21,6 +21,14 @@ if [ $NUM_PARTITIONS -ne 3 ]; then
   die "Loader disk not found!"
 fi
 
+# Shows title
+clear
+TITLE="Welcome to Automated Redpill Loader v${ARPL_VERSION}"
+printf "\033[1;44m%*s\n" $COLUMNS ""
+printf "\033[1;44m%*s\033[A\n" $COLUMNS ""
+printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE}+$COLUMNS)/2)) "${TITLE}"
+printf "\033[1;44m%*s\033[0m\n" $COLUMNS ""
+
 # Check partitions and ignore errors
 fsck.vfat -aw ${LOADER_DISK}1 >/dev/null 2>&1 || true
 fsck.ext2 -p ${LOADER_DISK}2 >/dev/null 2>&1 || true
@@ -42,6 +50,10 @@ ln -s "${CACHE_PATH}/ssh" "/etc/ssh"
 rm -rf ~/.bash_history
 ln -s ${CACHE_PATH}/.bash_history ~/.bash_history
 
+# Get first MAC address
+MAC=`ip link show eth0 | awk '/ether/{print$2}'`
+MACF=`echo ${MAC} | sed 's/://g'`
+
 # If user config file not exists, initialize it
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
   touch "${USER_CONFIG_FILE}"
@@ -58,12 +70,17 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
   writeConfigKey "addons.misc" "" "${USER_CONFIG_FILE}"
   writeConfigKey "addons.acpid" "" "${USER_CONFIG_FILE}"
+  # Initialize with real MAC
+  writeConfigKey "original-mac" "${MACF}" "${USER_CONFIG_FILE}"
+  writeConfigKey "cmdline.netif_num" "1" "${USER_CONFIG_FILE}"
+  writeConfigKey "cmdline.mac1" "${MACF}" "${USER_CONFIG_FILE}"
 fi
 
 # Set custom MAC if defined
 MAC1=`readConfigKey "cmdline.mac1" "${USER_CONFIG_FILE}"`
-if [ -n "${MAC1}" ]; then
+if [ -n "${MAC1}" -a "${MAC1}" != "${MACF}" ]; then
   MAC="${MAC1:0:2}:${MAC1:2:2}:${MAC1:4:2}:${MAC1:6:2}:${MAC1:8:2}:${MAC1:10:2}"
+  echo "Setting MAC to ${MAC}"
   ip link set dev eth0 address ${MAC} >/dev/null 2>&1 && \
     (/etc/init.d/S41dhcpcd restart >/dev/null 2>&1 &) || true
 fi
@@ -82,14 +99,6 @@ fi
 # Save variables to user config file
 writeConfigKey "vid" ${VID} "${USER_CONFIG_FILE}"
 writeConfigKey "pid" ${PID} "${USER_CONFIG_FILE}"
-
-# Shows title
-clear
-TITLE="Welcome to Automated Redpill Loader v${ARPL_VERSION}"
-printf "\033[1;44m%*s\n" $COLUMNS ""
-printf "\033[1;44m%*s\033[A\n" $COLUMNS ""
-printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE}+$COLUMNS)/2)) "${TITLE}"
-printf "\033[1;44m%*s\033[0m\n" $COLUMNS ""
 
 # Inform user
 echo -en "Loader disk: \033[1;32m${LOADER_DISK}\033[0m ("

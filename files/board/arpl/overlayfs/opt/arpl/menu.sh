@@ -353,23 +353,23 @@ function cmdlineMenu() {
         done
         ;;
       c)
-        dialog --backtitle "`backtitle`" --title "User cmdline" \
-          --inputbox "Type a custom MAC address" 0 0 "${CMDLINE['mac1']}"\
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        MAC1="`sed 's/://g' <"${TMP_PATH}/resp"`"
-        if [ -z "${MAC1}" ]; then
-          unset CMDLINE["mac1"]
-          unset CMDLINE["netif_num"]
-          deleteConfigKey "cmdline.mac1" "${USER_CONFIG_FILE}"
-          deleteConfigKey "cmdline.netif_num" "${USER_CONFIG_FILE}"
-        else
-          CMDLINE["mac1"]="${MAC1}"
-          CMDLINE["netif_num"]=1
-          writeConfigKey "cmdline.mac1"      "${MAC1}" "${USER_CONFIG_FILE}"
-          writeConfigKey "cmdline.netif_num" "1"       "${USER_CONFIG_FILE}"
-        fi
-        /etc/init.d/S30arpl-mac restart 2>&1 | dialog --backtitle "`backtitle`" \
+        while true; do
+          dialog --backtitle "`backtitle`" --title "User cmdline" \
+            --inputbox "Type a custom MAC address" 0 0 "${CMDLINE['mac1']}"\
+            2>${TMP_PATH}/resp
+          [ $? -ne 0 ] && continue
+          MAC="`<"${TMP_PATH}/resp"`"
+          [ -z "${MAC}" ] && MAC="`readConfigKey "original-mac" "${USER_CONFIG_FILE}"`"
+          MAC1="`echo "${MAC}" | sed 's/://g'`"
+          [ ${#MAC1} -eq 12 ] && break
+          dialog --backtitle "`backtitle`" --title "User cmdline" --msgbox "Invalid MAC" 0 0
+        done
+        CMDLINE["mac1"]="${MAC1}"
+        CMDLINE["netif_num"]=1
+        writeConfigKey "cmdline.mac1"      "${MAC1}" "${USER_CONFIG_FILE}"
+        writeConfigKey "cmdline.netif_num" "1"       "${USER_CONFIG_FILE}"
+        MAC="${MAC1:0:2}:${MAC1:2:2}:${MAC1:4:2}:${MAC1:6:2}:${MAC1:8:2}:${MAC1:10:2}"
+        ip link set dev eth0 address ${MAC} 2>&1 | dialog --backtitle "`backtitle`" \
           --title "User cmdline" --progressbox "Changing mac" 20 70
         /etc/init.d/S41dhcpcd restart 2>&1 | dialog --backtitle "`backtitle`" \
           --title "User cmdline" --progressbox "Renewing IP" 20 70
