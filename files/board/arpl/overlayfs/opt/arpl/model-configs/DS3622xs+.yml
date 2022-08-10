@@ -70,3 +70,23 @@ builds:
       - "ramdisk-common-init-script.patch"
       - "ramdisk-42661-post-init-script.patch"
       - "ramdisk-42661-disable-disabled-ports.patch"
+
+  42951:
+    ver: "7.1.1"
+    kver: "4.4.180"
+    rd-compressed: false
+    efi-bug: no
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42951/DSM_DS3622xs%2B_42951.pat"
+      hash: "11f34ae65b13f7feace40e6a7c2399150ef2b4f4eb3a6dcec0be52fca265f151"
+      ramdisk-hash: "469d76399eb94fee0cb135c6e178cdea797290671f6bf0ae896d7387f66dc952"
+      zimage-hash: "9134fc61aea7f687d62728470b8847e640693c444e0afd130882b728ab553fea"
+    patch:
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-42951-post-init-script.patch"
+      - "ramdisk-42661-disable-disabled-ports.patch"
