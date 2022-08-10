@@ -62,3 +62,23 @@ builds:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
       - "ramdisk-42661-post-init-script.patch"
+
+  42951:
+    ver: "7.1.1"
+    kver: "4.4.180"
+    rd-compressed: false
+    efi-bug: no
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42951/DSM_DS1520%2B_42951.pat"
+      hash: "32063eb34a0e29402c7774d60bb3b7247f894c60e676a437de00cd21b9b68cdb"
+      ramdisk-hash: "1afd618cd6799087320343a48a3992594730e2e807110f2770a4cf3f708f8ccd"
+      zimage-hash: "bbfa903358576e5545c3c3c021c292637360f0925de5e59cb3e785f92db71fd3"
+    patch:
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-42951-post-init-script.patch"
+      - "ramdisk-42661-disable-disabled-ports.patch"
