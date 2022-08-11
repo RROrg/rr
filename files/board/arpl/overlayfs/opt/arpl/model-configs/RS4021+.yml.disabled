@@ -1,4 +1,4 @@
-id: "DS1621+"
+id: "RS4021+"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
@@ -7,26 +7,24 @@ synoinfo: &synoinfo
   rss_server_v2: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.json"
   small_info_path: "https://example.com/null"
   security_version_server: "https://example.com/smallupdate"
+  support_bde_internal_10g": "no"
+  esataportcfg: "0x0"
 cmdline: &cmdline
-  SMBusHddDynamicPower: 1
   syno_hdd_powerup_seq: 0
   HddHotplug: 0
-  vender_format_version: 2
-  syno_port_thaw: 1
   syno_hdd_detect: 0
-  synoboot2:
-  syno_ttyS0: "serial,0x3f8"
-  syno_ttyS1: "serial,0x2f8"
-platform: "v1000"
-unique: "synology_v1000_1621+"
+  syno_port_thaw: 1
+  vender_format_version: 2
+platform: "broadwellnk"
+unique: "synology_broadwellnk_rs4021+"
 dom: 2
 serial:
   prefix:
-    - "2080"
-  middle: "S7R"
+    - "0000"
+  middle: "XXX"
   suffix: "alpha"
-disks: 6
-dt: true
+disks: 16
+dt: false
 builds:
   42218:
     ver: "7.0.1"
@@ -38,17 +36,18 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS1621%2B_42218.pat"
-      hash: "19f56827ba8bf0397d42cd1d6f83c447f092c2c1bbb70d8a2ad3fbd427e866df"
-      ramdisk-hash: "73512c7bceb34cf7f7f93c2703db60496da0e27274fc45e5aefa0366c9734d6e"
-      zimage-hash: "f4648d0dd6b29ef6149b0ff46afe1fe32f81730aa79af72f37ffd3647c76f586"
+      url: "https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_RS4021xs%2B_42218.pat"
+      hash: "7afca3970ac7324d7431c1484d4249939bedd4c18ac34187f894c43119edf3a1"
+      ramdisk-hash: "3aa9d810064747fca6d0a3ab4c979bd82b49fc0d166dfe714261c2a22145cc70"
+      zimage-hash: "17607e1739c8acc9903272ebd981bccb27b51057cdcb3cc446e5c5149db452d3"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
       - "ramdisk-common-post-init-script.patch"
+      - "ramdisk-common-disable-disabled-ports.patch"
 
   42661:
-    ver: "7.1.0"
+    ver: "7.1"
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
@@ -57,14 +56,15 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.1/42661-1/DSM_DS1621%2B_42661.pat"
-      hash: "381077302a89398a9fb5ec516217578d6f33b0219fe95135e80fd93cddbf88c4"
-      ramdisk-hash: "8fd5eb40fb088af97d3beee85b6275c2ceb368b08453eb5a5d00d42cc7d578d1"
-      zimage-hash: "d939b5937be00a644aae64c33633619a7c310433e60a515c77bbef00b0a7e6b6"
+      url: "https://global.download.synology.com/download/DSM/release/7.1/42661-1/DSM_RS4021xs%2B_42661.pat"
+      hash: "496b64e431dafa34cdebb92da8ac736bf1610fe157f03df7e6d11152d60991f5"
+      ramdisk-hash: "143e475fe73c0adb3377361402b4baad21448476e844e55e16d1ed51ffc4c971"
+      zimage-hash: "e073dd84054f652811e0ae1932af2c7cdbd5fb6e5f18f265097072b8af4605e8"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
       - "ramdisk-42661-post-init-script.patch"
+      - "ramdisk-42661-disable-disabled-ports.patch"
 
   42951:
     ver: "7.1.1"
@@ -76,11 +76,12 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42951/DSM_DS1621%2B_42951.pat"
-      hash: "127bc3a5405761915f8a4669c925defd39b31b9740064af357ff2db928314ac9"
-      ramdisk-hash: "12553531c3e8820241babc6b5176ea6f417368e80740c086b6897a67c8783f6e"
-      zimage-hash: "d28951da0eb41286fbe37ffdfc880271787573d68226e5d26321819cf2d2e6e2"
+      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42951/DSM_RS4021xs%2B_42951.pat"
+      hash: "7c9e076f3007662f63e34fd478fc48f32dee766f1ddc712f25ae91a2e56e078c"
+      ramdisk-hash: "c4d23a068a66499c50c9772fc5c90cc38dfcba5c45dcab085eda5d07d720046b"
+      zimage-hash: "9134fc61aea7f687d62728470b8847e640693c444e0afd130882b728ab553fea"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
       - "ramdisk-42951-post-init-script.patch"
+      - "ramdisk-42661-disable-disabled-ports.patch"

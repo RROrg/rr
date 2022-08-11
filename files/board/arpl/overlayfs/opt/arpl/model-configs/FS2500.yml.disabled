@@ -1,4 +1,4 @@
-id: "DS920+"
+id: "FS2500"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
@@ -8,25 +8,22 @@ synoinfo: &synoinfo
   small_info_path: "https://example.com/null"
   security_version_server: "https://example.com/smallupdate"
 cmdline: &cmdline
-  intel_iommu: "igfx_off"
-  HddEnableDynamicPower: 1
+  intel_iommu: igfx_off
+  SMBusHddDynamicPower: 1
+  vender_format_version: 2
   synoboot2:
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
-  vender_format_version: 2
-platform: "geminilake"
-unique: "synology_geminilake_920+"
+platform: "v1000"
+unique: "synology_v1000_fs2500"
 dom: 2
-dt: true
 serial:
   prefix:
-    - "2030"
-    - "2040"
-    - "20C0"
-    - "2150"
-  middle: "SBR"
+    - "0000"
+  middle: "XXX"
   suffix: "alpha"
-disks: 4
+disks: 12
+dt: true
 builds:
   42218:
     ver: "7.0.1"
@@ -38,17 +35,17 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS920%2B_42218.pat"
-      hash: "fe2a4648f76adeb65c3230632503ea36bbac64ee88b459eb9bfb5f3b8c8cebb3"
-      ramdisk-hash: "f7dd1317f24ec6b9bac839e37f66b59030218c7f97c06f73f1f54ed0f892c4aa"
-      zimage-hash: "346b68f662b50f47d3ee6c2bc9de6302e4b60436142c24ee88b620c7afd1ba06"
+      url: "https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_FS2500_42218.pat"
+      hash: "4d060be8afec548fdb042bc8095524f10ff200033cab74df37ae07f3de5eaa69"
+      ramdisk-hash: "cbe9099c57f23ba53415574b011580218fa55a0bdb83c4e4bba9e27100e5379d"
+      zimage-hash: "f6816165a52b1f53ce44a45878fe06641da34e9478947f826a236c1a6548f8fd"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
       - "ramdisk-common-post-init-script.patch"
 
   42661:
-    ver: "7.1.0"
+    ver: "7.1"
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
@@ -57,15 +54,15 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.1/42661-1/DSM_DS920%2B_42661.pat"
-      hash: "8076950fdad2ca58ea9b91a12584b9262830fe627794a0c4fc5861f819095261"
-      ramdisk-hash: "c8ad44826c87e065a3b05f354a639c0a86cb2fa47b88e11949604d53f3e80048"
-      zimage-hash: "1d0e5b76e08e3483f6bf06d23b5978ec498b855bde23db1f96f343db4c43337d"
+      url: "https://global.download.synology.com/download/DSM/release/7.1/42661-1/DSM_FS2500_42661.pat"
+      hash: "f8343ac070b43fe62d02af6ac9a9c61f8c9852b6b2c79b933629409113e1d3e6"
+      ramdisk-hash: "698e9b1d719d3032a9a2b91ca08078c632b3265590147b2f6c9ca200c826e987"
+      zimage-hash: "d939b5937be00a644aae64c33633619a7c310433e60a515c77bbef00b0a7e6b6"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
       - "ramdisk-42661-post-init-script.patch"
-
+      
   42951:
     ver: "7.1.1"
     kver: "4.4.180"
@@ -76,10 +73,10 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42951/DSM_DS920%2B_42951.pat"
-      hash: "412b94e64fb46bc7732de55bec0892e6ee51529364ae2aa2473d04aa48b9a3bd"
-      ramdisk-hash: "1026791ed6b9387fc0fcaec68c4606be35d29582ed7501a2fdf02d62c017e368"
-      zimage-hash: "bbfa903358576e5545c3c3c021c292637360f0925de5e59cb3e785f92db71fd3"
+      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42951/DSM_FS2500_42951.pat"
+      hash: "a878c928d7133c3bf3e10e8d3fb43ca7449a57f01d240a3c80de51cdd43af5c3"
+      ramdisk-hash: "a248103b1b47f800753b627394af8768698b74944d156cb6e40c80cd6ba8556f"
+      zimage-hash: "d28951da0eb41286fbe37ffdfc880271787573d68226e5d26321819cf2d2e6e2"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"

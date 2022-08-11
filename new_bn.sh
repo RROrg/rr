@@ -19,10 +19,11 @@ KVERS["FS2500"]="4.4.180"
 KVERS["RS4021xs+"]="4.4.180"
 RELEASE="7.1.1"
 BUILDNUMBER="42951"
+EXTRA=""
 
 for MODEL in DS918+ DS920+ DS1520+ DS1621+ DS2422+ DS3615xs DS3617xs DS3622xs+ DVA1622 DVA3221 FS2500 RS4021xs+; do
   MODEL_CODED=`echo ${MODEL} | sed 's/+/%2B/g'`
-  URL="https://global.download.synology.com/download/DSM/release/${RELEASE}/${BUILDNUMBER}/DSM_${MODEL_CODED}_${BUILDNUMBER}.pat"
+  URL="https://global.download.synology.com/download/DSM/release/${RELEASE}/${BUILDNUMBER}${EXTRA}/DSM_${MODEL_CODED}_${BUILDNUMBER}.pat"
   FILENAME="${MODEL}-${BUILDNUMBER}.pat"
   FILEPATH="/tmp/${FILENAME}"
   echo -n "Checking ${MODEL}... "
@@ -31,7 +32,7 @@ for MODEL in DS918+ DS920+ DS1520+ DS1621+ DS2422+ DS3615xs DS3617xs DS3622xs+ D
   else
     STATUS=`curl -s -o /dev/null -w "%{http_code}" -L "${URL}"`
     if [ ${STATUS} -ne 200 ]; then
-      echo "error: HTTP status = %{STATUS}"
+      echo "error: HTTP status = ${STATUS}"
       continue
     fi
     echo "ok, download it."
