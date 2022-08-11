@@ -59,6 +59,7 @@ function backtitle() {
 # Shows available models to user choose one
 function modelMenu() {
   RESTRICT=1
+  FLGBETA=0
   while true; do
     echo "" > "${TMP_PATH}/menu"
     FLGNEX=0
@@ -67,6 +68,8 @@ function modelMenu() {
       M="${M::-4}"
       PLATFORM=`readModelKey "${M}" "platform"`
       DT="`readModelKey "${M}" "dt"`"
+      BETA="`readModelKey "${M}" "beta"`"
+      [ "${BETA}" = "true" -a ${FLGBETA} -eq 0 ] && continue
       # Check id model is compatible with CPU
       COMPATIBLE=1
       if [ ${RESTRICT} -eq 1 ]; then
@@ -82,6 +85,7 @@ function modelMenu() {
       [ ${COMPATIBLE} -eq 1 ] && echo "${M} \"\Zb${PLATFORM}${DT}\Zn\" " >> "${TMP_PATH}/menu"
     done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
     [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1Disable flags restriction\Zn\"" >> "${TMP_PATH}/menu"
+    [ ${FLGBETA} -eq 0 ] && echo "b \"\Z1Show beta models\Zn\"" >> "${TMP_PATH}/menu"
     dialog --backtitle "`backtitle`" --colors --menu "Choose the model" 0 0 0 \
       --file "${TMP_PATH}/menu" 2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -89,6 +93,10 @@ function modelMenu() {
     [ -z "${resp}" ] && return
     if [ "${resp}" = "f" ]; then
       RESTRICT=0
+      continue
+    fi
+    if [ "${resp}" = "b" ]; then
+      FLGBETA=1
       continue
     fi
     # If user change model, clean buildnumber and S/N
@@ -163,8 +171,9 @@ function serialMenu() {
         elif [ `validateSerial ${MODEL} ${SERIAL}` -eq 1 ]; then
           break
         fi
-        dialog --backtitle "`backtitle`" \
-          --msgbox "Invalid serial, please type a right one" 0 0
+        dialog --backtitle "`backtitle`" --title "Alert" \
+          --yesno "Invalid serial, continue?" 0 0
+        [ $? -eq 0 ] && break
       done
       break
     elif [ "${resp}" = "a" ]; then

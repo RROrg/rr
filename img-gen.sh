@@ -14,10 +14,17 @@ rm -rf ".buildroot/board/arpl/p3"
 
 # Get latest LKMs
 echo "Getting latest LKMs"
-TAG=`curl -s https://api.github.com/repos/fbelavenuto/redpill-lkm/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-curl -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip
-rm -rf files/board/arpl/p3/lkms/*
-unzip /tmp/rp-lkms.zip -d files/board/arpl/p3/lkms
+if [ `ls ../redpill-lkm/output | wc -l` -eq 0 ]; then
+  echo "  Downloading from github"
+  TAG=`curl -s https://api.github.com/repos/fbelavenuto/redpill-lkm/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+  curl -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip
+  rm -rf files/board/arpl/p3/lkms/*
+  unzip /tmp/rp-lkms.zip -d files/board/arpl/p3/lkms
+else
+  echo "  Copying from ../redpill-lkm/output"
+  rm -rf files/board/arpl/p3/lkms/*
+  cp -f ../redpill-lkm/output/* files/board/arpl/p3/lkms
+fi
 
 # Get latest addons and install its
 echo "Getting latest Addons"
