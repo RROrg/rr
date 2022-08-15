@@ -19,6 +19,7 @@ DIRTY=0
 
 MODEL="`readConfigKey "model" "${USER_CONFIG_FILE}"`"
 BUILD="`readConfigKey "build" "${USER_CONFIG_FILE}"`"
+LAYOUT="`readConfigKey "layout" "${USER_CONFIG_FILE}"`"
 KEYMAP="`readConfigKey "keymap" "${USER_CONFIG_FILE}"`"
 LKM="`readConfigKey "lkm" "${USER_CONFIG_FILE}"`"
 SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
@@ -48,9 +49,9 @@ function backtitle() {
     BACKTITLE+=" (no IP)"
   fi
   if [ -n "${KEYMAP}" ]; then
-    BACKTITLE+=" (${KEYMAP})"
+    BACKTITLE+=" (${LAYOUT}/${KEYMAP})"
   else
-    BACKTITLE+=" (us)"
+    BACKTITLE+=" (qwerty/us)"
   fi
   echo ${BACKTITLE}
 }
@@ -746,19 +747,26 @@ function editUserConfig() {
 ###############################################################################
 # Shows available keymaps to user choose one
 function keymapMenu() {
+  dialog --backtitle "`backtitle`" --default-item "${LAYOUT}" --no-items \
+    --menu "Choose a layout" 0 0 0 "azerty" "bepo" "carpalx" "colemak" \
+    "dvorak" "fgGIod" "neo" "olpc" "qwerty" "qwertz" \
+    2>${TMP_PATH}/resp
+  [ $? -ne 0 ] && return
+  LAYOUT="`<${TMP_PATH}/resp`"
   OPTIONS=""
   while read KM; do
     OPTIONS+="${KM::-7} "
-  done < <(cd /usr/share/keymaps/i386/qwerty; ls *.map.gz)
-  dialog --backtitle "`backtitle`" --no-items \
+  done < <(cd /usr/share/keymaps/i386/${LAYOUT}; ls *.map.gz)
+  dialog --backtitle "`backtitle`" --no-items --default-item "${KEYMAP}" \
     --menu "Choice a keymap" 0 0 0 ${OPTIONS} \
     2>/tmp/resp
   [ $? -ne 0 ] && return
   resp=`cat /tmp/resp 2>/dev/null`
   [ -z "${resp}" ] && return
   KEYMAP=${resp}
+  writeConfigKey "layout" "${LAYOUT}" "${USER_CONFIG_FILE}"
   writeConfigKey "keymap" "${KEYMAP}" "${USER_CONFIG_FILE}"
-  zcat /usr/share/keymaps/i386/qwerty/${KEYMAP}.map.gz | loadkeys
+  zcat /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz | loadkeys
 }
 
 ###############################################################################
