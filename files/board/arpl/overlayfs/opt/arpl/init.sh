@@ -62,6 +62,7 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "build" "" "${USER_CONFIG_FILE}"
   writeConfigKey "sn" "" "${USER_CONFIG_FILE}"
   writeConfigKey "maxdisks" "" "${USER_CONFIG_FILE}"
+  writeConfigKey "layout" "qwerty" "${USER_CONFIG_FILE}"
   writeConfigKey "keymap" "" "${USER_CONFIG_FILE}"
   writeConfigKey "zimage-hash" "" "${USER_CONFIG_FILE}"
   writeConfigKey "ramdisk-hash" "" "${USER_CONFIG_FILE}"
@@ -120,12 +121,13 @@ if [ ${SIZEOFDISK} -ne ${ENDSECTOR} ]; then
 fi
 
 # Load keymap name
+LAYOUT="`readConfigKey "layout" "${USER_CONFIG_FILE}"`"
 KEYMAP="`readConfigKey "keymap" "${USER_CONFIG_FILE}"`"
 
 # Loads a keymap if is valid
-if [ -f /usr/share/keymaps/i386/qwerty/${KEYMAP}.map.gz ]; then
-  echo -e "Loading keymap \033[1;32m${KEYMAP}\033[0m"
-  zcat /usr/share/keymaps/i386/qwerty/${KEYMAP}.map.gz | loadkeys
+if [ -f /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz ]; then
+  echo -e "Loading keymap \033[1;32m${LAYOUT}/${KEYMAP}\033[0m"
+  zcat /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz | loadkeys
 fi
 
 # Decide if boot automatically
