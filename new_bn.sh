@@ -39,6 +39,8 @@ for MODEL in DS918+ DS920+ DS1520+ DS1621+ DS2422+ DS3615xs DS3617xs DS3622xs+ D
     echo "ok, download it."
     curl --progress-bar -C - -L "${URL}" -o ${FILEPATH}
   fi
+  echo "Calculating md5:"
+  PAT_MD5=`md5sum ${FILEPATH} | awk '{print$1}'`
   echo "Calculating sha256:"
   sudo rm -rf /tmp/extracted
   docker run --rm -it -v /tmp:/data syno-extractor /data/${FILENAME} /data/extracted
@@ -62,6 +64,7 @@ for MODEL in DS918+ DS920+ DS1520+ DS1621+ DS2422+ DS3615xs DS3617xs DS3622xs+ D
       hash: "${PAT_CS}"
       ramdisk-hash: "${RD_CS}"
       zimage-hash: "${ZIMAGE_CS}"
+      md5-hash: "${PAT_MD5}"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
