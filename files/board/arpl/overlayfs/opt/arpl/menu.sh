@@ -367,7 +367,7 @@ function cmdlineMenu() {
           dialog --backtitle "`backtitle`" --title "User cmdline" \
             --inputbox "Type a custom MAC address" 0 0 "${CMDLINE['mac1']}"\
             2>${TMP_PATH}/resp
-          [ $? -ne 0 ] && continue
+          [ $? -ne 0 ] && break
           MAC="`<"${TMP_PATH}/resp"`"
           [ -z "${MAC}" ] && MAC="`readConfigKey "original-mac" "${USER_CONFIG_FILE}"`"
           MAC1="`echo "${MAC}" | sed 's/://g'`"
