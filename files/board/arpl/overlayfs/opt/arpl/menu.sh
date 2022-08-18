@@ -119,7 +119,7 @@ function modelMenu() {
 ###############################################################################
 # Shows available buildnumbers from a model to user choose one
 function buildMenu() {
-  ITEMS="`readConfigEntriesArray "builds" "${MODEL_CONFIG_PATH}/${MODEL}.yml"`"
+  ITEMS="`readConfigEntriesArray "builds" "${MODEL_CONFIG_PATH}/${MODEL}.yml" | sort -r`"
   dialog --clear --no-items --backtitle "`backtitle`" \
     --menu "Choose a build number" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
