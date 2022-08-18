@@ -50,7 +50,7 @@ done
 # Get latest modules
 echo "Getting latest modules"
 MODULES_DIR="${PWD}/files/board/arpl/p3/modules"
-if [ -d ../arpl-addons ]; then
+if [ -d ../arpl-modules ]; then
   cd ../arpl-modules
   for D in `ls -d *-*`; do
     echo "${D}"
