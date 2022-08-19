@@ -684,14 +684,14 @@ function make() {
 
   [ ! -f "${ORI_ZIMAGE_FILE}" -o ! -f "${ORI_RDGZ_FILE}" ] && extractDsmFiles
 
-  /opt/arpl/zimage-patch.sh
+  /opt/arpl/zimage-patch.sh | tee -a "${LOG_FILE}"
   if [ $? -ne 0 ]; then
     dialog --backtitle "`backtitle`" --title "Error" --aspect 18 \
       --msgbox "zImage not patched:\n`<"${LOG_FILE}"`" 0 0
     return 1
   fi
 
-  /opt/arpl/ramdisk-patch.sh
+  /opt/arpl/ramdisk-patch.sh | tee -a "${LOG_FILE}"
   if [ $? -ne 0 ]; then
     dialog --backtitle "`backtitle`" --title "Error" --aspect 18 \
       --msgbox "Ramdisk not patched:\n`<"${LOG_FILE}"`" 0 0
