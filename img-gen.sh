@@ -80,9 +80,9 @@ echo "Version: ${VERSION}"
 echo "Building... Drink a coffee and wait!"
 make BR2_EXTERNAL=../external
 cd -
-qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img arpl.vmdk
-#qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
+#qemu-img convert -O vmdk -o adapter_type=lsilogic -o compat6 arpl.img arpl.vmdk
+qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
 [ -x test.sh ] && ./test.sh
 rm -f *.zip
 zip -9 "arpl-${VERSION}.img.zip" arpl.img
-zip -9 "arpl-${VERSION}.vmdk.zip" arpl.vmdk
+zip -9 "arpl-${VERSION}.vmdk.zip" arpl*.vmdk

@@ -84,14 +84,15 @@ jobs:
           echo "Building..."
           make BR2_EXTERNAL=../external
           cd -
-          qemu-img convert -O vmdk arpl.img arpl.vmdk
+          #qemu-img convert -O vmdk arpl.img arpl.vmdk
+          qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
 
       # Zip image
       - name: Pack
         shell: bash
         run: |
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
-          zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip" arpl.vmdk
+          zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip" arpl*.vmdk
 
       # Upload artifact
       - name: Upload
@@ -100,7 +101,7 @@ jobs:
           name: Images
           path: |
             arpl.img
-            arpl.vmdk
+            arpl*.vmdk
           retention-days: 5
 
       # Publish a release if is a tag
