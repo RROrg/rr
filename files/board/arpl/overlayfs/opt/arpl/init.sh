@@ -154,7 +154,7 @@ while true; do
   COUNT=$((${COUNT}+1))
   IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
   if [ -n "${IP}" ]; then
-    echo -en "OK\nAccess \033[1;34mhttp://${IP}:7681\033[0m to configure the loader via web terminal"
+    echo -en "OK\nAccess \033[1;34mhttp://${IP}:7681\033[0m to configure the loader via web terminal or use SSH"
     break
   fi
   echo -n "."
@@ -166,7 +166,6 @@ echo
 echo -e "Call \033[1;32mmenu.sh\033[0m to configure loader"
 echo
 echo -e "User config is on \033[1;32m${USER_CONFIG_FILE}\033[0m"
-echo -e "Default SSH Root password is \033[1;31mRedp1lL-1s-4weSomE\033[0m"
 echo
 
 mkdir -p "${ADDONS_PATH}"
