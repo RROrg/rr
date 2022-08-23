@@ -15,6 +15,9 @@ function export-vars() {
   export LDFLAGS="-I/opt/${1}/lib"
   export LD_LIBRARY_PATH="/opt/${1}/lib"
   export ARCH=x86_64
+  export PATH="/opt/${1}/bin:${PATH}"
+  export CC="x86_64-pc-linux-gnu-gcc"
+  export LD="x86_64-pc-linux-gnu-ld"
 }
 
 ###############################################################################
