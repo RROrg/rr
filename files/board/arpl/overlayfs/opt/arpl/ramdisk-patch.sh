@@ -46,7 +46,7 @@ declare -A ADDONS
 
 # Read synoinfo and addons from config
 while IFS="=" read KEY VALUE; do
-  [ -n "${KEY}" ] &&  SYNOINFO["${KEY}"]="${VALUE}"
+  [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
 done < <(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")
 while IFS="=" read KEY VALUE; do
   [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
@@ -62,7 +62,7 @@ done < <(readModelArray "${MODEL}" "builds.${BUILD}.patch")
 # Patch /etc/synoinfo.conf
 echo -n "."
 for KEY in ${!SYNOINFO[@]}; do
-  sed -i "s|^${KEY}=.*|${KEY}=\"${SYNOINFO[${KEY}]}\"|" "${RAMDISK_PATH}/etc/synoinfo.conf" >"${LOG_FILE}" 2>&1 || dieLog
+  _set_conf_kv "${KEY}" "${SYNOINFO[${KEY}]}" "${RAMDISK_PATH}/etc/synoinfo.conf" >"${LOG_FILE}" 2>&1 || dieLog
 done
 
 # Patch /sbin/init.post
