@@ -50,6 +50,17 @@ ln -s "${CACHE_PATH}/ssh" "/etc/ssh"
 rm -rf ~/.bash_history
 ln -s ${CACHE_PATH}/.bash_history ~/.bash_history
 
+# Check if exists directories into P3 partition, if yes remove and link it
+if [ -d "${CACHE_PATH}/model-configs" ]; then
+  rm -rf "${MODEL_CONFIG_PATH}"
+  ln -s "${CACHE_PATH}/model-configs" "${MODEL_CONFIG_PATH}"
+fi
+
+if [ -d "${CACHE_PATH}/patch" ]; then
+  rm -rf "${PATCH_PATH}"
+  ln -s "${CACHE_PATH}/patch" "${PATCH_PATH}"
+fi
+
 # Get first MAC address
 MAC=`ip link show eth0 | awk '/ether/{print$2}'`
 MACF=`echo ${MAC} | sed 's/://g'`
