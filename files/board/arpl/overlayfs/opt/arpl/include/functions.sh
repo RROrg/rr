@@ -146,3 +146,25 @@ function arrayExistItem() {
   done
   return ${EXISTS}
 }
+
+###############################################################################
+# Replace/remove/add values in .conf K=V file
+# 1 - name
+# 2 - new_val
+# 3 - path
+function _set_conf_kv() {
+  # Delete
+  if [ -z "$2" ]; then
+    sed -i "$3" -e "s/^$1=.*$//"
+    return $?;
+  fi
+
+  # Replace
+  if grep -q "^$1=" "$3"; then
+    sed -i "$3" -e "s\"^$1=.*\"$1=\\\"$2\\\"\""
+    return $?
+  fi
+
+  # Add if doesn't exist
+  echo "$1=\"$2\"" >> $3
+}
