@@ -79,6 +79,7 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     efi-bug: no
+    rc: true
     cmdline:
       <<: *cmdline
     synoinfo:
@@ -89,6 +90,27 @@ builds:
       ramdisk-hash: "0eb6433108d8ca1ac1c9b7bf5c35c54c1c0b400f4fcca2c5e95194494fc26686"
       zimage-hash: "bb0657c7111a31eaf27e51957ce6f83c6ed48b863666d1ea0a25ed52df3a4020"
       md5-hash: "fbdd1584dfcb1898df5f66a886a6e9b7"
+    patch:
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-42951-post-init-script.patch"
+      - "ramdisk-42661-disable-disabled-ports.patch"
+
+  42962:
+    ver: "7.1.1"
+    kver: "4.4.180"
+    rd-compressed: false
+    efi-bug: no
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42962/DSM_DS918%2B_42962.pat"
+      hash: "c1ffb1b48301fbcf1ccffae00062e95c8b5b18d50a70c3fbb79ea12a38a39bb7"
+      ramdisk-hash: "6ac446bddba53b1c215e0abbf05236371e5e3b91ab0c4c193a0999cc8b8a857b"
+      zimage-hash: "12afcd27e15ba5e4596e1af7275d9462d31c7d8afb32aa723f7b8b7cfa5a19a2"
+      md5-hash: "74c067cf1363b9b70522b145b59e1626"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
