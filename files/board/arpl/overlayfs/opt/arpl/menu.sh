@@ -287,8 +287,8 @@ function addonMenu() {
         [ -z "${URL}" ] && continue
         clear
         echo "Downloading ${URL}"
-        curl --insecure -L "${URL}" -o "${TMP_PATH}/addon.tgz" --progress-bar
-        if [ $? -ne 0 ]; then
+        STATUS=`curl --insecure -w "%{http_code}" -L "${URL}" -o "${TMP_PATH}/addon.tgz" --progress-bar`
+        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "Error downloading" --aspect 18 \
             --msgbox "Check internet, URL or cache disk space" 0 0
           return 1
@@ -546,8 +546,8 @@ function extractDsmFiles() {
     echo "${PAT_FILE} cached."
   else
     echo "Downloading ${PAT_FILE}"
-    curl --insecure -L "${PAT_URL}" -o "${PAT_PATH}" --progress-bar
-    if [ $? -ne 0 ]; then
+    STATUS=`curl --insecure -w "%{http_code}" -L "${PAT_URL}" -o "${PAT_PATH}" --progress-bar`
+    if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
       dialog --backtitle "`backtitle`" --title "Error downloading" --aspect 18 \
         --msgbox "Check internet or cache disk space" 0 0
       return 1
@@ -599,9 +599,8 @@ function extractDsmFiles() {
       # Check if old pat already downloaded
       if [ ! -f "${OLDPAT_PATH}" ]; then
         echo "Downloading old pat to extract synology .pat extractor..."
-        curl --insecure -L "${OLDPAT_URL}" \
-          -o "${OLDPAT_PATH}"  --progress-bar
-        if [ $? -ne 0 ]; then
+        STATUS=`curl --insecure -w "%{http_code}" -L "${OLDPAT_URL}" -o "${OLDPAT_PATH}"  --progress-bar`
+        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "Error downloading" --aspect 18 \
             --msgbox "Check internet or cache disk space" 0 0
           return 1
@@ -798,14 +797,14 @@ function updateMenu() {
         fi
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
           --infobox "Downloading last version ${TAG}" 0 0
-        curl --insecure -s -L "https://github.com/fbelavenuto/arpl/releases/download/${TAG}/bzImage" -o /tmp/bzImage
-        if [ $? -ne 0 ]; then
+        STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl/releases/download/${TAG}/bzImage" -o /tmp/bzImage`
+        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
             --msgbox "Error downloading bzImage" 0 0
           continue
         fi
-        curl --insecure -s -L "https://github.com/fbelavenuto/arpl/releases/download/${TAG}/rootfs.cpio.xz" -o /tmp/rootfs.cpio.xz
-        if [ $? -ne 0 ]; then
+        STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl/releases/download/${TAG}/rootfs.cpio.xz" -o /tmp/rootfs.cpio.xz`
+        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
             --msgbox "Error downloading rootfs.cpio.xz" 0 0
           continue
@@ -832,8 +831,8 @@ function updateMenu() {
         fi
         dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
           --infobox "Downloading last version" 0 0
-        curl --insecure -s -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip
-        if [ $? -ne 0 ]; then
+        STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip`
+        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
             --msgbox "Error downloading new version" 0 0
           continue
@@ -867,8 +866,8 @@ function updateMenu() {
         fi
         dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
           --infobox "Downloading last version" 0 0
-        curl --insecure -s -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip
-        if [ $? -ne 0 ]; then
+        STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip`
+        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "Update LKMs" --aspect 18 \
             --msgbox "Error downloading last version" 0 0
           continue
@@ -905,8 +904,8 @@ function updateMenu() {
         for P in ${!PLATFORMS[@]}; do
           dialog --backtitle "`backtitle`" --title "Update Modules" --aspect 18 \
             --infobox "Downloading ${P} modules" 0 0
-          curl --insecure -s -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/${P}.tgz" -o "/tmp/${P}.tgz"
-          if [ $? -ne 0 ]; then
+          STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/${P}.tgz" -o "/tmp/${P}.tgz"`
+          if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
             dialog --backtitle "`backtitle`" --title "Update Modules" --aspect 18 \
               --msgbox "Error downloading ${P}.tgz" 0 0
             continue
