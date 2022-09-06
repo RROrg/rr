@@ -75,10 +75,10 @@ cp -Ru files/* .buildroot/
 
 cd .buildroot
 echo "Generating default config"
-make BR2_EXTERNAL=../external arpl_defconfig
+make BR2_EXTERNAL=../external -j`nproc` arpl_defconfig
 echo "Version: ${VERSION}"
 echo "Building... Drink a coffee and wait!"
-make BR2_EXTERNAL=../external
+make BR2_EXTERNAL=../external -j`nproc`
 cd -
 #qemu-img convert -O vmdk -o adapter_type=lsilogic -o compat6 arpl.img arpl.vmdk
 qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
