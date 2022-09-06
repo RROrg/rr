@@ -38,9 +38,9 @@ jobs:
           cp -Ru files/* .buildroot
           cd .buildroot
           echo "Generating default config"
-          make BR2_EXTERNAL=../external -j`nproc` arpl_defconfig
+          make BR2_EXTERNAL=../external arpl_defconfig
           echo "First make"
-          make BR2_EXTERNAL=../external -j`nproc`
+          make BR2_EXTERNAL=../external
 
       # Build incremental from cache
       - name: Build image
@@ -79,10 +79,10 @@ jobs:
           cp -Ru files/* .buildroot/
           cd .buildroot
           echo "Generating default config"
-          make BR2_EXTERNAL=../external -j`nproc` arpl_defconfig
+          make BR2_EXTERNAL=../external arpl_defconfig
           echo "Version: ${VERSION}"
           echo "Building..."
-          make BR2_EXTERNAL=../external -j`nproc`
+          make BR2_EXTERNAL=../external
           cd -
           #qemu-img convert -O vmdk arpl.img arpl.vmdk
           qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
