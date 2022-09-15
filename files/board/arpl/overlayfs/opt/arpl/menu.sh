@@ -925,6 +925,10 @@ function updateMenu() {
 ###############################################################################
 ###############################################################################
 
+if [ "x$1" = "xb" -a -n "${MODEL}" -a -n "${BUILD}" -a loaderIsConfigured ]; then
+  make
+  boot
+fi
 # Main loop
 NEXT="m"
 while true; do
