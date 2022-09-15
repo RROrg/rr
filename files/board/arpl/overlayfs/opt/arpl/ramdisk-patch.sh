@@ -109,6 +109,8 @@ echo -n "."
 mkdir -p "${RAMDISK_PATH}/addons"
 echo "#!/bin/sh" > "${RAMDISK_PATH}/addons/addons.sh"
 echo 'echo "addons.sh called with params ${@}"' >> "${RAMDISK_PATH}/addons/addons.sh"
+chmod +x "${RAMDISK_PATH}/addons/addons.sh"
+
 # Required eudev and dtbpatch/maxdisks
 installAddon eudev
 echo "/addons/eudev.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
@@ -128,7 +130,6 @@ for ADDON in ${!ADDONS[@]}; do
   fi
   echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 done
-chmod +x "${RAMDISK_PATH}/addons/addons.sh"
 
 # Build modules dependencies
 /opt/arpl/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
