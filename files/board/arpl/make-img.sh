@@ -45,8 +45,6 @@ sudo cp "${BINARIES_DIR}/rootfs.cpio.xz"     "${BINARIES_DIR}/p3/initrd-arpl"
 sudo cp -R "${BOARD_PATH}/p1/"*              "${BINARIES_DIR}/p1"
 sudo cp -R "${BOARD_PATH}/p3/"*              "${BINARIES_DIR}/p3"
 sync
-cp "${BINARIES_DIR}/bzImage" ~/bzImage-arpl
-cp "${BINARIES_DIR}/rootfs.cpio.xz" ~/initrd-arpl
 
 echo "Unmount image file"
 sudo umount "${BINARIES_DIR}/p1"
