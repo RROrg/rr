@@ -180,6 +180,12 @@ echo -e "User config is on \033[1;32m${USER_CONFIG_FILE}\033[0m"
 echo -e "Default SSH Root password is \033[1;31mRedp1lL-1s-4weSomE\033[0m"
 echo
 
+# Check memory
+RAM=`free -m | awk '/Mem:/{print$2}'`
+if [ ${RAM} -le 3500 ]; then
+  echo -e "\033[1;33mYou have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory.\033[0m\n"
+fi
+
 mkdir -p "${ADDONS_PATH}"
 mkdir -p "${LKM_PATH}"
 mkdir -p "${MODULES_PATH}"
