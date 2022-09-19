@@ -818,7 +818,7 @@ function updateMenu() {
         fi
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
           --infobox "Installing new files" 0 0
-        (cd /tmp && sha256sum -c sha256sum)
+        (cd /tmp && sha256sum --status -c sha256sum)
         if [ $? -ne 0 ]; then
           dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
             --msgbox "Checksum do not match!" 0 0

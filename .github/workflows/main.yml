@@ -93,10 +93,9 @@ jobs:
         run: |
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip" arpl*.vmdk
-          sha256sum .buildroot/output/images/bzImage .buildroot/output/images/rootfs.cpio.xz \
-            "arpl-${{ steps.build.outputs.VERSION }}.img.zip" "arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip" \
-            > sha256sum
-
+          (cd .buildroot/output/images && sha256sum bzImage rootfs.cpio.xz) >> sha256sum
+          sha256sum "arpl-${{ steps.build.outputs.VERSION }}.img.zip" >> sha256sum
+          sha256sum "arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip" >> sha256sum
 
       # Upload artifact
       - name: Upload
@@ -106,6 +105,7 @@ jobs:
           path: |
             arpl.img
             arpl*.vmdk
+            sha256sum
           retention-days: 5
 
       # Publish a release if is a tag
