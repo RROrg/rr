@@ -87,12 +87,16 @@ jobs:
           #qemu-img convert -O vmdk arpl.img arpl.vmdk
           qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
 
-      # Zip image
+      # Zip image and generate checksum
       - name: Pack
         shell: bash
         run: |
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip" arpl*.vmdk
+          sha256sum .buildroot/output/images/bzImage .buildroot/output/images/rootfs.cpio.xz \
+            "arpl-${{ steps.build.outputs.VERSION }}.img.zip" "arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip" \
+            > sha256sum
+
 
       # Upload artifact
       - name: Upload
@@ -114,3 +118,4 @@ jobs:
             arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip
             .buildroot/output/images/bzImage
             .buildroot/output/images/rootfs.cpio.xz
+            sha256sum

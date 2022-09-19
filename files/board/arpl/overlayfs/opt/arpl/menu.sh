@@ -797,6 +797,13 @@ function updateMenu() {
         fi
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
           --infobox "Downloading last version ${TAG}" 0 0
+        # Download checksum
+        STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl/releases/download/${TAG}/sha256sum" -o /tmp/sha256sum`
+        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+          dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
+            --msgbox "Error downloading checksums" 0 0
+          continue
+        fi
         STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl/releases/download/${TAG}/bzImage" -o /tmp/bzImage`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
@@ -811,6 +818,12 @@ function updateMenu() {
         fi
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
           --infobox "Installing new files" 0 0
+        (cd /tmp && sha256sum -c sha256sum)
+        if [ $? -ne 0 ]; then
+          dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
+            --msgbox "Checksum do not match!" 0 0
+          continue
+        fi
         mv /tmp/bzImage "${ARPL_BZIMAGE_FILE}"
         mv /tmp/rootfs.cpio.xz "${ARPL_RAMDISK_FILE}"
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
