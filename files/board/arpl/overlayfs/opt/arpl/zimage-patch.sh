@@ -2,8 +2,10 @@
 
 . /opt/arpl/include/functions.sh
 
+set -o pipefail # Get exit code from process piped
+
 # Sanity check
-[ -f "${ORI_ZIMAGE_FILE}" ] || die "${ORI_ZIMAGE_FILE} not found!"
+[ -f "${ORI_ZIMAGE_FILE}" ] || (die "${ORI_ZIMAGE_FILE} not found!" | tee -a "${LOG_FILE}")
 
 echo -n "Patching zImage"
 
@@ -17,7 +19,6 @@ echo -n "."
 echo -n "."
 # rebuild zImage
 /opt/arpl/vmlinux-to-bzImage.sh "${TMP_PATH}/vmlinux-mod" "${MOD_ZIMAGE_FILE}" >"${LOG_FILE}" 2>&1 || dieLog
-
 echo -n "."
 # Update HASH of new DSM zImage
 HASH="`sha256sum ${ORI_ZIMAGE_FILE} | awk '{print$1}'`"
