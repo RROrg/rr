@@ -3,8 +3,10 @@
 . /opt/arpl/include/functions.sh
 . /opt/arpl/include/addons.sh
 
+set -o pipefail # Get exit code from process piped
+
 # Sanity check
-[ -f "${ORI_RDGZ_FILE}" ] || die "${ORI_RDGZ_FILE} not found!"
+[ -f "${ORI_RDGZ_FILE}" ] || (die "${ORI_RDGZ_FILE} not found!" | tee -a "${LOG_FILE}")
 
 echo -n "Patching Ramdisk"
 
@@ -39,7 +41,7 @@ KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
 RD_COMPRESSED="`readModelKey "${MODEL}" "builds.${BUILD}.rd-compressed"`"
 
 # Sanity check
-[ -z "${PLATFORM}" -o -z "${KVER}" ] && die "ERROR: Configuration for model ${MODEL} and buildnumber ${BUILD} not found."
+[ -z "${PLATFORM}" -o -z "${KVER}" ] && (die "ERROR: Configuration for model ${MODEL} and buildnumber ${BUILD} not found." | tee -a "${LOG_FILE}")
 
 declare -A SYNOINFO
 declare -A ADDONS
@@ -125,7 +127,7 @@ fi
 for ADDON in ${!ADDONS[@]}; do
   PARAMS=${ADDONS[${ADDON}]}
   if ! installAddon ${ADDON}; then
-    echo "ADDON ${ADDON} not found!" | tee "${LOG_FILE}"
+    echo "ADDON ${ADDON} not found!" | tee -a "${LOG_FILE}"
     exit 1
   fi
   echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
