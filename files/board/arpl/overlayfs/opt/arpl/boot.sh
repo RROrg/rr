@@ -89,7 +89,7 @@ fi
 # Validate netif_num
 NETIF_NUM=${CMDLINE["netif_num"]}
 MACS=0
-for N in `seq 1 4`; do
+for N in `seq 1 9`; do
   [ -n "${CMDLINE["mac${N}"]}" ] && MACS=$((${MACS}+1))
 done
 if [ ${NETIF_NUM} -ne ${MACS} ]; then
