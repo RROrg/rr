@@ -82,6 +82,7 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
   writeConfigKey "addons.misc" "" "${USER_CONFIG_FILE}"
   writeConfigKey "addons.acpid" "" "${USER_CONFIG_FILE}"
+  writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
   # Initialize with real MAC
   writeConfigKey "cmdline.netif_num" "1" "${USER_CONFIG_FILE}"
   writeConfigKey "cmdline.mac1" "${MACF}" "${USER_CONFIG_FILE}"

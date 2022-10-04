@@ -45,6 +45,7 @@ RD_COMPRESSED="`readModelKey "${MODEL}" "builds.${BUILD}.rd-compressed"`"
 
 declare -A SYNOINFO
 declare -A ADDONS
+declare -A USERMODULES
 
 # Read synoinfo and addons from config
 while IFS="=" read KEY VALUE; do
@@ -53,6 +54,11 @@ done < <(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")
 while IFS="=" read KEY VALUE; do
   [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
 done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
+
+# Read modules from user config
+while IFS="=" read KEY VALUE; do
+  [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
+done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
 
 # Patches
 while read f; do
@@ -84,15 +90,17 @@ echo -n "."
 # Extract modules to ramdisk
 rm -rf "${TMP_PATH}/modules"
 mkdir -p "${TMP_PATH}/modules"
-gzip -dc "${CACHE_PATH}/modules/${PLATFORM}-${KVER}.tgz" | tar xf - -C "${TMP_PATH}/modules"
+gzip -dc "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" | tar xf - -C "${TMP_PATH}/modules"
 for F in `ls "${TMP_PATH}/modules/"*.ko`; do
   M=`basename ${F}`
-  # Skip existent modules
-#  [ -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] || mv "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
-  cp "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
+  if arrayExistItem "${M:0:-3}" "${!USERMODULES[@]}"; then
+    cp -f "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
+  else
+    rm -f "${RAMDISK_PATH}/usr/lib/modules/${M}"
+  fi
 done
 mkdir -p "${RAMDISK_PATH}/usr/lib/firmware"
-gzip -dc "${CACHE_PATH}/modules/firmware.tgz" | tar xf - -C "${RAMDISK_PATH}/usr/lib/firmware"
+gzip -dc "${MODULES_PATH}/firmware.tgz" | tar xf - -C "${RAMDISK_PATH}/usr/lib/firmware"
 # Clean
 rm -rf "${TMP_PATH}/modules"
 
