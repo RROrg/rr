@@ -2,6 +2,7 @@
 
 . /opt/arpl/include/functions.sh
 . /opt/arpl/include/addons.sh
+. /opt/arpl/include/modules.sh
 
 # Check partition 3 space, if < 2GiB uses ramdisk
 RAMCACHE=0
@@ -61,6 +62,8 @@ function backtitle() {
 function modelMenu() {
   RESTRICT=1
   FLGBETA=0
+  dialog --backtitle "`backtitle`" --title "Model" --aspect 18 \
+    --infobox "Reading models" 0 0
   while true; do
     echo "" > "${TMP_PATH}/menu"
     FLGNEX=0
@@ -126,6 +129,8 @@ function buildMenu() {
   resp=$(<${TMP_PATH}/resp)
   [ -z "${resp}" ] && return
   if [ "${BUILD}" != "${resp}" ]; then
+    dialog --backtitle "`backtitle`" --title "Build Number" \
+      --infobox "Reconfiguring Synoinfo, Addons and Modules" 0 0
     BUILD=${resp}
     writeConfigKey "build" "${BUILD}" "${USER_CONFIG_FILE}"
     # Delete synoinfo and reload model/build synoinfo
@@ -142,6 +147,11 @@ function buildMenu() {
         deleteConfigKey "addons.${ADDON}" "${USER_CONFIG_FILE}"
       fi
     done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
+    # Rebuild modules
+    writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+    while read ID DESC; do
+      writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+    done < <(getAllModules "${PLATFORM}" "${KVER}")
     # Remove old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
     DIRTY=1
@@ -314,7 +324,7 @@ function cmdlineMenu() {
   while IFS="=" read KEY VALUE; do
     [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
   done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
-  echo "a \"Add/edit an cmdline item\""                         > "${TMP_PATH}/menu"
+  echo "a \"Add/edit a cmdline item\""                         > "${TMP_PATH}/menu"
   echo "d \"Delete cmdline item(s)\""                           >> "${TMP_PATH}/menu"
   echo "c \"Define a custom MAC\""                              >> "${TMP_PATH}/menu"
   echo "s \"Show user cmdline\""                                >> "${TMP_PATH}/menu"
@@ -445,7 +455,7 @@ function synoinfoMenu() {
     [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
   done < <(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")
 
-  echo "a \"Add/edit an synoinfo item\""   > "${TMP_PATH}/menu"
+  echo "a \"Add/edit a synoinfo item\""   > "${TMP_PATH}/menu"
   echo "d \"Delete synoinfo item(s)\""    >> "${TMP_PATH}/menu"
   if [ "${DT}" != "true" ]; then
     echo "x \"Set maxdisks manually\""    >> "${TMP_PATH}/menu"
@@ -514,6 +524,85 @@ function synoinfoMenu() {
           --aspect 18 --msgbox "${ITEMS}" 0 0
         ;;
       e) return ;;
+    esac
+  done
+}
+
+###############################################################################
+# Permit user select the modules to include
+function selectModules() {
+  PLATFORM="`readModelKey "${MODEL}" "platform"`"
+  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
+  dialog --backtitle "`backtitle`" --title "Modules" --aspect 18 \
+    --infobox "Reading modules" 0 0
+  ALLMODULES=`getAllModules "${PLATFORM}" "${KVER}"`
+  unset USERMODULES
+  declare -A USERMODULES
+  while IFS="=" read KEY VALUE; do
+    [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
+  done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
+  # menu loop
+  while true; do
+    dialog --backtitle "`backtitle`" --menu "Choose a option" 0 0 0 \
+      s "Show selected modules" \
+      a "Select all modules" \
+      d "Deselect all modules" \
+      c "Choose modules to include" \
+      e "Exit" \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && break
+    case "`<${TMP_PATH}/resp`" in
+      s) ITEMS=""
+        for KEY in ${!USERMODULES[@]}; do
+          ITEMS+="${KEY}: ${USERMODULES[$KEY]}\n"
+        done
+        dialog --backtitle "`backtitle`" --title "User modules" \
+          --msgbox "${ITEMS}" 0 0
+        ;;
+      a) dialog --backtitle "`backtitle`" --title "Modules" \
+           --infobox "Selecting all modules" 0 0
+        unset USERMODULES
+        declare -A USERMODULES
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        while read ID DESC; do
+          USERMODULES["${ID}"]=""
+          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+        done <<<${ALLMODULES}
+        ;;
+
+      d) dialog --backtitle "`backtitle`" --title "Modules" \
+           --infobox "Deselecting all modules" 0 0
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        unset USERMODULES
+        declare -A USERMODULES
+        ;;
+
+      c)
+        rm -f "${TMP_PATH}/opts"
+        while read ID DESC; do
+          arrayExistItem "${ID}" "${!USERMODULES[@]}" && ACT="on" || ACT="off"
+          echo "${ID} ${DESC} ${ACT}" >> "${TMP_PATH}/opts"
+        done <<<${ALLMODULES}
+        dialog --backtitle "`backtitle`" --title "Modules" --aspect 18 \
+          --checklist "Select modules to include" 0 0 0 \
+          --file "${TMP_PATH}/opts" 2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        resp=$(<${TMP_PATH}/resp)
+        [ -z "${resp}" ] && continue
+        dialog --backtitle "`backtitle`" --title "Modules" \
+           --infobox "Writing to user config" 0 0
+        unset USERMODULES
+        declare -A USERMODULES
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        for ID in ${resp}; do
+          USERMODULES["${ID}"]=""
+          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+        done
+        ;;
+
+      e)
+        break
+        ;;
     esac
   done
 }
@@ -666,6 +755,8 @@ function extractDsmFiles() {
   echo "OK"
 }
 
+###############################################################################
+# Where the magic happens!
 function make() {
   clear
   PLATFORM="`readModelKey "${MODEL}" "platform"`"
@@ -954,6 +1045,7 @@ while true; do
       echo "x \"Cmdline menu\""                       >> "${TMP_PATH}/menu"
       echo "i \"Synoinfo menu\""                      >> "${TMP_PATH}/menu"
       echo "l \"Switch LKM version: \Z4${LKM}\Zn\""   >> "${TMP_PATH}/menu"
+      echo "o \"Modules\""                            >> "${TMP_PATH}/menu"
       echo "d \"Build the loader\""                   >> "${TMP_PATH}/menu"
     fi
   fi
@@ -976,8 +1068,9 @@ while true; do
     i) synoinfoMenu; NEXT="l" ;;
     l) [ "${LKM}" = "dev" ] && LKM='prod' || LKM='dev'
       writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
-      NEXT="d"
+      NEXT="o"
       ;;
+    o) selectModules; NEXT="d" ;;
     d) make; NEXT="b" ;;
     b) boot ;;
     u) editUserConfig; NEXT="u" ;;
