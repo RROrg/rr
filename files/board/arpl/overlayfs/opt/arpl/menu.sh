@@ -23,6 +23,7 @@ BUILD="`readConfigKey "build" "${USER_CONFIG_FILE}"`"
 LAYOUT="`readConfigKey "layout" "${USER_CONFIG_FILE}"`"
 KEYMAP="`readConfigKey "keymap" "${USER_CONFIG_FILE}"`"
 LKM="`readConfigKey "lkm" "${USER_CONFIG_FILE}"`"
+DIRECTBOOT="`readConfigKey "directboot" "${USER_CONFIG_FILE}"`"
 SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
 
 ###############################################################################
@@ -1049,7 +1050,10 @@ while true; do
       echo "d \"Build the loader\""                   >> "${TMP_PATH}/menu"
     fi
   fi
-  loaderIsConfigured && echo "b \"Boot the loader\" " >> "${TMP_PATH}/menu"
+  if loaderIsConfigured; then
+    echo "r \"Switch direct boot: \Z4${DIRECTBOOT}\Zn\"">> "${TMP_PATH}/menu"
+    echo "b \"Boot the loader\" "                     >> "${TMP_PATH}/menu"
+  fi
   echo "u \"Edit user config file manually\""         >> "${TMP_PATH}/menu"
   echo "k \"Choose a keymap\" "                       >> "${TMP_PATH}/menu"
   [ ${RAMCACHE} -eq 0 -a -d "${CACHE_PATH}/dl" ] && echo "c \"Clean disk cache\"" >> "${TMP_PATH}/menu"
@@ -1071,7 +1075,11 @@ while true; do
       NEXT="o"
       ;;
     o) selectModules; NEXT="d" ;;
-    d) make; NEXT="b" ;;
+    d) make; NEXT="r" ;;
+    r) [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
+      writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
+      NEXT="b"
+      ;;
     b) boot ;;
     u) editUserConfig; NEXT="u" ;;
     k) keymapMenu ;;

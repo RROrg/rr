@@ -69,6 +69,7 @@ MACF=`echo ${MAC} | sed 's/://g'`
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
   touch "${USER_CONFIG_FILE}"
   writeConfigKey "lkm" "dev" "${USER_CONFIG_FILE}"
+  writeConfigKey "directboot" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "model" "" "${USER_CONFIG_FILE}"
   writeConfigKey "build" "" "${USER_CONFIG_FILE}"
   writeConfigKey "sn" "" "${USER_CONFIG_FILE}"
