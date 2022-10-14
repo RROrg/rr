@@ -84,7 +84,7 @@ jobs:
           echo "Building..."
           make BR2_EXTERNAL=../external
           cd -
-          #qemu-img convert -O vmdk arpl.img arpl.vmdk
+          qemu-img convert -O vmdk arpl.img arpl-dyn.vmdk
           qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
 
       # Zip image and generate checksum
@@ -92,7 +92,8 @@ jobs:
         shell: bash
         run: |
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
-          zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip" arpl*.vmdk
+          zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk-dyn.zip" arpl-dyn.vmdk
+          zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk-flat.zip" arpl.vmdk arpl-flat.vmdk
           (cd .buildroot/output/images && sha256sum bzImage rootfs.cpio.xz) >> sha256sum
 
       # Upload artifact
@@ -112,7 +113,8 @@ jobs:
         with:
           files: |
             arpl-${{ steps.build.outputs.VERSION }}.img.zip
-            arpl-${{ steps.build.outputs.VERSION }}.vmdk.zip
+            arpl-${{ steps.build.outputs.VERSION }}.vmdk-dyn.zip
+            arpl-${{ steps.build.outputs.VERSION }}.vmdk-flat.zip
             .buildroot/output/images/bzImage
             .buildroot/output/images/rootfs.cpio.xz
             sha256sum
