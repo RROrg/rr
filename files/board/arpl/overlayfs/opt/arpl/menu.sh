@@ -896,7 +896,7 @@ function updateMenu() {
             --msgbox "Error downloading update file" 0 0
           continue
         fi
-        unzip /tmp/update.zip -d /tmp
+        unzip -oq /tmp/update.zip -d /tmp
         if [ $? -ne 0 ]; then
           dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
             --msgbox "Error extracting update file" 0 0
