@@ -99,7 +99,7 @@ jobs:
           yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml | while read F; do
             (cd `dirname ${F}` && sha256sum `basename ${F}`) >> sha256sum
           done
-          yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml | xargs zip -9j "update-${{ steps.build.outputs.VERSION }}.zip" sha256sum update-list.yml
+          yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml | xargs zip -9j "update.zip" sha256sum update-list.yml
 
       # Upload artifact
       - name: Upload
@@ -109,7 +109,6 @@ jobs:
           path: |
             arpl.img
             arpl*.vmdk
-            update-${{ steps.build.outputs.VERSION }}.zip
           retention-days: 5
 
       # Publish a release if is a tag
@@ -121,4 +120,4 @@ jobs:
             arpl-${{ steps.build.outputs.VERSION }}.img.zip
             arpl-${{ steps.build.outputs.VERSION }}.vmdk-dyn.zip
             arpl-${{ steps.build.outputs.VERSION }}.vmdk-flat.zip
-            update-${{ steps.build.outputs.VERSION }}.zip
+            update.zip
