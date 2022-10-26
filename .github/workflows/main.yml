@@ -27,6 +27,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libelf-dev qemu-utils
+          sudo cp -f files/board/arpl/overlayfs/usr/bin/yq /usr/bin/yq
 
       # Prepare buildroot for first make (for cache)
       - name: Prepare buildroot
@@ -94,7 +95,11 @@ jobs:
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk-dyn.zip" arpl-dyn.vmdk
           zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk-flat.zip" arpl.vmdk arpl-flat.vmdk
-          (cd .buildroot/output/images && sha256sum bzImage rootfs.cpio.xz) >> sha256sum
+          sha256sum update-list.yml > sha256sum
+          yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml | while read F; do
+            (cd `dirname ${F}` && sha256sum `basename ${F}` > sha256sum)
+          done
+          yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml | xargs zip -9D "update-${{ steps.build.outputs.VERSION }}.zip" sha256sum update-list.yml
 
       # Upload artifact
       - name: Upload
@@ -115,6 +120,4 @@ jobs:
             arpl-${{ steps.build.outputs.VERSION }}.img.zip
             arpl-${{ steps.build.outputs.VERSION }}.vmdk-dyn.zip
             arpl-${{ steps.build.outputs.VERSION }}.vmdk-flat.zip
-            .buildroot/output/images/bzImage
-            .buildroot/output/images/rootfs.cpio.xz
-            sha256sum
+            update-${{ steps.build.outputs.VERSION }}.zip
