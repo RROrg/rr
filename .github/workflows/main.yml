@@ -48,7 +48,7 @@ jobs:
         id: build
         run: |
           VERSION=`<VERSION`
-          echo "{VERSION}=${VERSION}" >> $GITHUB_OUTPUT
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
           # Remove old files
           rm -rf .buildroot/output/target/opt/arpl
           rm -rf .buildroot/board/arpl/overlayfs
@@ -99,7 +99,7 @@ jobs:
           yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml | while read F; do
             (cd `dirname ${F}` && sha256sum `basename ${F}` > sha256sum)
           done
-          yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml | xargs zip -9D "update-${{ steps.build.outputs.VERSION }}.zip" sha256sum update-list.yml
+          yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml | xargs zip -9j "update-${{ steps.build.outputs.VERSION }}.zip" sha256sum update-list.yml
 
       # Upload artifact
       - name: Upload
