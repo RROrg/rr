@@ -48,7 +48,7 @@ jobs:
         id: build
         run: |
           VERSION=`<VERSION`
-          echo "::set-output name=VERSION::${VERSION}"
+          echo "{VERSION}=${VERSION}" >> $GITHUB_OUTPUT
           # Remove old files
           rm -rf .buildroot/output/target/opt/arpl
           rm -rf .buildroot/board/arpl/overlayfs
@@ -109,6 +109,7 @@ jobs:
           path: |
             arpl.img
             arpl*.vmdk
+            update-${{ steps.build.outputs.VERSION }}.zip
           retention-days: 5
 
       # Publish a release if is a tag
