@@ -890,7 +890,8 @@ function updateMenu() {
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
           --infobox "Downloading last version ${TAG}" 0 0
         # Download update file
-        STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl/releases/download/${TAG}/update-${TAG}.zip" -o /tmp/update.zip`
+        STATUS=`curl --insecure -s -w "%{http_code}" -L \
+          "https://github.com/fbelavenuto/arpl/releases/download/${TAG}/update.zip" -o /tmp/update.zip`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
             --msgbox "Error downloading update file" 0 0
