@@ -915,6 +915,10 @@ function updateMenu() {
         while IFS="=" read KEY VALUE; do
           mv /tmp/`basename "${KEY}"` "${VALUE}"
         done < <(readConfigMap "replace" "/tmp/update-list.yml")
+        while read F; do
+          [ -f "${F}" ] && rm -f "${F}"
+          [ -d "${F}" ] && rm -Rf "${F}"
+        done < <(readConfigArray "remove" "/tmp/update-list.yml")
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
           --yesno "Arpl updated with success to ${TAG}!\nReboot?" 0 0
         [ $? -ne 0 ] && continue
