@@ -35,21 +35,29 @@ I developed a simple patch to no longer display the DUMMY port error on models w
 ## Quickstart guide
 
 After booting the loader, the following screen should appear. Type menu.sh and press `<ENTER>`:
+
 ![](doc/first-screen.png)
 
 If you prefer, you can access it via the web:
+
 ![](doc/ttyd.png)
 
 Select the "model" option and choose the model you prefer:
+
 ![](doc/model.png)
 
 Select the "Buildnumber" option and choose the first option:
+
 ![](doc/buildnumber.png)
 
+Go to "Serial" menu and choose "Generate a random serial number".
+
 Select the "Build" option and wait for the loader to be generated:
+
 ![](doc/making.png)
 
 Select the "Boot" option and wait for the DSM to boot:
+
 ![](doc/DSM%20boot.png)
 
 The DSM kernel does not display messages on the screen, so it is necessary to continue the process of configuring DSM through the browser by accessing the address `http://<ip>`.
