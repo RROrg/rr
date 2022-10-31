@@ -6,15 +6,15 @@ I'm Brazilian and my English is not good, so I apologize for my translations.
 
 I tried to make the system as user-friendly as possible, to make life easier. The loader automatically detects which device is being used, SATADoM or USB, detecting its VID and PID correctly. redpill-lkm has been edited to allow booting the kernel without setting the variables related to network interfaces so the loader (and user) doesn't have to worry about that. The Jun's code that makes the zImage and Ramdisk patch is embedded, if there is a change in "zImage" or "rd.gz" by some smallupdate, the loader re-applies the patches. The most important kernel modules are built into the DSM ramdisk image for automatic peripheral detection.
 
-# Important
+# Important considerations
 
-## It is highly recommended to use an SSD for the loader in the case of the option via DoM or a fast USB flash drive
+ - Some users have experienced an excessively long time to boot. In this case is highly recommended to use an SSD for the loader in the case of the option via DoM or a fast USB flash drive;
 
-## You must have at least 4GB of RAM, both in baremetal and VMs
+ - You must have at least 4GB of RAM, both in baremetal and VMs;
 
-## The DSM kernel is compatible with SATA ports, not SAS/SCSI/etc. For device-tree models only SATA ports work. For the other models, another type of disks may work.
+ - The DSM kernel is compatible with SATA ports, not SAS/SCSI/etc. For device-tree models only SATA ports work. For the other models, another type of disks may work;
 
-## It is possible to use HBA cards, however SMART and serial # are only functional on DS3615xs, DS3617xs and DS3622xs+ models.
+ - It is possible to use HBA cards, however SMART and serial numbers are only functional on DS3615xs, DS3617xs and DS3622xs+ models.
 
 # Use
 
