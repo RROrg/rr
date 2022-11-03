@@ -69,29 +69,6 @@ builds:
       - "ramdisk-42661-post-init-script.patch"
       - "ramdisk-42661-disable-disabled-ports.patch"
 
-  42951:
-    ver: "7.1.1"
-    kver: "4.4.180"
-    rd-compressed: false
-    efi-bug: no
-    rc: true
-    cmdline:
-      <<: *cmdline
-    synoinfo:
-      <<: *synoinfo
-    pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42951/DSM_RS4021xs%2B_42951.pat"
-      hash: "7c9e076f3007662f63e34fd478fc48f32dee766f1ddc712f25ae91a2e56e078c"
-      ramdisk-hash: "c4d23a068a66499c50c9772fc5c90cc38dfcba5c45dcab085eda5d07d720046b"
-      zimage-hash: "9134fc61aea7f687d62728470b8847e640693c444e0afd130882b728ab553fea"
-      md5-hash: "e2d11981bba84b2eb6ba62b8bf2d2d28"
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
-      - "ramdisk-42661-disable-disabled-ports.patch"
-
   42962:
     ver: "7.1.1"
     kver: "4.4.180"

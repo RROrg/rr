@@ -66,28 +66,6 @@ builds:
       - "ramdisk-common-etc-rc.patch"
       - "ramdisk-42661-post-init-script.patch"
       
-  42951:
-    ver: "7.1.1"
-    kver: "4.4.180"
-    rd-compressed: false
-    efi-bug: no
-    rc: true
-    cmdline:
-      <<: *cmdline
-    synoinfo:
-      <<: *synoinfo
-    pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42951/DSM_FS2500_42951.pat"
-      hash: "a878c928d7133c3bf3e10e8d3fb43ca7449a57f01d240a3c80de51cdd43af5c3"
-      ramdisk-hash: "a248103b1b47f800753b627394af8768698b74944d156cb6e40c80cd6ba8556f"
-      zimage-hash: "d28951da0eb41286fbe37ffdfc880271787573d68226e5d26321819cf2d2e6e2"
-      md5-hash: "7b48e21c1f2090bb01d5f14a8e16a435"
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
-
   42962:
     ver: "7.1.1"
     kver: "4.4.180"
