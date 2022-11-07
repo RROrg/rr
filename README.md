@@ -20,7 +20,25 @@ I tried to make the system as user-friendly as possible, to make life easier. Th
 
 ## General
 
-To use this project, download the latest image available and burn it to a USB stick or SATA disk-on-module. Set the PC to boot from the burned media and follow the informations on the screen. When booting, the user can call the "menu.sh" command from the computer itself, access via SSH or use the virtual terminal (ttyd) by typing the address provided on the screen `http://<ip>:7681`. The loader will automatically increase the size of the last partition and use this space as cache if it is larger than 2GiB.
+To use this project, download the latest image available and burn it to a USB stick or SATA disk-on-module. Set the PC to boot from the burned media and follow the informations on the screen.
+
+The loader will automatically increase the size of the last partition and use this space as cache if it is larger than 2GiB.
+
+## Acessing loader
+
+### Via terminal
+
+Call the "menu.sh" command from the computer itself.
+
+### Via web
+
+From another machine into same network, type the address provided on the screen `http://<ip>:7681` in browser.
+
+### Via ssh
+
+From another machine into same network, use a ssh client, username `root` and password `Redp1lL-1s-4weSomE`
+
+## Using loader
 
 The menu system is dynamic and I hope it is intuitive enough that the user can use it without any problems.
 
@@ -65,7 +83,7 @@ There are several tutorials on how to configure DSM over the internet, which wil
 
 # Troubles/questions/etc
 
-Please use the Issues from github
+Please search the forums at https://xpenology.com/forum if your question/problem has been discussed and resolved. If you can't find a solution, use github issues.
 
 # Thanks
 
