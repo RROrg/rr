@@ -102,6 +102,7 @@ fi
 
 # Prepare command line
 CMDLINE_LINE=""
+CMDLINE_DIRECT=""
 grep -q "force_junior" /proc/cmdline && CMDLINE_LINE+="force_junior "
 [ ${EFI} -eq 1 ] && CMDLINE_LINE+="withefi "
 [ "${BUS}" = "ata" ] && CMDLINE_LINE+="synoboot_satadom=${DOM} dom_szmax=${SIZE} "
@@ -109,11 +110,14 @@ CMDLINE_LINE+="console=ttyS0,115200n8 earlyprintk log_buf_len=32M earlycon=uart8
 for KEY in ${!CMDLINE[@]}; do
   VALUE="${CMDLINE[${KEY}]}"
   CMDLINE_LINE+=" ${KEY}"
+  CMDLINE_DIRECT+=" ${KEY}"
   [ -n "${VALUE}" ] && CMDLINE_LINE+="=${VALUE}"
+  [ -n "${VALUE}" ] && CMDLINE_DIRECT+="=${VALUE}"
 done
 # Escape special chars
 CMDLINE_LINE=`echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g'`
-grub-editenv ${GRUB_PATH}/grubenv set dsm_cmdline="${CMDLINE_LINE}"
+CMDLINE_DIRECT=`echo ${CMDLINE_DIRECT} | sed 's/>/\\\\>/g'`
+grub-editenv ${GRUB_PATH}/grubenv set dsm_cmdline="${CMDLINE_DIRECT}"
 echo -e "Cmdline:\n\033[1;36m${CMDLINE_LINE}\033[0m"
 
 # Wait for an IP
