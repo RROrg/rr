@@ -1074,6 +1074,7 @@ while true; do
     i) synoinfoMenu; NEXT="l" ;;
     l) [ "${LKM}" = "dev" ] && LKM='prod' || LKM='dev'
       writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
+      DIRTY=1
       NEXT="o"
       ;;
     o) selectModules; NEXT="d" ;;
