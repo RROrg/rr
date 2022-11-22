@@ -128,7 +128,7 @@ while true; do
   if [ -n "${IP}" ]; then
     echo -e ": \033[1;32m${IP}\033[0m"
     break
-  elif [ ${COUNT} -eq 15 ]; then
+  elif [ ${COUNT} -eq 30 ]; then
     echo -e ": \033[1;31mERROR\033[0m"
     break
   fi
