@@ -160,7 +160,7 @@ fi
 COUNT=0
 echo -n "Waiting IP."
 while true; do
-  if [ ${COUNT} -eq 15 ]; then
+  if [ ${COUNT} -eq 30 ]; then
     echo "ERROR"
     break
   fi
