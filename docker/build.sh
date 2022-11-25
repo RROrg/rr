@@ -19,6 +19,7 @@ function prepare() {
   URLS["denverton"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/Intel%20x86%20Linux%204.4.180%20%28Denverton%29/denverton-${GCCLIB_VER}_x86_64-GPL.txz"
   URLS["geminilake"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/Intel%20x86%20Linux%204.4.180%20%28GeminiLake%29/geminilake-${GCCLIB_VER}_x86_64-GPL.txz"
   URLS["v1000"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/Intel%20x86%20Linux%204.4.180%20%28V1000%29/v1000-${GCCLIB_VER}_x86_64-GPL.txz"
+  URLS["r1000"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/AMD%20x86%20Linux%204.4.180%20%28r1000%29/r1000-${GCCLIB_VER}_x86_64-GPL.txz"
 
   # Read platforms/kerver version
   echo "Reading platforms"
@@ -62,13 +63,13 @@ function prepare() {
 }
 
 # 7.0
-TOOLKIT_VER="7.0"
-TOOLCHAIN_VER="7.0-41890"
-GCCLIB_VER="gcc750_glibc226"
-prepare
-echo "Building ${TOOLKIT_VER}"
-docker image rm fbelavenuto/syno-compiler:${TOOLKIT_VER} >/dev/null 2>&1
-docker buildx build . --load --tag fbelavenuto/syno-compiler:${TOOLKIT_VER}
+#TOOLKIT_VER="7.0"
+#TOOLCHAIN_VER="7.0-41890"
+#GCCLIB_VER="gcc750_glibc226"
+#prepare
+#echo "Building ${TOOLKIT_VER}"
+#docker image rm fbelavenuto/syno-compiler:${TOOLKIT_VER} >/dev/null 2>&1
+#docker buildx build . --load --tag fbelavenuto/syno-compiler:${TOOLKIT_VER}
 
 # 7.1
 TOOLKIT_VER="7.1"
