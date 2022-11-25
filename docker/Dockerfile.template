@@ -23,7 +23,7 @@ ENV SHELL=/bin/bash \
     ARCH=x86_64
 
 RUN apt update --yes && \
-    apt install --yes --no-install-recommends --no-install-suggests \
+    apt install --yes --no-install-recommends --no-install-suggests --allow-unauthenticated \
       ca-certificates nano curl bc kmod git gettext texinfo autopoint gawk sudo \
       build-essential make ncurses-dev libssl-dev autogen automake pkg-config libtool xsltproc gperf && \
     apt-get clean && \
