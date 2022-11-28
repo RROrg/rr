@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+CACHE_DIR="cache"
+PLATFORM_FILE="../../PLATFORMS"
+
 ###############################################################################
 function trap_cancel() {
     echo "Press Control+C once more terminate the process (or wait 2s for it to restart)"
@@ -26,26 +29,26 @@ function prepare() {
   declare -A PLATFORMS
   while read PLATFORM KVER; do
     PLATFORMS[${PLATFORM}]="${KVER}"
-  done <../PLATFORMS
+  done < ${PLATFORM_FILE}
 
   # Download toolkits
-  mkdir -p cache
+  mkdir -p ${CACHE_DIR}
 
   for PLATFORM in ${!PLATFORMS[@]}; do
     KVER="${PLATFORMS[${PLATFORM}]}"
-    echo -n "Checking cache/${TOOLKIT_VER}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz... "
-    if [ ! -f "cache/${TOOLKIT_VER}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz" ]; then
+    echo -n "Checking ${CACHE_DIR}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz... "
+    if [ ! -f "${CACHE_DIR}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz" ]; then
       URL="https://global.download.synology.com/download/ToolChain/toolkit/${TOOLKIT_VER}/${PLATFORM}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz"
       echo "Downloading ${URL}"
-      curl -L "${URL}" -o "cache/${TOOLKIT_VER}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz"
+      curl -L "${URL}" -o "${CACHE_DIR}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz"
     else
       echo "OK"
     fi
-    echo -n "Checking cache/${TOOLKIT_VER}/${PLATFORM}-toolchain.txz... "
-    if [ ! -f "cache/${TOOLKIT_VER}/${PLATFORM}-toolchain.txz" ]; then
+    echo -n "Checking ${CACHE_DIR}/${PLATFORM}-toolchain.txz... "
+    if [ ! -f "${CACHE_DIR}/${PLATFORM}-toolchain.txz" ]; then
       URL=${URLS["${PLATFORM}"]}
       echo "Downloading ${URL}"
-      curl -L "${URL}" -o "cache/${TOOLKIT_VER}/${PLATFORM}-toolchain.txz"
+      curl -L "${URL}" -o "${CACHE_DIR}/${PLATFORM}-toolchain.txz"
     else
       echo "OK"
     fi
