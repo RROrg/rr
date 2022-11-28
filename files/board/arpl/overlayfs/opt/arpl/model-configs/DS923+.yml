@@ -1,0 +1,49 @@
+id: "DS923+"
+synoinfo: &synoinfo
+  support_disk_compatibility: "no"
+  support_memory_compatibility: "no"
+  support_led_brightness_adjustment: "no"
+  rss_server: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.xml"
+  rss_server_ssl: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.xml"
+  rss_server_v2: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.json"
+cmdline: &cmdline
+  SMBusHddDynamicPower: 1
+  synoboot2:
+  syno_ttyS0: "serial,0x3f8"
+  syno_ttyS1: "serial,0x2f8"
+  vender_format_version: 2
+platform: "r1000"
+unique: "synology_r1000_923+"
+beta: true
+dom: 2
+dt: true
+serial:
+  prefix:
+    - "2030"
+    - "2040"
+    - "20C0"
+    - "2150"
+  middle: "SBR"
+  suffix: "alpha"
+disks: 4
+builds:
+  42962:
+    ver: "7.1.1"
+    kver: "4.4.180"
+    rd-compressed: false
+    efi-bug: no
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42962/DSM_DS923%2B_42962.pat"
+      hash: "e33b47df446ce0bd99c5613767c9dba977915e25acfb5ccb9f5650b14459458f"
+      ramdisk-hash: "0aa3f1b2d00f887aaf0d0e2c8b51ec97bb545bf5f99c40f33d3eaabc32a5ac03"
+      zimage-hash: "1e54804c84e0b4e7f71eff5b5ec8aad9c6ba8fb4fc200ad92251d7d29155a651"
+      md5-hash: "fdff6232dacf9bd3b189506f51577128"
+    patch:
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"
