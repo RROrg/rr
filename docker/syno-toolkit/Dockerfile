@@ -1,0 +1,15 @@
+FROM scratch
+ARG PLATFORM
+ARG TOOLKIT_VER
+ARG CACHE_DIR
+
+ENV PLATFORM=${PLATFORM} TOOLKIT_VER=${TOOLKIT_VER}
+ADD ${CACHE_DIR}/base_env-${TOOLKIT_VER}.txz /
+ADD ${CACHE_DIR}/ds.${PLATFORM}-${TOOLKIT_VER}.env.txz /
+ADD ${CACHE_DIR}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz /
+ADD rootfs /
+
+WORKDIR /input
+VOLUME /input /output
+
+ENTRYPOINT ["/usr/bin/do.sh"]
