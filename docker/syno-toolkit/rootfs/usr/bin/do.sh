@@ -61,8 +61,17 @@ if [ $# -lt 1 ]; then
   echo "Commands: shell | compile-module | compile-lkm"
   exit 1
 fi
+export PATH="/usr/local/x86_64-pc-linux-gnu/bin:${PATH}"
 export KSRC="/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${TOOLKIT_VER}/build"
 export LINUX_SRC="/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${TOOLKIT_VER}/build"
+export CROSS_COMPILE="/usr/local/x86_64-pc-linux-gnu/bin/x86_64-pc-linux-gnu-"
+#export CFLAGS="-I/opt/${1}/include"
+#export LDFLAGS="-I/opt/${1}/lib"
+#export LD_LIBRARY_PATH="/opt/${1}/lib"
+export ARCH=x86_64
+export CC="x86_64-pc-linux-gnu-gcc"
+export LD="x86_64-pc-linux-gnu-ld"
+
 case $1 in
   shell) shift && bash -l $@ ;;
   compile-module) compile-module ;;
