@@ -1,3 +1,4 @@
+export PATH="/usr/local/x86_64-pc-linux-gnu/bin:${PATH}"
 [[ "$-" != *i* ]] && return
 export LS_OPTIONS='--color=auto'
 export SHELL='linux'
@@ -7,4 +8,3 @@ alias ll='ls -l'
 alias l='ls -l -a'
 alias h='history 25'
 alias j='jobs -l'
-export PATH="/opt/${PLATFORM}/bin:${PATH}"
