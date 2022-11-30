@@ -23,6 +23,7 @@ function prepare() {
   URLS["geminilake"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/Intel%20x86%20Linux%204.4.180%20%28GeminiLake%29/geminilake-${GCCLIB_VER}_x86_64-GPL.txz"
   URLS["v1000"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/Intel%20x86%20Linux%204.4.180%20%28V1000%29/v1000-${GCCLIB_VER}_x86_64-GPL.txz"
   URLS["r1000"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/AMD%20x86%20Linux%204.4.180%20%28r1000%29/r1000-${GCCLIB_VER}_x86_64-GPL.txz"
+  URLS["epyc7002"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/AMD%20x86%20Linux%20Linux%205.10.55%20%28epyc7002%29/epyc7002-${GCCLIB_VER}_x86_64-GPL.txz"
 
   # Read platforms/kerver version
   echo "Reading platforms"
