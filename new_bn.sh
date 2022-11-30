@@ -7,6 +7,7 @@ set -e
 declare -A KVERS
 KVERS["DS918+"]="4.4.180"
 KVERS["DS920+"]="4.4.180"
+KVERS["DS923+"]="4.4.180"
 KVERS["DS1520+"]="4.4.180"
 KVERS["DS1621+"]="4.4.180"
 KVERS["DS2422+"]="4.4.180"
