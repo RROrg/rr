@@ -4,12 +4,12 @@
 . /opt/arpl/include/addons.sh
 . /opt/arpl/include/modules.sh
 
-# Check partition 3 space, if < 2GiB uses ramdisk
-RAMCACHE=0
+# Check partition 3 space, if < 2GiB is necessary clean cache folder
+CLEARCACHE=0
 LOADER_DISK="`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1`"
 LOADER_DEVICE_NAME=`echo ${LOADER_DISK} | sed 's|/dev/||'`
 if [ `cat /sys/block/${LOADER_DEVICE_NAME}/${LOADER_DEVICE_NAME}3/size` -lt 4194304 ]; then
-  RAMCACHE=1
+  CLEARCACHE=1
 fi
 
 # Get actual IP
@@ -616,12 +616,11 @@ function extractDsmFiles() {
   RAMDISK_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.ramdisk-hash"`"
   ZIMAGE_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.zimage-hash"`"
 
-  if [ ${RAMCACHE} -eq 0 ]; then
-    OUT_PATH="${CACHE_PATH}/dl"
-    echo "Cache in disk"
-  else
-    OUT_PATH="${TMP_PATH}/dl"
-    echo "Cache in ram"
+  OUT_PATH="${CACHE_PATH}/dl"
+
+  if [ ${CLEARCACHE} -eq 1 ]; then
+    echo "Cleaning cache"
+    rm -rf "${OUT_PATH}"
   fi
   mkdir -p "${OUT_PATH}"
 
@@ -703,7 +702,7 @@ function extractDsmFiles() {
       if [ $? -ne 0 ]; then
         dialog --backtitle "`backtitle`" --title "Error extracting" --textbox "${LOG_FILE}" 0 0
       fi
-
+      rm "${OLDPAT_PATH}"
       # Extract all files from rd.gz
       (cd "${RAMDISK_PATH}"; xz -dc < rd.gz | cpio -idm) >/dev/null 2>&1 || true
       # Copy only necessary files
@@ -1058,7 +1057,7 @@ while true; do
   fi
   echo "u \"Edit user config file manually\""         >> "${TMP_PATH}/menu"
   echo "k \"Choose a keymap\" "                       >> "${TMP_PATH}/menu"
-  [ ${RAMCACHE} -eq 0 -a -d "${CACHE_PATH}/dl" ] && echo "c \"Clean disk cache\"" >> "${TMP_PATH}/menu"
+  [ ${CLEARCACHE} -eq 0 -a -d "${CACHE_PATH}/dl" ] && echo "c \"Clean disk cache\"" >> "${TMP_PATH}/menu"
   echo "p \"Update menu\""                            >> "${TMP_PATH}/menu"
   echo "e \"Exit\"" >> "${TMP_PATH}/menu"
   dialog --clear --default-item ${NEXT} --backtitle "`backtitle`" --colors \
