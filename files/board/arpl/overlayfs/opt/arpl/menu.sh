@@ -616,27 +616,34 @@ function extractDsmFiles() {
   RAMDISK_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.ramdisk-hash"`"
   ZIMAGE_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.zimage-hash"`"
 
-  OUT_PATH="${CACHE_PATH}/dl"
-
+  # If we have little disk space, clean cache folder
   if [ ${CLEARCACHE} -eq 1 ]; then
     echo "Cleaning cache"
-    rm -rf "${OUT_PATH}"
+    rm -rf "${CACHE_PATH}/dl"
   fi
-  mkdir -p "${OUT_PATH}"
+  mkdir -p "${CACHE_PATH}/dl"
+
+  SPACELEFT=`df --block-size=1 | awk '/'${LOADER_DEVICE_NAME}'3/{print$4}'`  # Check disk space left
 
   PAT_FILE="${MODEL}-${BUILD}.pat"
-  PAT_PATH="${OUT_PATH}/${PAT_FILE}"
+  PAT_PATH="${CACHE_PATH}/dl/${PAT_FILE}"
   EXTRACTOR_PATH="${CACHE_PATH}/extractor"
   EXTRACTOR_BIN="syno_extract_system_patch"
   OLDPAT_URL="https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
-  OLDPAT_PATH="${OUT_PATH}/DS3622xs+-42218.pat"
 
   if [ -f "${PAT_PATH}" ]; then
     echo "${PAT_FILE} cached."
   else
     echo "Downloading ${PAT_FILE}"
+    # Discover remote file size
+    FILESIZE=`curl --insecure -sLI "${PAT_URL}" | grep -i Content-Length | awk '{print$2}'`
+    if [ 0${FILESIZE} -ge ${SPACELEFT} ]; then
+      # No disk space to download, change it to RAMDISK
+      PAT_PATH="${TMP_PATH}/${PAT_FILE}"
+    fi
     STATUS=`curl --insecure -w "%{http_code}" -L "${PAT_URL}" -o "${PAT_PATH}" --progress-bar`
     if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+      rm "${PAT_PATH}"
       dialog --backtitle "`backtitle`" --title "Error downloading" --aspect 18 \
         --msgbox "Check internet or cache disk space" 0 0
       return 1
@@ -678,6 +685,8 @@ function extractDsmFiles() {
       ;;
   esac
 
+  SPACELEFT=`df --block-size=1 | awk '/'${LOADER_DEVICE_NAME}'3/{print$4}'`  # Check disk space left
+
   if [ "${isencrypted}" = "yes" ]; then
     # Check existance of extractor
     if [ -f "${EXTRACTOR_PATH}/${EXTRACTOR_BIN}" ]; then
@@ -686,23 +695,34 @@ function extractDsmFiles() {
       # Extractor not exists, get it.
       mkdir -p "${EXTRACTOR_PATH}"
       # Check if old pat already downloaded
+      OLDPAT_PATH="${CACHE_PATH}/dl/DS3622xs+-42218.pat"
       if [ ! -f "${OLDPAT_PATH}" ]; then
         echo "Downloading old pat to extract synology .pat extractor..."
+        # Discover remote file size
+        FILESIZE=`curl --insecure -sLI "${OLDPAT_URL}" | grep -i Content-Length | awk '{print$2}'`
+        if [ 0${FILESIZE} -ge ${SPACELEFT} ]; then
+          # No disk space to download, change it to RAMDISK
+          OLDPAT_PATH="${TMP_PATH}/DS3622xs+-42218.pat"
+        fi
         STATUS=`curl --insecure -w "%{http_code}" -L "${OLDPAT_URL}" -o "${OLDPAT_PATH}"  --progress-bar`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+          rm "${OLDPAT_PATH}"
           dialog --backtitle "`backtitle`" --title "Error downloading" --aspect 18 \
             --msgbox "Check internet or cache disk space" 0 0
           return 1
         fi
       fi
-      # Extract ramdisk from PAT
+      # Extract DSM ramdisk file from PAT
       rm -rf "${RAMDISK_PATH}"
       mkdir -p "${RAMDISK_PATH}"
       tar -xf "${OLDPAT_PATH}" -C "${RAMDISK_PATH}" rd.gz >"${LOG_FILE}" 2>&1
       if [ $? -ne 0 ]; then
+        rm "${OLDPAT_PATH}"
+        rm -rf "${RAMDISK_PATH}"
         dialog --backtitle "`backtitle`" --title "Error extracting" --textbox "${LOG_FILE}" 0 0
+        return 1
       fi
-      rm "${OLDPAT_PATH}"
+      rm -f "${TMP_PATH}/DS3622xs+-42218.pat"
       # Extract all files from rd.gz
       (cd "${RAMDISK_PATH}"; xz -dc < rd.gz | cpio -idm) >/dev/null 2>&1 || true
       # Copy only necessary files
@@ -752,6 +772,7 @@ function extractDsmFiles() {
   cp "${UNTAR_PAT_PATH}/GRUB_VER"        "${SLPART_PATH}"
   cp "${UNTAR_PAT_PATH}/zImage"          "${ORI_ZIMAGE_FILE}"
   cp "${UNTAR_PAT_PATH}/rd.gz"           "${ORI_RDGZ_FILE}"
+  rm -rf "${UNTAR_PAT_PATH}"
   echo "OK"
 }
 
