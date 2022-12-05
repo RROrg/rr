@@ -30,30 +30,6 @@ function compile-lkm {
 }
 
 ###############################################################################
-# function compile-drivers {
-#   while read platform kver; do
-#     SRC_PATH="/opt/${platform}"
-#     echo "Compiling for ${platform}-${kver}"
-#     cd /opt/linux-${kver}/drivers
-#     while read dir; do
-#       if [ -f "${dir}/Makefile" ]; then
-#         echo "Driver `basename ${dir}`"
-#         grep "CONFIG_.*/.*"   "${dir}/Makefile" | sed 's/.*\(CONFIG_[^)]*\).*/\1=n/g' >  /tmp/env
-#         grep "CONFIG_.*\.o.*" "${dir}/Makefile" | sed 's/.*\(CONFIG_[^)]*\).*/\1=m/g' >> /tmp/env
-#         make -C "${SRC_PATH}" M=$(readlink -f "${dir}") clean
-#         cat /tmp/env | xargs -d '\n' make -C "${SRC_PATH}" M=$(readlink -f "${dir}") modules $@
-#       fi
-#     done < <(find -type d)
-#     DST_PATH="/output/compiled-mods/${platform}-${kver}"
-#     mkdir -p "${DST_PATH}"
-#     while read f; do
-#       strip -g "${f}"
-#       mv "${f}" "${DST_PATH}"
-#     done < <(find -name \*.ko)
-#   done </opt/platforms
-# }
-
-###############################################################################
 ###############################################################################
 
 if [ $# -lt 1 ]; then
@@ -61,13 +37,9 @@ if [ $# -lt 1 ]; then
   echo "Commands: shell | compile-module | compile-lkm"
   exit 1
 fi
-export PATH="/usr/local/x86_64-pc-linux-gnu/bin:${PATH}"
 export KSRC="/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${TOOLKIT_VER}/build"
 export LINUX_SRC="/usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${TOOLKIT_VER}/build"
 export CROSS_COMPILE="/usr/local/x86_64-pc-linux-gnu/bin/x86_64-pc-linux-gnu-"
-#export CFLAGS="-I/opt/${1}/include"
-#export LDFLAGS="-I/opt/${1}/lib"
-#export LD_LIBRARY_PATH="/opt/${1}/lib"
 export ARCH=x86_64
 export CC="x86_64-pc-linux-gnu-gcc"
 export LD="x86_64-pc-linux-gnu-ld"
@@ -76,6 +48,5 @@ case $1 in
   shell) shift && bash -l $@ ;;
   compile-module) compile-module ;;
   compile-lkm) compile-lkm ;;
-  # compile-drivers) compile-drivers ;;
   *) echo "Command not recognized: $1" ;;
 esac

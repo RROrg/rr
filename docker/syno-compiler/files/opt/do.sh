@@ -9,15 +9,16 @@ function export-vars() {
     echo "Use: export-vars <platform>"
     exit 1
   fi
+  export PLATFORM="${1}"
   export KSRC="/opt/${1}/build"
   export CROSS_COMPILE="/opt/${1}/bin/x86_64-pc-linux-gnu-"
   export CFLAGS="-I/opt/${1}/include"
   export LDFLAGS="-I/opt/${1}/lib"
   export LD_LIBRARY_PATH="/opt/${1}/lib"
   export ARCH=x86_64
-  export PATH="/opt/${1}/bin:${PATH}"
   export CC="x86_64-pc-linux-gnu-gcc"
   export LD="x86_64-pc-linux-gnu-ld"
+  export PATH="/opt/${1}/bin:${PATH}"
 }
 
 ###############################################################################

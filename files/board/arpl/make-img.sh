@@ -15,7 +15,7 @@ BOARD_PATH="${CONFIG_DIR}/board/arpl"
 
 echo "Creating image file"
 # Create image zeroed
-dd if="/dev/zero" of="${IMAGE_FILE}" bs=1M count=500 conv=sync 2>/dev/null
+dd if="/dev/zero" of="${IMAGE_FILE}" bs=1M count=1024 conv=sync 2>/dev/null
 # Copy grub stage1 to image
 dd if="${BOARD_PATH}/grub.bin" of="${IMAGE_FILE}" conv=notrunc,sync 2>/dev/null
 # Create partitions on image

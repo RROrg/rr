@@ -3,7 +3,7 @@ ARG PLATFORMS="@@@PLATFORMS@@@"
 ARG TOOLKIT_VER="@@@TOOLKIT_VER@@@"
 
 # Copy downloaded toolkits
-ADD cache/$TOOLKIT_VER /cache
+ADD cache /cache
 # Extract toolkits
 RUN for V in ${PLATFORMS}; do \
       echo "${V}" | while IFS=':' read PLATFORM KVER; do \
