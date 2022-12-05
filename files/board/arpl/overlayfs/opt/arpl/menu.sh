@@ -530,85 +530,6 @@ function synoinfoMenu() {
 }
 
 ###############################################################################
-# Permit user select the modules to include
-function selectModules() {
-  PLATFORM="`readModelKey "${MODEL}" "platform"`"
-  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
-  dialog --backtitle "`backtitle`" --title "Modules" --aspect 18 \
-    --infobox "Reading modules" 0 0
-  ALLMODULES=`getAllModules "${PLATFORM}" "${KVER}"`
-  unset USERMODULES
-  declare -A USERMODULES
-  while IFS="=" read KEY VALUE; do
-    [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
-  done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
-  # menu loop
-  while true; do
-    dialog --backtitle "`backtitle`" --menu "Choose a option" 0 0 0 \
-      s "Show selected modules" \
-      a "Select all modules" \
-      d "Deselect all modules" \
-      c "Choose modules to include" \
-      e "Exit" \
-      2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && break
-    case "`<${TMP_PATH}/resp`" in
-      s) ITEMS=""
-        for KEY in ${!USERMODULES[@]}; do
-          ITEMS+="${KEY}: ${USERMODULES[$KEY]}\n"
-        done
-        dialog --backtitle "`backtitle`" --title "User modules" \
-          --msgbox "${ITEMS}" 0 0
-        ;;
-      a) dialog --backtitle "`backtitle`" --title "Modules" \
-           --infobox "Selecting all modules" 0 0
-        unset USERMODULES
-        declare -A USERMODULES
-        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-        while read ID DESC; do
-          USERMODULES["${ID}"]=""
-          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
-        done <<<${ALLMODULES}
-        ;;
-
-      d) dialog --backtitle "`backtitle`" --title "Modules" \
-           --infobox "Deselecting all modules" 0 0
-        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-        unset USERMODULES
-        declare -A USERMODULES
-        ;;
-
-      c)
-        rm -f "${TMP_PATH}/opts"
-        while read ID DESC; do
-          arrayExistItem "${ID}" "${!USERMODULES[@]}" && ACT="on" || ACT="off"
-          echo "${ID} ${DESC} ${ACT}" >> "${TMP_PATH}/opts"
-        done <<<${ALLMODULES}
-        dialog --backtitle "`backtitle`" --title "Modules" --aspect 18 \
-          --checklist "Select modules to include" 0 0 0 \
-          --file "${TMP_PATH}/opts" 2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        resp=$(<${TMP_PATH}/resp)
-        [ -z "${resp}" ] && continue
-        dialog --backtitle "`backtitle`" --title "Modules" \
-           --infobox "Writing to user config" 0 0
-        unset USERMODULES
-        declare -A USERMODULES
-        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-        for ID in ${resp}; do
-          USERMODULES["${ID}"]=""
-          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
-        done
-        ;;
-
-      e)
-        break
-        ;;
-    esac
-  done
-}
-
-###############################################################################
 # Extract linux and ramdisk files from the DSM .pat
 function extractDsmFiles() {
   PAT_URL="`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`"
@@ -819,14 +740,119 @@ function make() {
 }
 
 ###############################################################################
-# Calls boot.sh to boot into DSM kernel/ramdisk
-function boot() {
-  [ ${DIRTY} -eq 1 ] && dialog --backtitle "`backtitle`" --title "Alert" \
-    --yesno "Config changed, would you like to rebuild the loader?" 0 0
-  if [ $? -eq 0 ]; then
-    make || return
-  fi
-  boot.sh
+# Advanced menu
+function advancedMenu() {
+  NEXT="l"
+  while true; do
+    rm "${TMP_PATH}/menu"
+    if [ -n "${BUILD}" ]; then
+      echo "l \"Switch LKM version: \Z4${LKM}\Zn\""        >> "${TMP_PATH}/menu"
+      echo "o \"Modules\""                                 >> "${TMP_PATH}/menu"
+    fi
+    if loaderIsConfigured; then
+      echo "r \"Switch direct boot: \Z4${DIRECTBOOT}\Zn\"" >> "${TMP_PATH}/menu"
+    fi
+    echo "u \"Edit user config file manually\""            >> "${TMP_PATH}/menu"
+    echo "e \"Exit\""                                      >> "${TMP_PATH}/menu"
+
+    dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "Advanced" \
+      --colors --menu "Choose the option" 0 0 0 --file "${TMP_PATH}/menu" \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && break
+    case `<"${TMP_PATH}/resp"` in
+      l) [ "${LKM}" = "dev" ] && LKM='prod' || LKM='dev'
+        writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
+        DIRTY=1
+        NEXT="o"
+        ;;
+      o) selectModules; NEXT="r" ;;
+      r) [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
+        writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
+        NEXT="u"
+        ;;
+      u) editUserConfig; NEXT="e" ;;
+      e) break ;;
+    esac
+  done
+}
+
+###############################################################################
+# Permit user select the modules to include
+function selectModules() {
+  PLATFORM="`readModelKey "${MODEL}" "platform"`"
+  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
+  dialog --backtitle "`backtitle`" --title "Modules" --aspect 18 \
+    --infobox "Reading modules" 0 0
+  ALLMODULES=`getAllModules "${PLATFORM}" "${KVER}"`
+  unset USERMODULES
+  declare -A USERMODULES
+  while IFS="=" read KEY VALUE; do
+    [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
+  done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
+  # menu loop
+  while true; do
+    dialog --backtitle "`backtitle`" --menu "Choose a option" 0 0 0 \
+      s "Show selected modules" \
+      a "Select all modules" \
+      d "Deselect all modules" \
+      c "Choose modules to include" \
+      e "Exit" \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && break
+    case "`<${TMP_PATH}/resp`" in
+      s) ITEMS=""
+        for KEY in ${!USERMODULES[@]}; do
+          ITEMS+="${KEY}: ${USERMODULES[$KEY]}\n"
+        done
+        dialog --backtitle "`backtitle`" --title "User modules" \
+          --msgbox "${ITEMS}" 0 0
+        ;;
+      a) dialog --backtitle "`backtitle`" --title "Modules" \
+           --infobox "Selecting all modules" 0 0
+        unset USERMODULES
+        declare -A USERMODULES
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        while read ID DESC; do
+          USERMODULES["${ID}"]=""
+          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+        done <<<${ALLMODULES}
+        ;;
+
+      d) dialog --backtitle "`backtitle`" --title "Modules" \
+           --infobox "Deselecting all modules" 0 0
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        unset USERMODULES
+        declare -A USERMODULES
+        ;;
+
+      c)
+        rm -f "${TMP_PATH}/opts"
+        while read ID DESC; do
+          arrayExistItem "${ID}" "${!USERMODULES[@]}" && ACT="on" || ACT="off"
+          echo "${ID} ${DESC} ${ACT}" >> "${TMP_PATH}/opts"
+        done <<<${ALLMODULES}
+        dialog --backtitle "`backtitle`" --title "Modules" --aspect 18 \
+          --checklist "Select modules to include" 0 0 0 \
+          --file "${TMP_PATH}/opts" 2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        resp=$(<${TMP_PATH}/resp)
+        [ -z "${resp}" ] && continue
+        dialog --backtitle "`backtitle`" --title "Modules" \
+           --infobox "Writing to user config" 0 0
+        unset USERMODULES
+        declare -A USERMODULES
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        for ID in ${resp}; do
+          USERMODULES["${ID}"]=""
+          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+        done
+        ;;
+
+      e)
+        break
+        ;;
+    esac
+  done
 }
 
 ###############################################################################
@@ -853,6 +879,17 @@ function editUserConfig() {
     rm -f "${MOD_RDGZ_FILE}"
   fi
   DIRTY=1
+}
+
+###############################################################################
+# Calls boot.sh to boot into DSM kernel/ramdisk
+function boot() {
+  [ ${DIRTY} -eq 1 ] && dialog --backtitle "`backtitle`" --title "Alert" \
+    --yesno "Config changed, would you like to rebuild the loader?" 0 0
+  if [ $? -eq 0 ]; then
+    make || return
+  fi
+  boot.sh
 }
 
 ###############################################################################
@@ -971,6 +1008,7 @@ function updateMenu() {
         unzip /tmp/addons.zip -d /tmp/addons >/dev/null 2>&1
         dialog --backtitle "`backtitle`" --title "Update addons" --aspect 18 \
           --infobox "Installing new addons" 0 0
+        rm -Rf "${ADDONS_PATH}/"*
         for PKG in `ls /tmp/addons/*.addon`; do
           ADDON=`basename ${PKG} | sed 's|.addon||'`
           rm -rf "${ADDONS_PATH}/${ADDON}"
@@ -1067,21 +1105,21 @@ while true; do
       echo "a \"Addons\""                             >> "${TMP_PATH}/menu"
       echo "x \"Cmdline menu\""                       >> "${TMP_PATH}/menu"
       echo "i \"Synoinfo menu\""                      >> "${TMP_PATH}/menu"
-      echo "l \"Switch LKM version: \Z4${LKM}\Zn\""   >> "${TMP_PATH}/menu"
-      echo "o \"Modules\""                            >> "${TMP_PATH}/menu"
       echo "d \"Build the loader\""                   >> "${TMP_PATH}/menu"
     fi
   fi
+  echo "v \"Advanced menu\""                          >> "${TMP_PATH}/menu"
   if loaderIsConfigured; then
-    echo "r \"Switch direct boot: \Z4${DIRECTBOOT}\Zn\"">> "${TMP_PATH}/menu"
     echo "b \"Boot the loader\" "                     >> "${TMP_PATH}/menu"
   fi
-  echo "u \"Edit user config file manually\""         >> "${TMP_PATH}/menu"
   echo "k \"Choose a keymap\" "                       >> "${TMP_PATH}/menu"
-  [ ${CLEARCACHE} -eq 0 -a -d "${CACHE_PATH}/dl" ] && echo "c \"Clean disk cache\"" >> "${TMP_PATH}/menu"
+  if [ ${CLEARCACHE} -eq 0 -a -d "${CACHE_PATH}/dl" ]; then
+    echo "c \"Clean disk cache\""                     >> "${TMP_PATH}/menu"
+  fi
   echo "p \"Update menu\""                            >> "${TMP_PATH}/menu"
   echo "e \"Exit\"" >> "${TMP_PATH}/menu"
-  dialog --clear --default-item ${NEXT} --backtitle "`backtitle`" --colors \
+
+  dialog --default-item ${NEXT} --backtitle "`backtitle`" --colors \
     --menu "Choose the option" 0 0 0 --file "${TMP_PATH}/menu" \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && break
@@ -1091,20 +1129,10 @@ while true; do
     s) serialMenu; NEXT="a" ;;
     a) addonMenu; NEXT="x" ;;
     x) cmdlineMenu; NEXT="i" ;;
-    i) synoinfoMenu; NEXT="l" ;;
-    l) [ "${LKM}" = "dev" ] && LKM='prod' || LKM='dev'
-      writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
-      DIRTY=1
-      NEXT="o"
-      ;;
-    o) selectModules; NEXT="d" ;;
-    d) make; NEXT="r" ;;
-    r) [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
-      writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
-      NEXT="b"
-      ;;
+    i) synoinfoMenu; NEXT="d" ;;
+    d) make; NEXT="v" ;;
+    v) advancedMenu; NEXT="b" ;;
     b) boot ;;
-    u) editUserConfig; NEXT="u" ;;
     k) keymapMenu ;;
     c) dialog --backtitle "`backtitle`" --title "Cleaning" --aspect 18 \
       --prgbox "rm -rfv \"${CACHE_PATH}/dl\"" 0 0 ;;
