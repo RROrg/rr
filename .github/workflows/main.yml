@@ -77,6 +77,7 @@ jobs:
           # Copy files
           echo "Copying files"
           sed 's/^ARPL_VERSION=.*/ARPL_VERSION="'${VERSION}'"/' -i files/board/arpl/overlayfs/opt/arpl/include/consts.sh
+          echo "${VERSION}" > files/board/arpl/p1/ARPL-VERSION
           cp -Ru files/* .buildroot/
           cd .buildroot
           echo "Generating default config"

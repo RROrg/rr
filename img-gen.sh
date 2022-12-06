@@ -71,6 +71,7 @@ fi
 echo "Copying files"
 VERSION=`cat VERSION`
 sed 's/^ARPL_VERSION=.*/ARPL_VERSION="'${VERSION}'"/' -i files/board/arpl/overlayfs/opt/arpl/include/consts.sh
+echo "${VERSION}" > files/board/arpl/p1/ARPL-VERSION
 cp -Ru files/* .buildroot/
 
 cd .buildroot
