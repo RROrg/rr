@@ -1131,7 +1131,7 @@ while true; do
     x) cmdlineMenu; NEXT="i" ;;
     i) synoinfoMenu; NEXT="d" ;;
     d) make; NEXT="v" ;;
-    v) advancedMenu; NEXT="b" ;;
+    v) advancedMenu; NEXT="d" ;;
     b) boot ;;
     k) keymapMenu ;;
     c) dialog --backtitle "`backtitle`" --title "Cleaning" --aspect 18 \
