@@ -25,6 +25,7 @@ mkdir -p "${RAMDISK_PATH}"
 MODEL="`readConfigKey "model" "${USER_CONFIG_FILE}"`"
 BUILD="`readConfigKey "build" "${USER_CONFIG_FILE}"`"
 LKM="`readConfigKey "lkm" "${USER_CONFIG_FILE}"`"
+SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
 
 if [ ${BUILD} -ne ${buildnumber} ]; then
   echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${BUILD}\033[1;32m to \033[1;31m${buildnumber}\033[0m"
@@ -72,6 +73,8 @@ echo -n "."
 for KEY in ${!SYNOINFO[@]}; do
   _set_conf_kv "${KEY}" "${SYNOINFO[${KEY}]}" "${RAMDISK_PATH}/etc/synoinfo.conf" >"${LOG_FILE}" 2>&1 || dieLog
 done
+# Add serial number to synoinfo.conf, to help to recovery a installed DSM
+_set_conf_kv "SN" "${SN}" "${RAMDISK_PATH}/etc/synoinfo.conf" >"${LOG_FILE}" 2>&1 || dieLog
 
 # Patch /sbin/init.post
 echo -n "."
@@ -80,9 +83,11 @@ sed -e "/@@@CONFIG-MANIPULATORS-TOOLS@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e
 rm "${TMP_PATH}/rp.txt"
 touch "${TMP_PATH}/rp.txt"
 for KEY in ${!SYNOINFO[@]}; do
-  echo "_set_conf_kv '${KEY}' '${SYNOINFO[${KEY}]}' '/tmpRoot/etc/synoinfo.conf'" >> "${TMP_PATH}/rp.txt"
+  echo "_set_conf_kv '${KEY}' '${SYNOINFO[${KEY}]}' '/tmpRoot/etc/synoinfo.conf'"          >> "${TMP_PATH}/rp.txt"
   echo "_set_conf_kv '${KEY}' '${SYNOINFO[${KEY}]}' '/tmpRoot/etc.defaults/synoinfo.conf'" >> "${TMP_PATH}/rp.txt"
 done
+echo "_set_conf_kv 'SN' '${SN}' '/tmpRoot/etc/synoinfo.conf'"                              >> "${TMP_PATH}/rp.txt"
+echo "_set_conf_kv 'SN' '${SN}' '/tmpRoot/etc.defaults/synoinfo.conf'"                     >> "${TMP_PATH}/rp.txt"
 sed -e "/@@@CONFIG-GENERATED@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
 rm "${TMP_PATH}/rp.txt"
 
