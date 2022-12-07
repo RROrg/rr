@@ -148,6 +148,14 @@ function arrayExistItem() {
 }
 
 ###############################################################################
+# Get values in .conf K=V file
+# 1 - key
+# 2 - file
+function _get_conf_kv() {
+  grep "${1}" "${2}" | sed "s|^${1}=\"\(.*\)\"$|\1|g"
+}
+
+###############################################################################
 # Replace/remove/add values in .conf K=V file
 # 1 - name
 # 2 - new_val
@@ -167,4 +175,19 @@ function _set_conf_kv() {
 
   # Add if doesn't exist
   echo "$1=\"$2\"" >> $3
+}
+
+###############################################################################
+# Find and mount the DSM root filesystem
+# (based on pocopico's TCRP code)
+function findAndMountDSMRoot() {
+  [ $(mount | grep -i "${DSMROOT_PATH}" | wc -l) -gt 0 ] && return 0
+  dsmrootdisk="$(blkid /dev/sd* | grep -i raid | awk '{print $1 " " $4}' | grep UUID | grep sd[a-z]1 | head -1 | awk -F ":" '{print $1}')"
+  [ -z "${dsmrootdisk}" ] && return -1
+  [ $(mount | grep -i "${DSMROOT_PATH}" | wc -l) -eq 0 ] && mount -t ext4 $dsmrootdisk "${DSMROOT_PATH}"
+  if [ $(mount | grep -i "${DSMROOT_PATH}" | wc -l) -eq 0 ]; then
+    echo "Failed to mount"
+    return -1
+  fi
+  return 0
 }

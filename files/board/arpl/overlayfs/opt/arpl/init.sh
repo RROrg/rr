@@ -37,6 +37,7 @@ fsck.ext2 -p ${LOADER_DISK}3 >/dev/null 2>&1 || true
 mkdir -p ${BOOTLOADER_PATH}
 mkdir -p ${SLPART_PATH}
 mkdir -p ${CACHE_PATH}
+mkdir -p ${DSMROOT_PATH}
 # Mount the partitions
 mount ${LOADER_DISK}1 ${BOOTLOADER_PATH} || die "Can't mount ${BOOTLOADER_PATH}"
 mount ${LOADER_DISK}2 ${SLPART_PATH}     || die "Can't mount ${SLPART_PATH}"
