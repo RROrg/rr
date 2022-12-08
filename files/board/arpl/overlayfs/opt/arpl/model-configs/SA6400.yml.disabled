@@ -1,0 +1,46 @@
+id: "SA6400"
+synoinfo: &synoinfo
+  support_disk_compatibility: "no"
+  support_memory_compatibility: "no"
+  support_led_brightness_adjustment: "no"
+  rss_server: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.xml"
+  rss_server_ssl: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.xml"
+  rss_server_v2: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.json"
+cmdline: &cmdline
+  SMBusHddDynamicPower: 1
+  synoboot2:
+  syno_ttyS0: "serial,0x3f8"
+  syno_ttyS1: "serial,0x2f8"
+  vender_format_version: 2
+platform: "epyc7002"
+unique: "synology_epyc7002_sa6400"
+beta: true
+dom: 2
+serial:
+  prefix:
+    - "0000"
+  middle: "XXX"
+  suffix: "alpha"
+disks: 16
+dt: true
+builds:
+  42962:
+    ver: "7.1.1"
+    kver: "5.10.55"
+    rd-compressed: false
+    efi-bug: no
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42962/DSM_SA6400_42962.pat"
+      hash: "83fc408380ebb1381224261de6220b873d7b62a99e715557509ae9553f618a71"
+      ramdisk-hash: "d4efe45fc4dd71758fe365f7eb39d24982d1440b00986259cab9a03577982f68"
+      zimage-hash: "d5b8af848fc585695e35bd1c4f4c953fd8e54435b2799face4f8f350bac6df93"
+      md5-hash: "fdbbea86e280a8f754339a064f9ad2df"
+    patch:
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"

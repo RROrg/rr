@@ -60,6 +60,7 @@ void errorMsg(char *fmt, ...) {
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
     va_end(args);
+    fprintf(stderr, "\n");
     exit(1);
 }
 
@@ -307,15 +308,39 @@ int main(int argc, char *argv[]) {
     Elf_Scn *section;
     GElf_Shdr sectionHeader;
     char *sectionName;
+    char *fileIn = NULL, *fileOut = NULL;
+    int onlyBoot = 0, onlyRD = 0, onlyCMOS = 0, c;
 
-    if (argc != 3) {
-        errorMsg("Use: kpatch <vmlinux> <output>\n");
+    if (argc < 3) {
+        errorMsg("Use: kpatch (option) <vmlinux> <output>\nOptions:\n -b  Only bootparams\n -r  Only ramdisk\n -c  Only CMOS");
+    }
+    c = 1;
+    while (c < argc) {
+      if (strcmp(argv[c], "-b") == 0) {
+        onlyBoot = 1;
+      } else if (strcmp(argv[c], "-r") == 0) {
+        onlyRD = 1;
+      } else if (strcmp(argv[c], "-c") == 0) {
+        onlyCMOS = 1;
+      } else if (fileIn == NULL) {
+        fileIn = argv[c];
+      } else {
+        fileOut = argv[c];
+        break;
+      }
+      ++c;
+    }
+    if (NULL == fileIn) {
+        errorMsg("Please give a input filename");
+    }
+    if (NULL == fileOut) {
+        errorMsg("Please give a output filename");
     }
 
     if (elf_version(EV_CURRENT) == EV_NONE)
         elfErrno();
 
-    if ((fd = open(argv[1], O_RDONLY)) == -1)
+    if ((fd = open(fileIn, O_RDONLY)) == -1)
         errorNum();
 
     if ((elfHandle = elf_begin(fd, ELF_C_READ, NULL)) == NULL)
@@ -367,10 +392,22 @@ int main(int argc, char *argv[]) {
     printf("Found .init.text offset @ %lX\n", initTextOffs);
     printf("Found .rodata address @ %lX\n", rodataAddr);
     printf("Found .rodata offset @ %lX\n", rodataOffs);
-    patchBootParams();
-    patchRamdiskCheck();
-    patchCmosWrite();
-    if ((fd = open(argv[2], O_WRONLY | O_CREAT, 0644)) == -1) {
+    if (onlyBoot == 0 && onlyCMOS == 0 && onlyRD == 0) {
+        patchBootParams();
+        patchRamdiskCheck();
+        patchCmosWrite();
+    } else {
+        if (onlyBoot == 1) {
+            patchBootParams();
+        }
+        if (onlyRD == 1) {
+            patchRamdiskCheck();
+        }
+        if (onlyCMOS == 1) {
+            patchCmosWrite();
+        }
+    }
+    if ((fd = open(fileOut, O_WRONLY | O_CREAT, 0644)) == -1) {
         errorNum();
     }
     if (fileSize != write(fd, fileData, fileSize)) {
