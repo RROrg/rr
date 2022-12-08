@@ -150,9 +150,9 @@ echo -e "\033[1;37mLoading DSM kernel...\033[0m"
 # Executes DSM kernel via KEXEC
 if [ "${EFI_BUG}" = "yes" -a ${EFI} -eq 1 ]; then
   echo -e "\033[1;33mWarning, running kexec with --noefi param, strange things will happen!!\033[0m"
-  kexec --noefi -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
+  kexec --args-linux --noefi -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 else
-  kexec -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
+  kexec --args-linux -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 fi
 /sbin/swapoff -a >/dev/null 2>&1 || true
 /bin/umount -a -r >/dev/null 2>&1 || true
