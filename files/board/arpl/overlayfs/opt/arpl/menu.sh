@@ -1187,9 +1187,9 @@ while true; do
     s) serialMenu; NEXT="a" ;;
     a) addonMenu; NEXT="x" ;;
     x) cmdlineMenu; NEXT="i" ;;
-    i) synoinfoMenu; NEXT="d" ;;
-    d) make; NEXT="v" ;;
-    v) advancedMenu; NEXT="b" ;;
+    i) synoinfoMenu; NEXT="v" ;;
+    v) advancedMenu; NEXT="d" ;;
+    d) make; NEXT="b" ;;
     b) boot ;;
     k) keymapMenu ;;
     c) dialog --backtitle "`backtitle`" --title "Cleaning" --aspect 18 \
