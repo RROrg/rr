@@ -646,13 +646,13 @@ function extractDsmFiles() {
       rm -rf "${RAMDISK_PATH}"
       mkdir -p "${RAMDISK_PATH}"
       tar -xf "${OLDPAT_PATH}" -C "${RAMDISK_PATH}" rd.gz >"${LOG_FILE}" 2>&1
+      [ ${CLEARCACHE} -eq 1 ] && rm -f "${OLDPAT_PATH}"
       if [ $? -ne 0 ]; then
-        rm "${OLDPAT_PATH}"
+        rm -f "${OLDPAT_PATH}"
         rm -rf "${RAMDISK_PATH}"
         dialog --backtitle "`backtitle`" --title "Error extracting" --textbox "${LOG_FILE}" 0 0
         return 1
       fi
-      rm -f "${TMP_PATH}/DS3622xs+-42218.pat"
       # Extract all files from rd.gz
       (cd "${RAMDISK_PATH}"; xz -dc < rd.gz | cpio -idm) >/dev/null 2>&1 || true
       # Copy only necessary files
@@ -1171,7 +1171,7 @@ while true; do
     echo "b \"Boot the loader\" "                     >> "${TMP_PATH}/menu"
   fi
   echo "k \"Choose a keymap\" "                       >> "${TMP_PATH}/menu"
-  if [ ${CLEARCACHE} -eq 0 -a -d "${CACHE_PATH}/dl" ]; then
+  if [ ${CLEARCACHE} -eq 1 -a -d "${CACHE_PATH}/dl" ]; then
     echo "c \"Clean disk cache\""                     >> "${TMP_PATH}/menu"
   fi
   echo "p \"Update menu\""                            >> "${TMP_PATH}/menu"
