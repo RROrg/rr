@@ -74,6 +74,15 @@ jobs:
             echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
             tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
           done
+          # Get latest modules
+          echo "Getting latest modules"
+          MODULES_DIR="files/board/arpl/p3/modules"
+          TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-modules/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+          while read PLATFORM KVER; do
+            FILE="${PLATFORM}-${KVER}"
+            curl -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/${FILE}.tgz" -o "${MODULES_DIR}/${FILE}.tgz"
+          done < PLATFORMS
+          curl -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/firmware.tgz" -o "${MODULES_DIR}/firmware.tgz"
           # Copy files
           echo "Copying files"
           sed 's/^ARPL_VERSION=.*/ARPL_VERSION="'${VERSION}'"/' -i files/board/arpl/overlayfs/opt/arpl/include/consts.sh
