@@ -646,13 +646,13 @@ function extractDsmFiles() {
       rm -rf "${RAMDISK_PATH}"
       mkdir -p "${RAMDISK_PATH}"
       tar -xf "${OLDPAT_PATH}" -C "${RAMDISK_PATH}" rd.gz >"${LOG_FILE}" 2>&1
-      [ ${CLEARCACHE} -eq 1 ] && rm -f "${OLDPAT_PATH}"
       if [ $? -ne 0 ]; then
         rm -f "${OLDPAT_PATH}"
         rm -rf "${RAMDISK_PATH}"
         dialog --backtitle "`backtitle`" --title "Error extracting" --textbox "${LOG_FILE}" 0 0
         return 1
       fi
+      [ ${CLEARCACHE} -eq 1 ] && rm -f "${OLDPAT_PATH}"
       # Extract all files from rd.gz
       (cd "${RAMDISK_PATH}"; xz -dc < rd.gz | cpio -idm) >/dev/null 2>&1 || true
       # Copy only necessary files
