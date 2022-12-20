@@ -12,6 +12,7 @@ cmdline: &cmdline
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
   vender_format_version: 2
+  scsi_mod.use_blk_mq: 1
 platform: "epyc7002"
 unique: "synology_epyc7002_sa6400"
 beta: true
