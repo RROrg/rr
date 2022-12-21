@@ -78,7 +78,7 @@ done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
 # Check if machine has EFI
 [ -d /sys/firmware/efi ] && EFI=1 || EFI=0
 # Read EFI bug value
-EFI_BUG="`readModelKey "${MODEL}" "builds.${BUILD}.efi-bug"`"
+[ "${MODEL}" = "DS3615" ] && EFI_BUG=1 || EFI_BUG=0
 
 LOADER_DISK="`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1`"
 BUS=`udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2`
@@ -106,7 +106,7 @@ grep -q "force_junior" /proc/cmdline && CMDLINE_LINE+="force_junior "
 [ ${EFI} -eq 1 ] && CMDLINE_LINE+="withefi "
 [ "${BUS}" = "ata" ] && CMDLINE_LINE+="synoboot_satadom=${DOM} dom_szmax=${SIZE} "
 CMDLINE_DIRECT="${CMDLINE_LINE}"
-CMDLINE_LINE+="console=ttyS0,115200n8 earlyprintk log_buf_len=32M earlycon=uart8250,io,0x3f8,115200n8 root=/dev/md0 loglevel=15"
+CMDLINE_LINE+="console=ttyS0,115200n8 earlyprintk earlycon=uart8250,io,0x3f8,115200n8 root=/dev/md0 loglevel=15 log_buf_len=32M"
 for KEY in ${!CMDLINE[@]}; do
   VALUE="${CMDLINE[${KEY}]}"
   CMDLINE_LINE+=" ${KEY}"
@@ -150,9 +150,9 @@ echo -e "\033[1;37mLoading DSM kernel...\033[0m"
 # Executes DSM kernel via KEXEC
 if [ "${EFI_BUG}" = "yes" -a ${EFI} -eq 1 ]; then
   echo -e "\033[1;33mWarning, running kexec with --noefi param, strange things will happen!!\033[0m"
-  kexec --args-linux --noefi -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
+  kexec --noefi -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 else
-  kexec --args-linux -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
+  kexec -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 fi
 /sbin/swapoff -a >/dev/null 2>&1 || true
 /bin/umount -a -r >/dev/null 2>&1 || true

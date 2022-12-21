@@ -56,7 +56,6 @@ for MODEL in DS918+ DS920+ DS923+ DS1520+ DS1621+ DS2422+ DS3615xs DS3617xs DS36
     ver: "${RELEASE}"
     kver: "${KVERS[${MODEL}]}"
     rd-compressed: false
-    efi-bug: no
     cmdline:
       <<: *cmdline
     synoinfo:
