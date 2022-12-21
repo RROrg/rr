@@ -71,12 +71,10 @@ else
   # Kernel version 5.x
   gzip -cd "${SCRIPT_DIR}/bzImage-template-v5.gz" > "${ZIMAGE_MOD}"
 
-  lzma -9c ${VMLINUX_MOD} > ${TMP_PATH}/vmlinux-mod.lzma
-  dd if="${TMP_PATH}/vmlinux-mod.lzma" of="${ZIMAGE_MOD}" bs=15377 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=8377991 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=8420412 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-
-  RUN_SIZE=`objdump -h ${VMLINUX_MOD} | sh "${SCRIPT_DIR}/calc_run_size.sh"`
-  size_le ${RUN_SIZE} | dd of=${ZIMAGE_MOD} bs=8420408 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
+  dd if="${VMLINUX_MOD}" of="${ZIMAGE_MOD}" bs=14561 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
+  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=34463421 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
+  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=34479132 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
+#  RUN_SIZE=`objdump -h ${VMLINUX_MOD} | sh "${SCRIPT_DIR}/calc_run_size.sh"`
+#  size_le ${RUN_SIZE} | dd of=${ZIMAGE_MOD} bs=34626904 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
   size_le $(($((16#`crc32 "${ZIMAGE_MOD}" | awk '{print$1}'`)) ^ 0xFFFFFFFF)) | dd of="${ZIMAGE_MOD}" conv=notrunc oflag=append >"${LOG_FILE}" 2>&1 || dieLog
 fi
