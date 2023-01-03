@@ -29,7 +29,8 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
 ::sysinit:/etc/init.d/rcS
 
 # Login in terminals
-::respawn:/sbin/agetty -a root --noclear tty1
+tty1::respawn:/sbin/agetty -a root --noclear tty1
+tty2::askfirst:/sbin/agetty --noclear tty2
 ttyS0::askfirst:/sbin/agetty -a root ttyS0 115200 linux
 ::respawn:/usr/bin/ttyd login -f root
 
