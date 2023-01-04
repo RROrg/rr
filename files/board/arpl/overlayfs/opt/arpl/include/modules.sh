@@ -14,7 +14,7 @@ function getAllModules() {
   for F in `ls ${TMP_PATH}/modules/*.ko`; do
     X=`basename ${F}`
     M=${X:0:-3}
-    DESC=`modinfo ${F} | awk -F':' '/description/{ print $2}' | awk '{sub(/^[ ]+/,""); print}'`
+    DESC=`modinfo ${F} | awk -F':' '/description:/{ print $2}' | awk '{sub(/^[ ]+/,""); print}'`
     [ -z "${DESC}" ] && DESC="${X}"
     echo "${M} \"${DESC}\""
   done
