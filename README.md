@@ -81,6 +81,11 @@ Select the "Boot" option and wait for the DSM to boot:
 The DSM kernel does not display messages on the screen, so it is necessary to continue the process of configuring DSM through the browser by accessing the address `http://<ip>`.
 There are several tutorials on how to configure DSM over the internet, which will not be covered here.
 
+# Tutorials
+
+An ARPL user (Rikkie) created a tutorial to install ARPL on a proxmox server:
+https://hotstuff.asia/2023/01/03/xpenology-with-arpl-on-proxmox-the-easy-way/
+
 # Troubles/questions/etc
 
 Please search the forums at https://xpenology.com/forum if your question/problem has been discussed and resolved. If you can't find a solution, use github issues.
