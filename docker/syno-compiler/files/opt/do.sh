@@ -47,6 +47,7 @@ function compile-module {
     echo "Platform ${1} not found."
     exit 1
   fi
+  unset VALID
   echo -e "Compiling module for \033[7m${PLATFORM}-${KVER}\033[0m..."
   cp -R /input /tmp
   export-vars ${PLATFORM}
