@@ -154,7 +154,6 @@ if [ "${EFI_BUG}" = "yes" -a ${EFI} -eq 1 ]; then
 else
   kexec -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 fi
-/sbin/swapoff -a >/dev/null 2>&1 || true
-/bin/umount -a -r >/dev/null 2>&1 || true
 echo -e "\033[1;37mBooting...\033[0m"
-kexec -e -a >"${LOG_FILE}" 2>&1 || dieLog
+poweroff
+while true; do sleep 1; done # infinity loop

@@ -43,3 +43,4 @@ ttyS0::askfirst:/sbin/agetty -a root ttyS0 115200 linux
 ::shutdown:/etc/init.d/rcK
 ::shutdown:/sbin/swapoff -a
 ::shutdown:/bin/umount -a -r
+::shutdown:/usr/sbin/kexec -e -a
