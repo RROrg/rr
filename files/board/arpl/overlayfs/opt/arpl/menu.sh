@@ -1132,6 +1132,11 @@ function updateMenu() {
           rm "${MODULES_PATH}/${P}.tgz"
           mv "/tmp/${P}.tgz" "${MODULES_PATH}/${P}.tgz"
         done
+        # Rebuild modules
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        while read ID DESC; do
+          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+        done < <(getAllModules "${PLATFORM}" "${KVER}")
         DIRTY=1
         dialog --backtitle "`backtitle`" --title "Update Modules" --aspect 18 \
           --msgbox "Modules updated with success!" 0 0
