@@ -1025,6 +1025,7 @@ function updateMenu() {
           --infobox "Installing new files" 0 0
         # Process update-list.yml
         while IFS="=" read KEY VALUE; do
+          mkdir -p "`dirname "${VALUE}"`"
           mv /tmp/`basename "${KEY}"` "${VALUE}"
         done < <(readConfigMap "replace" "/tmp/update-list.yml")
         while read F; do
