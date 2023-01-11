@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CACHE_DIR="cache"
-PLATFORM_FILE="../../PLATFORMS"
+PLATFORM_FILE="PLATFORMS"
 
 ###############################################################################
 function trap_cancel() {

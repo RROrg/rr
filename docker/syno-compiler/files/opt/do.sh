@@ -51,8 +51,12 @@ function compile-module {
   echo -e "Compiling module for \033[7m${PLATFORM}-${KVER}\033[0m..."
   cp -R /input /tmp
   export-vars ${PLATFORM}
-  make -C "/opt/${PLATFORM}/build" M="/tmp/input" \
-       ${PLATFORM^^}-Y=y ${PLATFORM^^}-M=m modules
+  PARMS="${PLATFORM^^}-Y=y ${PLATFORM^^}-M=m"
+  if [ -f "/tmp/input/defines" ]
+  then
+    PARMS+=" `cat "/tmp/input/defines" | xargs`"
+  fi
+  make -C "/opt/${PLATFORM}/build" M="/tmp/input" ${PARMS} modules
   while read F; do
     strip -g "${F}"
     echo "Copying `basename ${F}`"
