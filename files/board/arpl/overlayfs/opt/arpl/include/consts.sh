@@ -1,5 +1,5 @@
 
-ARPL_VERSION="1.0-beta11"
+ARPL_VERSION="1.0-beta11a"
 
 # Define paths
 TMP_PATH="/tmp"
