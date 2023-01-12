@@ -52,11 +52,11 @@ function compile-module {
   cp -R /input /tmp
   export-vars ${PLATFORM}
   PARMS="${PLATFORM^^}-Y=y ${PLATFORM^^}-M=m"
-  if [ -f "/tmp/input/defines" ]
+  if [ -f "/tmp/input/defines.${1}" ]
   then
-    PARMS+=" `cat "/tmp/input/defines" | xargs`"
+    PARMS+=" `cat "/tmp/input/defines.${1}" | xargs`"
   fi
-  make -C "/opt/${PLATFORM}/build" M="/tmp/input" ${PARMS} modules
+  make -j`nproc` -C "/opt/${PLATFORM}/build" M="/tmp/input" ${PARMS} modules
   while read F; do
     strip -g "${F}"
     echo "Copying `basename ${F}`"
