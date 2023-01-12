@@ -1026,14 +1026,20 @@ function updateMenu() {
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
           --infobox "Installing new files" 0 0
         # Process update-list.yml
-        while IFS="=" read KEY VALUE; do
-          mkdir -p "`dirname "${VALUE}"`"
-          mv /tmp/`basename "${KEY}"` "${VALUE}"
-        done < <(readConfigMap "replace" "/tmp/update-list.yml")
         while read F; do
           [ -f "${F}" ] && rm -f "${F}"
           [ -d "${F}" ] && rm -Rf "${F}"
         done < <(readConfigArray "remove" "/tmp/update-list.yml")
+        while IFS="=" read KEY VALUE; do
+          if [ "${KEY: -1}" = "/" ]; then
+            rm -Rf "${VALUE}"
+            mkdir -p "${VALUE}"
+            gzip -dc "/tmp/`basename "${KEY}"`.tgz" | tar xf - -C "${VALUE}"
+          else
+            mkdir -p "`dirname "${VALUE}"`"
+            mv "/tmp/`basename "${KEY}"`" "${VALUE}"
+          fi
+        done < <(readConfigMap "replace" "/tmp/update-list.yml")
         dialog --backtitle "`backtitle`" --title "Update arpl" --aspect 18 \
           --yesno "Arpl updated with success to ${TAG}!\nReboot?" 0 0
         [ $? -ne 0 ] && continue
