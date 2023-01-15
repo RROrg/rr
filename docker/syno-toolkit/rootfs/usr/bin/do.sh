@@ -6,7 +6,11 @@ set -e
 function compile-module {
   echo -e "Compiling module for \033[7m${PLATFORM}\033[0m..."
   cp -R /input /tmp
-  make -C ${KSRC} M=/tmp/input ${PLATFORM^^}-Y=y ${PLATFORM^^}-M=m modules
+  PARMS="${PLATFORM^^}-Y=y ${PLATFORM^^}-M=m"
+  if [ -f "/tmp/input/defines.${PLATFORM}" ]; then
+    PARMS+=" `cat "/tmp/input/defines.${PLATFORM}" | xargs`"
+  fi
+  make -j`nproc` -C ${KSRC} M=/tmp/input ${PARMS} modules
   while read F; do
     strip -g "${F}"
     echo "Copying `basename ${F}`"

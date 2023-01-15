@@ -3,7 +3,7 @@
 set -e
 
 CACHE_DIR="cache"
-PLATFORM_FILE="../../PLATFORMS"
+PLATFORM_FILE="PLATFORMS"
 TOOLKIT_VER=7.1
 
 ###############################################################################
