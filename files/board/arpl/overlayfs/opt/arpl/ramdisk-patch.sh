@@ -32,6 +32,8 @@ MODEL="`readConfigKey "model" "${USER_CONFIG_FILE}"`"
 BUILD="`readConfigKey "build" "${USER_CONFIG_FILE}"`"
 LKM="`readConfigKey "lkm" "${USER_CONFIG_FILE}"`"
 SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
+LAYOUT="`readConfigKey "layout" "${USER_CONFIG_FILE}"`"
+KEYMAP="`readConfigKey "keymap" "${USER_CONFIG_FILE}"`"
 
 if [ ${BUILD} -ne ${buildnumber} ]; then
   echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${BUILD}\033[1;32m to \033[1;31m${buildnumber}\033[0m"
@@ -147,6 +149,7 @@ echo "/addons/powersched.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${L
 # User addons
 for ADDON in ${!ADDONS[@]}; do
   PARAMS=${ADDONS[${ADDON}]}
+  [ "${ADDON}" = "console" ] && PARAMS="${LAYOUT}/${KEYMAP}"
   if ! installAddon ${ADDON}; then
     echo "ADDON ${ADDON} not found!" | tee -a "${LOG_FILE}"
     exit 1

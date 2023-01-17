@@ -968,7 +968,7 @@ function keymapMenu() {
   KEYMAP=${resp}
   writeConfigKey "layout" "${LAYOUT}" "${USER_CONFIG_FILE}"
   writeConfigKey "keymap" "${KEYMAP}" "${USER_CONFIG_FILE}"
-  zcat /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz | loadkeys
+  loadkeys /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz
 }
 
 ###############################################################################
