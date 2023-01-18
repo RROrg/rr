@@ -14,6 +14,13 @@ RUN for V in ${PLATFORMS}; do \
           "usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${TOOLKIT_VER}" && \
         echo "Extracting ${PLATFORM}-toolchain.txz" && \
         tar -xaf "/cache/${PLATFORM}-toolchain.txz" -C "/opt/${PLATFORM}" --strip-components=1; \
+        KVER_MAJOR="`echo ${KVER} | rev | cut -d. -f2- | rev`"; \
+        if [ ! -d "/opt/linux-${KVER_MAJOR}.x" -a -f "/cache/linux-${KVER_MAJOR}.x.txz" ]; then \
+          echo "Extracting linux-${KVER_MAJOR}.x.txz" && \
+          tar -xaf "/cache/linux-${KVER_MAJOR}.x.txz" -C "/opt"; \
+          rm -rf /opt/${PLATFORM}/source && \
+          ln -s /opt/linux-${KVER_MAJOR}.x /opt/${PLATFORM}/source; \
+        fi; \
       done; \
     done
 
@@ -22,20 +29,22 @@ FROM debian:8-slim
 ENV SHELL=/bin/bash \
     ARCH=x86_64
 
+COPY --from=stage /opt /opt
 RUN apt update --yes && \
     apt install --yes --no-install-recommends --no-install-suggests --allow-unauthenticated \
       ca-certificates nano curl bc kmod git gettext texinfo autopoint gawk sudo \
       build-essential make ncurses-dev libssl-dev autogen automake pkg-config libtool xsltproc gperf && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    useradd --home-dir /input --no-create-home --shell /bin/bash --uid 1000 arpl && \
-    echo "arpl ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/arpl
+    useradd --create-home --shell /bin/bash --uid 1000 --user-group arpl && \
+    echo "arpl ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/arpl && \
+    chown 1000:1000 -R /opt && \
+    mkdir /output && chown 1000:1000 /output
 
-COPY --from=stage /opt /opt
 COPY files/ /
 
+USER arpl
 WORKDIR /input
 VOLUME /input /output
-USER arpl
 
 ENTRYPOINT ["/opt/do.sh"]
