@@ -59,6 +59,7 @@ jobs:
           STATUS=`curl -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/firmware.tgz" -o "${MODULES_DIR}/firmware.tgz"`
           echo "Status=${STATUS}"
           [ ${STATUS} -ne 200 ] && exit 1
+          echo OK
 
       # Prepare buildroot for first make (for cache)
       - name: Prepare buildroot
