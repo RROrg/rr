@@ -50,10 +50,10 @@ jobs:
           TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-modules/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
           while read PLATFORM KVER; do
             FILE="${PLATFORM}-${KVER}"
-            STATUS=`curl -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/${FILE}.tgz" -o "${MODULES_DIR}/${FILE}.tgz"`
+            STATUS=`curl -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/${FILE}.tgz" -o "${MODULES_DIR}/${FILE}.tgz"`
             [ ${STATUS} -ne 200 ] && exit 1
           done < PLATFORMS
-          STATUS=`curl -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/firmware.tgz" -o "${MODULES_DIR}/firmware.tgz"`
+          STATUS=`curl -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/firmware.tgz" -o "${MODULES_DIR}/firmware.tgz"`
           [ ${STATUS} -ne 200 ] && exit 1
 
       # Prepare buildroot for first make (for cache)
