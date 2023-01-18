@@ -132,6 +132,11 @@ echo -n "."
 mkdir -p "${RAMDISK_PATH}/addons"
 echo "#!/bin/sh" > "${RAMDISK_PATH}/addons/addons.sh"
 echo 'echo "addons.sh called with params ${@}"' >> "${RAMDISK_PATH}/addons/addons.sh"
+echo "export PLATFORM=${PLATFORM}"              >> "${RAMDISK_PATH}/addons/addons.sh"
+echo "export MODEL=${MODEL}"                    >> "${RAMDISK_PATH}/addons/addons.sh"
+echo "export BUILD=${BUILD}"                    >> "${RAMDISK_PATH}/addons/addons.sh"
+echo "export LAYOUT=${LAYOUT}"                  >> "${RAMDISK_PATH}/addons/addons.sh"
+echo "export KEYMAP=${KEYMAP}"                  >> "${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
 
 # Required addons: eudev, dtbpatch/maxdisks, powersched
@@ -149,7 +154,6 @@ echo "/addons/powersched.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${L
 # User addons
 for ADDON in ${!ADDONS[@]}; do
   PARAMS=${ADDONS[${ADDON}]}
-  [ "${ADDON}" = "console" ] && PARAMS="${LAYOUT}/${KEYMAP}"
   if ! installAddon ${ADDON}; then
     echo "ADDON ${ADDON} not found!" | tee -a "${LOG_FILE}"
     exit 1
