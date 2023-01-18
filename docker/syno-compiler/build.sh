@@ -25,6 +25,8 @@ function prepare() {
   URLS["r1000"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/AMD%20x86%20Linux%204.4.180%20%28r1000%29/r1000-${GCCLIB_VER}_x86_64-GPL.txz"
   URLS["epyc7002"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/AMD%20x86%20Linux%20Linux%205.10.55%20%28epyc7002%29/epyc7002-${GCCLIB_VER}_x86_64-GPL.txz"
 
+  URLS["3.10.x"]="https://ufpr.dl.sourceforge.net/project/dsgpl/Synology%20NAS%20GPL%20Source/25426branch/bromolow-source/linux-3.10.x.txz"
+  
   # Read platforms/kerver version
   echo "Reading platforms"
   declare -A PLATFORMS
@@ -40,7 +42,7 @@ function prepare() {
     echo -n "Checking ${CACHE_DIR}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz... "
     if [ ! -f "${CACHE_DIR}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz" ]; then
       URL="https://global.download.synology.com/download/ToolChain/toolkit/${TOOLKIT_VER}/${PLATFORM}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz"
-      echo "Downloading ${URL}"
+      echo -e "No\nDownloading ${URL}"
       curl -L "${URL}" -o "${CACHE_DIR}/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz"
     else
       echo "OK"
@@ -48,8 +50,20 @@ function prepare() {
     echo -n "Checking ${CACHE_DIR}/${PLATFORM}-toolchain.txz... "
     if [ ! -f "${CACHE_DIR}/${PLATFORM}-toolchain.txz" ]; then
       URL=${URLS["${PLATFORM}"]}
-      echo "Downloading ${URL}"
+      echo -e "No\nDownloading ${URL}"
       curl -L "${URL}" -o "${CACHE_DIR}/${PLATFORM}-toolchain.txz"
+    else
+      echo "OK"
+    fi
+  done
+
+  for KERNEL in 3.10.x 4.4.x 5.10.x; do
+    URL=${URLS["${KERNEL}"]}
+    [ -z "${URL}" ] && continue
+    echo -n "Checking ${CACHE_DIR}/linux-${KERNEL}.txz... "
+    if [ ! -f "${CACHE_DIR}/linux-${KERNEL}.txz" ]; then
+      echo -e "No\nDownloading ${URL}"
+      curl -L "${URL}" -o "${CACHE_DIR}/linux-${KERNEL}.txz"
     else
       echo "OK"
     fi

@@ -18,12 +18,15 @@ function export-vars() {
   export ARCH=x86_64
   export CC="x86_64-pc-linux-gnu-gcc"
   export LD="x86_64-pc-linux-gnu-ld"
-  export PATH="/opt/${1}/bin:${PATH}"
+  echo "export PATH=\"/opt/${1}/bin:${PATH}\"" | \
+    sudo tee /etc/profile.d/path.sh >/dev/null
+  sudo chmod +x /etc/profile.d/path.sh
 }
 
 ###############################################################################
 function shell() {
-  #cp /opt/${2}/build/System.map /input
+  cp -fv /opt/${2}/build/.config /opt/${2}/source/
+  cp -fv /opt/${2}/build/System.map /opt/${2}/source/
   export-vars $2
   shift 2
   bash -l $@
