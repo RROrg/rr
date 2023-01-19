@@ -29,7 +29,6 @@ FROM debian:8-slim
 ENV SHELL=/bin/bash \
     ARCH=x86_64
 
-COPY --from=stage /opt /opt
 RUN apt update --yes && \
     apt install --yes --no-install-recommends --no-install-suggests --allow-unauthenticated \
       ca-certificates nano curl bc kmod git gettext texinfo autopoint gawk sudo \
@@ -38,9 +37,9 @@ RUN apt update --yes && \
     rm -rf /var/lib/apt/lists/* && \
     useradd --create-home --shell /bin/bash --uid 1000 --user-group arpl && \
     echo "arpl ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/arpl && \
-    chown 1000:1000 -R /opt && \
     mkdir /output && chown 1000:1000 /output
 
+COPY --from=stage --chown=1000:1000 /opt /opt
 COPY files/ /
 
 USER arpl

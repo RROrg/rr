@@ -25,8 +25,7 @@ function prepare() {
   URLS["r1000"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/AMD%20x86%20Linux%204.4.180%20%28r1000%29/r1000-${GCCLIB_VER}_x86_64-GPL.txz"
   URLS["epyc7002"]="https://global.download.synology.com/download/ToolChain/toolchain/${TOOLCHAIN_VER}/AMD%20x86%20Linux%20Linux%205.10.55%20%28epyc7002%29/epyc7002-${GCCLIB_VER}_x86_64-GPL.txz"
 
-  URLS["3.10.x"]="https://ufpr.dl.sourceforge.net/project/dsgpl/Synology%20NAS%20GPL%20Source/25426branch/bromolow-source/linux-3.10.x.txz"
-  
+
   # Read platforms/kerver version
   echo "Reading platforms"
   declare -A PLATFORMS
