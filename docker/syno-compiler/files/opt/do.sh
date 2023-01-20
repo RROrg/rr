@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -eo pipefail
 
 ###############################################################################
 function export-vars() {
@@ -27,6 +27,7 @@ function export-vars() {
 function shell() {
   cp -fv /opt/${2}/build/.config /opt/${2}/source/
   cp -fv /opt/${2}/build/System.map /opt/${2}/source/
+  cp -fv /opt/${2}/build/Module.symvers /opt/${2}/source/
   export-vars $2
   shift 2
   bash -l $@
@@ -55,8 +56,7 @@ function compile-module {
   cp -R /input /tmp
   export-vars ${PLATFORM}
   PARMS="${PLATFORM^^}-Y=y ${PLATFORM^^}-M=m"
-  if [ -f "/tmp/input/defines.${1}" ]
-  then
+  if [ -f "/tmp/input/defines.${1}" ]; then
     PARMS+=" `cat "/tmp/input/defines.${1}" | xargs`"
   fi
   make -j`nproc` -C "/opt/${PLATFORM}/build" M="/tmp/input" ${PARMS} modules
