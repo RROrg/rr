@@ -158,7 +158,9 @@ elif grep -q "IWANTTOCHANGETHECONFIG" /proc/cmdline; then
 fi
 
 # If is to boot automatically, do it
-[ ${BOOT} -eq 1 ] && boot.sh
+if [ ${BOOT} -eq 1 ]; then 
+  boot.sh && exit 0
+fi
 
 # Wait for an IP
 COUNT=0
