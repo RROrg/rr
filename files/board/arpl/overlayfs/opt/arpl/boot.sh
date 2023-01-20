@@ -18,9 +18,6 @@ printf "\033[1;44m%*s\033[0m\n" ${COLUMNS} ""
 TITLE="BOOTING..."
 printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE}+${COLUMNS})/2)) "${TITLE}"
 
-history -w
-sync
-
 # Check if DSM zImage changed, patch it if necessary
 ZIMAGE_HASH="`readConfigKey "zimage-hash" "${USER_CONFIG_FILE}"`"
 if [ "`sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print$1}'`" != "${ZIMAGE_HASH}" ]; then
@@ -29,7 +26,7 @@ if [ "`sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print$1}'`" != "${ZIMAGE_HASH}" ];
   if [ $? -ne 0 ]; then
     dialog --backtitle "`backtitle`" --title "Error" \
       --msgbox "zImage not patched:\n`<"${LOG_FILE}"`" 12 70
-    return 1
+    exit 1
   fi
 fi
 
@@ -41,7 +38,7 @@ if [ "`sha256sum "${ORI_RDGZ_FILE}" | awk '{print$1}'`" != "${RAMDISK_HASH}" ]; 
   if [ $? -ne 0 ]; then
     dialog --backtitle "`backtitle`" --title "Error" \
       --msgbox "Ramdisk not patched:\n`<"${LOG_FILE}"`" 12 70
-    return 1
+    exit 1
   fi
 fi
 
@@ -142,8 +139,7 @@ if [ "${DIRECT}" = "true" ]; then
   echo -e "\033[1;33mReboot to boot directly in DSM\033[0m"
   grub-editenv ${GRUB_PATH}/grubenv set next_entry="direct"
   reboot
-  sleep 100
-  exit
+  exit 0
 fi
 echo -e "\033[1;37mLoading DSM kernel...\033[0m"
 
@@ -156,4 +152,4 @@ else
 fi
 echo -e "\033[1;37mBooting...\033[0m"
 poweroff
-while true; do sleep 1; done # infinity loop
+exit 0

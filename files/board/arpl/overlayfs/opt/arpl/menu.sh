@@ -1162,7 +1162,7 @@ function updateMenu() {
 
 if [ "x$1" = "xb" -a -n "${MODEL}" -a -n "${BUILD}" -a loaderIsConfigured ]; then
   make
-  boot
+  boot && exit 0 || sleep 5
 fi
 # Main loop
 NEXT="m"
@@ -1206,7 +1206,7 @@ while true; do
     i) synoinfoMenu; NEXT="v" ;;
     v) advancedMenu; NEXT="d" ;;
     d) make; NEXT="b" ;;
-    b) boot ;;
+    b) boot && exit 0 || sleep 5 ;;
     k) keymapMenu ;;
     c) dialog --backtitle "`backtitle`" --title "Cleaning" --aspect 18 \
       --prgbox "rm -rfv \"${CACHE_PATH}/dl\"" 0 0 ;;
@@ -1216,4 +1216,3 @@ while true; do
 done
 clear
 echo -e "Call \033[1;32mmenu.sh\033[0m to return to menu"
-
