@@ -139,7 +139,7 @@ echo "export LAYOUT=${LAYOUT}"                  >> "${RAMDISK_PATH}/addons/addon
 echo "export KEYMAP=${KEYMAP}"                  >> "${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
 
-# Required addons: eudev, dtbpatch/maxdisks, powersched
+# Required addons: eudev, dtbpatch/maxdisks, wol
 installAddon eudev
 echo "/addons/eudev.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 if [ "${DT}" = "true" ]; then
@@ -149,8 +149,8 @@ else
   installAddon maxdisks
   echo "/addons/maxdisks.sh \${1} ${MAXDISKS}" >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 fi
-installAddon powersched
-echo "/addons/powersched.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
+installAddon wol
+echo "/addons/wol.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 # User addons
 for ADDON in ${!ADDONS[@]}; do
   PARAMS=${ADDONS[${ADDON}]}
