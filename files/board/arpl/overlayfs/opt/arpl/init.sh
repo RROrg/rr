@@ -147,6 +147,9 @@ if [ -f /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz ]; then
   zcat /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz | loadkeys
 fi
 
+# Enable Wake on Lan, ignore errors
+ethtool -s eth0 wol g 2>/dev/null
+
 # Decide if boot automatically
 BOOT=1
 if ! loaderIsConfigured; then
