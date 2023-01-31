@@ -93,6 +93,7 @@ jobs:
         if: steps.br-cache.outputs.cache-hit != 'true'
         run: |
           echo "First make"
+          cd .buildroot
           make BR2_EXTERNAL=../external
 
       # Build incremental from caches
