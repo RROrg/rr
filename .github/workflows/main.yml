@@ -14,9 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Check cache
+      # Check dl cache
+      - name: Cache downloads
+        id: dl-cache
+        uses: actions/cache@v3
+        with:
+          path: ~/dl
+          key: ${{ runner.os }}-dl
+
+      # Check buildroot cache
       - name: Cache buildroot
-        id: cache
+        id: br-cache
         uses: actions/cache@v3
         with:
           path: .buildroot
@@ -61,9 +69,9 @@ jobs:
           [ ${STATUS} -ne 200 ] && exit 1
           echo OK
 
-      # Prepare buildroot for first make (for cache)
-      - name: Prepare buildroot
-        if: steps.cache.outputs.cache-hit != 'true'
+      # Clone buildroot repository (if not cached)
+      - name: Clone buildroot
+        if: steps.br-cache.outputs.cache-hit != 'true'
         run: |
           git clone --single-branch -b 2022.02 https://github.com/buildroot/buildroot.git .buildroot
           # Copy files
@@ -72,10 +80,22 @@ jobs:
           cd .buildroot
           echo "Generating default config"
           make BR2_EXTERNAL=../external arpl_defconfig
+
+      # Download sources if not cached
+      - name: Download buildroot packages source
+        if: steps.dl-cache.outputs.cache-hit != 'true'
+        run: |
+          cd .buildroot
+          make BR2_EXTERNAL=../external source
+
+      # Prepare buildroot for first make
+      - name: Prepare buildroot
+        if: steps.br-cache.outputs.cache-hit != 'true'
+        run: |
           echo "First make"
           make BR2_EXTERNAL=../external
 
-      # Build incremental from cache
+      # Build incremental from caches
       - name: Build image
         id: build
         run: |
