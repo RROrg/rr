@@ -339,7 +339,6 @@ function cmdlineMenu() {
   echo "c \"Define a custom MAC\""                              >> "${TMP_PATH}/menu"
   echo "s \"Show user cmdline\""                                >> "${TMP_PATH}/menu"
   echo "m \"Show model/build cmdline\""                         >> "${TMP_PATH}/menu"
-  echo "u \"Show SATA(s) # ports and drives\""                  >> "${TMP_PATH}/menu"
   echo "e \"Exit\""                                             >> "${TMP_PATH}/menu"
   # Loop menu
   while true; do
@@ -420,34 +419,6 @@ function cmdlineMenu() {
         done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
         dialog --backtitle "`backtitle`" --title "Model/build cmdline" \
           --aspect 18 --msgbox "${ITEMS}" 0 0
-        ;;
-      u) TEXT=""
-        NUMPORTS=0
-        for PCI in `lspci -d ::106 | awk '{print$1}'`; do
-          NAME=`lspci -s "${PCI}" | sed "s/\ .*://"`
-          TEXT+="\Zb${NAME}\Zn\nPorts: "
-          unset HOSTPORTS
-          declare -A HOSTPORTS
-          while read LINE; do
-            ATAPORT="`echo ${LINE} | grep -o 'ata[0-9]*'`"
-            PORT=`echo ${ATAPORT} | sed 's/ata//'`
-            HOSTPORTS[${PORT}]=`echo ${LINE} | grep -o 'host[0-9]*$'`
-          done < <(ls -l /sys/class/scsi_host | fgrep "${PCI}")
-          while read PORT; do
-            ls -l /sys/block | fgrep -q "${PCI}/ata${PORT}" && ATTACH=1 || ATTACH=0
-            PCMD=`cat /sys/class/scsi_host/${HOSTPORTS[${PORT}]}/ahci_port_cmd`
-            [ "${PCMD}" = "0" ] && DUMMY=1 || DUMMY=0
-            [ ${ATTACH} -eq 1 ] && TEXT+="\Z2\Zb"
-            [ ${DUMMY} -eq 1 ] && TEXT+="\Z1"
-            TEXT+="${PORT}\Zn "
-            NUMPORTS=$((${NUMPORTS}+1))
-          done < <(echo ${!HOSTPORTS[@]} | tr ' ' '\n' | sort -n)
-          TEXT+="\n"
-        done
-        TEXT+="\nTotal of ports: ${NUMPORTS}\n"
-        TEXT+="\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected."
-        dialog --backtitle "`backtitle`" --colors --aspect 18 \
-          --msgbox "${TEXT}" 0 0
         ;;
       e) return ;;
     esac
@@ -763,6 +734,7 @@ function advancedMenu() {
     fi
     echo "u \"Edit user config file manually\""            >> "${TMP_PATH}/menu"
     echo "t \"Try to recovery a DSM installed system\""    >> "${TMP_PATH}/menu"
+    echo "s \"Show SATA(s) # ports and drives\""           >> "${TMP_PATH}/menu"
     echo "e \"Exit\""                                      >> "${TMP_PATH}/menu"
 
     dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "Advanced" \
@@ -782,7 +754,35 @@ function advancedMenu() {
         ;;
       u) editUserConfig; NEXT="e" ;;
       t) tryRecoveryDSM ;;
-      e) break ;;
+      s) TEXT=""
+        NUMPORTS=0
+        for PCI in `lspci -d ::106 | awk '{print$1}'`; do
+          NAME=`lspci -s "${PCI}" | sed "s/\ .*://"`
+          TEXT+="\Zb${NAME}\Zn\nPorts: "
+          unset HOSTPORTS
+          declare -A HOSTPORTS
+          while read LINE; do
+            ATAPORT="`echo ${LINE} | grep -o 'ata[0-9]*'`"
+            PORT=`echo ${ATAPORT} | sed 's/ata//'`
+            HOSTPORTS[${PORT}]=`echo ${LINE} | grep -o 'host[0-9]*$'`
+          done < <(ls -l /sys/class/scsi_host | fgrep "${PCI}")
+          while read PORT; do
+            ls -l /sys/block | fgrep -q "${PCI}/ata${PORT}" && ATTACH=1 || ATTACH=0
+            PCMD=`cat /sys/class/scsi_host/${HOSTPORTS[${PORT}]}/ahci_port_cmd`
+            [ "${PCMD}" = "0" ] && DUMMY=1 || DUMMY=0
+            [ ${ATTACH} -eq 1 ] && TEXT+="\Z2\Zb"
+            [ ${DUMMY} -eq 1 ] && TEXT+="\Z1"
+            TEXT+="${PORT}\Zn "
+            NUMPORTS=$((${NUMPORTS}+1))
+          done < <(echo ${!HOSTPORTS[@]} | tr ' ' '\n' | sort -n)
+          TEXT+="\n"
+        done
+        TEXT+="\nTotal of ports: ${NUMPORTS}\n"
+        TEXT+="\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected."
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
+          --msgbox "${TEXT}" 0 0
+        ;;
+        e) break ;;
     esac
   done
 }
