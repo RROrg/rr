@@ -65,10 +65,10 @@ CMDLINE['pid']="${PID}"
 CMDLINE['sn']="${SN}"
 
 # Read cmdline
-while IFS="=" read KEY VALUE; do
+while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
 done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
-while IFS="=" read KEY VALUE; do
+while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
 done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
 

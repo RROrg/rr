@@ -145,13 +145,13 @@ function buildMenu() {
     writeConfigKey "build" "${BUILD}" "${USER_CONFIG_FILE}"
     # Delete synoinfo and reload model/build synoinfo
     writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
-    while IFS="=" read KEY VALUE; do
+    while IFS=': ' read KEY VALUE; do
       writeConfigKey "synoinfo.${KEY}" "${VALUE}" "${USER_CONFIG_FILE}"
     done < <(readModelMap "${MODEL}" "builds.${BUILD}.synoinfo")
     # Check addons
     PLATFORM="`readModelKey "${MODEL}" "platform"`"
     KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
-    while IFS="=" read ADDON PARAM; do
+    while IFS=': ' read ADDON PARAM; do
       [ -z "${ADDON}" ] && continue
       if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
         deleteConfigKey "addons.${ADDON}" "${USER_CONFIG_FILE}"
@@ -215,7 +215,7 @@ function addonMenu() {
   # Read addons from user config
   unset ADDONS
   declare -A ADDONS
-  while IFS="=" read KEY VALUE; do
+  while IFS=': ' read KEY VALUE; do
     [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
   done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
   NEXT="a"
@@ -331,10 +331,10 @@ function addonMenu() {
 function cmdlineMenu() {
   unset CMDLINE
   declare -A CMDLINE
-  while IFS="=" read KEY VALUE; do
+  while IFS=': ' read KEY VALUE; do
     [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
   done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
-  echo "a \"Add/edit a cmdline item\""                         > "${TMP_PATH}/menu"
+  echo "a \"Add/edit a cmdline item\""                           > "${TMP_PATH}/menu"
   echo "d \"Delete cmdline item(s)\""                           >> "${TMP_PATH}/menu"
   echo "c \"Define a custom MAC\""                              >> "${TMP_PATH}/menu"
   echo "s \"Show user cmdline\""                                >> "${TMP_PATH}/menu"
@@ -414,7 +414,7 @@ function cmdlineMenu() {
         ;;
       m)
         ITEMS=""
-        while IFS="=" read KEY VALUE; do
+        while IFS=': ' read KEY VALUE; do
           ITEMS+="${KEY}: ${VALUE}\n"
         done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
         dialog --backtitle "`backtitle`" --title "Model/build cmdline" \
@@ -427,20 +427,15 @@ function cmdlineMenu() {
 
 ###############################################################################
 function synoinfoMenu() {
-  # Get dt flag from model
-  DT="`readModelKey "${MODEL}" "dt"`"
   # Read synoinfo from user config
   unset SYNOINFO
   declare -A SYNOINFO
-  while IFS="=" read KEY VALUE; do
+  while IFS=': ' read KEY VALUE; do
     [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
   done < <(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")
 
   echo "a \"Add/edit a synoinfo item\""   > "${TMP_PATH}/menu"
   echo "d \"Delete synoinfo item(s)\""    >> "${TMP_PATH}/menu"
-  if [ "${DT}" != "true" ]; then
-    echo "x \"Set maxdisks manually\""    >> "${TMP_PATH}/menu"
-  fi
   echo "s \"Show synoinfo entries\""      >> "${TMP_PATH}/menu"
   echo "e \"Exit\""                       >> "${TMP_PATH}/menu"
 
@@ -486,15 +481,6 @@ function synoinfoMenu() {
           deleteConfigKey "synoinfo.${I}" "${USER_CONFIG_FILE}"
         done
         DIRTY=1
-        ;;
-      x)
-        MAXDISKS=`readConfigKey "maxdisks" "${USER_CONFIG_FILE}"`
-        dialog --backtitle "`backtitle`" --title "Maxdisks" \
-          --inputbox "Type a value for maxdisks" 0 0 "${MAXDISKS}" \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        VALUE="`<"${TMP_PATH}/resp"`"
-        [ "${VALUE}" != "${MAXDISKS}" ] && writeConfigKey "maxdisks" "${VALUE}" "${USER_CONFIG_FILE}"
         ;;
       s)
         ITEMS=""
@@ -685,7 +671,7 @@ function make() {
   KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
 
   # Check if all addon exists
-  while IFS="=" read ADDON PARAM; do
+  while IFS=': ' read ADDON PARAM; do
     [ -z "${ADDON}" ] && continue
     if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
       dialog --backtitle "`backtitle`" --title "Error" --aspect 18 \
@@ -840,7 +826,7 @@ function selectModules() {
   ALLMODULES=`getAllModules "${PLATFORM}" "${KVER}"`
   unset USERMODULES
   declare -A USERMODULES
-  while IFS="=" read KEY VALUE; do
+  while IFS=': ' read KEY VALUE; do
     [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
   done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
   # menu loop
@@ -1030,7 +1016,7 @@ function updateMenu() {
           [ -f "${F}" ] && rm -f "${F}"
           [ -d "${F}" ] && rm -Rf "${F}"
         done < <(readConfigArray "remove" "/tmp/update-list.yml")
-        while IFS="=" read KEY VALUE; do
+        while IFS=': ' read KEY VALUE; do
           if [ "${KEY: -1}" = "/" ]; then
             rm -Rf "${VALUE}"
             mkdir -p "${VALUE}"
@@ -1161,6 +1147,7 @@ function updateMenu() {
 ###############################################################################
 
 if [ "x$1" = "xb" -a -n "${MODEL}" -a -n "${BUILD}" -a loaderIsConfigured ]; then
+  install-addons.sh
   make
   boot && exit 0 || sleep 5
 fi
