@@ -33,7 +33,7 @@ function readConfigKey() {
 # 2 - Path of yaml config file
 # Returns map of values
 function readConfigMap() {
-  yq eval '.'${1}' | explode(.) | to_entries | map([.key, .value] | join("=")) | .[]' "${2}"
+  yq eval '.'${1}' | explode(.) | to_entries | map([.key, .value] | join(": ")) | .[]' "${2}"
 }
 
 ###############################################################################

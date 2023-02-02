@@ -58,15 +58,15 @@ declare -A ADDONS
 declare -A USERMODULES
 
 # Read synoinfo and addons from config
-while IFS="=" read KEY VALUE; do
+while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
 done < <(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")
-while IFS="=" read KEY VALUE; do
+while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
 done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
 
 # Read modules from user config
-while IFS="=" read KEY VALUE; do
+while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
 done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
 
@@ -125,7 +125,7 @@ cp "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
 gzip -dc "${LKM_PATH}/rp-${PLATFORM}-${KVER}-${LKM}.ko.gz" > "${RAMDISK_PATH}/usr/lib/modules/rp.ko"
 
 # Addons
-MAXDISKS=`readConfigKey "maxdisks" "${USER_CONFIG_FILE}"`
+#MAXDISKS=`readConfigKey "maxdisks" "${USER_CONFIG_FILE}"`
 # Check if model needs Device-tree dynamic patch
 DT="`readModelKey "${MODEL}" "dt"`"
 
@@ -140,16 +140,11 @@ echo "export LAYOUT=${LAYOUT}"                  >> "${RAMDISK_PATH}/addons/addon
 echo "export KEYMAP=${KEYMAP}"                  >> "${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
 
-# Required addons: eudev, dtbpatch/maxdisks, wol
+# Required addons: eudev, disks, wol
 installAddon eudev
 echo "/addons/eudev.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-if [ "${DT}" = "true" ]; then
-  installAddon dtbpatch
-  echo "/addons/dtbpatch.sh \${1} ${UNIQUE}" >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-else
-  installAddon maxdisks
-  echo "/addons/maxdisks.sh \${1} ${MAXDISKS}" >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-fi
+installAddon disks
+echo "/addons/disks.sh \${1} ${DT} ${UNIQUE}" >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 installAddon wol
 echo "/addons/wol.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 # User addons
