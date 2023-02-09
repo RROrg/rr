@@ -4,8 +4,8 @@ set -e
 
 MODEL_CONFIG_PATH="./files/board/arpl/overlayfs/opt/arpl/model-configs"
 
-RELEASE="7.1.1"
-BUILDNUMBER="42962"
+RELEASE="7.0.1"
+BUILDNUMBER="42218"
 EXTRA=""
 
 function readConfigKey() {
