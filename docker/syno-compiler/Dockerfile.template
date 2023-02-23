@@ -1,6 +1,7 @@
 FROM alpine:3.14 AS stage
 ARG PLATFORMS="@@@PLATFORMS@@@"
 ARG TOOLKIT_VER="@@@TOOLKIT_VER@@@"
+ARG GCCLIB_VER="@@@GCCLIB_VER@@@"
 
 # Copy downloaded toolkits
 ADD cache /cache
@@ -12,8 +13,8 @@ RUN for V in ${PLATFORMS}; do \
         mkdir "/opt/${PLATFORM}" && \
         tar -xaf "/cache/ds.${PLATFORM}-${TOOLKIT_VER}.dev.txz" -C "/opt/${PLATFORM}" --strip-components=9 \
           "usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/usr/lib/modules/DSM-${TOOLKIT_VER}" && \
-        echo "Extracting ${PLATFORM}-toolchain.txz" && \
-        tar -xaf "/cache/${PLATFORM}-toolchain.txz" -C "/opt/${PLATFORM}" --strip-components=1; \
+        echo "Extracting ${PLATFORM}-${GCCLIB_VER}_x86_64-GPL.txz" && \
+        tar -xaf "/cache/${PLATFORM}-${GCCLIB_VER}_x86_64-GPL.txz" -C "/opt/${PLATFORM}" --strip-components=1; \
         KVER_MAJOR="`echo ${KVER} | rev | cut -d. -f2- | rev`"; \
         if [ ! -d "/opt/linux-${KVER_MAJOR}.x" -a -f "/cache/linux-${KVER_MAJOR}.x.txz" ]; then \
           echo "Extracting linux-${KVER_MAJOR}.x.txz" && \
@@ -25,7 +26,7 @@ RUN for V in ${PLATFORMS}; do \
     done
 
 # Final image
-FROM debian:8-slim
+FROM debian:9-slim
 ENV SHELL=/bin/bash \
     ARCH=x86_64
 
