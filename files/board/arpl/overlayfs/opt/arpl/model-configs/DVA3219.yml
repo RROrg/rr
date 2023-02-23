@@ -4,14 +4,13 @@ synoinfo: &synoinfo
   support_memory_compatibility: "no"
   esataportcfg: "0x00"
   support_bde_internal_10g: "no"
-  supportraidgroup: "no"
-  support_syno_hybrid_raid: "yes"
   support_led_brightness_adjustment: "no"
   rss_server: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.xml"
   rss_server_ssl: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.xml"
   rss_server_v2: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.json"
   support_syno_hybrid_raid:
   supportraidgroup:
+  supportnvme: "yes"
 cmdline: &cmdline
   syno_hdd_powerup_seq: 0
   HddHotplug: 0
@@ -29,7 +28,7 @@ serial:
   middle: "RFR"
   suffix: "alpha"
 flags:
-  - "fma"
+  - "movbe"
 disks: 4
 builds:
   42218:
