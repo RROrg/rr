@@ -10,6 +10,7 @@ synoinfo: &synoinfo
   rss_server_v2: "https://raw.githubusercontent.com/fbelavenuto/arpl/main/rss.json"
   support_syno_hybrid_raid:
   supportraidgroup:
+  supportnvme: "yes"
 cmdline: &cmdline
   syno_hdd_powerup_seq: 0
   HddHotplug: 0
@@ -28,7 +29,7 @@ serial:
   middle: "SJR"
   suffix: "alpha"
 flags:
-  - "fma"
+  - "movbe"
 disks: 4
 builds:
   42218:
