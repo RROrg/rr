@@ -1,6 +1,6 @@
 # Automated Redpill Loader
 
-[中文说明](./README.md)
+[中文说明](./README-Zh.md)
 
 This particular project was created to facilitate my testing with Redpill and I decided to share it with other users.
 
