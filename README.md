@@ -1,5 +1,7 @@
 # Automated Redpill Loader
 
+[中文说明](../README.md)
+
 This particular project was created to facilitate my testing with Redpill and I decided to share it with other users.
 
 I'm Brazilian and my English is not good, so I apologize for my translations.
