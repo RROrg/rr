@@ -88,7 +88,7 @@ https://hotstuff.asia/2023/01/03/xpenology-with-arpl-on-proxmox-the-easy-way/
 
 # 麻烦/问题/等等
 
-如果您的问题已经被讨论和解决，请搜索论坛https://xpenology.com/forum。如果你找不到解决方案，请使用github issues。
+如果您的问题已经被讨论和解决，请搜索论坛 https://xpenology.com/forum 如果你找不到解决方案，请使用 github issues。
 
 # 感谢
 
