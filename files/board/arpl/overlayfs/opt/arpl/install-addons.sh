@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-. /opt/arpl/include/functions.sh
-
 set -e
+
+. /opt/arpl/include/functions.sh
 
 # Detect if has new local plugins to install/reinstall
 for F in `ls ${CACHE_PATH}/*.addon 2>/dev/null`; do

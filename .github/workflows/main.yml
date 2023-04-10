@@ -140,9 +140,9 @@ jobs:
       - name: Pack
         shell: bash
         run: |
-          zip -9 "arpl-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
-          zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk-dyn.zip" arpl-dyn.vmdk
-          zip -9 "arpl-${{ steps.build.outputs.VERSION }}.vmdk-flat.zip" arpl.vmdk arpl-flat.vmdk
+          zip -9 "arpl-i18n-${{ steps.build.outputs.VERSION }}.img.zip" arpl.img
+          zip -9 "arpl-i18n-${{ steps.build.outputs.VERSION }}.vmdk-dyn.zip" arpl-dyn.vmdk
+          zip -9 "arpl-i18n-${{ steps.build.outputs.VERSION }}.vmdk-flat.zip" arpl.vmdk arpl-flat.vmdk
           sha256sum update-list.yml > sha256sum
           zip -9j update.zip update-list.yml
           while read F; do
@@ -174,7 +174,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            arpl-${{ steps.build.outputs.VERSION }}.img.zip
-            arpl-${{ steps.build.outputs.VERSION }}.vmdk-dyn.zip
-            arpl-${{ steps.build.outputs.VERSION }}.vmdk-flat.zip
+            arpl-i18n-${{ steps.build.outputs.VERSION }}.img.zip
+            arpl-i18n-${{ steps.build.outputs.VERSION }}.vmdk-dyn.zip
+            arpl-i18n-${{ steps.build.outputs.VERSION }}.vmdk-flat.zip
             update.zip
