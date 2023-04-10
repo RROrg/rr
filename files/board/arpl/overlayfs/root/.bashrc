@@ -21,6 +21,17 @@ export CACHE_PATH="/mnt/p3"
 export DSMROOT_PATH="/mnt/dsmroot"
 export PATH="${PATH}:/opt/arpl"
 
+if [ -f ${BOOTLOADER_PATH}/.locale ]; then
+  export LANG="`cat ${BOOTLOADER_PATH}/.locale`"
+fi
+
+if [ -d /opt/arpl/lang ]; then
+  for F in "`ls /opt/arpl/lang/*.mo`"
+  do
+    install "${F}" "/usr/share/locale/$(basename $F .mo)/LC_MESSAGES/arpl.mo"
+  done
+fi
+
 if [ ! -f ${HOME}/.initialized ]; then
   touch ${HOME}/.initialized
   /opt/arpl/init.sh

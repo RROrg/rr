@@ -5,27 +5,27 @@ set -e
 . /opt/arpl/include/functions.sh
 
 # Sanity check
-loaderIsConfigured || die "Loader is not configured!"
+loaderIsConfigured || die "$(TEXT "Loader is not configured!")"
 
 # Print text centralized
 clear
 [ -z "${COLUMNS}" ] && COLUMNS=50
-TITLE="Welcome to Automated Redpill Loader v${ARPL_VERSION}"
+TITLE="`printf "$(TEXT "Welcome to %s")" "${ARPL_TITLE}"`"
 printf "\033[1;44m%*s\n" ${COLUMNS} ""
 printf "\033[1;44m%*s\033[A\n" ${COLUMNS} ""
 printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE}+${COLUMNS})/2)) "${TITLE}"
 printf "\033[1;44m%*s\033[0m\n" ${COLUMNS} ""
-TITLE="BOOTING..."
+TITLE="$(TEXT "BOOTING...")"
 printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE}+${COLUMNS})/2)) "${TITLE}"
 
 # Check if DSM zImage changed, patch it if necessary
 ZIMAGE_HASH="`readConfigKey "zimage-hash" "${USER_CONFIG_FILE}"`"
 if [ "`sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print$1}'`" != "${ZIMAGE_HASH}" ]; then
-  echo -e "\033[1;43mDSM zImage changed\033[0m"
+  echo -e "\033[1;43m$(TEXT "DSM zImage changed")\033[0m"
   /opt/arpl/zimage-patch.sh
   if [ $? -ne 0 ]; then
-    dialog --backtitle "`backtitle`" --title "Error" \
-      --msgbox "zImage not patched:\n`<"${LOG_FILE}"`" 12 70
+    dialog --backtitle "`backtitle`" --title "$(TEXT "Error")" \
+      --msgbox "$(TEXT "zImage not patched:\n")`<"${LOG_FILE}"`" 12 70
     exit 1
   fi
 fi
@@ -36,8 +36,8 @@ if [ "`sha256sum "${ORI_RDGZ_FILE}" | awk '{print$1}'`" != "${RAMDISK_HASH}" ]; 
   echo -e "\033[1;43mDSM Ramdisk changed\033[0m"
   /opt/arpl/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
-    dialog --backtitle "`backtitle`" --title "Error" \
-      --msgbox "Ramdisk not patched:\n`<"${LOG_FILE}"`" 12 70
+    dialog --backtitle "`backtitle`" --title "$(TEXT "Error")" \
+      --msgbox "$(TEXT "Ramdisk not patched:\n")`<"${LOG_FILE}"`" 12 70
     exit 1
   fi
 fi
@@ -49,8 +49,8 @@ MODEL="`readConfigKey "model" "${USER_CONFIG_FILE}"`"
 BUILD="`readConfigKey "build" "${USER_CONFIG_FILE}"`"
 SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
 
-echo -e "Model: \033[1;36m${MODEL}\033[0m"
-echo -e "Build: \033[1;36m${BUILD}\033[0m"
+echo -e "$(TEXT "Model:") \033[1;36m${MODEL}\033[0m"
+echo -e "$(TEXT "Build:") \033[1;36m${BUILD}\033[0m"
 
 declare -A CMDLINE
 
@@ -93,7 +93,7 @@ for N in `seq 1 9`; do
   [ -n "${CMDLINE["mac${N}"]}" ] && MACS=$((${MACS}+1))
 done
 if [ ${NETIF_NUM} -ne ${MACS} ]; then
-  echo -e "\033[1;33m*** netif_num is not equal to macX amount, set netif_num to ${MACS} ***\033[0m"
+  echo -e "\033[1;33m*** `printf "$(TEXT "netif_num is not equal to macX amount, set netif_num to %s")" "${MACS}"` ***\033[0m"
   CMDLINE["netif_num"]=${MACS}
 fi
 
@@ -114,11 +114,11 @@ done
 # Escape special chars
 #CMDLINE_LINE=`echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g'`
 CMDLINE_DIRECT=`echo ${CMDLINE_DIRECT} | sed 's/>/\\\\>/g'`
-echo -e "Cmdline:\n\033[1;36m${CMDLINE_LINE}\033[0m"
+echo -e "$(TEXT "Cmdline:\n")\033[1;36m${CMDLINE_LINE}\033[0m"
 
 # Wait for an IP
 COUNT=0
-echo -n "IP"
+echo -n "$(TEXT "IP")"
 while true; do
   IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
   if [ -n "${IP}" ]; then
@@ -136,20 +136,20 @@ done
 DIRECT="`readConfigKey "directboot" "${USER_CONFIG_FILE}"`"
 if [ "${DIRECT}" = "true" ]; then
   grub-editenv ${GRUB_PATH}/grubenv set dsm_cmdline="${CMDLINE_DIRECT}"
-  echo -e "\033[1;33mReboot to boot directly in DSM\033[0m"
+  echo -e "\033[1;33m$(TEXT "Reboot to boot directly in DSM")\033[0m"
   grub-editenv ${GRUB_PATH}/grubenv set next_entry="direct"
   reboot
   exit 0
 fi
-echo -e "\033[1;37mLoading DSM kernel...\033[0m"
+echo -e "\033[1;37m$(TEXT "Loading DSM kernel...")\033[0m"
 
 # Executes DSM kernel via KEXEC
 if [ "${EFI_BUG}" = "yes" -a ${EFI} -eq 1 ]; then
-  echo -e "\033[1;33mWarning, running kexec with --noefi param, strange things will happen!!\033[0m"
+  echo -e "\033[1;33m$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")\033[0m"
   kexec --noefi -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 else
   kexec -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 fi
-echo -e "\033[1;37mBooting...\033[0m"
+echo -e "\033[1;37m$(TEXT "Booting...")\033[0m"
 poweroff
 exit 0
