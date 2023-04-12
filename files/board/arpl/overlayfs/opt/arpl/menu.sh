@@ -55,6 +55,11 @@ function backtitle() {
   else
     BACKTITLE+=" (qwerty/us)"
   fi
+  if [ -d "/sys/firmware/efi" ]; then
+    BACKTITLE+=" [UEFI]"
+  else
+    BACKTITLE+=" [BIOS]"
+  fi
   echo ${BACKTITLE}
 }
 
@@ -139,6 +144,12 @@ function buildMenu() {
     resp="${1}"
   fi
   if [ "${BUILD}" != "${resp}" ]; then
+    local KVER=`readModelKey "${MODEL}" "builds.${resp}.kver"`
+    if [ -d "/sys/firmware/efi" -a "${KVER:0:1}" = "3" ]; then
+      dialog --backtitle "`backtitle`" --title "$(TEXT "Build Number")" --aspect 18 \
+       --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
+      buildMenu
+    fi
     dialog --backtitle "`backtitle`" --title "$(TEXT "Build Number")" \
       --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
     BUILD=${resp}
@@ -720,6 +731,7 @@ function advancedMenu() {
     echo "u \"$(TEXT "Edit user config file manually")\""            >> "${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\""    >> "${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\""           >> "${TMP_PATH}/menu"
+    echo "d \"$(TEXT "Custom dts location:/mnt/p1/model.dts # Need rebuild")\""           >> "${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\""                                      >> "${TMP_PATH}/menu"
 
     dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
