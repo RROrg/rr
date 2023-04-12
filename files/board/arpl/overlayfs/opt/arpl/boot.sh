@@ -33,7 +33,7 @@ fi
 # Check if DSM ramdisk changed, patch it if necessary
 RAMDISK_HASH="`readConfigKey "ramdisk-hash" "${USER_CONFIG_FILE}"`"
 if [ "`sha256sum "${ORI_RDGZ_FILE}" | awk '{print$1}'`" != "${RAMDISK_HASH}" ]; then
-  echo -e "\033[1;43mDSM Ramdisk changed\033[0m"
+  echo -e "\033[1;43m$(TEXT "DSM Ramdisk changed")\033[0m"
   /opt/arpl/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
     dialog --backtitle "`backtitle`" --title "$(TEXT "Error")" \
@@ -74,8 +74,8 @@ done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
 
 # Check if machine has EFI
 [ -d /sys/firmware/efi ] && EFI=1 || EFI=0
-# Read EFI bug value
-[ "${MODEL}" = "DS3615" ] && EFI_BUG=1 || EFI_BUG=0
+# 
+KVER=`readModelKey "${MODEL}" "builds.${BUILD}.kver"`
 
 LOADER_DISK="`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1`"
 BUS=`udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2`
@@ -144,12 +144,16 @@ fi
 echo -e "\033[1;37m$(TEXT "Loading DSM kernel...")\033[0m"
 
 # Executes DSM kernel via KEXEC
-if [ "${EFI_BUG}" = "yes" -a ${EFI} -eq 1 ]; then
+if [ "${KVER:0:1}" = "3" -a ${EFI} -eq 1 ]; then
   echo -e "\033[1;33m$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")\033[0m"
   kexec --noefi -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 else
   kexec -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 fi
 echo -e "\033[1;37m$(TEXT "Booting...")\033[0m"
+for T in `w | grep -v "TTY"| awk -F' ' '{printf " "$2}'`
+do
+  echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please use the http://find.synology.com/ find DSM and connect.]")\033[0m\n" > "/dev/${T}" 2>/dev/null
+done 
 poweroff
 exit 0

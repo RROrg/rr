@@ -98,7 +98,7 @@ fi
 writeConfigKey "original-mac" "${MACF}" "${USER_CONFIG_FILE}"
 
 # Set custom MAC if defined
-MAC1=`readConfigKey "cmdline.mac1" "${USER_CONFIG_FILE}"`
+MAC1="`readConfigKey "cmdline.mac1" "${USER_CONFIG_FILE}"`"
 if [ -n "${MAC1}" -a "${MAC1}" != "${MACF}" ]; then
   MAC="${MAC1:0:2}:${MAC1:2:2}:${MAC1:4:2}:${MAC1:6:2}:${MAC1:8:2}:${MAC1:10:2}"
   echo "`printf "$(TEXT "Setting MAC to %s")" "${MAC}"`"
