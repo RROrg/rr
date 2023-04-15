@@ -317,7 +317,7 @@ function addonMenu() {
         [ -z "${URL}" ] && continue
         clear
         echo "`printf "$(TEXT "Downloading %s")" "${URL}"`"
-        STATUS=`curl --insecure -w "%{http_code}" -L "${URL}" -o "${TMP_PATH}/addon.tgz" --progress-bar`
+        STATUS=`curl -k -w "%{http_code}" -L "${URL}" -o "${TMP_PATH}/addon.tgz" --progress-bar`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Error downloading")" --aspect 18 \
             --msgbox "$(TEXT "Check internet, URL or cache disk space")" 0 0
@@ -392,27 +392,31 @@ function cmdlineMenu() {
         done
         ;;
       c)
+        RET=1
         while true; do
           dialog --backtitle "`backtitle`" --title "$(TEXT "User cmdline")" \
             --inputbox "$(TEXT "Type a custom MAC address")" 0 0 "${CMDLINE['mac1']}"\
             2>${TMP_PATH}/resp
-          [ $? -ne 0 ] && break
+          RET=$?
+          [ ${RET} -ne 0 ] && break
           MAC="`<"${TMP_PATH}/resp"`"
           [ -z "${MAC}" ] && MAC="`readConfigKey "original-mac" "${USER_CONFIG_FILE}"`"
           MAC1="`echo "${MAC}" | sed 's/://g'`"
           [ ${#MAC1} -eq 12 ] && break
           dialog --backtitle "`backtitle`" --title "$(TEXT "User cmdline")" --msgbox "$(TEXT "Invalid MAC")" 0 0
         done
-        CMDLINE["mac1"]="${MAC1}"
-        CMDLINE["netif_num"]=1
-        writeConfigKey "cmdline.mac1"      "${MAC1}" "${USER_CONFIG_FILE}"
-        writeConfigKey "cmdline.netif_num" "1"       "${USER_CONFIG_FILE}"
-        MAC="${MAC1:0:2}:${MAC1:2:2}:${MAC1:4:2}:${MAC1:6:2}:${MAC1:8:2}:${MAC1:10:2}"
-        ip link set dev eth0 address ${MAC} 2>&1 | dialog --backtitle "`backtitle`" \
-          --title "$(TEXT "User cmdline")" --progressbox "$(TEXT "Changing MAC")" 20 70
-        /etc/init.d/S41dhcpcd restart 2>&1 | dialog --backtitle "`backtitle`" \
-          --title "$(TEXT "User cmdline")" --progressbox "$(TEXT "Renewing IP")" 20 70
-        IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
+        if [ ${RET} -eq 0 ]; then
+          CMDLINE["mac1"]="${MAC1}"
+          CMDLINE["netif_num"]=1
+          writeConfigKey "cmdline.mac1"      "${MAC1}" "${USER_CONFIG_FILE}"
+          writeConfigKey "cmdline.netif_num" "1"       "${USER_CONFIG_FILE}"
+          MAC="${MAC1:0:2}:${MAC1:2:2}:${MAC1:4:2}:${MAC1:6:2}:${MAC1:8:2}:${MAC1:10:2}"
+          ip link set dev eth0 address ${MAC} 2>&1 | dialog --backtitle "`backtitle`" \
+            --title "$(TEXT "User cmdline")" --progressbox "$(TEXT "Changing MAC")" 20 70
+          /etc/init.d/S41dhcpcd restart 2>&1 | dialog --backtitle "`backtitle`" \
+            --title "$(TEXT "User cmdline")" --progressbox "$(TEXT "Renewing IP")" 20 70
+          IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
+        fi
         ;;
       s)
         ITEMS=""
@@ -519,7 +523,7 @@ function extractDsmFiles() {
   PAT_PATH="${CACHE_PATH}/dl/${PAT_FILE}"
   EXTRACTOR_PATH="${CACHE_PATH}/extractor"
   EXTRACTOR_BIN="syno_extract_system_patch"
-  OLDPAT_URL="https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
+  OLDPAT_URL="https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
 
   if [ -f "${PAT_PATH}" ]; then
     echo "`printf "$(TEXT "%s cached.")" "${PAT_FILE}"`"
@@ -531,14 +535,25 @@ function extractDsmFiles() {
     fi
     mkdir -p "${CACHE_PATH}/dl"
 
+    speed_a="`curl -Lo /dev/null -skw "%{speed_download}" "global.synologydownload.com"`"
+    speed_b="`curl -Lo /dev/null -skw "%{speed_download}" "global.download.synology.com"`"
+    speed_c="`curl -Lo /dev/null -skw "%{speed_download}" "cndl.synology.cn"`"
+    fastest="`echo -e "global.synologydownload.com ${speed_a}\nglobal.download.synology.com ${speed_b}\ncndl.synology.cn ${speed_c}" | sort -k2rn | head -1 | awk '{print $1}'`"
+
+    mirror="`echo ${PAT_URL} | sed 's|^http[s]*://\([^/]*\).*|\1|'`"
+    if [ "${mirror}" != "${fastest}" ]; then
+      echo "`printf "$(TEXT "Based on the current network situation, switch to %s mirror to downloading.")" "${fastest}"`"
+      PAT_URL="`echo ${PAT_URL} | sed "s/${mirror}/${fastest}/"`"
+      OLDPAT_URL="https://${fastest}/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
+    fi
     echo "`printf "$(TEXT "Downloading %s")" "${PAT_FILE}"`"
     # Discover remote file size
-    FILESIZE=`curl --insecure -sLI "${PAT_URL}" | grep -i Content-Length | awk '{print$2}'`
+    FILESIZE=`curl -k -sLI "${PAT_URL}" | grep -i Content-Length | awk '{print$2}'`
     if [ 0${FILESIZE} -ge ${SPACELEFT} ]; then
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
     fi
-    STATUS=`curl --insecure -w "%{http_code}" -L "${PAT_URL}" -o "${PAT_PATH}" --progress-bar`
+    STATUS=`curl -k -w "%{http_code}" -L "${PAT_URL}" -o "${PAT_PATH}" --progress-bar`
     if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
       rm "${PAT_PATH}"
       dialog --backtitle "`backtitle`" --title "$(TEXT "Error downloading")" --aspect 18 \
@@ -596,12 +611,12 @@ function extractDsmFiles() {
       if [ ! -f "${OLDPAT_PATH}" ]; then
         echo "$(TEXT "Downloading old pat to extract synology .pat extractor...")"
         # Discover remote file size
-        FILESIZE=`curl --insecure -sLI "${OLDPAT_URL}" | grep -i Content-Length | awk '{print$2}'`
+        FILESIZE=`curl -k -sLI "${OLDPAT_URL}" | grep -i Content-Length | awk '{print$2}'`
         if [ 0${FILESIZE} -ge ${SPACELEFT} ]; then
           # No disk space to download, change it to RAMDISK
           OLDPAT_PATH="${TMP_PATH}/DS3622xs+-42218.pat"
         fi
-        STATUS=`curl --insecure -w "%{http_code}" -L "${OLDPAT_URL}" -o "${OLDPAT_PATH}"  --progress-bar`
+        STATUS=`curl -k -w "%{http_code}" -L "${OLDPAT_URL}" -o "${OLDPAT_PATH}"  --progress-bar`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           rm "${OLDPAT_PATH}"
           dialog --backtitle "`backtitle`" --title "$(TEXT "Error downloading")" --aspect 18 \
@@ -986,12 +1001,14 @@ function keymapMenu() {
 function updateMenu() {
   PLATFORM="`readModelKey "${MODEL}" "platform"`"
   KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
+  PROXY="`readConfigKey "proxy" "${USER_CONFIG_FILE}"`"; [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
   while true; do
     dialog --backtitle "`backtitle`" --menu "$(TEXT "Choose a option")" 0 0 0 \
       a "$(TEXT "Update arpl")" \
       d "$(TEXT "Update addons")" \
       l "$(TEXT "Update LKMs")" \
       m "$(TEXT "Update modules")" \
+      p "$(TEXT "Set proxy server")" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -999,13 +1016,14 @@ function updateMenu() {
       a)
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
           --infobox "$(TEXT "Checking last version")" 0 0
-        ACTUALVERSION="v${ARPL_VERSION}"
-        TAG="`curl --insecure -s https://api.github.com/repos/wjz304/arpl-i18n/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`"
+        ACTUALVERSION="${ARPL_VERSION}"
+        TAG="`curl -k -s "${PROXY}https://api.github.com/repos/wjz304/arpl-i18n/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`"
         if [ $? -ne 0 -o -z "${TAG}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
             --msgbox "$(TEXT "Error checking new version")" 0 0
           continue
         fi
+        [[ "${TAG:0:1}" == "v" ]] && TAG="${TAG:1}"
         if [ "${ACTUALVERSION}" = "${TAG}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
             --yesno "`printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${ACTUALVERSION}"`" 0 0
@@ -1014,8 +1032,7 @@ function updateMenu() {
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
           --infobox "`printf "$(TEXT "Downloading last version %s")" "${TAG}"`" 0 0
         # Download update file
-        STATUS=`curl --insecure -w "%{http_code}" -L \
-          "https://github.com/wjz304/arpl-i18n/releases/download/${TAG}/update.zip" -o /tmp/update.zip`
+        STATUS=`curl -k -w "%{http_code}" -L "${PROXY}https://github.com/wjz304/arpl-i18n/releases/download/${TAG}/update.zip" -o "/tmp/update.zip"`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
             --msgbox "$(TEXT "Error downloading update file")" 0 0
@@ -1162,6 +1179,28 @@ function updateMenu() {
         DIRTY=1
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
           --msgbox "$(TEXT "Modules updated with success!")" 0 0
+        ;;
+      p)
+        RET=1
+        while true; do
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Set Proxy Server")" \
+            --inputbox "$(TEXT "Please enter a proxy server url")" 0 0 "${PROXY}" \
+            2>${TMP_PATH}/resp
+          RET=$?
+          [ ${RET} -ne 0 ] && break
+          PROXY=`cat ${TMP_PATH}/resp`
+          if [ -z "${PROXYSERVER}" ]; then
+            break
+          elif [[ "${PROXYSERVER}" =~ "^(https?|ftp)://[^\s/$.?#].[^\s]*$" ]]; then
+            break
+          else
+            dialog --backtitle "`backtitle`" --title "$(TEXT "Alert")" \
+              --yesno "$(TEXT "Invalid proxy server url, continue?")" 0 0
+            RET=$?
+            [ ${RET} -eq 0 ] && break
+          fi
+        done
+        [ ${RET} -eq 0 ] && writeConfigKey "proxy" "${PROXY}" "${USER_CONFIG_FILE}"
         ;;
       e) return ;;
     esac
