@@ -21,8 +21,8 @@ beta: true
 dom: 2
 serial:
   prefix:
-    - "0000"
-  middle: "XXX"
+    - "2270"
+  middle: "UMR"
   suffix: "alpha"
 disks: 16
 dt: true
@@ -36,13 +36,34 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.download.synology.com/download/DSM/release/7.1.1/42962/DSM_SA6400_42962.pat"
-      hash: "83fc408380ebb1381224261de6220b873d7b62a99e715557509ae9553f618a71"
-      ramdisk-hash: "d4efe45fc4dd71758fe365f7eb39d24982d1440b00986259cab9a03577982f68"
-      zimage-hash: "d5b8af848fc585695e35bd1c4f4c953fd8e54435b2799face4f8f350bac6df93"
-      md5-hash: "fdbbea86e280a8f754339a064f9ad2df"
+      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-5/DSM_SA6400_42962.pat"
+      hash: "97413b95fff07f3482dead55cd9a81eb6cbbf4d56c5e283d684c340a13ba3ac4"
+      ramdisk-hash: "43b926a063b77ece8f05873ca2ae7d6bec2855af4d2ab15092dc778a10d9a91a"
+      zimage-hash: "caa147a172250b08febfb124df5d63a64082a8dcae921503fe9639c7102d7546"
+      md5-hash: "404bac6054f0e05e76dddcb6cea15c7c"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
+      - "ramdisk-common-sa6400-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"
+
+  64216:
+    ver: "7.2.0"
+    kver: "5.10.55"
+    rd-compressed: false
+    efi-bug: no
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.synologydownload.com/download/DSM/beta/7.2/64216/DSM_SA6400_64216.pat"
+      hash: "d9b15dd4aafc09da038fb329b15a8145d5f6ac54a4697b96474a8acd8a860325"
+      ramdisk-hash: "c5f805f13d0ca29f8a5c41b447131ed149df212ee5ea25dabb3fc405ec286a74"
+      zimage-hash: "c1481b8687482b08ec109417394f767abb2a3cdd53c3c8fef79a9569b922cd9c"
+      md5-hash: "d7671bd17ea0fd8b68340ee12de9cd5d"
+    patch:
+      - "ramdisk-64216-disable-root-pwd.patch"
+      - "ramdisk-64216-sa6400-init-script.patch"
       - "ramdisk-common-etc-rc.patch"
       - "ramdisk-42951-post-init-script.patch"
