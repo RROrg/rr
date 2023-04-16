@@ -50,19 +50,22 @@
 
 
 ## 翻译
-```shell
-sudo apt install gettext
-git clone https://github.com/wjz304/arpl-i18n.git
-cd arpl-i18n/files/board/arpl/overlayfs/opt/arpl
-xgettext -L Shell --keyword=TEXT *.sh -o lang/arpl.pot
-sed -i 's/charset=CHARSET/charset=UTF-8/' lang/arpl.pot    # The above process has been completed.
-msginit -i lang/arpl.pot -l zh_CN.UTF-8 -o lang/zh_CN.po    # Replace the language you need.
-# translate the lang/zh_CN.po.
-msgfmt lang/zh_CN.po -o lang/zh_CN.mo    # This process will be automatically processed during packaging.
-```
+* 其他语言的翻译:
+    ```shell
+    sudo apt install gettext
+    git clone https://github.com/wjz304/arpl-i18n.git
+    cd arpl-i18n/files/board/arpl/overlayfs/opt/arpl
+    xgettext -L Shell --keyword=TEXT *.sh -o lang/arpl.pot
+    sed -i 's/charset=CHARSET/charset=UTF-8/' lang/arpl.pot    # The above process has been completed.
+    msginit -i lang/arpl.pot -l zh_CN.UTF-8 -o lang/zh_CN.po    # Replace the language you need.
+    # translate the lang/zh_CN.po.
+    msgfmt lang/zh_CN.po -o lang/zh_CN.mo    # This process will be automatically processed during packaging.
+    ```
 
 ## 打赏一下
-<img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/20220908134226.jpg" width="400">
+* > ### 作者: Ing  QQ群: 21609194  QQ频道: 0pg8m22666
+
+* <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/20220908134226.jpg" width="400">
 
 
 
