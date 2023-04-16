@@ -1,4 +1,11 @@
-name: Build image
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+# 
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+name: Build arpl
 
 on:
   push:
@@ -6,6 +13,10 @@ on:
       - main
     tags:
       - v*
+
+  release:
+    types: [published]
+
   workflow_dispatch:
     inputs:
       version:
@@ -78,7 +89,7 @@ jobs:
         run: |
           # Calculate version
           VERSION=""
-          if [ ${{ github.event_name }} == 'push' -a ${{ github.ref_type }} == 'tag' ]; then
+          if [[ "${{ github.event_name }}" =~ ^(push|release)$ && "${{ github.ref_type }}" == 'tag' ]]; then
             VERSION="${{ github.ref_name }}"
           elif [ -n "${{ inputs.version }}" ]; then
             if [ "`echo ${{ inputs.version }} | cut -d '.' -f 1,2`" = "`date +'%y.%-m'`" ]; then
