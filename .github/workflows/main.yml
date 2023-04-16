@@ -12,6 +12,7 @@ on:
         description: 'format %y.%-m.$i or auto'
         required: false
         type: string
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -164,8 +165,8 @@ jobs:
 
           # Get latest LKMs
           echo "Getting latest LKMs"
-          TAG=`curl -s https://api.github.com/repos/fbelavenuto/redpill-lkm/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-          STATUS=`curl -w "%{http_code}" -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip`
+          TAG=`curl -s https://api.github.com/repos/wjz304/redpill-lkm/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+          STATUS=`curl -w "%{http_code}" -L "https://github.com/wjz304/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip`
           echo "Status=${STATUS}"
           [ ${STATUS} -ne 200 ] && exit 1
           # Unzip LKMs
@@ -175,8 +176,8 @@ jobs:
 
           # Get latest addons and install its
           echo "Getting latest Addons"
-          TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-          STATUS=`curl -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip`
+          TAG=`curl -s https://api.github.com/repos/wjz304/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+          STATUS=`curl -w "%{http_code}" -L "https://github.com/wjz304/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip`
           echo "Status=${STATUS}"
           [ ${STATUS} -ne 200 ] && exit 1
           # Install Addons
@@ -191,20 +192,17 @@ jobs:
             tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
           done
 
-
           # Get latest modules
-          echo "Getting latest modules"
+          echo "Getting latest Modules"
           MODULES_DIR="files/board/arpl/p3/modules"
-          TAG=`curl -s https://api.github.com/repos/fbelavenuto/arpl-modules/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-          while read PLATFORM KVER; do
-            FILE="${PLATFORM}-${KVER}"
-            STATUS=`curl -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/${FILE}.tgz" -o "${MODULES_DIR}/${FILE}.tgz"`
-            echo "Status=${STATUS}"
-            [ ${STATUS} -ne 200 ] && exit 1
-          done < PLATFORMS
-          STATUS=`curl -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/firmware.tgz" -o "${MODULES_DIR}/firmware.tgz"`
+          TAG=`curl -s https://api.github.com/repos/wjz304/arpl-modules/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+          STATUS=`curl -w "%{http_code}" -L "https://github.com/wjz304/arpl-modules/releases/download/${TAG}/modules.zip" -o "/tmp/modules.zip"`
           echo "Status=${STATUS}"
           [ ${STATUS} -ne 200 ] && exit 1
+          # Unzip Modules
+          rm -rf "${MODULES_DIR}/"*
+          unzip /tmp/modules.zip -d "${MODULES_DIR}"
+
           echo OK
 
       # Build incremental from caches

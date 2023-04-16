@@ -754,7 +754,7 @@ function advancedMenu() {
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
     case `<"${TMP_PATH}/resp"` in
-      l) [ "${LKM}" = "dev" ] && LKM='prod' || LKM='dev'
+      l) LKM=$([ "${LKM}" = "dev" ] && echo 'prod' || ([ "${LKM}" = "test" ] && echo 'dev' || echo 'test'))
         writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
         DIRTY=1
         NEXT="o"
@@ -1078,7 +1078,7 @@ function updateMenu() {
       d)
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
           --infobox "$(TEXT "Checking last version")" 0 0
-        TAG=`curl --insecure -s https://api.github.com/repos/fbelavenuto/arpl-addons/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+        TAG=`curl -k -s "${PROXY}https://api.github.com/repos/wjz304/arpl-addons/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
         if [ $? -ne 0 -o -z "${TAG}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
             --msgbox "$(TEXT "Error checking new version")" 0 0
@@ -1086,7 +1086,7 @@ function updateMenu() {
         fi
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
           --infobox "$(TEXT "Downloading last version")" 0 0
-        STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl-addons/releases/download/${TAG}/addons.zip" -o /tmp/addons.zip`
+        STATUS=`curl -k -s -w "%{http_code}" -L "${PROXY}https://github.com/wjz304/arpl-addons/releases/download/${TAG}/addons.zip" -o "/tmp/addons.zip"`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
             --msgbox "$(TEXT "Error downloading new version")" 0 0
@@ -1114,7 +1114,7 @@ function updateMenu() {
       l)
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
           --infobox "$(TEXT "Checking last version")" 0 0
-        TAG=`curl --insecure -s https://api.github.com/repos/fbelavenuto/redpill-lkm/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+        TAG=`curl -k -s "${PROXY}https://api.github.com/repos/wjz304/redpill-lkm/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
         if [ $? -ne 0 -o -z "${TAG}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
             --msgbox "$(TEXT "Error checking new version")" 0 0
@@ -1122,7 +1122,7 @@ function updateMenu() {
         fi
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
           --infobox "$(TEXT "Downloading last version")" 0 0
-        STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o /tmp/rp-lkms.zip`
+        STATUS=`curl -k -s -w "%{http_code}" -L "${PROXY}https://github.com/wjz304/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o "/tmp/rp-lkms.zip"`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
             --msgbox "$(TEXT "Error downloading last version")" 0 0
@@ -1137,38 +1137,26 @@ function updateMenu() {
           --msgbox "$(TEXT "LKMs updated with success!")" 0 0
         ;;
       m)
-        unset PLATFORMS
-        declare -A PLATFORMS
-        while read M; do
-          M="`basename ${M}`"
-          M="${M::-4}"
-          P=`readModelKey "${M}" "platform"`
-          ITEMS="`readConfigEntriesArray "builds" "${MODEL_CONFIG_PATH}/${M}.yml"`"
-          for B in ${ITEMS}; do
-            KVER=`readModelKey "${M}" "builds.${B}.kver"`
-            PLATFORMS["${P}-${KVER}"]=""
-          done
-        done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
           --infobox "$(TEXT "Checking last version")" 0 0
-        TAG=`curl --insecure -s https://api.github.com/repos/fbelavenuto/arpl-modules/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+        TAG=`curl -k -s "${PROXY}https://api.github.com/repos/wjz304/arpl-modules/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
         if [ $? -ne 0 -o -z "${TAG}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
             --msgbox "$(TEXT "Error checking new version")" 0 0
           continue
         fi
-        for P in ${!PLATFORMS[@]}; do
+
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
+          --infobox "$(TEXT "Downloading last version")" 0 0
+        STATUS=`curl -k -s -w "%{http_code}" -L "${PROXY}https://github.com/wjz304/arpl-modules/releases/download/${TAG}/modules.zip" -o "/tmp/modules.zip"`
+        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
-            --infobox "`printf "$(TEXT "Downloading %s modules")" "${P}"`" 0 0
-          STATUS=`curl --insecure -s -w "%{http_code}" -L "https://github.com/fbelavenuto/arpl-modules/releases/download/${TAG}/${P}.tgz" -o "/tmp/${P}.tgz"`
-          if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-            dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
-              --msgbox "`printf "$(TEXT "Error downloading %s.tgz")" "${P}"`" 0 0
-            continue
-          fi
-          rm "${MODULES_PATH}/${P}.tgz"
-          mv "/tmp/${P}.tgz" "${MODULES_PATH}/${P}.tgz"
-        done
+            --msgbox "$(TEXT "Error downloading last version")" 0 0
+          continue
+        fi
+        rm "${MODULES_PATH}/"*
+        unzip /tmp/modules.zip -d "${MODULES_PATH}" >/dev/null 2>&1
+
         # Rebuild modules if model/buildnumber is selected
         if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"

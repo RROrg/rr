@@ -1,4 +1,4 @@
-id: "DS918+"
+id: "DS1019+"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
@@ -6,9 +6,9 @@ synoinfo: &synoinfo
   support_led_brightness_adjustment: "no"
   support_leds_lp3943: ""
   buzzeroffen: "0xffff"
-  rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
-  rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
-  rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
+  rss_server: "https://raw.githubusercontent.com/wjz304/arpl-arpl-i18n/main/rss.xml"
+  rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-arpl-i18n/main/rss.xml"
+  rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-arpl-i18n/main/rss.json"
   #support_ssd_cache: "yes"
   support_syno_hybrid_raid:
   supportraidgroup:
@@ -19,15 +19,12 @@ cmdline: &cmdline
   syno_hdd_detect: 0
   elevator: elevator
 platform: "apollolake"
-unique: "synology_apollolake_918+"
+unique: "synology_apollolake_1019+"
 dom: 2
 serial:
   prefix:
-    - "1780"
-    - "1790"
-    - "1860"
-    - "1980"
-  middle: "PDN"
+    - "0000"
+  middle: "XXX"
   suffix: "numeric"
 disks: 4
 flags:
@@ -42,11 +39,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_DS918%2B_25556.pat"
-      hash: "ee021d9cd012a434578309845e3af999a43f81a7887ceec7319e6005ac5930d4"
-      ramdisk-hash: "bdb6a1b0f48a5ed713b9095db2b5976971cf714425982a1b5782f70749231324"
+      url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_DS1019%2B_25556.pat"
+      hash: "cccba154232b365a5da1a92777632318c29697776c40801715b9a04f5ae5f47f"
+      ramdisk-hash: "4a56110f63e26e7f9c7313d165dccb10fed3456e859a292f8020b209f6e07c6b"
       zimage-hash: "3f0f954c9bb6ef0fa195e244f6219ecb3c7a7b297ff6d584a119437eec612e88"
-      md5-hash: "97c4afcc5c679f9208fb7675309080ba"
+      md5-hash: "7eea144bb953dc0c9d8eebdfb073f984"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-25556-init-script.patch"
@@ -63,11 +60,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS918%2B_42218.pat"
-      hash: "a662d11999c266dfa86c54f7ba01045c6644c191124195a22d056d618790dffe"
-      ramdisk-hash: "d27320b536da0ac82d7959e0492180b3a25ef78a3997f65cc4ccddc426b921bd"
+      url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS1019%2B_42218.pat"
+      hash: "e782ad4ce5e0505e7981a5a3fa7ca986a4575240f645ec2c64f92def1774556f"
+      ramdisk-hash: "a8bcb6c36e8657a8723882b19ec3e76149dc67df3650f6db0af1958637e7f565"
       zimage-hash: "7311b04f7462847f529cf966c7b332097354692485c8157643d89441e2a81cd0"
-      md5-hash: "0c8a0d2dc6f1d7e37ee63d74760808b8"
+      md5-hash: "a7c5ac7a5963aac8bf9a599a8a6f6b86"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -84,11 +81,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_DS918%2B_42661.pat"
-      hash: "4e8a9d82a8a1fde5af9a934391080b7bf6b91811d9583acb73b90fb6577e22d7"
-      ramdisk-hash: "ef8c87b6e68226339e5623d048252f5be3089c0831e41298a4695f2bfa65f00e"
+      url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_DS1019%2B_42661.pat"
+      hash: "d0c0154e67af46c4b440e5972a5f405517eecb49e490b7adaf69e8f1ca005776"
+      ramdisk-hash: "c773886310d902432acc4131cd5161820839c787ffba4bfba3495b0e992c4f3a"
       zimage-hash: "9ce0d3452f08afaf95d52292ff20cbac6d69e17d5b9953377e4ac90c9ac7397d"
-      md5-hash: "2c49260d2646a0944b56933f7d4029fb"
+      md5-hash: "1318c234b08c06ad0a6b49a3d739fb95"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -105,11 +102,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_DS918%2B_42962.pat"
-      hash: "9905e145f3bd88fcc938b00882be10281861867e5165ae98aefa37be0d5d34b5"
-      ramdisk-hash: "01fa835229772cdf48be7aa473c029f5d12eefa77d3c6dba7c4f749157b9046b"
+      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_DS1019%2B_42962.pat"
+      hash: "af2268388df9434679205ffd782ae5c17cd81d733cdcd94b13fc894748ffe321"
+      ramdisk-hash: "c2ef679f95b892d515148b9095f4808dfe2bc4bf1ed0e5f6049fe773a24a6999"
       zimage-hash: "f372b5faaca87d852579df25fe1e9471fd346448ead932586ffd069e2dc4fb13"
-      md5-hash: "d5b62813ebc2d78bdbdf08b2c42e1280"
+      md5-hash: "b590bc9f0df784be4d6bae13d551f76b"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -126,11 +123,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/beta/7.2/64216/DSM_DS918%2B_64216.pat"
-      hash: "2b0cbe8b78588ee797cfedd41a0ff11410ac95bc88c3ae981f758251992a52c4"
-      ramdisk-hash: "09b3df7080c8c5a051a04e48a73b98077e4ed2518435415d152ec579288d2a4e"
+      url: "https://global.synologydownload.com/download/DSM/beta/7.2/64216/DSM_DS1019%2B_64216.pat"
+      hash: "46e878970f8167aaba391115b1588c3557a8a33e29a7e5c047a8ab7bd02186ad"
+      ramdisk-hash: "8b3a9443275c155f5e8f922e6d5933a48b454322712963f5136b40cd6b34b448"
       zimage-hash: "449e79815a6812393a8e76d29a8ceee29256f1484cf76b3ddea247a49dc30a27"
-      md5-hash: "6e2efdf264e627971db321724d2ecb61"
+      md5-hash: "bbfd46874412c6c87620947527838c27"
     patch:
       - "ramdisk-64216-disable-root-pwd.patch"
       - "ramdisk-64216-init-script.patch"

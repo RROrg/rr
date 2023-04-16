@@ -1,0 +1,108 @@
+id: "FS6400"
+synoinfo: &synoinfo
+  support_disk_compatibility: "no"
+  support_memory_compatibility: "no"
+  support_led_brightness_adjustment: "no"
+  rss_server: "https://raw.githubusercontent.com/wjz304/arpl-arpl-i18n/main/rss.xml"
+  rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-arpl-i18n/main/rss.xml"
+  rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-arpl-i18n/main/rss.json"
+  support_syno_hybrid_raid:
+  supportraidgroup:
+cmdline: &cmdline
+  SMBusHddDynamicPower: 1
+  vender_format_version: 2
+  synoboot2:
+  syno_ttyS0: "serial,0x3f8"
+  syno_ttyS1: "serial,0x2f8"
+  elevator: elevator
+platform: "purley"
+unique: "synology_purley_fs6400"
+beta: true
+dom: 2
+serial:
+  prefix:
+    - "0000"
+  middle: "XXX"
+  suffix: "alpha"
+disks: 24
+dt: true
+builds:
+  42218:
+    ver: "7.0.1"
+    kver: "4.4.180"
+    rd-compressed: false
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_FS6400_42218.pat"
+      hash: "3437cc14ba919f13e37691d31d960f3f48cd3d734c015001ad2a7679636a5e9d"
+      ramdisk-hash: "ec1e1ea2022ac4af7dfbf2f72b64219b0c8ef747278a0b5c37d50ac7b07195ed"
+      zimage-hash: "67a5c04ba47cbef148195816412f88248b86a58e021e1c8196e31fbd375d0b50"
+      md5-hash: "e7887381980432a7be5ddf4dec0772ad"
+    patch:
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-common-post-init-script.patch"
+
+  42661:
+    ver: "7.1.0"
+    kver: "4.4.180"
+    rd-compressed: false
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_FS6400_42661.pat"
+      hash: "94a84725e8b24dfb448429068c046e05084ead3a210f8710979e0992904673e7"
+      ramdisk-hash: "6ceff751e7132dd8cc80ff64ee23b7e3b3986d85d7d9132b4cb4b0d50f223b1f"
+      zimage-hash: "2326a556eec4c48b9887bad7eecab268e43dc0e036bed8ddf6fbba466d713cde"
+      md5-hash: "030064272d82777681502745fcfa8c48"
+    patch:
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42661-post-init-script.patch"
+      
+  42962:
+    ver: "7.1.1"
+    kver: "4.4.180"
+    rd-compressed: false
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_FS6400_42962.pat"
+      hash: "5bf4334781dc21270f2f7bde9e781d4fda53656222240db36187089ff018e7a5"
+      ramdisk-hash: "7743e4d2c3634616a2dc2ae74b81bacbe9439bea9bebc3309b469a842bd7367f"
+      zimage-hash: "3aaa1c27607f295f1fa8778f3e1a020c3a3db6629ea3b6f821286a8da90f6800"
+      md5-hash: "651be491d10a47ecc534295d84341c03"
+    patch:
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"
+
+  64216:
+    ver: "7.2.0"
+    kver: "4.4.302"
+    rd-compressed: false
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://cndl.synology.cn/download/DSM/beta/7.2/64216/DSM_FS6400_64216.pat"
+      hash: "c225b79d5154488226655cbbd2f40e14f5711643baffb7b8b15488683f28e058"
+      ramdisk-hash: "2109e6c499636b92e84912df867d1a01755a8b73b4b625838f4782f894264879"
+      zimage-hash: "f5a41949fb348e6fb4006ddabede35675b93bfbf126a46870dd5db99918fea1e"
+      md5-hash: "26c756b71ebd648712266efcd38b2cf4"
+    patch:
+      - "ramdisk-64216-disable-root-pwd.patch"
+      - "ramdisk-64216-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"
