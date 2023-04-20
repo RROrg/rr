@@ -535,9 +535,9 @@ function extractDsmFiles() {
     fi
     mkdir -p "${CACHE_PATH}/dl"
 
-    speed_a="`curl -Lo /dev/null -skw "%{speed_download}" "global.synologydownload.com"`"
-    speed_b="`curl -Lo /dev/null -skw "%{speed_download}" "global.download.synology.com"`"
-    speed_c="`curl -Lo /dev/null -skw "%{speed_download}" "cndl.synology.cn"`"
+    speed_a="`curl -Lo /dev/null -m 1 -skw "%{speed_download}" "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"`"
+    speed_b="`curl -Lo /dev/null -m 1 -skw "%{speed_download}" "https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"`"
+    speed_c="`curl -Lo /dev/null -m 1 -skw "%{speed_download}" "https://cndl.synology.cn/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"`"
     fastest="`echo -e "global.synologydownload.com ${speed_a}\nglobal.download.synology.com ${speed_b}\ncndl.synology.cn ${speed_c}" | sort -k2rn | head -1 | awk '{print $1}'`"
 
     mirror="`echo ${PAT_URL} | sed 's|^http[s]*://\([^/]*\).*|\1|'`"
