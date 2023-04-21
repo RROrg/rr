@@ -4,8 +4,7 @@
 
 ### 原版：
 <b>https://github.com/fbelavenuto/arpl</b>
-* [作者说明(En)](./arpl-README-En.md)
-* [作者说明(Zh)](./arpl-README-Zh.md)
+* [arpl说明](https://github.com/fbelavenuto/arpl/blob/main/README.md)
 
 ### 汉化：
 <b>https://github.com/wjz304/arpl-zh_CN</b>
@@ -14,7 +13,8 @@
 ### i18n: 
 <b>https://github.com/wjz304/arpl-i18n</b>
 * 多语言支持.
-* 包含我的修改.
+* 6.2&7.2支持.
+* other.
 
 
 ## 说明
@@ -25,7 +25,7 @@
     # 如果要切换原版修改第二条命令中的 wjz304/arpl-i18n 为 fbelavenuto/arpl
     # 如果切换中文版修改第二条命令中的 wjz304/arpl-i18n 为 wjz304/arpl-zh_CN
     CURREPO=`grep "github.com.*update" menu.sh | sed -r 's/.*com\/(.*)\/releases.*/\1/'`
-    sed -i "s|${CURREPO}|wjz304/arpl-i18n|g; s|ACTUALVERSION=\"v\${ARPL_VERSION}\"|ACTUALVERSION=\"v0.0\"|g" /opt/arpl/menu.sh
+    sed -i "s|${CURREPO}|wjz304/arpl-i18n|g" /opt/arpl/menu.sh
     # 进入设置菜单执行更新arpl操作即可.
     # 更新后请重启.
     ```
@@ -36,12 +36,13 @@
     # 解压
     unzip /opt/arpl/arpl.zip
     # 挂载 img
-    losetup /dev/loop0 /opt/arpl/arpl.img
+    LOOPX=`sudo losetup -f`
+    losetup ${LOOPX} /opt/arpl/arpl.img
     # 复制 p1 p3 分区
-    mkdir -p /mnt/loop0p1; mount /dev/loop0p1 /mnt/loop0p1; cp -r /mnt/loop0p1/* /mnt/p1/; umount /mnt/loop0p1
-    mkdir -p /mnt/loop0p3; mount /dev/loop0p3 /mnt/loop0p2; cp -r /mnt/loop0p3/* /mnt/p3/; umount /mnt/loop0p3
+    mkdir -p /mnt/loop0p1; mount ${LOOPX}p1 /mnt/loop0p1; cp -rf /mnt/loop0p1/* /mnt/p1/; umount /mnt/loop0p1
+    mkdir -p /mnt/loop0p3; mount ${LOOPX}p3 /mnt/loop0p2; cp -rf /mnt/loop0p3/* /mnt/p3/; umount /mnt/loop0p3
     # 卸载 img
-    losetup -d /dev/loop0
+    losetup -d ${LOOPX}
     # 如果安装的版本中无你当前安装的DSM请尽量删除 /mnt/p1/user-config.yml, /mnt/p3/*-dsm, /mnt/p2/*
     rm -rf /mnt/p1/user-config.yml /mnt/p3/*-dsm /mnt/p2/*
     # 重启
@@ -64,7 +65,6 @@
 
 ## 打赏一下
 * > ### 作者: Ing  QQ群: 21609194  QQ频道: 0pg8m22666
-
 * <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/20220908134226.jpg" width="400">
 
 

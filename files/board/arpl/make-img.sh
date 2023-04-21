@@ -29,9 +29,9 @@ LOOPX=`sudo losetup -f`
 # Setup the ${LOOPX} loop device
 sudo losetup -P "${LOOPX}" "${IMAGE_FILE}"
 # Format partitions
-sudo mkdosfs -F32 -n ARPL1 "${LOOPX}p1"    >/dev/null 2>&1
-sudo mkfs.ext2 -F -F -L ARPL2 "${LOOPX}p2" >/dev/null 2>&1
-sudo mkfs.ext4 -F -F -L ARPL3 "${LOOPX}p3" >/dev/null 2>&1
+sudo mkdosfs -F32 -n ARPL1 "${LOOPX}p1" >/dev/null 2>&1
+sudo mkfs.ext2 -F -L ARPL2 "${LOOPX}p2" >/dev/null 2>&1
+sudo mkfs.ext4 -F -L ARPL3 "${LOOPX}p3" >/dev/null 2>&1
 
 echo "Mounting image file"
 mkdir -p "${BINARIES_DIR}/p1"

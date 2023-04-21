@@ -1,0 +1,45 @@
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+# 
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+name: Update
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Initialization environment
+        run : |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          sudo timedatectl set-timezone "Asia/Shanghai"
+
+          pip install requests BeautifulSoup4 pyyaml
+
+      - name: update pats
+        run: |
+          python rssupdate.py
+
+      - name: Check and Push
+        run: |
+          git pull
+          status=$(git status -s | grep -E 'model-configs|rss' | awk '{printf " %s", $2}')
+          if [ -n "${status}" ]; then
+            git add ${status}
+            git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
+            git push -f
+          fi
