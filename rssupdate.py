@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
-root = '' # os.path.dirname(os.path.abspath(__file__))
+FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 def fullversion(ver):
     out = ver
@@ -73,8 +73,12 @@ def synoextractor(url):
     os.mkdir(filepath)
 
     if isencrypted is True:
-        toolpath = "extractor"
-        commands = [f"sudo", f"LD_LIBRARY_PATH={toolpath}", f"{toolpath}/syno_extract_system_patch", filename, filepath] 
+        TOOL_PATH = os.path.join(FILE_PATH, 'extractor')
+        if not os.path.exists(TOOL_PATH):
+            commands = ["bash", "-c", ". {}; getExtractor {}".format(os.path.join(FILE_PATH, 'scripts/func.sh'), TOOL_PATH)] 
+            result = subprocess.check_output(commands)
+        
+        commands = ["sudo", "LD_LIBRARY_PATH={}".format(TOOL_PATH), "{}/syno_extract_system_patch".format(TOOL_PATH), filename, filepath] 
         result = subprocess.check_output(commands)
         pass
     else:
@@ -106,7 +110,7 @@ def main(): # if __name__ == '__main__':
     
     configs = "files/board/arpl/overlayfs/opt/arpl/model-configs"
 
-    for filename in os.listdir(os.path.join(root, configs)):
+    for filename in os.listdir(os.path.join(FILE_PATH, configs)):
         if ".yml" in filename:  # filename.endswith(".yml"):
             models.append(filename.split(".yml")[0])
 
@@ -156,13 +160,13 @@ def main(): # if __name__ == '__main__':
     with open('rsshead.json', "r", encoding='utf-8') as f:
         rssjson = json.loads(f.read())
 
-    for filename in os.listdir(os.path.join(root, configs)):
+    for filename in os.listdir(os.path.join(FILE_PATH, configs)):
         if ".yml" not in filename:  # filename.endswith(".yml"):
             continue
         model = filename.split(".yml")[0]
         
         data = ''
-        with open(os.path.join(root, configs, filename), "r", encoding='utf-8') as f:
+        with open(os.path.join(FILE_PATH, configs, filename), "r", encoding='utf-8') as f:
             data = yaml.load(f, Loader=yaml.BaseLoader)
         try:
             isChange=False
@@ -182,7 +186,7 @@ def main(): # if __name__ == '__main__':
                     # data["builds"][ver]["pat"] = hashdata  # pyyaml 会修改文件格式
                     # yq -iy '.builds."25556".pat |= {url:"...", hash:"..."}' DS918+.yml  # yq 也会修改文件格式
                     pat = data["builds"][ver]["pat"]
-                    commands = ['sed', '-i', 's|{}|{}|; s|{}|{}|; s|{}|{}|; s|{}|{}|; s|{}|{}|'.format(pat["url"], hashdata["url"], pat["hash"], hashdata["hash"], pat["ramdisk-hash"], hashdata["ramdisk-hash"], pat["zimage-hash"], hashdata["zimage-hash"], pat["md5-hash"], hashdata["md5-hash"]), os.path.join(root, configs, filename)]
+                    commands = ['sed', '-i', 's|{}|{}|; s|{}|{}|; s|{}|{}|; s|{}|{}|; s|{}|{}|'.format(pat["url"], hashdata["url"], pat["hash"], hashdata["hash"], pat["ramdisk-hash"], hashdata["ramdisk-hash"], pat["zimage-hash"], hashdata["zimage-hash"], pat["md5-hash"], hashdata["md5-hash"]), os.path.join(FILE_PATH, configs, filename)]
                     result = subprocess.check_output(commands)
 
                     # rss.xml
@@ -195,14 +199,14 @@ def main(): # if __name__ == '__main__':
                             rssjson["channel"]["item"][idx]["model"].append({"mUnique": hashdata["unique"], "mLink": hashdata["url"], "mCheckSum": hashdata["md5-hash"]})
             # # pyyaml 会修改文件格式
             # if isChange is True:
-            #     with open(os.path.join(root, configs, filename), "w", encoding='utf-8') as f:
+            #     with open(os.path.join(FILE_PATH, configs, filename), "w", encoding='utf-8') as f:
             #         yaml.dump(data, f, Dumper=yaml.SafeDumper, sort_keys=False)  # 双引号: default_style='"', 
         except:
             pass
 
     rssxml.write("rss.xml", xml_declaration=True)
     # ET 处理 rss 的后与原有rss会多一个encode
-    commands = ['sed', '-i', 's|^<?xml .*\?>$|<?xml version="1.0"?>|', os.path.join(root, 'rss.xml')]
+    commands = ['sed', '-i', 's|^<?xml .*\?>$|<?xml version="1.0"?>|', os.path.join(FILE_PATH, 'rss.xml')]
     result = subprocess.check_output(commands)
     # ET 处理 rss 的并不会格式化
     commands = ['xmllint', '--format', 'rss.xml', '-o', 'rss_new.xml']
