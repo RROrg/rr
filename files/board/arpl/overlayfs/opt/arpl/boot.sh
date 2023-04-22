@@ -88,12 +88,9 @@ fi
 
 # Validate netif_num
 NETIF_NUM=${CMDLINE["netif_num"]}
-MACS=0
-for N in `seq 1 9`; do
-  [ -n "${CMDLINE["mac${N}"]}" ] && MACS=$((${MACS}+1))
-done
-if [ ${NETIF_NUM} -ne ${MACS} ]; then
-  echo -e "\033[1;33m*** `printf "$(TEXT "netif_num is not equal to macX amount, set netif_num to %s")" "${MACS}"` ***\033[0m"
+NETRL_NUM=`ip link show | grep ether | wc -l`
+if [ ${NETIF_NUM} -ne ${NETRL_NUM} ]; then
+  echo -e "\033[1;33m*** `printf "$(TEXT "netif_num is not equal to real network card amount, set netif_num to %s")" "${NETRL_NUM}"` ***\033[0m"
   CMDLINE["netif_num"]=${MACS}
 fi
 

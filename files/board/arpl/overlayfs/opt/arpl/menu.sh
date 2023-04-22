@@ -392,31 +392,34 @@ function cmdlineMenu() {
         done
         ;;
       c)
-        RET=1
-        while true; do
-          dialog --backtitle "`backtitle`" --title "$(TEXT "User cmdline")" \
-            --inputbox "$(TEXT "Type a custom MAC address")" 0 0 "${CMDLINE['mac1']}"\
-            2>${TMP_PATH}/resp
-          RET=$?
-          [ ${RET} -ne 0 ] && break
-          MAC="`<"${TMP_PATH}/resp"`"
-          [ -z "${MAC}" ] && MAC="`readConfigKey "original-mac" "${USER_CONFIG_FILE}"`"
-          MAC1="`echo "${MAC}" | sed 's/://g'`"
-          [ ${#MAC1} -eq 12 ] && break
-          dialog --backtitle "`backtitle`" --title "$(TEXT "User cmdline")" --msgbox "$(TEXT "Invalid MAC")" 0 0
+        NUM=`ip link show | grep ether | wc -l`
+        for i in $(seq 1 ${NUM}); do
+          RET=1
+          while true; do
+            dialog --backtitle "`backtitle`" --title "$(TEXT "User cmdline")" \
+              --inputbox "`printf "$(TEXT "Type a custom MAC address of %s")" "eth$(expr ${i} - 1)"`" 0 0 "${CMDLINE["mac${i}"]}"\
+              2>${TMP_PATH}/resp
+            RET=$?
+            [ ${RET} -ne 0 ] && break
+            MAC="`<"${TMP_PATH}/resp"`"
+            [ -z "${MAC}" ] && MAC="`readConfigKey "original-mac${i}" "${USER_CONFIG_FILE}"`"
+            MACF="`echo "${MAC}" | sed 's/://g'`"
+            [ ${#MACF} -eq 12 ] && break
+            dialog --backtitle "`backtitle`" --title "$(TEXT "User cmdline")" --msgbox "$(TEXT "Invalid MAC")" 0 0
+          done
+          if [ ${RET} -eq 0 ]; then
+            CMDLINE["mac${i}"]="${MACF}"
+            CMDLINE["netif_num"]=${NUM}
+            writeConfigKey "cmdline.mac${i}"      "${MACF}" "${USER_CONFIG_FILE}"
+            writeConfigKey "cmdline.netif_num"    "${NUM}"  "${USER_CONFIG_FILE}"
+            MAC="${MACF:0:2}:${MACF:2:2}:${MACF:4:2}:${MACF:6:2}:${MACF:8:2}:${MACF:10:2}"
+            ip link set dev eth$(expr ${i} - 1) address ${MAC} 2>&1 | dialog --backtitle "`backtitle`" \
+              --title "$(TEXT "User cmdline")" --progressbox "$(TEXT "Changing MAC")" 20 70
+            /etc/init.d/S41dhcpcd restart 2>&1 | dialog --backtitle "`backtitle`" \
+              --title "$(TEXT "User cmdline")" --progressbox "$(TEXT "Renewing IP")" 20 70
+            IP=`ip route 2>/dev/null | sed -n 's/.* via .* src \(.*\) metric .*/\1/p' | head -1` # IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
+          fi
         done
-        if [ ${RET} -eq 0 ]; then
-          CMDLINE["mac1"]="${MAC1}"
-          CMDLINE["netif_num"]=1
-          writeConfigKey "cmdline.mac1"      "${MAC1}" "${USER_CONFIG_FILE}"
-          writeConfigKey "cmdline.netif_num" "1"       "${USER_CONFIG_FILE}"
-          MAC="${MAC1:0:2}:${MAC1:2:2}:${MAC1:4:2}:${MAC1:6:2}:${MAC1:8:2}:${MAC1:10:2}"
-          ip link set dev eth0 address ${MAC} 2>&1 | dialog --backtitle "`backtitle`" \
-            --title "$(TEXT "User cmdline")" --progressbox "$(TEXT "Changing MAC")" 20 70
-          /etc/init.d/S41dhcpcd restart 2>&1 | dialog --backtitle "`backtitle`" \
-            --title "$(TEXT "User cmdline")" --progressbox "$(TEXT "Renewing IP")" 20 70
-          IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
-        fi
         ;;
       s)
         ITEMS=""
@@ -768,6 +771,8 @@ function advancedMenu() {
       t) tryRecoveryDSM ;;
       s) MSG=""
         NUMPORTS=0
+        ATTACHTPORTS=0
+        DiskIdxMap=""
         for PCI in `lspci -d ::106 | awk '{print$1}'`; do
           NAME=`lspci -s "${PCI}" | sed "s/\ .*://"`
           MSG+="\Zb${NAME}\Zn\nPorts: "
@@ -782,15 +787,18 @@ function advancedMenu() {
             ls -l /sys/block | fgrep -q "${PCI}/ata${PORT}" && ATTACH=1 || ATTACH=0
             PCMD=`cat /sys/class/scsi_host/${HOSTPORTS[${PORT}]}/ahci_port_cmd`
             [ "${PCMD}" = "0" ] && DUMMY=1 || DUMMY=0
-            [ ${ATTACH} -eq 1 ] && MSG+="\Z2\Zb"
+            [ ${ATTACH} -eq 1 ] && MSG+="\Z2\Zb" && ATTACHTPORTS=$((${ATTACHTPORTS}+1))
             [ ${DUMMY} -eq 1 ] && MSG+="\Z1"
             MSG+="${PORT}\Zn "
             NUMPORTS=$((${NUMPORTS}+1))
           done < <(echo ${!HOSTPORTS[@]} | tr ' ' '\n' | sort -n)
           MSG+="\n"
+          DiskIdxMap+=`printf '%02x' ${ATTACHTPORTS}`
         done
         MSG+="`printf "$(TEXT "\nTotal of ports: %s\n")" "${NUMPORTS}"`"
         MSG+="$(TEXT "\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected.")"
+        MSG+="$(TEXT "\nRecommended value:")"
+        MSG+="$(TEXT "\nDiskIdxMap:") ${DiskIdxMap}"
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "${MSG}" 0 0
         ;;
