@@ -69,8 +69,8 @@ if [ -d "${CACHE_PATH}/patch" ]; then
 fi
 
 # Get first MAC address
-MAC=`ip link show eth0 | awk '/ether/{print$2}'`
-MACF=`echo ${MAC} | sed 's/://g'`
+MACS=`ip link show | awk '/ether/{print$2}'`
+MACFS=(`echo ${MACS} | sed 's/://g'`)
 
 # If user config file not exists, initialize it
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
@@ -92,19 +92,25 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "addons.acpid" "" "${USER_CONFIG_FILE}"
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
   # Initialize with real MAC
-  writeConfigKey "cmdline.netif_num" "1" "${USER_CONFIG_FILE}"
-  writeConfigKey "cmdline.mac1" "${MACF}" "${USER_CONFIG_FILE}"
+  writeConfigKey "cmdline.netif_num" "${#MACFS[@]}" "${USER_CONFIG_FILE}"
+  for i in $(seq 1 ${#MACFS[@]}); do
+    writeConfigKey "cmdline.mac${i}" "${MACFS[$(expr ${i} - 1)]}" "${USER_CONFIG_FILE}"
+  done
 fi
-writeConfigKey "original-mac" "${MACF}" "${USER_CONFIG_FILE}"
+for i in $(seq 1 ${#MACFS[@]}); do
+  writeConfigKey "original-mac${i}" "${MACFS[$(expr ${i} - 1)]}" "${USER_CONFIG_FILE}"
+done
 
 # Set custom MAC if defined
-MAC1="`readConfigKey "cmdline.mac1" "${USER_CONFIG_FILE}"`"
-if [ -n "${MAC1}" -a "${MAC1}" != "${MACF}" ]; then
-  MAC="${MAC1:0:2}:${MAC1:2:2}:${MAC1:4:2}:${MAC1:6:2}:${MAC1:8:2}:${MAC1:10:2}"
-  echo "`printf "$(TEXT "Setting MAC to %s")" "${MAC}"`"
-  ip link set dev eth0 address ${MAC} >/dev/null 2>&1 && \
-    (/etc/init.d/S41dhcpcd restart >/dev/null 2>&1 &) || true
-fi
+for i in $(seq 1 ${#MACFS[@]}); do
+  MACF="`readConfigKey "cmdline.mac${i}" "${USER_CONFIG_FILE}"`"
+  if [ -n "${MACF}" -a "${MACF}" != "${MACFS[$(expr ${i} - 1)]}" ]; then
+    MAC="${MACF:0:2}:${MACF:2:2}:${MACF:4:2}:${MACF:6:2}:${MACF:8:2}:${MACF:10:2}"
+    echo "`printf "$(TEXT "Setting %s MAC to %s")" "eth$(expr ${i} - 1)" "${MAC}"`"
+    ip link set dev eth$(expr ${i} - 1) address ${MAC} >/dev/null 2>&1 && \
+      (/etc/init.d/S41dhcpcd restart >/dev/null 2>&1 &) || true
+  fi
+done
 
 # Get the VID/PID if we are in USB
 VID="0x0000"
@@ -177,7 +183,7 @@ while true; do
     break
   fi
   COUNT=$((${COUNT}+1))
-  IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
+  IP=`ip route 2>/dev/null | sed -n 's/.* via .* src \(.*\) metric .*/\1/p' | head -1` # IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
   if [ -n "${IP}" ]; then
     echo -en "`printf "$(TEXT "OK\nAccess \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal")" "${IP}"`"
     break
