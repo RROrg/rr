@@ -13,7 +13,7 @@ if [ `cat /sys/block/${LOADER_DEVICE_NAME}/${LOADER_DEVICE_NAME}3/size` -lt 4194
 fi
 
 # Get actual IP
-IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
+IP=`ip route 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p' | head -1` # `ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
 
 # Dirty flag
 DIRTY=0
@@ -417,7 +417,7 @@ function cmdlineMenu() {
               --title "$(TEXT "User cmdline")" --progressbox "$(TEXT "Changing MAC")" 20 70
             /etc/init.d/S41dhcpcd restart 2>&1 | dialog --backtitle "`backtitle`" \
               --title "$(TEXT "User cmdline")" --progressbox "$(TEXT "Renewing IP")" 20 70
-            IP=`ip route 2>/dev/null | sed -n 's/.* via .* src \(.*\) metric .*/\1/p' | head -1` # IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
+            IP=`ip route 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p' | head -1` # IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
           fi
         done
         ;;
@@ -771,13 +771,14 @@ function advancedMenu() {
       t) tryRecoveryDSM ;;
       s) MSG=""
         NUMPORTS=0
-        ATTACHTPORTS=0
+        ATTACHTNUM=0
         DiskIdxMap=""
         for PCI in `lspci -d ::106 | awk '{print$1}'`; do
           NAME=`lspci -s "${PCI}" | sed "s/\ .*://"`
           MSG+="\Zb${NAME}\Zn\nPorts: "
           unset HOSTPORTS
           declare -A HOSTPORTS
+          ATTACHTIDX=0
           while read LINE; do
             ATAPORT="`echo ${LINE} | grep -o 'ata[0-9]*'`"
             PORT=`echo ${ATAPORT} | sed 's/ata//'`
@@ -787,13 +788,14 @@ function advancedMenu() {
             ls -l /sys/block | fgrep -q "${PCI}/ata${PORT}" && ATTACH=1 || ATTACH=0
             PCMD=`cat /sys/class/scsi_host/${HOSTPORTS[${PORT}]}/ahci_port_cmd`
             [ "${PCMD}" = "0" ] && DUMMY=1 || DUMMY=0
-            [ ${ATTACH} -eq 1 ] && MSG+="\Z2\Zb" && ATTACHTPORTS=$((${ATTACHTPORTS}+1))
+            [ ${ATTACH} -eq 1 ] && MSG+="\Z2\Zb" && ATTACHTIDX=$((${ATTACHTIDX}+1))
             [ ${DUMMY} -eq 1 ] && MSG+="\Z1"
             MSG+="${PORT}\Zn "
             NUMPORTS=$((${NUMPORTS}+1))
           done < <(echo ${!HOSTPORTS[@]} | tr ' ' '\n' | sort -n)
           MSG+="\n"
-          DiskIdxMap+=`printf '%02x' ${ATTACHTPORTS}`
+          [ ${ATTACHTIDX} -gt 0 ] && DiskIdxMap+=`printf '%02x' ${ATTACHTNUM}` || DiskIdxMap+="ff"
+          ATTACHTNUM=$((${ATTACHTNUM}+${ATTACHTIDX}))
         done
         MSG+="`printf "$(TEXT "\nTotal of ports: %s\n")" "${NUMPORTS}"`"
         MSG+="$(TEXT "\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected.")"

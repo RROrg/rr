@@ -70,7 +70,7 @@ fi
 
 # Get first MAC address
 MACS=`ip link show | awk '/ether/{print$2}'`
-MACFS=(`echo ${MACS} | sed 's/://g'`)
+MACFS=(`echo ${MACS} | sed 's/://g'`)  # MACFS=(`cat /sys/class/net/eth*/address | sed 's/://g'`) # ?
 
 # If user config file not exists, initialize it
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
@@ -183,7 +183,7 @@ while true; do
     break
   fi
   COUNT=$((${COUNT}+1))
-  IP=`ip route 2>/dev/null | sed -n 's/.* via .* src \(.*\) metric .*/\1/p' | head -1` # IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
+  IP=`ip route 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p' | head -1` # IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
   if [ -n "${IP}" ]; then
     echo -en "`printf "$(TEXT "OK\nAccess \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal")" "${IP}"`"
     break

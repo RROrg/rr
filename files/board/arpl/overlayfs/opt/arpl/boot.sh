@@ -91,7 +91,7 @@ NETIF_NUM=${CMDLINE["netif_num"]}
 NETRL_NUM=`ip link show | grep ether | wc -l`
 if [ ${NETIF_NUM} -ne ${NETRL_NUM} ]; then
   echo -e "\033[1;33m*** `printf "$(TEXT "netif_num is not equal to real network card amount, set netif_num to %s")" "${NETRL_NUM}"` ***\033[0m"
-  CMDLINE["netif_num"]=${MACS}
+  CMDLINE["netif_num"]=${NETRL_NUM}
 fi
 
 # Prepare command line
@@ -117,12 +117,12 @@ echo -e "$(TEXT "Cmdline:\n")\033[1;36m${CMDLINE_LINE}\033[0m"
 COUNT=0
 echo -n "$(TEXT "IP")"
 while true; do
-  IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
+  IP=`ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*/\1: \2 /p'` # `ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
   if [ -n "${IP}" ]; then
-    echo -e ": \033[1;32m${IP}\033[0m"
+    echo -e ": \033[1;32m\n${IP}\033[0m"
     break
   elif [ ${COUNT} -eq 30 ]; then
-    echo -e ": \033[1;31mERROR\033[0m"
+    echo -e ": \033[1;31m\nERROR\033[0m"
     break
   fi
   COUNT=$((${COUNT}+1))
