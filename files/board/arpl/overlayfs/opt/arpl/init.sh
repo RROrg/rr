@@ -69,8 +69,7 @@ if [ -d "${CACHE_PATH}/patch" ]; then
 fi
 
 # Get first MAC address
-MACS=`ip link show | awk '/ether/{print$2}'`
-MACFS=(`echo ${MACS} | sed 's/://g'`)  # MACFS=(`cat /sys/class/net/eth*/address | sed 's/://g'`) # ?
+ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
 
 # If user config file not exists, initialize it
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
@@ -80,7 +79,7 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "model" "" "${USER_CONFIG_FILE}"
   writeConfigKey "build" "" "${USER_CONFIG_FILE}"
   writeConfigKey "sn" "" "${USER_CONFIG_FILE}"
-#  writeConfigKey "maxdisks" "" "${USER_CONFIG_FILE}"
+  #  writeConfigKey "maxdisks" "" "${USER_CONFIG_FILE}"
   writeConfigKey "layout" "qwerty" "${USER_CONFIG_FILE}"
   writeConfigKey "keymap" "" "${USER_CONFIG_FILE}"
   writeConfigKey "zimage-hash" "" "${USER_CONFIG_FILE}"
@@ -91,26 +90,27 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "addons.misc" "" "${USER_CONFIG_FILE}"
   writeConfigKey "addons.acpid" "" "${USER_CONFIG_FILE}"
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-  # Initialize with real MAC
-  writeConfigKey "cmdline.netif_num" "${#MACFS[@]}" "${USER_CONFIG_FILE}"
-  for i in $(seq 1 ${#MACFS[@]}); do
-    writeConfigKey "cmdline.mac${i}" "${MACFS[$(expr ${i} - 1)]}" "${USER_CONFIG_FILE}"
-  done
+  # When the user has not customized, Use 1 to maintain normal startup parameters.
+  # writeConfigKey "cmdline.netif_num" "1" "${USER_CONFIG_FILE}"
+  # writeConfigKey "cmdline.mac1" "`cat /sys/class/net/${ETHX[0]}/address | sed 's/://g'`" "${USER_CONFIG_FILE}"
 fi
-for i in $(seq 1 ${#MACFS[@]}); do
-  writeConfigKey "original-mac${i}" "${MACFS[$(expr ${i} - 1)]}" "${USER_CONFIG_FILE}"
-done
 
-# Set custom MAC if defined
-for i in $(seq 1 ${#MACFS[@]}); do
-  MACF="`readConfigKey "cmdline.mac${i}" "${USER_CONFIG_FILE}"`"
-  if [ -n "${MACF}" -a "${MACF}" != "${MACFS[$(expr ${i} - 1)]}" ]; then
+for N in $(seq 1 ${#ETHX[@]}); do
+  MACR="`cat /sys/class/net/${ETHX[$(expr ${N} - 1)]}/address | sed 's/://g'`"
+  # Set custom MAC if defined
+  MACF="`readConfigKey "cmdline.mac${N}" "${USER_CONFIG_FILE}"`"
+  if [ -n "${MACF}" -a "${MACF}" != "${MACR}" ]; then
     MAC="${MACF:0:2}:${MACF:2:2}:${MACF:4:2}:${MACF:6:2}:${MACF:8:2}:${MACF:10:2}"
-    echo "`printf "$(TEXT "Setting %s MAC to %s")" "eth$(expr ${i} - 1)" "${MAC}"`"
-    ip link set dev eth$(expr ${i} - 1) address ${MAC} >/dev/null 2>&1 && \
+    echo "`printf "$(TEXT "Setting %s MAC to %s")" "${ETHX[$(expr ${N} - 1)]}" "${MAC}"`"
+    ip link set dev ${ETHX[$(expr ${N} - 1)]} address ${MAC} >/dev/null 2>&1 && \
       (/etc/init.d/S41dhcpcd restart >/dev/null 2>&1 &) || true
   fi
+  # Initialize with real MAC
+  writeConfigKey "original-mac${N}" "${MACR}" "${USER_CONFIG_FILE}"
+  # Enable Wake on Lan, ignore errors
+  ethtool -s ${ETHX[$(expr ${N} - 1)]} wol g 2>/dev/null
 done
+
 
 # Get the VID/PID if we are in USB
 VID="0x0000"
@@ -156,9 +156,6 @@ if [ -f /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz ]; then
   zcat /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz | loadkeys
 fi
 
-# Enable Wake on Lan, ignore errors
-ethtool -s eth0 wol g 2>/dev/null
-
 # Decide if boot automatically
 BOOT=1
 if ! loaderIsConfigured; then
@@ -175,21 +172,28 @@ if [ ${BOOT} -eq 1 ]; then
 fi
 
 # Wait for an IP
-COUNT=0
-echo -n "$(TEXT "Waiting IP.")"
-while true; do
-  if [ ${COUNT} -eq 30 ]; then
-    echo "$(TEXT "ERROR")"
-    break
-  fi
-  COUNT=$((${COUNT}+1))
-  IP=`ip route 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p' | head -1` # IP=`ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
-  if [ -n "${IP}" ]; then
-    echo -en "`printf "$(TEXT "OK\nAccess \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal")" "${IP}"`"
-    break
-  fi
-  echo -n "."
-  sleep 1
+echo "`printf "$(TEXT "Detected %s network cards, Waiting IP.")" "${#ETHX[@]}"`"
+for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
+  COUNT=0
+  echo -en "${ETHX[${N}]}: "
+  while true; do
+    if [ -z "`ip link show ${ETHX[${N}]} | grep 'UP'`" ]; then
+      echo -en "\r${ETHX[${N}]}: $(TEXT "DOWN")\n"
+      break
+    fi
+    if [ ${COUNT} -eq 30 ]; then
+      echo -en "\r${ETHX[${N}]}: $(TEXT "ERROR")\n"
+      break
+    fi
+    COUNT=$((${COUNT}+1))
+    IP=`ip route show dev ${ETHX[${N}]} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p'`
+    if [ -n "${IP}" ]; then
+      echo -en "\r${ETHX[${N}]}: `printf "$(TEXT "Access \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal.")" "${IP}"`\n"
+      break
+    fi
+    echo -n "."
+    sleep 1
+  done
 done
 
 # Inform user

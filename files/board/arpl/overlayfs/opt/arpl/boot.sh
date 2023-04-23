@@ -87,10 +87,26 @@ if [ "${BUS}" = "ata" ]; then
 fi
 
 # Validate netif_num
-NETIF_NUM=${CMDLINE["netif_num"]}
-NETRL_NUM=`ip link show | grep ether | wc -l`
-if [ ${NETIF_NUM} -ne ${NETRL_NUM} ]; then
-  echo -e "\033[1;33m*** `printf "$(TEXT "netif_num is not equal to real network card amount, set netif_num to %s")" "${NETRL_NUM}"` ***\033[0m"
+MACS=()
+for N in `seq 1 9`; do  # Currently, only up to 9 are supported.  ( <==> menu.sh L396)
+  [ -n "${CMDLINE["mac${N}"]}" ] && MACS+=(${CMDLINE["mac${N}"]})
+done
+NETIF_NUM=${#MACS[*]}
+# set netif_num to custom mac amount, netif_num must be equal to the MACX amount, otherwise the kernel will panic.
+CMDLINE["netif_num"]=${NETIF_NUM}  # The current original CMDLINE['netif_num'] is no longer in use, Consider deleting.
+# real network cards amount
+NETRL_NUM=`ls /sys/class/net/ | grep eth | wc -l`
+if [ ${NETIF_NUM} -le ${NETRL_NUM} ]; then
+  echo -e "\033[1;33m*** `printf "$(TEXT "Detected %s network cards, but only %s MACs were customized, the rest will use the original MACs.")" "${NETRL_NUM}" "${CMDLINE["netif_num"]}"` ***\033[0m"
+  ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
+  for N in `seq $(expr ${NETIF_NUM} + 1) ${NETRL_NUM}`; do 
+    MACR="`cat /sys/class/net/${ETHX[$(expr ${N} - 1)]}/address | sed 's/://g'`"
+    # no duplicates
+    while [[ "${MACS[*]}" =~ "$MACR" ]]; do # no duplicates
+      MACR="${MACR:0:10}`printf "%02x" $((0x${MACR:10:2} + 1))`" 
+    done
+    CMDLINE["mac${N}"]="${MACR}"
+  done
   CMDLINE["netif_num"]=${NETRL_NUM}
 fi
 
@@ -99,8 +115,8 @@ CMDLINE_LINE=""
 grep -q "force_junior" /proc/cmdline && CMDLINE_LINE+="force_junior "
 [ ${EFI} -eq 1 ] && CMDLINE_LINE+="withefi " || CMDLINE_LINE+="noefi "
 [ "${BUS}" = "ata" ] && CMDLINE_LINE+="synoboot_satadom=${DOM} dom_szmax=${SIZE} "
-CMDLINE_DIRECT="${CMDLINE_LINE}"
 CMDLINE_LINE+="console=ttyS0,115200n8 earlyprintk earlycon=uart8250,io,0x3f8,115200n8 root=/dev/md0 loglevel=15 log_buf_len=32M"
+CMDLINE_DIRECT="${CMDLINE_LINE}"
 for KEY in ${!CMDLINE[@]}; do
   VALUE="${CMDLINE[${KEY}]}"
   CMDLINE_LINE+=" ${KEY}"
@@ -113,23 +129,6 @@ done
 CMDLINE_DIRECT=`echo ${CMDLINE_DIRECT} | sed 's/>/\\\\>/g'`
 echo -e "$(TEXT "Cmdline:\n")\033[1;36m${CMDLINE_LINE}\033[0m"
 
-# Wait for an IP
-COUNT=0
-echo -n "$(TEXT "IP")"
-while true; do
-  IP=`ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*/\1: \2 /p'` # `ip route get 1.1.1.1 2>/dev/null | awk '{print$7}'`
-  if [ -n "${IP}" ]; then
-    echo -e ": \033[1;32m\n${IP}\033[0m"
-    break
-  elif [ ${COUNT} -eq 30 ]; then
-    echo -e ": \033[1;31m\nERROR\033[0m"
-    break
-  fi
-  COUNT=$((${COUNT}+1))
-  sleep 1
-  echo -n "."
-done
-
 DIRECT="`readConfigKey "directboot" "${USER_CONFIG_FILE}"`"
 if [ "${DIRECT}" = "true" ]; then
   grub-editenv ${GRUB_PATH}/grubenv set dsm_cmdline="${CMDLINE_DIRECT}"
@@ -137,7 +136,32 @@ if [ "${DIRECT}" = "true" ]; then
   grub-editenv ${GRUB_PATH}/grubenv set next_entry="direct"
   reboot
   exit 0
+else
+  echo "`printf "$(TEXT "Detected %s network cards, Waiting IP.")" "${#ETHX[@]}"`"
+  for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
+    COUNT=0
+    echo -en "${ETHX[${N}]}: "
+    while true; do
+      if [ -z "`ip link show ${ETHX[${N}]} | grep 'UP'`" ]; then
+        echo -en "\r${ETHX[${N}]}: $(TEXT "DOWN")\n"
+        break
+      fi
+      if [ ${COUNT} -eq 30 ]; then
+        echo -en "\r${ETHX[${N}]}: $(TEXT "ERROR")\n"
+        break
+      fi
+      COUNT=$((${COUNT}+1))
+      IP=`ip route show dev ${ETHX[${N}]} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p'`
+      if [ -n "${IP}" ]; then
+        echo -en "\r${ETHX[${N}]}: `printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}"`\n"
+        break
+      fi
+      echo -n "."
+      sleep 1
+    done
+  done
 fi
+
 echo -e "\033[1;37m$(TEXT "Loading DSM kernel...")\033[0m"
 
 # Executes DSM kernel via KEXEC
