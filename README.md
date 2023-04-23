@@ -63,6 +63,11 @@
     msgfmt lang/zh_CN.po -o lang/zh_CN.mo    # This process will be automatically processed during packaging.
     ```
 
+## 一些使用教程
+* 中文: https://www.bilibili.com/video/BV1jk4y1Y7B7  
+    ##### `(From: http://mi-d.cn)`
+
+
 ## 打赏一下
 * > ### 作者: Ing  QQ群: 21609194  QQ频道: 0pg8m22666
 * <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/20220908134226.jpg" width="400">
