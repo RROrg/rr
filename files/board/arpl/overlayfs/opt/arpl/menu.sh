@@ -545,11 +545,11 @@ function extractDsmFiles() {
     fi
     mkdir -p "${CACHE_PATH}/dl"
 
-    speed_a="`curl -Lo /dev/null -m 1 -skw "%{speed_download}" "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"`"
-    speed_b="`curl -Lo /dev/null -m 1 -skw "%{speed_download}" "https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"`"
-    speed_c="`curl -Lo /dev/null -m 1 -skw "%{speed_download}" "https://cndl.synology.cn/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"`"
-    fastest="`echo -e "global.synologydownload.com ${speed_a}\nglobal.download.synology.com ${speed_b}\ncndl.synology.cn ${speed_c}" | sort -k2rn | head -1 | awk '{print $1}'`"
-
+    speed_a=`ping -c 1 -W 5 global.synologydownload.com | awk '/time=/ {print $7}' | cut -d '=' -f 2`
+    speed_b=`ping -c 1 -W 5 global.download.synology.com | awk '/time=/ {print $7}' | cut -d '=' -f 2`
+    speed_c=`ping -c 1 -W 5 cndl.synology.cn | awk '/time=/ {print $7}' | cut -d '=' -f 2`
+    fastest="`echo -e "global.synologydownload.com ${speed_a}\nglobal.download.synology.com ${speed_b}\ncndl.synology.cn ${speed_c}" | sort -k2n | head -1 | awk '{print $1}'`"
+    
     mirror="`echo ${PAT_URL} | sed 's|^http[s]*://\([^/]*\).*|\1|'`"
     if [ "${mirror}" != "${fastest}" ]; then
       echo "`printf "$(TEXT "Based on the current network situation, switch to %s mirror to downloading.")" "${fastest}"`"
@@ -756,7 +756,9 @@ function advancedMenu() {
     echo "u \"$(TEXT "Edit user config file manually")\""            >> "${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\""    >> "${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\""           >> "${TMP_PATH}/menu"
+    echo "f \"$(TEXT "Format disk(s) # SATA and NVME")\""            >> "${TMP_PATH}/menu"
     echo "d \"$(TEXT "Custom dts location:/mnt/p1/model.dts # Need rebuild")\""           >> "${TMP_PATH}/menu"
+    echo "p \"$(TEXT "Persistence of arpl modifications")\""         >> "${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\""                                      >> "${TMP_PATH}/menu"
 
     dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
@@ -808,6 +810,47 @@ function advancedMenu() {
         MSG+="$(TEXT "\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected.")"
         MSG+="$(TEXT "\nRecommended value:")"
         MSG+="$(TEXT "\nDiskIdxMap:") ${DiskIdxMap}"
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
+          --msgbox "${MSG}" 0 0
+        ;;
+      f) ITEMS=""
+        while read POSITION NAME; do
+          [ -z "${POSITION}" -o -z "${NAME}" ] && continue
+          ITEMS+="`printf "%s %s off " "${POSITION}" "${NAME}"`"
+        done < <(ls -l /dev/disk/by-id/ | grep -v "${LOADER_DEVICE_NAME}" | sed 's|../..|/dev|g' | awk -F' ' '{print $11" "$9}' | sort -uk 1,1)
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
+          --checklist "$(TEXT "Advanced")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && return
+        RESP=`<"${TMP_PATH}/resp"`
+        [ -z "${RESP}" ] && return
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
+            --yesno "$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")" 0 0
+        [ $? -ne 0 ] && return
+        (
+          for I in ${RESP}; do
+            mkfs.ext4 -F -O ^metadata_csum ${I}
+          done
+        ) | dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
+            --progressbox "$(TEXT "Formatting ...")" 20 70
+        MSG="$(TEXT "Formatting is complete.")"
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
+          --msgbox "${MSG}" 0 0
+        ;;
+      p) 
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Persistence of arpl modifications")" \
+            --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
+        [ $? -ne 0 ] && return
+        (
+          RDXZ_PATH=/tmp/rdxz_tmp
+          mkdir -p "${RDXZ_PATH}"
+          (cd "${RDXZ_PATH}"; xz -dc < "/mnt/p3/initrd-arpl" | cpio -idm) >/dev/null 2>&1 || true
+          rm -rf "${RDXZ_PATH}/opt/arpl"
+          cp -rf "/opt/arpl" "${RDXZ_PATH}/opt"
+          (cd "${RDXZ_PATH}"; find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 > "/mnt/p3/initrd-arpl") || true
+          rm -rf "${RDXZ_PATH}"
+        ) | dialog --backtitle "`backtitle`" --title "$(TEXT "Persistence of arpl modifications")" \
+            --progressbox "$(TEXT "Persisting ...")" 20 70
+        MSG="$(TEXT "Persisting is complete.")"
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "${MSG}" 0 0
         ;;
