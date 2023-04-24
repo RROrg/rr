@@ -146,7 +146,7 @@ else
         echo -en "\r${ETHX[${N}]}: $(TEXT "DOWN")\n"
         break
       fi
-      if [ ${COUNT} -eq 30 ]; then
+      if [ ${COUNT} -eq 8 ]; then # Under normal circumstances, no errors should occur here.
         echo -en "\r${ETHX[${N}]}: $(TEXT "ERROR")\n"
         break
       fi

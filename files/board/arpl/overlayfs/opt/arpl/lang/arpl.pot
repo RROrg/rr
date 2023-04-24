@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-24 02:43+0800\n"
+"POT-Creation-Date: 2023-04-24 18:26+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Reconfiguring Synoinfo, Addons and Modules"
 msgstr ""
 
-#: menu.sh:187 menu.sh:236 menu.sh:355 menu.sh:468 menu.sh:877 menu.sh:1023
+#: menu.sh:187 menu.sh:236 menu.sh:355 menu.sh:468 menu.sh:920 menu.sh:1066
 msgid "Choose a option"
 msgstr ""
 
@@ -216,7 +216,7 @@ msgstr ""
 msgid "Please enter a serial number "
 msgstr ""
 
-#: menu.sh:206 menu.sh:425 menu.sh:970 menu.sh:1202
+#: menu.sh:206 menu.sh:425 menu.sh:1013 menu.sh:1245
 msgid "Alert"
 msgstr ""
 
@@ -244,8 +244,8 @@ msgstr ""
 msgid "Download a external addon"
 msgstr ""
 
-#: menu.sh:242 menu.sh:352 menu.sh:464 menu.sh:760 menu.sh:882 menu.sh:1029
-#: menu.sh:1251
+#: menu.sh:242 menu.sh:352 menu.sh:464 menu.sh:762 menu.sh:925 menu.sh:1072
+#: menu.sh:1294
 msgid "Exit"
 msgstr ""
 
@@ -501,7 +501,7 @@ msgstr ""
 msgid "Addon %s not found!"
 msgstr ""
 
-#: menu.sh:734 menu.sh:1269
+#: menu.sh:734 menu.sh:1312
 msgid "Cleaning"
 msgstr ""
 
@@ -513,7 +513,7 @@ msgstr ""
 msgid "Switch LKM version:"
 msgstr ""
 
-#: menu.sh:751 menu.sh:867 menu.sh:893 menu.sh:904 menu.sh:917 menu.sh:923
+#: menu.sh:751 menu.sh:910 menu.sh:936 menu.sh:947 menu.sh:960 menu.sh:966
 msgid "Modules"
 msgstr ""
 
@@ -534,274 +534,314 @@ msgid "Show SATA(s) # ports and drives"
 msgstr ""
 
 #: menu.sh:759
+msgid "Format disk(s) # SATA and NVME"
+msgstr ""
+
+#: menu.sh:760
 msgid "Custom dts location:/mnt/p1/model.dts # Need rebuild"
 msgstr ""
 
-#: menu.sh:762
+#: menu.sh:761 menu.sh:840 menu.sh:851
+msgid "Persistence of arpl modifications"
+msgstr ""
+
+#: menu.sh:764 menu.sh:822
 msgid "Advanced"
 msgstr ""
 
-#: menu.sh:763 menu.sh:1254
+#: menu.sh:765 menu.sh:1297
 msgid "Choose the option"
 msgstr ""
 
-#: menu.sh:807
+#: menu.sh:809
 msgid "\\nTotal of ports: %s\\n"
 msgstr ""
 
-#: menu.sh:808
+#: menu.sh:810
 msgid ""
 "\\nPorts with color \\Z1red\\Zn as DUMMY, color \\Z2\\Zbgreen\\Zn has drive "
 "connected."
 msgstr ""
 
-#: menu.sh:809
+#: menu.sh:811
 msgid "\\nRecommended value:"
 msgstr ""
 
-#: menu.sh:810
+#: menu.sh:812
 msgid "\\nDiskIdxMap:"
 msgstr ""
 
-#: menu.sh:822 menu.sh:850 menu.sh:857
+#: menu.sh:821 menu.sh:826 menu.sh:833
+msgid "Format disk"
+msgstr ""
+
+#: menu.sh:827
+msgid ""
+"Warning:\\nThis operation is irreversible. Please backup important data. Do "
+"you want to continue?"
+msgstr ""
+
+#: menu.sh:834
+msgid "Formatting ..."
+msgstr ""
+
+#: menu.sh:835
+msgid "Formatting is complete."
+msgstr ""
+
+#: menu.sh:841
+msgid ""
+"Warning:\\nDo not terminate midway, otherwise it may cause damage to the "
+"arpl. Do you want to continue?"
+msgstr ""
+
+#: menu.sh:852
+msgid "Persisting ..."
+msgstr ""
+
+#: menu.sh:853
+msgid "Persisting is complete."
+msgstr ""
+
+#: menu.sh:865 menu.sh:893 menu.sh:900
 msgid "Try recovery DSM"
 msgstr ""
 
-#: menu.sh:823
+#: menu.sh:866
 msgid "Trying to recovery a DSM installed system"
 msgstr ""
 
-#: menu.sh:844
+#: menu.sh:887
 msgid "Found a installation:\\nModel: %s\\nBuildnumber: %s"
 msgstr ""
 
-#: menu.sh:848
+#: menu.sh:891
 msgid "\\nSerial: %s"
 msgstr ""
 
-#: menu.sh:858
+#: menu.sh:901
 msgid "Unfortunately I couldn't mount the DSM partition!"
 msgstr ""
 
-#: menu.sh:868
+#: menu.sh:911
 msgid "Reading modules"
 msgstr ""
 
-#: menu.sh:878
+#: menu.sh:921
 msgid "Show selected modules"
 msgstr ""
 
-#: menu.sh:879
+#: menu.sh:922
 msgid "Select all modules"
 msgstr ""
 
-#: menu.sh:880
+#: menu.sh:923
 msgid "Deselect all modules"
 msgstr ""
 
-#: menu.sh:881
+#: menu.sh:924
 msgid "Choose modules to include"
 msgstr ""
 
-#: menu.sh:890
+#: menu.sh:933
 msgid "User modules"
 msgstr ""
 
-#: menu.sh:894
+#: menu.sh:937
 msgid "Selecting all modules"
 msgstr ""
 
-#: menu.sh:905
+#: menu.sh:948
 msgid "Deselecting all modules"
 msgstr ""
 
-#: menu.sh:918
+#: menu.sh:961
 msgid "Select modules to include"
 msgstr ""
 
-#: menu.sh:924
+#: menu.sh:967
 msgid "Writing to user config"
 msgstr ""
 
-#: menu.sh:945
+#: menu.sh:988
 msgid "Edit with caution"
 msgstr ""
 
-#: menu.sh:951
+#: menu.sh:994
 msgid "Invalid YAML format"
 msgstr ""
 
-#: menu.sh:971
+#: menu.sh:1014
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr ""
 
-#: menu.sh:983 menu.sh:1245
+#: menu.sh:1026 menu.sh:1288
 msgid "Choose a language"
 msgstr ""
 
-#: menu.sh:996
+#: menu.sh:1039
 msgid "Choose a layout"
 msgstr ""
 
-#: menu.sh:1006
+#: menu.sh:1049
 msgid "Choice a keymap"
 msgstr ""
 
-#: menu.sh:1024 menu.sh:1034 menu.sh:1039 menu.sh:1045 menu.sh:1049
-#: menu.sh:1054 menu.sh:1060 menu.sh:1067 menu.sh:1071 menu.sh:1088
+#: menu.sh:1067 menu.sh:1077 menu.sh:1082 menu.sh:1088 menu.sh:1092
+#: menu.sh:1097 menu.sh:1103 menu.sh:1110 menu.sh:1114 menu.sh:1131
 msgid "Update arpl"
 msgstr ""
 
-#: menu.sh:1025 menu.sh:1096 menu.sh:1100 menu.sh:1104 menu.sh:1108
-#: menu.sh:1112 menu.sh:1117 menu.sh:1127
+#: menu.sh:1068 menu.sh:1139 menu.sh:1143 menu.sh:1147 menu.sh:1151
+#: menu.sh:1155 menu.sh:1160 menu.sh:1170
 msgid "Update addons"
 msgstr ""
 
-#: menu.sh:1026 menu.sh:1132 menu.sh:1136 menu.sh:1140 menu.sh:1144
-#: menu.sh:1148 menu.sh:1153
+#: menu.sh:1069 menu.sh:1175 menu.sh:1179 menu.sh:1183 menu.sh:1187
+#: menu.sh:1191 menu.sh:1196
 msgid "Update LKMs"
 msgstr ""
 
-#: menu.sh:1027
+#: menu.sh:1070
 msgid "Update modules"
 msgstr ""
 
-#: menu.sh:1028
+#: menu.sh:1071
 msgid "Set proxy server"
 msgstr ""
 
-#: menu.sh:1035 menu.sh:1097 menu.sh:1133 menu.sh:1158
+#: menu.sh:1078 menu.sh:1140 menu.sh:1176 menu.sh:1201
 msgid "Checking last version"
 msgstr ""
 
-#: menu.sh:1040 menu.sh:1101 menu.sh:1137 menu.sh:1162
+#: menu.sh:1083 menu.sh:1144 menu.sh:1180 menu.sh:1205
 msgid "Error checking new version"
 msgstr ""
 
-#: menu.sh:1046
+#: menu.sh:1089
 msgid "No new version. Actual version is %s\\nForce update?"
 msgstr ""
 
-#: menu.sh:1050
+#: menu.sh:1093
 msgid "Downloading last version %s"
 msgstr ""
 
-#: menu.sh:1055
+#: menu.sh:1098
 msgid "Error downloading update file"
 msgstr ""
 
-#: menu.sh:1061
+#: menu.sh:1104
 msgid "Error extracting update file"
 msgstr ""
 
-#: menu.sh:1068
+#: menu.sh:1111
 msgid "Checksum do not match!"
 msgstr ""
 
-#: menu.sh:1072
+#: menu.sh:1115
 msgid "Installing new files"
 msgstr ""
 
-#: menu.sh:1089
+#: menu.sh:1132
 msgid "Arpl updated with success to %s!\\nReboot?"
 msgstr ""
 
-#: menu.sh:1105 menu.sh:1141 menu.sh:1167
+#: menu.sh:1148 menu.sh:1184 menu.sh:1210
 msgid "Downloading last version"
 msgstr ""
 
-#: menu.sh:1109
+#: menu.sh:1152
 msgid "Error downloading new version"
 msgstr ""
 
-#: menu.sh:1113 menu.sh:1149
+#: menu.sh:1156 menu.sh:1192
 msgid "Extracting last version"
 msgstr ""
 
-#: menu.sh:1118
+#: menu.sh:1161
 msgid "Installing new addons"
 msgstr ""
 
-#: menu.sh:1128
+#: menu.sh:1171
 msgid "Addons updated with success!"
 msgstr ""
 
-#: menu.sh:1145 menu.sh:1171
+#: menu.sh:1188 menu.sh:1214
 msgid "Error downloading last version"
 msgstr ""
 
-#: menu.sh:1154
+#: menu.sh:1197
 msgid "LKMs updated with success!"
 msgstr ""
 
-#: menu.sh:1157 menu.sh:1161 menu.sh:1166 menu.sh:1170 menu.sh:1185
+#: menu.sh:1200 menu.sh:1204 menu.sh:1209 menu.sh:1213 menu.sh:1228
 msgid "Update Modules"
 msgstr ""
 
-#: menu.sh:1186
+#: menu.sh:1229
 msgid "Modules updated with success!"
 msgstr ""
 
-#: menu.sh:1191
+#: menu.sh:1234
 msgid "Set Proxy Server"
 msgstr ""
 
-#: menu.sh:1192
+#: menu.sh:1235
 msgid "Please enter a proxy server url"
 msgstr ""
 
-#: menu.sh:1203
+#: menu.sh:1246
 msgid "Invalid proxy server url, continue?"
 msgstr ""
 
-#: menu.sh:1226
+#: menu.sh:1269
 msgid "Choose a model"
 msgstr ""
 
-#: menu.sh:1228
+#: menu.sh:1271
 msgid "Choose a Build Number"
 msgstr ""
 
-#: menu.sh:1229
+#: menu.sh:1272
 msgid "Choose a serial number"
 msgstr ""
 
-#: menu.sh:1231
+#: menu.sh:1274
 msgid "Addons"
 msgstr ""
 
-#: menu.sh:1232
+#: menu.sh:1275
 msgid "Cmdline menu"
 msgstr ""
 
-#: menu.sh:1233
+#: menu.sh:1276
 msgid "Synoinfo menu"
 msgstr ""
 
-#: menu.sh:1236
+#: menu.sh:1279
 msgid "Advanced menu"
 msgstr ""
 
-#: menu.sh:1239
+#: menu.sh:1282
 msgid "Build the loader"
 msgstr ""
 
-#: menu.sh:1243
+#: menu.sh:1286
 msgid "Boot the loader"
 msgstr ""
 
-#: menu.sh:1246
+#: menu.sh:1289
 msgid "Choose a keymap"
 msgstr ""
 
-#: menu.sh:1248
+#: menu.sh:1291
 msgid "Clean disk cache"
 msgstr ""
 
-#: menu.sh:1250
+#: menu.sh:1293
 msgid "Update menu"
 msgstr ""
 
-#: menu.sh:1276
+#: menu.sh:1319
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr ""
