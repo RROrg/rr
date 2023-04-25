@@ -115,8 +115,9 @@ def main(): # if __name__ == '__main__':
             models.append(filename.split(".yml")[0])
 
     print(models)
-
-    # Get pats
+    
+    # Get beta pats
+    # 临时对策, RC 64551 目前并没有在 archive.synology.com 上线, beta 又为 64216, 临时用 64216 的地址进行替换.
     pats = {}
     req = requests.get('https://prerelease.synology.com/webapi/models?event=dsm72_beta')
     rels = json.loads(req.text)
@@ -125,7 +126,7 @@ def main(): # if __name__ == '__main__':
             if "name" not in i or "dsm" not in i: continue
             if i["name"] not in models: continue
             if i["name"] not in pats.keys(): pats[i["name"]]={}
-            pats[i["name"]][fullversion(i["dsm"]["version"])] = i["dsm"]["url"].split('?')[0]
+            pats[i["name"]][fullversion(i["dsm"]["version"]).replace('64216','64551')] = i["dsm"]["url"].split('?')[0].replace('beta','release').replace('64216','64551')
 
     req = requests.get('https://archive.synology.com/download/Os/DSM')
     req.encoding = 'utf-8'
@@ -135,7 +136,7 @@ def main(): # if __name__ == '__main__':
     for i in l:
         ver = i.attrs['href'].split('/')[-1]
         if not any([ver.startswith('6.2.4'), ver.startswith('7')]): continue
-        req = requests.get('https://archive.synology.cn{}'.format(i.attrs['href']))
+        req = requests.get('https://archive.synology.com{}'.format(i.attrs['href']))
         req.encoding = 'utf-8'
         bs=BeautifulSoup(req.text, 'html.parser')
         p = re.compile(r"^(.*?)_(.*?)_(.*?).pat$", re.MULTILINE | re.DOTALL)
