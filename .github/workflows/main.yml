@@ -160,7 +160,8 @@ jobs:
           qemu-img convert -O vmdk arpl.img arpl-dyn.vmdk
           qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
 
-          zip -9 "arpl-i18n.zip" arpl.img arpl-dyn.vmdk arpl.vmdk arpl-flat.vmdk
+          zip -9 "arpl-i18n.zip" arpl.img
+
       # Upload artifact
       - name: Upload
         uses: actions/upload-artifact@v3
