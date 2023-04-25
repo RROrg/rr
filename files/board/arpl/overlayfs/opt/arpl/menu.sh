@@ -756,7 +756,7 @@ function advancedMenu() {
     echo "u \"$(TEXT "Edit user config file manually")\""            >> "${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\""    >> "${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\""           >> "${TMP_PATH}/menu"
-    echo "f \"$(TEXT "Format disk(s) # SATA and NVME")\""            >> "${TMP_PATH}/menu"
+    echo "f \"$(TEXT "Format disk(s) # Without loader disk")\""      >> "${TMP_PATH}/menu"
     echo "d \"$(TEXT "Custom dts location:/mnt/p1/model.dts # Need rebuild")\""           >> "${TMP_PATH}/menu"
     echo "p \"$(TEXT "Persistence of arpl modifications")\""         >> "${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\""                                      >> "${TMP_PATH}/menu"
