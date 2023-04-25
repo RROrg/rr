@@ -9,7 +9,19 @@ name: Update
 
 on:
   workflow_dispatch:
-
+    inputs:
+      push: 
+        description: 'push'
+        default: false
+        type: boolean
+      config: 
+        description: 'update configs'
+        default: true
+        type: boolean
+      rss: 
+        description: 'update rss'
+        default: true
+        type: boolean
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,9 +46,19 @@ jobs:
 
       - name: update pats
         run: |
-          python rssupdate.py
+          python rssupdate.py ${{ inputs.config }} ${{ inputs.rss }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: grub
+          path: |
+            files/board/arpl/overlayfs/opt/arpl/model-configs
+            rss.json
+            rss.xml
 
       - name: Check and Push
+        if: success() && inputs.push == true
         run: |
           git pull
           status=$(git status -s | grep -E 'model-configs|rss' | awk '{printf " %s", $2}')
