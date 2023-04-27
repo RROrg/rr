@@ -137,6 +137,7 @@ if [ "${DIRECT}" = "true" ]; then
   reboot
   exit 0
 else
+  ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
   echo "`printf "$(TEXT "Detected %s network cards, Waiting IP.")" "${#ETHX[@]}"`"
   for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
     COUNT=0
