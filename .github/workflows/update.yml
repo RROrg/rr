@@ -23,7 +23,7 @@ on:
         default: true
         type: boolean
 jobs:
-  build:
+  configs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -51,7 +51,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: grub
+          name: configs
           path: |
             files/board/arpl/overlayfs/opt/arpl/model-configs
             rss.json

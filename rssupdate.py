@@ -228,13 +228,13 @@ if __name__ == '__main__':
     isUpdateConfigs = True
     isUpdateRss = True
 
-    if len(sys.argv) > 2:
+    if len(sys.argv) >= 2:
         try:
             isUpdateConfigs = bool(int(sys.argv[1]))
         except ValueError:
             isUpdateConfigs = bool(sys.argv[1])
 
-    if len(sys.argv) > 3:
+    if len(sys.argv) >= 3:
         try:
             isUpdateRss = bool(int(sys.argv[2]))
         except ValueError:
