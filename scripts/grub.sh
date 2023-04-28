@@ -6,14 +6,14 @@
 # See /LICENSE for more information.
 #
 
-ROOT=${1:-"grub"}
-GRUB=${2:-"grub-2.06"}
-BIOS=${3:-"i386-pc i386-efi x86_64-efi"}
+
+GRUB=${1:-"grub-2.06"}
+BIOS=${2:-"i386-pc i386-efi x86_64-efi"}
 
 curl -#kLO https://ftp.gnu.org/gnu/grub/${GRUB}.tar.gz
-tar zxvf ${GRUB}.tar.gz 
-pushd ${GRUB}
+tar zxvf ${GRUB}.tar.gz
 
+pushd ${GRUB}
 for B in ${BIOS}
 do
   b=${B}
@@ -31,46 +31,47 @@ popd
 
 
 rm -f grub.img
-dd if=/dev/zero of=grub.img bs=1M seek=50 count=0
-echo -e "n\np\n\n\n\nw\n" | fdisk grub.img
+dd if=/dev/zero of=grub.img bs=1M seek=1024 count=0
+echo -e "n\np\n1\n\n+50M\nn\np\n2\n\n+50M\nn\np\n3\n\n\nw\nq\n" | fdisk grub.img
 fdisk -l grub.img
 
 LOOPX=`sudo losetup -f`
 sudo losetup -P ${LOOPX} grub.img
 sudo mkdosfs -F32 -n ARPL1 ${LOOPX}p1
+sudo mkfs.ext2 -F -L ARPL2 ${LOOPX}p2
+sudo mkfs.ext4 -F -L ARPL3 ${LOOPX}p3
 
-rm -rf ARPL1_MOUNT
-mkdir -p ARPL1_MOUNT
-sudo mount ${LOOPX}p1 ARPL1_MOUNT
+rm -rf ARPL1
+mkdir -p ARPL1
+sudo mount ${LOOPX}p1 ARPL1
+
+sudo mkdir -p ARPL1/EFI
+sudo mkdir -p ARPL1/boot/grub
+cat > device.map <<EOF
+(hd0)   ${LOOPX}
+EOF
+sudo mv device.map ARPL1/boot/grub/device.map
 
 for B in ${BIOS}
 do
   args=""
-  args+=" --target=${B} --recheck --boot-directory=ARPL1_MOUNT/boot"
+  args+=" ${LOOPX} --target=${B} --no-floppy --recheck --grub-mkdevicemap=ARPL1/boot/grub/device.map --boot-directory=ARPL1/boot"
   if [[ "${B}" == *"efi" ]]; then
-      args+=" --efi-directory=ARPL1_MOUNT --removable --no-nvram"
+      args+=" --efi-directory=ARPL1 --removable --no-nvram"
   else
-      args+=" --root-directory=ARPL1_MOUNT"
+      args+=" --root-directory=ARPL1"
   fi
-  args+=" -s --no-bootsector ${LOOPX}"
-
   sudo ${GRUB}/${B}/grub-install ${args}
 done
 
-if [ -d "ARPL1_MOUNT/boot/grub/fonts" -a -f /usr/share/grub/unicode.pf2 ]; then
-  cp /usr/share/grub/unicode.pf2 "ARPL1_MOUNT/boot/grub/fonts"
+if [ -d ARPL1/boot/grub/fonts -a -f /usr/share/grub/unicode.pf2 ]; then
+  sudo cp /usr/share/grub/unicode.pf2 ARPL1/boot/grub/fonts
 fi
 
-sync
-
-ROOT="$(readlink -m ${ROOT})"
-rm -rf ${ROOT}
-mkdir -p ${ROOT}
-cp -rf ARPL1_MOUNT/* ${ROOT}
-
-#rm -rf grub.tgz
-#tar zcvf grub.tgz -C ${ROOT} .
+sudo sync
 
 sudo umount ${LOOPX}p1
 sudo losetup -d ${LOOPX}
-rm -rf ARPL1_MOUNT grub.img
+sudo rm -rf ARPL1
+
+gzip grub.img

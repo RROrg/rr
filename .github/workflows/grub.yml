@@ -1,0 +1,62 @@
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+# 
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+name: Grub
+
+on:
+  workflow_dispatch:
+    inputs:
+      push: 
+        description: 'push'
+        default: false
+        type: boolean
+jobs:
+  grub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Initialization environment
+        run : |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          sudo timedatectl set-timezone "Asia/Shanghai"
+          
+          sudo apt update
+          sudo apt install -y build-essential bison flex dosfstools
+
+      - name: Make Grub
+        run: |
+          . scripts/grub.sh "grub-2.06" "i386-pc i386-efi x86_64-efi"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: grub
+          path: |
+            grub.img.gz
+
+      - name: Check and Push
+        if: success() && inputs.push == true
+        run: |
+          if [ -f "grub.img.gz" ]; then
+            echo "Copy img ..."
+            mv -f grub.img.gz files/board/arpl/grub.img.gz 
+        
+            echo "Git push ..."
+            git pull
+            status=$(git status -s | grep -E 'grub.img.gz' | awk '{printf " %s", $2}')
+            if [ -n "${status}" ]; then
+              git add ${status}
+              git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
+              git push -f
+            fi
+          else
+            echo "No change ..."
+          fi
+
