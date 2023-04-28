@@ -1066,8 +1066,8 @@ function updateMenu() {
     dialog --backtitle "`backtitle`" --menu "$(TEXT "Choose a option")" 0 0 0 \
       a "$(TEXT "Update arpl")" \
       d "$(TEXT "Update addons")" \
-      l "$(TEXT "Update LKMs")" \
       m "$(TEXT "Update modules")" \
+      l "$(TEXT "Update LKMs")" \
       p "$(TEXT "Set proxy server")" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
@@ -1076,14 +1076,17 @@ function updateMenu() {
       a)
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
           --infobox "$(TEXT "Checking last version")" 0 0
-        ACTUALVERSION="${ARPL_VERSION}"
-        TAG="`curl -k -s "${PROXY}https://api.github.com/repos/wjz304/arpl-i18n/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`"
-        if [ $? -ne 0 -o -z "${TAG}" ]; then
+        # TAG="`curl -skL "${PROXY}https://api.github.com/repos/wjz304/arpl-i18n/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`"
+        # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
+        LATESTURL="`curl -skL -w %{url_effective} -o /dev/null "${PROXY}https://github.com/wjz304/arpl-i18n/releases/latest"`"
+        TAG="${LATESTURL##*/}"
+        [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+        if [ -z "${TAG}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
             --msgbox "$(TEXT "Error checking new version")" 0 0
           continue
         fi
-        [[ "${TAG:0:1}" == "v" ]] && TAG="${TAG:1}"
+        ACTUALVERSION="${ARPL_VERSION}"
         if [ "${ACTUALVERSION}" = "${TAG}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
             --yesno "`printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${ACTUALVERSION}"`" 0 0
@@ -1092,7 +1095,7 @@ function updateMenu() {
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
           --infobox "`printf "$(TEXT "Downloading last version %s")" "${TAG}"`" 0 0
         # Download update file
-        STATUS=`curl -k -w "%{http_code}" -L "${PROXY}https://github.com/wjz304/arpl-i18n/releases/download/${TAG}/update.zip" -o "/tmp/update.zip"`
+        STATUS=`curl -kL -w "%{http_code}" "${PROXY}https://github.com/wjz304/arpl-i18n/releases/download/${TAG}/update.zip" -o "/tmp/update.zip"`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
             --msgbox "$(TEXT "Error downloading update file")" 0 0
@@ -1138,15 +1141,25 @@ function updateMenu() {
       d)
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
           --infobox "$(TEXT "Checking last version")" 0 0
-        TAG=`curl -k -s "${PROXY}https://api.github.com/repos/wjz304/arpl-addons/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-        if [ $? -ne 0 -o -z "${TAG}" ]; then
+        # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/arpl-addons/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+        # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
+        LATESTURL="`curl -skL -w %{url_effective} -o /dev/null "${PROXY}https://github.com/wjz304/arpl-addons/releases/latest"`"
+        TAG="${LATESTURL##*/}"
+        [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+        if [ -z "${TAG}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
             --msgbox "$(TEXT "Error checking new version")" 0 0
           continue
         fi
+        ACTUALVERSION="`cat "/mnt/p3/addons/VERSION" 2>/dev/null`"
+        if [ "${ACTUALVERSION}" = "${TAG}" ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
+            --yesno "`printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${ACTUALVERSION}"`" 0 0
+          [ $? -ne 0 ] && continue
+        fi
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
           --infobox "$(TEXT "Downloading last version")" 0 0
-        STATUS=`curl -k -s -w "%{http_code}" -L "${PROXY}https://github.com/wjz304/arpl-addons/releases/download/${TAG}/addons.zip" -o "/tmp/addons.zip"`
+        STATUS=`curl -kL -w "%{http_code}" "${PROXY}https://github.com/wjz304/arpl-addons/releases/download/${TAG}/addons.zip" -o "/tmp/addons.zip"`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
             --msgbox "$(TEXT "Error downloading new version")" 0 0
@@ -1171,46 +1184,30 @@ function updateMenu() {
           --msgbox "$(TEXT "Addons updated with success!")" 0 0
         ;;
 
-      l)
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-          --infobox "$(TEXT "Checking last version")" 0 0
-        TAG=`curl -k -s "${PROXY}https://api.github.com/repos/wjz304/redpill-lkm/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-        if [ $? -ne 0 -o -z "${TAG}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-            --msgbox "$(TEXT "Error checking new version")" 0 0
-          continue
-        fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-          --infobox "$(TEXT "Downloading last version")" 0 0
-        STATUS=`curl -k -s -w "%{http_code}" -L "${PROXY}https://github.com/wjz304/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o "/tmp/rp-lkms.zip"`
-        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-            --msgbox "$(TEXT "Error downloading last version")" 0 0
-          continue
-        fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-          --infobox "$(TEXT "Extracting last version")" 0 0
-        rm -rf "${LKM_PATH}/"*
-        unzip /tmp/rp-lkms.zip -d "${LKM_PATH}" >/dev/null 2>&1
-        DIRTY=1
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-          --msgbox "$(TEXT "LKMs updated with success!")" 0 0
-        ;;
       m)
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
           --infobox "$(TEXT "Checking last version")" 0 0
-        TAG=`curl -k -s "${PROXY}https://api.github.com/repos/wjz304/arpl-modules/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-        if [ $? -ne 0 -o -z "${TAG}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
+        # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/arpl-modules/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+        # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
+        LATESTURL="`curl -skL -w %{url_effective} -o /dev/null "${PROXY}https://github.com/wjz304/arpl-modules/releases/latest"`"
+        TAG="${LATESTURL##*/}"
+        [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+        if [ -z "${TAG}" ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
             --msgbox "$(TEXT "Error checking new version")" 0 0
           continue
         fi
-
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
+        ACTUALVERSION="`cat "/mnt/p3/modules/VERSION" 2>/dev/null`"
+        if [ "${ACTUALVERSION}" = "${TAG}" ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
+            --yesno "`printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${ACTUALVERSION}"`" 0 0
+          [ $? -ne 0 ] && continue
+        fi
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
           --infobox "$(TEXT "Downloading last version")" 0 0
-        STATUS=`curl -k -s -w "%{http_code}" -L "${PROXY}https://github.com/wjz304/arpl-modules/releases/download/${TAG}/modules.zip" -o "/tmp/modules.zip"`
+        STATUS=`curl -kL -w "%{http_code}" "${PROXY}https://github.com/wjz304/arpl-modules/releases/download/${TAG}/modules.zip" -o "/tmp/modules.zip"`
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
             --msgbox "$(TEXT "Error downloading last version")" 0 0
           continue
         fi
@@ -1225,9 +1222,46 @@ function updateMenu() {
           done < <(getAllModules "${PLATFORM}" "${KVER}")
         fi
         DIRTY=1
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update Modules")" --aspect 18 \
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
           --msgbox "$(TEXT "Modules updated with success!")" 0 0
         ;;
+
+      l)
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
+          --infobox "$(TEXT "Checking last version")" 0 0
+        # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/redpill-lkm/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+        # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
+        LATESTURL="`curl -skL -w %{url_effective} -o /dev/null "${PROXY}https://github.com/wjz304/redpill-lkm/releases/latest"`"
+        TAG="${LATESTURL##*/}"
+        [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+        if [ -z "${TAG}" ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
+            --msgbox "$(TEXT "Error checking new version")" 0 0
+          continue
+        fi
+        ACTUALVERSION="`cat "/mnt/p3/lkms/VERSION" 2>/dev/null`"
+        if [ "${ACTUALVERSION}" = "${TAG}" ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
+            --yesno "`printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${ACTUALVERSION}"`" 0 0
+          [ $? -ne 0 ] && continue
+        fi
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
+          --infobox "$(TEXT "Downloading last version")" 0 0
+        STATUS=`curl -kL -w "%{http_code}" "${PROXY}https://github.com/wjz304/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o "/tmp/rp-lkms.zip"`
+        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
+            --msgbox "$(TEXT "Error downloading last version")" 0 0
+          continue
+        fi
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
+          --infobox "$(TEXT "Extracting last version")" 0 0
+        rm -rf "${LKM_PATH}/"*
+        unzip /tmp/rp-lkms.zip -d "${LKM_PATH}" >/dev/null 2>&1
+        DIRTY=1
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
+          --msgbox "$(TEXT "LKMs updated with success!")" 0 0
+        ;;
+
       p)
         RET=1
         while true; do
