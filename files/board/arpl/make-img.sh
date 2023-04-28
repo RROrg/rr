@@ -14,24 +14,14 @@ IMAGE_FILE="${MY_ROOT}/arpl.img"
 BOARD_PATH="${CONFIG_DIR}/board/arpl"
 
 echo "Creating image file"
-# Create image zeroed
-dd if="/dev/zero" of="${IMAGE_FILE}" bs=1M count=1024 conv=sync 2>/dev/null
-# Copy grub stage1 to image
-dd if="${BOARD_PATH}/grub.bin" of="${IMAGE_FILE}" conv=notrunc,sync 2>/dev/null
-# Create partitions on image
-echo -e "n\np\n\n\n+50M\na\nt\n\n0b\nn\np\n\n\n+50M\nn\np\n\n\n\nw" | fdisk "${IMAGE_FILE}" >/dev/null
-
-# Force umount, ignore errors
-sudo umount "${BINARIES_DIR}/p1" 2>/dev/null || true
-sudo umount "${BINARIES_DIR}/p3" 2>/dev/null || true
-# Force unsetup of loop device
+# unzip base image
+gzip -dc "${BOARD_PATH}/grub.img.gz" > "${IMAGE_FILE}"
+# fdisk
+fdisk -l "${IMAGE_FILE}"
+# Find idle of loop device
 LOOPX=`sudo losetup -f`
 # Setup the ${LOOPX} loop device
 sudo losetup -P "${LOOPX}" "${IMAGE_FILE}"
-# Format partitions
-sudo mkdosfs -F32 -n ARPL1 "${LOOPX}p1" >/dev/null 2>&1
-sudo mkfs.ext2 -F -L ARPL2 "${LOOPX}p2" >/dev/null 2>&1
-sudo mkfs.ext4 -F -L ARPL3 "${LOOPX}p3" >/dev/null 2>&1
 
 echo "Mounting image file"
 mkdir -p "${BINARIES_DIR}/p1"
