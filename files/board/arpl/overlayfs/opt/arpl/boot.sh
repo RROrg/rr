@@ -52,6 +52,11 @@ SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
 echo -e "$(TEXT "Model:") \033[1;36m${MODEL}\033[0m"
 echo -e "$(TEXT "Build:") \033[1;36m${BUILD}\033[0m"
 
+if [ ! -f "${MODEL_CONFIG_PATH}/${MODEL}.yml" ]; then
+  echo -e "\033[1;33m*** `printf "$(TEXT "The current version of arpl does not support booting %s-%s, please rebuild.")" "${MODEL}" "${BUILD}"` ***\033[0m"
+  exit 1
+fi
+
 declare -A CMDLINE
 
 # Fixed values
