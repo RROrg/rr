@@ -1173,6 +1173,7 @@ function updateMenu() {
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
           --infobox "$(TEXT "Installing new addons")" 0 0
         rm -Rf "${ADDONS_PATH}/"*
+        [ -f /tmp/addons/VERSION ] && cp -f /tmp/addons/VERSION ${ADDONS_PATH}/
         for PKG in `ls /tmp/addons/*.addon`; do
           ADDON=`basename ${PKG} | sed 's|.addon||'`
           rm -rf "${ADDONS_PATH}/${ADDON}"

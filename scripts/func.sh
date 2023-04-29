@@ -95,10 +95,12 @@ function getAddons() {
     STATUS=`curl -w "%{http_code}" -L "https://github.com/wjz304/arpl-addons/releases/download/${TAG}/addons.zip" -o "${CACHE_FILE}"`
     echo "Status=${STATUS}"
     [ ${STATUS} -ne 200 ] && exit 1
+    rm -rf "${DEST_PATH}"; mkdir -p "${DEST_PATH}"
     # Install Addons
     rm -rf "${CACHE_DIR}"; mkdir -p "${CACHE_DIR}"
     unzip "${CACHE_FILE}" -d "${CACHE_DIR}"
     echo "Installing addons to ${DEST_PATH}"
+    [ -f /tmp/addons/VERSION ] && cp -f /tmp/addons/VERSION ${DEST_PATH}/
     for PKG in `ls ${CACHE_DIR}/*.addon`; do
       ADDON=`basename "${PKG}" .addon`
       mkdir -p "${DEST_PATH}/${ADDON}"
