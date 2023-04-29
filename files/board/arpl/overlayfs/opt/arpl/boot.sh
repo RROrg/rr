@@ -93,7 +93,7 @@ fi
 
 # Validate netif_num
 MACS=()
-for N in `seq 1 9`; do  # Currently, only up to 9 are supported.  ( <==> menu.sh L396)
+for N in `seq 1 8`; do  # Currently, only up to 8 are supported.  (<==> menu.sh L396, <==> lkm: MAX_NET_IFACES)
   [ -n "${CMDLINE["mac${N}"]}" ] && MACS+=(${CMDLINE["mac${N}"]})
 done
 NETIF_NUM=${#MACS[*]}

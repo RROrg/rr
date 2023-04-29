@@ -393,7 +393,7 @@ function cmdlineMenu() {
         ;;
       c)
         ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
-        for N in `seq 1 9`; do # Currently, only up to 9 are supported.  ( <==> boot.sh L94)
+        for N in `seq 1 8`; do # Currently, only up to 8 are supported.  (<==> boot.sh L96, <==> lkm: MAX_NET_IFACES)
           MACR="`cat /sys/class/net/${ETHX[$(expr ${N} - 1)]}/address | sed 's/://g'`"
           MACF=${CMDLINE["mac${N}"]}
           [ -n "${MACF}" ] && MAC=${MACF} || MAC=${MACR}
@@ -403,7 +403,7 @@ function cmdlineMenu() {
               --inputbox "`printf "$(TEXT "Type a custom MAC address of %s")" "mac${N}"`" 0 0 "${MAC}"\
               2>${TMP_PATH}/resp
             RET=$?
-            [ ${RET} -ne 0 ] && break
+            [ ${RET} -ne 0 ] && break 2
             MAC="`<"${TMP_PATH}/resp"`"
             [ -z "${MAC}" ] && MAC="`readConfigKey "original-mac${i}" "${USER_CONFIG_FILE}"`"
             [ -z "${MAC}" ] && MAC="${MACFS[$(expr ${i} - 1)]}"
