@@ -9,7 +9,7 @@ synoinfo: &synoinfo
   support_syno_hybrid_raid:
   supportraidgroup:
 cmdline: &cmdline
-  intel_iommu: igfx_off
+  intel_iommu: "igfx_off"
   SMBusHddDynamicPower: 1
   vender_format_version: 2
   synoboot2:
@@ -18,15 +18,15 @@ cmdline: &cmdline
   elevator: elevator
 platform: "v1000"
 unique: "synology_v1000_fs2500"
-beta: true
-dom: 2
 serial:
   prefix:
     - "0000"
   middle: "XXX"
   suffix: "alpha"
-disks: 12
+dom: 2
 dt: true
+disks: 12
+beta: true
 builds:
   42218:
     ver: "7.0.1"

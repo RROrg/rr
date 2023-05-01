@@ -3,6 +3,7 @@ synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
   support_led_brightness_adjustment: "no"
+  buzzeroffen: "0xffff"
   rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
@@ -17,15 +18,15 @@ cmdline: &cmdline
   elevator: elevator
 platform: "purley"
 unique: "synology_purley_fs6400"
-beta: true
-dom: 2
 serial:
   prefix:
     - "0000"
   middle: "XXX"
   suffix: "alpha"
-disks: 24
+dom: 2
 dt: true
+disks: 24
+beta: true
 builds:
   42218:
     ver: "7.0.1"

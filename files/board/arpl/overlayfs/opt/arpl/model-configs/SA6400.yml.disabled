@@ -10,22 +10,22 @@ synoinfo: &synoinfo
   supportraidgroup:
 cmdline: &cmdline
   SMBusHddDynamicPower: 1
+  vender_format_version: 2
   synoboot2:
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
-  vender_format_version: 2
-  scsi_mod.use_blk_mq: 1
 platform: "epyc7002"
 unique: "synology_epyc7002_sa6400"
-beta: true
-dom: 2
+
 serial:
   prefix:
     - "2270"
   middle: "UMR"
   suffix: "alpha"
-disks: 16
+dom: 2
 dt: true
+disks: 16
+beta: true
 builds:
   42962:
     ver: "7.1.1"
