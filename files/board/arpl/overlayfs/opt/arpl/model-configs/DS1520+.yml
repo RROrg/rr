@@ -3,13 +3,14 @@ synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
   support_led_brightness_adjustment: "no"
+  buzzeroffen: "0xffff"
   rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
   support_syno_hybrid_raid:
   supportraidgroup:
 cmdline: &cmdline
-  intel_iommu: igfx_off
+  intel_iommu: "igfx_off"
   HddEnableDynamicPower: 1
   vender_format_version: 2
   synoboot2:
@@ -18,15 +19,15 @@ cmdline: &cmdline
   elevator: elevator
 platform: "geminilake"
 unique: "synology_geminilake_1520+"
-beta: true
-dom: 2
 serial:
   prefix:
     - "2060"
   middle: "RYR"
   suffix: "alpha"
-disks: 6
+dom: 2
 dt: true
+disks: 6
+beta: true
 builds:
   42218:
     ver: "7.0.1"

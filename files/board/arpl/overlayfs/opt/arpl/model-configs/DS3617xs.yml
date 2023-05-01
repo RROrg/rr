@@ -2,10 +2,10 @@ id: "DS3617xs"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
+  support_led_brightness_adjustment: "no"
   supportssdcache: "no"
   esataportcfg: "0x00"
   usbportcfg: "0x8700"
-  support_led_brightness_adjustment: "no"
   rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   support_syno_hybrid_raid:
@@ -18,7 +18,6 @@ cmdline: &cmdline
   elevator: elevator
 platform: "broadwell"
 unique: "synology_broadwell_3617xs"
-dom: 1
 serial:
   prefix:
     - "1130"
@@ -27,7 +26,10 @@ serial:
     - "1430"
   middle: "ODN"
   suffix: "numeric"
+dom: 1
+dt: false
 disks: 12
+beta: false
 builds:
   25556:
     ver: "6.2.4"

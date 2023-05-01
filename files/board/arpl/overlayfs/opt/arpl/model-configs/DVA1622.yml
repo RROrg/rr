@@ -2,8 +2,8 @@ id: "DVA1622"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
-  buzzeroffen: "0xffff"
   support_led_brightness_adjustment: "no"
+  buzzeroffen: "0xffff"
   rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
@@ -19,7 +19,6 @@ cmdline: &cmdline
   elevator: elevator
 platform: "geminilake"
 unique: "synology_geminilake_dva1622"
-dom: 2
 serial:
   prefix:
     - "2030"
@@ -28,8 +27,10 @@ serial:
     - "2150"
   middle: "UBR"
   suffix: "alpha"
-disks: 2
+dom: 2
 dt: true
+disks: 2
+beta: false
 builds:
   42661:
     ver: "7.1.0"

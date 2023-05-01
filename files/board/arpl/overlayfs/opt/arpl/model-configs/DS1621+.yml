@@ -20,14 +20,15 @@ cmdline: &cmdline
   elevator: elevator
 platform: "v1000"
 unique: "synology_v1000_1621+"
-dom: 2
 serial:
   prefix:
     - "2080"
   middle: "S7R"
   suffix: "alpha"
-disks: 6
+dom: 2
 dt: true
+disks: 6
+beta: false
 builds:
   42218:
     ver: "7.0.1"

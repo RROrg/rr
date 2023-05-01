@@ -2,9 +2,9 @@ id: "DVA3219"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
-  esataportcfg: "0x00"
-  support_bde_internal_10g: "no"
   support_led_brightness_adjustment: "no"
+  support_bde_internal_10g: "no"
+  esataportcfg: "0x00"
   rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
@@ -19,8 +19,6 @@ cmdline: &cmdline
   elevator: elevator
 platform: "denverton"
 unique: "synology_denverton_dva3219"
-beta: true
-dom: 2
 serial:
   prefix:
     - "1930"
@@ -29,7 +27,10 @@ serial:
   suffix: "alpha"
 flags:
   - "movbe"
+dom: 2
+dt: false
 disks: 4
+beta: true
 builds:
   25556:
     ver: "6.2.4"

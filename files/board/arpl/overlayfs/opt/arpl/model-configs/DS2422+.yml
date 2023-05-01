@@ -2,8 +2,8 @@ id: "DS2422+"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
-  supportssdcache: "no"
   support_led_brightness_adjustment: "no"
+  supportssdcache: "no"
   rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
@@ -19,15 +19,16 @@ cmdline: &cmdline
   elevator: elevator
 platform: "v1000"
 unique: "synology_v1000_2422+"
-dom: 2
 serial:
   prefix:
     - "2140"
     - "2180"
   middle: "SLR"
   suffix: "numeric"
-disks: 12
+dom: 2
 dt: true
+disks: 12
+beta: false
 builds:
   42218:
     ver: "7.0.1"

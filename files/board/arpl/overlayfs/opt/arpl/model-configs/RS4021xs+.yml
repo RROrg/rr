@@ -2,9 +2,9 @@ id: "RS4021xs+"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
+  support_led_brightness_adjustment: "no"
   support_bde_internal_10g: "no"
   esataportcfg: "0x0"
-  support_led_brightness_adjustment: "no"
   rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
@@ -18,15 +18,15 @@ cmdline: &cmdline
   elevator: elevator
 platform: "broadwellnk"
 unique: "synology_broadwellnk_rs4021xs+"
-beta: true
-dom: 2
 serial:
   prefix:
     - "2250"
   middle: "T2R"
   suffix: "alpha"
-disks: 16
+dom: 2
 dt: false
+disks: 16
+beta: true
 builds:
   25556:
     ver: "6.2.4"
