@@ -716,6 +716,7 @@ function make() {
   done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
 
   [ ! -f "${ORI_ZIMAGE_FILE}" -o ! -f "${ORI_RDGZ_FILE}" ] && extractDsmFiles
+  [ $? -ne 0 ] && return 1
 
   /opt/arpl/zimage-patch.sh
   if [ $? -ne 0 ]; then
