@@ -48,8 +48,8 @@ def synoextractor(url):
     commands = ['sudo', 'rm', '-rf', filename, filepath]
     result = subprocess.check_output(commands)
     
-    req = requests.get(url.replace(urlparse(url).netloc, 'cndl.synology.cn'))
-    #req = requests.get(url)
+    # req = requests.get(url.replace(urlparse(url).netloc, 'cndl.synology.cn'))
+    req = requests.get(url)
     with open(filename, "wb") as f:
         f.write(req.content)
 
