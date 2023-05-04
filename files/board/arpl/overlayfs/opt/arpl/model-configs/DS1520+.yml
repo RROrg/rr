@@ -29,6 +29,26 @@ dt: true
 disks: 6
 beta: true
 builds:
+  25556:
+    ver: "6.2.4"
+    kver: "4.4.59"
+    rd-compressed: false
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_DS1520%2B_25556.pat"
+      hash: "6d21f16daea1b0277cd58cfaade118245c5d4edb522aa870164e8a8d0f65948f"
+      ramdisk-hash: "cad435ca5e8cea0f7abe3073d021c63c044233c544027dcb432d776a7a2880ec"
+      zimage-hash: "b539a76d93824e16b461fa1820e16f046d4c63fa5390e1508c6830ff7a66caa9"
+      md5-hash: "d14c87ddd7c76c4c4156692b4a2c57f7"
+    patch:
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-25556-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-25556-post-init-script.patch"
+
   42218:
     ver: "7.0.1"
     kver: "4.4.180"

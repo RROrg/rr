@@ -28,6 +28,26 @@ dt: true
 disks: 24
 beta: true
 builds:
+  25556:
+    ver: "6.2.4"
+    kver: "4.4.59"
+    rd-compressed: false
+    cmdline:
+      <<: *cmdline
+    synoinfo:
+      <<: *synoinfo
+    pat:
+      url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_FS6400_25556.pat"
+      hash: "f0606769d11ec97a8a729285479ab26cecb7b5a4af23724a38780b22a7d2ea9a"
+      ramdisk-hash: "ff66dacf8ee8d543c7e4b79584193b47c6d8a31adc5a2f135fe03e001d57319e"
+      zimage-hash: "e8911e5e0028e18c240160ae70ec944df5f0f16d6d8ac461e5f7bc2a17b58e7c"
+      md5-hash: "c2d4e93551189532d8bd7bbcf2f55411"
+    patch:
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-25556-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-25556-post-init-script.patch"
+
   42218:
     ver: "7.0.1"
     kver: "4.4.180"
