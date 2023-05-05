@@ -770,6 +770,7 @@ function advancedMenu() {
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\""    >> "${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\""           >> "${TMP_PATH}/menu"
     echo "f \"$(TEXT "Format disk(s) # Without loader disk")\""      >> "${TMP_PATH}/menu"
+    echo "a \"$(TEXT "Allow degraded installation")\""               >> "${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a "true" = "`readModelKey "${MODEL}" "dt"`" ]; then
       echo "d \"$(TEXT "Custom dts location:/mnt/p1/model.dts # Need rebuild")\""           >> "${TMP_PATH}/menu"
     fi
@@ -851,6 +852,30 @@ function advancedMenu() {
         ) | dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
             --progressbox "$(TEXT "Formatting ...")" 20 70
         MSG="$(TEXT "Formatting is complete.")"
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
+          --msgbox "${MSG}" 0 0
+        ;;
+      a)
+        MSG=""
+        MSG+="$(TEXT "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\n")"
+        MSG+="$(TEXT "Therefore, please insert all disks before continuing.\n")"
+        MSG+="$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")"
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Allow degraded installation")" \
+            --yesno "${MSG}" 0 0
+        [ $? -ne 0 ] && return
+        (
+          mkdir -p /tmp/sdX1
+          for I in `ls /dev/sd*1 2>/dev/null | grep -v ${LOADER_DISK}1`; do
+            mount ${I} /tmp/sdX1
+            [ -f "/tmp/sdX1/etc/VERSION" ] && rm -f "/tmp/sdX1/etc/VERSION"
+            [ -f "/tmp/sdX1/etc.defaults/VERSION" ] && rm -f "/tmp/sdX1/etc.defaults/VERSION"
+            sync
+            umount ${I}
+          done
+          rm -rf /tmp/sdX1
+        ) | dialog --backtitle "`backtitle`" --title "$(TEXT "Allow degraded installation")" \
+            --progressbox "$(TEXT "Removing ...")" 20 70
+        MSG="$(TEXT "Remove VERSION file for all disks completed.")"
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "${MSG}" 0 0
         ;;
