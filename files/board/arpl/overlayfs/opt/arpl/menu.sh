@@ -1140,6 +1140,16 @@ function updateMenu() {
             --msgbox "$(TEXT "Checksum do not match!")" 0 0
           continue
         fi
+        # Check conditions
+        if [ -f "/tmp/update-check.sh" ]; then
+          chmod +x /tmp/update-check.sh
+          /tmp/update-check.sh
+          if [ $? -ne 0 ]; then
+            dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
+              --msgbox "$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")" 0 0
+            continue
+          fi
+        fi
         dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
           --infobox "$(TEXT "Installing new files")" 0 0
         # Process update-list.yml

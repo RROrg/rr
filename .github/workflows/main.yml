@@ -160,26 +160,18 @@ jobs:
           qemu-img convert -O vmdk arpl.img arpl-dyn.vmdk
           qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
 
-          zip -9 "arpl-i18n.zip" arpl.img
-
-      # Upload artifact
-      - name: Upload
-        uses: actions/upload-artifact@v3
-        with:
-          name: Images
-          path: |
-            arpl-i18n.zip
-          retention-days: 5
-
       # Zip image and generate checksum
       - name: Pack
-        if: env.VERSION != ''
         run: |
-          zip -9 "arpl-i18n-${{ env.VERSION }}.img.zip" arpl.img
-          zip -9 "arpl-i18n-${{ env.VERSION }}.vmdk-dyn.zip" arpl-dyn.vmdk
-          zip -9 "arpl-i18n-${{ env.VERSION }}.vmdk-flat.zip" arpl.vmdk arpl-flat.vmdk
-          sha256sum update-list.yml > sha256sum
-          zip -9j update.zip update-list.yml
+          if [ -n "${{ env.VERSION }}" ]; then
+            zip -9 "arpl-i18n-${{ env.VERSION }}.img.zip" arpl.img
+            zip -9 "arpl-i18n-${{ env.VERSION }}.vmdk-dyn.zip" arpl-dyn.vmdk
+            zip -9 "arpl-i18n-${{ env.VERSION }}.vmdk-flat.zip" arpl.vmdk arpl-flat.vmdk
+          else
+            zip -9 "arpl-i18n.img.zip" arpl.img
+          fi
+          sha256sum update-list.yml update-check.sh > sha256sum
+          zip -9j update.zip update-list.yml update-check.sh
           while read F; do
             if [ -d "${F}" ]; then
               FTGZ="`basename "${F}"`.tgz"
@@ -193,6 +185,16 @@ jobs:
             fi
           done < <(yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml)
           zip -9j update.zip sha256sum 
+
+      # Upload artifact
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: Images
+          path: |
+            arpl-i18n.img.zip
+            update.zip
+          retention-days: 5
 
       # Publish a release if is a tag
       - name: Release
