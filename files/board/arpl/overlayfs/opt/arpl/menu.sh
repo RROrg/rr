@@ -125,6 +125,7 @@ function modelMenu() {
     writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
     # Delete old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
+    rm -f "${TMP_PATH}/patdownloadurl"
     DIRTY=1
   fi
 }
@@ -175,6 +176,7 @@ function buildMenu() {
     done < <(getAllModules "${PLATFORM}" "${KVER}")
     # Remove old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
+    rm -f "${TMP_PATH}/patdownloadurl"
     DIRTY=1
   fi
 }
@@ -522,11 +524,20 @@ function synoinfoMenu() {
 ###############################################################################
 # Extract linux and ramdisk files from the DSM .pat
 function extractDsmFiles() {
-  PAT_URL="`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`"
-  PAT_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.hash"`"
-  RAMDISK_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.ramdisk-hash"`"
-  ZIMAGE_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.zimage-hash"`"
-
+  # echo "$(TEXT "Get Online hash...")"
+  # REPO_URL="https://raw.githubusercontent.com/wjz304/arpl-i18n/main/files/board/arpl/overlayfs/opt/arpl/model-configs/${MODEL//+/\%2B}.yml"
+  # curl -skL -m 5 "${REPO_URL}" -o "/tmp/REPO_MODEL.yml"
+  # PAT_URL="`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`"
+  # PAT_HASH="`readConfigKey "builds.${BUILD}.pat.hash" "/tmp/REPO_MODEL.yml"`"
+  # RAMDISK_HASH="`readConfigKey "builds.${BUILD}.pat.ramdisk-hash" "/tmp/REPO_MODEL.yml"`"
+  # ZIMAGE_HASH="`readConfigKey "builds.${BUILD}.pat.zimage-hash" "/tmp/REPO_MODEL.yml"`"
+  # if [ -z "${PAT_URL}" -o -z "${PAT_HASH}" -o -z "${RAMDISK_HASH}" -o -z "${ZIMAGE_HASH}" ]; then
+  #   echo "$(TEXT "Get Offline hash...")"
+    PAT_URL="`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`"
+    PAT_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.hash"`"
+    RAMDISK_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.ramdisk-hash"`"
+    ZIMAGE_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.zimage-hash"`"
+  # fi
   SPACELEFT=`df --block-size=1 | awk '/'${LOADER_DEVICE_NAME}'3/{print $4}'`  # Check disk space left
 
   PAT_FILE="${MODEL}-${BUILD}.pat"
@@ -556,10 +567,11 @@ function extractDsmFiles() {
       PAT_URL="`echo ${PAT_URL} | sed "s/${mirror}/${fastest}/"`"
       OLDPAT_URL="https://${fastest}/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
     fi
+    echo ${PAT_URL} > "${TMP_PATH}/patdownloadurl"
     echo "`printf "$(TEXT "Downloading %s")" "${PAT_FILE}"`"
     # Discover remote file size
     FILESIZE=`curl -k -sLI "${PAT_URL}" | grep -i Content-Length | awk '{print$2}'`
-    if [ 0${FILESIZE} -ge ${SPACELEFT} ]; then
+    if [ 0${FILESIZE} -ge 0${SPACELEFT} ]; then
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
     fi
@@ -622,7 +634,7 @@ function extractDsmFiles() {
         echo "$(TEXT "Downloading old pat to extract synology .pat extractor...")"
         # Discover remote file size
         FILESIZE=`curl -k -sLI "${OLDPAT_URL}" | grep -i Content-Length | awk '{print$2}'`
-        if [ 0${FILESIZE} -ge ${SPACELEFT} ]; then
+        if [ 0${FILESIZE} -ge 0${SPACELEFT} ]; then
           # No disk space to download, change it to RAMDISK
           OLDPAT_PATH="${TMP_PATH}/DS3622xs+-42218.pat"
         fi
@@ -758,8 +770,13 @@ function advancedMenu() {
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\""    >> "${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\""           >> "${TMP_PATH}/menu"
     echo "f \"$(TEXT "Format disk(s) # Without loader disk")\""      >> "${TMP_PATH}/menu"
-    echo "d \"$(TEXT "Custom dts location:/mnt/p1/model.dts # Need rebuild")\""           >> "${TMP_PATH}/menu"
+    if [ -n "${MODEL}" -a "true" = "`readModelKey "${MODEL}" "dt"`" ]; then
+      echo "d \"$(TEXT "Custom dts location:/mnt/p1/model.dts # Need rebuild")\""           >> "${TMP_PATH}/menu"
+    fi
     echo "p \"$(TEXT "Persistence of arpl modifications")\""         >> "${TMP_PATH}/menu"
+    if [ -n "${MODEL}" -a -n "${BUILD}" ]; then
+      echo "k \"$(TEXT "show pat download link")\""                  >> "${TMP_PATH}/menu"
+    fi
     echo "e \"$(TEXT "Exit")\""                                      >> "${TMP_PATH}/menu"
 
     dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
@@ -855,7 +872,15 @@ function advancedMenu() {
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "${MSG}" 0 0
         ;;
-        e) break ;;
+      k) 
+        # output pat download link
+        if [ ! -f "${TMP_PATH}/patdownloadurl" ]; then
+          echo "`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`" > "${TMP_PATH}/patdownloadurl"
+        fi
+        dialog --backtitle "`backtitle`" --title "$(TEXT "*.pat download link")" \
+          --editbox "${TMP_PATH}/patdownloadurl" 0 0
+        ;;
+      e) break ;;
     esac
   done
 }
