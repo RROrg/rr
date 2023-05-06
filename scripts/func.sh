@@ -33,7 +33,7 @@ function getExtractor(){
     rm -rf "${CACHE_DIR}"; mkdir -p "${CACHE_DIR}"
     # Download pat file
     # global.synologydownload.com, global.download.synology.com, cndl.synology.cn
-    local PAT_URL="https://global.download.synology.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
+    local PAT_URL="https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
     local PAT_FILE="DSM_DS3622xs+_42218.pat"
     local STATUS=`curl -# -w "%{http_code}" -L "${PAT_URL}" -o "${CACHE_DIR}/${PAT_FILE}"`
     if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
