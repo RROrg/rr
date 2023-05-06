@@ -762,8 +762,8 @@ function advancedMenu() {
   while true; do
     rm "${TMP_PATH}/menu"
     if [ -n "${BUILD}" ]; then
-      echo "l \"$(TEXT "Switch LKM version:") \Z4${LKM}\Zn\""        >> "${TMP_PATH}/menu"
       echo "o \"$(TEXT "Modules")\""                                 >> "${TMP_PATH}/menu"
+      echo "l \"$(TEXT "Switch LKM version:") \Z4${LKM}\Zn\""        >> "${TMP_PATH}/menu"
     fi
     if loaderIsConfigured; then
       echo "r \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >> "${TMP_PATH}/menu"
@@ -771,15 +771,16 @@ function advancedMenu() {
     echo "u \"$(TEXT "Edit user config file manually")\""            >> "${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\""    >> "${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\""           >> "${TMP_PATH}/menu"
-    echo "f \"$(TEXT "Format disk(s) # Without loader disk")\""      >> "${TMP_PATH}/menu"
-    echo "a \"$(TEXT "Allow downgrade installation")\""               >> "${TMP_PATH}/menu"
-    if [ -n "${MODEL}" -a "true" = "`readModelKey "${MODEL}" "dt"`" ]; then
-      echo "d \"$(TEXT "Custom dts location:/mnt/p1/model.dts # Need rebuild")\""           >> "${TMP_PATH}/menu"
-    fi
-    echo "p \"$(TEXT "Persistence of arpl modifications")\""         >> "${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a -n "${BUILD}" ]; then
       echo "k \"$(TEXT "show pat download link")\""                  >> "${TMP_PATH}/menu"
     fi
+    echo "a \"$(TEXT "Allow downgrade installation")\""              >> "${TMP_PATH}/menu"
+    echo "f \"$(TEXT "Format disk(s) # Without loader disk")\""      >> "${TMP_PATH}/menu"
+    echo "p \"$(TEXT "Persistence of arpl modifications")\""         >> "${TMP_PATH}/menu"
+    if [ -n "${MODEL}" -a "true" = "`readModelKey "${MODEL}" "dt"`" ]; then
+      echo "d \"$(TEXT "Custom dts file # Need rebuild")\""          >> "${TMP_PATH}/menu"
+    fi
+    echo "b \"$(TEXT "Backup bootloader disk # dd")\""               >> "${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\""                                      >> "${TMP_PATH}/menu"
 
     dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
@@ -787,15 +788,15 @@ function advancedMenu() {
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
     case `<"${TMP_PATH}/resp"` in
+      o) selectModules; NEXT="e" ;;
       l) LKM=$([ "${LKM}" = "dev" ] && echo 'prod' || ([ "${LKM}" = "test" ] && echo 'dev' || echo 'test'))
         writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
         DIRTY=1
-        NEXT="o"
+        NEXT="l"
         ;;
-      o) selectModules; NEXT="r" ;;
       r) [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
         writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
-        NEXT="u"
+        NEXT="e"
         ;;
       u) editUserConfig; NEXT="e" ;;
       t) tryRecoveryDSM ;;
@@ -834,28 +835,13 @@ function advancedMenu() {
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "${MSG}" 0 0
         ;;
-      f) ITEMS=""
-        while read POSITION NAME; do
-          [ -z "${POSITION}" -o -z "${NAME}" ] && continue
-          ITEMS+="`printf "%s %s off " "${POSITION}" "${NAME}"`"
-        done < <(ls -l /dev/disk/by-id/ | grep -v "${LOADER_DEVICE_NAME}" | sed 's|../..|/dev|g' | awk -F' ' '{print $11" "$9}' | sort -uk 1,1)
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
-          --checklist "$(TEXT "Advanced")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && return
-        RESP=`<"${TMP_PATH}/resp"`
-        [ -z "${RESP}" ] && return
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
-            --yesno "$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")" 0 0
-        [ $? -ne 0 ] && return
-        (
-          for I in ${RESP}; do
-            mkfs.ext4 -F -O ^metadata_csum ${I}
-          done
-        ) | dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
-            --progressbox "$(TEXT "Formatting ...")" 20 70
-        MSG="$(TEXT "Formatting is complete.")"
-        dialog --backtitle "`backtitle`" --colors --aspect 18 \
-          --msgbox "${MSG}" 0 0
+      k) 
+        # output pat download link
+        if [ ! -f "${TMP_PATH}/patdownloadurl" ]; then
+          echo "`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`" > "${TMP_PATH}/patdownloadurl"
+        fi
+        dialog --backtitle "`backtitle`" --title "$(TEXT "*.pat download link")" \
+          --editbox "${TMP_PATH}/patdownloadurl" 0 0
         ;;
       a)
         MSG=""
@@ -881,31 +867,90 @@ function advancedMenu() {
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "${MSG}" 0 0
         ;;
+      f) ITEMS=""
+        while read POSITION NAME; do
+          [ -z "${POSITION}" -o -z "${NAME}" ] && continue
+          ITEMS+="`printf "%s %s off " "${POSITION}" "${NAME}"`"
+        done < <(ls -l /dev/disk/by-id/ | grep -v "${LOADER_DEVICE_NAME}" | sed 's|../..|/dev|g' | awk -F' ' '{print $11" "$9}' | sort -uk 1,1)
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
+          --checklist "$(TEXT "Advanced")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && return
+        RESP=`<"${TMP_PATH}/resp"`
+        [ -z "${RESP}" ] && return
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
+            --yesno "$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")" 0 0
+        [ $? -ne 0 ] && return
+        (
+          for I in ${RESP}; do
+            mkfs.ext4 -F -O ^metadata_csum ${I}
+          done
+        ) | dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
+            --progressbox "$(TEXT "Formatting ...")" 20 70
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
+          --msgbox "$(TEXT "Formatting is complete.")" 0 0
+        ;;
       p) 
         dialog --backtitle "`backtitle`" --title "$(TEXT "Persistence of arpl modifications")" \
             --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
         [ $? -ne 0 ] && return
-        (
-          RDXZ_PATH=/tmp/rdxz_tmp
-          mkdir -p "${RDXZ_PATH}"
-          (cd "${RDXZ_PATH}"; xz -dc < "/mnt/p3/initrd-arpl" | cpio -idm) >/dev/null 2>&1 || true
-          rm -rf "${RDXZ_PATH}/opt/arpl"
-          cp -rf "/opt/arpl" "${RDXZ_PATH}/opt"
-          (cd "${RDXZ_PATH}"; find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 > "/mnt/p3/initrd-arpl") || true
-          rm -rf "${RDXZ_PATH}"
-        ) | dialog --backtitle "`backtitle`" --title "$(TEXT "Persistence of arpl modifications")" \
-            --progressbox "$(TEXT "Persisting ...")" 20 70
-        MSG="$(TEXT "Persisting is complete.")"
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Persistence of arpl modifications")" \
+            --infobox "$(TEXT "Persisting ...")" 0 0 
+        RDXZ_PATH=/tmp/rdxz_tmp
+        mkdir -p "${RDXZ_PATH}"
+        (cd "${RDXZ_PATH}"; xz -dc < "/mnt/p3/initrd-arpl" | cpio -idm) >/dev/null 2>&1 || true
+        rm -rf "${RDXZ_PATH}/opt/arpl"
+        cp -rf "/opt/arpl" "${RDXZ_PATH}/opt"
+        (cd "${RDXZ_PATH}"; find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 > "/mnt/p3/initrd-arpl") || true
+        rm -rf "${RDXZ_PATH}"
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
-          --msgbox "${MSG}" 0 0
+          --msgbox ""$(TEXT "Persisting is complete.")"" 0 0
         ;;
-      k) 
-        # output pat download link
-        if [ ! -f "${TMP_PATH}/patdownloadurl" ]; then
-          echo "`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`" > "${TMP_PATH}/patdownloadurl"
+      d)
+        if ! tty | grep -q "/dev/pts"; then
+          dialog --backtitle "`backtitle`" --colors --aspect 18 \
+            --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+          return
+        fi 
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
+          --msgbox "$(TEXT "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\n(saved in /mnt/p3/users/)")" 0 0
+        TMP_PATH=/tmp/users
+        rm -rf ${TMP_PATH}
+        mkdir -p ${TMP_PATH}
+        pushd ${TMP_PATH}
+        rz -q
+        for F in `ls -A`; do
+          USER_FILE=${TMP_PATH}/${F}
+          dtc -q -I dts -O dtb ${F} > test.dtb
+          RET=$?
+          break 
+        done
+        popd
+        if [ ${RET} -ne 0 -o -z "${USER_FILE}" ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Custom dts file")" --aspect 18 \
+            --msgbox "$(TEXT "Not a valid dts file, please try again!")" 0 0
+        else
+          mkdir -p ${USER_UP_PATH}
+          cp -f ${USER_FILE} ${USER_UP_PATH}/${MODEL}.dts
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Custom dts file")" --aspect 18 \
+            --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
         fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "*.pat download link")" \
-          --editbox "${TMP_PATH}/patdownloadurl" 0 0
+        ;;
+      b)
+        if ! tty | grep -q "/dev/pts"; then
+          dialog --backtitle "`backtitle`" --colors --aspect 18 \
+            --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+          return
+        fi 
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Backup bootloader disk")" \
+            --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
+        [ $? -ne 0 ] && return
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Backup bootloader disk")" \
+          --infobox "$(TEXT "Backuping...")" 0 0
+        dd if="${LOADER_DISK}" | gzip > backup.img.gz
+        sz -q backup.img.gz
+        rm -f backup.img.gz
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
+          --msgbox "$(TEXT "backup is complete.")" 0 0
         ;;
       e) break ;;
     esac

@@ -21,6 +21,7 @@ MOD_RDGZ_FILE="${CACHE_PATH}/initrd-dsm"
 ADDONS_PATH="${CACHE_PATH}/addons"
 LKM_PATH="${CACHE_PATH}/lkms"
 MODULES_PATH="${CACHE_PATH}/modules"
+USER_UP_PATH="${CACHE_PATH}/users"
 
 MODEL_CONFIG_PATH="/opt/arpl/model-configs"
 INCLUDE_PATH="/opt/arpl/include"
