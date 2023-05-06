@@ -178,9 +178,9 @@ else
   kexec -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 fi
 echo -e "\033[1;37m$(TEXT "Booting...")\033[0m"
-for T in `w | grep -v "TTY"| awk -F' ' '{printf " "$2}'`
+for T in `w | grep -v "TTY" | awk -F' ' '{print $2}'`
 do
-  echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please use the http://find.synology.com/ find DSM and connect.]")\033[0m\n" > "/dev/${T}" 2>/dev/null
+  echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please use the http://find.synology.com/ find DSM and connect.]")\033[0m\n" > "/dev/${T}" 2>/dev/null || true
 done 
 poweroff
 exit 0
