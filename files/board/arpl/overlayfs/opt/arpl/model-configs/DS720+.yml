@@ -1,4 +1,4 @@
-id: "FS6400"
+id: "DS720+"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
@@ -10,23 +10,27 @@ synoinfo: &synoinfo
   support_syno_hybrid_raid:
   supportraidgroup:
 cmdline: &cmdline
-  SMBusHddDynamicPower: 1
+  intel_iommu: "igfx_off"
+  HddEnableDynamicPower: 1
   vender_format_version: 2
   synoboot2:
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
   elevator: elevator
-platform: "purley"
-unique: "synology_purley_fs6400"
+platform: "geminilake"
+unique: "synology_geminilake_720+"
 serial:
   prefix:
-    - "0000"
-  middle: "XXX"
+    - "2030"
+    - "2040"
+    - "20C0"
+    - "2150"
+  middle: "SBR"
   suffix: "alpha"
 dom: 2
 dt: true
-disks: 24
-beta: true
+disks: 4
+beta: false
 builds:
   25556:
     ver: "6.2.4"
@@ -37,11 +41,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_FS6400_25556.pat"
-      hash: "f0606769d11ec97a8a729285479ab26cecb7b5a4af23724a38780b22a7d2ea9a"
-      ramdisk-hash: "ff66dacf8ee8d543c7e4b79584193b47c6d8a31adc5a2f135fe03e001d57319e"
-      zimage-hash: "e8911e5e0028e18c240160ae70ec944df5f0f16d6d8ac461e5f7bc2a17b58e7c"
-      md5-hash: "c2d4e93551189532d8bd7bbcf2f55411"
+      url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_DS720%2B_25556.pat"
+      hash: "fce997f3afe6f5e40b24fdbae574a2e292689822f32f4efd76305c06628a217f"
+      ramdisk-hash: "cdf7b7f61c4ecfdc473936286c4fddf0dd96e373e6deaefa01e073a206140839"
+      zimage-hash: "b539a76d93824e16b461fa1820e16f046d4c63fa5390e1508c6830ff7a66caa9"
+      md5-hash: "6b20f985a5a7fc4c40cab223a96c173b"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-25556-init-script.patch"
@@ -57,11 +61,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_FS6400_42218.pat"
-      hash: "3437cc14ba919f13e37691d31d960f3f48cd3d734c015001ad2a7679636a5e9d"
-      ramdisk-hash: "ec1e1ea2022ac4af7dfbf2f72b64219b0c8ef747278a0b5c37d50ac7b07195ed"
-      zimage-hash: "67a5c04ba47cbef148195816412f88248b86a58e021e1c8196e31fbd375d0b50"
-      md5-hash: "e7887381980432a7be5ddf4dec0772ad"
+      url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS720%2B_42218.pat"
+      hash: "b9b77846e0983f50496276bec6bcdfcfadd4c1f9f0db8ed2ca5766f131ddf97f"
+      ramdisk-hash: "8607c34fff3a13c75dbc1a9c730de2b2cf649697d6244fd37047090d2e2ba897"
+      zimage-hash: "70e93678f3932c35c5e884f950e50b36f8dc6366f96dd9a454c8d47ecbaee5de"
+      md5-hash: "55a7e4ccbf6fcba9238a11976a4a7381"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -77,11 +81,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_FS6400_42661.pat"
-      hash: "94a84725e8b24dfb448429068c046e05084ead3a210f8710979e0992904673e7"
-      ramdisk-hash: "6ceff751e7132dd8cc80ff64ee23b7e3b3986d85d7d9132b4cb4b0d50f223b1f"
-      zimage-hash: "2326a556eec4c48b9887bad7eecab268e43dc0e036bed8ddf6fbba466d713cde"
-      md5-hash: "030064272d82777681502745fcfa8c48"
+      url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_DS720%2B_42661.pat"
+      hash: "8076950fdad2ca58ea9b91a12584b9262830fe627794a0c4fc5861f819095261"
+      ramdisk-hash: "c8ad44826c87e065a3b05f354a639c0a86cb2fa47b88e11949604d53f3e80048"
+      zimage-hash: "1d0e5b76e08e3483f6bf06d23b5978ec498b855bde23db1f96f343db4c43337d"
+      md5-hash: "fa3936a53299b1a1142e4c614e2b360c"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -97,11 +101,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_FS6400_42962.pat"
-      hash: "5bf4334781dc21270f2f7bde9e781d4fda53656222240db36187089ff018e7a5"
-      ramdisk-hash: "7743e4d2c3634616a2dc2ae74b81bacbe9439bea9bebc3309b469a842bd7367f"
-      zimage-hash: "3aaa1c27607f295f1fa8778f3e1a020c3a3db6629ea3b6f821286a8da90f6800"
-      md5-hash: "651be491d10a47ecc534295d84341c03"
+      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_DS720%2B_42962.pat"
+      hash: "f58c15d4d83699884c30e4a4b04b1d2e0db19c477923d920327a897a73c741b6"
+      ramdisk-hash: "043d784fd35ee57eb5279c94a65e66ff2c7c4229728818bc141927a6451e95ee"
+      zimage-hash: "2de065851b8d3a222db1feea696aab12ded7b582876b22ff6e847cd6f2e62ecf"
+      md5-hash: "69792ae34d9b3c6e707d0e3e6b82816f"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -117,11 +121,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.2/64551/DSM_FS6400_64551.pat"
-      hash: "359c43ddfd567cbb7df07481386d69a62e8361ad64f10e9fe45e87c2efb5de26"
-      ramdisk-hash: "6a94cded324fda9f13a3cf2093ec34656651de77d1c963f6858545a3cb49643e"
-      zimage-hash: "6619a11c3d5e0ea7d494616814e7ef1b73253245fb72cec21ee71fbc801275e4"
-      md5-hash: "aee2aefb77fce45cc3f6611aa9aaf506"
+      url: "https://global.synologydownload.com/download/DSM/release/7.2/64551/DSM_DS720%2B_64551.pat"
+      hash: "d5dc4f98cfbf9b8b9bf77c607a6f0acd2cc2a4ee0651bf50b12a79e3de74204b"
+      ramdisk-hash: "641740f5783965ff10b6c333f589c4e31a55f94bc854e6cf2c849d6b1ab6be5c"
+      zimage-hash: "8cbe286e7b8085ca579695505311ba7265e018a7b4417ec33484fc8df13d2ec3"
+      md5-hash: "9699adeaef01f3333e8f5f84cc557ddb"
     patch:
       - "ramdisk-64216-disable-root-pwd.patch"
       - "ramdisk-64216-init-script.patch"

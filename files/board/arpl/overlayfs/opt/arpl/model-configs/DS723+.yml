@@ -1,8 +1,9 @@
-id: "SA6400"
+id: "DS723+"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
   support_led_brightness_adjustment: "no"
+  buzzeroffen: "0xffff"
   rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
@@ -14,54 +15,55 @@ cmdline: &cmdline
   synoboot2:
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
-platform: "epyc7002"
-unique: "synology_epyc7002_sa6400"
+  elevator: elevator
+platform: "r1000"
+unique: "synology_r1000_723+"
 serial:
   prefix:
     - "2270"
-  middle: "UMR"
+  middle: "TQR"
   suffix: "alpha"
 dom: 2
 dt: true
-disks: 16
+disks: 2
 beta: true
 builds:
   42962:
     ver: "7.1.1"
-    kver: "5.10.55"
+    kver: "4.4.180"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-5/DSM_SA6400_42962.pat"
-      hash: "97413b95fff07f3482dead55cd9a81eb6cbbf4d56c5e283d684c340a13ba3ac4"
-      ramdisk-hash: "43b926a063b77ece8f05873ca2ae7d6bec2855af4d2ab15092dc778a10d9a91a"
-      zimage-hash: "caa147a172250b08febfb124df5d63a64082a8dcae921503fe9639c7102d7546"
-      md5-hash: "404bac6054f0e05e76dddcb6cea15c7c"
+      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-5/DSM_DS723%2B_42962.pat"
+      hash: "633a626f3dc31338eb41ca929d8f9927a7a63f646067372d02ac045aa768560f"
+      ramdisk-hash: "3b5c813d61311fc2b65aab8aa7c5c0d19eee7ad99f24eaab254397c4c1c003af"
+      zimage-hash: "2bf64e284b4aa3965bdd284cd76ec441fd1ab7b136bee6613bcbae12ef9b770d"
+      md5-hash: "f572e96e8ed937c165467ed8ddddec0b"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-sa6400-init-script.patch"
+      - "ramdisk-common-init-script.patch"
       - "ramdisk-common-etc-rc.patch"
       - "ramdisk-42951-post-init-script.patch"
 
   64551:
     ver: "7.2.0"
-    kver: "5.10.55"
+    kver: "4.4.302"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.2/64551/DSM_SA6400_64551.pat"
-      hash: "1ef25a47a1007382f7a3c6e740427ecaca50efa99e77308f076202fdffdad2cb"
-      ramdisk-hash: "21d03f5241c714f9232a0befaf05bb2c759369c41d50181e7b0da106d0237d7f"
-      zimage-hash: "e636d48b485f90c421372a721b3a4c237098f377b22ad6e846666bba4fb23f09"
-      md5-hash: "ef8ebe0f0f8734026c300515fd8a69ed"
+      url: "https://global.synologydownload.com/download/DSM/release/7.2/64551/DSM_DS723%2B_64551.pat"
+      hash: "d1262257740f5c2e9c676f4642d772b8e556d7f1ab21b3df2254a12d97a314fd"
+      ramdisk-hash: "925be5ac1adeb763d5ee49be75324aa20b5ae912cc2961ddcbe57625f09d70d1"
+      zimage-hash: "f7679ea4d799bedb32721cff9fd5e55265e4a0fa40f903fb2cb04516b381335a"
+      md5-hash: "27994746822f832bb38e5c70c22845b9"
     patch:
       - "ramdisk-64216-disable-root-pwd.patch"
-      - "ramdisk-64216-sa6400-init-script.patch"
+      - "ramdisk-64216-init-script.patch"
       - "ramdisk-common-etc-rc.patch"
       - "ramdisk-42951-post-init-script.patch"
