@@ -1,11 +1,10 @@
-id: "DS918+"
+id: "RS1619xs+"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
-  support_led_brightness_adjustment: "no"
+  support_bde_internal_10g: "no"
   esataportcfg: "0x00"
-  support_leds_lp3943: ""
-  buzzeroffen: "0xffff"
+  support_led_brightness_adjustment: "no"
   rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
@@ -17,22 +16,17 @@ cmdline: &cmdline
   vender_format_version: 2
   syno_hdd_detect: 0
   elevator: elevator
-platform: "apollolake"
-unique: "synology_apollolake_918+"
+platform: "broadwellnk"
+unique: "synology_broadwellnk_rs1619xs+"
 serial:
   prefix:
-    - "1780"
-    - "1790"
-    - "1860"
-    - "1980"
-  middle: "PDN"
-  suffix: "numeric"
-flags:
-  - "movbe"
+    - "1920"
+  middle: "QPR"
+  suffix: "alpha"
 dom: 2
 dt: false
 disks: 4
-beta: false
+beta: true
 builds:
   25556:
     ver: "6.2.4"
@@ -43,11 +37,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_DS918%2B_25556.pat"
-      hash: "ee021d9cd012a434578309845e3af999a43f81a7887ceec7319e6005ac5930d4"
-      ramdisk-hash: "bdb6a1b0f48a5ed713b9095db2b5976971cf714425982a1b5782f70749231324"
-      zimage-hash: "3f0f954c9bb6ef0fa195e244f6219ecb3c7a7b297ff6d584a119437eec612e88"
-      md5-hash: "97c4afcc5c679f9208fb7675309080ba"
+      url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_RS1619xs%2B_25556.pat"
+      hash: "4d8710c74cc71d8cb61a599cc4d20db0086926b41632019fed5d60a65a10c70b"
+      ramdisk-hash: "4136d2fbfdbaab95a4535ec03c62fc26ff142d1487d63e3c3f62fce9cc68751f"
+      zimage-hash: "7eb286f0a1f130761b27e7a173715e3520020b2e4e32b5204aa29f902d617d56"
+      md5-hash: "980277a06f6ba645e8ae64121788beb7"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-25556-init-script.patch"
@@ -64,11 +58,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS918%2B_42218.pat"
-      hash: "a662d11999c266dfa86c54f7ba01045c6644c191124195a22d056d618790dffe"
-      ramdisk-hash: "d27320b536da0ac82d7959e0492180b3a25ef78a3997f65cc4ccddc426b921bd"
-      zimage-hash: "7311b04f7462847f529cf966c7b332097354692485c8157643d89441e2a81cd0"
-      md5-hash: "0c8a0d2dc6f1d7e37ee63d74760808b8"
+      url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_RS1619xs%2B_42218.pat"
+      hash: "a222d37f369d71042057ccb592f40c7c81e9b988a95d69fa166c7c2a611da99c"
+      ramdisk-hash: "11ebadba5d831ad6f31258ab317ed1f7cbfe18243413f9f81291b894b5f7a591"
+      zimage-hash: "d6059bcd7160ed1f775a9323599ac8860b60ada32f0a4f3e5ca166c15a17784e"
+      md5-hash: "b9b452577b38adc82aca42e031be267b"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -85,11 +79,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_DS918%2B_42661.pat"
-      hash: "4e8a9d82a8a1fde5af9a934391080b7bf6b91811d9583acb73b90fb6577e22d7"
-      ramdisk-hash: "ef8c87b6e68226339e5623d048252f5be3089c0831e41298a4695f2bfa65f00e"
-      zimage-hash: "9ce0d3452f08afaf95d52292ff20cbac6d69e17d5b9953377e4ac90c9ac7397d"
-      md5-hash: "2c49260d2646a0944b56933f7d4029fb"
+      url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_RS1619xs%2B_42661.pat"
+      hash: "53d0a4f1667288b6e890c4fdc48422557ff26ea8a2caede0955c5f45b560cccd"
+      ramdisk-hash: "df8a055d6bc901229f0ba53ed5b4fe024bdf9a1b42f0c32483adefcdac14db4d"
+      zimage-hash: "e073dd84054f652811e0ae1932af2c7cdbd5fb6e5f18f265097072b8af4605e8"
+      md5-hash: "7af76cca8226ecf95b25630bffa76b3d"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -106,11 +100,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_DS918%2B_42962.pat"
-      hash: "9905e145f3bd88fcc938b00882be10281861867e5165ae98aefa37be0d5d34b5"
-      ramdisk-hash: "01fa835229772cdf48be7aa473c029f5d12eefa77d3c6dba7c4f749157b9046b"
-      zimage-hash: "f372b5faaca87d852579df25fe1e9471fd346448ead932586ffd069e2dc4fb13"
-      md5-hash: "d5b62813ebc2d78bdbdf08b2c42e1280"
+      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_RS1619xs%2B_42962.pat"
+      hash: "4cd9b66fcf56d8d8cedd1435267a18c0b1cb7894462bdaf4db1bd9bb8f1ac0e1"
+      ramdisk-hash: "f7da7a63438138e91d2170836c0329c9127755e80bc97ffc618a92de8219e82c"
+      zimage-hash: "89155c534c5088fd28104c2f10543bf167d4e79a1f756b7f932e4a04a3bfaadb"
+      md5-hash: "7e0747b8808941d51c35de503473b62e"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -127,11 +121,11 @@ builds:
     synoinfo:
       <<: *synoinfo
     pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.2/64551/DSM_DS918%2B_64551.pat"
-      hash: "13b7d6dfb371bbf9b75ffbefbad07d514e42aaeefb868796bf0990ce26744a83"
-      ramdisk-hash: "d42a64015b1c3cad3c6f338bb3f2886076307e63b98c8804e14f407aa050cdc1"
-      zimage-hash: "30c27506d4f0226168e01e47e8158d7f709b596299945627387b75c548d22a2e"
-      md5-hash: "ddfdf8f2ca5a40edd46803f5ca982264"
+      url: "https://global.synologydownload.com/download/DSM/release/7.2/64551/DSM_RS1619xs%2B_64551.pat"
+      hash: "b10fbf687c31aee4921b4bf4712fead39cef85336d2a083c43391c147dc9e1f1"
+      ramdisk-hash: "07b201554359f708f1732c3a133fde915c14965e0c76168fabe106e99818b2d0"
+      zimage-hash: "359d23626a6d976851085d810b642549fc621cf869a8882590c04a24aca9b9fd"
+      md5-hash: "bb28143b66daacc3c233ce74e299785c"
     patch:
       - "ramdisk-64216-disable-root-pwd.patch"
       - "ramdisk-64216-init-script.patch"
