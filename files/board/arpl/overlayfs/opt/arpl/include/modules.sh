@@ -20,3 +20,42 @@ function getAllModules() {
   done
   rm -rf "${TMP_PATH}/modules"
 }
+
+###############################################################################
+# add a ko of modules.tgz
+# 1 - Platform
+# 2 - Kernel Version
+# 3 - ko file
+function addToModules() {
+  PLATFORM=${1}
+  KVER=${2}
+  KOFILE=${3}
+  # Unzip modules for temporary folder
+  rm -rf "${TMP_PATH}/modules"
+  mkdir -p "${TMP_PATH}/modules"
+  gzip -dc "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" | tar xf - -C "${TMP_PATH}/modules"
+  cp -f ${KOFILE} ${TMP_PATH}/modules
+  tar -cf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar" -C "${TMP_PATH}/modules" .
+  gzip -c "${MODULES_PATH}/${PLATFORM}-${KVER}.tar" > "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz"
+  rm -rf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar "${TMP_PATH}/modules"
+}
+
+
+###############################################################################
+# del a ko of modules.tgz
+# 1 - Platform
+# 2 - Kernel Version
+# 3 - ko name
+function delToModules() {
+  PLATFORM=${1}
+  KVER=${2}
+  KONAME=${3}
+  # Unzip modules for temporary folder
+  rm -rf "${TMP_PATH}/modules"
+  mkdir -p "${TMP_PATH}/modules"
+  gzip -dc "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" | tar xf - -C "${TMP_PATH}/modules"
+  rm -f ${TMP_PATH}/modules/${KONAME}
+  tar -cf ${MODULES_PATH}/${PLATFORM}-${KVER}.tar -C ${TMP_PATH}/modules .
+  gzip -c ${MODULES_PATH}/${PLATFORM}-${KVER}.tar > ${MODULES_PATH}/${PLATFORM}-${KVER}.tgz
+  rm -rf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar "${TMP_PATH}/modules"
+}

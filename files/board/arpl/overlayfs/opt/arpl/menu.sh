@@ -17,6 +17,8 @@ IP=`ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*
 
 # Dirty flag
 DIRTY=0
+# Debug flag
+DEBUG=0
 
 MODEL="`readConfigKey "model" "${USER_CONFIG_FILE}"`"
 BUILD="`readConfigKey "build" "${USER_CONFIG_FILE}"`"
@@ -335,6 +337,120 @@ function addonMenu() {
         fi
         ;;
       e) return ;;
+    esac
+  done
+}
+###############################################################################
+function moduleMenu() {
+  PLATFORM="`readModelKey "${MODEL}" "platform"`"
+  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
+  dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" --aspect 18 \
+    --infobox "$(TEXT "Reading modules")" 0 0
+  ALLMODULES=`getAllModules "${PLATFORM}" "${KVER}"`
+  unset USERMODULES
+  declare -A USERMODULES
+  while IFS=': ' read KEY VALUE; do
+    [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
+  done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
+  NEXT="s"
+  # loop menu
+  while true; do
+    dialog --backtitle "`backtitle`"  --default-item ${NEXT} \
+      --menu "$(TEXT "Choose a option")" 0 0 0 \
+      s "$(TEXT "Show selected modules")" \
+      a "$(TEXT "Select all modules")" \
+      d "$(TEXT "Deselect all modules")" \
+      c "$(TEXT "Choose modules to include")" \
+      o "$(TEXT "Download a external module")" \
+      e "$(TEXT "Exit")" \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && break
+    case "`<${TMP_PATH}/resp`" in
+      s) ITEMS=""
+        for KEY in ${!USERMODULES[@]}; do
+          ITEMS+="${KEY}: ${USERMODULES[$KEY]}\n"
+        done
+        dialog --backtitle "`backtitle`" --title "$(TEXT "User modules")" \
+          --msgbox "${ITEMS}" 0 0
+        ;;
+      a) dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" \
+           --infobox "$(TEXT "Selecting all modules")" 0 0
+        unset USERMODULES
+        declare -A USERMODULES
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        while read ID DESC; do
+          USERMODULES["${ID}"]=""
+          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+        done <<<${ALLMODULES}
+        ;;
+
+      d) dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" \
+           --infobox "$(TEXT "Deselecting all modules")" 0 0
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        unset USERMODULES
+        declare -A USERMODULES
+        ;;
+
+      c)
+        rm -f "${TMP_PATH}/opts"
+        while read ID DESC; do
+          arrayExistItem "${ID}" "${!USERMODULES[@]}" && ACT="on" || ACT="off"
+          echo "${ID} ${DESC} ${ACT}" >> "${TMP_PATH}/opts"
+        done <<<${ALLMODULES}
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" --aspect 18 \
+          --checklist "$(TEXT "Select modules to include")" 0 0 0 \
+          --file "${TMP_PATH}/opts" 2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        resp=$(<${TMP_PATH}/resp)
+        [ -z "${resp}" ] && continue
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" \
+           --infobox "$(TEXT "Writing to user config")" 0 0
+        unset USERMODULES
+        declare -A USERMODULES
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        for ID in ${resp}; do
+          USERMODULES["${ID}"]=""
+          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+        done
+        ;;
+
+      o)
+        MSG=""
+        MSG+="$(TEXT "This function is experimental and dangerous. If you don't know much, please exit.\n")" 
+        MSG+="$(TEXT "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\n")" 
+        MSG+="$(TEXT "This program will not determine the availability of imported modules or even make type judgments, as please double check if it is correct.\n")" 
+        MSG+="$(TEXT "If you want to remove it, please go to the \"Update Menu\" -> \"Update modules\" to forcibly update the modules. All imports will be reset.\n")" 
+        MSG+="$(TEXT "Do you want to continue?")" 
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Download a external module")" \
+            --yesno "${MSG}" 0 0
+        [ $? -ne 0 ] && return
+        dialog --backtitle "`backtitle`" --aspect 18 --colors --inputbox "$(TEXT "please enter the complete URL to download.\n")" 0 0 \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        URL="`<"${TMP_PATH}/resp"`"
+        [ -z "${URL}" ] && continue
+        clear
+        echo "`printf "$(TEXT "Downloading %s")" "${URL}"`"
+        STATUS=`curl -kLJO -w "%{http_code}" "${URL}" --progress-bar`
+        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Error downloading")" --aspect 18 \
+            --msgbox "$(TEXT "Check internet, URL or cache disk space")" 0 0
+          return 1
+        fi
+        KONAME=$(basename "$URL")
+        if [ -n "${KONAME}" -a "${KONAME##*.}" = "ko" ]; then
+          addToModules ${PLATFORM} ${KVER} ${KONAME}
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Success")" --aspect 18 \
+            --msgbox "`printf "$(TEXT "Module '%s' added to %s-%s")" "${KONAME}" ${PLATFORM} ${KVER}`" 0 0
+          rm -f ${KONAME}
+        else
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Invalid module")" --aspect 18 \
+            --msgbox "$(TEXT "File format not recognized!")" 0 0
+        fi
+        ;;
+      e)
+        break
+        ;;
     esac
   done
 }
@@ -762,11 +878,10 @@ function advancedMenu() {
   while true; do
     rm "${TMP_PATH}/menu"
     if [ -n "${BUILD}" ]; then
-      echo "o \"$(TEXT "Modules")\""                                 >> "${TMP_PATH}/menu"
       echo "l \"$(TEXT "Switch LKM version:") \Z4${LKM}\Zn\""        >> "${TMP_PATH}/menu"
     fi
     if loaderIsConfigured; then
-      echo "r \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >> "${TMP_PATH}/menu"
+      echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >> "${TMP_PATH}/menu"
     fi
     echo "u \"$(TEXT "Edit user config file manually")\""            >> "${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\""    >> "${TMP_PATH}/menu"
@@ -781,6 +896,7 @@ function advancedMenu() {
       echo "d \"$(TEXT "Custom dts file # Need rebuild")\""          >> "${TMP_PATH}/menu"
     fi
     echo "b \"$(TEXT "Backup bootloader disk # dd")\""               >> "${TMP_PATH}/menu"
+    echo "r \"$(TEXT "Restore bootloader disk # dd")\""              >> "${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\""                                      >> "${TMP_PATH}/menu"
 
     dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
@@ -788,13 +904,12 @@ function advancedMenu() {
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
     case `<"${TMP_PATH}/resp"` in
-      o) selectModules; NEXT="e" ;;
       l) LKM=$([ "${LKM}" = "dev" ] && echo 'prod' || ([ "${LKM}" = "test" ] && echo 'dev' || echo 'test'))
         writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
         DIRTY=1
         NEXT="l"
         ;;
-      r) [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
+      q) [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
         writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
         NEXT="e"
         ;;
@@ -952,6 +1067,47 @@ function advancedMenu() {
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "$(TEXT "backup is complete.")" 0 0
         ;;
+      r)
+        if ! tty | grep -q "/dev/pts"; then
+          dialog --backtitle "`backtitle`" --colors --aspect 18 \
+            --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+          return
+        fi 
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" \
+            --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
+        [ $? -ne 0 ] && return
+        IFTOOL=""
+        TMP_PATH=/tmp/users
+        rm -rf ${TMP_PATH}
+        mkdir -p ${TMP_PATH}
+        pushd ${TMP_PATH}
+        rz -q
+        for F in `ls -A`; do
+          USER_FILE=${TMP_PATH}/${F}
+          [ "${F##*.}" = "zip" -a `unzip -l ${USER_FILE} | grep -c "\.img$"` -eq 1 ] && IFTOOL="zip"
+          [ "${F##*.}" = "gz" -a "${F#*.}" = "img.gz" ] && IFTOOL="gzip"
+          break 
+        done
+        popd
+        if [ -z "${IFTOOL}" -o -z "${USER_FILE}" ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" --aspect 18 \
+            --msgbox "$(TEXT "Not a valid .zip/.img.gz file, please try again!")" 0 0
+        else
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" --aspect 18 \
+            --msgbox "$(TEXT "A valid file, Writing...")" 0 0
+          umount /mnt/p1 /mnt/p2 /mnt/p3
+          if [ "${IFTOOL}" = "zip" ]; then
+            unzip -p ${USER_FILE} | dd of="${LOADER_DISK}" bs=1M conv=fsync
+          elif [ "${IFTOOL}" = "gzip" ]; then
+            gzip -dc ${USER_FILE} | dd of="${LOADER_DISK}" bs=1M conv=fsync
+          fi
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" --aspect 18 \
+            --yesno "`printf "$(TEXT "Restore bootloader disk with success to %s!\nReboot?")" "`basename ${USER_FILE}`"`" 0 0
+          [ $? -ne 0 ] && continue
+          reboot
+          exit
+        fi
+        ;;
       e) break ;;
     esac
   done
@@ -998,85 +1154,6 @@ function tryRecoveryDSM() {
     dialog --backtitle "`backtitle`" --title "$(TEXT "Try recovery DSM")" --aspect 18 \
       --msgbox "$(TEXT "Unfortunately I couldn't mount the DSM partition!")" 0 0
   fi
-}
-
-###############################################################################
-# Permit user select the modules to include
-function selectModules() {
-  PLATFORM="`readModelKey "${MODEL}" "platform"`"
-  KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
-  dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" --aspect 18 \
-    --infobox "$(TEXT "Reading modules")" 0 0
-  ALLMODULES=`getAllModules "${PLATFORM}" "${KVER}"`
-  unset USERMODULES
-  declare -A USERMODULES
-  while IFS=': ' read KEY VALUE; do
-    [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
-  done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
-  # menu loop
-  while true; do
-    dialog --backtitle "`backtitle`" --menu "$(TEXT "Choose a option")" 0 0 0 \
-      s "$(TEXT "Show selected modules")" \
-      a "$(TEXT "Select all modules")" \
-      d "$(TEXT "Deselect all modules")" \
-      c "$(TEXT "Choose modules to include")" \
-      e "$(TEXT "Exit")" \
-      2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && break
-    case "`<${TMP_PATH}/resp`" in
-      s) ITEMS=""
-        for KEY in ${!USERMODULES[@]}; do
-          ITEMS+="${KEY}: ${USERMODULES[$KEY]}\n"
-        done
-        dialog --backtitle "`backtitle`" --title "$(TEXT "User modules")" \
-          --msgbox "${ITEMS}" 0 0
-        ;;
-      a) dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" \
-           --infobox "$(TEXT "Selecting all modules")" 0 0
-        unset USERMODULES
-        declare -A USERMODULES
-        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-        while read ID DESC; do
-          USERMODULES["${ID}"]=""
-          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
-        done <<<${ALLMODULES}
-        ;;
-
-      d) dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" \
-           --infobox "$(TEXT "Deselecting all modules")" 0 0
-        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-        unset USERMODULES
-        declare -A USERMODULES
-        ;;
-
-      c)
-        rm -f "${TMP_PATH}/opts"
-        while read ID DESC; do
-          arrayExistItem "${ID}" "${!USERMODULES[@]}" && ACT="on" || ACT="off"
-          echo "${ID} ${DESC} ${ACT}" >> "${TMP_PATH}/opts"
-        done <<<${ALLMODULES}
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" --aspect 18 \
-          --checklist "$(TEXT "Select modules to include")" 0 0 0 \
-          --file "${TMP_PATH}/opts" 2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        resp=$(<${TMP_PATH}/resp)
-        [ -z "${resp}" ] && continue
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" \
-           --infobox "$(TEXT "Writing to user config")" 0 0
-        unset USERMODULES
-        declare -A USERMODULES
-        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-        for ID in ${resp}; do
-          USERMODULES["${ID}"]=""
-          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
-        done
-        ;;
-
-      e)
-        break
-        ;;
-    esac
-  done
 }
 
 ###############################################################################
@@ -1415,6 +1492,7 @@ while true; do
     echo "s \"$(TEXT "Choose a serial number")\""               >> "${TMP_PATH}/menu"
     if [ -n "${BUILD}" ]; then
       echo "a \"$(TEXT "Addons")\""                             >> "${TMP_PATH}/menu"
+      echo "o \"$(TEXT "Modules")\""                            >> "${TMP_PATH}/menu"
       echo "x \"$(TEXT "Cmdline menu")\""                       >> "${TMP_PATH}/menu"
       echo "i \"$(TEXT "Synoinfo menu")\""                      >> "${TMP_PATH}/menu"
     fi
@@ -1444,7 +1522,8 @@ while true; do
     m) modelMenu; NEXT="n" ;;
     n) buildMenu; NEXT="s" ;;
     s) serialMenu; NEXT="a" ;;
-    a) addonMenu; NEXT="x" ;;
+    a) addonMenu; NEXT="o" ;;
+    o) moduleMenu; NEXT="x" ;;
     x) cmdlineMenu; NEXT="i" ;;
     i) synoinfoMenu; NEXT="v" ;;
     v) advancedMenu; NEXT="d" ;;
