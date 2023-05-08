@@ -1,0 +1,42 @@
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+# 
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+
+name: Auto Comment
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Init Env
+        run : |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          sudo timedatectl set-timezone "Asia/Shanghai"
+
+      
+      - name: Check Issues
+        run: |
+          if echo "${{ github.event.issue.body }}" | grep -q "DS"; then 
+            echo "FALG=true" >> $GITHUB_ENV
+          else
+            echo "FALG=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create Issues comment
+        if: env.FALG == 'false'
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'create-comment'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body: | 
+            <img src="https://user-images.githubusercontent.com/5615843/235939097-6798da58-24fd-44cc-9970-c8d2f9609704.jpg" width="400">
+          emoji: heart
