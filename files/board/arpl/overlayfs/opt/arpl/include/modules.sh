@@ -37,7 +37,7 @@ function addToModules() {
   cp -f ${KOFILE} ${TMP_PATH}/modules
   tar -cf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar" -C "${TMP_PATH}/modules" .
   gzip -c "${MODULES_PATH}/${PLATFORM}-${KVER}.tar" > "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz"
-  rm -rf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar "${TMP_PATH}/modules"
+  rm -rf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar" "${TMP_PATH}/modules"
 }
 
 
@@ -55,7 +55,7 @@ function delToModules() {
   mkdir -p "${TMP_PATH}/modules"
   gzip -dc "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" | tar xf - -C "${TMP_PATH}/modules"
   rm -f ${TMP_PATH}/modules/${KONAME}
-  tar -cf ${MODULES_PATH}/${PLATFORM}-${KVER}.tar -C ${TMP_PATH}/modules .
-  gzip -c ${MODULES_PATH}/${PLATFORM}-${KVER}.tar > ${MODULES_PATH}/${PLATFORM}-${KVER}.tgz
-  rm -rf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar "${TMP_PATH}/modules"
+  tar -cf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar" -C "${TMP_PATH}/modules" .
+  gzip -c "${MODULES_PATH}/${PLATFORM}-${KVER}.tar" > "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz"
+  rm -rf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar" "${TMP_PATH}/modules"
 }
