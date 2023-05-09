@@ -1062,7 +1062,7 @@ function advancedMenu() {
         dialog --backtitle "`backtitle`" --title "$(TEXT "Backup bootloader disk")" \
           --infobox "$(TEXT "Backuping...")" 0 0
         dd if="${LOADER_DISK}" | gzip > backup.img.gz
-        sz -q backup.img.gz
+        sz backup.img.gz
         rm -f backup.img.gz
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "$(TEXT "backup is complete.")" 0 0
@@ -1081,7 +1081,7 @@ function advancedMenu() {
         rm -rf ${TMP_PATH}
         mkdir -p ${TMP_PATH}
         pushd ${TMP_PATH}
-        rz -q
+        rz -byeq
         for F in `ls -A`; do
           USER_FILE=${TMP_PATH}/${F}
           [ "${F##*.}" = "zip" -a `unzip -l ${USER_FILE} | grep -c "\.img$"` -eq 1 ] && IFTOOL="zip"
@@ -1094,7 +1094,7 @@ function advancedMenu() {
             --msgbox "$(TEXT "Not a valid .zip/.img.gz file, please try again!")" 0 0
         else
           dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" --aspect 18 \
-            --msgbox "$(TEXT "A valid file, Writing...")" 0 0
+            --infobox "$(TEXT "A valid file, Writing...")" 0 0
           umount /mnt/p1 /mnt/p2 /mnt/p3
           if [ "${IFTOOL}" = "zip" ]; then
             unzip -p ${USER_FILE} | dd of="${LOADER_DISK}" bs=1M conv=fsync
