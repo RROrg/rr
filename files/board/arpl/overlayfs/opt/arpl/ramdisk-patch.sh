@@ -34,7 +34,7 @@ LKM="`readConfigKey "lkm" "${USER_CONFIG_FILE}"`"
 SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
 LAYOUT="`readConfigKey "layout" "${USER_CONFIG_FILE}"`"
 KEYMAP="`readConfigKey "keymap" "${USER_CONFIG_FILE}"`"
-UNIQUE=`readModelKey "${MODEL}" "unique"`
+
 
 if [ ${BUILD} -ne ${buildnumber} ]; then
   echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${BUILD}\033[1;32m to \033[1;31m${buildnumber}\033[0m"
@@ -46,8 +46,11 @@ fi
 
 echo -n "."
 # Read model data
+UNIQUE=`readModelKey "${MODEL}" "unique"`
 PLATFORM="`readModelKey "${MODEL}" "platform"`"
 KVER="`readModelKey "${MODEL}" "builds.${BUILD}.kver"`"
+PAT_URL="`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`"
+PAT_MD5_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.md5-hash"`"
 RD_COMPRESSED="`readModelKey "${MODEL}" "builds.${BUILD}.rd-compressed"`"
 
 # Sanity check
@@ -159,6 +162,12 @@ for ADDON in ${!ADDONS[@]}; do
 done
 
 [ "2" = "${BUILD:0:1}" ] && sed -i 's/function //g' `find "${RAMDISK_PATH}/addons/" -type f -name "*.sh"`
+
+# loacl rss, Make the bootloader and online installation versions consistent
+mkLocalRss "${RAMDISK_PATH}" "${PAT_URL}" "${PAT_MD5_HASH}" "${RAMDISK_PATH}/addons"
+sed -i "s|rss_server=.*$|rss_server=\"file://localhost/addons/localrss.xml\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
+sed -i "s|rss_server_ssl=.*$|rss_server_ssl=\"file://localhost/addons/localrss.xml\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
+sed -i "s|rss_server_v2=.*$|rss_server_v2=\"file://localhost/addons/localrss.json\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
 
 # Enable Telnet
 echo "inetd" >> "${RAMDISK_PATH}/addons/addons.sh"
