@@ -895,8 +895,8 @@ function advancedMenu() {
     if [ -n "${MODEL}" -a "true" = "`readModelKey "${MODEL}" "dt"`" ]; then
       echo "d \"$(TEXT "Custom dts file # Need rebuild")\""          >> "${TMP_PATH}/menu"
     fi
-    echo "b \"$(TEXT "Backup bootloader disk # dd")\""               >> "${TMP_PATH}/menu"
-    echo "r \"$(TEXT "Restore bootloader disk # dd")\""              >> "${TMP_PATH}/menu"
+    echo "b \"$(TEXT "Backup bootloader disk # test")\""             >> "${TMP_PATH}/menu"
+    echo "r \"$(TEXT "Restore bootloader disk # test")\""            >> "${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\""                                      >> "${TMP_PATH}/menu"
 
     dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
@@ -1032,7 +1032,7 @@ function advancedMenu() {
         rm -rf ${TMP_PATH}
         mkdir -p ${TMP_PATH}
         pushd ${TMP_PATH}
-        rz -q
+        rz -be
         for F in `ls -A`; do
           USER_FILE=${TMP_PATH}/${F}
           dtc -q -I dts -O dtb ${F} > test.dtb
@@ -1073,36 +1073,39 @@ function advancedMenu() {
             --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
           return
         fi 
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" \
-            --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" --aspect 18 \
+            --yesno "$(TEXT "Please upload the backup file.\nCurrently, zip(github) and img.gz(backup) compressed file formats are supported.")" 0 0
         [ $? -ne 0 ] && return
         IFTOOL=""
         TMP_PATH=/tmp/users
         rm -rf ${TMP_PATH}
         mkdir -p ${TMP_PATH}
         pushd ${TMP_PATH}
-        rz -byeq
+        rz -be
         for F in `ls -A`; do
-          USER_FILE=${TMP_PATH}/${F}
-          [ "${F##*.}" = "zip" -a `unzip -l ${USER_FILE} | grep -c "\.img$"` -eq 1 ] && IFTOOL="zip"
+          USER_FILE="${F}"
+          [ "${F##*.}" = "zip" -a `unzip -l "${TMP_PATH}/${USER_FILE}" | grep -c "\.img$"` -eq 1 ] && IFTOOL="zip"
           [ "${F##*.}" = "gz" -a "${F#*.}" = "img.gz" ] && IFTOOL="gzip"
           break 
         done
         popd
-        if [ -z "${IFTOOL}" -o -z "${USER_FILE}" ]; then
+        if [ -z "${IFTOOL}" -o -z "${TMP_PATH}/${USER_FILE}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" --aspect 18 \
-            --msgbox "$(TEXT "Not a valid .zip/.img.gz file, please try again!")" 0 0
+            --msgbox "`printf "$(TEXT "Not a valid .zip/.img.gz file, please try again!")" "${USER_FILE}"`" 0 0
         else
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" \
+              --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
+          [ $? -ne 0 ] && ( rm -f ${LOADER_DISK}; return )
           dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" --aspect 18 \
-            --infobox "$(TEXT "A valid file, Writing...")" 0 0
+            --infobox "$(TEXT "Writing...")" 0 0
           umount /mnt/p1 /mnt/p2 /mnt/p3
           if [ "${IFTOOL}" = "zip" ]; then
-            unzip -p ${USER_FILE} | dd of="${LOADER_DISK}" bs=1M conv=fsync
+            unzip -p "${TMP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
           elif [ "${IFTOOL}" = "gzip" ]; then
-            gzip -dc ${USER_FILE} | dd of="${LOADER_DISK}" bs=1M conv=fsync
+            gzip -dc "${TMP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
           fi
           dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" --aspect 18 \
-            --yesno "`printf "$(TEXT "Restore bootloader disk with success to %s!\nReboot?")" "`basename ${USER_FILE}`"`" 0 0
+            --yesno "`printf "$(TEXT "Restore bootloader disk with success to %s!\nReboot?")" "${USER_FILE}"`" 0 0
           [ $? -ne 0 ] && continue
           reboot
           exit
