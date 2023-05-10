@@ -1,9 +1,13 @@
+#
+# Automatically generated file; DO NOT EDIT.
+# Buildroot 2023.02.1 Configuration
+#
 BR2_x86_64=y
+BR2_TOOLCHAIN_BUILDROOT_GLIBC=y
+BR2_TOOLCHAIN_BUILDROOT_CXX=y
 BR2_DL_DIR="$(HOME)/dl"
 BR2_CCACHE=y
 BR2_CCACHE_DIR=".buildroot-ccache"
-BR2_TOOLCHAIN_BUILDROOT_GLIBC=y
-BR2_TOOLCHAIN_BUILDROOT_CXX=y
 BR2_TARGET_GENERIC_HOSTNAME="arpl"
 BR2_TARGET_GENERIC_ISSUE="Automated RedPill loader"
 BR2_ROOTFS_DEVICE_CREATION_DYNAMIC_EUDEV=y
@@ -18,8 +22,7 @@ BR2_ROOTFS_OVERLAY="board/arpl/overlayfs"
 BR2_ROOTFS_POST_BUILD_SCRIPT="board/arpl/post-build.sh"
 BR2_ROOTFS_POST_IMAGE_SCRIPT="board/arpl/make-img.sh"
 BR2_LINUX_KERNEL=y
-# BR2_LINUX_KERNEL_PATCH="https://raw.githubusercontent.com/zhmars/cjktty-patches/master/v5.x/cjktty-5.15.patch"
-BR2_LINUX_KERNEL_PATCH="board/arpl/cjktty-5.15.patch"
+BR2_LINUX_KERNEL_PATCH="https://raw.githubusercontent.com/zhmars/cjktty-patches/master/v6.x/cjktty-6.1.patch"
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
 BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="board/arpl/kernel_defconfig"
 BR2_LINUX_KERNEL_XZ=y
@@ -98,3 +101,7 @@ BR2_TARGET_ROOTFS_CPIO_XZ=y
 # BR2_TARGET_ROOTFS_TAR is not set
 BR2_PACKAGE_HOST_DOSFSTOOLS=y
 BR2_PACKAGE_HOST_E2FSPROGS=y
+# ARPL external packages (in /root/arpl-i18n/external)
+#
+# BR2_PACKAGE_R8168 is not set
+# BR2_PACKAGE_R8125 is not set
