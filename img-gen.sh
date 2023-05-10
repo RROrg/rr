@@ -7,7 +7,7 @@ set -e
 
 if [ ! -d .buildroot ]; then
   echo "Downloading buildroot"
-  git clone --single-branch -b 2022.02 https://github.com/buildroot/buildroot.git .buildroot
+  git clone --single-branch -b 2023.02.x https://github.com/buildroot/buildroot.git .buildroot
 fi
 
 # Convert po2mo, Get extractor, LKM, addons and Modules
