@@ -164,10 +164,10 @@ done
 [ "2" = "${BUILD:0:1}" ] && sed -i 's/function //g' `find "${RAMDISK_PATH}/addons/" -type f -name "*.sh"`
 
 # loacl rss, Make the bootloader and online installation versions consistent
-mkLocalRss "${RAMDISK_PATH}" "${PAT_URL}" "${PAT_MD5_HASH}" "${RAMDISK_PATH}/addons"
-sed -i "s|rss_server=.*$|rss_server=\"file://localhost/addons/localrss.xml\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
-sed -i "s|rss_server_ssl=.*$|rss_server_ssl=\"file://localhost/addons/localrss.xml\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
-sed -i "s|rss_server_v2=.*$|rss_server_v2=\"file://localhost/addons/localrss.json\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
+mkLocalRss "${RAMDISK_PATH}" "${PAT_URL}" "${PAT_MD5_HASH}" "${RAMDISK_PATH}/usr/syno/web"
+sed -i "s|rss_server=.*$|rss_server=\"http://localhost:5000/localrss.xml\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
+sed -i "s|rss_server_ssl=.*$|rss_server_ssl=\"http://localhost:5000/localrss.xml\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
+sed -i "s|rss_server_v2=.*$|rss_server_v2=\"http://localhost:5000/localrss.json\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
 
 # Enable Telnet
 echo "inetd" >> "${RAMDISK_PATH}/addons/addons.sh"
