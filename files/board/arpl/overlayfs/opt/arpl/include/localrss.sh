@@ -29,8 +29,8 @@ cat > ${OUTPATH}/localrss.json << EOF
         "BuildNum": ${buildnumber},
         "BuildDate": "${builddate}",
         "ReqMajorVer": ${major},
-        "ReqMinorVer": ${minor},
-        "ReqBuildPhase": ${micro},
+        "ReqMinorVer": 0,
+        "ReqBuildPhase": 0,
         "ReqBuildNum": 0,
         "ReqBuildDate": "${builddate}",
         "isSecurityVersion": false,
@@ -63,8 +63,8 @@ cat > ${OUTPATH}/localrss.xml << EOF
       <BuildNum>${buildnumber}</BuildNum>
       <BuildDate>${builddate}</BuildDate>
       <ReqMajorVer>${major}</ReqMajorVer>
-      <ReqMinorVer>${minor}</ReqMinorVer>
-      <ReqBuildPhase>${micro}</ReqBuildPhase>
+      <ReqMinorVer>0</ReqMinorVer>
+      <ReqBuildPhase>0</ReqBuildPhase>
       <ReqBuildNum>0</ReqBuildNum>
       <ReqBuildDate>${builddate}</ReqBuildDate>
       <model>
