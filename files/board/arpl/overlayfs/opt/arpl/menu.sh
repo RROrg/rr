@@ -18,7 +18,7 @@ IP=`ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*
 # Dirty flag
 DIRTY=0
 # Debug flag
-DEBUG=0
+# DEBUG=0
 
 MODEL="`readConfigKey "model" "${USER_CONFIG_FILE}"`"
 BUILD="`readConfigKey "build" "${USER_CONFIG_FILE}"`"
@@ -895,8 +895,10 @@ function advancedMenu() {
     if [ -n "${MODEL}" -a "true" = "`readModelKey "${MODEL}" "dt"`" ]; then
       echo "d \"$(TEXT "Custom dts file # Need rebuild")\""          >> "${TMP_PATH}/menu"
     fi
-    echo "b \"$(TEXT "Backup bootloader disk # test")\""             >> "${TMP_PATH}/menu"
-    echo "r \"$(TEXT "Restore bootloader disk # test")\""            >> "${TMP_PATH}/menu"
+    if [ -n "${DEBUG}" ]; then
+      echo "b \"$(TEXT "Backup bootloader disk # test")\""             >> "${TMP_PATH}/menu"
+      echo "r \"$(TEXT "Restore bootloader disk # test")\""            >> "${TMP_PATH}/menu"
+    fi
     echo "e \"$(TEXT "Exit")\""                                      >> "${TMP_PATH}/menu"
 
     dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
