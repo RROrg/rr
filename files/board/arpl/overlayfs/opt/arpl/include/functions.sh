@@ -1,7 +1,6 @@
 . /opt/arpl/include/i18n.sh
 . /opt/arpl/include/consts.sh
 . /opt/arpl/include/configFile.sh
-. /opt/arpl/include/localrss.sh
 
 ###############################################################################
 # Read key value from model config file

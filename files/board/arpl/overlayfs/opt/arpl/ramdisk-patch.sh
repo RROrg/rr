@@ -139,6 +139,8 @@ echo 'echo "addons.sh called with params ${@}"' >> "${RAMDISK_PATH}/addons/addon
 echo "export PLATFORM=${PLATFORM}"              >> "${RAMDISK_PATH}/addons/addons.sh"
 echo "export MODEL=${MODEL}"                    >> "${RAMDISK_PATH}/addons/addons.sh"
 echo "export BUILD=${BUILD}"                    >> "${RAMDISK_PATH}/addons/addons.sh"
+echo "export MLINK=${PAT_URL}"                  >> "${RAMDISK_PATH}/addons/addons.sh"
+echo "export MCHECKSUM=${PAT_MD5_HASH}"         >> "${RAMDISK_PATH}/addons/addons.sh"
 echo "export LAYOUT=${LAYOUT}"                  >> "${RAMDISK_PATH}/addons/addons.sh"
 echo "export KEYMAP=${KEYMAP}"                  >> "${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
@@ -151,6 +153,8 @@ echo "/addons/disks.sh \${1} ${DT} ${UNIQUE}" >> "${RAMDISK_PATH}/addons/addons.
 [ -f "${USER_UP_PATH}/${MODEL}.dts" ] && cp "${USER_UP_PATH}/${MODEL}.dts" "${RAMDISK_PATH}/addons/model.dts"
 installAddon wol
 echo "/addons/wol.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
+installAddon localrss
+echo "/addons/localrss.sh \${1} " >> "${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 # User addons
 for ADDON in ${!ADDONS[@]}; do
   PARAMS=${ADDONS[${ADDON}]}
@@ -162,12 +166,6 @@ for ADDON in ${!ADDONS[@]}; do
 done
 
 [ "2" = "${BUILD:0:1}" ] && sed -i 's/function //g' `find "${RAMDISK_PATH}/addons/" -type f -name "*.sh"`
-
-# loacl rss, Make the bootloader and online installation versions consistent
-mkLocalRss "${RAMDISK_PATH}" "${PAT_URL}" "${PAT_MD5_HASH}" "${RAMDISK_PATH}/usr/syno/web"
-sed -i "s|rss_server=.*$|rss_server=\"http://localhost:5000/localrss.xml\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
-sed -i "s|rss_server_ssl=.*$|rss_server_ssl=\"http://localhost:5000/localrss.xml\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
-sed -i "s|rss_server_v2=.*$|rss_server_v2=\"http://localhost:5000/localrss.json\"|g" "${RAMDISK_PATH}/etc/synoinfo.conf"
 
 # Enable Telnet
 echo "inetd" >> "${RAMDISK_PATH}/addons/addons.sh"
