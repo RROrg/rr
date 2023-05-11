@@ -40,7 +40,6 @@ function addToModules() {
   rm -rf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar" "${TMP_PATH}/modules"
 }
 
-
 ###############################################################################
 # del a ko of modules.tgz
 # 1 - Platform
