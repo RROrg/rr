@@ -987,8 +987,9 @@ function advancedMenu() {
       f) ITEMS=""
         while read POSITION NAME; do
           [ -z "${POSITION}" -o -z "${NAME}" ] && continue
+          echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
           ITEMS+="`printf "%s %s off " "${POSITION}" "${NAME}"`"
-        done < <(ls -l /dev/disk/by-id/ | grep -v "${LOADER_DEVICE_NAME}" | sed 's|../..|/dev|g' | awk -F' ' '{print $11" "$9}' | sort -uk 1,1)
+        done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd*" | awk -F' ' '{print $10" "$8}' | sort -uk 1,1)
         dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
           --checklist "$(TEXT "Advanced")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
         [ $? -ne 0 ] && return
@@ -997,6 +998,14 @@ function advancedMenu() {
         dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
             --yesno "$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")" 0 0
         [ $? -ne 0 ] && return
+        if [ `ls /dev/md* | wc -l` -gt 0 ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
+              --yesno "$(TEXT "Warning:\nThe current hds is in raid, do you still want to format them?")" 0 0
+          [ $? -ne 0 ] && return
+          for I in `ls /dev/md*`; do
+            mdadm -S ${I}
+          done
+        fi
         (
           for I in ${RESP}; do
             mkfs.ext4 -F -O ^metadata_csum ${I}
