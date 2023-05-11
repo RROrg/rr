@@ -1073,7 +1073,7 @@ function advancedMenu() {
         dialog --backtitle "`backtitle`" --title "$(TEXT "Backup bootloader disk")" \
           --infobox "$(TEXT "Backuping...")" 0 0
         dd if="${LOADER_DISK}" | gzip > backup.img.gz
-        sz backup.img.gz
+        sz -be backup.img.gz
         rm -f backup.img.gz
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "$(TEXT "backup is complete.")" 0 0
