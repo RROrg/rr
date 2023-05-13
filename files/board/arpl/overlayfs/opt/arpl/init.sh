@@ -24,7 +24,7 @@ fi
 # Check partitions and ignore errors
 fsck.vfat -aw ${LOADER_DISK}1 >/dev/null 2>&1 || true
 fsck.ext2 -p ${LOADER_DISK}2 >/dev/null 2>&1 || true
-fsck.ext2 -p ${LOADER_DISK}3 >/dev/null 2>&1 || true
+fsck.ext4 -p ${LOADER_DISK}3 >/dev/null 2>&1 || true
 # Make folders to mount partitions
 mkdir -p ${BOOTLOADER_PATH}
 mkdir -p ${SLPART_PATH}
