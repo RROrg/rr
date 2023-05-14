@@ -11,7 +11,7 @@ GRUB=${1:-"grub-2.06"}
 BIOS=${2:-"i386-pc i386-efi x86_64-efi"}
 
 curl -#kLO https://ftp.gnu.org/gnu/grub/${GRUB}.tar.gz
-tar zxvf ${GRUB}.tar.gz
+tar -zxvf ${GRUB}.tar.gz
 
 pushd ${GRUB}
 for B in ${BIOS}

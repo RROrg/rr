@@ -175,7 +175,7 @@ jobs:
           while read F; do
             if [ -d "${F}" ]; then
               FTGZ="`basename "${F}"`.tgz"
-              tar czf "${FTGZ}" -C "${F}" .
+              tar -czf "${FTGZ}" -C "${F}" .
               sha256sum "${FTGZ}" >> sha256sum
               zip -9j update.zip "${FTGZ}"
               rm "${FTGZ}"
