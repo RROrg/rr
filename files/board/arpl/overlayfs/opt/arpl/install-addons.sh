@@ -10,6 +10,6 @@ for F in `ls ${CACHE_PATH}/*.addon 2>/dev/null`; do
   rm -rf "${ADDONS_PATH}/${ADDON}"
   mkdir -p "${ADDONS_PATH}/${ADDON}"
   echo "Installing ${F} to ${ADDONS_PATH}/${ADDON}"
-  tar xaf "${F}" -C "${ADDONS_PATH}/${ADDON}"
+  tar -xaf "${F}" -C "${ADDONS_PATH}/${ADDON}"
   rm -f "${F}"
 done
