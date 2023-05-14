@@ -16,7 +16,7 @@ done
 if [ -z "${LOADER_DISK}" ]; then
   die "$(TEXT "Loader disk not found!")"
 fi
-NUM_PARTITIONS=$(blkid | grep "${LOADER_DISK}" | cut -d: -f1 | wc -l)
+NUM_PARTITIONS=$(blkid | grep "${LOADER_DISK}[0-9]\+" | cut -d: -f1 | wc -l)
 if [ $NUM_PARTITIONS -ne 3 ]; then
   die "$(TEXT "Loader disk not found!")"
 fi
@@ -74,7 +74,7 @@ ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
 # If user config file not exists, initialize it
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
   touch "${USER_CONFIG_FILE}"
-  writeConfigKey "lkm" "dev" "${USER_CONFIG_FILE}"
+  writeConfigKey "lkm" "prod" "${USER_CONFIG_FILE}"
   writeConfigKey "directboot" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "model" "" "${USER_CONFIG_FILE}"
   writeConfigKey "build" "" "${USER_CONFIG_FILE}"
