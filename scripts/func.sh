@@ -74,7 +74,7 @@ function getLKMs() {
     rm -f "${CACHE_FILE}"
     TAG=`curl -s "https://api.github.com/repos/wjz304/redpill-lkm/releases/latest" | grep -oP '"tag_name": "\K(.*)(?=")'`
     STATUS=`curl -w "%{http_code}" -L "https://github.com/wjz304/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o "${CACHE_FILE}"`
-    echo "Status=${STATUS}"
+    echo "TAG=${TAG}; Status=${STATUS}"
     [ ${STATUS} -ne 200 ] && exit 1
     # Unzip LKMs
     rm -rf "${DEST_PATH}"; mkdir -p "${DEST_PATH}"
@@ -93,7 +93,7 @@ function getAddons() {
     local CACHE_FILE="/tmp/addons.zip"
     TAG=`curl -s https://api.github.com/repos/wjz304/arpl-addons/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")'`
     STATUS=`curl -w "%{http_code}" -L "https://github.com/wjz304/arpl-addons/releases/download/${TAG}/addons.zip" -o "${CACHE_FILE}"`
-    echo "Status=${STATUS}"
+    echo "TAG=${TAG}; Status=${STATUS}"
     [ ${STATUS} -ne 200 ] && exit 1
     rm -rf "${DEST_PATH}"; mkdir -p "${DEST_PATH}"
     # Install Addons
@@ -105,7 +105,7 @@ function getAddons() {
       ADDON=`basename "${PKG}" .addon`
       mkdir -p "${DEST_PATH}/${ADDON}"
       echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
-      tar xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
+      tar -xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
     done
     echo "Getting Addons end"
 }
@@ -120,7 +120,7 @@ function getModules() {
     rm -f "${CACHE_FILE}"
     TAG=`curl -s https://api.github.com/repos/wjz304/arpl-modules/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")'`
     STATUS=`curl -w "%{http_code}" -L "https://github.com/wjz304/arpl-modules/releases/download/${TAG}/modules.zip" -o "${CACHE_FILE}"`
-    echo "Status=${STATUS}"
+    echo "TAG=${TAG}; Status=${STATUS}"
     [ ${STATUS} -ne 200 ] && exit 1
     # Unzip Modules
     rm -rf "${DEST_PATH}"; mkdir -p "${DEST_PATH}"
