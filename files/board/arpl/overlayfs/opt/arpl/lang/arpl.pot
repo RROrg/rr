@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-11 10:46+0800\n"
+"POT-Creation-Date: 2023-05-15 00:45+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgid "DSM zImage changed"
 msgstr ""
 
 #: boot.sh:27 boot.sh:39 menu.sh:705 menu.sh:731 menu.sh:800 menu.sh:811
-#: menu.sh:840 menu.sh:853 menu.sh:860
+#: menu.sh:840 menu.sh:853 menu.sh:860 menu.sh:1078
 msgid "Error"
 msgstr ""
 
@@ -205,7 +205,7 @@ msgstr ""
 msgid "Reconfiguring Synoinfo, Addons and Modules"
 msgstr ""
 
-#: menu.sh:191 menu.sh:240 menu.sh:359 menu.sh:473 menu.sh:586 menu.sh:1255
+#: menu.sh:191 menu.sh:240 menu.sh:359 menu.sh:473 menu.sh:586 menu.sh:1271
 msgid "Choose a option"
 msgstr ""
 
@@ -221,7 +221,7 @@ msgstr ""
 msgid "Please enter a serial number "
 msgstr ""
 
-#: menu.sh:210 menu.sh:543 menu.sh:1202 menu.sh:1479
+#: menu.sh:210 menu.sh:543 menu.sh:1218 menu.sh:1495
 msgid "Alert"
 msgstr ""
 
@@ -249,8 +249,8 @@ msgstr ""
 msgid "Download a external addon"
 msgstr ""
 
-#: menu.sh:246 menu.sh:365 menu.sh:470 menu.sh:582 menu.sh:902 menu.sh:1261
-#: menu.sh:1529
+#: menu.sh:246 menu.sh:365 menu.sh:470 menu.sh:582 menu.sh:902 menu.sh:1277
+#: menu.sh:1545
 msgid "Exit"
 msgstr ""
 
@@ -318,7 +318,7 @@ msgstr ""
 msgid "File format not recognized!"
 msgstr ""
 
-#: menu.sh:347 menu.sh:376 menu.sh:387 menu.sh:400 menu.sh:406 menu.sh:1509
+#: menu.sh:347 menu.sh:376 menu.sh:387 menu.sh:400 menu.sh:406 menu.sh:1525
 msgid "Modules"
 msgstr ""
 
@@ -598,7 +598,7 @@ msgstr ""
 msgid "Addon %s not found!"
 msgstr ""
 
-#: menu.sh:865 menu.sh:1548
+#: menu.sh:865 menu.sh:1564
 msgid "Cleaning"
 msgstr ""
 
@@ -658,7 +658,7 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: menu.sh:905 menu.sh:1532
+#: menu.sh:905 menu.sh:1548
 msgid "Choose the option"
 msgstr ""
 
@@ -725,7 +725,7 @@ msgstr ""
 msgid "Formatting is complete."
 msgstr ""
 
-#: menu.sh:1020 menu.sh:1071 menu.sh:1108
+#: menu.sh:1020 menu.sh:1071 menu.sh:1124
 msgid ""
 "Warning:\\nDo not terminate midway, otherwise it may cause damage to the "
 "arpl. Do you want to continue?"
@@ -739,7 +739,7 @@ msgstr ""
 msgid "Persisting is complete."
 msgstr ""
 
-#: menu.sh:1037 menu.sh:1067 menu.sh:1084
+#: menu.sh:1037 menu.sh:1067 menu.sh:1100
 msgid "This feature is only available when accessed via web/ssh."
 msgstr ""
 
@@ -770,234 +770,253 @@ msgid "Backuping..."
 msgstr ""
 
 #: menu.sh:1079
-msgid "backup is complete."
+msgid ""
+"Failed to generate backup. There may be insufficient memory. Please clear "
+"the cache and try again!"
 msgstr ""
 
-#: menu.sh:1087 menu.sh:1104 menu.sh:1107 menu.sh:1110 menu.sh:1118
-msgid "Restore bootloader disk"
+#: menu.sh:1086
+msgid "Click on the address above to download."
+msgstr ""
+
+#: menu.sh:1087
+msgid ""
+"Please confirm the completion of the download before closing this window."
 msgstr ""
 
 #: menu.sh:1088
+msgid "backup.img.gz download link"
+msgstr ""
+
+#: menu.sh:1094
+msgid "backup is complete."
+msgstr ""
+
+#: menu.sh:1103 menu.sh:1120 menu.sh:1123 menu.sh:1126 menu.sh:1134
+msgid "Restore bootloader disk"
+msgstr ""
+
+#: menu.sh:1104
 msgid ""
 "Please upload the backup file.\\nCurrently, zip(github) and img.gz(backup) "
 "compressed file formats are supported."
 msgstr ""
 
-#: menu.sh:1105
+#: menu.sh:1121
 msgid "Not a valid .zip/.img.gz file, please try again!"
 msgstr ""
 
-#: menu.sh:1111
+#: menu.sh:1127
 msgid "Writing..."
 msgstr ""
 
-#: menu.sh:1119
+#: menu.sh:1135
 msgid "Restore bootloader disk with success to %s!\\nReboot?"
 msgstr ""
 
-#: menu.sh:1133 menu.sh:1161 menu.sh:1168
+#: menu.sh:1149 menu.sh:1177 menu.sh:1184
 msgid "Try recovery DSM"
 msgstr ""
 
-#: menu.sh:1134
+#: menu.sh:1150
 msgid "Trying to recovery a DSM installed system"
 msgstr ""
 
-#: menu.sh:1155
+#: menu.sh:1171
 msgid "Found a installation:\\nModel: %s\\nBuildnumber: %s"
 msgstr ""
 
-#: menu.sh:1159
+#: menu.sh:1175
 msgid "\\nSerial: %s"
 msgstr ""
 
-#: menu.sh:1169
+#: menu.sh:1185
 msgid "Unfortunately I couldn't mount the DSM partition!"
 msgstr ""
 
-#: menu.sh:1177
+#: menu.sh:1193
 msgid "Edit with caution"
 msgstr ""
 
-#: menu.sh:1183
+#: menu.sh:1199
 msgid "Invalid YAML format"
 msgstr ""
 
-#: menu.sh:1203
+#: menu.sh:1219
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr ""
 
-#: menu.sh:1215 menu.sh:1523
+#: menu.sh:1231 menu.sh:1539
 msgid "Choose a language"
 msgstr ""
 
-#: menu.sh:1228
+#: menu.sh:1244
 msgid "Choose a layout"
 msgstr ""
 
-#: menu.sh:1238
+#: menu.sh:1254
 msgid "Choice a keymap"
 msgstr ""
 
-#: menu.sh:1256 menu.sh:1266 menu.sh:1274 menu.sh:1280 menu.sh:1284
-#: menu.sh:1289 menu.sh:1295 menu.sh:1302 menu.sh:1311 menu.sh:1316
-#: menu.sh:1333
+#: menu.sh:1272 menu.sh:1282 menu.sh:1290 menu.sh:1296 menu.sh:1300
+#: menu.sh:1305 menu.sh:1311 menu.sh:1318 menu.sh:1327 menu.sh:1332
+#: menu.sh:1349
 msgid "Update arpl"
 msgstr ""
 
-#: menu.sh:1257 menu.sh:1341 menu.sh:1349 menu.sh:1355 menu.sh:1359
-#: menu.sh:1363 menu.sh:1367 menu.sh:1372 menu.sh:1383
+#: menu.sh:1273 menu.sh:1357 menu.sh:1365 menu.sh:1371 menu.sh:1375
+#: menu.sh:1379 menu.sh:1383 menu.sh:1388 menu.sh:1399
 msgid "Update addons"
 msgstr ""
 
-#: menu.sh:1258 menu.sh:1388 menu.sh:1396 menu.sh:1402 menu.sh:1406
-#: menu.sh:1410 menu.sh:1425
+#: menu.sh:1274 menu.sh:1404 menu.sh:1412 menu.sh:1418 menu.sh:1422
+#: menu.sh:1426 menu.sh:1441
 msgid "Update modules"
 msgstr ""
 
-#: menu.sh:1259 menu.sh:1430 menu.sh:1438 menu.sh:1444 menu.sh:1448
-#: menu.sh:1452 menu.sh:1456 menu.sh:1461
+#: menu.sh:1275 menu.sh:1446 menu.sh:1454 menu.sh:1460 menu.sh:1464
+#: menu.sh:1468 menu.sh:1472 menu.sh:1477
 msgid "Update LKMs"
 msgstr ""
 
-#: menu.sh:1260
+#: menu.sh:1276
 msgid "Set proxy server"
 msgstr ""
 
-#: menu.sh:1267 menu.sh:1342 menu.sh:1389 menu.sh:1431
+#: menu.sh:1283 menu.sh:1358 menu.sh:1405 menu.sh:1447
 msgid "Checking last version"
 msgstr ""
 
-#: menu.sh:1275 menu.sh:1350 menu.sh:1397 menu.sh:1439
+#: menu.sh:1291 menu.sh:1366 menu.sh:1413 menu.sh:1455
 msgid "Error checking new version"
 msgstr ""
 
-#: menu.sh:1281 menu.sh:1356 menu.sh:1403 menu.sh:1445
+#: menu.sh:1297 menu.sh:1372 menu.sh:1419 menu.sh:1461
 msgid "No new version. Actual version is %s\\nForce update?"
 msgstr ""
 
-#: menu.sh:1285
+#: menu.sh:1301
 msgid "Downloading last version %s"
 msgstr ""
 
-#: menu.sh:1290
+#: menu.sh:1306
 msgid "Error downloading update file"
 msgstr ""
 
-#: menu.sh:1296
+#: menu.sh:1312
 msgid "Error extracting update file"
 msgstr ""
 
-#: menu.sh:1303
+#: menu.sh:1319
 msgid "Checksum do not match!"
 msgstr ""
 
-#: menu.sh:1312
+#: menu.sh:1328
 msgid ""
 "The current version does not support upgrading to the latest update.zip. "
 "Please remake the bootloader disk!"
 msgstr ""
 
-#: menu.sh:1317
+#: menu.sh:1333
 msgid "Installing new files"
 msgstr ""
 
-#: menu.sh:1334
+#: menu.sh:1350
 msgid "Arpl updated with success to %s!\\nReboot?"
 msgstr ""
 
-#: menu.sh:1360 menu.sh:1407 menu.sh:1449
+#: menu.sh:1376 menu.sh:1423 menu.sh:1465
 msgid "Downloading last version"
 msgstr ""
 
-#: menu.sh:1364
+#: menu.sh:1380
 msgid "Error downloading new version"
 msgstr ""
 
-#: menu.sh:1368 menu.sh:1457
+#: menu.sh:1384 menu.sh:1473
 msgid "Extracting last version"
 msgstr ""
 
-#: menu.sh:1373
+#: menu.sh:1389
 msgid "Installing new addons"
 msgstr ""
 
-#: menu.sh:1384
+#: menu.sh:1400
 msgid "Addons updated with success!"
 msgstr ""
 
-#: menu.sh:1411 menu.sh:1453
+#: menu.sh:1427 menu.sh:1469
 msgid "Error downloading last version"
 msgstr ""
 
-#: menu.sh:1426
+#: menu.sh:1442
 msgid "Modules updated with success!"
 msgstr ""
 
-#: menu.sh:1462
+#: menu.sh:1478
 msgid "LKMs updated with success!"
 msgstr ""
 
-#: menu.sh:1468
+#: menu.sh:1484
 msgid "Set Proxy Server"
 msgstr ""
 
-#: menu.sh:1469
+#: menu.sh:1485
 msgid "Please enter a proxy server url"
 msgstr ""
 
-#: menu.sh:1480
+#: menu.sh:1496
 msgid "Invalid proxy server url, continue?"
 msgstr ""
 
-#: menu.sh:1503
+#: menu.sh:1519
 msgid "Choose a model"
 msgstr ""
 
-#: menu.sh:1505
+#: menu.sh:1521
 msgid "Choose a Build Number"
 msgstr ""
 
-#: menu.sh:1506
+#: menu.sh:1522
 msgid "Choose a serial number"
 msgstr ""
 
-#: menu.sh:1508
+#: menu.sh:1524
 msgid "Addons"
 msgstr ""
 
-#: menu.sh:1510
+#: menu.sh:1526
 msgid "Cmdline menu"
 msgstr ""
 
-#: menu.sh:1511
+#: menu.sh:1527
 msgid "Synoinfo menu"
 msgstr ""
 
-#: menu.sh:1514
+#: menu.sh:1530
 msgid "Advanced menu"
 msgstr ""
 
-#: menu.sh:1517
+#: menu.sh:1533
 msgid "Build the loader"
 msgstr ""
 
-#: menu.sh:1521
+#: menu.sh:1537
 msgid "Boot the loader"
 msgstr ""
 
-#: menu.sh:1524
+#: menu.sh:1540
 msgid "Choose a keymap"
 msgstr ""
 
-#: menu.sh:1526
+#: menu.sh:1542
 msgid "Clean disk cache"
 msgstr ""
 
-#: menu.sh:1528
+#: menu.sh:1544
 msgid "Update menu"
 msgstr ""
 
-#: menu.sh:1555
+#: menu.sh:1571
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr ""
