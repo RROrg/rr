@@ -107,7 +107,7 @@ echo -n "."
 # Extract modules to ramdisk
 rm -rf "${TMP_PATH}/modules"
 mkdir -p "${TMP_PATH}/modules"
-gzip -dc "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" | tar xf - -C "${TMP_PATH}/modules"
+tar -zxf "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" -C "${TMP_PATH}/modules"
 for F in `ls "${TMP_PATH}/modules/"*.ko`; do
   M=`basename ${F}`
   if arrayExistItem "${M:0:-3}" "${!USERMODULES[@]}"; then
@@ -117,7 +117,7 @@ for F in `ls "${TMP_PATH}/modules/"*.ko`; do
   fi
 done
 mkdir -p "${RAMDISK_PATH}/usr/lib/firmware"
-gzip -dc "${MODULES_PATH}/firmware.tgz" | tar xf - -C "${RAMDISK_PATH}/usr/lib/firmware"
+tar -zxf "${MODULES_PATH}/firmware.tgz" -C "${RAMDISK_PATH}/usr/lib/firmware"
 # Clean
 rm -rf "${TMP_PATH}/modules"
 
