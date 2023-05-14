@@ -957,8 +957,8 @@ function advancedMenu() {
         if [ ! -f "${TMP_PATH}/patdownloadurl" ]; then
           echo "`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`" > "${TMP_PATH}/patdownloadurl"
         fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "*.pat download link")" \
-          --editbox "${TMP_PATH}/patdownloadurl" 0 0
+        dialog --backtitle "`backtitle`" --title "$(TEXT "*.pat download link")" --aspect 18 \
+          --editbox "${TMP_PATH}/patdownloadurl" 10 100
         ;;
       a)
         MSG=""
@@ -1072,11 +1072,27 @@ function advancedMenu() {
         [ $? -ne 0 ] && return
         dialog --backtitle "`backtitle`" --title "$(TEXT "Backup bootloader disk")" \
           --infobox "$(TEXT "Backuping...")" 0 0
-        dd if="${LOADER_DISK}" | gzip > backup.img.gz
-        sz -be backup.img.gz
-        rm -f backup.img.gz
-          dialog --backtitle "`backtitle`" --colors --aspect 18 \
+        rm -f /var/www/data/backup.img.gz  # thttpd root path
+        dd if="${LOADER_DISK}" bs=1M conv=fsync | gzip > /var/www/data/backup.img.gz
+        if [ $? -ne 0]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Error")" --aspect 18 \
+            --msgbox "$(TEXT "Failed to generate backup. There may be insufficient memory. Please clear the cache and try again!")" 0 0
+          return
+        fi
+        if [ -z "${SSH_TTY}" ]; then  # web
+          IP_HEAD="`ip route show 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p' | head -1`"
+          echo "http://${IP_HEAD}/backup.img.gz"  > ${TMP_PATH}/resp
+          echo "            ↑                  " >> ${TMP_PATH}/resp
+          echo "$(TEXT "Click on the address above to download.")" >> ${TMP_PATH}/resp
+          echo "$(TEXT "Please confirm the completion of the download before closing this window.")" >> ${TMP_PATH}/resp
+          dialog --backtitle "`backtitle`" --title "$(TEXT "backup.img.gz download link")" --aspect 18 \
+           --editbox "${TMP_PATH}/resp" 10 100
+        else                          # ssh
+          sz -be /var/www/data/backup.img.gz
+        fi
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
             --msgbox "$(TEXT "backup is complete.")" 0 0
+        rm -f /var/www/data/backup.img.gz
         ;;
       r)
         if ! tty | grep -q "/dev/pts"; then
@@ -1174,7 +1190,7 @@ function tryRecoveryDSM() {
 # Permits user edit the user config
 function editUserConfig() {
   while true; do
-    dialog --backtitle "`backtitle`" --title "$(TEXT "Edit with caution")" \
+    dialog --backtitle "`backtitle`" --title "$(TEXT "Edit with caution")" --aspect 18 \
       --editbox "${USER_CONFIG_FILE}" 0 0 2>"${TMP_PATH}/userconfig"
     [ $? -ne 0 ] && return
     mv "${TMP_PATH}/userconfig" "${USER_CONFIG_FILE}"
