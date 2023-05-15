@@ -153,6 +153,11 @@ function buildMenu() {
        --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
       buildMenu
     fi
+    if [ ! "usb" = "`udevadm info --query property --name ${LOADER_DISK} | grep BUS | cut -d= -f2`" -a "${KVER:0:1}" = "5" ]; then
+      dialog --backtitle "`backtitle`" --title "$(TEXT "Build Number")" --aspect 18 \
+       --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
+      buildMenu
+    fi
     dialog --backtitle "`backtitle`" --title "$(TEXT "Build Number")" \
       --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
     BUILD=${resp}
