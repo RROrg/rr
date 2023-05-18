@@ -3,16 +3,18 @@ synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
   support_led_brightness_adjustment: "no"
+  support_syno_hybrid_raid:
+  supportraidgroup:
+  maxlanport: "8"
+  netif_seq: "0 1 2 3 4 5 6 7"
   #rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   #rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   #rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
-  support_syno_hybrid_raid:
-  supportraidgroup:
 cmdline: &cmdline
   intel_iommu: "igfx_off"
+  synoboot2:
   SMBusHddDynamicPower: 1
   vender_format_version: 2
-  synoboot2:
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
   elevator: elevator

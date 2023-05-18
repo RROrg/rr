@@ -3,16 +3,18 @@ synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
   support_led_brightness_adjustment: "no"
+  support_syno_hybrid_raid:
+  supportraidgroup:
+  maxlanport: "8"
+  netif_seq: "0 1 2 3 4 5 6 7"
   esataportcfg: "0x00"
   #rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
   #rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
-  support_syno_hybrid_raid:
-  supportraidgroup:
 cmdline: &cmdline
-  syno_hdd_powerup_seq: 0
   HddHotplug: 0
-  vender_format_version: 2
   syno_hdd_detect: 0
+  syno_hdd_powerup_seq: 0
+  vender_format_version: 2
   elevator: elevator
 platform: "braswell"
 unique: "synology_braswell_916+"
