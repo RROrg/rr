@@ -52,7 +52,7 @@ function delToModules() {
   mkdir -p "${TMP_PATH}/modules"
   tar -zxf "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" -C "${TMP_PATH}/modules"
   rm -f ${TMP_PATH}/modules/${KONAME}
-  tar -zcf "${MODULES_PATH}/${PLATFORM}-${KVER}.tar" -C "${TMP_PATH}/modules" .
+  tar -zcf "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" -C "${TMP_PATH}/modules" .
 }
 
 ###############################################################################
