@@ -363,6 +363,7 @@ function moduleMenu() {
     dialog --backtitle "`backtitle`"  --default-item ${NEXT} \
       --menu "$(TEXT "Choose a option")" 0 0 0 \
       s "$(TEXT "Show selected modules")" \
+      l "$(TEXT "Select loaded modules")" \
       a "$(TEXT "Select all modules")" \
       d "$(TEXT "Deselect all modules")" \
       c "$(TEXT "Choose modules to include")" \
@@ -377,6 +378,21 @@ function moduleMenu() {
         done
         dialog --backtitle "`backtitle`" --title "$(TEXT "User modules")" \
           --msgbox "${ITEMS}" 0 0
+        ;;
+      l) dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" \
+           --infobox "$(TEXT "Selecting loaded modules")" 0 0
+        KOLIST=""
+        for I in `lsmod | awk -F' ' '{print $1}' | grep -v 'Module'`; do
+          KOLIST+="`getdepends ${PLATFORM} ${KVER} ${I}` ${I} "
+        done
+        KOLIST=(`echo ${KOLIST} | tr ' ' '\n' | sort -u`)
+        unset USERMODULES
+        declare -A USERMODULES
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        for ID in ${KOLIST[@]}; do
+          USERMODULES["${ID}"]=""
+          writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+        done
         ;;
       a) dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" \
            --infobox "$(TEXT "Selecting all modules")" 0 0
@@ -645,20 +661,11 @@ function synoinfoMenu() {
 ###############################################################################
 # Extract linux and ramdisk files from the DSM .pat
 function extractDsmFiles() {
-  # echo "$(TEXT "Get Online hash...")"
-  # REPO_URL="https://raw.githubusercontent.com/wjz304/arpl-i18n/main/files/board/arpl/overlayfs/opt/arpl/model-configs/${MODEL//+/\%2B}.yml"
-  # curl -skL -m 5 "${REPO_URL}" -o "/tmp/REPO_MODEL.yml"
-  # PAT_URL="`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`"
-  # PAT_HASH="`readConfigKey "builds.${BUILD}.pat.hash" "/tmp/REPO_MODEL.yml"`"
-  # RAMDISK_HASH="`readConfigKey "builds.${BUILD}.pat.ramdisk-hash" "/tmp/REPO_MODEL.yml"`"
-  # ZIMAGE_HASH="`readConfigKey "builds.${BUILD}.pat.zimage-hash" "/tmp/REPO_MODEL.yml"`"
-  # if [ -z "${PAT_URL}" -o -z "${PAT_HASH}" -o -z "${RAMDISK_HASH}" -o -z "${ZIMAGE_HASH}" ]; then
-  #   echo "$(TEXT "Get Offline hash...")"
-    PAT_URL="`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`"
-    PAT_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.hash"`"
-    RAMDISK_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.ramdisk-hash"`"
-    ZIMAGE_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.zimage-hash"`"
-  # fi
+  PAT_URL="`readModelKey "${MODEL}" "builds.${BUILD}.pat.url"`"
+  PAT_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.hash"`"
+  RAMDISK_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.ramdisk-hash"`"
+  ZIMAGE_HASH="`readModelKey "${MODEL}" "builds.${BUILD}.pat.zimage-hash"`"
+
   SPACELEFT=`df --block-size=1 | awk '/'${LOADER_DEVICE_NAME}'3/{print $4}'`  # Check disk space left
 
   PAT_FILE="${MODEL}-${BUILD}.pat"
@@ -904,6 +911,7 @@ function advancedMenu() {
       echo "b \"$(TEXT "Backup bootloader disk # test")\""             >> "${TMP_PATH}/menu"
       echo "r \"$(TEXT "Restore bootloader disk # test")\""            >> "${TMP_PATH}/menu"
     fi
+    echo "o \"$(TEXT "Development tools")\""                         >> "${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\""                                      >> "${TMP_PATH}/menu"
 
     dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
@@ -1030,7 +1038,7 @@ function advancedMenu() {
         mkdir -p "${RDXZ_PATH}"
         (cd "${RDXZ_PATH}"; xz -dc < "/mnt/p3/initrd-arpl" | cpio -idm) >/dev/null 2>&1 || true
         rm -rf "${RDXZ_PATH}/opt/arpl"
-        cp -rf "/opt/arpl" "${RDXZ_PATH}/opt"
+        cp -rf "/opt" "${RDXZ_PATH}/"
         (cd "${RDXZ_PATH}"; find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 > "/mnt/p3/initrd-arpl") || true
         rm -rf "${RDXZ_PATH}"
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
@@ -1142,6 +1150,21 @@ function advancedMenu() {
           reboot
           exit
         fi
+        ;;
+      o)
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Development tools")" --aspect 18 \
+            --yesno "$(TEXT "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?")" 0 0
+        [ $? -ne 0 ] && return
+        (
+          wget -O - http://bin.entware.net/x64-k3.2/installer/generic.sh | /bin/sh
+          sed -i 's|:/opt/arpl|:/opt/bin:/opt/arpl|' ~/.bashrc
+          source ~/.bashrc
+          opkg update
+          #opkg install python3 python3-pip
+        ) | dialog --backtitle "`backtitle`" --title "$(TEXT "Development tools")" \
+            --progressbox "$(TEXT "opkg installing ...")" 20 70
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
+          --msgbox "$(TEXT "opkg install is complete. Please reconnect to SSH/web, or execute 'source ~/.bashrc'")" 0 0
         ;;
       e) break ;;
     esac
