@@ -680,7 +680,7 @@ function extractDsmFiles() {
     speed_a=`ping -c 1 -W 5 global.synologydownload.com | awk '/time=/ {print $7}' | cut -d '=' -f 2`
     speed_b=`ping -c 1 -W 5 global.download.synology.com | awk '/time=/ {print $7}' | cut -d '=' -f 2`
     speed_c=`ping -c 1 -W 5 cndl.synology.cn | awk '/time=/ {print $7}' | cut -d '=' -f 2`
-    fastest="`echo -e "global.synologydownload.com ${speed_a}\nglobal.download.synology.com ${speed_b}\ncndl.synology.cn ${speed_c}" | sort -k2n | head -1 | awk '{print $1}'`"
+    fastest="`echo -e "global.synologydownload.com ${speed_a:-999}\nglobal.download.synology.com ${speed_b:-999}\ncndl.synology.cn ${speed_c:-999}" | sort -k2n | head -1 | awk '{print $1}'`"
     
     mirror="`echo ${PAT_URL} | sed 's|^http[s]*://\([^/]*\).*|\1|'`"
     if [ "${mirror}" != "${fastest}" ]; then
