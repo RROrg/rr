@@ -26,7 +26,7 @@ if [ -f ${BOOTLOADER_PATH}/.locale ]; then
 fi
 
 if [ -d /opt/arpl/lang ]; then
-  for F in "`ls /opt/arpl/lang/*.mo`"
+  for F in `ls /opt/arpl/lang/*.mo`
   do
     install "${F}" "/usr/share/locale/$(basename $F .mo)/LC_MESSAGES/arpl.mo"
   done

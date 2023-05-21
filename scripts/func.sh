@@ -13,7 +13,7 @@ function convertpo2mo() {
     echo "Convert po2mo begin"
     local DEST_PATH="${1:-lang}"
     if [ `find ${DEST_PATH}/ -name "*.po" | wc -l` -gt 0 ]; then
-      for P in "`ls ${DEST_PATH}/*.po`"
+      for P in `ls ${DEST_PATH}/*.po`
       do
         # Use msgfmt command to compile the .po file into a binary .mo file
         echo "msgfmt ${P} to ${P/.po/.mo}"
