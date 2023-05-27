@@ -1030,8 +1030,53 @@ function advancedMenu() {
           --msgbox "$(TEXT "Formatting is complete.")" 0 0
         ;;
       x)
+        SHADOW_FILE=""
+        mkdir -p /tmp/sdX1
+        for I in `ls /dev/sd*1 2>/dev/null | grep -v ${LOADER_DISK}1`; do
+          mount ${I} /tmp/sdX1
+          if [ -f "/tmp/sdX1/etc/shadow" ]; then
+            cp "/tmp/sdX1/etc/shadow" "/tmp/shadow_bak"
+            SHADOW_FILE="/tmp/shadow_bak"
+          fi
+          umount ${I}
+          [ -n "${SHADOW_FILE}" ] && break
+        done
+        rm -rf /tmp/sdX1
+        if [ -z "${SHADOW_FILE}" ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Error")" --aspect 18 \
+            --msgbox "$(TEXT "The installed Syno system not found in the currently inserted disks!")" 0 0
+          return
+        fi
+        ITEMS="`cat ${SHADOW_FILE} | awk -F ':' '{if ($2 != "*" && $2 != "!!") {print $1;}}'`"
+        dialog --clear --no-items --backtitle "`backtitle`" --title "$(TEXT "Reset syno system password")" \
+              --menu "$(TEXT "Choose a user name")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && return
+        USER=$(<${TMP_PATH}/resp)
+        [ -z "${USER}" ] && return
+        OLDPASSWD=`cat ${SHADOW_FILE} | grep "^${USER}:" | awk -F ':' '{print $2}'`
+
+        dialog --backtitle "`backtitle`" --title "$(TEXT "Reset syno system password")" \
+          --inputbox "`printf "$(TEXT "Type a new password for user '%s'")" "${NAME}"`" 0 0 "${CMDLINE[${NAME}]}" \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && return
+        VALUE="`<"${TMP_PATH}/resp"`"
+        NEWPASSWD=`python -c "import crypt,getpass;pw=\"${VALUE}\";print(crypt.crypt(pw))"`
+        (
+          mkdir -p /tmp/sdX1
+          for I in `ls /dev/sd*1 2>/dev/null | grep -v ${LOADER_DISK}1`; do
+            mount ${I} /tmp/sdX1
+            sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "/tmp/sdX1/etc/shadow"
+            sync
+            umount ${I}
+          done
+          rm -rf /tmp/sdX1
+        ) | dialog --backtitle "`backtitle`" --title "$(TEXT "Reset syno system password")" \
+            --progressbox "$(TEXT "Resetting ...")" 20 70
+        [ -f "${SHADOW_FILE}" ] && rm -rf "${SHADOW_FILE}"
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
-          --msgbox "$(TEXT "You came early, this function has not been implemented yet, hahaha!")" 0 0
+          --msgbox "$(TEXT "Password reset completed.")" 0 0
+        # dialog --backtitle "`backtitle`" --colors --aspect 18 \
+        #   --msgbox "$(TEXT "You came early, this function has not been implemented yet, hahaha!")" 0 0
         ;;
       p) 
         dialog --backtitle "`backtitle`" --title "$(TEXT "Persistence of arpl modifications")" \
