@@ -60,7 +60,7 @@ fi
 declare -A CMDLINE
 
 # Fixed values
-CMDLINE['netif_num']=0
+#CMDLINE['netif_num']=0
 # Automatic values
 CMDLINE['syno_hw_version']="${MODEL}"
 [ -z "${VID}" ] && VID="0x0000" # Sanity check
@@ -97,22 +97,25 @@ for N in `seq 1 8`; do  # Currently, only up to 8 are supported.  (<==> menu.sh 
   [ -n "${CMDLINE["mac${N}"]}" ] && MACS+=(${CMDLINE["mac${N}"]})
 done
 NETIF_NUM=${#MACS[*]}
-# set netif_num to custom mac amount, netif_num must be equal to the MACX amount, otherwise the kernel will panic.
-CMDLINE["netif_num"]=${NETIF_NUM}  # The current original CMDLINE['netif_num'] is no longer in use, Consider deleting.
-# real network cards amount
-NETRL_NUM=`ls /sys/class/net/ | grep eth | wc -l`
-if [ ${NETIF_NUM} -le ${NETRL_NUM} ]; then
-  echo -e "\033[1;33m*** `printf "$(TEXT "Detected %s network cards, but only %s MACs were customized, the rest will use the original MACs.")" "${NETRL_NUM}" "${CMDLINE["netif_num"]}"` ***\033[0m"
-  ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
-  for N in `seq $(expr ${NETIF_NUM} + 1) ${NETRL_NUM}`; do 
-    MACR="`cat /sys/class/net/${ETHX[$(expr ${N} - 1)]}/address | sed 's/://g'`"
-    # no duplicates
-    while [[ "${MACS[*]}" =~ "$MACR" ]]; do # no duplicates
-      MACR="${MACR:0:10}`printf "%02x" $((0x${MACR:10:2} + 1))`" 
+NETRL_NUM=`ls /sys/class/net/ | grep eth | wc -l` # real network cards amount
+if [ ${NETIF_NUM} -eq 0 ]; then
+  echo -e "\033[1;33m*** `printf "$(TEXT "Detected %s network cards, but No MACs were customized, they will use the original MACs.")" "${NETRL_NUM}"` ***\033[0m"
+else
+  # set netif_num to custom mac amount, netif_num must be equal to the MACX amount, otherwise the kernel will panic.
+  CMDLINE["netif_num"]=${NETIF_NUM}  # The current original CMDLINE['netif_num'] is no longer in use, Consider deleting.
+  if [ ${NETIF_NUM} -le ${NETRL_NUM} ]; then
+    echo -e "\033[1;33m*** `printf "$(TEXT "Detected %s network cards, but only %s MACs were customized, the rest will use the original MACs.")" "${NETRL_NUM}" "${CMDLINE["netif_num"]}"` ***\033[0m"
+    ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
+    for N in `seq $(expr ${NETIF_NUM} + 1) ${NETRL_NUM}`; do 
+      MACR="`cat /sys/class/net/${ETHX[$(expr ${N} - 1)]}/address | sed 's/://g'`"
+      # no duplicates
+      while [[ "${MACS[*]}" =~ "$MACR" ]]; do # no duplicates
+        MACR="${MACR:0:10}`printf "%02x" $((0x${MACR:10:2} + 1))`" 
+      done
+      CMDLINE["mac${N}"]="${MACR}"
     done
-    CMDLINE["mac${N}"]="${MACR}"
-  done
-  CMDLINE["netif_num"]=${NETRL_NUM}
+    CMDLINE["netif_num"]=${NETRL_NUM}
+  fi
 fi
 
 # Prepare command line
