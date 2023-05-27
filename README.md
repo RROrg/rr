@@ -18,35 +18,8 @@
 
 
 ## 说明 - Instructions
-* ### [命令输入方法演示](https://www.bilibili.com/video/BV1T84y1P7Kq)  https://www.bilibili.com/video/BV1T84y1P7Kq  
-* arpl各版本间切换(菜单更新, 增量):  
-    ```shell
-    # shell 下输入以下命令修改更新 repo. 
-    # 如果要切换原版修改第二条命令中的 wjz304/arpl-i18n 为 fbelavenuto/arpl
-    # 如果切换中文版修改第二条命令中的 wjz304/arpl-i18n 为 wjz304/arpl-zh_CN
-    # Enter the following command under the shell to modify and update repo
-    # If you want to switch the original version and modify wjz304/arpl-i18n to fbelavenuto/arpl in the second command.
-    # If you switch to the Chinese version and modify the wjz304/arpl-i18n to wjz304/arpl_zh_CN in the second command.
-    CURREPO=`grep "github.com.*update" menu.sh | sed -r 's/.*com\/(.*)\/releases.*/\1/'`
-    sed -i "s|${CURREPO}|wjz304/arpl-i18n|g" /opt/arpl/menu.sh
-    # 进入设置菜单执行更新arpl操作即可. 更新后请重启.
-    # Simply enter the main menu and perform the update arpl operation. Please restart after the update.
-    ```
-* arpl各版本间切换(手动方式, 全量):  
-    ```shell
-    # 在 shell 中下载需要的版本或者手动上传到/opt/arpl/下
-    # Download the required version in the shell or manually upload it to/opt/arpl/
-    curl -kL -o /opt/arpl/arpl.zip https://github.com/wjz304/arpl-i18n/releases/download/23.4.5/arpl-i18n-23.4.5.img.zip
-    # 卸载挂载的引导盘
-    # Uninstalling the mounted boot disk
-    umount /mnt/p1 /mnt/p2 /mnt/p3
-    # 解压 并写入到引导盘
-    # Decompress and write to the boot disk
-    unzip -p arpl.zip | dd of=`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1` bs=1M conv=fsync
-    # 重启 reboot
-    reboot
-    ```
-
+* [GUIDE](./guide.md)
+ 
 
 ## 翻译 - Translation
 * 其他语言的翻译 - Language translation work:
