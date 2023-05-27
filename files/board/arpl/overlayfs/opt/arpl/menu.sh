@@ -903,6 +903,7 @@ function advancedMenu() {
     fi
     echo "a \"$(TEXT "Allow downgrade installation")\""              >> "${TMP_PATH}/menu"
     echo "f \"$(TEXT "Format disk(s) # Without loader disk")\""      >> "${TMP_PATH}/menu"
+    echo "x \"$(TEXT "Reset syno system password")\""                >> "${TMP_PATH}/menu"
     echo "p \"$(TEXT "Persistence of arpl modifications")\""         >> "${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a "true" = "`readModelKey "${MODEL}" "dt"`" ]; then
       echo "d \"$(TEXT "Custom dts file # Need rebuild")\""          >> "${TMP_PATH}/menu"
@@ -1027,6 +1028,10 @@ function advancedMenu() {
             --progressbox "$(TEXT "Formatting ...")" 20 70
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "$(TEXT "Formatting is complete.")" 0 0
+        ;;
+      x)
+        dialog --backtitle "`backtitle`" --colors --aspect 18 \
+          --msgbox "$(TEXT "You came early, this function has not been implemented yet, hahaha!")" 0 0
         ;;
       p) 
         dialog --backtitle "`backtitle`" --title "$(TEXT "Persistence of arpl modifications")" \
