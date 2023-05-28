@@ -7,6 +7,12 @@ set -e
 # Sanity check
 loaderIsConfigured || die "$(TEXT "Loader is not configured!")"
 
+# Check if machine has EFI
+[ -d /sys/firmware/efi ] && EFI=1 || EFI=0
+
+LOADER_DISK="`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1`"
+BUS=`udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2`
+
 # Print text centralized
 clear
 [ -z "${COLUMNS}" ] && COLUMNS=50
@@ -15,7 +21,9 @@ printf "\033[1;44m%*s\n" ${COLUMNS} ""
 printf "\033[1;44m%*s\033[A\n" ${COLUMNS} ""
 printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE}+${COLUMNS})/2)) "${TITLE}"
 printf "\033[1;44m%*s\033[0m\n" ${COLUMNS} ""
-TITLE="$(TEXT "BOOTING...")"
+TITLE="BOOTING:"
+[ -d "/sys/firmware/efi" ] && TITLE+=" [UEFI]" || TITLE+=" [BIOS]"
+[ "${BUS}" = "usb" ] && TITLE+=" [USB flashdisk]" || TITLE+=" [SATA DoM]"
 printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE}+${COLUMNS})/2)) "${TITLE}"
 
 # Check if DSM zImage changed, patch it if necessary
@@ -77,13 +85,9 @@ while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
 done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
 
-# Check if machine has EFI
-[ -d /sys/firmware/efi ] && EFI=1 || EFI=0
 # 
 KVER=`readModelKey "${MODEL}" "builds.${BUILD}.kver"`
 
-LOADER_DISK="`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1`"
-BUS=`udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2`
 if [ "${BUS}" = "ata" ]; then
   LOADER_DEVICE_NAME=`echo ${LOADER_DISK} | sed 's|/dev/||'`
   SIZE=$((`cat /sys/block/${LOADER_DEVICE_NAME}/size`/2048+10))
@@ -149,20 +153,21 @@ else
   echo "`printf "$(TEXT "Detected %s network cards, Waiting IP.")" "${#ETHX[@]}"`"
   for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
     COUNT=0
-    echo -en "${ETHX[${N}]}: "
+    DRIVER=`ls -ld /sys/class/net/${ETHX[${N}]}/device/driver 2>/dev/null | awk -F '/' '{print $NF}'`
+    echo -en "${ETHX[${N}]}(${DRIVER}): "
     while true; do
       if [ -z "`ip link show ${ETHX[${N}]} | grep 'UP'`" ]; then
-        echo -en "\r${ETHX[${N}]}: $(TEXT "DOWN")\n"
+        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "DOWN")\n"
         break
       fi
       if [ ${COUNT} -eq 8 ]; then # Under normal circumstances, no errors should occur here.
-        echo -en "\r${ETHX[${N}]}: $(TEXT "ERROR")\n"
+        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "ERROR")\n"
         break
       fi
       COUNT=$((${COUNT}+1))
       IP=`ip route show dev ${ETHX[${N}]} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p'`
       if [ -n "${IP}" ]; then
-        echo -en "\r${ETHX[${N}]}: `printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}"`\n"
+        echo -en "\r${ETHX[${N}]}(${DRIVER}): `printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}"`\n"
         break
       fi
       echo -n "."
