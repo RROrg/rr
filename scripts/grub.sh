@@ -32,7 +32,7 @@ popd
 
 rm -f grub.img
 dd if=/dev/zero of=grub.img bs=1M seek=1024 count=0
-echo -e "n\np\n1\n\n+50M\nn\np\n2\n\n+50M\nn\np\n3\n\n\nw\nq\n" | fdisk grub.img
+echo -e "n\np\n1\n\n+50M\nn\np\n2\n\n+50M\nn\np\n3\n\n\na\n1\nw\nq\n" | fdisk grub.img
 fdisk -l grub.img
 
 LOOPX=`sudo losetup -f`
