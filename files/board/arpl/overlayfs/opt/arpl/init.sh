@@ -13,13 +13,13 @@ while true; do
   CNT=$((${CNT}-1))
   sleep 1
 done
-if [ -z "${LOADER_DISK}" ]; then
-  die "$(TEXT "Loader disk not found!")"
-fi
+
+
+[ -z "${LOADER_DISK}" ] && die "$(TEXT "Loader disk not found!")"
 NUM_PARTITIONS=$(blkid | grep "${LOADER_DISK}[0-9]\+" | cut -d: -f1 | wc -l)
-if [ $NUM_PARTITIONS -ne 3 ]; then
-  die "$(TEXT "Loader disk not found!")"
-fi
+[ $NUM_PARTITIONS -lt 3 ] && die "$(TEXT "Loader disk seems to be damaged!")"
+[ $NUM_PARTITIONS -gt 3 ] && die "$(TEXT "There are multiple loader disks, please insert only one loader disk!")"
+
 
 # Check partitions and ignore errors
 fsck.vfat -aw ${LOADER_DISK}1 >/dev/null 2>&1 || true
