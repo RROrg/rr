@@ -1054,12 +1054,15 @@ function advancedMenu() {
         USER=$(<${TMP_PATH}/resp)
         [ -z "${USER}" ] && return
         OLDPASSWD=`cat ${SHADOW_FILE} | grep "^${USER}:" | awk -F ':' '{print $2}'`
-
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Reset syno system password")" \
-          --inputbox "`printf "$(TEXT "Type a new password for user '%s'")" "${NAME}"`" 0 0 "${CMDLINE[${NAME}]}" \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && return
-        VALUE="`<"${TMP_PATH}/resp"`"
+        while true; do
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Reset syno system password")" \
+            --inputbox "`printf "$(TEXT "Type a new password for user '%s'")" "${USER}"`" 0 0 "${CMDLINE[${NAME}]}" \
+            2>${TMP_PATH}/resp
+          [ $? -ne 0 ] && break 2
+          VALUE="`<"${TMP_PATH}/resp"`"
+          [ -n "${VALUE}" ] && break
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Reset syno system password")" --msgbox "$(TEXT "Invalid password")" 0 0
+        done
         NEWPASSWD=`python -c "import crypt,getpass;pw=\"${VALUE}\";print(crypt.crypt(pw))"`
         (
           mkdir -p /tmp/sdX1
