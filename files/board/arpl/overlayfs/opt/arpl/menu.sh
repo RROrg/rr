@@ -1003,7 +1003,7 @@ function advancedMenu() {
           [ -z "${POSITION}" -o -z "${NAME}" ] && continue
           echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
           ITEMS+="`printf "%s %s off " "${POSITION}" "${NAME}"`"
-        done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd*" | awk -F' ' '{print $10" "$8}' | sort -uk 1,1)
+        done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd*" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
         dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
           --checklist "$(TEXT "Advanced")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
         [ $? -ne 0 ] && return
