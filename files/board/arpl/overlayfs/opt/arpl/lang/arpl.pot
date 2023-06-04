@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-02 22:37+0800\n"
+"POT-Creation-Date: 2023-06-04 23:13+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,55 +59,56 @@ msgid ""
 "The current version of arpl does not support booting %s-%s, please rebuild."
 msgstr ""
 
-#: boot.sh:110
+#: boot.sh:106
 msgid ""
 "Detected %s network cards, but No MACs were customized, they will use the "
-"original MACs."
+"original MACs. May affect account related functions."
 msgstr ""
 
-#: boot.sh:112
+#: boot.sh:111
 msgid ""
 "Detected %s network cards, but only %s MACs were customized, the rest will "
 "use the original MACs."
 msgstr ""
 
-#: boot.sh:143
+#: boot.sh:142
 msgid "Cmdline:\\n"
 msgstr ""
 
-#: boot.sh:148
+#: boot.sh:147
 msgid "Reboot to boot directly in DSM"
 msgstr ""
 
-#: boot.sh:154 init.sh:175
-msgid "Detected %s network cards, Waiting IP."
+#: boot.sh:153
+msgid ""
+"Detected %s network cards, Waiting IP.(For reference only, not absolute.)"
 msgstr ""
 
-#: boot.sh:161 init.sh:181
+#: boot.sh:160 init.sh:181
 msgid "DOWN"
 msgstr ""
 
-#: boot.sh:165 init.sh:185
+#: boot.sh:164 init.sh:185
 msgid "ERROR"
 msgstr ""
 
-#: boot.sh:171
+#: boot.sh:170
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr ""
 
-#: boot.sh:180
+#: boot.sh:179
 msgid "Loading DSM kernel..."
 msgstr ""
 
-#: boot.sh:184
+#: boot.sh:183
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr ""
 
-#: boot.sh:189
+#: boot.sh:188
 msgid "Booting..."
 msgstr ""
 
-#: boot.sh:192
+#: boot.sh:191
 msgid ""
 "[This interface will not be operational. Please use the http://find.synology."
 "com/ find DSM and connect.]"
@@ -151,6 +152,10 @@ msgstr ""
 
 #: init.sh:165
 msgid "User requested edit settings."
+msgstr ""
+
+#: init.sh:175
+msgid "Detected %s network cards, Waiting IP."
 msgstr ""
 
 #: init.sh:191

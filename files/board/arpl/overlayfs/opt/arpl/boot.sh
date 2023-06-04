@@ -103,7 +103,7 @@ done
 NETIF_NUM=${#MACS[*]}
 NETRL_NUM=`ls /sys/class/net/ | grep eth | wc -l` # real network cards amount
 if [ ${NETIF_NUM} -eq 0 ]; then
-  echo -e "\033[1;33m*** `printf "$(TEXT "Detected %s network cards, but No MACs were customized, they will use the original MACs.")" "${NETRL_NUM}"` ***\033[0m"
+  echo -e "\033[1;33m*** `printf "$(TEXT "Detected %s network cards, but No MACs were customized, they will use the original MACs. May affect account related functions.")" "${NETRL_NUM}"` ***\033[0m"
 else
   # set netif_num to custom mac amount, netif_num must be equal to the MACX amount, otherwise the kernel will panic.
   CMDLINE["netif_num"]=${NETIF_NUM}  # The current original CMDLINE['netif_num'] is no longer in use, Consider deleting.
@@ -150,7 +150,7 @@ if [ "${DIRECT}" = "true" ]; then
   exit 0
 else
   ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
-  echo "`printf "$(TEXT "Detected %s network cards, Waiting IP.")" "${#ETHX[@]}"`"
+  echo "`printf "$(TEXT "Detected %s network cards, Waiting IP.(For reference only, not absolute.)")" "${#ETHX[@]}"`"
   for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
     COUNT=0
     DRIVER=`ls -ld /sys/class/net/${ETHX[${N}]}/device/driver 2>/dev/null | awk -F '/' '{print $NF}'`
