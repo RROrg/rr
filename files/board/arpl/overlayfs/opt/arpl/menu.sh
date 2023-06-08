@@ -123,7 +123,7 @@ function modelMenu() {
     writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
     BUILD=""
     writeConfigKey "build" "${BUILD}" "${USER_CONFIG_FILE}"
-    SN=""
+    SN=`generateSerial "${MODEL}"`
     writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
     # Delete old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
@@ -186,44 +186,6 @@ function buildMenu() {
     rm -f "${TMP_PATH}/patdownloadurl"
     DIRTY=1
   fi
-}
-
-###############################################################################
-# Shows menu to user type one or generate randomly
-function serialMenu() {
-  while true; do
-    dialog --clear --backtitle "`backtitle`" \
-      --menu "$(TEXT "Choose a option")" 0 0 0 \
-      a "$(TEXT "Generate a random serial number")" \
-      m "$(TEXT "Enter a serial number")" \
-    2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && return
-    resp=$(<${TMP_PATH}/resp)
-    [ -z "${resp}" ] && return
-    if [ "${resp}" = "m" ]; then
-      while true; do
-        dialog --backtitle "`backtitle`" \
-          --inputbox "$(TEXT "Please enter a serial number ")" 0 0 "" \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && return
-        SERIAL=`cat ${TMP_PATH}/resp`
-        if [ -z "${SERIAL}" ]; then
-          return
-        elif [ `validateSerial ${MODEL} ${SERIAL}` -eq 1 ]; then
-          break
-        fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Alert")" \
-          --yesno "$(TEXT "Invalid serial, continue?")" 0 0
-        [ $? -eq 0 ] && break
-      done
-      break
-    elif [ "${resp}" = "a" ]; then
-      SERIAL=`generateSerial "${MODEL}"`
-      break
-    fi
-  done
-  SN="${SERIAL}"
-  writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
 }
 
 ###############################################################################
@@ -485,9 +447,12 @@ function cmdlineMenu() {
   done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
   echo "a \"$(TEXT "Add/edit a cmdline item")\""                           > "${TMP_PATH}/menu"
   echo "d \"$(TEXT "Delete cmdline item(s)")\""                           >> "${TMP_PATH}/menu"
+  if [ -n "${MODEL}" ]; then 
+    echo "s \"$(TEXT "Define a serial number")\""                         >> "${TMP_PATH}/menu"
+  fi
   echo "c \"$(TEXT "Define a custom MAC")\""                              >> "${TMP_PATH}/menu"
-  echo "s \"$(TEXT "Show user cmdline")\""                                >> "${TMP_PATH}/menu"
-  echo "m \"$(TEXT "Show model/build cmdline")\""                         >> "${TMP_PATH}/menu"
+  echo "v \"$(TEXT "Show user added cmdline")\""                          >> "${TMP_PATH}/menu"
+  echo "m \"$(TEXT "Show model inherent cmdline")\""                      >> "${TMP_PATH}/menu"
   echo "e \"$(TEXT "Exit")\""                                             >> "${TMP_PATH}/menu"
   # Loop menu
   while true; do
@@ -530,6 +495,25 @@ function cmdlineMenu() {
           deleteConfigKey "cmdline.${I}" "${USER_CONFIG_FILE}"
         done
         ;;
+      s)
+        while true; do
+          dialog --backtitle "`backtitle`" --title "$(TEXT "User cmdline")" \
+            --inputbox "$(TEXT "Please enter a serial number ")" 0 0 "" \
+            2>${TMP_PATH}/resp
+          [ $? -ne 0 ] && break 2
+          SERIAL=`cat ${TMP_PATH}/resp`
+          if [ -z "${SERIAL}" ]; then
+            return
+          elif [ `validateSerial ${MODEL} ${SERIAL}` -eq 1 ]; then
+            break
+          fi
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Alert")" \
+            --yesno "$(TEXT "Invalid serial, continue?")" 0 0
+          [ $? -eq 0 ] && break
+        done
+        SN="${SERIAL}"
+        writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
+        ;;
       c)
         ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
         for N in `seq 1 8`; do # Currently, only up to 8 are supported.  (<==> boot.sh L96, <==> lkm: MAX_NET_IFACES)
@@ -567,7 +551,7 @@ function cmdlineMenu() {
           fi
         done
         ;;
-      s)
+      v)
         ITEMS=""
         for KEY in ${!CMDLINE[@]}; do
           ITEMS+="${KEY}: ${CMDLINE[$KEY]}\n"
@@ -1600,7 +1584,6 @@ while true; do
   echo "m \"$(TEXT "Choose a model")\""                          > "${TMP_PATH}/menu"
   if [ -n "${MODEL}" ]; then
     echo "n \"$(TEXT "Choose a Build Number")\""                >> "${TMP_PATH}/menu"
-    echo "s \"$(TEXT "Choose a serial number")\""               >> "${TMP_PATH}/menu"
     if [ -n "${BUILD}" ]; then
       echo "a \"$(TEXT "Addons")\""                             >> "${TMP_PATH}/menu"
       echo "o \"$(TEXT "Modules")\""                            >> "${TMP_PATH}/menu"
@@ -1631,8 +1614,7 @@ while true; do
   [ $? -ne 0 ] && break
   case `<"${TMP_PATH}/resp"` in
     m) modelMenu; NEXT="n" ;;
-    n) buildMenu; NEXT="s" ;;
-    s) serialMenu; NEXT="a" ;;
+    n) buildMenu; NEXT="a" ;;
     a) addonMenu; NEXT="o" ;;
     o) moduleMenu; NEXT="x" ;;
     x) cmdlineMenu; NEXT="i" ;;
