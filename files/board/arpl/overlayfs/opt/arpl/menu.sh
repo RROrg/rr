@@ -26,6 +26,7 @@ LAYOUT="`readConfigKey "layout" "${USER_CONFIG_FILE}"`"
 KEYMAP="`readConfigKey "keymap" "${USER_CONFIG_FILE}"`"
 LKM="`readConfigKey "lkm" "${USER_CONFIG_FILE}"`"
 DIRECTBOOT="`readConfigKey "directboot" "${USER_CONFIG_FILE}"`"
+NOTSETMACS="`readConfigKey "notsetmacs" "${USER_CONFIG_FILE}"`"
 SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
 
 ###############################################################################
@@ -879,6 +880,7 @@ function advancedMenu() {
     if loaderIsConfigured; then
       echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >> "${TMP_PATH}/menu"
     fi
+    echo "m \"$(TEXT "Switch not set MACs:") \Z4${NOTSETMACS}\Zn\"" >> "${TMP_PATH}/menu"
     echo "u \"$(TEXT "Edit user config file manually")\""            >> "${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\""    >> "${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\""           >> "${TMP_PATH}/menu"
@@ -911,6 +913,10 @@ function advancedMenu() {
         ;;
       q) [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
         writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
+        NEXT="e"
+        ;;
+      m) [ "${NOTSETMACS}" = "false" ] && NOTSETMACS='true' || NOTSETMACS='false'
+        writeConfigKey "notsetmacs" "${NOTSETMACS}" "${USER_CONFIG_FILE}"
         NEXT="e"
         ;;
       u) editUserConfig; NEXT="e" ;;

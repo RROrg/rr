@@ -76,6 +76,7 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   touch "${USER_CONFIG_FILE}"
   writeConfigKey "lkm" "prod" "${USER_CONFIG_FILE}"
   writeConfigKey "directboot" "false" "${USER_CONFIG_FILE}"
+  writeConfigKey "notsetmacs" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "model" "" "${USER_CONFIG_FILE}"
   writeConfigKey "build" "" "${USER_CONFIG_FILE}"
   writeConfigKey "sn" "" "${USER_CONFIG_FILE}"
@@ -175,20 +176,21 @@ fi
 echo "`printf "$(TEXT "Detected %s network cards, Waiting IP.")" "${#ETHX[@]}"`"
 for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
   COUNT=0
-  echo -en "${ETHX[${N}]}: "
+  DRIVER=`ls -ld /sys/class/net/${ETHX[${N}]}/device/driver 2>/dev/null | awk -F '/' '{print $NF}'`
+  echo -en "${ETHX[${N}]}(${DRIVER}): "
   while true; do
     if [ -z "`ip link show ${ETHX[${N}]} | grep 'UP'`" ]; then
-      echo -en "\r${ETHX[${N}]}: $(TEXT "DOWN")\n"
+      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "DOWN")\n"
       break
     fi
     if [ ${COUNT} -eq 30 ]; then
-      echo -en "\r${ETHX[${N}]}: $(TEXT "ERROR")\n"
+      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "ERROR")\n"
       break
     fi
     COUNT=$((${COUNT}+1))
     IP=`ip route show dev ${ETHX[${N}]} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p'`
     if [ -n "${IP}" ]; then
-      echo -en "\r${ETHX[${N}]}: `printf "$(TEXT "Access \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal.")" "${IP}"`\n"
+      echo -en "\r${ETHX[${N}]}(${DRIVER}): `printf "$(TEXT "Access \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal.")" "${IP}"`\n"
       break
     fi
     echo -n "."
