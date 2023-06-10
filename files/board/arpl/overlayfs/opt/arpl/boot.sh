@@ -101,7 +101,7 @@ if [ "${NOTSETMACS}" = "true" ]; then
     [ -n "${CMDLINE["mac${N}"]}" ] && unset CMDLINE["mac${N}"]
   done
   unset CMDLINE['netif_num']
-  echo -e "\033[1;33m*** `printf "$(TEXT "Not set macs is enabled.")"` ***\033[0m"
+  echo -e "\033[1;33m*** `printf "$(TEXT "'Not set MACs' is enabled.")"` ***\033[0m"
 else
   # Validate netif_num
   MACS=()
