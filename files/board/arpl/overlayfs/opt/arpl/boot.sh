@@ -68,7 +68,7 @@ fi
 declare -A CMDLINE
 
 # Fixed values
-#CMDLINE['netif_num']=0
+CMDLINE['netif_num']=0
 # Automatic values
 CMDLINE['syno_hw_version']="${MODEL}"
 [ -z "${VID}" ] && VID="0x0000" # Sanity check
@@ -95,20 +95,26 @@ if [ "${BUS}" = "ata" ]; then
   DOM="`readModelKey "${MODEL}" "dom"`"
 fi
 
-# Validate netif_num
-MACS=()
-for N in `seq 1 8`; do  # Currently, only up to 8 are supported.  (<==> menu.sh L396, <==> lkm: MAX_NET_IFACES)
-  [ -n "${CMDLINE["mac${N}"]}" ] && MACS+=(${CMDLINE["mac${N}"]})
-done
-NETIF_NUM=${#MACS[*]}
-NETRL_NUM=`ls /sys/class/net/ | grep eth | wc -l` # real network cards amount
-if [ ${NETIF_NUM} -eq 0 ]; then
-  echo -e "\033[1;33m*** `printf "$(TEXT "Detected %s network cards, but No MACs were customized, they will use the original MACs. May affect account related functions.")" "${NETRL_NUM}"` ***\033[0m"
+NOTSETMACS="`readConfigKey "notsetmacs" "${USER_CONFIG_FILE}"`"
+if [ "${NOTSETMACS}" = "true" ]; then
+  for N in `seq 1 8`; do  # Currently, only up to 8 are supported.  (<==> menu.sh L396, <==> lkm: MAX_NET_IFACES)
+    [ -n "${CMDLINE["mac${N}"]}" ] && unset CMDLINE["mac${N}"]
+  done
+  unset CMDLINE['netif_num']
+  echo -e "\033[1;33m*** `printf "$(TEXT "Not set macs is enabled.")"` ***\033[0m"
 else
+  # Validate netif_num
+  MACS=()
+  for N in `seq 1 8`; do  # Currently, only up to 8 are supported.  (<==> menu.sh L396, <==> lkm: MAX_NET_IFACES)
+    [ -n "${CMDLINE["mac${N}"]}" ] && MACS+=(${CMDLINE["mac${N}"]})
+  done
+  NETIF_NUM=${#MACS[*]}
   # set netif_num to custom mac amount, netif_num must be equal to the MACX amount, otherwise the kernel will panic.
   CMDLINE["netif_num"]=${NETIF_NUM}  # The current original CMDLINE['netif_num'] is no longer in use, Consider deleting.
+  # real network cards amount
+  NETRL_NUM=`ls /sys/class/net/ | grep eth | wc -l`
   if [ ${NETIF_NUM} -le ${NETRL_NUM} ]; then
-    echo -e "\033[1;33m*** `printf "$(TEXT "Detected %s network cards, but only %s MACs were customized, the rest will use the original MACs.")" "${NETRL_NUM}" "${CMDLINE["netif_num"]}"` ***\033[0m"
+    echo -e "\033[1;33m*** `printf "$(TEXT "Detected %s network cards, %s MACs were customized, the rest will use the original MACs.")" "${NETRL_NUM}" "${CMDLINE["netif_num"]}"` ***\033[0m"
     ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
     for N in `seq $(expr ${NETIF_NUM} + 1) ${NETRL_NUM}`; do 
       MACR="`cat /sys/class/net/${ETHX[$(expr ${N} - 1)]}/address | sed 's/://g'`"
@@ -121,7 +127,6 @@ else
     CMDLINE["netif_num"]=${NETRL_NUM}
   fi
 fi
-
 # Prepare command line
 CMDLINE_LINE=""
 grep -q "force_junior" /proc/cmdline && CMDLINE_LINE+="force_junior "
@@ -149,8 +154,9 @@ if [ "${DIRECT}" = "true" ]; then
   reboot
   exit 0
 else
+  sleep 1
   ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
-  echo "`printf "$(TEXT "Detected %s network cards, Waiting IP.(For reference only, not absolute.)")" "${#ETHX[@]}"`"
+  echo "`printf "$(TEXT "Detected %s network cards, Waiting IP.(For reference only)")" "${#ETHX[@]}"`"
   for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
     COUNT=0
     DRIVER=`ls -ld /sys/class/net/${ETHX[${N}]}/device/driver 2>/dev/null | awk -F '/' '{print $NF}'`
