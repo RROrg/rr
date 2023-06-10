@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-R8125_VERSION = 99cd3bc868e4ba82a473d8efaedad04fedb0c0f7
-R8125_SITE = $(call github,fbelavenuto,r8125,$(R8125_VERSION))
+R8125_VERSION = a44d1347a47fe627754583fcb012b330aec01e84
+R8125_SITE = $(call github,wjz304,r8125,$(R8125_VERSION))
 R8125_LICENSE = GPL-2.0
 
 $(eval $(kernel-module))
