@@ -1,12 +1,12 @@
 ################################################################################
 #
-# r8168
+# r8169
 #
 ################################################################################
 
-R8168_VERSION = 52c98bd764e6dd22ff17876afa655e9e11237cc9
-R8168_SITE = $(call github,fbelavenuto,r8168,$(R8168_VERSION))
-R8168_LICENSE = GPL-2.0
+R8169_VERSION = ffebd251be5440e0013a2435014a2f3ab49371ee
+R8169_SITE = $(call github,wjz304,r8169,$(R8169_VERSION))
+R8169_LICENSE = GPL-2.0
 
 $(eval $(kernel-module))
 $(eval $(generic-package))
