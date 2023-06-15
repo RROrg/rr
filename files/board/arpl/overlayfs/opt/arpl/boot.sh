@@ -197,5 +197,5 @@ do
   echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please use the http://find.synology.com/ find DSM and connect.]")\033[0m\n" > "/dev/${T}" 2>/dev/null || true
 done 
 #poweroff
-kexec -e
+kexec -f -e
 exit 0
