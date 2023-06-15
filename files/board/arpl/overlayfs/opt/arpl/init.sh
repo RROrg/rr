@@ -77,6 +77,7 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "lkm" "prod" "${USER_CONFIG_FILE}"
   writeConfigKey "directboot" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "notsetmacs" "false" "${USER_CONFIG_FILE}"
+  writeConfigKey "bootipwait" "10" "${USER_CONFIG_FILE}"
   writeConfigKey "model" "" "${USER_CONFIG_FILE}"
   writeConfigKey "build" "" "${USER_CONFIG_FILE}"
   writeConfigKey "sn" "" "${USER_CONFIG_FILE}"

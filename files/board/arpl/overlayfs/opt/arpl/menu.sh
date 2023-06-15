@@ -27,6 +27,7 @@ KEYMAP="`readConfigKey "keymap" "${USER_CONFIG_FILE}"`"
 LKM="`readConfigKey "lkm" "${USER_CONFIG_FILE}"`"
 DIRECTBOOT="`readConfigKey "directboot" "${USER_CONFIG_FILE}"`"
 NOTSETMACS="`readConfigKey "notsetmacs" "${USER_CONFIG_FILE}"`"
+BOOTIPWAIT="`readConfigKey "bootipwait" "${USER_CONFIG_FILE}"`"
 SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
 
 ###############################################################################
@@ -879,6 +880,9 @@ function advancedMenu() {
     fi
     if loaderIsConfigured; then
       echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >> "${TMP_PATH}/menu"
+      if [ "${DIRECTBOOT}" = "false" ]; then
+        echo "w \"$(TEXT "boot IPs wait time:") \Z4${BOOTIPWAIT}\Zn\"" >> "${TMP_PATH}/menu"
+      fi
     fi
     echo "m \"$(TEXT "Switch 'not set MACs':") \Z4${NOTSETMACS}\Zn\"" >> "${TMP_PATH}/menu"
     echo "u \"$(TEXT "Edit user config file manually")\""            >> "${TMP_PATH}/menu"
@@ -901,7 +905,7 @@ function advancedMenu() {
     echo "o \"$(TEXT "Development tools")\""                         >> "${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\""                                      >> "${TMP_PATH}/menu"
 
-    dialog --default-item ${NEXT} --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
+    dialog --default-item "${NEXT}" --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
       --colors --menu "$(TEXT "Choose the option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
@@ -913,6 +917,17 @@ function advancedMenu() {
         ;;
       q) [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
         writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
+        NEXT="e"
+        ;;
+      w)
+        ITEMS="`echo -e "1 \n5 \n10 \n30 \n60 \n"`"
+        dialog --backtitle "`backtitle`" --default-item "${BOOTIPWAIT}" --no-items \
+          --colors --menu "$(TEXT "Choose a waiting time(seconds)")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && return
+        resp=`cat ${TMP_PATH}/resp 2>/dev/null`
+        [ -z "${resp}" ] && return
+        BOOTIPWAIT=${resp}
+        writeConfigKey "bootipwait" "${BOOTIPWAIT}" "${USER_CONFIG_FILE}"
         NEXT="e"
         ;;
       m) [ "${NOTSETMACS}" = "false" ] && NOTSETMACS='true' || NOTSETMACS='false'
@@ -1301,7 +1316,7 @@ function languageMenu() {
   dialog --backtitle "`backtitle`" --default-item "${LAYOUT}" --no-items \
     --menu "$(TEXT "Choose a language")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
-  resp=`cat /tmp/resp 2>/dev/null`
+  resp=`cat ${TMP_PATH}/resp 2>/dev/null`
   [ -z "${resp}" ] && return
   LANGUAGE=${resp}
   echo "${LANGUAGE}.UTF-8" > ${BOOTLOADER_PATH}/.locale
@@ -1323,9 +1338,9 @@ function keymapMenu() {
   done < <(cd /usr/share/keymaps/i386/${LAYOUT}; ls *.map.gz)
   dialog --backtitle "`backtitle`" --no-items --default-item "${KEYMAP}" \
     --menu "$(TEXT "Choice a keymap")" 0 0 0 ${OPTIONS} \
-    2>/tmp/resp
+    2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
-  resp=`cat /tmp/resp 2>/dev/null`
+  resp=`cat ${TMP_PATH}/resp 2>/dev/null`
   [ -z "${resp}" ] && return
   KEYMAP=${resp}
   writeConfigKey "layout" "${LAYOUT}" "${USER_CONFIG_FILE}"

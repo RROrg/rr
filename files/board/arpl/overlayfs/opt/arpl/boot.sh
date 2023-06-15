@@ -154,7 +154,9 @@ if [ "${DIRECT}" = "true" ]; then
   reboot
   exit 0
 else
-  sleep 1
+  (/etc/init.d/S41dhcpcd restart >/dev/null 2>&1 &) || true
+  BOOTIPWAIT="`readConfigKey "bootipwait" "${USER_CONFIG_FILE}"`"
+  sleep ${BOOTIPWAIT}
   ETHX=(`ls /sys/class/net/ | grep eth`)  # real network cards list
   echo "`printf "$(TEXT "Detected %s network cards, Waiting IP.(For reference only)")" "${#ETHX[@]}"`"
   for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
