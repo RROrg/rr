@@ -45,7 +45,7 @@
 
 ## 打赏一下
 * > ### 作者: Ing  
-* > QQ群: 21609194 (已解散)
+* > QQ群: 21609194 [点击链接加入QQ群](https://qm.qq.com/cgi-bin/qm/qr?k=z5O89os88QEKXCbz-0gwtEz1AeQiCwk3)
 * > QQ频道: redpill2syno [点击链接加入QQ频道](https://pd.qq.com/s/5nmli9qgn)
 * > TG频道: redpill2syno [点击链接加入TG频道](https://t.me/redpill2syno)
 * <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/20220908134226.jpg" width="400">
