@@ -1122,13 +1122,13 @@ function advancedMenu() {
         fi 
         dialog --backtitle "`backtitle`" --colors --aspect 18 \
           --msgbox "$(TEXT "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\n(saved in /mnt/p3/users/)")" 0 0
-        TMP_PATH=/tmp/users
-        rm -rf ${TMP_PATH}
-        mkdir -p ${TMP_PATH}
-        pushd ${TMP_PATH}
+        TMP_UP_PATH=/tmp/users
+        rm -rf ${TMP_UP_PATH}
+        mkdir -p ${TMP_UP_PATH}
+        pushd ${TMP_UP_PATH}
         rz -be
         for F in `ls -A`; do
-          USER_FILE=${TMP_PATH}/${F}
+          USER_FILE=${TMP_UP_PATH}/${F}
           dtc -q -I dts -O dtb ${F} > test.dtb
           RET=$?
           break 
@@ -1187,19 +1187,19 @@ function advancedMenu() {
             --yesno "$(TEXT "Please upload the backup file.\nCurrently, zip(github) and img.gz(backup) compressed file formats are supported.")" 0 0
         [ $? -ne 0 ] && return
         IFTOOL=""
-        TMP_PATH=/tmp/users
-        rm -rf ${TMP_PATH}
-        mkdir -p ${TMP_PATH}
-        pushd ${TMP_PATH}
+        TMP_UP_PATH=/tmp/users
+        rm -rf ${TMP_UP_PATH}
+        mkdir -p ${TMP_UP_PATH}
+        pushd ${TMP_UP_PATH}
         rz -be
         for F in `ls -A`; do
           USER_FILE="${F}"
-          [ "${F##*.}" = "zip" -a `unzip -l "${TMP_PATH}/${USER_FILE}" | grep -c "\.img$"` -eq 1 ] && IFTOOL="zip"
+          [ "${F##*.}" = "zip" -a `unzip -l "${TMP_UP_PATH}/${USER_FILE}" | grep -c "\.img$"` -eq 1 ] && IFTOOL="zip"
           [ "${F##*.}" = "gz" -a "${F#*.}" = "img.gz" ] && IFTOOL="gzip"
           break 
         done
         popd
-        if [ -z "${IFTOOL}" -o -z "${TMP_PATH}/${USER_FILE}" ]; then
+        if [ -z "${IFTOOL}" -o -z "${TMP_UP_PATH}/${USER_FILE}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" --aspect 18 \
             --msgbox "`printf "$(TEXT "Not a valid .zip/.img.gz file, please try again!")" "${USER_FILE}"`" 0 0
         else
@@ -1210,9 +1210,9 @@ function advancedMenu() {
             --infobox "$(TEXT "Writing...")" 0 0
           umount /mnt/p1 /mnt/p2 /mnt/p3
           if [ "${IFTOOL}" = "zip" ]; then
-            unzip -p "${TMP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
+            unzip -p "${TMP_UP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
           elif [ "${IFTOOL}" = "gzip" ]; then
-            gzip -dc "${TMP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
+            gzip -dc "${TMP_UP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
           fi
           dialog --backtitle "`backtitle`" --title "$(TEXT "Restore bootloader disk")" --aspect 18 \
             --yesno "`printf "$(TEXT "Restore bootloader disk with success to %s!\nReboot?")" "${USER_FILE}"`" 0 0
@@ -1360,6 +1360,132 @@ function keymapMenu() {
   loadkeys /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz
 }
 
+# 1 - ext name
+# 2 - current version
+# 3 - repo url
+# 4 - attachment name
+function downloadExts() {
+  PROXY="`readConfigKey "proxy" "${USER_CONFIG_FILE}"`"; [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
+  T="`printf "$(TEXT "Update %s")" "${1}"`"
+
+  dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+    --infobox "$(TEXT "Checking last version")" 0 0
+  # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/arpl-addons/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+  # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
+  LATESTURL="`curl -skL -w %{url_effective} -o /dev/null "${PROXY}${3}/releases/latest"`"
+  TAG="${LATESTURL##*/}"
+  [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+  if [ -z "${TAG}" ]; then
+    dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+      --msgbox "$(TEXT "Error checking new version")" 0 0
+    return 1
+  fi
+  if [ "${2}" = "${TAG}" ]; then
+    dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+      --yesno "`printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${2}"`" 0 0
+    [ $? -ne 0 ] && return 1
+  fi
+  dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+    --infobox "$(TEXT "Downloading last version")" 0 0
+  rm -f "/tmp/${4}.zip"
+  STATUS=`curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "/tmp/${4}.zip"`
+  if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+    dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+      --msgbox "$(TEXT "Error downloading new version")" 0 0
+    return 1
+  fi
+  return 0
+}
+
+# 1 - ext name
+function updateArpl() {
+  T="`printf "$(TEXT "Update %s")" "${1}"`"
+  dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+    --infobox "$(TEXT "Extracting last version")" 0 0
+  unzip -oq /tmp/update.zip -d /tmp
+  if [ $? -ne 0 ]; then
+    dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+      --msgbox "$(TEXT "Error extracting update file")" 0 0
+    continue
+  fi
+  # Check checksums
+  (cd /tmp && sha256sum --status -c sha256sum)
+  if [ $? -ne 0 ]; then
+    dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+      --msgbox "$(TEXT "Checksum do not match!")" 0 0
+    continue
+  fi
+  # Check conditions
+  if [ -f "/tmp/update-check.sh" ]; then
+    chmod +x /tmp/update-check.sh
+    /tmp/update-check.sh
+    if [ $? -ne 0 ]; then
+      dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+        --msgbox "$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")" 0 0
+      continue
+    fi
+  fi
+  dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+    --infobox "$(TEXT "Installing new files")" 0 0
+  # Process update-list.yml
+  while read F; do
+    [ -f "${F}" ] && rm -f "${F}"
+    [ -d "${F}" ] && rm -Rf "${F}"
+  done < <(readConfigArray "remove" "/tmp/update-list.yml")
+  while IFS=': ' read KEY VALUE; do
+    if [ "${KEY: -1}" = "/" ]; then
+      rm -Rf "${VALUE}"
+      mkdir -p "${VALUE}"
+      tar -zxf "/tmp/`basename "${KEY}"`.tgz" -C "${VALUE}"
+    else
+      mkdir -p "`dirname "${VALUE}"`"
+      mv "/tmp/`basename "${KEY}"`" "${VALUE}"
+    fi
+  done < <(readConfigMap "replace" "/tmp/update-list.yml")
+  dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+    --yesno "`printf "$(TEXT "Arpl updated with success to %s!\nReboot?")" "${TAG}"`" 0 0
+  [ $? -ne 0 ] && continue
+  arpl-reboot.sh config
+}
+
+# 1 - ext name
+function updateExts() {
+  T="`printf "$(TEXT "Update %s")" "${1}"`"
+  dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+    --infobox "$(TEXT "Extracting last version")" 0 0
+  if [ "${1}" = "addons" ]; then
+    rm -rf /tmp/addons
+    mkdir -p /tmp/addons
+    unzip /tmp/addons.zip -d /tmp/addons >/dev/null 2>&1
+    dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+      --infobox "$(TEXT "Installing new addons")" 0 0
+    rm -Rf "${ADDONS_PATH}/"*
+    [ -f /tmp/addons/VERSION ] && cp -f /tmp/addons/VERSION ${ADDONS_PATH}/
+    for PKG in `ls /tmp/addons/*.addon`; do
+      ADDON=`basename ${PKG} | sed 's|.addon||'`
+      rm -rf "${ADDONS_PATH}/${ADDON}"
+      mkdir -p "${ADDONS_PATH}/${ADDON}"
+      tar -xaf "${PKG}" -C "${ADDONS_PATH}/${ADDON}" >/dev/null 2>&1
+    done
+  elif [ "${1}" = "modules" ]; then
+    rm "${MODULES_PATH}/"*
+    unzip /tmp/modules.zip -d "${MODULES_PATH}" >/dev/null 2>&1
+    # Rebuild modules if model/buildnumber is selected
+    if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
+      writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+      while read ID DESC; do
+        writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+      done < <(getAllModules "${PLATFORM}" "${KVER}")
+    fi
+  elif [ "${1}" = "LKMs" ]; then
+    rm -rf "${LKM_PATH}/"*
+    unzip /tmp/rp-lkms.zip -d "${LKM_PATH}" >/dev/null 2>&1
+  fi
+  DIRTY=1
+  dialog --backtitle "`backtitle`" --title "${T}" --aspect 18 \
+    --msgbox "$(TEXT "Addons updated with success!")" 0 0
+}
+
 ###############################################################################
 function updateMenu() {
   PLATFORM="`readModelKey "${MODEL}" "platform"`"
@@ -1372,208 +1498,41 @@ function updateMenu() {
       m "$(TEXT "Update modules")" \
       l "$(TEXT "Update LKMs")" \
       p "$(TEXT "Set proxy server")" \
+      u "$(TEXT "Local upload")" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "`<${TMP_PATH}/resp`" in
       a)
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
-          --infobox "$(TEXT "Checking last version")" 0 0
-        # TAG="`curl -skL "${PROXY}https://api.github.com/repos/wjz304/arpl-i18n/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`"
-        # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
-        LATESTURL="`curl -skL -w %{url_effective} -o /dev/null "${PROXY}https://github.com/wjz304/arpl-i18n/releases/latest"`"
-        TAG="${LATESTURL##*/}"
-        [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
-        if [ -z "${TAG}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
-            --msgbox "$(TEXT "Error checking new version")" 0 0
-          continue
-        fi
-        ACTUALVERSION="${ARPL_VERSION}"
-        if [ "${ACTUALVERSION}" = "${TAG}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
-            --yesno "`printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${ACTUALVERSION}"`" 0 0
-          [ $? -ne 0 ] && continue
-        fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
-          --infobox "`printf "$(TEXT "Downloading last version %s")" "${TAG}"`" 0 0
-        # Download update file
-        STATUS=`curl -kL -w "%{http_code}" "${PROXY}https://github.com/wjz304/arpl-i18n/releases/download/${TAG}/update.zip" -o "/tmp/update.zip"`
-        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
-            --msgbox "$(TEXT "Error downloading update file")" 0 0
-          continue
-        fi
-        unzip -oq /tmp/update.zip -d /tmp
-        if [ $? -ne 0 ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
-            --msgbox "$(TEXT "Error extracting update file")" 0 0
-          continue
-        fi
-        # Check checksums
-        (cd /tmp && sha256sum --status -c sha256sum)
-        if [ $? -ne 0 ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
-            --msgbox "$(TEXT "Checksum do not match!")" 0 0
-          continue
-        fi
-        # Check conditions
-        if [ -f "/tmp/update-check.sh" ]; then
-          chmod +x /tmp/update-check.sh
-          /tmp/update-check.sh
-          if [ $? -ne 0 ]; then
-            dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
-              --msgbox "$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")" 0 0
-            continue
-          fi
-        fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
-          --infobox "$(TEXT "Installing new files")" 0 0
-        # Process update-list.yml
-        while read F; do
-          [ -f "${F}" ] && rm -f "${F}"
-          [ -d "${F}" ] && rm -Rf "${F}"
-        done < <(readConfigArray "remove" "/tmp/update-list.yml")
-        while IFS=': ' read KEY VALUE; do
-          if [ "${KEY: -1}" = "/" ]; then
-            rm -Rf "${VALUE}"
-            mkdir -p "${VALUE}"
-            tar -zxf "/tmp/`basename "${KEY}"`.tgz" -C "${VALUE}"
-          else
-            mkdir -p "`dirname "${VALUE}"`"
-            mv "/tmp/`basename "${KEY}"`" "${VALUE}"
-          fi
-        done < <(readConfigMap "replace" "/tmp/update-list.yml")
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update arpl")" --aspect 18 \
-          --yesno "`printf "$(TEXT "Arpl updated with success to %s!\nReboot?")" "${TAG}"`" 0 0
+        T="`printf "$(TEXT "Update %s")" "$(TEXT "arpl")"`"
+        CURVER="${ARPL_VERSION:-0}"
+        downloadExts "arpl" ${CURVER} "https://github.com/wjz304/arpl-i18n" "update"
         [ $? -ne 0 ] && continue
-        arpl-reboot.sh config
-        exit
+        updateArpl "arpl"
         ;;
 
       d)
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
-          --infobox "$(TEXT "Checking last version")" 0 0
-        # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/arpl-addons/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-        # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
-        LATESTURL="`curl -skL -w %{url_effective} -o /dev/null "${PROXY}https://github.com/wjz304/arpl-addons/releases/latest"`"
-        TAG="${LATESTURL##*/}"
-        [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
-        if [ -z "${TAG}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
-            --msgbox "$(TEXT "Error checking new version")" 0 0
-          continue
-        fi
-        ACTUALVERSION="`cat "/mnt/p3/addons/VERSION" 2>/dev/null`"
-        if [ "${ACTUALVERSION}" = "${TAG}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
-            --yesno "`printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${ACTUALVERSION}"`" 0 0
-          [ $? -ne 0 ] && continue
-        fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
-          --infobox "$(TEXT "Downloading last version")" 0 0
-        STATUS=`curl -kL -w "%{http_code}" "${PROXY}https://github.com/wjz304/arpl-addons/releases/download/${TAG}/addons.zip" -o "/tmp/addons.zip"`
-        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
-            --msgbox "$(TEXT "Error downloading new version")" 0 0
-          continue
-        fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
-          --infobox "$(TEXT "Extracting last version")" 0 0
-        rm -rf /tmp/addons
-        mkdir -p /tmp/addons
-        unzip /tmp/addons.zip -d /tmp/addons >/dev/null 2>&1
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
-          --infobox "$(TEXT "Installing new addons")" 0 0
-        rm -Rf "${ADDONS_PATH}/"*
-        [ -f /tmp/addons/VERSION ] && cp -f /tmp/addons/VERSION ${ADDONS_PATH}/
-        for PKG in `ls /tmp/addons/*.addon`; do
-          ADDON=`basename ${PKG} | sed 's|.addon||'`
-          rm -rf "${ADDONS_PATH}/${ADDON}"
-          mkdir -p "${ADDONS_PATH}/${ADDON}"
-          tar -xaf "${PKG}" -C "${ADDONS_PATH}/${ADDON}" >/dev/null 2>&1
-        done
-        DIRTY=1
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update addons")" --aspect 18 \
-          --msgbox "$(TEXT "Addons updated with success!")" 0 0
+        T="`printf "$(TEXT "Update %s")" "$(TEXT "addons")"`"
+        CURVER="`cat "/mnt/p3/addons/VERSION" 2>/dev/null`"
+        downloadExts "addons" "${CURVER:-0}" "https://github.com/wjz304/arpl-addons" "addons"
+        [ $? -ne 0 ] && continue
+        updateExts "addons"
         ;;
 
       m)
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
-          --infobox "$(TEXT "Checking last version")" 0 0
-        # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/arpl-modules/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-        # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
-        LATESTURL="`curl -skL -w %{url_effective} -o /dev/null "${PROXY}https://github.com/wjz304/arpl-modules/releases/latest"`"
-        TAG="${LATESTURL##*/}"
-        [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
-        if [ -z "${TAG}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
-            --msgbox "$(TEXT "Error checking new version")" 0 0
-          continue
-        fi
-        ACTUALVERSION="`cat "/mnt/p3/modules/VERSION" 2>/dev/null`"
-        if [ "${ACTUALVERSION}" = "${TAG}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
-            --yesno "`printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${ACTUALVERSION}"`" 0 0
-          [ $? -ne 0 ] && continue
-        fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
-          --infobox "$(TEXT "Downloading last version")" 0 0
-        STATUS=`curl -kL -w "%{http_code}" "${PROXY}https://github.com/wjz304/arpl-modules/releases/download/${TAG}/modules.zip" -o "/tmp/modules.zip"`
-        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
-            --msgbox "$(TEXT "Error downloading last version")" 0 0
-          continue
-        fi
-        rm "${MODULES_PATH}/"*
-        unzip /tmp/modules.zip -d "${MODULES_PATH}" >/dev/null 2>&1
-
-        # Rebuild modules if model/buildnumber is selected
-        if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
-          writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-          while read ID DESC; do
-            writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
-          done < <(getAllModules "${PLATFORM}" "${KVER}")
-        fi
-        DIRTY=1
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update modules")" --aspect 18 \
-          --msgbox "$(TEXT "Modules updated with success!")" 0 0
+        T="`printf "$(TEXT "Update %s")" "$(TEXT "modules")"`"
+        CURVER="`cat "/mnt/p3/modules/VERSION" 2>/dev/null`"
+        downloadExts "modules" "${CURVER:-0}" "https://github.com/wjz304/arpl-modules" "modules"
+        [ $? -ne 0 ] && continue
+        updateExts "modules"
         ;;
 
       l)
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-          --infobox "$(TEXT "Checking last version")" 0 0
-        # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/redpill-lkm/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-        # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
-        LATESTURL="`curl -skL -w %{url_effective} -o /dev/null "${PROXY}https://github.com/wjz304/redpill-lkm/releases/latest"`"
-        TAG="${LATESTURL##*/}"
-        [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
-        if [ -z "${TAG}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-            --msgbox "$(TEXT "Error checking new version")" 0 0
-          continue
-        fi
-        ACTUALVERSION="`cat "/mnt/p3/lkms/VERSION" 2>/dev/null`"
-        if [ "${ACTUALVERSION}" = "${TAG}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-            --yesno "`printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${ACTUALVERSION}"`" 0 0
-          [ $? -ne 0 ] && continue
-        fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-          --infobox "$(TEXT "Downloading last version")" 0 0
-        STATUS=`curl -kL -w "%{http_code}" "${PROXY}https://github.com/wjz304/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o "/tmp/rp-lkms.zip"`
-        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-            --msgbox "$(TEXT "Error downloading last version")" 0 0
-          continue
-        fi
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-          --infobox "$(TEXT "Extracting last version")" 0 0
-        rm -rf "${LKM_PATH}/"*
-        unzip /tmp/rp-lkms.zip -d "${LKM_PATH}" >/dev/null 2>&1
-        DIRTY=1
-        dialog --backtitle "`backtitle`" --title "$(TEXT "Update LKMs")" --aspect 18 \
-          --msgbox "$(TEXT "LKMs updated with success!")" 0 0
+        T="`printf "$(TEXT "Update %s")" "$(TEXT "LKMs")"`"
+        CURVER="`cat "/mnt/p3/lkms/VERSION" 2>/dev/null`"
+        downloadExts "LKMs" "${CURVER:-0}" "https://github.com/wjz304/redpill-lkm" "rp-lkms"
+        [ $? -ne 0 ] && continue
+        updateExts "LKMs"
         ;;
 
       p)
@@ -1597,6 +1556,55 @@ function updateMenu() {
           fi
         done
         [ ${RET} -eq 0 ] && writeConfigKey "proxy" "${PROXY}" "${USER_CONFIG_FILE}"
+        ;;
+
+      u)
+        if ! tty | grep -q "/dev/pts"; then
+          dialog --backtitle "`backtitle`" --colors --aspect 18 \
+            --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+          return
+        fi
+        MSG=""
+        MSG+="$(TEXT "Please keep the attachment name consistent with the attachment name on Github.\n")"
+        MSG+="$(TEXT "Upload update.zip will update arpl.\n")"
+        MSG+="$(TEXT "Upload addons.zip will update Addons.\n")"
+        MSG+="$(TEXT "Upload modules.zip will update Modules.\n")"
+        MSG+="$(TEXT "Upload rp-lkms.zip will update LKMs.\n")"
+        dialog --backtitle "`backtitle`"  --colors --aspect 18 \
+          --msgbox "${MSG}" 0 0
+        EXTS=("update.zip" "addons.zip" "modules.zip" "rp-lkms.zip")
+        TMP_UP_PATH=/tmp/users
+        USER_FILE=""
+        rm -rf ${TMP_UP_PATH}
+        mkdir -p ${TMP_UP_PATH}
+        pushd ${TMP_UP_PATH}
+        rz -be
+        for F in `ls -A`; do
+          for I in ${EXTS[@]}; do 
+            [[ "${I}" == "${F}" ]] && USER_FILE=${F}
+          done
+          break 
+        done
+        popd
+        if [ -z "${USER_FILE}" ]; then
+          dialog --backtitle "`backtitle`" --title "$(TEXT "Local upload")" --aspect 18 \
+            --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
+        else
+          rm /tmp/${USER_FILE}
+          mv ${TMP_UP_PATH}/${USER_FILE} /tmp/${USER_FILE}
+          if [ "${USER_FILE}" = "update.zip" ]; then
+            updateArpl "arpl"
+          elif [ "${USER_FILE}" = "addons.zip" ]; then
+            updateExts "addons"
+          elif [ "${USER_FILE}" = "modules.zip" ]; then
+            updateExts "modules"
+          elif [ "${USER_FILE}" = "rp-lkms.zip" ]; then
+            updateExts "LKMs"
+          else
+            dialog --backtitle "`backtitle`" --title "$(TEXT "Local upload")" --aspect 18 \
+              --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
+          fi
+        fi
         ;;
       e) return ;;
     esac
