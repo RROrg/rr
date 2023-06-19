@@ -940,7 +940,7 @@ function advancedMenu() {
         NUMPORTS=0
         ATTACHTNUM=0
         DiskIdxMap=""
-        for PCI in `lspci -d ::106 | awk '{print$1}'`; do
+        for PCI in `echo -e "$(lspci -d ::106)\n$(lspci -d ::107)" | awk '{print $1}'`; do
           NAME=`lspci -s "${PCI}" | sed "s/\ .*://"`
           MSG+="\Zb${NAME}\Zn\nPorts: "
           unset HOSTPORTS
@@ -948,11 +948,18 @@ function advancedMenu() {
           ATTACHTIDX=0
           while read LINE; do
             ATAPORT="`echo ${LINE} | grep -o 'ata[0-9]*'`"
-            PORT=`echo ${ATAPORT} | sed 's/ata//'`
+            PORT=""
+            if [ -n "${ATAPORT}" ]; then
+              PORT=`echo ${ATAPORT} | sed 's/ata//'`
+            else
+              SASPORT="`echo ${LINE} | grep -o "${PCI}/host[0-9]*"`"
+              PORT=`echo ${SASPORT} | sed "s/${PCI}\/host//"`
+            fi
             HOSTPORTS[${PORT}]=`echo ${LINE} | grep -o 'host[0-9]*$'`
           done < <(ls -l /sys/class/scsi_host | fgrep "${PCI}")
           while read PORT; do
-            ls -l /sys/block | fgrep -q "${PCI}/ata${PORT}" && ATTACH=1 || ATTACH=0
+            ls -l /sys/block | fgrep -q "${PCI}/ata${PORT}" && ATTACH=1 || \
+            ls -l /sys/block | fgrep -q "${PCI}/host${PORT}" && ATTACH=1 || ATTACH=0
             PCMD=`cat /sys/class/scsi_host/${HOSTPORTS[${PORT}]}/ahci_port_cmd`
             [ "${PCMD}" = "0" ] && DUMMY=1 || DUMMY=0
             [ ${ATTACH} -eq 1 ] && MSG+="\Z2\Zb" && ATTACHTIDX=$((${ATTACHTIDX}+1))
@@ -1009,6 +1016,11 @@ function advancedMenu() {
           echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
           ITEMS+="`printf "%s %s off " "${POSITION}" "${NAME}"`"
         done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd*" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
+        while read POSITION NAME; do
+          [ -z "${POSITION}" -o -z "${NAME}" ] && continue
+          echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
+          ITEMS+="`printf "%s %s off " "${POSITION}" "${NAME}"`"
+        done < <(ls -l /dev/disk/by-path/ | sed 's|../..|/dev|g' | grep -E "/dev/sd*" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
         dialog --backtitle "`backtitle`" --title "$(TEXT "Format disk")" \
           --checklist "$(TEXT "Advanced")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
         [ $? -ne 0 ] && return
