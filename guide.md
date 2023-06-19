@@ -118,6 +118,11 @@
     gzip -c /mnt/p3/modules/epyc7002-5.10.55.tar > /mnt/p3/modules/epyc7002-5.10.55.tgz
     rm -rf /mnt/p3/modules/epyc7002-5.10.55.tar /mnt/p3/modules/epyc7002-5.10.55
     ```
+* arpl 开机强行进入到arpl (Any version):
+    ```shell
+    # 在 wait IP 的时候, 快速的连上, 杀死 boot.sh 进程.
+    kill `ps | grep -v grep | grep boot.sh | awk '{print $1}'`
+    ```
 
 # SYNO:
 * ssh 开启 root 权限:
