@@ -211,7 +211,7 @@ function addonMenu() {
       d "$(TEXT "Delete addon(s)")" \
       s "$(TEXT "Show user addons")" \
       m "$(TEXT "Show all available addons")" \
-      o "$(TEXT "Download a external addon")" \
+      o "$(TEXT "Upload a external addon")" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -283,28 +283,45 @@ function addonMenu() {
           --colors --msgbox "${MSG}" 0 0
         ;;
       o)
-        dialog --backtitle "`backtitle`" --aspect 18 --colors --inputbox "$(TEXT "please enter the complete URL to download.\n")" 0 0 \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && continue
-        URL="`<"${TMP_PATH}/resp"`"
-        [ -z "${URL}" ] && continue
-        clear
-        echo "`printf "$(TEXT "Downloading %s")" "${URL}"`"
-        STATUS=`curl -k -w "%{http_code}" -L "${URL}" -o "${TMP_PATH}/addon.tgz" --progress-bar`
-        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Error downloading")" --aspect 18 \
-            --msgbox "$(TEXT "Check internet, URL or cache disk space")" 0 0
-          return 1
+        if ! tty | grep -q "/dev/pts"; then
+          dialog --backtitle "`backtitle`" --colors --aspect 18 \
+            --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+          return
         fi
-        ADDON="`untarAddon "${TMP_PATH}/addon.tgz"`"
-        if [ -n "${ADDON}" ]; then
-          dialog --backtitle "`backtitle`" --title "$(TEXT "Success")" --aspect 18 \
-            --msgbox "`printf "$(TEXT "Addon '%s' added to loader")" "${ADDON}"`" 0 0
-        else
+        dialog --backtitle "`backtitle`"  --colors --aspect 18 \
+          --msgbox "$(TEXT "Please upload the *.addons file.")" 0 0
+        TMP_UP_PATH=/tmp/users
+        USER_FILE=""
+        rm -rf ${TMP_UP_PATH}
+        mkdir -p ${TMP_UP_PATH}
+        pushd ${TMP_UP_PATH}
+        rz -be
+        for F in `ls -A`; do
+          USER_FILE=${F}
+          break 
+        done
+        popd
+        if [ -z "${USER_FILE}" ]; then
           dialog --backtitle "`backtitle`" --title "$(TEXT "Invalid addon")" --aspect 18 \
-            --msgbox "$(TEXT "File format not recognized!")" 0 0
+            --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
+        else
+          if [ -d "${ADDONS_PATH}/`basename ${USER_FILE} .addons`" ]; then
+            dialog --backtitle "`backtitle`" --title "$(TEXT "Alert")" \
+              --yesno "$(TEXT "Invalid proxy server url, continue?")" 0 0
+            RET=$?
+            [ ${RET} -eq 0 ] && return
+          fi
+          ADDON="`untarAddon "${TMP_UP_PATH}/${USER_FILE}"`"
+          if [ -n "${ADDON}" ]; then
+            dialog --backtitle "`backtitle`" --title "$(TEXT "Success")" --aspect 18 \
+              --msgbox "`printf "$(TEXT "Addon '%s' added to loader, Please enable it in 'Add an addon' menu.")" "${ADDON}"`" 0 0
+          else
+            dialog --backtitle "`backtitle`" --title "$(TEXT "Invalid addon")" --aspect 18 \
+              --msgbox "$(TEXT "File format not recognized!")" 0 0
+          fi
         fi
         ;;
+
       e) return ;;
     esac
   done
