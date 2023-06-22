@@ -374,6 +374,7 @@ function moduleMenu() {
           USERMODULES["${ID}"]=""
           writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
         done
+        DIRTY=1
         ;;
       a) dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" \
            --infobox "$(TEXT "Selecting all modules")" 0 0
@@ -384,6 +385,7 @@ function moduleMenu() {
           USERMODULES["${ID}"]=""
           writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
         done <<<${ALLMODULES}
+        DIRTY=1
         ;;
 
       d) dialog --backtitle "`backtitle`" --title "$(TEXT "Modules")" \
@@ -391,6 +393,7 @@ function moduleMenu() {
         writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
         unset USERMODULES
         declare -A USERMODULES
+        DIRTY=1
         ;;
 
       c)
@@ -414,6 +417,7 @@ function moduleMenu() {
           USERMODULES["${ID}"]=""
           writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
         done
+        DIRTY=1
         ;;
 
       o)
@@ -1160,6 +1164,7 @@ function advancedMenu() {
           dialog --backtitle "`backtitle`" --title "$(TEXT "Custom dts file")" --aspect 18 \
             --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
         fi
+        DIRTY=1
         ;;
       b)
         if ! tty | grep -q "/dev/pts"; then
