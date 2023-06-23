@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Calculate the amount of space needed to run the kernel, including room for
 # the .bss and .brk sections.
