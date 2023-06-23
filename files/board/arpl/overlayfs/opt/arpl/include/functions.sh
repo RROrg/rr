@@ -33,7 +33,7 @@ function readModelArray() {
 # Check if loader is fully configured
 # Returns 1 if not
 function loaderIsConfigured() {
-  SN="`readConfigKey "sn" "${USER_CONFIG_FILE}"`"
+  SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
   [ -z "${SN}" ] && return 1
   [ ! -f "${MOD_ZIMAGE_FILE}" ] && return 1
   [ ! -f "${MOD_RDGZ_FILE}" ] && return 1
@@ -60,13 +60,13 @@ function dieLog() {
 ###############################################################################
 # Generate a number with 6 digits from 1 to 30000
 function random() {
-  printf "%06d" $(($RANDOM %30000 +1 ))
+  printf "%06d" $(($RANDOM % 30000 + 1))
 }
 
 ###############################################################################
 # Generate a hexa number from 0x00 to 0xFF
 function randomhex() {
-  printf "&02X" "$(( $RANDOM %255 +1 ))"
+  printf "&02X" "$(($RANDOM % 255 + 1))"
 }
 
 ###############################################################################
@@ -80,9 +80,9 @@ function generateRandomLetter() {
 ###############################################################################
 # Generate a random digit (0-9A-Z)
 function generateRandomValue() {
-	 for i in 0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K L M N P Q R S T V W X Y Z; do
-     echo $i
-	 done | sort -R | tail -1
+  for i in 0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K L M N P Q R S T V W X Y Z; do
+    echo $i
+  done | sort -R | tail -1
 }
 
 ###############################################################################
@@ -90,15 +90,15 @@ function generateRandomValue() {
 # 1 - Model
 # Returns serial number
 function generateSerial() {
-  SERIAL="`readModelArray "${1}" "serial.prefix" | sort -R | tail -1`"
-  SERIAL+=`readModelKey "${1}" "serial.middle"`
-  case "`readModelKey "${1}" "serial.suffix"`" in
-    numeric)
-      SERIAL+=$(random)      
-      ;;
-    alpha)
-      SERIAL+=$(generateRandomLetter)$(generateRandomValue)$(generateRandomValue)$(generateRandomValue)$(generateRandomValue)$(generateRandomLetter)
-      ;;
+  SERIAL="$(readModelArray "${1}" "serial.prefix" | sort -R | tail -1)"
+  SERIAL+=$(readModelKey "${1}" "serial.middle")
+  case "$(readModelKey "${1}" "serial.suffix")" in
+  numeric)
+    SERIAL+=$(random)
+    ;;
+  alpha)
+    SERIAL+=$(generateRandomLetter)$(generateRandomValue)$(generateRandomValue)$(generateRandomValue)$(generateRandomValue)$(generateRandomLetter)
+    ;;
   esac
   echo ${SERIAL}
 }
@@ -109,8 +109,8 @@ function generateSerial() {
 # 2 - Serial number to test
 # Returns 1 if serial number is valid
 function validateSerial() {
-  PREFIX=`readModelArray "${1}" "serial.prefix"`
-  MIDDLE=`readModelKey "${1}" "serial.middle"`
+  PREFIX=$(readModelArray "${1}" "serial.prefix")
+  MIDDLE=$(readModelKey "${1}" "serial.middle")
   S=${2:0:4}
   P=${2:4:3}
   L=${#2}
@@ -164,7 +164,7 @@ function _set_conf_kv() {
   # Delete
   if [ -z "$2" ]; then
     sed -i "$3" -e "s/^$1=.*$//"
-    return $?;
+    return $?
   fi
 
   # Replace
@@ -174,7 +174,7 @@ function _set_conf_kv() {
   fi
 
   # Add if doesn't exist
-  echo "$1=\"$2\"" >> $3
+  echo "$1=\"$2\"" >>$3
 }
 
 ###############################################################################
