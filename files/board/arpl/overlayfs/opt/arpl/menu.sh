@@ -252,12 +252,12 @@ function addonMenu() {
           --msgbox "$(TEXT "No user addons to remove")" 0 0
         continue
       fi
-      ITEMS=""
+      rm -f "${TMP_PATH}/opts"
       for I in "${!ADDONS[@]}"; do
-        ITEMS+="${I} ${I} off "
+        echo "\"${I}\" \"${I}\" \"off\"" >>"${TMP_PATH}/opts"
       done
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
-        --no-tags --checklist "$(TEXT "Select addon to remove")" 0 0 0 ${ITEMS} \
+        --no-tags --checklist "$(TEXT "Select addon to remove")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
       ADDON="$(<"${TMP_PATH}/resp")"
@@ -519,12 +519,12 @@ function cmdlineMenu() {
           --msgbox "$(TEXT "No user cmdline to remove")" 0 0
         continue
       fi
-      ITEMS=""
+      rm -f "${TMP_PATH}/opts"
       for I in "${!CMDLINE[@]}"; do
-        [ -z "${CMDLINE[${I}]}" ] && ITEMS+="${I} \"\" off " || ITEMS+="${I} ${CMDLINE[${I}]} off "
+        echo "\"${I}\" \"${CMDLINE[${I}]}\" \"off\"" >>"${TMP_PATH}/opts"
       done
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
-        --checklist "$(TEXT "Select cmdline to remove")" 0 0 0 ${ITEMS} \
+        --checklist "$(TEXT "Select cmdline to remove")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
       RESP=$(<"${TMP_PATH}/resp")
@@ -660,7 +660,6 @@ function synoinfoMenu() {
         continue
       fi
       rm -f "${TMP_PATH}/opts"
-      ITEMS=""
       for I in ${!SYNOINFO[@]}; do
         echo "\"${I}\" \"${SYNOINFO[${I}]}\" \"off\"" >>"${TMP_PATH}/opts"
       done
@@ -1068,19 +1067,19 @@ function advancedMenu() {
         --msgbox "${MSG}" 0 0
       ;;
     f)
-      ITEMS=""
+      rm -f "${TMP_PATH}/opts"
       while read POSITION NAME; do
         [ -z "${POSITION}" -o -z "${NAME}" ] && continue
         echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
-        ITEMS+="$(printf "%s %s off " "${POSITION}" "${NAME}")"
+        echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
       done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd*" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
       while read POSITION NAME; do
         [ -z "${POSITION}" -o -z "${NAME}" ] && continue
         echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
-        ITEMS+="$(printf "%s %s off " "${POSITION}" "${NAME}")"
+        echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
       done < <(ls -l /dev/disk/by-path/ | sed 's|../..|/dev|g' | grep -E "/dev/sd*" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --checklist "$(TEXT "Advanced")" 0 0 0 ${ITEMS} \
+        --checklist "$(TEXT "Advanced")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
       RESP=$(<"${TMP_PATH}/resp")
