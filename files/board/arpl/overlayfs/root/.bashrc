@@ -16,18 +16,17 @@ PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
 export EDITOR="/bin/nano"
 export BOOTLOADER_PATH="/mnt/p1"
-export SLPART_PATH="/mnt/p2"  # Synologic partition
+export SLPART_PATH="/mnt/p2" # Synologic partition
 export CACHE_PATH="/mnt/p3"
 export DSMROOT_PATH="/mnt/dsmroot"
 export PATH="${PATH}:/opt/arpl"
 
 if [ -f ${BOOTLOADER_PATH}/.locale ]; then
-  export LANG="`cat ${BOOTLOADER_PATH}/.locale`"
+  export LANG="$(cat ${BOOTLOADER_PATH}/.locale)"
 fi
 
 if [ -d /opt/arpl/lang ]; then
-  for F in `ls /opt/arpl/lang/*.mo`
-  do
+  for F in $(ls /opt/arpl/lang/*.mo); do
     install "${F}" "/usr/share/locale/$(basename $F .mo)/LC_MESSAGES/arpl.mo"
   done
 fi
