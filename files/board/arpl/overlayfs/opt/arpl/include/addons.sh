@@ -1,4 +1,3 @@
-
 ###############################################################################
 # Return list of available addons
 # 1 - Platform
@@ -6,11 +5,11 @@
 function availableAddons() {
   while read D; do
     [ ! -f "${D}/manifest.yml" ] && continue
-    ADDON=`basename ${D}`
+    ADDON=$(basename ${D})
     checkAddonExist "${ADDON}" "${1}" "${2}" || continue
-    SYSTEM=`readConfigKey "system" "${D}/manifest.yml"`
+    SYSTEM=$(readConfigKey "system" "${D}/manifest.yml")
     [ "${SYSTEM}" = "true" ] && continue
-    DESC="`readConfigKey "description" "${D}/manifest.yml"`"
+    DESC="$(readConfigKey "description" "${D}/manifest.yml")"
     echo -e "${ADDON}\t${DESC}"
   done < <(find "${ADDONS_PATH}" -maxdepth 1 -type d | sort)
 }
@@ -67,7 +66,7 @@ function untarAddon() {
   rm -rf "${TMP_PATH}/addon"
   mkdir -p "${TMP_PATH}/addon"
   tar -xaf "${1}" -C "${TMP_PATH}/addon" || return
-  ADDON=`readConfigKey "name" "${TMP_PATH}/addon/manifest.yml"`
+  ADDON=$(readConfigKey "name" "${TMP_PATH}/addon/manifest.yml")
   [ -z "${ADDON}" ] && return
   rm -rf "${ADDONS_PATH}/${ADDON}"
   mv "${TMP_PATH}/addon" "${ADDONS_PATH}/${ADDON}"

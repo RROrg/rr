@@ -1,4 +1,3 @@
-
 ###############################################################################
 # Delete a key in config file
 # 1 - Path of Key
@@ -22,7 +21,7 @@ function writeConfigKey() {
 # 2 - Path of yaml config file
 # Return Value
 function readConfigKey() {
-  RESULT=`yq eval '.'${1}' | explode(.)' "${2}"`
+  RESULT=$(yq eval '.'${1}' | explode(.)' "${2}")
   [ "${RESULT}" == "null" ] && echo "" || echo ${RESULT}
 }
 
