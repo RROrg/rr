@@ -659,12 +659,13 @@ function synoinfoMenu() {
           --msgbox "$(TEXT "No synoinfo entries to remove")" 0 0
         continue
       fi
+      rm -f "${TMP_PATH}/opts"
       ITEMS=""
-      for I in "${!SYNOINFO[@]}"; do
-        [ -z "${SYNOINFO[${I}]}" ] && ITEMS+="${I} \"\" off " || ITEMS+="${I} ${SYNOINFO[${I}]} off "
+      for I in ${!SYNOINFO[@]}; do
+        echo "\"${I}\" \"${SYNOINFO[${I}]}\" \"off\"" >>"${TMP_PATH}/opts"
       done
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Synoinfo")" \
-        --checklist "$(TEXT "Select synoinfo entry to remove")" 0 0 0 ${ITEMS} \
+        --checklist "$(TEXT "Select synoinfo entry to remove")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
       RESP=$(<"${TMP_PATH}/resp")
@@ -1533,7 +1534,7 @@ function updateExts() {
     mkdir -p /tmp/addons
     unzip /tmp/addons.zip -d /tmp/addons >/dev/null 2>&1
     dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-      --infobox "$(TEXT "Installing new addons")" 0 0
+      --infobox "$(printf "$(TEXT "Installing new %s")" "${1}")" 0 0
     rm -Rf "${ADDONS_PATH}/"*
     [ -f /tmp/addons/VERSION ] && cp -f /tmp/addons/VERSION ${ADDONS_PATH}/
     for PKG in $(ls /tmp/addons/*.addon); do
@@ -1558,7 +1559,7 @@ function updateExts() {
   fi
   DIRTY=1
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-    --msgbox "$(TEXT "Addons updated with success!")" 0 0
+    --msgbox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
 }
 
 ###############################################################################
