@@ -316,7 +316,7 @@ function addonMenu() {
       else
         if [ -d "${ADDONS_PATH}/$(basename ${USER_FILE} .addons)" ]; then
           dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
-            --yesno "$(TEXT "Invalid proxy server url, continue?")" 0 0
+            --yesno "$(TEXT "The addon already exists. Do you want to overwrite it?")" 0 0
           RET=$?
           [ ${RET} -eq 0 ] && return
         fi
@@ -357,7 +357,7 @@ function moduleMenu() {
       a "$(TEXT "Select all modules")" \
       d "$(TEXT "Deselect all modules")" \
       c "$(TEXT "Choose modules to include")" \
-      o "$(TEXT "Download a external module")" \
+      o "$(TEXT "Upload a external module")" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
@@ -444,28 +444,26 @@ function moduleMenu() {
         --yesno "${MSG}" 0 0
       [ $? -ne 0 ] && return
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-        --inputbox "$(TEXT "please enter the complete URL to download.\n")" 0 0 \
-        2>${TMP_PATH}/resp
-      [ $? -ne 0 ] && continue
-      URL="$(<"${TMP_PATH}/resp")"
-      [ -z "${URL}" ] && continue
-      clear
-      echo "$(printf "$(TEXT "Downloading %s")" "${URL}")"
-      STATUS=$(curl -kLJO -w "%{http_code}" "${URL}" --progress-bar)
-      if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+        --msgbox "$(TEXT "Please upload the *.ko file.")" 0 0 
+      TMP_UP_PATH=/tmp/users
+      USER_FILE=""
+      rm -rf ${TMP_UP_PATH}
+      mkdir -p ${TMP_UP_PATH}
+      pushd ${TMP_UP_PATH}
+      rz -be
+      for F in $(ls -A); do
+        USER_FILE=${F}
+        break
+      done
+      popd
+      if [ -n "${USER_FILE}" -a "${USER_FILE##*.}" = "ko" ]; then
+        addToModules ${PLATFORM} ${KVER} "${TMP_UP_PATH}/${USER_FILE}"
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-          --msgbox "$(TEXT "Check internet, URL or cache disk space")" 0 0
-        return 1
-      fi
-      KONAME=$(basename "$URL")
-      if [ -n "${KONAME}" -a "${KONAME##*.}" = "ko" ]; then
-        addToModules ${PLATFORM} ${KVER} ${KONAME}
-        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-          --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${KONAME}" ${PLATFORM} ${KVER})" 0 0
-        rm -f ${KONAME}
+          --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${USER_FILE}" ${PLATFORM} ${KVER})" 0 0
+        rm -f "${TMP_UP_PATH}/${USER_FILE}"
       else
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-          --msgbox "$(TEXT "File format not recognized!")" 0 0
+          --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       fi
       ;;
     e)
