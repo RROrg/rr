@@ -9,8 +9,6 @@ synoinfo: &synoinfo
   netif_seq: "0 1 2 3 4 5 6 7"
   esataportcfg: "0x00"
   usbportcfg: "0x8700"
-  #rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
-  #rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
 cmdline: &cmdline
   HddHotplug: 0
   syno_hdd_detect: 0
@@ -21,10 +19,10 @@ platform: "bromolow"
 unique: "synology_bromolow_rs3413xs+"
 serial:
   prefix:
-    - "1130"
-    - "1230"
-    - "1330"
-    - "1430"
+  - "1130"
+  - "1230"
+  - "1330"
+  - "1430"
   middle: "LWN"
   suffix: "numeric"
 dom: 1
@@ -37,81 +35,69 @@ builds:
     kver: "3.10.105"
     rd-compressed: false
     cmdline:
-      <<: *cmdline
+      !!merge <<: *cmdline
     synoinfo:
-      <<: *synoinfo
+      !!merge <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_RS3413xs%2B_25556.pat"
-      hash: "4d920c2bfc173f9f583b35f10369109793c1effabe03ee56ffb35974d1c674bf"
-      ramdisk-hash: "c256ca6f2f353d97d47befd2a7267e3dda677e3307b7bb38a45870365b855a43"
-      zimage-hash: "4b463c7db1d55daa0a1600662ff91fe216a5f0381a41af96c4f7b4ec6f9d548e"
-      md5-hash: "9651b2cd3fd42e45450a72617fbb2803"
+      md5: "9651b2cd3fd42e45450a72617fbb2803"
     patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-25556-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-25556-post-init-script.patch"
-      - "ramdisk-common-disable-disabled-ports.patch"
+    - "ramdisk-common-disable-root-pwd.patch"
+    - "ramdisk-25556-init-script.patch"
+    - "ramdisk-common-etc-rc.patch"
+    - "ramdisk-25556-post-init-script.patch"
+    - "ramdisk-common-disable-disabled-ports.patch"
 
   42218:
     ver: "7.0.1"
     kver: "3.10.108"
     rd-compressed: false
     cmdline:
-      <<: *cmdline
+      !!merge <<: *cmdline
     synoinfo:
-      <<: *synoinfo
+      !!merge <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_RS3413xs%2B_42218.pat"
-      hash: "b5f5505a4ee0d623c562db43a0be6aba64a5bc57c6d6dcb796d80a60ea5fc7cd"
-      ramdisk-hash: "ad2b7c6ffabf348a14df0558ab89bc2ac62226b33dfe5b19114f7beed11ae41f"
-      zimage-hash: "354f0bb13c898a7b24f2942d8015f591f7acce1739e2060580c0f38c41addaf7"
-      md5-hash: "2f2e7312db70ca36b3c09236f117f23f"
+      md5: "2f2e7312db70ca36b3c09236f117f23f"
     patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-common-post-init-script.patch"
-      - "ramdisk-common-disable-disabled-ports.patch"
+    - "ramdisk-common-disable-root-pwd.patch"
+    - "ramdisk-common-init-script.patch"
+    - "ramdisk-common-etc-rc.patch"
+    - "ramdisk-common-post-init-script.patch"
+    - "ramdisk-common-disable-disabled-ports.patch"
 
   42661:
     ver: "7.1.0"
     kver: "3.10.108"
     rd-compressed: false
     cmdline:
-      <<: *cmdline
+      !!merge <<: *cmdline
     synoinfo:
-      <<: *synoinfo
+      !!merge <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_RS3413xs%2B_42661.pat"
-      hash: "16446a2f8c157ecde3714d0dc1c37cf4e9fd8189286a6417d77c65c0ea87c8e5"
-      ramdisk-hash: "1f8d64b17aab7e401b14ec01f96adde070b28d50b8256ff82cc296ebd5b62421"
-      zimage-hash: "3017542c92232cb5477b0e11d82d708a9909320350b1740aab58359e85f82351"
-      md5-hash: "f4ffa894e9b7218ea12d601d493fcda2"
+      md5: "f4ffa894e9b7218ea12d601d493fcda2"
     patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42661-post-init-script.patch"
-      - "ramdisk-42661-disable-disabled-ports.patch"
+    - "ramdisk-common-disable-root-pwd.patch"
+    - "ramdisk-common-init-script.patch"
+    - "ramdisk-common-etc-rc.patch"
+    - "ramdisk-42661-post-init-script.patch"
+    - "ramdisk-42661-disable-disabled-ports.patch"
 
   42962:
     ver: "7.1.1"
     kver: "3.10.108"
     rd-compressed: false
     cmdline:
-      <<: *cmdline
+      !!merge <<: *cmdline
     synoinfo:
-      <<: *synoinfo
+      !!merge <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_RS3413xs%2B_42962.pat"
-      hash: "69972c59bd1e3702776f565f40c1c1a226bfa6f914a051b7056ded4352319bf8"
-      ramdisk-hash: "dcb00ef6973050aba866fe2d64dc1bcf8b46bc0eda5b2b405ab186e3443d64ed"
-      zimage-hash: "3c8d6692eec9f8dcbf3224e73f3442244d53112f5522c3dfb2af280714a7a84c"
-      md5-hash: "508ed0ce3b827dcff5f6796700098a5c"
+      md5: "508ed0ce3b827dcff5f6796700098a5c"
     patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
-      - "ramdisk-42661-disable-disabled-ports.patch"
+    - "ramdisk-common-disable-root-pwd.patch"
+    - "ramdisk-common-init-script.patch"
+    - "ramdisk-common-etc-rc.patch"
+    - "ramdisk-42951-post-init-script.patch"
+    - "ramdisk-42661-disable-disabled-ports.patch"

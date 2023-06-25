@@ -444,7 +444,7 @@ function moduleMenu() {
         --yesno "${MSG}" 0 0
       [ $? -ne 0 ] && return
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-        --msgbox "$(TEXT "Please upload the *.ko file.")" 0 0 
+        --msgbox "$(TEXT "Please upload the *.ko file.")" 0 0
       TMP_UP_PATH=/tmp/users
       USER_FILE=""
       rm -rf ${TMP_UP_PATH}
@@ -690,9 +690,7 @@ function synoinfoMenu() {
 # Extract linux and ramdisk files from the DSM .pat
 function extractDsmFiles() {
   PAT_URL="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.url")"
-  PAT_HASH="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.hash")"
-  RAMDISK_HASH="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.ramdisk-hash")"
-  ZIMAGE_HASH="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.zimage-hash")"
+  PAT_MD5="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.md5")"
 
   SPACELEFT=$(df --block-size=1 | awk '/'${LOADER_DEVICE_NAME}'3/{print $4}') # Check disk space left
 
@@ -741,9 +739,9 @@ function extractDsmFiles() {
   fi
 
   echo -n "$(printf "$(TEXT "Checking hash of %s: ")" "${PAT_FILE}")"
-  if [ "$(sha256sum ${PAT_PATH} | awk '{print$1}')" != "${PAT_HASH}" ]; then
+  if [ "$(md5sum ${PAT_PATH} | awk '{print $1}')" != "${PAT_MD5}" ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-      --msgbox "$(TEXT "Hash of pat not match, try again!")" 0 0
+      --msgbox "$(TEXT "md5 Hash of pat not match, try again!")" 0 0
     rm -f ${PAT_PATH}
     return 1
   fi
@@ -836,28 +834,20 @@ function extractDsmFiles() {
         --textbox "${LOG_FILE}" 0 0
     fi
   fi
-
-  echo -n "$(TEXT "Checking hash of zImage: ")"
-  HASH="$(sha256sum ${UNTAR_PAT_PATH}/zImage | awk '{print$1}')"
-  if [ "${HASH}" != "${ZIMAGE_HASH}" ]; then
-    sleep 1
+  if [ ! -f ${UNTAR_PAT_PATH}/grub_cksum.syno ] ||
+    [ ! -f ${UNTAR_PAT_PATH}/GRUB_VER ] ||
+    [ ! -f ${UNTAR_PAT_PATH}/zImage ] ||
+    [ ! -f ${UNTAR_PAT_PATH}/rd.gz ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-      --msgbox "$(TEXT "Hash of zImage not match, try again!")" 0 0
+      --msgbox "$(TEXT "pat Invalid, try again!")" 0 0
     return 1
   fi
-  echo "$(TEXT "OK")"
+  echo -n "$(TEXT "Setting hash: ")"
+  ZIMAGE_HASH="$(sha256sum ${UNTAR_PAT_PATH}/zImage | awk '{print $1}')"
   writeConfigKey "zimage-hash" "${ZIMAGE_HASH}" "${USER_CONFIG_FILE}"
-
-  echo -n "$(TEXT "Checking hash of ramdisk: ")"
-  HASH="$(sha256sum ${UNTAR_PAT_PATH}/rd.gz | awk '{print$1}')"
-  if [ "${HASH}" != "${RAMDISK_HASH}" ]; then
-    sleep 1
-    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-      --msgbox "$(TEXT "Hash of ramdisk not match, try again!")" 0 0
-    return 1
-  fi
-  echo "$(TEXT "OK")"
+  RAMDISK_HASH="$(sha256sum ${UNTAR_PAT_PATH}/rd.gz | awk '{print $1}')"
   writeConfigKey "ramdisk-hash" "${RAMDISK_HASH}" "${USER_CONFIG_FILE}"
+  echo "$(TEXT "OK")"
 
   echo -n "$(TEXT "Copying files: ")"
   cp "${UNTAR_PAT_PATH}/grub_cksum.syno" "${BOOTLOADER_PATH}"
