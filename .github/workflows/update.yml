@@ -14,14 +14,7 @@ on:
         description: 'push'
         default: false
         type: boolean
-      config: 
-        description: 'update configs'
-        default: true
-        type: boolean
-      rss: 
-        description: 'update rss'
-        default: true
-        type: boolean
+
 jobs:
   configs:
     runs-on: ubuntu-latest
@@ -46,7 +39,7 @@ jobs:
 
       - name: update pats
         run: |
-          python rssupdate.py ${{ inputs.config }} ${{ inputs.rss }}
+          python rssupdate.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -54,14 +47,12 @@ jobs:
           name: configs
           path: |
             files/board/arpl/overlayfs/opt/arpl/model-configs
-            rss.json
-            rss.xml
 
       - name: Check and Push
         if: success() && inputs.push == true
         run: |
           git pull
-          status=$(git status -s | grep -E 'model-configs|rss' | awk '{printf " %s", $2}')
+          status=$(git status -s | grep -E 'model-configs' | awk '{printf " %s", $2}')
           if [ -n "${status}" ]; then
             git add ${status}
             git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
