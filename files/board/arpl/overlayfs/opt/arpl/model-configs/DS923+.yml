@@ -8,9 +8,6 @@ synoinfo: &synoinfo
   maxlanport: "8"
   netif_seq: "0 1 2 3 4 5 6 7"
   buzzeroffen: "0xffff"
-  #rss_server: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
-  #rss_server_ssl: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.xml"
-  #rss_server_v2: "https://raw.githubusercontent.com/wjz304/arpl-i18n/main/rss.json"
 cmdline: &cmdline
   synoboot2:
   SMBusHddDynamicPower: 1
@@ -22,7 +19,7 @@ platform: "r1000"
 unique: "synology_r1000_923+"
 serial:
   prefix:
-    - "2270"
+  - "2270"
   middle: "TQR"
   suffix: "alpha"
 dom: 2
@@ -35,37 +32,31 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     cmdline:
-      <<: *cmdline
+      !!merge <<: *cmdline
     synoinfo:
-      <<: *synoinfo
+      !!merge <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-6/DSM_DS923%2B_42962.pat"
-      hash: "17e2ef183233175cea392eff69158780d8c3521d1710d504533524351175cba0"
-      ramdisk-hash: "c934e84d43f0ae7d970ae3b52229f601673c2b3814952c7b85dd809cd957647b"
-      zimage-hash: "351bbabd320ea2966594638aa81c5bf4ae66c520639c25151af2c3bccee9c921"
-      md5-hash: "fd4d36adb0645f7c1215854405da62c3"
+      md5: "fd4d36adb0645f7c1215854405da62c3"
     patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
+    - "ramdisk-common-disable-root-pwd.patch"
+    - "ramdisk-common-init-script.patch"
+    - "ramdisk-common-etc-rc.patch"
+    - "ramdisk-42951-post-init-script.patch"
 
   64570:
     ver: "7.2.0"
     kver: "4.4.302"
     rd-compressed: false
     cmdline:
-      <<: *cmdline
+      !!merge <<: *cmdline
     synoinfo:
-      <<: *synoinfo
+      !!merge <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.2/64570-1/DSM_DS923%2B_64570.pat"
-      hash: "7c6dcdc4d0e88585d20d066ed960839b9c08a548e4d439334e051ec3931d2f31"
-      ramdisk-hash: "d85428564dbe68e4c50f87c50e89bc3dc71157150fc7a5e4b5b244b8e3233832"
-      zimage-hash: "3bc6186d70d954b32ed9a01d7020591dd6e46c6147a7401583d16e26fea3c89d"
-      md5-hash: "8504b920d4af57a5daa3d573cac34870"
+      md5: "8504b920d4af57a5daa3d573cac34870"
     patch:
-      - "ramdisk-64216-disable-root-pwd.patch"
-      - "ramdisk-64216-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
+    - "ramdisk-64216-disable-root-pwd.patch"
+    - "ramdisk-64216-init-script.patch"
+    - "ramdisk-common-etc-rc.patch"
+    - "ramdisk-42951-post-init-script.patch"

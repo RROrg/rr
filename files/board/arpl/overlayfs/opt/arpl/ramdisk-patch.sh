@@ -49,7 +49,7 @@ UNIQUE=$(readModelKey "${MODEL}" "unique")
 PLATFORM="$(readModelKey "${MODEL}" "platform")"
 KVER="$(readModelKey "${MODEL}" "builds.${BUILD}.kver")"
 PAT_URL="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.url")"
-PAT_MD5_HASH="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.md5-hash")"
+PAT_MD5="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.md5")"
 RD_COMPRESSED="$(readModelKey "${MODEL}" "builds.${BUILD}.rd-compressed")"
 
 # Sanity check
@@ -139,7 +139,7 @@ echo "export PLATFORM=${PLATFORM}"              >>"${RAMDISK_PATH}/addons/addons
 echo "export MODEL=${MODEL}"                    >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export BUILD=${BUILD}"                    >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export MLINK=${PAT_URL}"                  >>"${RAMDISK_PATH}/addons/addons.sh"
-echo "export MCHECKSUM=${PAT_MD5_HASH}"         >>"${RAMDISK_PATH}/addons/addons.sh"
+echo "export MCHECKSUM=${PAT_MD5}"              >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export LAYOUT=${LAYOUT}"                  >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export KEYMAP=${KEYMAP}"                  >>"${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
