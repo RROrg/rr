@@ -57,13 +57,16 @@ MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
 BUILD="$(readConfigKey "build" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
+SFNUM="$(readConfigKey "smallfixnumber" "${USER_CONFIG_FILE}")"
 
-CPU="$(cat /proc/cpuinfo | grep 'model name' | uniq | awk -F': ' '{print $2}')"
+CPU="$(echo $(cat /proc/cpuinfo | grep 'model name' | uniq | awk -F':' '{print $2}'))"
+MEM="$(free -m | grep -i mem | awk '{print$2}') MB"
 
 echo -e "$(TEXT "Model:") \033[1;36m${MODEL}\033[0m"
-echo -e "$(TEXT "Build:") \033[1;36m${BUILD}\033[0m"
+echo -e "$(TEXT "Build:") \033[1;36m${BUILD}$([ ${SFNUM:-0} -ne 0 ] && echo "u${SFNUM}")\033[0m"
 echo -e "$(TEXT "LKM:  ") \033[1;36m${LKM}\033[0m"
 echo -e "$(TEXT "CPU:  ") \033[1;36m${CPU}\033[0m"
+echo -e "$(TEXT "MEM:  ") \033[1;36m${MEM}\033[0m"
 
 if [ ! -f "${MODEL_CONFIG_PATH}/${MODEL}.yml" ] || [ -z "$(readConfigKey "builds.${BUILD}" "${MODEL_CONFIG_PATH}/${MODEL}.yml")" ]; then
   echo -e "\033[1;33m*** $(printf "$(TEXT "The current version of arpl does not support booting %s-%s, please rebuild.")" "${MODEL}" "${BUILD}") ***\033[0m"
