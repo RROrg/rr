@@ -32,9 +32,9 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     cmdline:
-      !!merge <<: *cmdline
+      <<: *cmdline
     synoinfo:
-      !!merge <<: *synoinfo
+      <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-6/DSM_DS723%2B_42962.pat"
       md5: "e8e6598014205a9cfb98c95183e856fe"
@@ -49,9 +49,9 @@ builds:
     kver: "4.4.302"
     rd-compressed: false
     cmdline:
-      !!merge <<: *cmdline
+      <<: *cmdline
     synoinfo:
-      !!merge <<: *synoinfo
+      <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.2/64570-1/DSM_DS723%2B_64570.pat"
       md5: "302f4427cc76bc3830afc5cff1424298"

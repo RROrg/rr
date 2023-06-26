@@ -30,9 +30,9 @@ builds:
     kver: "5.10.55"
     rd-compressed: false
     cmdline:
-      !!merge <<: *cmdline
+      <<: *cmdline
     synoinfo:
-      !!merge <<: *synoinfo
+      <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-6/DSM_SA6400_42962.pat"
       md5: "7bb63d65829b2ad4bcfda3b37e0ac1b1"
@@ -47,9 +47,9 @@ builds:
     kver: "5.10.55"
     rd-compressed: false
     cmdline:
-      !!merge <<: *cmdline
+      <<: *cmdline
     synoinfo:
-      !!merge <<: *synoinfo
+      <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.2/64570-1/DSM_SA6400_64570.pat"
       md5: "83b591bfb240c51b2feff8f02eac8bde"
