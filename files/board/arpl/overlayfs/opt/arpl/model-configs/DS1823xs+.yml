@@ -33,9 +33,9 @@ builds:
     kver: "4.4.180"
     rd-compressed: false
     cmdline:
-      !!merge <<: *cmdline
+      <<: *cmdline
     synoinfo:
-      !!merge <<: *synoinfo
+      <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-6/DSM_DS1823xs%2B_42962.pat"
       md5: "1011932a1cfb8aa07e77beebede87a71"
@@ -50,9 +50,9 @@ builds:
     kver: "4.4.302"
     rd-compressed: false
     cmdline:
-      !!merge <<: *cmdline
+      <<: *cmdline
     synoinfo:
-      !!merge <<: *synoinfo
+      <<: *synoinfo
     pat:
       url: "https://global.synologydownload.com/download/DSM/release/7.2/64570-1/DSM_DS1823xs%2B_64570.pat"
       md5: "1a8a5e1d8461e9a3af638dae7f121ad3"
