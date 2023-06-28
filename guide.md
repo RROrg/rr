@@ -191,4 +191,13 @@
   cat /proc/cmdlime                             # 引导参数
   cat /var/log/linuxrc.syno.log                 # 引导态下启动日志
   cat /var/log/messages                         # 引导态下操作日志
+
+  # Intel GPU
+  lspci -n | grep 0300 | cut -d " " -f 3           # PIDVID
+  ls /dev/dri                                      # 查看显卡设备
+  cat /sys/kernel/debug/dri/0/i915_frequency_info  # 显卡驱动详细信息
+
+  # Nvidia GPU
+  ls /dev/nvid*                                    # 查看显卡设备
+  nvidia-smi                                       # 显卡驱动详细信息
   ```
