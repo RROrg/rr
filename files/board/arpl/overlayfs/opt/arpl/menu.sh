@@ -544,6 +544,8 @@ function cmdlineMenu() {
         elif [ $(validateSerial ${MODEL} ${SERIAL}) -eq 1 ]; then
           break
         fi
+        # At present, the SN rules are not complete, and many SNs are not truly invalid, so not provide tips now.
+        break
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
           --yesno "$(TEXT "Invalid serial, continue?")" 0 0
         [ $? -eq 0 ] && break
