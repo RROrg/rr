@@ -54,22 +54,23 @@ fi
 VID="$(readConfigKey "vid" "${USER_CONFIG_FILE}")"
 PID="$(readConfigKey "pid" "${USER_CONFIG_FILE}")"
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
-BUILD="$(readConfigKey "build" "${USER_CONFIG_FILE}")"
+PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
+SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
-SFNUM="$(readConfigKey "smallfixnumber" "${USER_CONFIG_FILE}")"
 
 CPU="$(echo $(cat /proc/cpuinfo | grep 'model name' | uniq | awk -F':' '{print $2}'))"
 MEM="$(free -m | grep -i mem | awk '{print$2}') MB"
 
 echo -e "$(TEXT "Model:") \033[1;36m${MODEL}\033[0m"
-echo -e "$(TEXT "Build:") \033[1;36m${BUILD}$([ ${SFNUM:-0} -ne 0 ] && echo "u${SFNUM}")\033[0m"
+echo -e "$(TEXT "Build:") \033[1;36m${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))\033[0m"
 echo -e "$(TEXT "LKM:  ") \033[1;36m${LKM}\033[0m"
 echo -e "$(TEXT "CPU:  ") \033[1;36m${CPU}\033[0m"
 echo -e "$(TEXT "MEM:  ") \033[1;36m${MEM}\033[0m"
 
-if [ ! -f "${MODEL_CONFIG_PATH}/${MODEL}.yml" ] || [ -z "$(readConfigKey "builds.${BUILD}" "${MODEL_CONFIG_PATH}/${MODEL}.yml")" ]; then
-  echo -e "\033[1;33m*** $(printf "$(TEXT "The current version of arpl does not support booting %s-%s, please rebuild.")" "${MODEL}" "${BUILD}") ***\033[0m"
+if [ ! -f "${MODEL_CONFIG_PATH}/${MODEL}.yml" ] || [ -z "$(readConfigKey "productvers.[${PRODUCTVER}]" "${MODEL_CONFIG_PATH}/${MODEL}.yml")" ]; then
+  echo -e "\033[1;33m*** $(printf "$(TEXT "The current version of arpl does not support booting %s-%s, please rebuild.")" "${MODEL}" "${PRODUCTVER}") ***\033[0m"
   exit 1
 fi
 
@@ -88,13 +89,13 @@ CMDLINE['sn']="${SN}"
 # Read cmdline
 while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
-done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
+done < <(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].cmdline")
 while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
 done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
 
 #
-KVER=$(readModelKey "${MODEL}" "builds.${BUILD}.kver")
+KVER=$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")
 
 if [ "${BUS}" = "ata" ]; then
   LOADER_DEVICE_NAME=$(echo ${LOADER_DISK} | sed 's|/dev/||')

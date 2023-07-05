@@ -30,18 +30,14 @@ dom: 1
 dt: false
 disks: 12
 beta: true
-builds:
-  25556:
-    ver: "6.2.4"
+productvers:
+  "6.2":
     kver: "4.4.59"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_SA3600_25556.pat"
-      md5: "5fcc06efe85c74276736dd49717c33f1"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-25556-init-script.patch"
@@ -49,17 +45,13 @@ builds:
       - "ramdisk-25556-post-init-script.patch"
       - "ramdisk-common-disable-disabled-ports.patch"
 
-  42218:
-    ver: "7.0.1"
+  "7.0":
     kver: "4.4.180"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_SA3600_42218.pat"
-      md5: "64c75bdf8d28761cb294e41bf3aee2e9"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -67,35 +59,13 @@ builds:
       - "ramdisk-common-post-init-script.patch"
       - "ramdisk-common-disable-disabled-ports.patch"
 
-  42661:
-    ver: "7.1.0"
+  "7.1":
     kver: "4.4.180"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_SA3600_42661.pat"
-      md5: "ece886eba8b0c2eaf260704dbd20f9a7"
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42661-post-init-script.patch"
-      - "ramdisk-42661-disable-disabled-ports.patch"
-
-  42962:
-    ver: "7.1.1"
-    kver: "4.4.180"
-    rd-compressed: false
-    cmdline:
-      <<: *cmdline
-    synoinfo:
-      <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_SA3600_42962.pat"
-      md5: "7c21732ca4f4cb4cf43538a3d9497cf8"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
@@ -103,17 +73,13 @@ builds:
       - "ramdisk-42951-post-init-script.patch"
       - "ramdisk-42661-disable-disabled-ports.patch"
 
-  64570:
-    ver: "7.2.0"
+  "7.2":
     kver: "4.4.302"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.2/64570-1/DSM_SA3600_64570.pat"
-      md5: "cc489fe3b383290713dd13f363a1ee7e"
     patch:
       - "ramdisk-64216-disable-root-pwd.patch"
       - "ramdisk-64216-init-script.patch"

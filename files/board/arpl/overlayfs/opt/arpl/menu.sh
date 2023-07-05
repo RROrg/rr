@@ -21,7 +21,9 @@ DIRTY=0
 # DEBUG=0
 
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
-BUILD="$(readConfigKey "build" "${USER_CONFIG_FILE}")"
+PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
+SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
 LAYOUT="$(readConfigKey "layout" "${USER_CONFIG_FILE}")"
 KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
@@ -39,10 +41,15 @@ function backtitle() {
   else
     BACKTITLE+=" (no model)"
   fi
-  if [ -n "${BUILD}" ]; then
-    BACKTITLE+=" ${BUILD}"
+  if [ -n "${PRODUCTVER}" ]; then
+    BACKTITLE+=" ${PRODUCTVER}"
+    if [ -n "${BUILDNUM}" ]; then
+      BACKTITLE+="(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
+    else
+      BACKTITLE+="(no build)"
+    fi
   else
-    BACKTITLE+=" (no build)"
+    BACKTITLE+=" (no productver)"
   fi
   if [ -n "${SN}" ]; then
     BACKTITLE+=" ${SN}"
@@ -120,25 +127,28 @@ function modelMenu() {
   else
     resp="${1}"
   fi
-  # If user change model, clean buildnumber and S/N
+  # If user change model, clean build* and pat* and SN
   if [ "${MODEL}" != "${resp}" ]; then
     MODEL=${resp}
     writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
-    BUILD=""
-    writeConfigKey "build" "${BUILD}" "${USER_CONFIG_FILE}"
+    PRODUCTVER=""
+    BUILDNUM=""
+    SMALLNUM=""
+    writeConfigKey "productver" "" "${USER_CONFIG_FILE}"
+    writeConfigKey "buildnum" "" "${USER_CONFIG_FILE}"
+    writeConfigKey "smallnum" "" "${USER_CONFIG_FILE}"
+    writeConfigKey "paturl" "" "${USER_CONFIG_FILE}"
+    writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
     SN=$(generateSerial "${MODEL}")
     writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
-    # Delete old files
-    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
-    rm -f "${TMP_PATH}/patdownloadurl"
     DIRTY=1
   fi
 }
 
 ###############################################################################
 # Shows available buildnumbers from a model to user choose one
-function buildMenu() {
-  ITEMS="$(readConfigEntriesArray "builds" "${MODEL_CONFIG_PATH}/${MODEL}.yml" | sort -r)"
+function productversMenu() {
+  ITEMS="$(readConfigEntriesArray "productvers" "${MODEL_CONFIG_PATH}/${MODEL}.yml" | sort -r)"
   if [ -z "${1}" ]; then
     dialog --backtitle "$(backtitle)" --colors \
       --no-items --menu "$(TEXT "Choose a build number")" 0 0 0 ${ITEMS} \
@@ -150,30 +160,69 @@ function buildMenu() {
     if ! arrayExistItem "${1}" ${ITEMS}; then return; fi
     resp="${1}"
   fi
-  if [ "${BUILD}" != "${resp}" ]; then
-    local KVER=$(readModelKey "${MODEL}" "builds.${resp}.kver")
+  if [ "${PRODUCTVER}" != "${resp}" ]; then
+    local KVER=$(readModelKey "${MODEL}" "productvers.[${resp}].kver")
     if [ -d "/sys/firmware/efi" -a "${KVER:0:1}" = "3" ]; then
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Build Number")" \
         --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
-      buildMenu
+      return
     fi
     if [ ! "usb" = "$(udevadm info --query property --name ${LOADER_DISK} | grep BUS | cut -d= -f2)" -a "${KVER:0:1}" = "5" ]; then
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Build Number")" \
         --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
-      buildMenu
+      return
+    fi
+    # get online pat data
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Build Number")" \
+      --infobox "$(TEXT "Get online pat data ..")" 0 0
+    idx=1
+    while [ $idx -le 3 ]; do # Loop 3 times, if successful, break
+      speed_a=$(ping -c 1 -W 5 www.synology.com | awk '/time=/ {print $7}' | cut -d '=' -f 2)
+      speed_b=$(ping -c 1 -W 5 www.synology.cn | awk '/time=/ {print $7}' | cut -d '=' -f 2)
+      fastest="$(echo -e "https://www.synology.com/api/support/findDownloadInfo?lang=en-us ${speed_a:-999}\nhttps://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn ${speed_b:-999}" | sort -k2n | head -1 | awk '{print $1}')"
+      patdata=$(curl -skL "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
+      if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
+        if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
+          paturl=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].url')
+          patsum=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].checksum')
+          paturl=${paturl%%\?*}
+          break
+        fi
+      fi
+      idx=$((idx + 1))
+    done
+    if [ -z "${paturl}" -o -z "${patsum}" ]; then
+      MSG="Failed to get online pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat."
+      paturl=""
+      patsum=""
+    else
+      MSG="Successfully to get online pat data,\nPlease confirm or modify as needed."
     fi
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Build Number")" \
+      --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
+      2>"${TMP_PATH}/resp"
+    [ $? -ne 0 ] && return
+    [ -z "${paturl}" -o -z "${patsum}" ] && return
+    paturl="$(cat "${TMP_PATH}/resp" | tail -n +1 | head -1)"
+    patsum="$(cat "${TMP_PATH}/resp" | tail -n +2 | head -1)"
+    writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
+    writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
+    PRODUCTVER=${resp}
+    writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
+    BUILDNUM=""
+    SMALLNUM=""
+    writeConfigKey "buildnum" "" "${USER_CONFIG_FILE}"
+    writeConfigKey "smallnum" "" "${USER_CONFIG_FILE}"
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Build Number")" \
       --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
-    BUILD=${resp}
-    writeConfigKey "build" "${BUILD}" "${USER_CONFIG_FILE}"
     # Delete synoinfo and reload model/build synoinfo
     writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
     while IFS=': ' read KEY VALUE; do
       writeConfigKey "synoinfo.${KEY}" "${VALUE}" "${USER_CONFIG_FILE}"
-    done < <(readModelMap "${MODEL}" "builds.${BUILD}.synoinfo")
+    done < <(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
     # Check addons
     PLATFORM="$(readModelKey "${MODEL}" "platform")"
-    KVER="$(readModelKey "${MODEL}" "builds.${BUILD}.kver")"
+    KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
     while IFS=': ' read ADDON PARAM; do
       [ -z "${ADDON}" ] && continue
       if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
@@ -187,7 +236,6 @@ function buildMenu() {
     done < <(getAllModules "${PLATFORM}" "${KVER}")
     # Remove old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
-    rm -f "${TMP_PATH}/patdownloadurl"
     DIRTY=1
   fi
 }
@@ -197,7 +245,7 @@ function buildMenu() {
 function addonMenu() {
   # Read 'platform' and kernel version to check if addon exists
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
-  KVER="$(readModelKey "${MODEL}" "builds.${BUILD}.kver")"
+  KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
   # Read addons from user config
   unset ADDONS
   declare -A ADDONS
@@ -338,7 +386,7 @@ function addonMenu() {
 ###############################################################################
 function moduleMenu() {
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
-  KVER="$(readModelKey "${MODEL}" "builds.${BUILD}.kver")"
+  KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
   dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
     --infobox "$(TEXT "Reading modules")" 0 0
   ALLMODULES=$(getAllModules "${PLATFORM}" "${KVER}")
@@ -607,7 +655,7 @@ function cmdlineMenu() {
       ITEMS=""
       while IFS=': ' read KEY VALUE; do
         ITEMS+="${KEY}: ${VALUE}\n"
-      done < <(readModelMap "${MODEL}" "builds.${BUILD}.cmdline")
+      done < <(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].cmdline")
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
         --msgbox "${ITEMS}" 0 0
       ;;
@@ -691,16 +739,16 @@ function synoinfoMenu() {
 ###############################################################################
 # Extract linux and ramdisk files from the DSM .pat
 function extractDsmFiles() {
-  PAT_URL="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.url")"
-  PAT_MD5="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.md5")"
+  PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
+  PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
 
   SPACELEFT=$(df --block-size=1 | awk '/'${LOADER_DEVICE_NAME}'3/{print $4}') # Check disk space left
 
-  PAT_FILE="${MODEL}-${BUILD}.pat"
+  PAT_FILE="${MODEL}-${PRODUCTVER}.pat"
   PAT_PATH="${CACHE_PATH}/dl/${PAT_FILE}"
   EXTRACTOR_PATH="${CACHE_PATH}/extractor"
   EXTRACTOR_BIN="syno_extract_system_patch"
-  OLDPAT_URL="https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
+  OLDPATURL="https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
 
   if [ -f "${PAT_PATH}" ]; then
     echo "$(printf "$(TEXT "%s cached.")" "${PAT_FILE}")"
@@ -717,21 +765,20 @@ function extractDsmFiles() {
     speed_c=$(ping -c 1 -W 5 cndl.synology.cn | awk '/time=/ {print $7}' | cut -d '=' -f 2)
     fastest="$(echo -e "global.synologydownload.com ${speed_a:-999}\nglobal.download.synology.com ${speed_b:-999}\ncndl.synology.cn ${speed_c:-999}" | sort -k2n | head -1 | awk '{print $1}')"
 
-    mirror="$(echo ${PAT_URL} | sed 's|^http[s]*://\([^/]*\).*|\1|')"
+    mirror="$(echo ${PATURL} | sed 's|^http[s]*://\([^/]*\).*|\1|')"
     if [ "${mirror}" != "${fastest}" ]; then
       echo "$(printf "$(TEXT "Based on the current network situation, switch to %s mirror to downloading.")" "${fastest}")"
-      PAT_URL="$(echo ${PAT_URL} | sed "s/${mirror}/${fastest}/")"
-      OLDPAT_URL="https://${fastest}/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
+      PATURL="$(echo ${PATURL} | sed "s/${mirror}/${fastest}/")"
+      OLDPATURL="https://${fastest}/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
     fi
-    echo ${PAT_URL} >"${TMP_PATH}/patdownloadurl"
     echo "$(printf "$(TEXT "Downloading %s")" "${PAT_FILE}")"
     # Discover remote file size
-    FILESIZE=$(curl -k -sLI "${PAT_URL}" | grep -i Content-Length | awk '{print$2}')
+    FILESIZE=$(curl -k -sLI "${PATURL}" | grep -i Content-Length | awk '{print$2}')
     if [ 0${FILESIZE} -ge 0${SPACELEFT} ]; then
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
     fi
-    STATUS=$(curl -k -w "%{http_code}" -L "${PAT_URL}" -o "${PAT_PATH}" --progress-bar)
+    STATUS=$(curl -k -w "%{http_code}" -L "${PATURL}" -o "${PAT_PATH}" --progress-bar)
     if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
       rm "${PAT_PATH}"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
@@ -741,7 +788,7 @@ function extractDsmFiles() {
   fi
 
   echo -n "$(printf "$(TEXT "Checking hash of %s: ")" "${PAT_FILE}")"
-  if [ "$(md5sum ${PAT_PATH} | awk '{print $1}')" != "${PAT_MD5}" ]; then
+  if [ "$(md5sum ${PAT_PATH} | awk '{print $1}')" != "${PATSUM}" ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "md5 Hash of pat not match, try again!")" 0 0
     rm -f ${PAT_PATH}
@@ -788,12 +835,12 @@ function extractDsmFiles() {
       if [ ! -f "${OLDPAT_PATH}" ]; then
         echo "$(TEXT "Downloading old pat to extract synology .pat extractor...")"
         # Discover remote file size
-        FILESIZE=$(curl -k -sLI "${OLDPAT_URL}" | grep -i Content-Length | awk '{print$2}')
+        FILESIZE=$(curl -k -sLI "${OLDPATURL}" | grep -i Content-Length | awk '{print$2}')
         if [ 0${FILESIZE} -ge 0${SPACELEFT} ]; then
           # No disk space to download, change it to RAMDISK
           OLDPAT_PATH="${TMP_PATH}/DS3622xs+-42218.pat"
         fi
-        STATUS=$(curl -k -w "%{http_code}" -L "${OLDPAT_URL}" -o "${OLDPAT_PATH}" --progress-bar)
+        STATUS=$(curl -k -w "%{http_code}" -L "${OLDPATURL}" -o "${OLDPAT_PATH}" --progress-bar)
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           rm "${OLDPAT_PATH}"
           dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
@@ -867,7 +914,7 @@ function extractDsmFiles() {
 function make() {
   clear
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
-  KVER="$(readModelKey "${MODEL}" "builds.${BUILD}.kver")"
+  KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
 
   # Check if all addon exists
   while IFS=': ' read ADDON PARAM; do
@@ -897,10 +944,11 @@ function make() {
       --msgbox "$(TEXT "Ramdisk not patched:\n")$(<"${LOG_FILE}")" 0 0
     return 1
   fi
-
+  PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+  BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
+  SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
   echo "$(TEXT "Cleaning")"
   rm -rf "${UNTAR_PAT_PATH}"
-
   echo "$(TEXT "Ready!")"
   sleep 3
   DIRTY=0
@@ -913,7 +961,7 @@ function advancedMenu() {
   NEXT="l"
   while true; do
     rm "${TMP_PATH}/menu"
-    if [ -n "${BUILD}" ]; then
+    if [ -n "${PRODUCTVER}" ]; then
       echo "l \"$(TEXT "Switch LKM version:") \Z4${LKM}\Zn\"" >>"${TMP_PATH}/menu"
     fi
     if loaderIsConfigured; then
@@ -926,8 +974,8 @@ function advancedMenu() {
     echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\"" >>"${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\"" >>"${TMP_PATH}/menu"
-    if [ -n "${MODEL}" -a -n "${BUILD}" ]; then
-      echo "k \"$(TEXT "show pat download link")\"" >>"${TMP_PATH}/menu"
+    if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
+      echo "k \"$(TEXT "show/modify the current pat data")\"" >>"${TMP_PATH}/menu"
     fi
     echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"
     echo "f \"$(TEXT "Format disk(s) # Without loader disk")\"" >>"${TMP_PATH}/menu"
@@ -1025,12 +1073,21 @@ function advancedMenu() {
         --msgbox "${MSG}" 0 0
       ;;
     k)
-      # output pat download link
-      if [ ! -f "${TMP_PATH}/patdownloadurl" ]; then
-        echo "$(readModelKey "${MODEL}" "builds.${BUILD}.pat.url")" >"${TMP_PATH}/patdownloadurl"
-      fi
+      PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
+      PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
+      MSG="$(TEXT "pat: (editable)")"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --editbox "${TMP_PATH}/patdownloadurl" 10 100
+        --form "${MSG}" 10 110 2 "URL" 1 1 "${PATURL}" 1 5 100 0 "MD5" 2 1 "${PATSUM}" 2 5 100 0 \
+        2>"${TMP_PATH}/resp"
+      [ $? -ne 0 ] && return
+      paturl="$(cat "${TMP_PATH}/resp" | tail -n +1 | head -1)"
+      patsum="$(cat "${TMP_PATH}/resp" | tail -n +2 | head -1)"
+      if [ ! ${paturl} = ${PATURL} ] || [ ! ${patsum} = ${PATSUM} ]; then
+        writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
+        writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
+        rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
+        DIRTY=1
+      fi
       ;;
     a)
       MSG=""
@@ -1308,10 +1365,15 @@ function tryRecoveryDSM() {
     --infobox "$(TEXT "Trying to recovery a DSM installed system")" 0 0
   if findAndMountDSMRoot; then
     MODEL=""
-    BUILD=""
+    PRODUCTVER=""
+    BUILDNUM=""
+    SMALLNUM=""
     if [ -f "${DSMROOT_PATH}/.syno/patch/VERSION" ]; then
       eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep unique)
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep base)
+      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep majorversion)
+      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep minorversion)
+      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep buildnumber)
+      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep smallfixnumber)
       if [ -n "${unique}" ]; then
         while read F; do
           M="$(basename ${F})"
@@ -1322,16 +1384,20 @@ function tryRecoveryDSM() {
           modelMenu "${M}"
         done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
         if [ -n "${MODEL}" ]; then
-          buildMenu ${base}
-          if [ -n "${BUILD}" ]; then
+          productversMenu "${majorversion}.${minorversion}"
+          if [ -n "${PRODUCTVER}" ]; then
             cp "${DSMROOT_PATH}/.syno/patch/zImage" "${SLPART_PATH}"
             cp "${DSMROOT_PATH}/.syno/patch/rd.gz" "${SLPART_PATH}"
-            MSG="$(printf "$(TEXT "Found a installation:\nModel: %s\nBuildnumber: %s")" "${MODEL}" "${BUILD}")"
+            MSG="$(printf "$(TEXT "Found a installation:\nModel: %s\nProductversion: %s")" "${MODEL}" "${PRODUCTVER}")"
             SN=$(_get_conf_kv SN "${DSMROOT_PATH}/etc/synoinfo.conf")
             if [ -n "${SN}" ]; then
               writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
               MSG+="$(printf "$(TEXT "\nSerial: %s")" "${SN}")"
             fi
+            BUILDNUM=${buildnumber}
+            SMALLNUM=${smallfixnumber}
+            writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
+            writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
             dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Try recovery DSM")" \
               --msgbox "${MSG}" 0 0
           fi
@@ -1358,12 +1424,14 @@ function editUserConfig() {
       --msgbox "${ERRORS}" 0 0
   done
   OLDMODEL=${MODEL}
-  OLDBUILD=${BUILD}
+  OLDPRODUCTVER=${PRODUCTVER}
+  OLDBUILDNUM=${BUILDNUM}
   MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
-  BUILD="$(readConfigKey "build" "${USER_CONFIG_FILE}")"
+  PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+  BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
   SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 
-  if [ "${MODEL}" != "${OLDMODEL}" -o "${BUILD}" != "${OLDBUILD}" ]; then
+  if [ "${MODEL}" != "${OLDMODEL}" -o "${PRODUCTVER}" != "${OLDPRODUCTVER}" -o "${BUILDNUM}" != "${OLDBUILDNUM}" ]; then
     # Remove old files
     rm -f "${MOD_ZIMAGE_FILE}"
     rm -f "${MOD_RDGZ_FILE}"
@@ -1536,6 +1604,8 @@ function updateExts() {
     rm "${MODULES_PATH}/"*
     unzip /tmp/modules.zip -d "${MODULES_PATH}" >/dev/null 2>&1
     # Rebuild modules if model/buildnumber is selected
+    PLATFORM="$(readModelKey "${MODEL}" "platform")"
+    KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
     if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
       while read ID DESC; do
@@ -1553,8 +1623,6 @@ function updateExts() {
 
 ###############################################################################
 function updateMenu() {
-  PLATFORM="$(readModelKey "${MODEL}" "platform")"
-  KVER="$(readModelKey "${MODEL}" "builds.${BUILD}.kver")"
   PROXY="$(readConfigKey "proxy" "${USER_CONFIG_FILE}")"
   [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
   while true; do
@@ -1681,7 +1749,7 @@ function updateMenu() {
 ###############################################################################
 ###############################################################################
 
-if [ "x$1" = "xb" -a -n "${MODEL}" -a -n "${BUILD}" -a loaderIsConfigured ]; then
+if [ "x$1" = "xb" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]; then
   install-addons.sh
   make
   boot && exit 0 || sleep 5
@@ -1691,8 +1759,8 @@ NEXT="m"
 while true; do
   echo "m \"$(TEXT "Choose a model")\"" >"${TMP_PATH}/menu"
   if [ -n "${MODEL}" ]; then
-    echo "n \"$(TEXT "Choose a Build Number")\"" >>"${TMP_PATH}/menu"
-    if [ -n "${BUILD}" ]; then
+    echo "n \"$(TEXT "Choose a product version")\"" >>"${TMP_PATH}/menu"
+    if [ -n "${PRODUCTVER}" ]; then
       echo "a \"$(TEXT "Addons")\"" >>"${TMP_PATH}/menu"
       echo "o \"$(TEXT "Modules")\"" >>"${TMP_PATH}/menu"
       echo "x \"$(TEXT "Cmdline menu")\"" >>"${TMP_PATH}/menu"
@@ -1701,7 +1769,7 @@ while true; do
   fi
   echo "v \"$(TEXT "Advanced menu")\"" >>"${TMP_PATH}/menu"
   if [ -n "${MODEL}" ]; then
-    if [ -n "${BUILD}" ]; then
+    if [ -n "${PRODUCTVER}" ]; then
       echo "d \"$(TEXT "Build the loader")\"" >>"${TMP_PATH}/menu"
     fi
   fi
@@ -1726,7 +1794,7 @@ while true; do
     NEXT="n"
     ;;
   n)
-    buildMenu
+    productversMenu
     NEXT="a"
     ;;
   a)

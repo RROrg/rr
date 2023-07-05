@@ -93,7 +93,7 @@
     # 将dts文件放到/mnt/p1下,并重命名为model.dts. "/mnt/p1/model.dts"
     sed -i '/^.*\/addons\/disks.sh.*$/a [ -f "\/mnt\/p1\/model.dts" ] \&\& cp "\/mnt\/p1\/model.dts" "${RAMDISK_PATH}\/addons\/model.dts"' /opt/arpl/ramdisk-patch.sh
     ```
-* arpl 离线安装 (arpl_zh_CN(ver > ++-v1.3) / arpl-i18n):
+* arpl 离线安装 (arpl_zh_CN(ver > ++-v1.3) / arpl-i18n(ver < 23.7.0>)):
     ```shell
     1. arpl 下
     # arpl下获取型号版本的pat下载地址 (替换以下命令中的 版本号和型号部分)

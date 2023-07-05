@@ -4,8 +4,8 @@
 . /opt/arpl/include/functions.sh
 
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
-BUILD="$(readConfigKey "build" "${USER_CONFIG_FILE}")"
-KVER="$(readModelKey "${MODEL}" "builds.${BUILD}.kver")"
+PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
 
 # Adapted from: scripts/Makefile.lib
 # Usage: size_append FILE [FILE2] [FILEn]...

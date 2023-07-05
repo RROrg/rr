@@ -26,86 +26,53 @@ dom: 2
 dt: true
 disks: 24
 beta: true
-builds:
-  25556:
-    ver: "6.2.4"
+productvers:
+  "6.2":
     kver: "4.4.59"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/6.2.4/25556/DSM_FS6400_25556.pat"
-      md5: "c2d4e93551189532d8bd7bbcf2f55411"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-25556-init-script.patch"
       - "ramdisk-common-etc-rc.patch"
       - "ramdisk-25556-post-init-script.patch"
 
-  42218:
-    ver: "7.0.1"
+  "7.0":
     kver: "4.4.180"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_FS6400_42218.pat"
-      md5: "e7887381980432a7be5ddf4dec0772ad"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
       - "ramdisk-common-etc-rc.patch"
       - "ramdisk-common-post-init-script.patch"
 
-  42661:
-    ver: "7.1.0"
+  "7.1":
     kver: "4.4.180"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_FS6400_42661.pat"
-      md5: "030064272d82777681502745fcfa8c48"
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42661-post-init-script.patch"
-
-  42962:
-    ver: "7.1.1"
-    kver: "4.4.180"
-    rd-compressed: false
-    cmdline:
-      <<: *cmdline
-    synoinfo:
-      <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_FS6400_42962.pat"
-      md5: "651be491d10a47ecc534295d84341c03"
     patch:
       - "ramdisk-common-disable-root-pwd.patch"
       - "ramdisk-common-init-script.patch"
       - "ramdisk-common-etc-rc.patch"
       - "ramdisk-42951-post-init-script.patch"
 
-  64570:
-    ver: "7.2.0"
+  "7.2":
     kver: "4.4.302"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.2/64570-1/DSM_FS6400_64570.pat"
-      md5: "2e69250e65f75bd4bb9e8274d865bc70"
     patch:
       - "ramdisk-64216-disable-root-pwd.patch"
       - "ramdisk-64216-init-script.patch"

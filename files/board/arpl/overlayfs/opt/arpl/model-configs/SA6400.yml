@@ -24,35 +24,27 @@ dom: -1
 dt: true
 disks: 16
 beta: true
-builds:
-  42962:
-    ver: "7.1.1"
+productvers:
+  "7.1":
     kver: "5.10.55"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-6/DSM_SA6400_42962.pat"
-      md5: "7bb63d65829b2ad4bcfda3b37e0ac1b1"
     patch:
     - "ramdisk-common-disable-root-pwd.patch"
     - "ramdisk-common-sa6400-init-script.patch"
     - "ramdisk-common-etc-rc.patch"
     - "ramdisk-42951-post-init-script.patch"
 
-  64570:
-    ver: "7.2.0"
+  "7.2":
     kver: "5.10.55"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.2/64570-1/DSM_SA6400_64570.pat"
-      md5: "83b591bfb240c51b2feff8f02eac8bde"
     patch:
     - "ramdisk-64216-disable-root-pwd.patch"
     - "ramdisk-64216-sa6400-init-script.patch"
