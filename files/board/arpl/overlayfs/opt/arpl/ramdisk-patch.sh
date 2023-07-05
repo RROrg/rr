@@ -25,35 +25,47 @@ rm -rf "${RAMDISK_PATH}" # Force clean
 mkdir -p "${RAMDISK_PATH}"
 (cd "${RAMDISK_PATH}"; xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm) >/dev/null 2>&1
 
-# Check if DSM buildnumber changed
-. "${RAMDISK_PATH}/etc/VERSION"
-
+# get user data
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
-BUILD="$(readConfigKey "build" "${USER_CONFIG_FILE}")"
+PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
+SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 LAYOUT="$(readConfigKey "layout" "${USER_CONFIG_FILE}")"
 KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
+PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
+PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
 
-if [ ${BUILD} -ne ${buildnumber} ]; then
-  echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${BUILD}\033[1;32m to \033[1;31m${buildnumber}\033[0m"
+# Check if DSM buildnumber changed
+. "${RAMDISK_PATH}/etc/VERSION"
+
+if [ -n "${PRODUCTVER}" -a -n "${BUILDNUM}" -a -n "${SMALLNUM}" ] && \
+  ([ ! "${PRODUCTVER}" = "${majorversion}.${minorversion}" ] || [ ! "${BUILDNUM}" = "${buildnumber}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber}" ]); then
+  OLDVER="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
+  NEWVER="${majorversion}.${minorversion}(${buildnumber}$([ ${smallfixnumber:-0} -ne 0 ] && echo "u${smallfixnumber}"))"
+  echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${OLDVER}\033[1;32m to \033[1;31m${NEWVER}\033[0m"
   echo -n "Patching Ramdisk."
-  # Update new buildnumber
-  BUILD=${buildnumber}
-  writeConfigKey "build" "${BUILD}" "${USER_CONFIG_FILE}"
+  PATURL=""
+  PATSUM=""
 fi
+# Update new buildnumber
+PRODUCTVER=${majorversion}.${minorversion}
+BUILDNUM=${buildnumber}
+SMALLNUM=${smallfixnumber}
+writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
+writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
+writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
 
 echo -n "."
 # Read model data
 UNIQUE=$(readModelKey "${MODEL}" "unique")
 PLATFORM="$(readModelKey "${MODEL}" "platform")"
-KVER="$(readModelKey "${MODEL}" "builds.${BUILD}.kver")"
-PAT_URL="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.url")"
-PAT_MD5="$(readModelKey "${MODEL}" "builds.${BUILD}.pat.md5")"
-RD_COMPRESSED="$(readModelKey "${MODEL}" "builds.${BUILD}.rd-compressed")"
+KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+RD_COMPRESSED="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].rd-compressed")"
 
 # Sanity check
-[ -z "${PLATFORM}" -o -z "${KVER}" ] && (die "ERROR: Configuration for model ${MODEL} and buildnumber ${BUILD} not found." | tee -a "${LOG_FILE}")
+[ -z "${PLATFORM}" -o -z "${KVER}" ] && (die "ERROR: Configuration for model ${MODEL} and productversion ${PRODUCTVER} not found." | tee -a "${LOG_FILE}")
 
 declare -A SYNOINFO
 declare -A ADDONS
@@ -77,7 +89,7 @@ while read f; do
   echo -n "."
   echo "Patching with ${f}" >"${LOG_FILE}" 2>&1
   (cd "${RAMDISK_PATH}" && patch -p1 <"${PATCH_PATH}/${f}") >>"${LOG_FILE}" 2>&1 || dieLog
-done < <(readModelArray "${MODEL}" "builds.${BUILD}.patch")
+done < <(readModelArray "${MODEL}" "productvers.[${PRODUCTVER}].patch")
 
 # Patch /etc/synoinfo.conf
 echo -n "."
@@ -137,9 +149,8 @@ echo "#!/bin/sh"                                 >"${RAMDISK_PATH}/addons/addons
 echo 'echo "addons.sh called with params ${@}"' >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export PLATFORM=${PLATFORM}"              >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export MODEL=${MODEL}"                    >>"${RAMDISK_PATH}/addons/addons.sh"
-echo "export BUILD=${BUILD}"                    >>"${RAMDISK_PATH}/addons/addons.sh"
-echo "export MLINK=${PAT_URL}"                  >>"${RAMDISK_PATH}/addons/addons.sh"
-echo "export MCHECKSUM=${PAT_MD5}"              >>"${RAMDISK_PATH}/addons/addons.sh"
+echo "export MLINK=${PATURL}"                   >>"${RAMDISK_PATH}/addons/addons.sh"
+echo "export MCHECKSUM=${PATSUM}"               >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export LAYOUT=${LAYOUT}"                  >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export KEYMAP=${KEYMAP}"                  >>"${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
@@ -164,7 +175,7 @@ for ADDON in ${!ADDONS[@]}; do
   echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 done
 
-[ "2" = "${BUILD:0:1}" ] && sed -i 's/function //g' $(find "${RAMDISK_PATH}/addons/" -type f -name "*.sh")
+[ "2" = "${BUILDNUM:0:1}" ] && sed -i 's/function //g' $(find "${RAMDISK_PATH}/addons/" -type f -name "*.sh")
 
 # Enable Telnet
 echo "inetd" >>"${RAMDISK_PATH}/addons/addons.sh"
@@ -191,5 +202,4 @@ rm -rf "${RAMDISK_PATH}"
 # Update SHA256 hash
 RAMDISK_HASH="$(sha256sum ${ORI_RDGZ_FILE} | awk '{print$1}')"
 writeConfigKey "ramdisk-hash" "${RAMDISK_HASH}" "${USER_CONFIG_FILE}"
-writeConfigKey "smallfixnumber" "${smallfixnumber}" "${USER_CONFIG_FILE}"
 echo

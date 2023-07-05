@@ -26,69 +26,40 @@ dom: 2
 dt: true
 disks: 12
 beta: true
-builds:
-  42218:
-    ver: "7.0.1"
+productvers:
+  "7.0":
     kver: "4.4.180"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_FS2500_42218.pat"
-      md5: "9562d49a07f5481208b672ff777f3cbf"
     patch:
     - "ramdisk-common-disable-root-pwd.patch"
     - "ramdisk-common-init-script.patch"
     - "ramdisk-common-etc-rc.patch"
     - "ramdisk-common-post-init-script.patch"
 
-  42661:
-    ver: "7.1"
+  "7.1":
     kver: "4.4.180"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1/42661-1/DSM_FS2500_42661.pat"
-      md5: "e071c4984d041309f151de29b9ba82b5"
-    patch:
-    - "ramdisk-common-disable-root-pwd.patch"
-    - "ramdisk-common-init-script.patch"
-    - "ramdisk-common-etc-rc.patch"
-    - "ramdisk-42661-post-init-script.patch"
-
-  42962:
-    ver: "7.1.1"
-    kver: "4.4.180"
-    rd-compressed: false
-    cmdline:
-      <<: *cmdline
-    synoinfo:
-      <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-1/DSM_FS2500_42962.pat"
-      md5: "169493af5375eb9da89ff324a3fe129a"
     patch:
     - "ramdisk-common-disable-root-pwd.patch"
     - "ramdisk-common-init-script.patch"
     - "ramdisk-common-etc-rc.patch"
     - "ramdisk-42951-post-init-script.patch"
 
-  64570:
-    ver: "7.2.0"
+  "7.2":
     kver: "4.4.302"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.2/64570-1/DSM_FS2500_64570.pat"
-      md5: "faab7cd3b7456a406f4be1afe9012d5d"
     patch:
     - "ramdisk-64216-disable-root-pwd.patch"
     - "ramdisk-64216-init-script.patch"

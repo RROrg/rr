@@ -26,35 +26,27 @@ dom: 2
 dt: true
 disks: 2
 beta: true
-builds:
-  42962:
-    ver: "7.1.1"
+productvers:
+  "7.1":
     kver: "4.4.180"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.1.1/42962-6/DSM_DS723%2B_42962.pat"
-      md5: "e8e6598014205a9cfb98c95183e856fe"
     patch:
     - "ramdisk-common-disable-root-pwd.patch"
     - "ramdisk-common-init-script.patch"
     - "ramdisk-common-etc-rc.patch"
     - "ramdisk-42951-post-init-script.patch"
 
-  64570:
-    ver: "7.2.0"
+  "7.2":
     kver: "4.4.302"
     rd-compressed: false
     cmdline:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    pat:
-      url: "https://global.synologydownload.com/download/DSM/release/7.2/64570-1/DSM_DS723%2B_64570.pat"
-      md5: "302f4427cc76bc3830afc5cff1424298"
     patch:
     - "ramdisk-64216-disable-root-pwd.patch"
     - "ramdisk-64216-init-script.patch"

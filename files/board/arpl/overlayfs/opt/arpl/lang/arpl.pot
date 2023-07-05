@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-26 20:21+0800\n"
+"POT-Creation-Date: 2023-07-05 17:01+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: boot.sh:8 init.sh:162
+#: boot.sh:8 init.sh:166
 msgid "Loader is not configured!"
 msgstr ""
 
@@ -29,12 +29,12 @@ msgstr ""
 msgid "DSM zImage changed"
 msgstr ""
 
-#: boot.sh:35 boot.sh:47 menu.sh:735 menu.sh:743 menu.sh:769 menu.sh:797
-#: menu.sh:809 menu.sh:833 menu.sh:841 menu.sh:874 menu.sh:887 menu.sh:894
+#: boot.sh:35 boot.sh:47 menu.sh:784 menu.sh:792 menu.sh:818 menu.sh:846
+#: menu.sh:858 menu.sh:882 menu.sh:890 menu.sh:923 menu.sh:936 menu.sh:943
 msgid "Error"
 msgstr ""
 
-#: boot.sh:36 menu.sh:888
+#: boot.sh:36 menu.sh:937
 msgid "zImage not patched:\\n"
 msgstr ""
 
@@ -42,82 +42,82 @@ msgstr ""
 msgid "DSM Ramdisk changed"
 msgstr ""
 
-#: boot.sh:48 menu.sh:895
+#: boot.sh:48 menu.sh:944
 msgid "Ramdisk not patched:\\n"
 msgstr ""
 
-#: boot.sh:65
+#: boot.sh:66
 msgid "Model:"
 msgstr ""
 
-#: boot.sh:66
+#: boot.sh:67
 msgid "Build:"
 msgstr ""
 
-#: boot.sh:67
+#: boot.sh:68
 msgid "LKM:  "
 msgstr ""
 
-#: boot.sh:68
+#: boot.sh:69
 msgid "CPU:  "
 msgstr ""
 
-#: boot.sh:69
+#: boot.sh:70
 msgid "MEM:  "
 msgstr ""
 
-#: boot.sh:72
+#: boot.sh:73
 msgid ""
 "The current version of arpl does not support booting %s-%s, please rebuild."
 msgstr ""
 
-#: boot.sh:113
+#: boot.sh:114
 msgid "'Not set MACs' is enabled."
 msgstr ""
 
-#: boot.sh:127
+#: boot.sh:128
 msgid ""
 "Detected %s network cards, %s MACs were customized, the rest will use the "
 "original MACs."
 msgstr ""
 
-#: boot.sh:157
+#: boot.sh:158
 msgid "Cmdline:\\n"
 msgstr ""
 
-#: boot.sh:162
+#: boot.sh:163
 msgid "Reboot to boot directly in DSM"
 msgstr ""
 
-#: boot.sh:172
+#: boot.sh:173
 msgid "Detected %s network cards, Waiting IP.(For reference only)"
 msgstr ""
 
-#: boot.sh:179 init.sh:182
+#: boot.sh:180 init.sh:186
 msgid "DOWN"
 msgstr ""
 
-#: boot.sh:183 init.sh:186
+#: boot.sh:184 init.sh:190
 msgid "ERROR"
 msgstr ""
 
-#: boot.sh:189
+#: boot.sh:190
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr ""
 
-#: boot.sh:198
+#: boot.sh:199
 msgid "Loading DSM kernel..."
 msgstr ""
 
-#: boot.sh:202
+#: boot.sh:203
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr ""
 
-#: boot.sh:207
+#: boot.sh:208
 msgid "Booting..."
 msgstr ""
 
-#: boot.sh:209
+#: boot.sh:210
 msgid ""
 "[This interface will not be operational. Please use the http://find.synology."
 "com/ find DSM and connect.]"
@@ -139,932 +139,940 @@ msgstr ""
 msgid "Can't mount %s"
 msgstr ""
 
-#: init.sh:105
+#: init.sh:109
 msgid "Setting %s MAC to %s"
 msgstr ""
 
-#: init.sh:123
+#: init.sh:127
 msgid "Loader disk neither USB or DoM"
 msgstr ""
 
-#: init.sh:131
+#: init.sh:135
 msgid "Loader disk:"
 msgstr ""
 
-#: init.sh:144
+#: init.sh:148
 msgid "Resizing %s"
 msgstr ""
 
-#: init.sh:155
+#: init.sh:159
 msgid "Loading keymap"
 msgstr ""
 
-#: init.sh:165
+#: init.sh:169
 msgid "User requested edit settings."
 msgstr ""
 
-#: init.sh:175
+#: init.sh:179
 msgid "Detected %s network cards, Waiting IP."
 msgstr ""
 
-#: init.sh:192
+#: init.sh:196
 msgid ""
 "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web "
 "terminal."
 msgstr ""
 
-#: init.sh:202
+#: init.sh:206
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
 msgstr ""
 
-#: init.sh:204
+#: init.sh:208
 msgid "User config is on"
 msgstr ""
 
-#: init.sh:205
+#: init.sh:209
 msgid "Default SSH Root password is"
 msgstr ""
 
-#: init.sh:211
+#: init.sh:215
 msgid ""
 "You have less than 4GB of RAM, if errors occur in loader creation, please "
 "increase the amount of memory."
 msgstr ""
 
-#: menu.sh:76
+#: menu.sh:83
 msgid "Model"
 msgstr ""
 
-#: menu.sh:77
+#: menu.sh:84
 msgid "Reading models"
 msgstr ""
 
-#: menu.sh:102
+#: menu.sh:109
 msgid "Disable flags restriction"
 msgstr ""
 
-#: menu.sh:103
+#: menu.sh:110
 msgid "Show beta models"
 msgstr ""
 
-#: menu.sh:105
+#: menu.sh:112
 msgid "Choose the model"
 msgstr ""
 
-#: menu.sh:144
+#: menu.sh:154
 msgid "Choose a build number"
 msgstr ""
 
-#: menu.sh:156 menu.sh:161 menu.sh:165
+#: menu.sh:166 menu.sh:171 menu.sh:176 menu.sh:201 menu.sh:216
 msgid "Build Number"
 msgstr ""
 
-#: menu.sh:157
+#: menu.sh:167
 msgid ""
 "This version does not support UEFI startup, Please select another version or "
 "switch the startup mode."
 msgstr ""
 
-#: menu.sh:162
+#: menu.sh:172
 msgid ""
 "This version only support usb startup, Please select another version or "
 "switch the startup mode."
 msgstr ""
 
-#: menu.sh:166
+#: menu.sh:177
+msgid "Get online pat data .."
+msgstr ""
+
+#: menu.sh:217
 msgid "Reconfiguring Synoinfo, Addons and Modules"
 msgstr ""
 
-#: menu.sh:211 menu.sh:354 menu.sh:495 menu.sh:634 menu.sh:1560
+#: menu.sh:259 menu.sh:402 menu.sh:543 menu.sh:684 menu.sh:1630
 msgid "Choose a option"
 msgstr ""
 
-#: menu.sh:212
+#: menu.sh:260
 msgid "Add an addon"
 msgstr ""
 
-#: menu.sh:213
+#: menu.sh:261
 msgid "Delete addon(s)"
 msgstr ""
 
-#: menu.sh:214
+#: menu.sh:262
 msgid "Show user addons"
 msgstr ""
 
-#: menu.sh:215
+#: menu.sh:263
 msgid "Show all available addons"
 msgstr ""
 
-#: menu.sh:216
+#: menu.sh:264
 msgid "Upload a external addon"
 msgstr ""
 
-#: menu.sh:217 menu.sh:361 menu.sh:491 menu.sh:629 menu.sh:942 menu.sh:1567
-#: menu.sh:1715
+#: menu.sh:265 menu.sh:409 menu.sh:539 menu.sh:679 menu.sh:992 menu.sh:1637
+#: menu.sh:1785
 msgid "Exit"
 msgstr ""
 
-#: menu.sh:229 menu.sh:234 menu.sh:240 menu.sh:251 menu.sh:259 menu.sh:277
-#: menu.sh:291 menu.sh:296 menu.sh:300 menu.sh:314 menu.sh:318 menu.sh:325
-#: menu.sh:328 menu.sh:1694
+#: menu.sh:277 menu.sh:282 menu.sh:288 menu.sh:299 menu.sh:307 menu.sh:325
+#: menu.sh:339 menu.sh:344 menu.sh:348 menu.sh:362 menu.sh:366 menu.sh:373
+#: menu.sh:376 menu.sh:1764
 msgid "Addons"
 msgstr ""
 
-#: menu.sh:230
+#: menu.sh:278
 msgid "No available addons to add"
 msgstr ""
 
-#: menu.sh:235
+#: menu.sh:283
 msgid "Select an addon"
 msgstr ""
 
-#: menu.sh:241
+#: menu.sh:289
 msgid "Type a opcional params to addon"
 msgstr ""
 
-#: menu.sh:252
+#: menu.sh:300
 msgid "No user addons to remove"
 msgstr ""
 
-#: menu.sh:260
+#: menu.sh:308
 msgid "Select addon to remove"
 msgstr ""
 
-#: menu.sh:297 menu.sh:1174 menu.sh:1205 menu.sh:1238 menu.sh:1629
+#: menu.sh:345 menu.sh:1233 menu.sh:1264 menu.sh:1297 menu.sh:1699
 msgid "This feature is only available when accessed via web/ssh."
 msgstr ""
 
-#: menu.sh:301
+#: menu.sh:349
 msgid "Please upload the *.addons file."
 msgstr ""
 
-#: menu.sh:315 menu.sh:466 menu.sh:1656 menu.sh:1670
+#: menu.sh:363 menu.sh:514 menu.sh:1726 menu.sh:1740
 msgid "Not a valid file, please try again!"
 msgstr ""
 
-#: menu.sh:319
+#: menu.sh:367
 msgid "The addon already exists. Do you want to overwrite it?"
 msgstr ""
 
-#: menu.sh:326
+#: menu.sh:374
 msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
 msgstr ""
 
-#: menu.sh:329
+#: menu.sh:377
 msgid "File format not recognized!"
 msgstr ""
 
-#: menu.sh:342 menu.sh:370 menu.sh:374 menu.sh:391 menu.sh:404 menu.sh:418
-#: menu.sh:424 menu.sh:443 menu.sh:446 menu.sh:461 menu.sh:465 menu.sh:1695
+#: menu.sh:390 menu.sh:418 menu.sh:422 menu.sh:439 menu.sh:452 menu.sh:466
+#: menu.sh:472 menu.sh:491 menu.sh:494 menu.sh:509 menu.sh:513 menu.sh:1765
 msgid "Modules"
 msgstr ""
 
-#: menu.sh:343
+#: menu.sh:391
 msgid "Reading modules"
 msgstr ""
 
-#: menu.sh:355
+#: menu.sh:403
 msgid "Show selected modules"
 msgstr ""
 
-#: menu.sh:356
+#: menu.sh:404
 msgid "Select loaded modules"
 msgstr ""
 
-#: menu.sh:357
+#: menu.sh:405
 msgid "Select all modules"
 msgstr ""
 
-#: menu.sh:358
+#: menu.sh:406
 msgid "Deselect all modules"
 msgstr ""
 
-#: menu.sh:359
+#: menu.sh:407
 msgid "Choose modules to include"
 msgstr ""
 
-#: menu.sh:360
+#: menu.sh:408
 msgid "Upload a external module"
 msgstr ""
 
-#: menu.sh:375
+#: menu.sh:423
 msgid "Selecting loaded modules"
 msgstr ""
 
-#: menu.sh:392
+#: menu.sh:440
 msgid "Selecting all modules"
 msgstr ""
 
-#: menu.sh:405
+#: menu.sh:453
 msgid "Deselecting all modules"
 msgstr ""
 
-#: menu.sh:419
+#: menu.sh:467
 msgid "Select modules to include"
 msgstr ""
 
-#: menu.sh:425
+#: menu.sh:473
 msgid "Writing to user config"
 msgstr ""
 
-#: menu.sh:438
+#: menu.sh:486
 msgid ""
 "This function is experimental and dangerous. If you don't know much, please "
 "exit.\\n"
 msgstr ""
 
-#: menu.sh:439
+#: menu.sh:487
 msgid ""
 "The imported .ko of this function will be implanted into the corresponding "
 "arch's modules package, which will affect all models of the arch.\\n"
 msgstr ""
 
-#: menu.sh:440
+#: menu.sh:488
 msgid ""
 "This program will not determine the availability of imported modules or even "
 "make type judgments, as please double check if it is correct.\\n"
 msgstr ""
 
-#: menu.sh:441
+#: menu.sh:489
 msgid ""
 "If you want to remove it, please go to the \"Update Menu\" -> \"Update "
 "modules\" to forcibly update the modules. All imports will be reset.\\n"
 msgstr ""
 
-#: menu.sh:442
+#: menu.sh:490
 msgid "Do you want to continue?"
 msgstr ""
 
-#: menu.sh:447
+#: menu.sh:495
 msgid "Please upload the *.ko file."
 msgstr ""
 
-#: menu.sh:462
+#: menu.sh:510
 msgid "Module '%s' added to %s-%s"
 msgstr ""
 
-#: menu.sh:483
+#: menu.sh:531
 msgid "Add/edit a cmdline item"
 msgstr ""
 
-#: menu.sh:484
+#: menu.sh:532
 msgid "Delete cmdline item(s)"
 msgstr ""
 
-#: menu.sh:486
+#: menu.sh:534
 msgid "Define a serial number"
 msgstr ""
 
-#: menu.sh:488
+#: menu.sh:536
 msgid "Define a custom MAC"
 msgstr ""
 
-#: menu.sh:489
+#: menu.sh:537
 msgid "Show user added cmdline"
 msgstr ""
 
-#: menu.sh:490
+#: menu.sh:538
 msgid "Show model inherent cmdline"
 msgstr ""
 
-#: menu.sh:500 menu.sh:506 menu.sh:516 menu.sh:524 menu.sh:537 menu.sh:547
-#: menu.sh:564 menu.sh:574 menu.sh:584 menu.sh:587 menu.sh:590 menu.sh:601
-#: menu.sh:609
+#: menu.sh:548 menu.sh:554 menu.sh:564 menu.sh:572 menu.sh:585 menu.sh:597
+#: menu.sh:614 menu.sh:624 menu.sh:634 menu.sh:637 menu.sh:640 menu.sh:651
+#: menu.sh:659
 msgid "Cmdline"
 msgstr ""
 
-#: menu.sh:501
+#: menu.sh:549
 msgid "Type a name of cmdline"
 msgstr ""
 
-#: menu.sh:507
+#: menu.sh:555
 msgid "Type a value of '%s' cmdline"
 msgstr ""
 
-#: menu.sh:517
+#: menu.sh:565
 msgid "No user cmdline to remove"
 msgstr ""
 
-#: menu.sh:525
+#: menu.sh:573
 msgid "Select cmdline to remove"
 msgstr ""
 
-#: menu.sh:538
+#: menu.sh:586
 msgid "Please enter a serial number "
 msgstr ""
 
-#: menu.sh:548
+#: menu.sh:598
 msgid "Invalid serial, continue?"
 msgstr ""
 
-#: menu.sh:565
+#: menu.sh:615
 msgid "Type a custom MAC address of %s"
 msgstr ""
 
-#: menu.sh:575
+#: menu.sh:625
 msgid "Invalid MAC"
 msgstr ""
 
-#: menu.sh:585
+#: menu.sh:635
 msgid "Changing MAC"
 msgstr ""
 
-#: menu.sh:588
+#: menu.sh:638
 msgid "Renewing IP"
 msgstr ""
 
-#: menu.sh:591
+#: menu.sh:641
 msgid "Continue to custom MAC?"
 msgstr ""
 
-#: menu.sh:626
+#: menu.sh:676
 msgid "Add/edit a synoinfo item"
 msgstr ""
 
-#: menu.sh:627
+#: menu.sh:677
 msgid "Delete synoinfo item(s)"
 msgstr ""
 
-#: menu.sh:628
+#: menu.sh:678
 msgid "Show synoinfo entries"
 msgstr ""
 
-#: menu.sh:639 menu.sh:645 menu.sh:656 menu.sh:664 menu.sh:681
+#: menu.sh:689 menu.sh:695 menu.sh:706 menu.sh:714 menu.sh:731
 msgid "Synoinfo"
 msgstr ""
 
-#: menu.sh:640
+#: menu.sh:690
 msgid "Type a name of synoinfo entry"
 msgstr ""
 
-#: menu.sh:646
+#: menu.sh:696
 msgid "Type a value of '%s' synoinfo entry"
 msgstr ""
 
-#: menu.sh:657
+#: menu.sh:707
 msgid "No synoinfo entries to remove"
 msgstr ""
 
-#: menu.sh:665
+#: menu.sh:715
 msgid "Select synoinfo entry to remove"
 msgstr ""
 
-#: menu.sh:704
+#: menu.sh:754
 msgid "%s cached."
 msgstr ""
 
-#: menu.sh:708
+#: menu.sh:758
 msgid "Cleaning cache"
 msgstr ""
 
-#: menu.sh:720
+#: menu.sh:770
 msgid ""
 "Based on the current network situation, switch to %s mirror to downloading."
 msgstr ""
 
-#: menu.sh:725
+#: menu.sh:774
 msgid "Downloading %s"
 msgstr ""
 
-#: menu.sh:736 menu.sh:798
+#: menu.sh:785 menu.sh:847
 msgid "Check internet or cache disk space"
 msgstr ""
 
-#: menu.sh:741
+#: menu.sh:790
 msgid "Checking hash of %s: "
 msgstr ""
 
-#: menu.sh:744
+#: menu.sh:793
 msgid "md5 Hash of pat not match, try again!"
 msgstr ""
 
-#: menu.sh:748 menu.sh:850 menu.sh:860
+#: menu.sh:797 menu.sh:899 menu.sh:909
 msgid "OK"
 msgstr ""
 
-#: menu.sh:752
+#: menu.sh:801
 msgid "Disassembling %s: "
 msgstr ""
 
-#: menu.sh:757
+#: menu.sh:806
 msgid "Uncompressed tar"
 msgstr ""
 
-#: menu.sh:761
+#: menu.sh:810
 msgid "Compressed tar"
 msgstr ""
 
-#: menu.sh:765
+#: menu.sh:814
 msgid "Encrypted"
 msgstr ""
 
-#: menu.sh:770
+#: menu.sh:819
 msgid ""
 "Could not determine if pat file is encrypted or not, maybe corrupted, try "
 "again!"
 msgstr ""
 
-#: menu.sh:780
+#: menu.sh:829
 msgid "Extractor cached."
 msgstr ""
 
-#: menu.sh:787
+#: menu.sh:836
 msgid "Downloading old pat to extract synology .pat extractor..."
 msgstr ""
 
-#: menu.sh:827 menu.sh:830
+#: menu.sh:876 menu.sh:879
 msgid "Extracting..."
 msgstr ""
 
-#: menu.sh:842
+#: menu.sh:891
 msgid "pat Invalid, try again!"
 msgstr ""
 
-#: menu.sh:845
+#: menu.sh:894
 msgid "Setting hash: "
 msgstr ""
 
-#: menu.sh:852
+#: menu.sh:901
 msgid "Copying files: "
 msgstr ""
 
-#: menu.sh:875
+#: menu.sh:924
 msgid "Addon %s not found!"
 msgstr ""
 
-#: menu.sh:899 menu.sh:1764
+#: menu.sh:950 menu.sh:1834
 msgid "Cleaning"
 msgstr ""
 
-#: menu.sh:902
+#: menu.sh:952
 msgid "Ready!"
 msgstr ""
 
-#: menu.sh:915
+#: menu.sh:965
 msgid "Switch LKM version:"
 msgstr ""
 
-#: menu.sh:918
+#: menu.sh:968
 msgid "Switch direct boot:"
 msgstr ""
 
-#: menu.sh:920
+#: menu.sh:970
 msgid "boot IPs wait time:"
 msgstr ""
 
-#: menu.sh:923
+#: menu.sh:973
 msgid "Switch 'not set MACs':"
 msgstr ""
 
-#: menu.sh:924
+#: menu.sh:974
 msgid "Edit user config file manually"
 msgstr ""
 
-#: menu.sh:925
+#: menu.sh:975
 msgid "Try to recovery a DSM installed system"
 msgstr ""
 
-#: menu.sh:926
+#: menu.sh:976
 msgid "Show SATA(s) # ports and drives"
 msgstr ""
 
-#: menu.sh:928
-msgid "show pat download link"
+#: menu.sh:978
+msgid "show/modify the current pat data"
 msgstr ""
 
-#: menu.sh:930
+#: menu.sh:980
 msgid "Allow downgrade installation"
 msgstr ""
 
-#: menu.sh:931
+#: menu.sh:981
 msgid "Format disk(s) # Without loader disk"
 msgstr ""
 
-#: menu.sh:932
+#: menu.sh:982
 msgid "Reset syno system password"
 msgstr ""
 
-#: menu.sh:933
+#: menu.sh:983
 msgid "Persistence of arpl modifications"
 msgstr ""
 
-#: menu.sh:935
+#: menu.sh:985
 msgid "Custom dts file # Need rebuild"
 msgstr ""
 
-#: menu.sh:938
+#: menu.sh:988
 msgid "Backup bootloader disk # test"
 msgstr ""
 
-#: menu.sh:939
+#: menu.sh:989
 msgid "Restore bootloader disk # test"
 msgstr ""
 
-#: menu.sh:941
+#: menu.sh:991
 msgid "Development tools"
 msgstr ""
 
-#: menu.sh:944 menu.sh:962 menu.sh:1022 menu.sh:1030 menu.sh:1038 menu.sh:1051
-#: menu.sh:1054 menu.sh:1069 menu.sh:1070 menu.sh:1075 menu.sh:1079
-#: menu.sh:1090 menu.sh:1092 menu.sh:1109 menu.sh:1114 menu.sh:1122
-#: menu.sh:1128 menu.sh:1141 menu.sh:1144 menu.sh:1150 menu.sh:1153
-#: menu.sh:1168 menu.sh:1173 menu.sh:1177 menu.sh:1192 menu.sh:1197
-#: menu.sh:1204 menu.sh:1208 menu.sh:1211 menu.sh:1216 menu.sh:1226
-#: menu.sh:1231 menu.sh:1237 menu.sh:1241 menu.sh:1258 menu.sh:1261
-#: menu.sh:1267 menu.sh:1275 menu.sh:1283 menu.sh:1292 menu.sh:1294
+#: menu.sh:994 menu.sh:1012 menu.sh:1072 menu.sh:1079 menu.sh:1097 menu.sh:1110
+#: menu.sh:1113 menu.sh:1128 menu.sh:1129 menu.sh:1134 menu.sh:1138
+#: menu.sh:1149 menu.sh:1151 menu.sh:1168 menu.sh:1173 menu.sh:1181
+#: menu.sh:1187 menu.sh:1200 menu.sh:1203 menu.sh:1209 menu.sh:1212
+#: menu.sh:1227 menu.sh:1232 menu.sh:1236 menu.sh:1251 menu.sh:1256
+#: menu.sh:1263 menu.sh:1267 menu.sh:1270 menu.sh:1275 menu.sh:1285
+#: menu.sh:1290 menu.sh:1296 menu.sh:1300 menu.sh:1317 menu.sh:1320
+#: menu.sh:1326 menu.sh:1334 menu.sh:1342 menu.sh:1351 menu.sh:1353
 msgid "Advanced"
 msgstr ""
 
-#: menu.sh:945 menu.sh:1718
+#: menu.sh:995 menu.sh:1788
 msgid "Choose the option"
 msgstr ""
 
-#: menu.sh:963
+#: menu.sh:1013
 msgid "Choose a waiting time(seconds)"
 msgstr ""
 
-#: menu.sh:1018
+#: menu.sh:1068
 msgid "\\nTotal of ports: %s\\n"
 msgstr ""
 
-#: menu.sh:1019
+#: menu.sh:1069
 msgid ""
 "\\nPorts with color \\Z1red\\Zn as DUMMY, color \\Z2\\Zbgreen\\Zn has drive "
 "connected."
 msgstr ""
 
-#: menu.sh:1020
+#: menu.sh:1070
 msgid "\\nRecommended value:"
 msgstr ""
 
-#: menu.sh:1021
+#: menu.sh:1071
 msgid "\\nDiskIdxMap:"
 msgstr ""
 
-#: menu.sh:1035
+#: menu.sh:1078
+msgid "pat: (editable)"
+msgstr ""
+
+#: menu.sh:1094
 msgid ""
 "This feature will allow you to downgrade the installation by removing the "
 "VERSION file from the first partition of all disks.\\n"
 msgstr ""
 
-#: menu.sh:1036
+#: menu.sh:1095
 msgid "Therefore, please insert all disks before continuing.\\n"
 msgstr ""
 
-#: menu.sh:1037 menu.sh:1076
+#: menu.sh:1096 menu.sh:1135
 msgid ""
 "Warning:\\nThis operation is irreversible. Please backup important data. Do "
 "you want to continue?"
 msgstr ""
 
-#: menu.sh:1052
+#: menu.sh:1111
 msgid "Removing ..."
 msgstr ""
 
-#: menu.sh:1053
+#: menu.sh:1112
 msgid "Remove VERSION file for all disks completed."
 msgstr ""
 
-#: menu.sh:1080
+#: menu.sh:1139
 msgid ""
 "Warning:\\nThe current hds is in raid, do you still want to format them?"
 msgstr ""
 
-#: menu.sh:1091
+#: menu.sh:1150
 msgid "Formatting ..."
 msgstr ""
 
-#: menu.sh:1093
+#: menu.sh:1152
 msgid "Formatting is complete."
 msgstr ""
 
-#: menu.sh:1110
+#: menu.sh:1169
 msgid "The installed Syno system not found in the currently inserted disks!"
 msgstr ""
 
-#: menu.sh:1115
+#: menu.sh:1174
 msgid "Choose a user name"
 msgstr ""
 
-#: menu.sh:1123
+#: menu.sh:1182
 msgid "Type a new password for user '%s'"
 msgstr ""
 
-#: menu.sh:1129
+#: menu.sh:1188
 msgid "Invalid password"
 msgstr ""
 
-#: menu.sh:1142
+#: menu.sh:1201
 msgid "Resetting ..."
 msgstr ""
 
-#: menu.sh:1145
+#: menu.sh:1204
 msgid "Password reset completed."
 msgstr ""
 
-#: menu.sh:1151 menu.sh:1209 menu.sh:1262
+#: menu.sh:1210 menu.sh:1268 menu.sh:1321
 msgid ""
 "Warning:\\nDo not terminate midway, otherwise it may cause damage to the "
 "arpl. Do you want to continue?"
 msgstr ""
 
-#: menu.sh:1154
+#: menu.sh:1213
 msgid "Persisting ..."
 msgstr ""
 
-#: menu.sh:1169
+#: menu.sh:1228
 msgid "Persisting is complete."
 msgstr ""
 
-#: menu.sh:1178
+#: menu.sh:1237
 msgid ""
 "Currently, only dts format files are supported. Please prepare and click to "
 "confirm uploading.\\n(saved in /mnt/p3/users/)"
 msgstr ""
 
-#: menu.sh:1193
+#: menu.sh:1252
 msgid "Not a valid dts file, please try again!"
 msgstr ""
 
-#: menu.sh:1198
+#: menu.sh:1257
 msgid "A valid dts file, Automatically import at compile time."
 msgstr ""
 
-#: menu.sh:1212
+#: menu.sh:1271
 msgid "Backuping..."
 msgstr ""
 
-#: menu.sh:1217
+#: menu.sh:1276
 msgid ""
 "Failed to generate backup. There may be insufficient memory. Please clear "
 "the cache and try again!"
 msgstr ""
 
-#: menu.sh:1224
+#: menu.sh:1283
 msgid "Click on the address above to download."
 msgstr ""
 
-#: menu.sh:1225
+#: menu.sh:1284
 msgid ""
 "Please confirm the completion of the download before closing this window."
 msgstr ""
 
-#: menu.sh:1232
+#: menu.sh:1291
 msgid "backup is complete."
 msgstr ""
 
-#: menu.sh:1242
+#: menu.sh:1301
 msgid ""
 "Please upload the backup file.\\nCurrently, zip(github) and img.gz(backup) "
 "compressed file formats are supported."
 msgstr ""
 
-#: menu.sh:1259
+#: menu.sh:1318
 msgid "Not a valid .zip/.img.gz file, please try again!"
 msgstr ""
 
-#: menu.sh:1268
+#: menu.sh:1327
 msgid "Writing..."
 msgstr ""
 
-#: menu.sh:1276
+#: menu.sh:1335
 msgid "Restore bootloader disk with success to %s!\\nReboot?"
 msgstr ""
 
-#: menu.sh:1284
+#: menu.sh:1343
 msgid ""
 "This option only installs opkg package management, allowing you to install "
 "more tools for use and debugging. Do you want to continue?"
 msgstr ""
 
-#: menu.sh:1293
+#: menu.sh:1352
 msgid "opkg installing ..."
 msgstr ""
 
-#: menu.sh:1295
+#: menu.sh:1354
 msgid ""
 "opkg install is complete. Please reconnect to SSH/web, or execute 'source ~/."
 "bashrc'"
 msgstr ""
 
-#: menu.sh:1305 menu.sh:1333 menu.sh:1340
+#: menu.sh:1364 menu.sh:1401 menu.sh:1408
 msgid "Try recovery DSM"
 msgstr ""
 
-#: menu.sh:1306
+#: menu.sh:1365
 msgid "Trying to recovery a DSM installed system"
 msgstr ""
 
-#: menu.sh:1327
-msgid "Found a installation:\\nModel: %s\\nBuildnumber: %s"
+#: menu.sh:1391
+msgid "Found a installation:\\nModel: %s\\nProductversion: %s"
 msgstr ""
 
-#: menu.sh:1331
+#: menu.sh:1395
 msgid "\\nSerial: %s"
 msgstr ""
 
-#: menu.sh:1341
+#: menu.sh:1409
 msgid "Unfortunately I couldn't mount the DSM partition!"
 msgstr ""
 
-#: menu.sh:1349 menu.sh:1355
+#: menu.sh:1417 menu.sh:1423
 msgid "Edit with caution"
 msgstr ""
 
-#: menu.sh:1375
+#: menu.sh:1445
 msgid "Alert"
 msgstr ""
 
-#: menu.sh:1376
+#: menu.sh:1446
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr ""
 
-#: menu.sh:1388 menu.sh:1709
+#: menu.sh:1458 menu.sh:1779
 msgid "Choose a language"
 msgstr ""
 
-#: menu.sh:1402
+#: menu.sh:1472
 msgid "Choose a layout"
 msgstr ""
 
-#: menu.sh:1414
+#: menu.sh:1484
 msgid "Choice a keymap"
 msgstr ""
 
-#: menu.sh:1432 menu.sh:1465 menu.sh:1516 menu.sh:1572 menu.sh:1580
-#: menu.sh:1588 menu.sh:1596
+#: menu.sh:1502 menu.sh:1535 menu.sh:1586 menu.sh:1642 menu.sh:1650
+#: menu.sh:1658 menu.sh:1666
 msgid "Update %s"
 msgstr ""
 
-#: menu.sh:1435
+#: menu.sh:1505
 msgid "Checking last version"
 msgstr ""
 
-#: menu.sh:1443
+#: menu.sh:1513
 msgid "Error checking new version"
 msgstr ""
 
-#: menu.sh:1448
+#: menu.sh:1518
 msgid "No new version. Actual version is %s\\nForce update?"
 msgstr ""
 
-#: menu.sh:1452
+#: menu.sh:1522
 msgid "Downloading last version"
 msgstr ""
 
-#: menu.sh:1457
+#: menu.sh:1527
 msgid "Error downloading new version"
 msgstr ""
 
-#: menu.sh:1467 menu.sh:1518
+#: menu.sh:1537 menu.sh:1588
 msgid "Extracting last version"
 msgstr ""
 
-#: menu.sh:1471
+#: menu.sh:1541
 msgid "Error extracting update file"
 msgstr ""
 
-#: menu.sh:1478
+#: menu.sh:1548
 msgid "Checksum do not match!"
 msgstr ""
 
-#: menu.sh:1487
+#: menu.sh:1557
 msgid ""
 "The current version does not support upgrading to the latest update.zip. "
 "Please remake the bootloader disk!"
 msgstr ""
 
-#: menu.sh:1492
+#: menu.sh:1562
 msgid "Installing new files"
 msgstr ""
 
-#: menu.sh:1509
+#: menu.sh:1579
 msgid "Arpl updated with success to %s!\\nReboot?"
 msgstr ""
 
-#: menu.sh:1524
+#: menu.sh:1594
 msgid "Installing new %s"
 msgstr ""
 
-#: menu.sh:1549
+#: menu.sh:1621
 msgid "%s updated with success!"
 msgstr ""
 
-#: menu.sh:1561
+#: menu.sh:1631
 msgid "Update arpl"
 msgstr ""
 
-#: menu.sh:1562
+#: menu.sh:1632
 msgid "Update addons"
 msgstr ""
 
-#: menu.sh:1563
+#: menu.sh:1633
 msgid "Update modules"
 msgstr ""
 
-#: menu.sh:1564
+#: menu.sh:1634
 msgid "Update LKMs"
 msgstr ""
 
-#: menu.sh:1565
+#: menu.sh:1635
 msgid "Set proxy server"
 msgstr ""
 
-#: menu.sh:1566
+#: menu.sh:1636
 msgid "Local upload"
 msgstr ""
 
-#: menu.sh:1572
+#: menu.sh:1642
 msgid "arpl"
 msgstr ""
 
-#: menu.sh:1580
+#: menu.sh:1650
 msgid "addons"
 msgstr ""
 
-#: menu.sh:1588
+#: menu.sh:1658
 msgid "modules"
 msgstr ""
 
-#: menu.sh:1596
+#: menu.sh:1666
 msgid "LKMs"
 msgstr ""
 
-#: menu.sh:1606 menu.sh:1617 menu.sh:1628 menu.sh:1638 menu.sh:1655
-#: menu.sh:1669
+#: menu.sh:1676 menu.sh:1687 menu.sh:1698 menu.sh:1708 menu.sh:1725
+#: menu.sh:1739
 msgid "Update"
 msgstr ""
 
-#: menu.sh:1607
+#: menu.sh:1677
 msgid "Please enter a proxy server url"
 msgstr ""
 
-#: menu.sh:1618
+#: menu.sh:1688
 msgid "Invalid proxy server url, continue?"
 msgstr ""
 
-#: menu.sh:1633
+#: menu.sh:1703
 msgid ""
 "Please keep the attachment name consistent with the attachment name on "
 "Github.\\n"
 msgstr ""
 
-#: menu.sh:1634
+#: menu.sh:1704
 msgid "Upload update.zip will update arpl.\\n"
 msgstr ""
 
-#: menu.sh:1635
+#: menu.sh:1705
 msgid "Upload addons.zip will update Addons.\\n"
 msgstr ""
 
-#: menu.sh:1636
+#: menu.sh:1706
 msgid "Upload modules.zip will update Modules.\\n"
 msgstr ""
 
-#: menu.sh:1637
+#: menu.sh:1707
 msgid "Upload rp-lkms.zip will update LKMs.\\n"
 msgstr ""
 
-#: menu.sh:1690
+#: menu.sh:1760
 msgid "Choose a model"
 msgstr ""
 
-#: menu.sh:1692
-msgid "Choose a Build Number"
+#: menu.sh:1762
+msgid "Choose a product version"
 msgstr ""
 
-#: menu.sh:1696
+#: menu.sh:1766
 msgid "Cmdline menu"
 msgstr ""
 
-#: menu.sh:1697
+#: menu.sh:1767
 msgid "Synoinfo menu"
 msgstr ""
 
-#: menu.sh:1700
+#: menu.sh:1770
 msgid "Advanced menu"
 msgstr ""
 
-#: menu.sh:1703
+#: menu.sh:1773
 msgid "Build the loader"
 msgstr ""
 
-#: menu.sh:1707
+#: menu.sh:1777
 msgid "Boot the loader"
 msgstr ""
 
-#: menu.sh:1710
+#: menu.sh:1780
 msgid "Choose a keymap"
 msgstr ""
 
-#: menu.sh:1712
+#: menu.sh:1782
 msgid "Clean disk cache"
 msgstr ""
 
-#: menu.sh:1714
+#: menu.sh:1784
 msgid "Update menu"
 msgstr ""
 
-#: menu.sh:1776
+#: menu.sh:1846
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr ""

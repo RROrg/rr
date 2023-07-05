@@ -23,6 +23,10 @@ on:
         description: 'format %y.%-m.$i or auto'
         required: false
         type: string
+      prerelease:
+        description: 'pre release'
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -202,6 +206,7 @@ jobs:
         if: env.VERSION != ''
         with:
           tag_name: ${{ env.VERSION }}
+          prerelease: ${{ inputs.prerelease }}
           files: |
             arpl-i18n-${{ env.VERSION }}.img.zip
             arpl-i18n-${{ env.VERSION }}.vmdk-dyn.zip
