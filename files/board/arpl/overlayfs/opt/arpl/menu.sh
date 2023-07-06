@@ -223,6 +223,7 @@ function productversMenu() {
     # Check addons
     PLATFORM="$(readModelKey "${MODEL}" "platform")"
     KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+    KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
     while IFS=': ' read ADDON PARAM; do
       [ -z "${ADDON}" ] && continue
       if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
@@ -233,7 +234,7 @@ function productversMenu() {
     writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
     while read ID DESC; do
       writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
-    done < <(getAllModules "${PLATFORM}" "${KVER}")
+    done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
     # Remove old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
     DIRTY=1
@@ -387,9 +388,11 @@ function addonMenu() {
 function moduleMenu() {
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
   KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+  KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+
   dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
     --infobox "$(TEXT "Reading modules")" 0 0
-  ALLMODULES=$(getAllModules "${PLATFORM}" "${KVER}")
+  ALLMODULES=$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
   unset USERMODULES
   declare -A USERMODULES
   while IFS=': ' read KEY VALUE; do
@@ -423,7 +426,7 @@ function moduleMenu() {
         --infobox "$(TEXT "Selecting loaded modules")" 0 0
       KOLIST=""
       for I in $(lsmod | awk -F' ' '{print $1}' | grep -v 'Module'); do
-        KOLIST+="$(getdepends ${PLATFORM} ${KVER} ${I}) ${I} "
+        KOLIST+="$(getdepends "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${I}") ${I} "
       done
       KOLIST=($(echo ${KOLIST} | tr ' ' '\n' | sort -u))
       unset USERMODULES
@@ -505,9 +508,9 @@ function moduleMenu() {
       done
       popd
       if [ -n "${USER_FILE}" -a "${USER_FILE##*.}" = "ko" ]; then
-        addToModules ${PLATFORM} ${KVER} "${TMP_UP_PATH}/${USER_FILE}"
+        addToModules ${PLATFORM} "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${TMP_UP_PATH}/${USER_FILE}"
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-          --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${USER_FILE}" ${PLATFORM} ${KVER})" 0 0
+          --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${USER_FILE}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" 0 0
         rm -f "${TMP_UP_PATH}/${USER_FILE}"
       else
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
@@ -1606,11 +1609,12 @@ function updateExts() {
     # Rebuild modules if model/buildnumber is selected
     PLATFORM="$(readModelKey "${MODEL}" "platform")"
     KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+    KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
     if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
       while read ID DESC; do
         writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
-      done < <(getAllModules "${PLATFORM}" "${KVER}")
+      done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
     fi
   elif [ "${1}" = "LKMs" ]; then
     rm -rf "${LKM_PATH}/"*
