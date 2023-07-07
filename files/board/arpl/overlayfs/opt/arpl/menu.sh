@@ -151,7 +151,7 @@ function productversMenu() {
   ITEMS="$(readConfigEntriesArray "productvers" "${MODEL_CONFIG_PATH}/${MODEL}.yml" | sort -r)"
   if [ -z "${1}" ]; then
     dialog --backtitle "$(backtitle)" --colors \
-      --no-items --menu "$(TEXT "Choose a build number")" 0 0 0 ${ITEMS} \
+      --no-items --menu "$(TEXT "Choose a product version")" 0 0 0 ${ITEMS} \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     resp=$(<${TMP_PATH}/resp)
@@ -163,17 +163,17 @@ function productversMenu() {
   if [ "${PRODUCTVER}" != "${resp}" ]; then
     local KVER=$(readModelKey "${MODEL}" "productvers.[${resp}].kver")
     if [ -d "/sys/firmware/efi" -a "${KVER:0:1}" = "3" ]; then
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Build Number")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
         --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
       return
     fi
     if [ ! "usb" = "$(udevadm info --query property --name ${LOADER_DISK} | grep BUS | cut -d= -f2)" -a "${KVER:0:1}" = "5" ]; then
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Build Number")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
         --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
       return
     fi
     # get online pat data
-    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Build Number")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --infobox "$(TEXT "Get online pat data ..")" 0 0
     idx=1
     while [ $idx -le 3 ]; do # Loop 3 times, if successful, break
@@ -198,7 +198,7 @@ function productversMenu() {
     else
       MSG="Successfully to get online pat data,\nPlease confirm or modify as needed."
     fi
-    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Build Number")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
       2>"${TMP_PATH}/resp"
     [ $? -ne 0 ] && return
@@ -213,7 +213,7 @@ function productversMenu() {
     SMALLNUM=""
     writeConfigKey "buildnum" "" "${USER_CONFIG_FILE}"
     writeConfigKey "smallnum" "" "${USER_CONFIG_FILE}"
-    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Build Number")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
     # Delete synoinfo and reload model/build synoinfo
     writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"

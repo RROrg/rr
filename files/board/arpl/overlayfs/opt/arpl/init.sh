@@ -176,24 +176,47 @@ if [ ${BOOT} -eq 1 ]; then
 fi
 
 # Wait for an IP
-echo "$(printf "$(TEXT "Detected %s network cards, Waiting IP.")" "${#ETHX[@]}")"
+echo "$(printf "$(TEXT "Detected %s network cards.")" "${#ETHX[@]}")"
+echo "$(TEXT "Checking Connect.")"
+COUNT=0
+while [ ${COUNT} -lt 30 ]; do
+  hasConnect="false"
+  for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
+    if ethtool ${ETHX[${N}]} | grep 'Link detected' | grep -q 'yes'; then
+      echo -en "${ETHX[${N}]} "
+      hasConnect="true"
+    fi
+  done
+  if [ ${hasConnect} = "true" ]; then
+    echo -en "connected.\n"
+    break
+  fi
+  COUNT=$((${COUNT} + 1))
+  echo -n "."
+  sleep 1
+done
+echo "$(TEXT "Waiting IP.")"
 for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
   COUNT=0
   DRIVER=$(ls -ld /sys/class/net/${ETHX[${N}]}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
   echo -en "${ETHX[${N}]}(${DRIVER}): "
   while true; do
-    if [ -z "$(ip link show ${ETHX[${N}]} | grep 'UP')" ]; then
+    if ! ip link show ${ETHX[${N}]} | grep -q 'UP'; then
       echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "DOWN")\n"
       break
     fi
-    if [ ${COUNT} -eq 30 ]; then
+    if ethtool ${ETHX[${N}]} | grep 'Link detected' | grep -q 'no'; then
+      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "NOT CONNECTED")\n"
+      break
+    fi
+    if [ ${COUNT} -eq 8 ]; then
       echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "ERROR")\n"
       break
     fi
     COUNT=$((${COUNT} + 1))
     IP=$(ip route show dev ${ETHX[${N}]} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p')
     if [ -n "${IP}" ]; then
-      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal.")" "${IP}")\n"
+      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to configure the loader via web terminal.")" "${IP}")\n"
       break
     fi
     echo -n "."
