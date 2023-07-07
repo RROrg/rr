@@ -165,19 +165,40 @@ if [ "${DIRECT}" = "true" ]; then
   reboot
   exit 0
 else
-  (/etc/init.d/S41dhcpcd restart >/dev/null 2>&1 &) || true
   BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
   [ -z "${BOOTIPWAIT}" ] && BOOTIPWAIT=10
-  sleep ${BOOTIPWAIT}
   ETHX=($(ls /sys/class/net/ | grep eth)) # real network cards list
-  echo "$(printf "$(TEXT "Detected %s network cards, Waiting IP.(For reference only)")" "${#ETHX[@]}")"
+  echo "$(printf "$(TEXT "Detected %s network cards.")" "${#ETHX[@]}")"
+  echo "$(TEXT "Checking Connect.")"
+  COUNT=0
+  while [ ${COUNT} -lt ${BOOTIPWAIT} ]; do
+    hasConnect="false"
+    for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
+      if ethtool ${ETHX[${N}]} | grep 'Link detected' | grep -q 'yes'; then
+        echo -en "${ETHX[${N}]} "
+        hasConnect="true"
+      fi
+    done
+    if [ ${hasConnect} = "true" ]; then
+      echo -en "connected.\n"
+      break
+    fi
+    COUNT=$((${COUNT} + 1))
+    echo -n "."
+    sleep 1
+  done
+  echo "$(TEXT "Waiting IP.(For reference only)")"
   for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
     COUNT=0
     DRIVER=$(ls -ld /sys/class/net/${ETHX[${N}]}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
     echo -en "${ETHX[${N}]}(${DRIVER}): "
     while true; do
-      if [ -z "$(ip link show ${ETHX[${N}]} | grep 'UP')" ]; then
+      if ! ip link show ${ETHX[${N}]} | grep -q 'UP'; then
         echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "DOWN")\n"
+        break
+      fi
+      if ethtool ${ETHX[${N}]} | grep 'Link detected' | grep -q 'no'; then
+        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "NOT CONNECTED")\n"
         break
       fi
       if [ ${COUNT} -eq 8 ]; then # Under normal circumstances, no errors should occur here.
