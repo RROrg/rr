@@ -1758,7 +1758,7 @@ if [ "x$1" = "xb" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]
   boot && exit 0 || sleep 5
 fi
 # Main loop
-NEXT="m"
+[ -n "${MODEL}" ] && NEXT="v" || NEXT="m" 
 while true; do
   echo "m \"$(TEXT "Choose a model")\"" >"${TMP_PATH}/menu"
   if [ -n "${MODEL}" ]; then
@@ -1798,23 +1798,23 @@ while true; do
     ;;
   n)
     productversMenu
-    NEXT="a"
+    NEXT="d"
     ;;
   a)
     addonMenu
-    NEXT="o"
+    NEXT="d"
     ;;
   o)
     moduleMenu
-    NEXT="x"
+    NEXT="d"
     ;;
   x)
     cmdlineMenu
-    NEXT="i"
+    NEXT="d"
     ;;
   i)
     synoinfoMenu
-    NEXT="v"
+    NEXT="d"
     ;;
   v)
     advancedMenu
@@ -1829,16 +1829,20 @@ while true; do
     ;;
   l)
     languageMenu
+    NEXT="m"
     ;;
   k)
     keymapMenu
+    NEXT="m"
     ;;
   c)
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cleaning")" \
       --prgbox "rm -rfv \"${CACHE_PATH}/dl\"" 0 0
+    NEXT="d"
     ;;
   p)
     updateMenu
+    NEXT="d"
     ;;
   e)
     NEXT="e"
