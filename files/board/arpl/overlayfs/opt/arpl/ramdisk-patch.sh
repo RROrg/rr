@@ -23,7 +23,10 @@ SPACELEFT=$(df --block-size=1 | awk '/'${LOADER_DEVICE_NAME}'3/{print$4}')
 echo -n "."
 rm -rf "${RAMDISK_PATH}" # Force clean
 mkdir -p "${RAMDISK_PATH}"
-(cd "${RAMDISK_PATH}"; xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm) >/dev/null 2>&1
+(
+  cd "${RAMDISK_PATH}"
+  xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm
+) >/dev/null 2>&1
 
 # get user data
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
@@ -40,7 +43,7 @@ PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
 # Check if DSM buildnumber changed
 . "${RAMDISK_PATH}/etc/VERSION"
 
-if [ -n "${PRODUCTVER}" -a -n "${BUILDNUM}" -a -n "${SMALLNUM}" ] && \
+if [ -n "${PRODUCTVER}" -a -n "${BUILDNUM}" -a -n "${SMALLNUM}" ] &&
   ([ ! "${PRODUCTVER}" = "${majorversion}.${minorversion}" ] || [ ! "${BUILDNUM}" = "${buildnumber}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber}" ]); then
   OLDVER="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
   NEWVER="${majorversion}.${minorversion}(${buildnumber}$([ ${smallfixnumber:-0} -ne 0 ] && echo "u${smallfixnumber}"))"
@@ -146,14 +149,14 @@ DT="$(readModelKey "${MODEL}" "dt")"
 
 echo -n "."
 mkdir -p "${RAMDISK_PATH}/addons"
-echo "#!/bin/sh"                                 >"${RAMDISK_PATH}/addons/addons.sh"
+echo "#!/bin/sh" >"${RAMDISK_PATH}/addons/addons.sh"
 echo 'echo "addons.sh called with params ${@}"' >>"${RAMDISK_PATH}/addons/addons.sh"
-echo "export PLATFORM=${PLATFORM}"              >>"${RAMDISK_PATH}/addons/addons.sh"
-echo "export MODEL=${MODEL}"                    >>"${RAMDISK_PATH}/addons/addons.sh"
-echo "export MLINK=${PATURL}"                   >>"${RAMDISK_PATH}/addons/addons.sh"
-echo "export MCHECKSUM=${PATSUM}"               >>"${RAMDISK_PATH}/addons/addons.sh"
-echo "export LAYOUT=${LAYOUT}"                  >>"${RAMDISK_PATH}/addons/addons.sh"
-echo "export KEYMAP=${KEYMAP}"                  >>"${RAMDISK_PATH}/addons/addons.sh"
+echo "export PLATFORM=${PLATFORM}" >>"${RAMDISK_PATH}/addons/addons.sh"
+echo "export MODEL=${MODEL}" >>"${RAMDISK_PATH}/addons/addons.sh"
+echo "export MLINK=${PATURL}" >>"${RAMDISK_PATH}/addons/addons.sh"
+echo "export MCHECKSUM=${PATSUM}" >>"${RAMDISK_PATH}/addons/addons.sh"
+echo "export LAYOUT=${LAYOUT}" >>"${RAMDISK_PATH}/addons/addons.sh"
+echo "export KEYMAP=${KEYMAP}" >>"${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
 
 # Required addons: eudev, disks, wol

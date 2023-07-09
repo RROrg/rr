@@ -1579,8 +1579,7 @@ function updateArpl() {
     fi
   done < <(readConfigMap "replace" "/tmp/update-list.yml")
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-    --yesno "$(printf "$(TEXT "Arpl updated with success to %s!\nReboot?")" "${TAG}")" 0 0
-  [ $? -ne 0 ] && continue
+    --msgbox "$(printf "$(TEXT "Arpl updated with success to %s!\nReboot?")" "${TAG}")" 0 0
   arpl-reboot.sh config
 }
 
@@ -1842,7 +1841,35 @@ while true; do
     updateMenu
     ;;
   e)
-    break
+    NEXT="e"
+    while true; do
+      dialog --backtitle "$(backtitle)" --colors \
+        --default-item ${NEXT} --menu "$(TEXT "Choose a action")" 0 0 0 \
+        p "$(TEXT "Poweroff")" \
+        r "$(TEXT "Reboot")" \
+        c "$(TEXT "Reboot to arpl")" \
+        s "$(TEXT "Back to shell")" \
+        e "$(TEXT "Exit")" \
+        2>${TMP_PATH}/resp
+      [ $? -ne 0 ] && break
+      case "$(<${TMP_PATH}/resp)" in
+      p)
+        poweroff
+        ;;
+      r)
+        reboot
+        ;;
+      c)
+        arpl-reboot.sh config
+        ;;
+      s)
+        break 2
+        ;;
+      e)
+        break
+        ;;
+      esac
+    done
     ;;
   esac
 done
