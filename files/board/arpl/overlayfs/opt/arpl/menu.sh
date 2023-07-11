@@ -167,7 +167,7 @@ function productversMenu() {
         --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
       return
     fi
-    if [ ! "usb" = "$(udevadm info --query property --name ${LOADER_DISK} | grep BUS | cut -d= -f2)" -a "${KVER:0:1}" = "5" ]; then
+    if [ ! "usb" = "$(udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2)" -a "${KVER:0:1}" = "5" ]; then
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
         --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
       return
@@ -175,7 +175,7 @@ function productversMenu() {
     # get online pat data
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --infobox "$(TEXT "Get online pat data ..")" 0 0
-    idx=1
+    idx=0
     while [ $idx -le 3 ]; do # Loop 3 times, if successful, break
       speed_a=$(ping -c 1 -W 5 www.synology.com | awk '/time=/ {print $7}' | cut -d '=' -f 2)
       speed_b=$(ping -c 1 -W 5 www.synology.cn | awk '/time=/ {print $7}' | cut -d '=' -f 2)

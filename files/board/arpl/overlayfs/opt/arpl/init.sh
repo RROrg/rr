@@ -119,7 +119,7 @@ done
 # Get the VID/PID if we are in USB
 VID="0x0000"
 PID="0x0000"
-BUS=$(udevadm info --query property --name ${LOADER_DISK} | grep BUS | cut -d= -f2)
+BUS=$(udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2)
 if [ "${BUS}" = "usb" ]; then
   VID="0x$(udevadm info --query property --name ${LOADER_DISK} | grep ID_VENDOR_ID | cut -d= -f2)"
   PID="0x$(udevadm info --query property --name ${LOADER_DISK} | grep ID_MODEL_ID | cut -d= -f2)"
