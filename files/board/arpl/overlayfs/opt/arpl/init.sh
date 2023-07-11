@@ -209,8 +209,8 @@ for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
       echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "NOT CONNECTED")\n"
       break
     fi
-    if [ ${COUNT} -eq 8 ]; then
-      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "ERROR")\n"
+    if [ ${COUNT} -eq 15 ]; then
+      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "TIMEOUT")\n"
       break
     fi
     COUNT=$((${COUNT} + 1))

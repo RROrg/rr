@@ -202,7 +202,7 @@ else
         break
       fi
       if [ ${COUNT} -eq 8 ]; then # Under normal circumstances, no errors should occur here.
-        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "ERROR")\n"
+        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "TIMEOUT")\n"
         break
       fi
       COUNT=$((${COUNT} + 1))
