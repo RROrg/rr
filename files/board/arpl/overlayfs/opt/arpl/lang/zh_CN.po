@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arpl-i18n\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-09 11:51+0800\n"
-"PO-Revision-Date: 2023-07-09 11:51+0800\n"
+"POT-Creation-Date: 2023-07-12 23:47+0800\n"
+"PO-Revision-Date: 2023-07-12 23:47+0800\n"
 "Last-Translator: ing <wjz304@qq.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -222,7 +222,7 @@ msgstr "显示测试型号"
 msgid "Choose the model"
 msgstr "选择型号"
 
-#: menu.sh:154 menu.sh:1765
+#: menu.sh:154 menu.sh:1808
 msgid "Choose a product version"
 msgstr "选择版本"
 
@@ -250,7 +250,7 @@ msgstr "获取线上pat数据 .."
 msgid "Reconfiguring Synoinfo, Addons and Modules"
 msgstr "重新配置 Syninfo, 插件和模块"
 
-#: menu.sh:260 menu.sh:405 menu.sh:546 menu.sh:687 menu.sh:1633
+#: menu.sh:260 menu.sh:405 menu.sh:546 menu.sh:687 menu.sh:1655
 msgid "Choose a option"
 msgstr "设置"
 
@@ -274,14 +274,14 @@ msgstr "显示所有可用插件"
 msgid "Upload a external addon"
 msgstr "上传外部插件"
 
-#: menu.sh:266 menu.sh:412 menu.sh:542 menu.sh:682 menu.sh:995 menu.sh:1640
-#: menu.sh:1788 menu.sh:1856
+#: menu.sh:266 menu.sh:412 menu.sh:542 menu.sh:682 menu.sh:995 menu.sh:1663
+#: menu.sh:1831 menu.sh:1899
 msgid "Exit"
 msgstr "退出"
 
 #: menu.sh:278 menu.sh:283 menu.sh:289 menu.sh:300 menu.sh:308 menu.sh:326
 #: menu.sh:340 menu.sh:345 menu.sh:349 menu.sh:363 menu.sh:367 menu.sh:374
-#: menu.sh:377 menu.sh:1767
+#: menu.sh:377 menu.sh:1810
 msgid "Addons"
 msgstr "插件"
 
@@ -305,7 +305,7 @@ msgstr "没有要删除的用户插件"
 msgid "Select addon to remove"
 msgstr "选择要删除的插件"
 
-#: menu.sh:346 menu.sh:1236 menu.sh:1267 menu.sh:1300 menu.sh:1702
+#: menu.sh:346 menu.sh:1236 menu.sh:1267 menu.sh:1300 menu.sh:1745
 msgid "This feature is only available when accessed via web/ssh."
 msgstr "此功能仅通过web/ssh访问时可用."
 
@@ -313,7 +313,7 @@ msgstr "此功能仅通过web/ssh访问时可用."
 msgid "Please upload the *.addons file."
 msgstr "请上传 *.addons 文件."
 
-#: menu.sh:364 menu.sh:517 menu.sh:1729 menu.sh:1743
+#: menu.sh:364 menu.sh:517 menu.sh:1772 menu.sh:1786
 msgid "Not a valid file, please try again!"
 msgstr "不是有效的文件, 请重试!"
 
@@ -330,7 +330,7 @@ msgid "File format not recognized!"
 msgstr "文件格式无法识别!"
 
 #: menu.sh:393 menu.sh:421 menu.sh:425 menu.sh:442 menu.sh:455 menu.sh:469
-#: menu.sh:475 menu.sh:494 menu.sh:497 menu.sh:512 menu.sh:516 menu.sh:1768
+#: menu.sh:475 menu.sh:494 menu.sh:497 menu.sh:512 menu.sh:516 menu.sh:1811
 msgid "Modules"
 msgstr "模块"
 
@@ -607,7 +607,7 @@ msgstr "拷贝文件: "
 msgid "Addon %s not found!"
 msgstr "插件 %s 未找到!"
 
-#: menu.sh:953 menu.sh:1839
+#: menu.sh:953 menu.sh:1882
 msgid "Cleaning"
 msgstr "清除中"
 
@@ -690,7 +690,7 @@ msgstr "开发者工具"
 msgid "Advanced"
 msgstr "高级"
 
-#: menu.sh:998 menu.sh:1791
+#: menu.sh:998 menu.sh:1834
 msgid "Choose the option"
 msgstr "设置"
 
@@ -898,7 +898,7 @@ msgstr "警告"
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "配置已更改, 是否重新编译引导?"
 
-#: menu.sh:1461 menu.sh:1782
+#: menu.sh:1461 menu.sh:1825
 msgid "Choose a language"
 msgstr "选择语言"
 
@@ -910,196 +910,205 @@ msgstr "选择布局"
 msgid "Choice a keymap"
 msgstr "选择键盘"
 
-#: menu.sh:1505 menu.sh:1538 menu.sh:1588 menu.sh:1645 menu.sh:1653
-#: menu.sh:1661 menu.sh:1669
+#: menu.sh:1506 menu.sh:1554 menu.sh:1605 menu.sh:1668 menu.sh:1672
+#: menu.sh:1676 menu.sh:1680 menu.sh:1688 menu.sh:1696 menu.sh:1704
+#: menu.sh:1712
 msgid "Update %s"
 msgstr "更新 %s"
 
-#: menu.sh:1508
+#: menu.sh:1509
 msgid "Checking last version"
 msgstr "检测新版本中"
 
-#: menu.sh:1516
+#: menu.sh:1518 menu.sh:1521
 msgid "Error checking new version"
 msgstr "检测新版本错误"
 
-#: menu.sh:1521
+#: menu.sh:1528
+msgid "No new version."
+msgstr "没有新版本."
+
+#: menu.sh:1531
 msgid "No new version. Actual version is %s\\nForce update?"
 msgstr "没有新版本. 实际版本为 %s\\n强制更新?"
 
-#: menu.sh:1525
+#: menu.sh:1536
 msgid "Downloading last version"
 msgstr "下载新版本中"
 
-#: menu.sh:1530
+#: menu.sh:1542 menu.sh:1545
 msgid "Error downloading new version"
 msgstr "下载新版本错误"
 
-#: menu.sh:1540 menu.sh:1590
+#: menu.sh:1556 menu.sh:1607
 msgid "Extracting last version"
 msgstr "解压新版本"
 
-#: menu.sh:1544
+#: menu.sh:1560
 msgid "Error extracting update file"
 msgstr "更新文件解压错误"
 
-#: menu.sh:1551
+#: menu.sh:1567
 msgid "Checksum do not match!"
 msgstr "Checksum不匹配!"
 
-#: menu.sh:1560
+#: menu.sh:1576
 msgid ""
 "The current version does not support upgrading to the latest update.zip. "
 "Please remake the bootloader disk!"
 msgstr "当前版本不支持最新的update.zip升级, 请重新制作引导盘!"
 
-#: menu.sh:1565
+#: menu.sh:1581
 msgid "Installing new files"
 msgstr "安装更新中"
 
-#: menu.sh:1582
+#: menu.sh:1598
 msgid "Arpl updated with success to %s!\\nReboot?"
 msgstr "Arpl更新成功 %s!\\n重启?"
 
-#: menu.sh:1596
+#: menu.sh:1613
 msgid "Installing new %s"
 msgstr "安装新 %s 中"
 
-#: menu.sh:1624
+#: menu.sh:1642 menu.sh:1645
 msgid "%s updated with success!"
 msgstr "%s 更新成功!"
 
-#: menu.sh:1634
+#: menu.sh:1656
+msgid "Update all"
+msgstr "更新所有"
+
+#: menu.sh:1657
 msgid "Update arpl"
 msgstr "更新arpl"
 
-#: menu.sh:1635
+#: menu.sh:1658
 msgid "Update addons"
 msgstr "更新插件"
 
-#: menu.sh:1636
+#: menu.sh:1659
 msgid "Update modules"
 msgstr "更新模块"
 
-#: menu.sh:1637
+#: menu.sh:1660
 msgid "Update LKMs"
 msgstr "更新LKMs"
 
-#: menu.sh:1638
+#: menu.sh:1661
 msgid "Set proxy server"
 msgstr "设置代理"
 
-#: menu.sh:1639
+#: menu.sh:1662
 msgid "Local upload"
 msgstr "本地上传"
 
-#: menu.sh:1645
-msgid "arpl"
-msgstr "arpl"
-
-#: menu.sh:1653
+#: menu.sh:1668 menu.sh:1696
 msgid "addons"
 msgstr "插件"
 
-#: menu.sh:1661
+#: menu.sh:1672 menu.sh:1704
 msgid "modules"
 msgstr "模块"
 
-#: menu.sh:1669
+#: menu.sh:1676 menu.sh:1712
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:1679 menu.sh:1690 menu.sh:1701 menu.sh:1711 menu.sh:1728
-#: menu.sh:1742
+#: menu.sh:1680 menu.sh:1688
+msgid "arpl"
+msgstr "arpl"
+
+#: menu.sh:1722 menu.sh:1733 menu.sh:1744 menu.sh:1754 menu.sh:1771
+#: menu.sh:1785
 msgid "Update"
 msgstr "更新"
 
-#: menu.sh:1680
+#: menu.sh:1723
 msgid "Please enter a proxy server url"
 msgstr "请输入代理服务器url"
 
-#: menu.sh:1691
+#: menu.sh:1734
 msgid "Invalid proxy server url, continue?"
 msgstr "无效的代理服务器url,是否继续?"
 
-#: menu.sh:1706
+#: menu.sh:1749
 msgid ""
 "Please keep the attachment name consistent with the attachment name on "
 "Github.\\n"
 msgstr "请保持附件名称与 github 上附件名称一致.\\n"
 
-#: menu.sh:1707
+#: menu.sh:1750
 msgid "Upload update.zip will update arpl.\\n"
 msgstr "上传 update.zip 将更新 arpl.\\n"
 
-#: menu.sh:1708
+#: menu.sh:1751
 msgid "Upload addons.zip will update Addons.\\n"
 msgstr "上传 addons.zip 将更新 插件.\\n"
 
-#: menu.sh:1709
+#: menu.sh:1752
 msgid "Upload modules.zip will update Modules.\\n"
 msgstr "上传 modules.zip 将更新 模块.\\n"
 
-#: menu.sh:1710
+#: menu.sh:1753
 msgid "Upload rp-lkms.zip will update LKMs.\\n"
 msgstr "上传 rp-lkms.zip 将更新 LKMs.\\n"
 
-#: menu.sh:1763
+#: menu.sh:1806
 msgid "Choose a model"
 msgstr "选择型号"
 
-#: menu.sh:1769
+#: menu.sh:1812
 msgid "Cmdline menu"
 msgstr "设置Cmdline"
 
-#: menu.sh:1770
+#: menu.sh:1813
 msgid "Synoinfo menu"
 msgstr "设置Synoinfo"
 
-#: menu.sh:1773
+#: menu.sh:1816
 msgid "Advanced menu"
 msgstr "高级设置"
 
-#: menu.sh:1776
+#: menu.sh:1819
 msgid "Build the loader"
 msgstr "编译引导"
 
-#: menu.sh:1780
+#: menu.sh:1823
 msgid "Boot the loader"
 msgstr "启动"
 
-#: menu.sh:1783
+#: menu.sh:1826
 msgid "Choose a keymap"
 msgstr "选择键盘"
 
-#: menu.sh:1785
+#: menu.sh:1828
 msgid "Clean disk cache"
 msgstr "清除磁盘缓存"
 
-#: menu.sh:1787
+#: menu.sh:1830
 msgid "Update menu"
 msgstr "更新"
 
-#: menu.sh:1851
+#: menu.sh:1894
 msgid "Choose a action"
 msgstr "选择动作"
 
-#: menu.sh:1852
+#: menu.sh:1895
 msgid "Poweroff"
 msgstr "关机"
 
-#: menu.sh:1853
+#: menu.sh:1896
 msgid "Reboot"
 msgstr "重启"
 
-#: menu.sh:1854
+#: menu.sh:1897
 msgid "Reboot to arpl"
 msgstr "重启到arpl"
 
-#: menu.sh:1855
+#: menu.sh:1898
 msgid "Back to shell"
 msgstr "退出到shell"
 
-#: menu.sh:1881
+#: menu.sh:1924
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "执行 \\033[1;32mmenu.sh\\033[0m 重新进入设置菜单"
