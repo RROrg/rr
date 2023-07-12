@@ -202,17 +202,17 @@ function productversMenu() {
       --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
       2>"${TMP_PATH}/resp"
     [ $? -ne 0 ] && return
-    [ -z "${paturl}" -o -z "${patsum}" ] && return
     paturl="$(cat "${TMP_PATH}/resp" | tail -n +1 | head -1)"
     patsum="$(cat "${TMP_PATH}/resp" | tail -n +2 | head -1)"
+    [ -z "${paturl}" -o -z "${patsum}" ] && return
     writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
     writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
     PRODUCTVER=${resp}
     writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
     BUILDNUM=""
     SMALLNUM=""
-    writeConfigKey "buildnum" "" "${USER_CONFIG_FILE}"
-    writeConfigKey "smallnum" "" "${USER_CONFIG_FILE}"
+    writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
+    writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
     # Delete synoinfo and reload model/build synoinfo
@@ -1499,6 +1499,7 @@ function keymapMenu() {
 # 2 - current version
 # 3 - repo url
 # 4 - attachment name
+# 5 - silent
 function downloadExts() {
   PROXY="$(readConfigKey "proxy" "${USER_CONFIG_FILE}")"
   [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
@@ -1512,22 +1513,38 @@ function downloadExts() {
   TAG="${LATESTURL##*/}"
   [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
   if [ -z "${TAG}" ]; then
-    dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-      --msgbox "$(TEXT "Error checking new version")" 0 0
+    if [ ! "${5}" = "0" ]; then
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
+        --infobox "$(TEXT "Error checking new version")" 0 0
+    else
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
+        --msgbox "$(TEXT "Error checking new version")" 0 0
+    fi
     return 1
   fi
   if [ "${2}" = "${TAG}" ]; then
-    dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-      --yesno "$(printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${2}")" 0 0
-    [ $? -ne 0 ] && return 1
+    if [ ! "${5}" = "0" ]; then
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
+        --infobox "$(TEXT "No new version.")" 0 0
+      return 1
+    else
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
+        --yesno "$(printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${2}")" 0 0
+      [ $? -ne 0 ] && return 1
+    fi
   fi
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Downloading last version")" 0 0
   rm -f "/tmp/${4}.zip"
   STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "/tmp/${4}.zip")
   if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-    dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-      --msgbox "$(TEXT "Error downloading new version")" 0 0
+    if [ ! "${5}" = "0" ]; then
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
+        --infobox "$(TEXT "Error downloading new version")" 0 0
+    else
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
+        --msgbox "$(TEXT "Error downloading new version")" 0 0
+    fi
     return 1
   fi
   return 0
@@ -1542,14 +1559,14 @@ function updateArpl() {
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "${T}" \
       --msgbox "$(TEXT "Error extracting update file")" 0 0
-    continue
+    return 1
   fi
   # Check checksums
   (cd /tmp && sha256sum --status -c sha256sum)
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "${T}" \
       --msgbox "$(TEXT "Checksum do not match!")" 0 0
-    continue
+    return 1
   fi
   # Check conditions
   if [ -f "/tmp/update-check.sh" ]; then
@@ -1558,7 +1575,7 @@ function updateArpl() {
     if [ $? -ne 0 ]; then
       dialog --backtitle "$(backtitle)" --colors --title "${T}" \
         --msgbox "$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")" 0 0
-      continue
+      return 1
     fi
   fi
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
@@ -1584,6 +1601,7 @@ function updateArpl() {
 }
 
 # 1 - ext name
+# 2 - silent
 function updateExts() {
   T="$(printf "$(TEXT "Update %s")" "${1}")"
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
@@ -1620,8 +1638,13 @@ function updateExts() {
     unzip /tmp/rp-lkms.zip -d "${LKM_PATH}" >/dev/null 2>&1
   fi
   DIRTY=1
-  dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-    --msgbox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
+  if [ ! "${2}" = "0" ]; then
+    dialog --backtitle "$(backtitle)" --colors --title "${T}" \
+      --infobox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
+  else
+    dialog --backtitle "$(backtitle)" --colors --title "${T}" \
+      --msgbox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
+  fi
 }
 
 ###############################################################################
@@ -1631,7 +1654,8 @@ function updateMenu() {
   while true; do
     dialog --backtitle "$(backtitle)" --colors \
       --menu "$(TEXT "Choose a option")" 0 0 0 \
-      a "$(TEXT "Update arpl")" \
+      a "$(TEXT "Update all")" \
+      r "$(TEXT "Update arpl")" \
       d "$(TEXT "Update addons")" \
       m "$(TEXT "Update modules")" \
       l "$(TEXT "Update LKMs")" \
@@ -1642,9 +1666,29 @@ function updateMenu() {
     [ $? -ne 0 ] && return
     case "$(<${TMP_PATH}/resp)" in
     a)
+      T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
+      CURVER="$(cat "/mnt/p3/addons/VERSION" 2>/dev/null)"
+      downloadExts "addons" "${CURVER:-0}" "https://github.com/wjz304/arpl-addons" "addons" "1"
+      [ $? -eq 0 ] && updateExts "addons" "1"
+      T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
+      CURVER="$(cat "/mnt/p3/modules/VERSION" 2>/dev/null)"
+      downloadExts "modules" "${CURVER:-0}" "https://github.com/wjz304/arpl-modules" "modules" "1"
+      [ $? -eq 0 ] && updateExts "modules" "1"
+      T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
+      CURVER="$(cat "/mnt/p3/lkms/VERSION" 2>/dev/null)"
+      downloadExts "LKMs" "${CURVER:-0}" "https://github.com/wjz304/redpill-lkm" "rp-lkms" "1"
+      [ $? -eq 0 ] && updateExts "LKMs" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "arpl")")"
       CURVER="${ARPL_VERSION:-0}"
-      downloadExts "arpl" ${CURVER} "https://github.com/wjz304/arpl-i18n" "update"
+      downloadExts "arpl" ${CURVER} "https://github.com/wjz304/arpl-i18n" "update" "0"
+      [ $? -ne 0 ] && continue
+      updateArpl "arpl"
+      ;;
+
+    r)
+      T="$(printf "$(TEXT "Update %s")" "$(TEXT "arpl")")"
+      CURVER="${ARPL_VERSION:-0}"
+      downloadExts "arpl" ${CURVER} "https://github.com/wjz304/arpl-i18n" "update" "0"
       [ $? -ne 0 ] && continue
       updateArpl "arpl"
       ;;
@@ -1652,25 +1696,25 @@ function updateMenu() {
     d)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
       CURVER="$(cat "/mnt/p3/addons/VERSION" 2>/dev/null)"
-      downloadExts "addons" "${CURVER:-0}" "https://github.com/wjz304/arpl-addons" "addons"
+      downloadExts "addons" "${CURVER:-0}" "https://github.com/wjz304/arpl-addons" "addons" "0"
       [ $? -ne 0 ] && continue
-      updateExts "addons"
+      updateExts "addons" "0"
       ;;
 
     m)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
       CURVER="$(cat "/mnt/p3/modules/VERSION" 2>/dev/null)"
-      downloadExts "modules" "${CURVER:-0}" "https://github.com/wjz304/arpl-modules" "modules"
+      downloadExts "modules" "${CURVER:-0}" "https://github.com/wjz304/arpl-modules" "modules" "0"
       [ $? -ne 0 ] && continue
-      updateExts "modules"
+      updateExts "modules" "0"
       ;;
 
     l)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
       CURVER="$(cat "/mnt/p3/lkms/VERSION" 2>/dev/null)"
-      downloadExts "LKMs" "${CURVER:-0}" "https://github.com/wjz304/redpill-lkm" "rp-lkms"
+      downloadExts "LKMs" "${CURVER:-0}" "https://github.com/wjz304/redpill-lkm" "rp-lkms" "0"
       [ $? -ne 0 ] && continue
-      updateExts "LKMs"
+      updateExts "LKMs" "0"
       ;;
 
     p)
@@ -1733,11 +1777,11 @@ function updateMenu() {
         if [ "${USER_FILE}" = "update.zip" ]; then
           updateArpl "arpl"
         elif [ "${USER_FILE}" = "addons.zip" ]; then
-          updateExts "addons"
+          updateExts "addons" "0"
         elif [ "${USER_FILE}" = "modules.zip" ]; then
-          updateExts "modules"
+          updateExts "modules" "0"
         elif [ "${USER_FILE}" = "rp-lkms.zip" ]; then
-          updateExts "LKMs"
+          updateExts "LKMs" "0"
         else
           dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Update")" \
             --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
@@ -1758,7 +1802,7 @@ if [ "x$1" = "xb" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]
   boot && exit 0 || sleep 5
 fi
 # Main loop
-[ -n "${MODEL}" ] && NEXT="v" || NEXT="m" 
+[ -n "${MODEL}" ] && NEXT="v" || NEXT="m"
 while true; do
   echo "m \"$(TEXT "Choose a model")\"" >"${TMP_PATH}/menu"
   if [ -n "${MODEL}" ]; then
