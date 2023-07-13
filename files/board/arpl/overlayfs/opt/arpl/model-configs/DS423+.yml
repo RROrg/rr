@@ -1,31 +1,32 @@
-id: "DS1823xs+"
+id: "DS423+"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
   support_led_brightness_adjustment: "no"
-  supportssdcache: "no"
   support_syno_hybrid_raid:
   supportraidgroup:
   maxlanport: "8"
   netif_seq: "0 1 2 3 4 5 6 7"
+  buzzeroffen: "0xffff"
+  esataportcfg: "0x00"
 cmdline: &cmdline
+  intel_iommu: "igfx_off"
   synoboot2:
-  syno_hdd_detect: 0
-  SMBusHddDynamicPower: 1
+  HddEnableDynamicPower: 1
   vender_format_version: 2
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
   elevator: elevator
-platform: "v1000"
-unique: "synology_v1000_1823xs+"
+platform: "geminilake"
+unique: "synology_geminilake_423+"
 serial:
   prefix:
-  - "2280"
-  middle: "V5R"
+  - "0000"
+  middle: "XXX"
   suffix: "alpha"
 dom: 2
 dt: true
-disks: 12
+disks: 4
 beta: false
 productvers:
   "7.1":

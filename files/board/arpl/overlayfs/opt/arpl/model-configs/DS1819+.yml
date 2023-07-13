@@ -1,35 +1,32 @@
-id: "DS720+"
+id: "DS1819+"
 synoinfo: &synoinfo
   support_disk_compatibility: "no"
-  support_memory_compatibility: "no"
+  support_memory_compatibility: "yes"
   support_led_brightness_adjustment: "no"
+  support_bde_internal_10g: "no"
+  supportnvme: "yes"
   support_syno_hybrid_raid:
   supportraidgroup:
   maxlanport: "8"
   netif_seq: "0 1 2 3 4 5 6 7"
-  buzzeroffen: "0xffff"
+  esataportcfg: "0x00"
 cmdline: &cmdline
-  intel_iommu: "igfx_off"
-  synoboot2:
-  HddEnableDynamicPower: 1
+  HddHotplug: 0
+  syno_hdd_detect: 0
+  syno_hdd_powerup_seq: 0
   vender_format_version: 2
-  syno_ttyS0: "serial,0x3f8"
-  syno_ttyS1: "serial,0x2f8"
   elevator: elevator
-platform: "geminilake"
-unique: "synology_geminilake_720+"
+platform: "denverton"
+unique: "synology_denverton_1819+"
 serial:
   prefix:
-  - "2030"
-  - "2040"
-  - "20C0"
-  - "2150"
-  middle: "SBR"
+  - "0000"
+  middle: "XXX"
   suffix: "alpha"
 dom: 2
-dt: true
-disks: 4
-beta: true
+dt: false
+disks: 8
+beta: false
 productvers:
   "6.2":
     kver: "4.4.59"
@@ -43,6 +40,7 @@ productvers:
     - "ramdisk-25556-init-script.patch"
     - "ramdisk-common-etc-rc.patch"
     - "ramdisk-25556-post-init-script.patch"
+    - "ramdisk-common-disable-disabled-ports.patch"
 
   "7.0":
     kver: "4.4.180"
@@ -56,6 +54,7 @@ productvers:
     - "ramdisk-common-init-script.patch"
     - "ramdisk-common-etc-rc.patch"
     - "ramdisk-common-post-init-script.patch"
+    - "ramdisk-common-disable-disabled-ports.patch"
 
   "7.1":
     kver: "4.4.180"
@@ -69,6 +68,7 @@ productvers:
     - "ramdisk-common-init-script.patch"
     - "ramdisk-common-etc-rc.patch"
     - "ramdisk-42951-post-init-script.patch"
+    - "ramdisk-42661-disable-disabled-ports.patch"
 
   "7.2":
     kver: "4.4.302"
@@ -82,3 +82,4 @@ productvers:
     - "ramdisk-64216-init-script.patch"
     - "ramdisk-common-etc-rc.patch"
     - "ramdisk-42951-post-init-script.patch"
+    - "ramdisk-42661-disable-disabled-ports.patch"
