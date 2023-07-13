@@ -763,13 +763,15 @@ function extractDsmFiles() {
     fi
     mkdir -p "${CACHE_PATH}/dl"
 
-    speed_a=$(ping -c 1 -W 5 global.synologydownload.com | awk '/time=/ {print $7}' | cut -d '=' -f 2)
-    speed_b=$(ping -c 1 -W 5 global.download.synology.com | awk '/time=/ {print $7}' | cut -d '=' -f 2)
-    speed_c=$(ping -c 1 -W 5 cndl.synology.cn | awk '/time=/ {print $7}' | cut -d '=' -f 2)
-    fastest="$(echo -e "global.synologydownload.com ${speed_a:-999}\nglobal.download.synology.com ${speed_b:-999}\ncndl.synology.cn ${speed_c:-999}" | sort -k2n | head -1 | awk '{print $1}')"
-
+    mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
+    mirrorspeeds=""
+    for I in ${mirrors[@]}; do
+      speed=$(ping -c 1 -W 5 ${I} | awk '/time=/ {print $7}' | cut -d '=' -f 2)
+      mirrorspeeds+="${I} ${speed:-999}\n"
+    done
+    fastest="$(echo -e "${mirrorspeeds}" | tr -s '\n' | sort -k2n | head -1 | awk '{print $1}')"
     mirror="$(echo ${PATURL} | sed 's|^http[s]*://\([^/]*\).*|\1|')"
-    if [ "${mirror}" != "${fastest}" ]; then
+    if echo "${mirrors[@]}" | grep -wq "${mirror}" && [ "${mirror}" != "${fastest}" ]; then
       echo "$(printf "$(TEXT "Based on the current network situation, switch to %s mirror to downloading.")" "${fastest}")"
       PATURL="$(echo ${PATURL} | sed "s/${mirror}/${fastest}/")"
       OLDPATURL="https://${fastest}/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
