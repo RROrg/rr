@@ -200,4 +200,8 @@
   # Nvidia GPU
   ls /dev/nvid*                                    # 查看显卡设备
   nvidia-smi                                       # 显卡驱动详细信息
+
+  # Get MD5
+  certutil -hashfile xxx.pat MD5                   # windows
+  md5sum xxx.pat                                   # linux/mac
   ```
