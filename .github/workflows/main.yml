@@ -161,16 +161,16 @@ jobs:
           echo "Building..."
           make BR2_EXTERNAL=../external
           cd -
-          qemu-img convert -O vmdk arpl.img arpl-dyn.vmdk
-          qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
+          # qemu-img convert -O vmdk arpl.img arpl-dyn.vmdk
+          # qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
 
       # Zip image and generate checksum
       - name: Pack
         run: |
           if [ -n "${{ env.VERSION }}" ]; then
             zip -9 "arpl-i18n-${{ env.VERSION }}.img.zip" arpl.img
-            zip -9 "arpl-i18n-${{ env.VERSION }}.vmdk-dyn.zip" arpl-dyn.vmdk
-            zip -9 "arpl-i18n-${{ env.VERSION }}.vmdk-flat.zip" arpl.vmdk arpl-flat.vmdk
+            # zip -9 "arpl-i18n-${{ env.VERSION }}.vmdk-dyn.zip" arpl-dyn.vmdk
+            # zip -9 "arpl-i18n-${{ env.VERSION }}.vmdk-flat.zip" arpl.vmdk arpl-flat.vmdk
           else
             zip -9 "arpl-i18n.img.zip" arpl.img
           fi
@@ -209,6 +209,6 @@ jobs:
           prerelease: ${{ inputs.prerelease }}
           files: |
             arpl-i18n-${{ env.VERSION }}.img.zip
-            arpl-i18n-${{ env.VERSION }}.vmdk-dyn.zip
-            arpl-i18n-${{ env.VERSION }}.vmdk-flat.zip
+            # arpl-i18n-${{ env.VERSION }}.vmdk-dyn.zip
+            # arpl-i18n-${{ env.VERSION }}.vmdk-flat.zip
             update.zip
