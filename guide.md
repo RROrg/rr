@@ -15,12 +15,21 @@
    * 下载: 
      * https://archive.synology.cn/download/Os/DSM
      * https://archive.synology.com/download/Os/DSM  
+   * 介绍:
+    * https://www.synology.cn/zh-cn/products#specs
+    * https://www.synology.com/en-us/products#specs
    * 型号列表: 
      * https://kb.synology.cn/zh-cn/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have
-     * https://kb.synology.com/zh-hk/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have
+     * https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have
    * RAID计算: 
      * https://www.synology.cn/zh-cn/support/RAID_calculator
-     * https://www.synology.com/zh-tw/support/RAID_calculator
+     * https://www.synology.com/en-us/support/RAID_calculator
+
+# 安装条件
+  1. 引导盘只支持 sata / usb.
+  2. 安装盘要大于 32GB.
+  3. 内存需要大于 4GB.
+  4. DT的型号不支持sas控制器.
 
 # ARPL:
 * ### [命令输入方法演示](https://www.bilibili.com/video/BV1T84y1P7Kq)  https://www.bilibili.com/video/BV1T84y1P7Kq  
