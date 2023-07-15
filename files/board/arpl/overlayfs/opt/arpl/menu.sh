@@ -192,11 +192,11 @@ function productversMenu() {
       idx=$((idx + 1))
     done
     if [ -z "${paturl}" -o -z "${patsum}" ]; then
-      MSG="Failed to get online pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat."
+      MSG="$(TEXT "Failed to get online pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.")"
       paturl=""
       patsum=""
     else
-      MSG="Successfully to get online pat data,\nPlease confirm or modify as needed."
+      MSG="$(TEXT "Successfully to get online pat data,\nPlease confirm or modify as needed.")"
     fi
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \

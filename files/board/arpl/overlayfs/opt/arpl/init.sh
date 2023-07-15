@@ -68,6 +68,8 @@ fi
 
 # Get first MAC address
 ETHX=($(ls /sys/class/net/ | grep eth)) # real network cards list
+# No network devices
+[ ${#ETHX[@]} -le 0 ] && die "$(TEXT "Network devices not found!")"
 
 # If user config file not exists, initialize it
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
