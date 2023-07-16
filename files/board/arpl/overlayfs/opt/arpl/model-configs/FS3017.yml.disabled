@@ -12,8 +12,6 @@ cmdline: &cmdline
   synoboot2:
   SMBusHddDynamicPower: 1
   vender_format_version: 2
-  syno_ttyS0: "serial,0x3f8"
-  syno_ttyS1: "serial,0x2f8"
   elevator: elevator
 platform: "grantley"
 unique: "synology_grantley_fs3017"
@@ -22,8 +20,8 @@ serial:
     - "0000"
   middle: "XXX"
   suffix: "numeric"
-dom: 2
-dt: true
+dom: 1
+dt: false
 disks: 24
 beta: true
 productvers:
