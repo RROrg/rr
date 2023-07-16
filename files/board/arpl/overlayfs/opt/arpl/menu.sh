@@ -30,6 +30,7 @@ LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 DIRECTBOOT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 NOTSETMACS="$(readConfigKey "notsetmacs" "${USER_CONFIG_FILE}")"
 BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
+KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 
 ###############################################################################
@@ -973,6 +974,7 @@ function advancedMenu() {
       echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >>"${TMP_PATH}/menu"
       if [ "${DIRECTBOOT}" = "false" ]; then
         echo "w \"$(TEXT "boot IPs wait time:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
+        echo "k \"$(TEXT "Switch way of switching kernel:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
       fi
     fi
     echo "m \"$(TEXT "Switch 'not set MACs':") \Z4${NOTSETMACS}\Zn\"" >>"${TMP_PATH}/menu"
@@ -980,7 +982,7 @@ function advancedMenu() {
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\"" >>"${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\"" >>"${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
-      echo "k \"$(TEXT "show/modify the current pat data")\"" >>"${TMP_PATH}/menu"
+      echo "c \"$(TEXT "show/modify the current pat data")\"" >>"${TMP_PATH}/menu"
     fi
     echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"
     echo "f \"$(TEXT "Format disk(s) # Without loader disk")\"" >>"${TMP_PATH}/menu"
@@ -1022,6 +1024,11 @@ function advancedMenu() {
       [ -z "${resp}" ] && return
       BOOTIPWAIT=${resp}
       writeConfigKey "bootipwait" "${BOOTIPWAIT}" "${USER_CONFIG_FILE}"
+      NEXT="e"
+      ;;
+    k)
+      [ "${KERNELWAY}" = "kexec" ] && KERNELWAY='power' || KERNELWAY='kexec'
+      writeConfigKey "kernelway" "${KERNELWAY}" "${USER_CONFIG_FILE}"
       NEXT="e"
       ;;
     m)
@@ -1077,7 +1084,7 @@ function advancedMenu() {
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "${MSG}" 0 0
       ;;
-    k)
+    c)
       PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
       PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
       MSG="$(TEXT "pat: (editable)")"
