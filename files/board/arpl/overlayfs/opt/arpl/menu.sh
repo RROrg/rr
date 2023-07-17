@@ -248,6 +248,7 @@ function addonMenu() {
   # Read 'platform' and kernel version to check if addon exists
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
   KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+  KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
   # Read addons from user config
   unset ADDONS
   declare -A ADDONS
@@ -274,7 +275,7 @@ function addonMenu() {
       while read ADDON DESC; do
         arrayExistItem "${ADDON}" "${!ADDONS[@]}" && continue # Check if addon has already been added
         echo "${ADDON} \"${DESC}\"" >>"${TMP_PATH}/menu"
-      done < <(availableAddons "${PLATFORM}" "${KVER}")
+      done < <(availableAddons "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
       if [ ! -f "${TMP_PATH}/menu" ]; then
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "No available addons to add")" 0 0
@@ -337,7 +338,7 @@ function addonMenu() {
           MSG+="${MODULE}"
         fi
         MSG+=": \Z5${DESC}\Zn\n"
-      done < <(availableAddons "${PLATFORM}" "${KVER}")
+      done < <(availableAddons "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
         --msgbox "${MSG}" 0 0
       ;;
@@ -921,11 +922,11 @@ function make() {
   clear
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
   KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-
+  KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
   # Check if all addon exists
   while IFS=': ' read ADDON PARAM; do
     [ -z "${ADDON}" ] && continue
-    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
+    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
         --msgbox "$(printf "$(TEXT "Addon %s not found!")" "${ADDON}")" 0 0
       return 1
