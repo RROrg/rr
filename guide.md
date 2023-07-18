@@ -16,8 +16,8 @@
      * https://archive.synology.cn/download/Os/DSM
      * https://archive.synology.com/download/Os/DSM  
    * 介绍:
-    * https://www.synology.cn/zh-cn/products#specs
-    * https://www.synology.com/en-us/products#specs
+     * https://www.synology.cn/zh-cn/products#specs
+     * https://www.synology.com/en-us/products#specs
    * 型号列表: 
      * https://kb.synology.cn/zh-cn/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have
      * https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have
