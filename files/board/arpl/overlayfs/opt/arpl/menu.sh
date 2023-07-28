@@ -104,8 +104,8 @@ function modelMenu() {
             fi
           done
         fi
-        [ "${DT}" = "true" ] && DT="-DT" || DT=""
-        [ ${COMPATIBLE} -eq 1 ] && echo "${M} \"\Zb${PLATFORM}${DT}\Zn\" " >>"${TMP_PATH}/menu"
+        [ "${DT}" = "true" ] && DT="DT" || DT=""
+        [ ${COMPATIBLE} -eq 1 ] && echo "${M} \"$(printf "\Zb%-12s\Zn \Z4%-2s\Zn" "${PLATFORM}" "${DT}")\" " >>"${TMP_PATH}/menu"
       done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
       [ ${FLGBETA} -eq 0 ] && echo "b \"\Z1$(TEXT "Show beta models")\Zn\"" >>"${TMP_PATH}/menu"
@@ -1157,7 +1157,7 @@ function advancedMenu() {
       fi
       (
         for I in ${RESP}; do
-          mkfs.ext4 -F -O ^metadata_csum ${I}
+          mkfs.ext4 -T largefile4 ${I}
         done
       ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Formatting ...")" 20 70
