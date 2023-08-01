@@ -1132,12 +1132,12 @@ function advancedMenu() {
         [ -z "${POSITION}" -o -z "${NAME}" ] && continue
         echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
         echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
-      done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd*" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
+      done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd|/dev/nvme" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
       while read POSITION NAME; do
         [ -z "${POSITION}" -o -z "${NAME}" ] && continue
         echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
         echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
-      done < <(ls -l /dev/disk/by-path/ | sed 's|../..|/dev|g' | grep -E "/dev/sd*" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
+      done < <(ls -l /dev/disk/by-path/ | sed 's|../..|/dev|g' | grep -E "/dev/sd|/dev/nvme" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --checklist "$(TEXT "Advanced")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>${TMP_PATH}/resp
