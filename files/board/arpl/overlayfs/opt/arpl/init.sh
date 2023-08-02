@@ -219,7 +219,7 @@ for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
     COUNT=$((${COUNT} + 1))
     IP=$(ip route show dev ${ETHX[${N}]} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p')
     if [ -n "${IP}" ]; then
-      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to configure the loader via web terminal.")" "${IP}")\n"
+      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal.")" "${IP}")\n"
       break
     fi
     echo -n "."
