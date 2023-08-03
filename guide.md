@@ -4,9 +4,10 @@
    * telnet 工具 putty (下载: https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)  
    * ssh 工具 FinalShell (下载: https://www.hostbuf.com/t/988.html)  
    * sftp 工具 WinSCP (下载: https://winscp.net/eng/index.php)
-   * 文本编辑工具 Notepad3 (下载: https://github.com/rizonesoft/Notepad3/releases) (抵制Notepad++)   
+   * 文本编辑工具 Notepad3 (下载: https://github.com/rizonesoft/Notepad3/releases)
    * 镜像写盘工具 Rufus (下载: https://rufus.ie/zh/)
-   * 磁盘管理工具 Diskgenius (下载: 不敢说)
+   * 镜像转换工具 StarWind V2V Image Converter (下载: https://www.starwindsoftware.com/starwind-v2v-converter)
+   * 磁盘管理工具 Diskgenius (下载: https://www.diskgenius.com/)
 
 # LINK:
    * 查找: 
