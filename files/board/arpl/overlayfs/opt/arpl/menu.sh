@@ -292,7 +292,8 @@ function addonMenu() {
         --inputbox "$(TEXT "Type a opcional params to addon")" 0 0 \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && continue
-      ADDONS[${ADDON}]="$(<"${TMP_PATH}/resp")"
+      VALUE="$(<"${TMP_PATH}/resp")"
+      ADDONS[${ADDON}]="${VALUE}"
       writeConfigKey "addons.${ADDON}" "${VALUE}" "${USER_CONFIG_FILE}"
       DIRTY=1
       ;;
