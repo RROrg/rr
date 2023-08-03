@@ -12,10 +12,9 @@
 
 ### i18n: 
 <b>https://github.com/wjz304/arpl-i18n</b>
-* 多语言支持.
-* 6.2&7.2支持.
-* other.
-
+* addons: https://github.com/wjz304/arpl-addons
+* modules: https://github.com/wjz304/arpl-modules
+* rp-lkms: https://github.com/wjz304/redpill-lkm
 
 ## 说明 - Instructions
 * [GUIDE](./guide.md)
