@@ -142,6 +142,9 @@ function modelMenu() {
     writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
     SN=$(generateSerial "${MODEL}")
     writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
+    # get logo.png
+    rm -f "${CACHE_PATH}/logo.png"
+    curl -skL "https://www.synology.com/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${CACHE_PATH}/logo.png"
     DIRTY=1
   fi
 }
@@ -997,7 +1000,7 @@ function advancedMenu() {
       echo "b \"$(TEXT "Backup bootloader disk # test")\"" >>"${TMP_PATH}/menu"
       echo "r \"$(TEXT "Restore bootloader disk # test")\"" >>"${TMP_PATH}/menu"
     fi
-    echo "o \"$(TEXT "Development tools")\"" >>"${TMP_PATH}/menu"
+    echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
@@ -1229,13 +1232,13 @@ function advancedMenu() {
       mkdir -p "${RDXZ_PATH}"
       (
         cd "${RDXZ_PATH}"
-        xz -dc <"/mnt/p3/initrd-arpl" | cpio -idm
+        xz -dc <"${CACHE_PATH}/initrd-arpl" | cpio -idm
       ) >/dev/null 2>&1 || true
       rm -rf "${RDXZ_PATH}/opt/arpl"
       cp -rf "/opt" "${RDXZ_PATH}/"
       (
         cd "${RDXZ_PATH}"
-        find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 >"/mnt/p3/initrd-arpl"
+        find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 >"${CACHE_PATH}/initrd-arpl"
       ) || true
       rm -rf "${RDXZ_PATH}"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
@@ -1339,7 +1342,7 @@ function advancedMenu() {
         )
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --infobox "$(TEXT "Writing...")" 0 0
-        umount /mnt/p1 /mnt/p2 /mnt/p3
+        umount ${BOOTLOADER_PATH} ${SLPART_PATH} ${CACHE_PATH}
         if [ "${IFTOOL}" = "zip" ]; then
           unzip -p "${TMP_UP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
         elif [ "${IFTOOL}" = "gzip" ]; then
@@ -1678,15 +1681,15 @@ function updateMenu() {
     case "$(<${TMP_PATH}/resp)" in
     a)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      CURVER="$(cat "/mnt/p3/addons/VERSION" 2>/dev/null)"
+      CURVER="$(cat "${CACHE_PATH}/addons/VERSION" 2>/dev/null)"
       downloadExts "addons" "${CURVER:-0}" "https://github.com/wjz304/arpl-addons" "addons" "1"
       [ $? -eq 0 ] && updateExts "addons" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      CURVER="$(cat "/mnt/p3/modules/VERSION" 2>/dev/null)"
+      CURVER="$(cat "${CACHE_PATH}/modules/VERSION" 2>/dev/null)"
       downloadExts "modules" "${CURVER:-0}" "https://github.com/wjz304/arpl-modules" "modules" "1"
       [ $? -eq 0 ] && updateExts "modules" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      CURVER="$(cat "/mnt/p3/lkms/VERSION" 2>/dev/null)"
+      CURVER="$(cat "${CACHE_PATH}/lkms/VERSION" 2>/dev/null)"
       downloadExts "LKMs" "${CURVER:-0}" "https://github.com/wjz304/redpill-lkm" "rp-lkms" "1"
       [ $? -eq 0 ] && updateExts "LKMs" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "arpl")")"
@@ -1706,7 +1709,7 @@ function updateMenu() {
 
     d)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      CURVER="$(cat "/mnt/p3/addons/VERSION" 2>/dev/null)"
+      CURVER="$(cat "${CACHE_PATH}/addons/VERSION" 2>/dev/null)"
       downloadExts "addons" "${CURVER:-0}" "https://github.com/wjz304/arpl-addons" "addons" "0"
       [ $? -ne 0 ] && continue
       updateExts "addons" "0"
@@ -1714,7 +1717,7 @@ function updateMenu() {
 
     m)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      CURVER="$(cat "/mnt/p3/modules/VERSION" 2>/dev/null)"
+      CURVER="$(cat "${CACHE_PATH}/modules/VERSION" 2>/dev/null)"
       downloadExts "modules" "${CURVER:-0}" "https://github.com/wjz304/arpl-modules" "modules" "0"
       [ $? -ne 0 ] && continue
       updateExts "modules" "0"
@@ -1722,7 +1725,7 @@ function updateMenu() {
 
     l)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      CURVER="$(cat "/mnt/p3/lkms/VERSION" 2>/dev/null)"
+      CURVER="$(cat "${CACHE_PATH}/lkms/VERSION" 2>/dev/null)"
       downloadExts "LKMs" "${CURVER:-0}" "https://github.com/wjz304/redpill-lkm" "rp-lkms" "0"
       [ $? -ne 0 ] && continue
       updateExts "LKMs" "0"
@@ -1817,10 +1820,10 @@ fi
 while true; do
   echo "m \"$(TEXT "Choose a model")\"" >"${TMP_PATH}/menu"
   if [ -n "${MODEL}" ]; then
-    echo "n \"$(TEXT "Choose a product version")\"" >>"${TMP_PATH}/menu"
+    echo "n \"$(TEXT "Choose a version")\"" >>"${TMP_PATH}/menu"
     if [ -n "${PRODUCTVER}" ]; then
-      echo "a \"$(TEXT "Addons")\"" >>"${TMP_PATH}/menu"
-      echo "o \"$(TEXT "Modules")\"" >>"${TMP_PATH}/menu"
+      echo "a \"$(TEXT "Addons menu")\"" >>"${TMP_PATH}/menu"
+      echo "o \"$(TEXT "Modules menu")\"" >>"${TMP_PATH}/menu"
       echo "x \"$(TEXT "Cmdline menu")\"" >>"${TMP_PATH}/menu"
       echo "i \"$(TEXT "Synoinfo menu")\"" >>"${TMP_PATH}/menu"
     fi
