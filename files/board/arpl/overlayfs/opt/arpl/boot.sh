@@ -26,7 +26,7 @@ TITLE="BOOTING:"
 [ "${BUS}" = "usb" ] && TITLE+=" [USB flashdisk]" || TITLE+=" [SATA DoM]"
 printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
 
-[ -f "${CACHE_PATH}/logo.png" ] && echo | fbv -acu "${CACHE_PATH}/logo.png" >/dev/null
+[ -f "${CACHE_PATH}/logo.png" ] && echo | fbv -acuf "${CACHE_PATH}/logo.png" >/dev/null
 
 # Check if DSM zImage changed, patch it if necessary
 ZIMAGE_HASH="$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")"
@@ -233,5 +233,5 @@ for T in $(w | grep -v "TTY" | awk -F' ' '{print $2}'); do
   echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please use the http://find.synology.com/ find DSM and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
 done
 KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
-[ "${KERNELWAY}" = "kexec" ] && kexec -f -e || poweroff
+[ "${KERNELWAY}" = "kexec" ] && kexec -f -d --console-serial -e || poweroff
 exit 0

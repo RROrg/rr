@@ -142,9 +142,6 @@ function modelMenu() {
     writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
     SN=$(generateSerial "${MODEL}")
     writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
-    # get logo.png
-    rm -f "${CACHE_PATH}/logo.png"
-    curl -skL "https://www.synology.com/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${CACHE_PATH}/logo.png"
     DIRTY=1
   fi
 }
@@ -178,7 +175,7 @@ function productversMenu() {
     fi
     # get online pat data
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
-      --infobox "$(TEXT "Get online pat data ..")" 0 0
+      --infobox "$(TEXT "Get pat data ..")" 0 0
     idx=0
     while [ $idx -le 3 ]; do # Loop 3 times, if successful, break
       speed_a=$(ping -c 1 -W 5 www.synology.com | awk '/time=/ {print $7}' | cut -d '=' -f 2)
@@ -196,11 +193,11 @@ function productversMenu() {
       idx=$((idx + 1))
     done
     if [ -z "${paturl}" -o -z "${patsum}" ]; then
-      MSG="$(TEXT "Failed to get online pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.")"
+      MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.")"
       paturl=""
       patsum=""
     else
-      MSG="$(TEXT "Successfully to get online pat data,\nPlease confirm or modify as needed.")"
+      MSG="$(TEXT "Successfully to get pat data,\nPlease confirm or modify as needed.")"
     fi
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
@@ -920,10 +917,25 @@ function extractDsmFiles() {
   echo "$(TEXT "OK")"
 }
 
+# 1 - model
+function getLogo() {
+  rm -f "${CACHE_PATH}/logo.png"
+  STATUS=$(curl -skL -w "%{http_code}" "https://www.synology.com/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${CACHE_PATH}/logo.png")
+  if [ $? -ne 0 -o ${STATUS} -ne 200 -o -f "${CACHE_PATH}/logo.png" ]; then
+    convert -rotate 180 "${CACHE_PATH}/logo.png" "${CACHE_PATH}/logo.png" 2>/dev/null
+    magick montage "${CACHE_PATH}/logo.png" -background 'none' -tile '3x3' -geometry '350x210' "${CACHE_PATH}/logo.png" 2>/dev/null
+    convert -rotate 180 "${CACHE_PATH}/logo.png" "${CACHE_PATH}/logo.png" 2>/dev/null
+  fi
+}
+
 ###############################################################################
 # Where the magic happens!
 function make() {
+  # clear
   clear
+  # get logo.png
+  getLogo "${MODEL}"
+
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
   KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
   KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
@@ -978,11 +990,11 @@ function advancedMenu() {
     if loaderIsConfigured; then
       echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >>"${TMP_PATH}/menu"
       if [ "${DIRECTBOOT}" = "false" ]; then
-        echo "w \"$(TEXT "boot IPs wait time:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
-        echo "k \"$(TEXT "Switch way of switching kernel:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
+        echo "w \"$(TEXT "Time of timeout of wait ip in boot:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
+        echo "k \"$(TEXT "kernel switching method:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
       fi
     fi
-    echo "m \"$(TEXT "Switch 'not set MACs':") \Z4${NOTSETMACS}\Zn\"" >>"${TMP_PATH}/menu"
+    echo "m \"$(TEXT "Switch 'Do not set MACs':") \Z4${NOTSETMACS}\Zn\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\"" >>"${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\"" >>"${TMP_PATH}/menu"
@@ -991,8 +1003,8 @@ function advancedMenu() {
     fi
     echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"
     echo "f \"$(TEXT "Format disk(s) # Without loader disk")\"" >>"${TMP_PATH}/menu"
-    echo "x \"$(TEXT "Reset syno system password")\"" >>"${TMP_PATH}/menu"
-    echo "p \"$(TEXT "Persistence of arpl modifications")\"" >>"${TMP_PATH}/menu"
+    echo "x \"$(TEXT "Reset DSM system password")\"" >>"${TMP_PATH}/menu"
+    echo "p \"$(TEXT "Save modifications of '/opt/arpl'")\"" >>"${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a "true" = "$(readModelKey "${MODEL}" "dt")" ]; then
       echo "d \"$(TEXT "Custom dts file # Need rebuild")\"" >>"${TMP_PATH}/menu"
     fi
@@ -1227,7 +1239,7 @@ function advancedMenu() {
         --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
       [ $? -ne 0 ] && return
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --infobox "$(TEXT "Persisting ...")" 0 0
+        --infobox "$(TEXT "Saving ...")" 0 0
       RDXZ_PATH=/tmp/rdxz_tmp
       mkdir -p "${RDXZ_PATH}"
       (
@@ -1242,7 +1254,7 @@ function advancedMenu() {
       ) || true
       rm -rf "${RDXZ_PATH}"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --msgbox ""$(TEXT "Persisting is complete.")"" 0 0
+        --msgbox ""$(TEXT "Save is complete.")"" 0 0
       ;;
     d)
       if ! tty | grep -q "/dev/pts"; then
