@@ -233,5 +233,5 @@ for T in $(w | grep -v "TTY" | awk -F' ' '{print $2}'); do
   echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please use the http://find.synology.com/ find DSM and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
 done
 KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
-[ "${KERNELWAY}" = "kexec" ] && kexec -f -d --console-serial -e || poweroff
+[ "${KERNELWAY}" = "kexec" ] && kexec -f -e || poweroff
 exit 0
