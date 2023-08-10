@@ -37,6 +37,9 @@
 * I am not proficient in language, and even my English is very poor. 
   Developers who are familiar with various languages are welcome to submit PR.
 
+* Translation maintenance personnel:
+   * zh_CN: @wjz304
+   * zh_TW: @豪哥幫幫忙
 
 ## 教程 - Usage 
 * English: https://www.youtube.com/watch?v=VB67_FG5y-E
