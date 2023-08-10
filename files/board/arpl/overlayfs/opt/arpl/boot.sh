@@ -12,6 +12,7 @@ loaderIsConfigured || die "$(TEXT "Loader is not configured!")"
 
 LOADER_DISK="$(blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1)"
 BUS=$(udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2)
+[ "${BUS}" = "ata" ] && BUS="sata"
 
 # Print text centralized
 clear
@@ -23,7 +24,7 @@ printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
 printf "\033[1;44m%*s\033[0m\n" ${COLUMNS} ""
 TITLE="BOOTING:"
 [ -d "/sys/firmware/efi" ] && TITLE+=" [UEFI]" || TITLE+=" [BIOS]"
-[ "${BUS}" = "usb" ] && TITLE+=" [USB flashdisk]" || TITLE+=" [SATA DoM]"
+[ "${BUS}" = "usb" ] && TITLE+=" [${BUS^^} flashdisk]" || TITLE+=" [${BUS^^} DoM]"
 printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
 
 [ -f "${CACHE_PATH}/logo.png" ] && echo | fbv -acuf "${CACHE_PATH}/logo.png" >/dev/null
@@ -99,7 +100,7 @@ done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
 #
 KVER=$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")
 
-if [ "${BUS}" = "ata" ]; then
+if [ ! "${BUS}" = "usb" ]; then
   LOADER_DEVICE_NAME=$(echo ${LOADER_DISK} | sed 's|/dev/||')
   SIZE=$(($(cat /sys/block/${LOADER_DEVICE_NAME}/size) / 2048 + 10))
   # Read SATADoM type
@@ -144,7 +145,7 @@ fi
 CMDLINE_LINE=""
 grep -q "force_junior" /proc/cmdline && CMDLINE_LINE+="force_junior "
 [ ${EFI} -eq 1 ] && CMDLINE_LINE+="withefi " || CMDLINE_LINE+="noefi "
-[ "${BUS}" = "ata" ] && CMDLINE_LINE+="synoboot_satadom=${DOM} dom_szmax=${SIZE} "
+[ ! "${BUS}" = "usb" ] && CMDLINE_LINE+="synoboot_satadom=${DOM} dom_szmax=${SIZE} "
 CMDLINE_LINE+="console=ttyS0,115200n8 earlyprintk earlycon=uart8250,io,0x3f8,115200n8 root=/dev/md0 loglevel=15 log_buf_len=32M"
 CMDLINE_DIRECT="${CMDLINE_LINE}"
 for KEY in ${!CMDLINE[@]}; do
