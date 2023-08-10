@@ -7,19 +7,19 @@ assignees: ''
 
 ---
 
-Install ENV:
- * motherboard:
- * CPU:
- * NIC:
+Install ENV:  
+ * motherboard:  
+ * CPU:  
+ * NIC:  
 
-Arpl version:
+Arpl version:  
 
-DSM model:
-DSM version:
+DSM model:  
+DSM version:  
 
-Issue:
+Issue:  
 
-logs:
+logs:  
 
 ...
 
