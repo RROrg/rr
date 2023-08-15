@@ -1240,17 +1240,17 @@ function advancedMenu() {
       [ $? -ne 0 ] && return
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --infobox "$(TEXT "Saving ...")" 0 0
-      RDXZ_PATH=/tmp/rdxz_tmp
+      RDXZ_PATH=${TMP_PATH}/rdxz_tmp
       mkdir -p "${RDXZ_PATH}"
       (
         cd "${RDXZ_PATH}"
-        xz -dc <"${CACHE_PATH}/initrd-arpl" | cpio -idm
+        xz -dc <"${ARPL_RAMDISK_FILE}" | cpio -idm
       ) >/dev/null 2>&1 || true
       rm -rf "${RDXZ_PATH}/opt/arpl"
       cp -rf "/opt" "${RDXZ_PATH}/"
       (
         cd "${RDXZ_PATH}"
-        find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 >"${CACHE_PATH}/initrd-arpl"
+        find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 >"${ARPL_RAMDISK_FILE}"
       ) || true
       rm -rf "${RDXZ_PATH}"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
@@ -1264,7 +1264,7 @@ function advancedMenu() {
       fi
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\n(saved in /mnt/p3/users/)")" 0 0
-      TMP_UP_PATH=/tmp/users
+      TMP_UP_PATH=${TMP_PATH}/users
       rm -rf ${TMP_UP_PATH}
       mkdir -p ${TMP_UP_PATH}
       pushd ${TMP_UP_PATH}
@@ -1330,7 +1330,7 @@ function advancedMenu() {
         --yesno "$(TEXT "Please upload the backup file.\nCurrently, zip(github) and img.gz(backup) compressed file formats are supported.")" 0 0
       [ $? -ne 0 ] && return
       IFTOOL=""
-      TMP_UP_PATH=/tmp/users
+      TMP_UP_PATH=${TMP_PATH}/users
       rm -rf ${TMP_UP_PATH}
       mkdir -p ${TMP_UP_PATH}
       pushd ${TMP_UP_PATH}
@@ -1561,7 +1561,7 @@ function downloadExts() {
   fi
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Downloading last version")" 0 0
-  rm -f "/tmp/${4}.zip"
+  rm -f "${TMP_PATH}/${4}.zip"
   STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "/tmp/${4}.zip")
   if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
     if [ ! "${5}" = "0" ]; then
