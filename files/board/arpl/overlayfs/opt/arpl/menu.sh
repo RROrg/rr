@@ -83,12 +83,17 @@ function modelMenu() {
     FLGBETA=0
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Model")" \
       --infobox "$(TEXT "Reading models")" 0 0
+    echo -n "" >"${TMP_PATH}/modellist"
+    while read M; do
+      Y=$(echo ${M} | tr -cd "[0-9]")
+      Y=${Y:0-2}
+      echo "${M} ${Y}" >>"${TMP_PATH}/modellist"
+    done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sed 's/.*\///; s/\.yml//')
+
     while true; do
-      echo "" >"${TMP_PATH}/menu"
+      echo -n "" >"${TMP_PATH}/menu"
       FLGNEX=0
-      while read M; do
-        M="$(basename ${M})"
-        M="${M::-4}"
+      while read M Y; do
         PLATFORM=$(readModelKey "${M}" "platform")
         DT="$(readModelKey "${M}" "dt")"
         BETA="$(readModelKey "${M}" "beta")"
@@ -106,7 +111,7 @@ function modelMenu() {
         fi
         [ "${DT}" = "true" ] && DT="DT" || DT=""
         [ ${COMPATIBLE} -eq 1 ] && echo "${M} \"$(printf "\Zb%-12s\Zn \Z4%-2s\Zn" "${PLATFORM}" "${DT}")\" " >>"${TMP_PATH}/menu"
-      done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
+      done < <(cat "${TMP_PATH}/modellist" | sort -r -n -k 2)
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
       [ ${FLGBETA} -eq 0 ] && echo "b \"\Z1$(TEXT "Show beta models")\Zn\"" >>"${TMP_PATH}/menu"
       dialog --backtitle "$(backtitle)" --colors \
@@ -1061,43 +1066,54 @@ function advancedMenu() {
     s)
       MSG=""
       NUMPORTS=0
-      ATTACHTNUM=0
-      DiskIdxMap=""
-      for PCI in $(echo -e "$(lspci -d ::106)\n$(lspci -d ::107)" | awk '{print $1}'); do
+      [ $(lspci -d ::106 | wc -l) -gt 0 ] && MSG+="\nATA:\n"
+      for PCI in $(lspci -d ::106 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
         MSG+="\Zb${NAME}\Zn\nPorts: "
-        unset HOSTPORTS
-        declare -A HOSTPORTS
-        ATTACHTIDX=0
-        while read LINE; do
-          ATAPORT="$(echo ${LINE} | grep -o 'ata[0-9]*')"
-          PORT=""
-          if [ -n "${ATAPORT}" ]; then
-            PORT=$(echo ${ATAPORT} | sed 's/ata//')
+        PORTS=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
+        for P in ${PORTS}; do
+          if lsscsi -b | grep -v - | grep -q "\[${P}:"; then
+            DUMMY="$([ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd)" = "0" ] && echo 1 || echo 2)" 
+            if [ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd)" = "0" ]; then
+              MSG+="\Z1$(printf "%02d" ${P})\Zn "
+            else
+              MSG+="\Z2$(printf "%02d" ${P})\Zn "
+            fi
           else
-            SASPORT="$(echo ${LINE} | grep -o "${PCI}/host[0-9]*")"
-            PORT=$(echo ${SASPORT} | sed "s/${PCI}\/host//")
+            MSG+="$(printf "%02d" ${P}) "
           fi
-          HOSTPORTS[${PORT}]=$(echo ${LINE} | grep -o 'host[0-9]*$')
-        done < <(ls -l /sys/class/scsi_host | fgrep "${PCI}")
-        while read PORT; do
-          ls -l /sys/block | fgrep -q "${PCI}/ata${PORT}" && ATTACH=1 ||
-            ls -l /sys/block | fgrep -q "${PCI}/host${PORT}" && ATTACH=1 || ATTACH=0
-          PCMD=$(cat /sys/class/scsi_host/${HOSTPORTS[${PORT}]}/ahci_port_cmd)
-          [ "${PCMD}" = "0" ] && DUMMY=1 || DUMMY=0
-          [ ${ATTACH} -eq 1 ] && MSG+="\Z2\Zb" && ATTACHTIDX=$((${ATTACHTIDX} + 1))
-          [ ${DUMMY} -eq 1 ] && MSG+="\Z1"
-          MSG+="${PORT}\Zn "
           NUMPORTS=$((${NUMPORTS} + 1))
-        done < <(echo ${!HOSTPORTS[@]} | tr ' ' '\n' | sort -n)
+        done
         MSG+="\n"
-        [ ${ATTACHTIDX} -gt 0 ] && DiskIdxMap+=$(printf '%02x' ${ATTACHTNUM}) || DiskIdxMap+="ff"
-        ATTACHTNUM=$((${ATTACHTNUM} + ${ATTACHTIDX}))
       done
+      [ $(lspci -d ::107 | wc -l) -gt 0 ] && MSG+="\nLSI:\n"
+      for PCI in $(lspci -d ::107 | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+        PORT=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
+        PORTNUM=$(lsscsi -b | grep -v - | grep "\[${PORT}:" | wc -l)
+        MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
+        NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
+      done
+      [ $(ls -l /sys/class/scsi_host | grep usb | wc -l) -gt 0 ] && MSG+="\nUSB:\n"
+      for PCI in $(lspci -d ::c03 | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+        PORT=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
+        PORTNUM=$(lsscsi -b | grep -v - | grep "\[${PORT}:" | wc -l)
+        [ ${PORTNUM} -eq 0 ] && continue
+        MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
+        NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
+      done
+      [ $(lspci -d ::108 | wc -l) -gt 0 ] && MSG+="\nNVME:\n"
+      for PCI in $(lspci -d ::108 | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+        PORT=$(ls -l /sys/class/nvme | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/nvme//' | sort -n)
+        PORTNUM=$(lsscsi -b | grep -v - | grep "\[N:${PORT}:" | wc -l)
+        MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
+        NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
+      done
+      MSG+="\n"
       MSG+="$(printf "$(TEXT "\nTotal of ports: %s\n")" "${NUMPORTS}")"
       MSG+="$(TEXT "\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected.")"
-      MSG+="$(TEXT "\nRecommended value:")"
-      MSG+="$(TEXT "\nDiskIdxMap:") ${DiskIdxMap}"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "${MSG}" 0 0
       ;;
@@ -1149,11 +1165,6 @@ function advancedMenu() {
         echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
         echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
       done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd|/dev/nvme" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
-      while read POSITION NAME; do
-        [ -z "${POSITION}" -o -z "${NAME}" ] && continue
-        echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
-        echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
-      done < <(ls -l /dev/disk/by-path/ | sed 's|../..|/dev|g' | grep -E "/dev/sd|/dev/nvme" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --checklist "$(TEXT "Advanced")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>${TMP_PATH}/resp
