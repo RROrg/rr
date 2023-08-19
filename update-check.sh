@@ -9,7 +9,10 @@ if loaderIsConfigured; then
   if [ -f "${ORI_RDGZ_FILE}" ]; then
     rm -rf "${RAMDISK_PATH}"
     mkdir -p "${RAMDISK_PATH}"
-    (cd "${RAMDISK_PATH}"; xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm) >/dev/null 2>&1
+    (
+      cd "${RAMDISK_PATH}"
+      xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm
+    ) >/dev/null 2>&1
     . "${RAMDISK_PATH}/etc/VERSION"
     [ -n "$(readConfigKey "build" "${USER_CONFIG_FILE}")" ] && deleteConfigKey "build" "${USER_CONFIG_FILE}"
     [ -n "$(readConfigKey "smallfixnumber" "${USER_CONFIG_FILE}")" ] && deleteConfigKey "smallfixnumber" "${USER_CONFIG_FILE}"
