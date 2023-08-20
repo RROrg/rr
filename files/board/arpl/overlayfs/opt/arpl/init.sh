@@ -16,8 +16,8 @@ done
 
 [ -z "${LOADER_DISK}" ] && die "$(TEXT "Loader disk not found!")"
 NUM_PARTITIONS=$(blkid | grep "${LOADER_DISK}[0-9]\+" | cut -d: -f1 | wc -l)
-[ $NUM_PARTITIONS -lt 3 ] && die "$(TEXT "Loader disk seems to be damaged!")"
-[ $NUM_PARTITIONS -gt 3 ] && die "$(TEXT "There are multiple loader disks, please insert only one loader disk!")"
+[ ${NUM_PARTITIONS} -lt 3 ] && die "$(TEXT "Loader disk seems to be damaged!")"
+[ ${NUM_PARTITIONS} -gt 3 ] && die "$(TEXT "There are multiple loader disks, please insert only one loader disk!")"
 
 # Check partitions and ignore errors
 fsck.vfat -aw ${LOADER_DISK}1 >/dev/null 2>&1 || true
@@ -39,10 +39,10 @@ mount ${LOADER_DISK}3 ${CACHE_PATH} || die "$(printf "$(TEXT "Can't mount %s")" 
 # Shows title
 clear
 TITLE="$(printf "$(TEXT "Welcome to %s")" "${ARPL_TITLE}")"
-printf "\033[1;44m%*s\n" $COLUMNS ""
-printf "\033[1;44m%*s\033[A\n" $COLUMNS ""
-printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE} + $COLUMNS) / 2)) "${TITLE}"
-printf "\033[1;44m%*s\033[0m\n" $COLUMNS ""
+printf "\033[1;44m%*s\n" ${COLUMNS} ""
+printf "\033[1;44m%*s\033[A\n" ${COLUMNS} ""
+printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
+printf "\033[1;44m%*s\033[0m\n" ${COLUMNS} ""
 
 # Move/link SSH machine keys to/from cache volume
 [ ! -d "${CACHE_PATH}/ssh" ] && cp -R "/etc/ssh" "${CACHE_PATH}/ssh"
@@ -146,7 +146,7 @@ ENDSECTOR=$(($(fdisk -l ${LOADER_DISK} | awk '/'${LOADER_DEVICE_NAME}3'/{print$3
 if [ ${SIZEOFDISK} -ne ${ENDSECTOR} ]; then
   echo -e "\033[1;36m$(printf "$(TEXT "Resizing %s")" "${LOADER_DISK}3")\033[0m"
   echo -e "d\n\nn\n\n\n\n\nn\nw" | fdisk "${LOADER_DISK}" >"${LOG_FILE}" 2>&1 || dieLog
-  resize2fs ${LOADER_DISK}3 >"${LOG_FILE}" 2>&1 || dieLog
+  resize2fs "${LOADER_DISK}3" >"${LOG_FILE}" 2>&1 || dieLog
 fi
 
 # Load keymap name
@@ -154,9 +154,9 @@ LAYOUT="$(readConfigKey "layout" "${USER_CONFIG_FILE}")"
 KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
 
 # Loads a keymap if is valid
-if [ -f /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz ]; then
+if [ -f "/usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz" ]; then
   echo -e "$(TEXT "Loading keymap") \033[1;32m${LAYOUT}/${KEYMAP}\033[0m"
-  zcat /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz | loadkeys
+  zcat "/usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz" | loadkeys
 fi
 
 # Decide if boot automatically
@@ -186,7 +186,7 @@ while [ ${COUNT} -lt 30 ]; do
       hasConnect="true"
     fi
   done
-  if [ ${hasConnect} = "true" ]; then
+  if [ "${hasConnect}" = "true" ]; then
     echo -en "connected.\n"
     break
   fi

@@ -7,8 +7,8 @@
 # Check partition 3 space, if < 2GiB is necessary clean cache folder
 CLEARCACHE=0
 LOADER_DISK="$(blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1)"
-LOADER_DEVICE_NAME=$(echo ${LOADER_DISK} | sed 's|/dev/||')
-if [ $(cat /sys/block/${LOADER_DEVICE_NAME}/${LOADER_DEVICE_NAME}3/size) -lt 4194304 ]; then
+LOADER_DEVICE_NAME=$(echo "${LOADER_DISK}" | sed 's|/dev/||')
+if [ $(cat "/sys/block/${LOADER_DEVICE_NAME}/${LOADER_DEVICE_NAME}3/size") -lt 4194304 ]; then
   CLEARCACHE=1
 fi
 
@@ -182,7 +182,7 @@ function productversMenu() {
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --infobox "$(TEXT "Get pat data ..")" 0 0
     idx=0
-    while [ $idx -le 3 ]; do # Loop 3 times, if successful, break
+    while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
       speed_a=$(ping -c 1 -W 5 www.synology.com | awk '/time=/ {print $7}' | cut -d '=' -f 2)
       speed_b=$(ping -c 1 -W 5 www.synology.cn | awk '/time=/ {print $7}' | cut -d '=' -f 2)
       fastest="$(echo -e "https://www.synology.com/api/support/findDownloadInfo?lang=en-us ${speed_a:-999}\nhttps://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn ${speed_b:-999}" | sort -k2n | head -1 | awk '{print $1}')"
@@ -195,7 +195,7 @@ function productversMenu() {
           break
         fi
       fi
-      idx=$((idx + 1))
+      idx=$((${idx} + 1))
     done
     if [ -z "${paturl}" -o -z "${patsum}" ]; then
       MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.")"
@@ -356,7 +356,7 @@ function addonMenu() {
       fi
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
         --msgbox "$(TEXT "Please upload the *.addons file.")" 0 0
-      TMP_UP_PATH=/tmp/users
+      TMP_UP_PATH=${TMP_PATH}/users
       USER_FILE=""
       rm -rf ${TMP_UP_PATH}
       mkdir -p ${TMP_UP_PATH}
@@ -504,7 +504,7 @@ function moduleMenu() {
       [ $? -ne 0 ] && return
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
         --msgbox "$(TEXT "Please upload the *.ko file.")" 0 0
-      TMP_UP_PATH=/tmp/users
+      TMP_UP_PATH=${TMP_PATH}/users
       USER_FILE=""
       rm -rf ${TMP_UP_PATH}
       mkdir -p ${TMP_UP_PATH}
@@ -1143,15 +1143,15 @@ function advancedMenu() {
         --yesno "${MSG}" 0 0
       [ $? -ne 0 ] && return
       (
-        mkdir -p /tmp/sdX1
-        for I in $(ls /dev/sd*1 2>/dev/null | grep -v ${LOADER_DISK}1); do
-          mount ${I} /tmp/sdX1
-          [ -f "/tmp/sdX1/etc/VERSION" ] && rm -f "/tmp/sdX1/etc/VERSION"
-          [ -f "/tmp/sdX1/etc.defaults/VERSION" ] && rm -f "/tmp/sdX1/etc.defaults/VERSION"
+        mkdir -p "${TMP_PATH}/sdX1"
+        for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK}1"); do
+          mount "${I}" "${TMP_PATH}/sdX1"
+          [ -f "${TMP_PATH}/sdX1/etc/VERSION" ] && rm -f "${TMP_PATH}/sdX1/etc/VERSION"
+          [ -f "${TMP_PATH}/sdX1/etc.defaults/VERSION" ] && rm -f "${TMP_PATH}/sdX1/etc.defaults/VERSION"
           sync
-          umount ${I}
+          umount "${I}"
         done
-        rm -rf /tmp/sdX1
+        rm -rf "${TMP_PATH}/sdX1"
       ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Removing ...")" 20 70
       MSG="$(TEXT "Remove VERSION file for all disks completed.")"
@@ -1179,12 +1179,12 @@ function advancedMenu() {
           --yesno "$(TEXT "Warning:\nThe current hds is in raid, do you still want to format them?")" 0 0
         [ $? -ne 0 ] && return
         for I in $(ls /dev/md*); do
-          mdadm -S ${I}
+          mdadm -S "${I}"
         done
       fi
       (
         for I in ${RESP}; do
-          mkfs.ext4 -T largefile4 ${I}
+          mkfs.ext4 -T largefile4 "${I}"
         done
       ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Formatting ...")" 20 70
@@ -1193,30 +1193,30 @@ function advancedMenu() {
       ;;
     x)
       SHADOW_FILE=""
-      mkdir -p /tmp/sdX1
-      for I in $(ls /dev/sd*1 2>/dev/null | grep -v ${LOADER_DISK}1); do
-        mount ${I} /tmp/sdX1
-        if [ -f "/tmp/sdX1/etc/shadow" ]; then
-          cp "/tmp/sdX1/etc/shadow" "/tmp/shadow_bak"
-          SHADOW_FILE="/tmp/shadow_bak"
+      mkdir -p "${TMP_PATH}/sdX1"
+      for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK}1"); do
+        mount ${I} "${TMP_PATH}/sdX1"
+        if [ -f "${TMP_PATH}/sdX1/etc/shadow" ]; then
+          cp "${TMP_PATH}/sdX1/etc/shadow" "${TMP_PATH}/shadow_bak"
+          SHADOW_FILE="${TMP_PATH}/shadow_bak"
         fi
-        umount ${I}
+        umount "${I}"
         [ -n "${SHADOW_FILE}" ] && break
       done
-      rm -rf /tmp/sdX1
+      rm -rf "${TMP_PATH}/sdX1"
       if [ -z "${SHADOW_FILE}" ]; then
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "The installed Syno system not found in the currently inserted disks!")" 0 0
         return
       fi
-      ITEMS="$(cat ${SHADOW_FILE} | awk -F ':' '{if ($2 != "*" && $2 != "!!") {print $1;}}')"
+      ITEMS="$(cat "${SHADOW_FILE}" | awk -F ':' '{if ($2 != "*" && $2 != "!!") {print $1;}}')"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --no-items --menu "$(TEXT "Choose a user name")" 0 0 0 ${ITEMS} \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
-      USER=$(<${TMP_PATH}/resp)
+      USER="$(<${TMP_PATH}/resp)"
       [ -z "${USER}" ] && return
-      OLDPASSWD=$(cat ${SHADOW_FILE} | grep "^${USER}:" | awk -F ':' '{print $2}')
+      OLDPASSWD="$(cat "${SHADOW_FILE}" | grep "^${USER}:" | awk -F ':' '{print $2}')"
       while true; do
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --inputbox "$(printf "$(TEXT "Type a new password for user '%s'")" "${USER}")" 0 0 "${CMDLINE[${NAME}]}" \
@@ -1227,16 +1227,16 @@ function advancedMenu() {
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "Invalid password")" 0 0
       done
-      NEWPASSWD=$(python -c "import crypt,getpass;pw=\"${VALUE}\";print(crypt.crypt(pw))")
+      NEWPASSWD="$(python -c "import crypt,getpass;pw=\"${VALUE}\";print(crypt.crypt(pw))")"
       (
-        mkdir -p /tmp/sdX1
+        mkdir -p "${TMP_PATH}/sdX1"
         for I in $(ls /dev/sd*1 2>/dev/null | grep -v ${LOADER_DISK}1); do
-          mount ${I} /tmp/sdX1
-          sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "/tmp/sdX1/etc/shadow"
+          mount "${I}" "${TMP_PATH}/sdX1"
+          sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "${TMP_PATH}/sdX1/etc/shadow"
           sync
-          umount ${I}
+          umount "${I}"
         done
-        rm -rf /tmp/sdX1
+        rm -rf "${TMP_PATH}/sdX1"
       ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Resetting ...")" 20 70
       [ -f "${SHADOW_FILE}" ] && rm -rf "${SHADOW_FILE}"
@@ -1251,7 +1251,7 @@ function advancedMenu() {
       [ $? -ne 0 ] && return
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --infobox "$(TEXT "Saving ...")" 0 0
-      RDXZ_PATH=${TMP_PATH}/rdxz_tmp
+      RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
       mkdir -p "${RDXZ_PATH}"
       (
         cd "${RDXZ_PATH}"
@@ -1275,14 +1275,14 @@ function advancedMenu() {
       fi
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\n(saved in /mnt/p3/users/)")" 0 0
-      TMP_UP_PATH=${TMP_PATH}/users
-      rm -rf ${TMP_UP_PATH}
-      mkdir -p ${TMP_UP_PATH}
-      pushd ${TMP_UP_PATH}
+      TMP_UP_PATH="${TMP_PATH}/users"
+      rm -rf "${TMP_UP_PATH}"
+      mkdir -p "${TMP_UP_PATH}"
+      pushd "${TMP_UP_PATH}"
       rz -be
       for F in $(ls -A); do
-        USER_FILE=${TMP_UP_PATH}/${F}
-        dtc -q -I dts -O dtb ${F} >test.dtb
+        USER_FILE="${TMP_UP_PATH}/${F}"
+        dtc -q -I dts -O dtb "${F}" >"test.dtb"
         RET=$?
         break
       done
@@ -1291,8 +1291,8 @@ function advancedMenu() {
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "Not a valid dts file, please try again!")" 0 0
       else
-        mkdir -p ${USER_UP_PATH}
-        cp -f ${USER_FILE} ${USER_UP_PATH}/${MODEL}.dts
+        mkdir -p "${USER_UP_PATH}"
+        cp -f "${USER_FILE}" "${USER_UP_PATH}/${MODEL}.dts"
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
       fi
@@ -1341,10 +1341,10 @@ function advancedMenu() {
         --yesno "$(TEXT "Please upload the backup file.\nCurrently, zip(github) and img.gz(backup) compressed file formats are supported.")" 0 0
       [ $? -ne 0 ] && return
       IFTOOL=""
-      TMP_UP_PATH=${TMP_PATH}/users
-      rm -rf ${TMP_UP_PATH}
-      mkdir -p ${TMP_UP_PATH}
-      pushd ${TMP_UP_PATH}
+      TMP_UP_PATH="${TMP_PATH}/users"
+      rm -rf "${TMP_UP_PATH}"
+      mkdir -p "${TMP_UP_PATH}"
+      pushd "${TMP_UP_PATH}"
       rz -be
       for F in $(ls -A); do
         USER_FILE="${F}"
@@ -1360,12 +1360,12 @@ function advancedMenu() {
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
         [ $? -ne 0 ] && (
-          rm -f ${LOADER_DISK}
+          rm -f "${LOADER_DISK}"
           return
         )
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --infobox "$(TEXT "Writing...")" 0 0
-        umount ${BOOTLOADER_PATH} ${SLPART_PATH} ${CACHE_PATH}
+        umount "${BOOTLOADER_PATH}" "${SLPART_PATH}" "${CACHE_PATH}"
         if [ "${IFTOOL}" = "zip" ]; then
           unzip -p "${TMP_UP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
         elif [ "${IFTOOL}" = "gzip" ]; then
@@ -1573,7 +1573,7 @@ function downloadExts() {
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Downloading last version")" 0 0
   rm -f "${TMP_PATH}/${4}.zip"
-  STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "/tmp/${4}.zip")
+  STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
   if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
     if [ ! "${5}" = "0" ]; then
       dialog --backtitle "$(backtitle)" --colors --title "${T}" \
@@ -1592,7 +1592,7 @@ function updateArpl() {
   T="$(printf "$(TEXT "Update %s")" "${1}")"
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Extracting last version")" 0 0
-  unzip -oq /tmp/update.zip -d /tmp
+  unzip -oq "${TMP_PATH}/update.zip" -d "${TMP_PATH}/"
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "${T}" \
       --msgbox "$(TEXT "Error extracting update file")" 0 0
@@ -1606,9 +1606,9 @@ function updateArpl() {
     return 1
   fi
   # Check conditions
-  if [ -f "/tmp/update-check.sh" ]; then
-    chmod +x /tmp/update-check.sh
-    /tmp/update-check.sh
+  if [ -f "${TMP_PATH}/update-check.sh" ]; then
+    chmod +x "${TMP_PATH}/update-check.sh"
+    ${TMP_PATH}/update-check.sh
     if [ $? -ne 0 ]; then
       dialog --backtitle "$(backtitle)" --colors --title "${T}" \
         --msgbox "$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")" 0 0
@@ -1621,17 +1621,17 @@ function updateArpl() {
   while read F; do
     [ -f "${F}" ] && rm -f "${F}"
     [ -d "${F}" ] && rm -Rf "${F}"
-  done < <(readConfigArray "remove" "/tmp/update-list.yml")
+  done < <(readConfigArray "remove" "${TMP_PATH}/update-list.yml")
   while IFS=': ' read KEY VALUE; do
     if [ "${KEY: -1}" = "/" ]; then
       rm -Rf "${VALUE}"
       mkdir -p "${VALUE}"
-      tar -zxf "/tmp/$(basename "${KEY}").tgz" -C "${VALUE}"
+      tar -zxf "${TMP_PATH}/$(basename "${KEY}").tgz" -C "${VALUE}"
     else
       mkdir -p "$(dirname "${VALUE}")"
-      mv "/tmp/$(basename "${KEY}")" "${VALUE}"
+      mv "${TMP_PATH}/$(basename "${KEY}")" "${VALUE}"
     fi
-  done < <(readConfigMap "replace" "/tmp/update-list.yml")
+  done < <(readConfigMap "replace" "${TMP_PATH}/update-list.yml")
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --msgbox "$(printf "$(TEXT "Arpl updated with success to %s!\nReboot?")" "${TAG}")" 0 0
   arpl-reboot.sh config
@@ -1644,14 +1644,14 @@ function updateExts() {
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Extracting last version")" 0 0
   if [ "${1}" = "addons" ]; then
-    rm -rf /tmp/addons
-    mkdir -p /tmp/addons
-    unzip /tmp/addons.zip -d /tmp/addons >/dev/null 2>&1
+    rm -rf "${TMP_PATH}/addons"
+    mkdir -p "${TMP_PATH}/addons"
+    unzip "${TMP_PATH}/addons.zip" -d "${TMP_PATH}/addons" >/dev/null 2>&1
     dialog --backtitle "$(backtitle)" --colors --title "${T}" \
       --infobox "$(printf "$(TEXT "Installing new %s")" "${1}")" 0 0
     rm -Rf "${ADDONS_PATH}/"*
-    [ -f /tmp/addons/VERSION ] && cp -f /tmp/addons/VERSION ${ADDONS_PATH}/
-    for PKG in $(ls /tmp/addons/*.addon); do
+    [ -f "${TMP_PATH}/addons/VERSION" ] && cp -f "${TMP_PATH}/addons/VERSION" "${ADDONS_PATH}/"
+    for PKG in $(ls ${TMP_PATH}/addons/*.addon); do
       ADDON=$(basename ${PKG} | sed 's|.addon||')
       rm -rf "${ADDONS_PATH}/${ADDON}"
       mkdir -p "${ADDONS_PATH}/${ADDON}"
@@ -1659,7 +1659,7 @@ function updateExts() {
     done
   elif [ "${1}" = "modules" ]; then
     rm "${MODULES_PATH}/"*
-    unzip /tmp/modules.zip -d "${MODULES_PATH}" >/dev/null 2>&1
+    unzip ${TMP_PATH}/modules.zip -d "${MODULES_PATH}" >/dev/null 2>&1
     # Rebuild modules if model/buildnumber is selected
     PLATFORM="$(readModelKey "${MODEL}" "platform")"
     KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
@@ -1672,7 +1672,7 @@ function updateExts() {
     fi
   elif [ "${1}" = "LKMs" ]; then
     rm -rf "${LKM_PATH}/"*
-    unzip /tmp/rp-lkms.zip -d "${LKM_PATH}" >/dev/null 2>&1
+    unzip "${TMP_PATH}/rp-lkms.zip" -d "${LKM_PATH}" >/dev/null 2>&1
   fi
   DIRTY=1
   if [ ! "${2}" = "0" ]; then
@@ -1717,7 +1717,7 @@ function updateMenu() {
       [ $? -eq 0 ] && updateExts "LKMs" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "arpl")")"
       CURVER="${ARPL_VERSION:-0}"
-      downloadExts "arpl" ${CURVER} "https://github.com/wjz304/arpl-i18n" "update" "0"
+      downloadExts "arpl" "${CURVER}" "https://github.com/wjz304/arpl-i18n" "update" "0"
       [ $? -ne 0 ] && continue
       updateArpl "arpl"
       ;;
@@ -1725,7 +1725,7 @@ function updateMenu() {
     r)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "arpl")")"
       CURVER="${ARPL_VERSION:-0}"
-      downloadExts "arpl" ${CURVER} "https://github.com/wjz304/arpl-i18n" "update" "0"
+      downloadExts "arpl" "${CURVER}" "https://github.com/wjz304/arpl-i18n" "update" "0"
       [ $? -ne 0 ] && continue
       updateArpl "arpl"
       ;;
@@ -1792,15 +1792,15 @@ function updateMenu() {
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Update")" \
         --msgbox "${MSG}" 0 0
       EXTS=("update.zip" "addons.zip" "modules.zip" "rp-lkms.zip")
-      TMP_UP_PATH=/tmp/users
+      TMP_UP_PATH="${TMP_PATH}/users"
       USER_FILE=""
-      rm -rf ${TMP_UP_PATH}
-      mkdir -p ${TMP_UP_PATH}
-      pushd ${TMP_UP_PATH}
+      rm -rf "${TMP_UP_PATH}"
+      mkdir -p "${TMP_UP_PATH}"
+      pushd "${TMP_UP_PATH}"
       rz -be
       for F in $(ls -A); do
         for I in ${EXTS[@]}; do
-          [[ "${I}" == "${F}" ]] && USER_FILE=${F}
+          [[ "${I}" == "${F}" ]] && USER_FILE="${F}"
         done
         break
       done
@@ -1809,8 +1809,8 @@ function updateMenu() {
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Update")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       else
-        rm /tmp/${USER_FILE}
-        mv ${TMP_UP_PATH}/${USER_FILE} /tmp/${USER_FILE}
+        rm "${TMP_PATH}/${USER_FILE}"
+        mv "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/${USER_FILE}"
         if [ "${USER_FILE}" = "update.zip" ]; then
           updateArpl "arpl"
         elif [ "${USER_FILE}" = "addons.zip" ]; then
