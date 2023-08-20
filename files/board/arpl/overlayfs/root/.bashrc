@@ -7,8 +7,8 @@ PS1='\u@\h:\w# '
 
 # You may uncomment the following lines if you want `ls' to be colorized:
 export LS_OPTIONS='--color=auto'
-alias ls='ls $LS_OPTIONS'
-alias ll='ls $LS_OPTIONS -l'
+alias ls='ls ${LS_OPTIONS}'
+alias ll='ls ${LS_OPTIONS} -l'
 
 # Save history in realtime
 shopt -s histappend
@@ -25,17 +25,17 @@ if [ -f ${BOOTLOADER_PATH}/.locale ]; then
   export LANG="$(cat ${BOOTLOADER_PATH}/.locale)"
 fi
 
-if [ -d /opt/arpl/lang ]; then
+if [ $(ls /opt/arpl/lang/*.mo 2>/dev/null | wc -l) -gt 0 ]; then
   for F in $(ls /opt/arpl/lang/*.mo); do
-    install "${F}" "/usr/share/locale/$(basename $F .mo)/LC_MESSAGES/arpl.mo"
+    install "${F}" "/usr/share/locale/$(basename "${F}" .mo)/LC_MESSAGES/arpl.mo"
   done
 fi
 
 if [ ! -f ${HOME}/.initialized ]; then
-  touch ${HOME}/.initialized
+  touch "${HOME}/.initialized"
   /opt/arpl/init.sh
 fi
-cd /opt/arpl
+cd "/opt/arpl"
 if tty | grep -q "/dev/pts" && [ -z "${SSH_TTY}" ]; then
   /opt/arpl/menu.sh
   #exit  # Allow web access back to shell
