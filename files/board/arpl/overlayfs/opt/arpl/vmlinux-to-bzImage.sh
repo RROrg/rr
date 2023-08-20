@@ -42,7 +42,7 @@ SCRIPT_DIR=$(dirname $0)
 VMLINUX_MOD=${1}
 ZIMAGE_MOD=${2}
 KVER_MAJOR=${KVER:0:1}
-if [ $KVER_MAJOR -eq 4 ] || [ $KVER_MAJOR -eq 3 ]; then
+if [ ${KVER_MAJOR} -eq 4 ] || [ ${KVER_MAJOR} -eq 3 ]; then
   # Kernel version 4.x or 3.x (bromolow)
   #zImage_head           16494
   #payload(
