@@ -9,26 +9,26 @@ PIDFILE=/var/run/dhcpcd/pid
 
 [ -f "${CONFIG}" ] || exit 0
 
-case "$1" in
+case "${1}" in
 start)
   echo "Starting dhcpcd..."
-  start-stop-daemon -S -x "$DAEMON" -p "$PIDFILE" -- -f "$CONFIG"
+  start-stop-daemon -S -x "${DAEMON}" -p "${PIDFILE}" -- -f "${CONFIG}"
   ;;
 stop)
   echo "Stopping dhcpcd..."
-  start-stop-daemon -K -x "$DAEMON" -p "$PIDFILE" -o
+  start-stop-daemon -K -x "${DAEMON}" -p "${PIDFILE}" -o
   ;;
 reload | force-reload)
   echo "Reloading dhcpcd configuration..."
-  "$DAEMON" -s reload
+  "${DAEMON}" -s reload
   ;;
 restart)
-  "$0" stop
+  "${0}" stop
   sleep 1 # Prevent race condition: ensure dhcpcd stops before start.
-  "$0" start
+  "${0}" start
   ;;
 *)
-  echo "Usage: $0 {start|stop|restart|reload|force-reload}"
+  echo "Usage: ${0} {start|stop|restart|reload|force-reload}"
   exit 1
   ;;
 esac
