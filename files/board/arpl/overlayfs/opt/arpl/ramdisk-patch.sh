@@ -159,16 +159,6 @@ echo "export LAYOUT=${LAYOUT}" >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export KEYMAP=${KEYMAP}" >>"${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
 
-# User addons
-for ADDON in ${!ADDONS[@]}; do
-  PARAMS=${ADDONS[${ADDON}]}
-  if ! installAddon ${ADDON}; then
-    echo "ADDON ${ADDON} not found!" | tee -a "${LOG_FILE}"
-    exit 1
-  fi
-  echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-done
-
 # Required addons: eudev, disks, localrss, wol
 installAddon eudev
 echo "/addons/eudev.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
@@ -179,6 +169,17 @@ installAddon localrss
 echo "/addons/localrss.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 installAddon wol
 echo "/addons/wol.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
+
+# User addons
+for ADDON in ${!ADDONS[@]}; do
+  PARAMS=${ADDONS[${ADDON}]}
+  if ! installAddon ${ADDON}; then
+    echo "ADDON ${ADDON} not found!" | tee -a "${LOG_FILE}"
+    exit 1
+  fi
+  echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
+done
+
 # Enable Telnet
 echo "inetd" >>"${RAMDISK_PATH}/addons/addons.sh"
 
