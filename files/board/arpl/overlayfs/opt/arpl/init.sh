@@ -75,6 +75,7 @@ ETHX=($(ls /sys/class/net/ | grep eth)) # real network cards list
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
   touch "${USER_CONFIG_FILE}"
   writeConfigKey "lkm" "prod" "${USER_CONFIG_FILE}"
+  writeConfigKey "dsmlogo" "true" "${USER_CONFIG_FILE}"
   writeConfigKey "directboot" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "notsetmacs" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "bootipwait" "10" "${USER_CONFIG_FILE}"

@@ -27,6 +27,7 @@ SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
 LAYOUT="$(readConfigKey "layout" "${USER_CONFIG_FILE}")"
 KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
+DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
 DIRECTBOOT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 NOTSETMACS="$(readConfigKey "notsetmacs" "${USER_CONFIG_FILE}")"
 BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
@@ -294,7 +295,7 @@ function addonMenu() {
       ADDON="$(<"${TMP_PATH}/resp")"
       [ -z "${ADDON}" ] && continue
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
-        --inputbox "$(TEXT "Type a opcional params to addon")" 0 0 \
+        --inputbox "$(TEXT "Type a optional params to addon")" 0 0 \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && continue
       VALUE="$(<"${TMP_PATH}/resp")"
@@ -1018,6 +1019,7 @@ function advancedMenu() {
       echo "r \"$(TEXT "Restore bootloader disk # test")\"" >>"${TMP_PATH}/menu"
     fi
     echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
+    echo "g \"$(TEXT "Show dsm logo:") \Z4${DSMLOGO}\Zn\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
@@ -1392,6 +1394,11 @@ function advancedMenu() {
         --progressbox "$(TEXT "opkg installing ...")" 20 70
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "opkg install is complete. Please reconnect to SSH/web, or execute 'source ~/.bashrc'")" 0 0
+      ;;
+    g)
+      [ "${DSMLOGO}" = "true" ] && DSMLOGO='false' || DSMLOGO='true'
+      writeConfigKey "dsmlogo" "${DSMLOGO}" "${USER_CONFIG_FILE}"
+      NEXT="e"
       ;;
     e) break ;;
     esac
