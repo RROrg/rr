@@ -27,7 +27,10 @@ TITLE="BOOTING:"
 [ "${BUS}" = "usb" ] && TITLE+=" [${BUS^^} flashdisk]" || TITLE+=" [${BUS^^} DoM]"
 printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
 
-[ -c "/dev/fb0" -a -f "${CACHE_PATH}/logo.png" ] && echo | fbv -acuf "${CACHE_PATH}/logo.png" >/dev/null
+DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
+if [ ${DSMLOGO} = "true" -a -c "/dev/fb0" -a -f "${CACHE_PATH}/logo.png" ]; then
+  echo | fbv -acuf "${CACHE_PATH}/logo.png" >/dev/null 2>/dev/null
+fi
 
 # Check if DSM zImage changed, patch it if necessary
 ZIMAGE_HASH="$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")"
