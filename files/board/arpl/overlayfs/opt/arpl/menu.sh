@@ -177,7 +177,7 @@ function productversMenu() {
     if [ ! "usb" = "$(udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2)" -a "${KVER:0:1}" = "5" ]; then
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
         --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
-      return
+      # return
     fi
     # get online pat data
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
