@@ -1075,7 +1075,7 @@ function advancedMenu() {
         PORTS=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
         for P in ${PORTS}; do
           if lsscsi -b | grep -v - | grep -q "\[${P}:"; then
-            DUMMY="$([ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd)" = "0" ] && echo 1 || echo 2)" 
+            DUMMY="$([ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd)" = "0" ] && echo 1 || echo 2)"
             if [ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd)" = "0" ]; then
               MSG+="\Z1$(printf "%02d" ${P})\Zn "
             else
@@ -1696,16 +1696,20 @@ function updateMenu() {
   PROXY="$(readConfigKey "proxy" "${USER_CONFIG_FILE}")"
   [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
   while true; do
+    rm "${TMP_PATH}/menu"
+    echo "a \"$(TEXT "Update all")\"" >>"${TMP_PATH}/menu"
+    echo "r \"$(TEXT "Update arpl")\"" >>"${TMP_PATH}/menu"
+    echo "d \"$(TEXT "Update addons")\"" >>"${TMP_PATH}/menu"
+    echo "m \"$(TEXT "Update modules")\"" >>"${TMP_PATH}/menu"
+    echo "l \"$(TEXT "Update LKMs")\"" >>"${TMP_PATH}/menu"
+    if [ -n "${DEBUG}" ]; then
+      echo "p \"$(TEXT "Set proxy server")\"" >>"${TMP_PATH}/menu"
+    fi
+    echo "u \"$(TEXT "Local upload")\"" >>"${TMP_PATH}/menu"
+    echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
+
     dialog --backtitle "$(backtitle)" --colors \
-      --menu "$(TEXT "Choose a option")" 0 0 0 \
-      a "$(TEXT "Update all")" \
-      r "$(TEXT "Update arpl")" \
-      d "$(TEXT "Update addons")" \
-      m "$(TEXT "Update modules")" \
-      l "$(TEXT "Update LKMs")" \
-      p "$(TEXT "Set proxy server")" \
-      u "$(TEXT "Local upload")" \
-      e "$(TEXT "Exit")" \
+      --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "$(<${TMP_PATH}/resp)" in
