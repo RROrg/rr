@@ -21,7 +21,7 @@ platform: "geminilake"
 unique: "synology_geminilake_423+"
 serial:
   prefix:
-  - "22A0"
+    - "22A0"
   middle: "VKR"
   suffix: "alpha"
 dom: 2
@@ -37,10 +37,10 @@ productvers:
     synoinfo:
       <<: *synoinfo
     patch:
-    - "ramdisk-common-disable-root-pwd.patch"
-    - "ramdisk-common-init-script.patch"
-    - "ramdisk-common-etc-rc.patch"
-    - "ramdisk-42951-post-init-script.patch"
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"
 
   "7.2":
     kver: "4.4.302"
@@ -50,7 +50,7 @@ productvers:
     synoinfo:
       <<: *synoinfo
     patch:
-    - "ramdisk-64216-disable-root-pwd.patch"
-    - "ramdisk-64216-init-script.patch"
-    - "ramdisk-common-etc-rc.patch"
-    - "ramdisk-42951-post-init-script.patch"
+      - "ramdisk-64216-disable-root-pwd.patch"
+      - "ramdisk-64216-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"

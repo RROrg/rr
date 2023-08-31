@@ -30,10 +30,10 @@ sudo mount ${LOOPX}p1 "${BINARIES_DIR}/p1"
 sudo mount ${LOOPX}p3 "${BINARIES_DIR}/p3"
 
 echo "Copying files"
-sudo cp "${BINARIES_DIR}/bzImage"            "${BINARIES_DIR}/p3/bzImage-arpl"
-sudo cp "${BINARIES_DIR}/rootfs.cpio.xz"     "${BINARIES_DIR}/p3/initrd-arpl"
-sudo cp -R "${BOARD_PATH}/p1/"*              "${BINARIES_DIR}/p1"
-sudo cp -R "${BOARD_PATH}/p3/"*              "${BINARIES_DIR}/p3"
+sudo cp "${BINARIES_DIR}/bzImage" "${BINARIES_DIR}/p3/bzImage-arpl"
+sudo cp "${BINARIES_DIR}/rootfs.cpio.xz" "${BINARIES_DIR}/p3/initrd-arpl"
+sudo cp -R "${BOARD_PATH}/p1/"* "${BINARIES_DIR}/p1"
+sudo cp -R "${BOARD_PATH}/p3/"* "${BINARIES_DIR}/p3"
 sync
 
 echo "Unmount image file"

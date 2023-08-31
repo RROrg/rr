@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2022 Ing <https://github.com/wjz304>
-# 
+#
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
 #
@@ -20,11 +20,11 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'format %y.%-m.$i or auto'
+        description: "format %y.%-m.$i or auto"
         required: false
         type: string
       prerelease:
-        description: 'pre release'
+        description: "pre release"
         default: false
         type: boolean
 
@@ -47,7 +47,7 @@ jobs:
           sudo apt update
           sudo apt install -y jq gawk gettext libelf-dev qemu-utils
           sudo snap install yq
-          
+
       # Check dl cache
       - name: Cache downloads
         id: dl-cache
@@ -191,7 +191,7 @@ jobs:
               zip -9j update.zip "${F}"
             fi
           done < <(yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml)
-          zip -9j update.zip sha256sum 
+          zip -9j update.zip sha256sum
 
       # Upload artifact
       - name: Upload

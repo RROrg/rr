@@ -19,7 +19,7 @@ platform: "broadwellnk"
 unique: "synology_broadwellnk_rs4021xs+"
 serial:
   prefix:
-  - "2160"
+    - "2160"
   middle: "T2R"
   suffix: "alpha"
 dom: 2
@@ -35,11 +35,11 @@ productvers:
     synoinfo:
       <<: *synoinfo
     patch:
-    - "ramdisk-common-disable-root-pwd.patch"
-    - "ramdisk-25556-init-script.patch"
-    - "ramdisk-common-etc-rc.patch"
-    - "ramdisk-25556-post-init-script.patch"
-    - "ramdisk-common-disable-disabled-ports.patch"
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-25556-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-25556-post-init-script.patch"
+      - "ramdisk-common-disable-disabled-ports.patch"
 
   "7.0":
     kver: "4.4.180"
@@ -49,11 +49,11 @@ productvers:
     synoinfo:
       <<: *synoinfo
     patch:
-    - "ramdisk-common-disable-root-pwd.patch"
-    - "ramdisk-common-init-script.patch"
-    - "ramdisk-common-etc-rc.patch"
-    - "ramdisk-common-post-init-script.patch"
-    - "ramdisk-common-disable-disabled-ports.patch"
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-common-post-init-script.patch"
+      - "ramdisk-common-disable-disabled-ports.patch"
 
   "7.1":
     kver: "4.4.180"
@@ -63,11 +63,11 @@ productvers:
     synoinfo:
       <<: *synoinfo
     patch:
-    - "ramdisk-common-disable-root-pwd.patch"
-    - "ramdisk-common-init-script.patch"
-    - "ramdisk-common-etc-rc.patch"
-    - "ramdisk-42951-post-init-script.patch"
-    - "ramdisk-42661-disable-disabled-ports.patch"
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"
+      - "ramdisk-42661-disable-disabled-ports.patch"
 
   "7.2":
     kver: "4.4.302"
@@ -77,8 +77,8 @@ productvers:
     synoinfo:
       <<: *synoinfo
     patch:
-    - "ramdisk-64216-disable-root-pwd.patch"
-    - "ramdisk-64216-init-script.patch"
-    - "ramdisk-common-etc-rc.patch"
-    - "ramdisk-42951-post-init-script.patch"
-    - "ramdisk-42661-disable-disabled-ports.patch"
+      - "ramdisk-64216-disable-root-pwd.patch"
+      - "ramdisk-64216-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"
+      - "ramdisk-42661-disable-disabled-ports.patch"
