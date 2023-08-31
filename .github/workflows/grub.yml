@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2022 Ing <https://github.com/wjz304>
-# 
+#
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
 #
@@ -10,8 +10,8 @@ name: Grub
 on:
   workflow_dispatch:
     inputs:
-      push: 
-        description: 'push'
+      push:
+        description: "push"
         default: false
         type: boolean
 jobs:
@@ -22,11 +22,11 @@ jobs:
         uses: actions/checkout@main
 
       - name: Initialization environment
-        run : |
+        run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           sudo timedatectl set-timezone "Asia/Shanghai"
-          
+
           sudo apt update
           sudo apt install -y build-essential bison flex dosfstools
 
@@ -47,7 +47,7 @@ jobs:
           if [ -f "grub.img.gz" ]; then
             echo "Copy img ..."
             mv -f grub.img.gz files/board/arpl/grub.img.gz 
-        
+
             echo "Git push ..."
             git pull
             status=$(git status -s | grep -E 'grub.img.gz' | awk '{printf " %s", $2}')
@@ -59,4 +59,3 @@ jobs:
           else
             echo "No change ..."
           fi
-

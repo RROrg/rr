@@ -19,7 +19,7 @@ platform: "r1000"
 unique: "synology_r1000_923+"
 serial:
   prefix:
-  - "2270"
+    - "2270"
   middle: "TQR"
   suffix: "alpha"
 dom: 2
@@ -35,10 +35,10 @@ productvers:
     synoinfo:
       <<: *synoinfo
     patch:
-    - "ramdisk-common-disable-root-pwd.patch"
-    - "ramdisk-common-init-script.patch"
-    - "ramdisk-common-etc-rc.patch"
-    - "ramdisk-42951-post-init-script.patch"
+      - "ramdisk-common-disable-root-pwd.patch"
+      - "ramdisk-common-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"
 
   "7.2":
     kver: "4.4.302"
@@ -48,7 +48,7 @@ productvers:
     synoinfo:
       <<: *synoinfo
     patch:
-    - "ramdisk-64216-disable-root-pwd.patch"
-    - "ramdisk-64216-init-script.patch"
-    - "ramdisk-common-etc-rc.patch"
-    - "ramdisk-42951-post-init-script.patch"
+      - "ramdisk-64216-disable-root-pwd.patch"
+      - "ramdisk-64216-init-script.patch"
+      - "ramdisk-common-etc-rc.patch"
+      - "ramdisk-42951-post-init-script.patch"
