@@ -224,21 +224,21 @@ else
   done
   BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
   [ -z "${BOOTWAIT}" ] && BOOTWAIT=10
-  w | awk '{print $1" "$2" "$4" "$5" "$6}' >WO
+  w | awk '{print $1" "$2" "$4" "$5" "$6}' >WB
   MSG=""
   while test ${BOOTWAIT} -ge 0; do
     MSG="$(printf "$(TEXT "%2ds (accessing arpl will interrupt boot)")" "${BOOTWAIT}")"
     echo -en "\r${MSG}"
     w | awk '{print $1" "$2" "$4" "$5" "$6}' >WC
-    if ! diff WO WC >/dev/null 2>&1; then
+    if ! diff WB WC >/dev/null 2>&1; then
       echo -en "\r$(TEXT "A new access is connected, the boot process is interrupted.")\n"
-      break
+      rm -f WB WC
+      exit 0
     fi
     sleep 1
     BOOTWAIT=$((BOOTWAIT - 1))
   done
-  rm -f WO WC
-  [ ${BOOTWAIT} -eq 0 ] && exit 0
+  rm -f WB WC
   echo -en "\r$(printf "%${#MSG}s" " ")\n"
 fi
 
