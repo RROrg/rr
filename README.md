@@ -44,13 +44,16 @@
 ## 教程 - Usage 
 * English: https://www.youtube.com/watch?v=VB67_FG5y-E
     ##### `(From: @NETVN82)`
+* Español: https://www.youtube.com/watch?v=KC6oCcAyoV4
+    ##### `(From: @Jay tech 2023)`
 * 한국어: https://www.youtube.com/watch?v=4O7EfU6MT60
     ##### `(From: @pageinnet)`
-* 中文简体: https://www.bilibili.com/video/BV1jk4y1Y7B7  
-    ##### `(From: http://mi-d.cn)`
+* ภาษาไทย: https://www.youtube.com/watch?v=4sGrMMEQQ6I
+    ##### `(From: @stnology)`
 * 中文繁體: https://www.youtube.com/watch?v=cW2eRCjtAEs
     ##### `(From: @豪哥幫幫忙)`
-
+* 中文简体: https://www.bilibili.com/video/BV1jk4y1Y7B7  
+    ##### `(From: http://mi-d.cn)`
 
 ## 打赏一下
 * > ### 作者: Ing  
