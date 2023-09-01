@@ -38,7 +38,7 @@ if [ "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print$1}')" != "${ZIMAGE_HASH}" ]
   echo -e "\033[1;43m$(TEXT "DSM zImage changed")\033[0m"
   /opt/arpl/zimage-patch.sh
   if [ $? -ne 0 ]; then
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "zImage not patched:\n")$(<"${LOG_FILE}")" 12 70
     exit 1
   fi
@@ -51,7 +51,7 @@ if [ "${RAMDISK_HASH_CUR}" != "${RAMDISK_HASH}" ]; then
   echo -e "\033[1;43m$(TEXT "DSM Ramdisk changed")\033[0m"
   /opt/arpl/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "Ramdisk not patched:\n")$(<"${LOG_FILE}")" 12 70
     exit 1
   fi
@@ -174,13 +174,11 @@ if [ "${DIRECT}" = "true" ]; then
   reboot
   exit 0
 else
-  BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
-  [ -z "${BOOTIPWAIT}" ] && BOOTIPWAIT=10
   ETHX=($(ls /sys/class/net/ | grep eth)) # real network cards list
   echo "$(printf "$(TEXT "Detected %s network cards.")" "${#ETHX[@]}")"
   echo "$(TEXT "Checking Connect.")"
   COUNT=0
-  while [ ${COUNT} -lt ${BOOTIPWAIT} ]; do
+  while [ ${COUNT} -lt 32 ]; do
     hasConnect="false"
     for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
       if ethtool ${ETHX[${N}]} | grep 'Link detected' | grep -q 'yes'; then
@@ -224,6 +222,24 @@ else
       sleep 1
     done
   done
+  BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
+  [ -z "${BOOTWAIT}" ] && BOOTWAIT=10
+  w | awk '{print $1" "$2" "$4" "$5" "$6}' >WO
+  MSG=""
+  while test ${BOOTWAIT} -ge 0; do
+    MSG="$(printf "$(TEXT "%2ds (accessing arpl will interrupt boot)")" "${BOOTWAIT}")"
+    echo -en "\r${MSG}"
+    w | awk '{print $1" "$2" "$4" "$5" "$6}' >WC
+    if ! diff WO WC >/dev/null 2>&1; then
+      echo -en "\r$(TEXT "A new access is connected, the boot process is interrupted.")\n"
+      break
+    fi
+    sleep 1
+    BOOTWAIT=$((BOOTWAIT - 1))
+  done
+  rm -f WO WC
+  [ ${BOOTWAIT} -eq 0 ] && exit 0
+  echo -en "\r$(printf "%${#MSG}s" " ")\n"
 fi
 
 echo -e "\033[1;37m$(TEXT "Loading DSM kernel...")\033[0m"

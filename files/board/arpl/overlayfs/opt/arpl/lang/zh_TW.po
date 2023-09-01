@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arpl-i18n\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-24 20:08+0800\n"
-"PO-Revision-Date: 2023-08-24 20:09+0800\n"
+"POT-Creation-Date: 2023-09-01 08:27+0800\n"
+"PO-Revision-Date: 2023-09-01 08:27+0800\n"
 "Last-Translator: March Fun <marchfun@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) <marchfun@gmail.com>\n"
 "Language: zh_TW\n"
@@ -89,47 +89,55 @@ msgstr "Cmdline:\\n"
 msgid "Reboot to boot directly in DSM"
 msgstr "重啓並直接進入 DSM 開機"
 
-#: boot.sh:180 init.sh:179
+#: boot.sh:178 init.sh:179
 msgid "Detected %s network cards."
 msgstr "檢測到 %s 個網卡。"
 
-#: boot.sh:181 init.sh:180
+#: boot.sh:179 init.sh:180
 msgid "Checking Connect."
 msgstr "檢查連線。"
 
-#: boot.sh:199
+#: boot.sh:197
 msgid "Waiting IP.(For reference only)"
 msgstr "取得 IP (僅供參考)"
 
-#: boot.sh:206 init.sh:205
+#: boot.sh:204 init.sh:205
 msgid "DOWN"
 msgstr "關閉"
 
-#: boot.sh:210 init.sh:209
+#: boot.sh:208 init.sh:209
 msgid "NOT CONNECTED"
 msgstr "未連線"
 
-#: boot.sh:214 init.sh:213
+#: boot.sh:212 init.sh:213
 msgid "TIMEOUT"
 msgstr "逾時"
 
-#: boot.sh:220
+#: boot.sh:218
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr "在瀏覽器中瀏覽 \\033[1;34mhttp://%s:5000\\033[0m 連線 DSM。"
 
-#: boot.sh:229
+#: boot.sh:230
+msgid "%2ds (accessing arpl will interrupt boot)"
+msgstr "訪問arpl將中斷啟動"
+
+#: boot.sh:234
+msgid "A new access is connected, the boot process is interrupted."
+msgstr "新的連接, 啟動過程被中斷."
+
+#: boot.sh:245
 msgid "Loading DSM kernel..."
 msgstr "載入 DSM kernel..."
 
-#: boot.sh:233
+#: boot.sh:249
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "警告，使用'--noefi'參數執行'kexec'，可能有意外事情發生！"
 
-#: boot.sh:238
+#: boot.sh:254
 msgid "Booting..."
 msgstr "開機中..."
 
-#: boot.sh:240
+#: boot.sh:256
 msgid ""
 "[This interface will not be operational. Please use the http://find.synology."
 "com/ find DSM and connect.]"
@@ -266,7 +274,7 @@ msgstr "取得 pat 資料成功，\\n請確認或者依需要修改。"
 msgid "Reconfiguring Synoinfo, Addons and Modules"
 msgstr "重新設置 Syninfo、外掛和模組"
 
-#: menu.sh:268 menu.sh:414 menu.sh:555 menu.sh:696 menu.sh:1700
+#: menu.sh:268 menu.sh:414 menu.sh:555 menu.sh:696 menu.sh:1712
 msgid "Choose a option"
 msgstr "設定"
 
@@ -290,8 +298,8 @@ msgstr "顯示所有可用外掛"
 msgid "Upload a external addon"
 msgstr "上傳外部外掛"
 
-#: menu.sh:274 menu.sh:421 menu.sh:551 menu.sh:691 menu.sh:1023 menu.sh:1708
-#: menu.sh:1876 menu.sh:1944
+#: menu.sh:274 menu.sh:421 menu.sh:551 menu.sh:691 menu.sh:1023 menu.sh:1709
+#: menu.sh:1880 menu.sh:1948
 msgid "Exit"
 msgstr "退出"
 
@@ -321,7 +329,7 @@ msgstr "沒有要删除的使用者外掛"
 msgid "Select addon to remove"
 msgstr "選擇要删除的外掛"
 
-#: menu.sh:355 menu.sh:1275 menu.sh:1306 menu.sh:1339 menu.sh:1790
+#: menu.sh:355 menu.sh:1275 menu.sh:1306 menu.sh:1339 menu.sh:1794
 msgid "This feature is only available when accessed via web/ssh."
 msgstr "此功能僅在透過 web/ssh 存取時可用。"
 
@@ -329,7 +337,7 @@ msgstr "此功能僅在透過 web/ssh 存取時可用。"
 msgid "Please upload the *.addons file."
 msgstr "請上傳 *.addons 檔案。"
 
-#: menu.sh:373 menu.sh:526 menu.sh:1817 menu.sh:1831
+#: menu.sh:373 menu.sh:526 menu.sh:1821 menu.sh:1835
 msgid "Not a valid file, please try again!"
 msgstr "不是有效的檔案，請重試！"
 
@@ -627,7 +635,7 @@ msgstr "複製檔案: "
 msgid "Addon %s not found!"
 msgstr "外掛 %s 未找到!"
 
-#: menu.sh:979 menu.sh:1927
+#: menu.sh:979 menu.sh:1931
 msgid "Cleaning"
 msgstr "清除中"
 
@@ -644,8 +652,8 @@ msgid "Switch direct boot:"
 msgstr "切換直接開機:"
 
 #: menu.sh:999
-msgid "Time of timeout of wait ip in boot:"
-msgstr "開機時取得 IP 的逾時時間:"
+msgid "Timeout of boot wait:"
+msgstr "開機逾時時間:"
 
 #: menu.sh:1000
 msgid "kernel switching method:"
@@ -719,7 +727,7 @@ msgstr "顯示 dsm logo:"
 msgid "Advanced"
 msgstr "進階"
 
-#: menu.sh:1026 menu.sh:1879
+#: menu.sh:1026 menu.sh:1883
 msgid "Choose the option"
 msgstr "設定"
 
@@ -923,7 +931,7 @@ msgstr "警告"
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "設置已變更，是否重新編譯開機檔？"
 
-#: menu.sh:1505 menu.sh:1870
+#: menu.sh:1505 menu.sh:1874
 msgid "Choose a language"
 msgstr "選擇語言"
 
@@ -935,9 +943,9 @@ msgstr "選擇佈局"
 msgid "Choice a keymap"
 msgstr "選擇鍵盤"
 
-#: menu.sh:1550 menu.sh:1599 menu.sh:1650 menu.sh:1713 menu.sh:1717
-#: menu.sh:1721 menu.sh:1725 menu.sh:1733 menu.sh:1741 menu.sh:1749
-#: menu.sh:1757
+#: menu.sh:1550 menu.sh:1599 menu.sh:1650 menu.sh:1717 menu.sh:1721
+#: menu.sh:1725 menu.sh:1729 menu.sh:1737 menu.sh:1745 menu.sh:1753
+#: menu.sh:1761
 msgid "Update %s"
 msgstr "更新 %s"
 
@@ -999,23 +1007,23 @@ msgstr "安裝新 %s 中"
 msgid "%s updated with success!"
 msgstr "%s 更新成功!"
 
-#: menu.sh:1701
+#: menu.sh:1700
 msgid "Update all"
 msgstr "更新全部"
 
-#: menu.sh:1702
+#: menu.sh:1701
 msgid "Update arpl"
 msgstr "更新 ARPL"
 
-#: menu.sh:1703
+#: menu.sh:1702
 msgid "Update addons"
 msgstr "更新外掛"
 
-#: menu.sh:1704
+#: menu.sh:1703
 msgid "Update modules"
 msgstr "更新模組"
 
-#: menu.sh:1705
+#: menu.sh:1704
 msgid "Update LKMs"
 msgstr "更新 LKM"
 
@@ -1023,129 +1031,129 @@ msgstr "更新 LKM"
 msgid "Set proxy server"
 msgstr "設定代理"
 
-#: menu.sh:1707
+#: menu.sh:1708
 msgid "Local upload"
 msgstr "本地上傳"
 
-#: menu.sh:1713 menu.sh:1741
+#: menu.sh:1717 menu.sh:1745
 msgid "addons"
 msgstr "外掛"
 
-#: menu.sh:1717 menu.sh:1749
+#: menu.sh:1721 menu.sh:1753
 msgid "modules"
 msgstr "模組"
 
-#: menu.sh:1721 menu.sh:1757
+#: menu.sh:1725 menu.sh:1761
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:1725 menu.sh:1733
+#: menu.sh:1729 menu.sh:1737
 msgid "arpl"
 msgstr "arpl"
 
-#: menu.sh:1767 menu.sh:1778 menu.sh:1789 menu.sh:1799 menu.sh:1816
-#: menu.sh:1830
+#: menu.sh:1771 menu.sh:1782 menu.sh:1793 menu.sh:1803 menu.sh:1820
+#: menu.sh:1834
 msgid "Update"
 msgstr "更新"
 
-#: menu.sh:1768
+#: menu.sh:1772
 msgid "Please enter a proxy server url"
 msgstr "請輸入代理伺服器網址"
 
-#: menu.sh:1779
+#: menu.sh:1783
 msgid "Invalid proxy server url, continue?"
 msgstr "無效的代理伺服器網址，是否繼續？"
 
-#: menu.sh:1794
+#: menu.sh:1798
 msgid ""
 "Please keep the attachment name consistent with the attachment name on "
 "Github.\\n"
 msgstr "請保持附件名稱與 github 上附件名稱一致。\\n"
 
-#: menu.sh:1795
+#: menu.sh:1799
 msgid "Upload update.zip will update arpl.\\n"
 msgstr "上傳 update.zip 將更新 arpl。\\n"
 
-#: menu.sh:1796
+#: menu.sh:1800
 msgid "Upload addons.zip will update Addons.\\n"
 msgstr "上傳 addons.zip 將更新 外掛。\\n"
 
-#: menu.sh:1797
+#: menu.sh:1801
 msgid "Upload modules.zip will update Modules.\\n"
 msgstr "上傳 modules.zip 將更新 模組。\\n"
 
-#: menu.sh:1798
+#: menu.sh:1802
 msgid "Upload rp-lkms.zip will update LKMs.\\n"
 msgstr "上傳 rp-lkms.zip 將更新 LKM。\\n"
 
-#: menu.sh:1851
+#: menu.sh:1855
 msgid "Choose a model"
 msgstr "選擇型號"
 
-#: menu.sh:1853
+#: menu.sh:1857
 msgid "Choose a version"
 msgstr "選擇版本"
 
-#: menu.sh:1855
+#: menu.sh:1859
 msgid "Addons menu"
 msgstr "外掛"
 
-#: menu.sh:1856
+#: menu.sh:1860
 msgid "Modules menu"
 msgstr "模組"
 
-#: menu.sh:1857
+#: menu.sh:1861
 msgid "Cmdline menu"
 msgstr "設定 Cmdline"
 
-#: menu.sh:1858
+#: menu.sh:1862
 msgid "Synoinfo menu"
 msgstr "設定 Synoinfo"
 
-#: menu.sh:1861
+#: menu.sh:1865
 msgid "Advanced menu"
 msgstr "進階設定"
 
-#: menu.sh:1864
+#: menu.sh:1868
 msgid "Build the loader"
 msgstr "編譯開機檔"
 
-#: menu.sh:1868
+#: menu.sh:1872
 msgid "Boot the loader"
 msgstr "開機"
 
-#: menu.sh:1871
+#: menu.sh:1875
 msgid "Choose a keymap"
 msgstr "選擇鍵盤"
 
-#: menu.sh:1873
+#: menu.sh:1877
 msgid "Clean disk cache"
 msgstr "清除磁碟快取"
 
-#: menu.sh:1875
+#: menu.sh:1879
 msgid "Update menu"
 msgstr "更新"
 
-#: menu.sh:1939
+#: menu.sh:1943
 msgid "Choose a action"
 msgstr "選擇動作"
 
-#: menu.sh:1940
+#: menu.sh:1944
 msgid "Poweroff"
 msgstr "關機"
 
-#: menu.sh:1941
+#: menu.sh:1945
 msgid "Reboot"
 msgstr "重新開機"
 
-#: menu.sh:1942
+#: menu.sh:1946
 msgid "Reboot to arpl"
 msgstr "重開機到 ARPL"
 
-#: menu.sh:1943
+#: menu.sh:1947
 msgid "Back to shell"
 msgstr "退回到 shell"
 
-#: menu.sh:1969
+#: menu.sh:1973
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "執行 \\033[1;32mmenu.sh\\033[0m 重新進入設定選單"

@@ -26,7 +26,7 @@
     # If it does not involve adding or deleting, the following process is not required.
     sudo apt install gettext
     git clone https://github.com/wjz304/arpl-i18n.git
-    cd arpl-i18n/files/board/arpl/overlayfs/opt/arpl
+    cd files/board/arpl/overlayfs/opt/arpl
     xgettext -L Shell --keyword=TEXT *.sh -o lang/arpl.pot
     sed -i 's/charset=CHARSET/charset=UTF-8/' lang/arpl.pot
     # You need to replace the language you need and translate the po file.

@@ -30,7 +30,7 @@ LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
 DIRECTBOOT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 NOTSETMACS="$(readConfigKey "notsetmacs" "${USER_CONFIG_FILE}")"
-BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
+BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
 KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 
@@ -82,7 +82,7 @@ function modelMenu() {
   if [ -z "${1}" ]; then
     RESTRICT=1
     FLGBETA=0
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Model")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Model")" \
       --infobox "$(TEXT "Reading models")" 0 0
     echo -n "" >"${TMP_PATH}/modellist"
     while read M; do
@@ -115,7 +115,7 @@ function modelMenu() {
       done < <(cat "${TMP_PATH}/modellist" | sort -r -n -k 2)
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
       [ ${FLGBETA} -eq 0 ] && echo "b \"\Z1$(TEXT "Show beta models")\Zn\"" >>"${TMP_PATH}/menu"
-      dialog --backtitle "$(backtitle)" \
+      dialog --backtitle "$(backtitle)" --colors \
         --menu "$(TEXT "Choose the model")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
@@ -157,7 +157,7 @@ function modelMenu() {
 function productversMenu() {
   ITEMS="$(readConfigEntriesArray "productvers" "${MODEL_CONFIG_PATH}/${MODEL}.yml" | sort -r)"
   if [ -z "${1}" ]; then
-    dialog --backtitle "$(backtitle)" \
+    dialog --backtitle "$(backtitle)" --colors \
       --no-items --menu "$(TEXT "Choose a product version")" 0 0 0 ${ITEMS} \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -170,17 +170,17 @@ function productversMenu() {
   if [ "${PRODUCTVER}" != "${resp}" ]; then
     local KVER=$(readModelKey "${MODEL}" "productvers.[${resp}].kver")
     if [ -d "/sys/firmware/efi" -a "${KVER:0:1}" = "3" ]; then
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Product Version")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
         --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
       return
     fi
     if [ ! "usb" = "$(udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2)" -a "${KVER:0:1}" = "5" ]; then
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Product Version")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
         --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
       # return
     fi
     # get online pat data
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Product Version")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --infobox "$(TEXT "Get pat data ..")" 0 0
     idx=0
     while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
@@ -205,7 +205,7 @@ function productversMenu() {
     else
       MSG="$(TEXT "Successfully to get pat data,\nPlease confirm or modify as needed.")"
     fi
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Product Version")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
       2>"${TMP_PATH}/resp"
     [ $? -ne 0 ] && return
@@ -220,7 +220,7 @@ function productversMenu() {
     SMALLNUM=""
     writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
     writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Product Version")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
       --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
     # Delete synoinfo and reload model/build synoinfo
     writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
@@ -264,7 +264,7 @@ function addonMenu() {
   NEXT="a"
   # Loop menu
   while true; do
-    dialog --backtitle "$(backtitle)" \
+    dialog --backtitle "$(backtitle)" --colors \
       --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 \
       a "$(TEXT "Add an addon")" \
       d "$(TEXT "Delete addon(s)")" \
@@ -283,18 +283,18 @@ function addonMenu() {
         echo "${ADDON} \"${DESC}\"" >>"${TMP_PATH}/menu"
       done < <(availableAddons "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
       if [ ! -f "${TMP_PATH}/menu" ]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "No available addons to add")" 0 0
         NEXT="e"
         continue
       fi
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
         --menu "$(TEXT "Select an addon")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
       ADDON="$(<"${TMP_PATH}/resp")"
       [ -z "${ADDON}" ] && continue
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
         --inputbox "$(TEXT "Type a optional params to addon")" 0 0 \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && continue
@@ -306,7 +306,7 @@ function addonMenu() {
     d)
       NEXT='d'
       if [ ${#ADDONS[@]} -eq 0 ]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "No user addons to remove")" 0 0
         continue
       fi
@@ -314,7 +314,7 @@ function addonMenu() {
       for I in "${!ADDONS[@]}"; do
         echo "\"${I}\" \"${I}\" \"off\"" >>"${TMP_PATH}/opts"
       done
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
         --no-tags --checklist "$(TEXT "Select addon to remove")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
@@ -332,7 +332,7 @@ function addonMenu() {
       for KEY in ${!ADDONS[@]}; do
         ITEMS+="${KEY}: ${ADDONS[$KEY]}\n"
       done
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
         --msgbox "${ITEMS}" 0 0
       ;;
     m)
@@ -346,16 +346,16 @@ function addonMenu() {
         fi
         MSG+=": \Z5${DESC}\Zn\n"
       done < <(availableAddons "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
         --msgbox "${MSG}" 0 0
       ;;
     o)
       if ! tty | grep -q "/dev/pts"; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
         return
       fi
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
         --msgbox "$(TEXT "Please upload the *.addons file.")" 0 0
       TMP_UP_PATH=${TMP_PATH}/users
       USER_FILE=""
@@ -369,21 +369,21 @@ function addonMenu() {
       done
       popd
       if [ -z "${USER_FILE}" ]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       else
         if [ -d "${ADDONS_PATH}/$(basename ${USER_FILE} .addons)" ]; then
-          dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
             --yesno "$(TEXT "The addon already exists. Do you want to overwrite it?")" 0 0
           RET=$?
           [ ${RET} -eq 0 ] && return
         fi
         ADDON="$(untarAddon "${TMP_UP_PATH}/${USER_FILE}")"
         if [ -n "${ADDON}" ]; then
-          dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
             --msgbox "$(printf "$(TEXT "Addon '%s' added to loader, Please enable it in 'Add an addon' menu.")" "${ADDON}")" 0 0
         else
-          dialog --backtitle "$(backtitle)" --title "$(TEXT "Addons")" \
+          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
             --msgbox "$(TEXT "File format not recognized!")" 0 0
         fi
       fi
@@ -399,7 +399,7 @@ function moduleMenu() {
   KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
   KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
 
-  dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+  dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
     --infobox "$(TEXT "Reading modules")" 0 0
   ALLMODULES=$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
   unset USERMODULES
@@ -410,7 +410,7 @@ function moduleMenu() {
   NEXT="s"
   # loop menu
   while true; do
-    dialog --backtitle "$(backtitle)" \
+    dialog --backtitle "$(backtitle)" --colors \
       --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 \
       s "$(TEXT "Show selected modules")" \
       l "$(TEXT "Select loaded modules")" \
@@ -427,11 +427,11 @@ function moduleMenu() {
       for KEY in ${!USERMODULES[@]}; do
         ITEMS+="${KEY}: ${USERMODULES[$KEY]}\n"
       done
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
         --msgbox "${ITEMS}" 0 0
       ;;
     l)
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
         --infobox "$(TEXT "Selecting loaded modules")" 0 0
       KOLIST=""
       for I in $(lsmod | awk -F' ' '{print $1}' | grep -v 'Module'); do
@@ -448,7 +448,7 @@ function moduleMenu() {
       DIRTY=1
       ;;
     a)
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
         --infobox "$(TEXT "Selecting all modules")" 0 0
       unset USERMODULES
       declare -A USERMODULES
@@ -461,7 +461,7 @@ function moduleMenu() {
       ;;
 
     d)
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
         --infobox "$(TEXT "Deselecting all modules")" 0 0
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
       unset USERMODULES
@@ -475,13 +475,13 @@ function moduleMenu() {
         arrayExistItem "${ID}" "${!USERMODULES[@]}" && ACT="on" || ACT="off"
         echo "${ID} ${DESC} ${ACT}" >>"${TMP_PATH}/opts"
       done <<<${ALLMODULES}
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
         --checklist "$(TEXT "Select modules to include")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && continue
       resp=$(<${TMP_PATH}/resp)
       [ -z "${resp}" ] && continue
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
         --infobox "$(TEXT "Writing to user config")" 0 0
       unset USERMODULES
       declare -A USERMODULES
@@ -500,10 +500,10 @@ function moduleMenu() {
       MSG+="$(TEXT "This program will not determine the availability of imported modules or even make type judgments, as please double check if it is correct.\n")"
       MSG+="$(TEXT "If you want to remove it, please go to the \"Update Menu\" -> \"Update modules\" to forcibly update the modules. All imports will be reset.\n")"
       MSG+="$(TEXT "Do you want to continue?")"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
         --yesno "${MSG}" 0 0
       [ $? -ne 0 ] && return
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
         --msgbox "$(TEXT "Please upload the *.ko file.")" 0 0
       TMP_UP_PATH=${TMP_PATH}/users
       USER_FILE=""
@@ -518,11 +518,11 @@ function moduleMenu() {
       popd
       if [ -n "${USER_FILE}" -a "${USER_FILE##*.}" = "ko" ]; then
         addToModules ${PLATFORM} "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${TMP_UP_PATH}/${USER_FILE}"
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
           --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${USER_FILE}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" 0 0
         rm -f "${TMP_UP_PATH}/${USER_FILE}"
       else
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Modules")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       fi
       ;;
@@ -551,19 +551,19 @@ function cmdlineMenu() {
   echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
   # Loop menu
   while true; do
-    dialog --backtitle "$(backtitle)" \
+    dialog --backtitle "$(backtitle)" --colors \
       --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "$(<${TMP_PATH}/resp)" in
     a)
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
         --inputbox "$(TEXT "Type a name of cmdline")" 0 0 \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && continue
       NAME="$(sed 's/://g' <"${TMP_PATH}/resp")"
       [ -z "${NAME}" ] && continue
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
         --inputbox "$(printf "$(TEXT "Type a value of '%s' cmdline")" "${NAME}")" 0 0 "${CMDLINE[${NAME}]}" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && continue
@@ -573,7 +573,7 @@ function cmdlineMenu() {
       ;;
     d)
       if [ ${#CMDLINE[@]} -eq 0 ]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
           --msgbox "$(TEXT "No user cmdline to remove")" 0 0
         continue
       fi
@@ -581,7 +581,7 @@ function cmdlineMenu() {
       for I in "${!CMDLINE[@]}"; do
         echo "\"${I}\" \"${CMDLINE[${I}]}\" \"off\"" >>"${TMP_PATH}/opts"
       done
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
         --checklist "$(TEXT "Select cmdline to remove")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
@@ -594,7 +594,7 @@ function cmdlineMenu() {
       ;;
     s)
       while true; do
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
           --inputbox "$(TEXT "Please enter a serial number ")" 0 0 "" \
           2>${TMP_PATH}/resp
         [ $? -ne 0 ] && break 2
@@ -606,7 +606,7 @@ function cmdlineMenu() {
         fi
         # At present, the SN rules are not complete, and many SNs are not truly invalid, so not provide tips now.
         break
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
           --yesno "$(TEXT "Invalid serial, continue?")" 0 0
         [ $? -eq 0 ] && break
       done
@@ -623,7 +623,7 @@ function cmdlineMenu() {
         [ -n "${MACF}" ] && MAC=${MACF} || MAC=${MACR}
         RET=1
         while true; do
-          dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
             --inputbox "$(printf "$(TEXT "Type a custom MAC address of %s")" "mac${N}")" 0 0 "${MAC}" \
             2>${TMP_PATH}/resp
           RET=$?
@@ -633,7 +633,7 @@ function cmdlineMenu() {
           [ -z "${MAC}" ] && MAC="${MACFS[$(expr ${i} - 1)]}"
           MACF="$(echo "${MAC}" | sed "s/:\|-\| //g")"
           [ ${#MACF} -eq 12 ] && break
-          dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
             --msgbox "$(TEXT "Invalid MAC")" 0 0
         done
         if [ ${RET} -eq 0 ]; then
@@ -643,13 +643,13 @@ function cmdlineMenu() {
           writeConfigKey "cmdline.netif_num" "${N}" "${USER_CONFIG_FILE}"
           MAC="${MACF:0:2}:${MACF:2:2}:${MACF:4:2}:${MACF:6:2}:${MACF:8:2}:${MACF:10:2}"
           ip link set dev ${ETHX[$(expr ${N} - 1)]} address "${MAC}" 2>&1 |
-            dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+            dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
               --progressbox "$(TEXT "Changing MAC")" 20 70
           /etc/init.d/S41dhcpcd restart 2>&1 |
-            dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+            dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
               --progressbox "$(TEXT "Renewing IP")" 20 70
           # IP=`ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*/\1: \2 /p' | head -1`
-          dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
             --yesno "$(TEXT "Continue to custom MAC?")" 0 0
           [ $? -ne 0 ] && break
         fi
@@ -660,7 +660,7 @@ function cmdlineMenu() {
       for KEY in ${!CMDLINE[@]}; do
         ITEMS+="${KEY}: ${CMDLINE[$KEY]}\n"
       done
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
         --msgbox "${ITEMS}" 0 0
       ;;
     m)
@@ -668,7 +668,7 @@ function cmdlineMenu() {
       while IFS=': ' read KEY VALUE; do
         ITEMS+="${KEY}: ${VALUE}\n"
       done < <(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].cmdline")
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Cmdline")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
         --msgbox "${ITEMS}" 0 0
       ;;
     e) return ;;
@@ -692,19 +692,19 @@ function synoinfoMenu() {
 
   # menu loop
   while true; do
-    dialog --backtitle "$(backtitle)" \
+    dialog --backtitle "$(backtitle)" --colors \
       --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "$(<${TMP_PATH}/resp)" in
     a)
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Synoinfo")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Synoinfo")" \
         --inputbox "$(TEXT "Type a name of synoinfo entry")" 0 0 \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && continue
       NAME="$(<"${TMP_PATH}/resp")"
       [ -z "${NAME}" ] && continue
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Synoinfo")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Synoinfo")" \
         --inputbox "$(printf "$(TEXT "Type a value of '%s' synoinfo entry")" "${NAME}")" 0 0 "${SYNOINFO[${NAME}]}" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && continue
@@ -715,7 +715,7 @@ function synoinfoMenu() {
       ;;
     d)
       if [ ${#SYNOINFO[@]} -eq 0 ]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Synoinfo")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Synoinfo")" \
           --msgbox "$(TEXT "No synoinfo entries to remove")" 0 0
         continue
       fi
@@ -723,7 +723,7 @@ function synoinfoMenu() {
       for I in ${!SYNOINFO[@]}; do
         echo "\"${I}\" \"${SYNOINFO[${I}]}\" \"off\"" >>"${TMP_PATH}/opts"
       done
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Synoinfo")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Synoinfo")" \
         --checklist "$(TEXT "Select synoinfo entry to remove")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
@@ -740,7 +740,7 @@ function synoinfoMenu() {
       for KEY in ${!SYNOINFO[@]}; do
         ITEMS+="${KEY}: ${SYNOINFO[$KEY]}\n"
       done
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Synoinfo")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Synoinfo")" \
         --msgbox "${ITEMS}" 0 0
       ;;
     e) return ;;
@@ -795,7 +795,7 @@ function extractDsmFiles() {
     STATUS=$(curl -k -w "%{http_code}" -L "${PATURL}" -o "${PAT_PATH}" --progress-bar)
     if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
       rm "${PAT_PATH}"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
         --msgbox "$(TEXT "Check internet or cache disk space")" 0 0
       return 1
     fi
@@ -803,7 +803,7 @@ function extractDsmFiles() {
 
   echo -n "$(printf "$(TEXT "Checking hash of %s: ")" "${PAT_FILE}")"
   if [ "$(md5sum ${PAT_PATH} | awk '{print $1}')" != "${PATSUM}" ]; then
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "md5 Hash of pat not match, try again!")" 0 0
     rm -f ${PAT_PATH}
     return 1
@@ -829,7 +829,7 @@ function extractDsmFiles() {
     isencrypted="yes"
     ;;
   *)
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "Could not determine if pat file is encrypted or not, maybe corrupted, try again!")" 0 0
     return 1
     ;;
@@ -857,7 +857,7 @@ function extractDsmFiles() {
         STATUS=$(curl -k -w "%{http_code}" -L "${OLDPATURL}" -o "${OLDPAT_PATH}" --progress-bar)
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           rm "${OLDPAT_PATH}"
-          dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
             --msgbox "$(TEXT "Check internet or cache disk space")" 0 0
           return 1
         fi
@@ -869,7 +869,7 @@ function extractDsmFiles() {
       if [ $? -ne 0 ]; then
         rm -f "${OLDPAT_PATH}"
         rm -rf "${RAMDISK_PATH}"
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
           --textbox "${LOG_FILE}" 0 0
         return 1
       fi
@@ -893,7 +893,7 @@ function extractDsmFiles() {
     echo "$(TEXT "Extracting...")"
     tar -xf "${PAT_PATH}" -C "${UNTAR_PAT_PATH}" >"${LOG_FILE}" 2>&1
     if [ $? -ne 0 ]; then
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
         --textbox "${LOG_FILE}" 0 0
     fi
   fi
@@ -901,7 +901,7 @@ function extractDsmFiles() {
     [ ! -f ${UNTAR_PAT_PATH}/GRUB_VER ] ||
     [ ! -f ${UNTAR_PAT_PATH}/zImage ] ||
     [ ! -f ${UNTAR_PAT_PATH}/rd.gz ]; then
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "pat Invalid, try again!")" 0 0
     return 1
   fi
@@ -949,7 +949,7 @@ function make() {
   while IFS=': ' read ADDON PARAM; do
     [ -z "${ADDON}" ] && continue
     if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
         --msgbox "$(printf "$(TEXT "Addon %s not found!")" "${ADDON}")" 0 0
       return 1
     fi
@@ -962,14 +962,14 @@ function make() {
 
   /opt/arpl/zimage-patch.sh
   if [ $? -ne 0 ]; then
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "zImage not patched:\n")$(<"${LOG_FILE}")" 0 0
     return 1
   fi
 
   /opt/arpl/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Error")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "Ramdisk not patched:\n")$(<"${LOG_FILE}")" 0 0
     return 1
   fi
@@ -996,7 +996,7 @@ function advancedMenu() {
     if loaderIsConfigured; then
       echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >>"${TMP_PATH}/menu"
       if [ "${DIRECTBOOT}" = "false" ]; then
-        echo "w \"$(TEXT "Time of timeout of wait ip in boot:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
+        echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\"" >>"${TMP_PATH}/menu"
         echo "k \"$(TEXT "kernel switching method:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
       fi
     fi
@@ -1022,7 +1022,7 @@ function advancedMenu() {
     echo "g \"$(TEXT "Show dsm logo:") \Z4${DSMLOGO}\Zn\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
       --default-item "${NEXT}" --menu "$(TEXT "Choose the option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
@@ -1040,14 +1040,14 @@ function advancedMenu() {
       ;;
     w)
       ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
-        --default-item "${BOOTIPWAIT}" --no-items --menu "$(TEXT "Choose a waiting time(seconds)")" 0 0 0 ${ITEMS} \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
+        --default-item "${BOOTWAIT}" --no-items --menu "$(TEXT "Choose a waiting time(seconds)")" 0 0 0 ${ITEMS} \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
       resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
       [ -z "${resp}" ] && return
-      BOOTIPWAIT=${resp}
-      writeConfigKey "bootipwait" "${BOOTIPWAIT}" "${USER_CONFIG_FILE}"
+      BOOTWAIT=${resp}
+      writeConfigKey "bootwait" "${BOOTWAIT}" "${USER_CONFIG_FILE}"
       NEXT="e"
       ;;
     k)
@@ -1116,14 +1116,14 @@ function advancedMenu() {
       MSG+="\n"
       MSG+="$(printf "$(TEXT "\nTotal of ports: %s\n")" "${NUMPORTS}")"
       MSG+="$(TEXT "\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected.")"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "${MSG}" 0 0
       ;;
     c)
       PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
       PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
       MSG="$(TEXT "pat: (editable)")"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --form "${MSG}" 10 110 2 "URL" 1 1 "${PATURL}" 1 5 100 0 "MD5" 2 1 "${PATSUM}" 2 5 100 0 \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && return
@@ -1141,7 +1141,7 @@ function advancedMenu() {
       MSG+="$(TEXT "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\n")"
       MSG+="$(TEXT "Therefore, please insert all disks before continuing.\n")"
       MSG+="$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --yesno "${MSG}" 0 0
       [ $? -ne 0 ] && return
       (
@@ -1154,10 +1154,10 @@ function advancedMenu() {
           umount "${I}"
         done
         rm -rf "${TMP_PATH}/sdX1"
-      ) | dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Removing ...")" 20 70
       MSG="$(TEXT "Remove VERSION file for all disks completed.")"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "${MSG}" 0 0
       ;;
     f)
@@ -1167,17 +1167,17 @@ function advancedMenu() {
         echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
         echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
       done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd|/dev/nvme" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --checklist "$(TEXT "Advanced")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
       RESP=$(<"${TMP_PATH}/resp")
       [ -z "${RESP}" ] && return
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --yesno "$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")" 0 0
       [ $? -ne 0 ] && return
       if [ $(ls /dev/md* | wc -l) -gt 0 ]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --yesno "$(TEXT "Warning:\nThe current hds is in raid, do you still want to format them?")" 0 0
         [ $? -ne 0 ] && return
         for I in $(ls /dev/md*); do
@@ -1188,9 +1188,9 @@ function advancedMenu() {
         for I in ${RESP}; do
           mkfs.ext4 -T largefile4 "${I}"
         done
-      ) | dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Formatting ...")" 20 70
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "Formatting is complete.")" 0 0
       ;;
     x)
@@ -1207,12 +1207,12 @@ function advancedMenu() {
       done
       rm -rf "${TMP_PATH}/sdX1"
       if [ -z "${SHADOW_FILE}" ]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "The installed Syno system not found in the currently inserted disks!")" 0 0
         return
       fi
       ITEMS="$(cat "${SHADOW_FILE}" | awk -F ':' '{if ($2 != "*" && $2 != "!!") {print $1;}}')"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --no-items --menu "$(TEXT "Choose a user name")" 0 0 0 ${ITEMS} \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
@@ -1220,13 +1220,13 @@ function advancedMenu() {
       [ -z "${USER}" ] && return
       OLDPASSWD="$(cat "${SHADOW_FILE}" | grep "^${USER}:" | awk -F ':' '{print $2}')"
       while true; do
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --inputbox "$(printf "$(TEXT "Type a new password for user '%s'")" "${USER}")" 0 0 "${CMDLINE[${NAME}]}" \
           2>${TMP_PATH}/resp
         [ $? -ne 0 ] && break 2
         VALUE="$(<"${TMP_PATH}/resp")"
         [ -n "${VALUE}" ] && break
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "Invalid password")" 0 0
       done
       NEWPASSWD="$(python -c "import crypt,getpass;pw=\"${VALUE}\";print(crypt.crypt(pw))")"
@@ -1239,19 +1239,19 @@ function advancedMenu() {
           umount "${I}"
         done
         rm -rf "${TMP_PATH}/sdX1"
-      ) | dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Resetting ...")" 20 70
       [ -f "${SHADOW_FILE}" ] && rm -rf "${SHADOW_FILE}"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "Password reset completed.")" 0 0
       # dialog --backtitle "`backtitle`" --title "$(TEXT "Advanced")" \
       #   --msgbox "$(TEXT "You came early, this function has not been implemented yet, hahaha!")" 0 0
       ;;
     p)
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
       [ $? -ne 0 ] && return
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --infobox "$(TEXT "Saving ...")" 0 0
       RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
       mkdir -p "${RDXZ_PATH}"
@@ -1266,16 +1266,16 @@ function advancedMenu() {
         find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 >"${ARPL_RAMDISK_FILE}"
       ) || true
       rm -rf "${RDXZ_PATH}"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox ""$(TEXT "Save is complete.")"" 0 0
       ;;
     d)
       if ! tty | grep -q "/dev/pts"; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
         return
       fi
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\n(saved in /mnt/p3/users/)")" 0 0
       TMP_UP_PATH="${TMP_PATH}/users"
       rm -rf "${TMP_UP_PATH}"
@@ -1290,31 +1290,31 @@ function advancedMenu() {
       done
       popd
       if [ ${RET} -ne 0 -o -z "${USER_FILE}" ]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "Not a valid dts file, please try again!")" 0 0
       else
         mkdir -p "${USER_UP_PATH}"
         cp -f "${USER_FILE}" "${USER_UP_PATH}/${MODEL}.dts"
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
       fi
       DIRTY=1
       ;;
     b)
       if ! tty | grep -q "/dev/pts"; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
         return
       fi
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
       [ $? -ne 0 ] && return
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --infobox "$(TEXT "Backuping...")" 0 0
       rm -f /var/www/data/backup.img.gz # thttpd root path
       dd if="${LOADER_DISK}" bs=1M conv=fsync | gzip >/var/www/data/backup.img.gz
       if [ $? -ne 0]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "Failed to generate backup. There may be insufficient memory. Please clear the cache and try again!")" 0 0
         return
       fi
@@ -1324,22 +1324,22 @@ function advancedMenu() {
         echo "            ↑                  " >>${TMP_PATH}/resp
         echo "$(TEXT "Click on the address above to download.")" >>${TMP_PATH}/resp
         echo "$(TEXT "Please confirm the completion of the download before closing this window.")" >>${TMP_PATH}/resp
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --editbox "${TMP_PATH}/resp" 10 100
       else # ssh
         sz -be /var/www/data/backup.img.gz
       fi
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "backup is complete.")" 0 0
       rm -f /var/www/data/backup.img.gz
       ;;
     r)
       if ! tty | grep -q "/dev/pts"; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
         return
       fi
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --yesno "$(TEXT "Please upload the backup file.\nCurrently, zip(github) and img.gz(backup) compressed file formats are supported.")" 0 0
       [ $? -ne 0 ] && return
       IFTOOL=""
@@ -1356,16 +1356,16 @@ function advancedMenu() {
       done
       popd
       if [ -z "${IFTOOL}" -o -z "${TMP_UP_PATH}/${USER_FILE}" ]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(printf "$(TEXT "Not a valid .zip/.img.gz file, please try again!")" "${USER_FILE}")" 0 0
       else
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the arpl. Do you want to continue?")" 0 0
         [ $? -ne 0 ] && (
           rm -f "${LOADER_DISK}"
           return
         )
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --infobox "$(TEXT "Writing...")" 0 0
         umount "${BOOTLOADER_PATH}" "${SLPART_PATH}" "${CACHE_PATH}"
         if [ "${IFTOOL}" = "zip" ]; then
@@ -1373,7 +1373,7 @@ function advancedMenu() {
         elif [ "${IFTOOL}" = "gzip" ]; then
           gzip -dc "${TMP_UP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
         fi
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --yesno "$(printf "$(TEXT "Restore bootloader disk with success to %s!\nReboot?")" "${USER_FILE}")" 0 0
         [ $? -ne 0 ] && continue
         reboot
@@ -1381,7 +1381,7 @@ function advancedMenu() {
       fi
       ;;
     o)
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --yesno "$(TEXT "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?")" 0 0
       [ $? -ne 0 ] && return
       (
@@ -1390,9 +1390,9 @@ function advancedMenu() {
         source ~/.bashrc
         opkg update
         #opkg install python3 python3-pip
-      ) | dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "opkg installing ...")" 20 70
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Advanced")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "opkg install is complete. Please reconnect to SSH/web, or execute 'source ~/.bashrc'")" 0 0
       ;;
     g)
@@ -1408,7 +1408,7 @@ function advancedMenu() {
 ###############################################################################
 # Try to recovery a DSM already installed
 function tryRecoveryDSM() {
-  dialog --backtitle "$(backtitle)" --title "$(TEXT "Try recovery DSM")" \
+  dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Try recovery DSM")" \
     --infobox "$(TEXT "Trying to recovery a DSM installed system")" 0 0
   if findAndMountDSMRoot; then
     MODEL=""
@@ -1445,14 +1445,14 @@ function tryRecoveryDSM() {
             SMALLNUM=${smallfixnumber}
             writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
             writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
-            dialog --backtitle "$(backtitle)" --title "$(TEXT "Try recovery DSM")" \
+            dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Try recovery DSM")" \
               --msgbox "${MSG}" 0 0
           fi
         fi
       fi
     fi
   else
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Try recovery DSM")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Try recovery DSM")" \
       --msgbox "$(TEXT "Unfortunately I couldn't mount the DSM partition!")" 0 0
   fi
 }
@@ -1461,13 +1461,13 @@ function tryRecoveryDSM() {
 # Permits user edit the user config
 function editUserConfig() {
   while true; do
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Edit with caution")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Edit with caution")" \
       --editbox "${USER_CONFIG_FILE}" 0 0 2>"${TMP_PATH}/userconfig"
     [ $? -ne 0 ] && return
     mv "${TMP_PATH}/userconfig" "${USER_CONFIG_FILE}"
     ERRORS=$(yq eval "${USER_CONFIG_FILE}" 2>&1)
     [ $? -eq 0 ] && break
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Edit with caution")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Edit with caution")" \
       --msgbox "${ERRORS}" 0 0
   done
   OLDMODEL=${MODEL}
@@ -1489,7 +1489,7 @@ function editUserConfig() {
 ###############################################################################
 # Calls boot.sh to boot into DSM kernel/ramdisk
 function boot() {
-  [ ${DIRTY} -eq 1 ] && dialog --backtitle "$(backtitle)" --title "$(TEXT "Alert")" \
+  [ ${DIRTY} -eq 1 ] && dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Alert")" \
     --yesno "$(TEXT "Config changed, would you like to rebuild the loader?")" 0 0
   if [ $? -eq 0 ]; then
     make || return
@@ -1501,7 +1501,7 @@ function boot() {
 # Shows language to user choose one
 function languageMenu() {
   ITEMS="$(ls /usr/share/locale)"
-  dialog --backtitle "$(backtitle)" \
+  dialog --backtitle "$(backtitle)" --colors \
     --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a language")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
   resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
@@ -1515,7 +1515,7 @@ function languageMenu() {
 # Shows available keymaps to user choose one
 function keymapMenu() {
   OPTIONS="azerty bepo carpalx colemak dvorak fgGIod neo olpc qwerty qwertz"
-  dialog --backtitle "$(backtitle)" \
+  dialog --backtitle "$(backtitle)" --colors \
     --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a layout")" 0 0 0 ${OPTIONS} \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
@@ -1527,7 +1527,7 @@ function keymapMenu() {
     cd /usr/share/keymaps/i386/${LAYOUT}
     ls *.map.gz
   )
-  dialog --backtitle "$(backtitle)" \
+  dialog --backtitle "$(backtitle)" --colors \
     --default-item "${KEYMAP}" --no-items --menu "$(TEXT "Choice a keymap")" 0 0 0 ${OPTIONS} \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
@@ -1549,7 +1549,7 @@ function downloadExts() {
   [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
   T="$(printf "$(TEXT "Update %s")" "${1}")"
 
-  dialog --backtitle "$(backtitle)" --title "${T}" \
+  dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Checking last version")" 0 0
   # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/arpl-addons/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
   # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
@@ -1558,35 +1558,35 @@ function downloadExts() {
   [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
   if [ -z "${TAG}" ]; then
     if [ ! "${5}" = "0" ]; then
-      dialog --backtitle "$(backtitle)" --title "${T}" \
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
         --infobox "$(TEXT "Error checking new version")" 0 0
     else
-      dialog --backtitle "$(backtitle)" --title "${T}" \
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
         --msgbox "$(TEXT "Error checking new version")" 0 0
     fi
     return 1
   fi
   if [ "${2}" = "${TAG}" ]; then
     if [ ! "${5}" = "0" ]; then
-      dialog --backtitle "$(backtitle)" --title "${T}" \
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
         --infobox "$(TEXT "No new version.")" 0 0
       return 1
     else
-      dialog --backtitle "$(backtitle)" --title "${T}" \
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
         --yesno "$(printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${2}")" 0 0
       [ $? -ne 0 ] && return 1
     fi
   fi
-  dialog --backtitle "$(backtitle)" --title "${T}" \
+  dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Downloading last version")" 0 0
   rm -f "${TMP_PATH}/${4}.zip"
   STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
   if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
     if [ ! "${5}" = "0" ]; then
-      dialog --backtitle "$(backtitle)" --title "${T}" \
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
         --infobox "$(TEXT "Error downloading new version")" 0 0
     else
-      dialog --backtitle "$(backtitle)" --title "${T}" \
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
         --msgbox "$(TEXT "Error downloading new version")" 0 0
     fi
     return 1
@@ -1597,18 +1597,18 @@ function downloadExts() {
 # 1 - ext name
 function updateArpl() {
   T="$(printf "$(TEXT "Update %s")" "${1}")"
-  dialog --backtitle "$(backtitle)" --title "${T}" \
+  dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Extracting last version")" 0 0
   unzip -oq "${TMP_PATH}/update.zip" -d "${TMP_PATH}/"
   if [ $? -ne 0 ]; then
-    dialog --backtitle "$(backtitle)" --title "${T}" \
+    dialog --backtitle "$(backtitle)" --colors --title "${T}" \
       --msgbox "$(TEXT "Error extracting update file")" 0 0
     return 1
   fi
   # Check checksums
   (cd /tmp && sha256sum --status -c sha256sum)
   if [ $? -ne 0 ]; then
-    dialog --backtitle "$(backtitle)" --title "${T}" \
+    dialog --backtitle "$(backtitle)" --colors --title "${T}" \
       --msgbox "$(TEXT "Checksum do not match!")" 0 0
     return 1
   fi
@@ -1617,12 +1617,12 @@ function updateArpl() {
     chmod +x "${TMP_PATH}/update-check.sh"
     ${TMP_PATH}/update-check.sh
     if [ $? -ne 0 ]; then
-      dialog --backtitle "$(backtitle)" --title "${T}" \
+      dialog --backtitle "$(backtitle)" --colors --title "${T}" \
         --msgbox "$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")" 0 0
       return 1
     fi
   fi
-  dialog --backtitle "$(backtitle)" --title "${T}" \
+  dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Installing new files")" 0 0
   # Process update-list.yml
   while read F; do
@@ -1639,7 +1639,7 @@ function updateArpl() {
       mv "${TMP_PATH}/$(basename "${KEY}")" "${VALUE}"
     fi
   done < <(readConfigMap "replace" "${TMP_PATH}/update-list.yml")
-  dialog --backtitle "$(backtitle)" --title "${T}" \
+  dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --msgbox "$(printf "$(TEXT "Arpl updated with success to %s!\nReboot?")" "${TAG}")" 0 0
   arpl-reboot.sh config
 }
@@ -1648,13 +1648,13 @@ function updateArpl() {
 # 2 - silent
 function updateExts() {
   T="$(printf "$(TEXT "Update %s")" "${1}")"
-  dialog --backtitle "$(backtitle)" --title "${T}" \
+  dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Extracting last version")" 0 0
   if [ "${1}" = "addons" ]; then
     rm -rf "${TMP_PATH}/addons"
     mkdir -p "${TMP_PATH}/addons"
     unzip "${TMP_PATH}/addons.zip" -d "${TMP_PATH}/addons" >/dev/null 2>&1
-    dialog --backtitle "$(backtitle)" --title "${T}" \
+    dialog --backtitle "$(backtitle)" --colors --title "${T}" \
       --infobox "$(printf "$(TEXT "Installing new %s")" "${1}")" 0 0
     rm -Rf "${ADDONS_PATH}/"*
     [ -f "${TMP_PATH}/addons/VERSION" ] && cp -f "${TMP_PATH}/addons/VERSION" "${ADDONS_PATH}/"
@@ -1683,10 +1683,10 @@ function updateExts() {
   fi
   DIRTY=1
   if [ ! "${2}" = "0" ]; then
-    dialog --backtitle "$(backtitle)" --title "${T}" \
+    dialog --backtitle "$(backtitle)" --colors --title "${T}" \
       --infobox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
   else
-    dialog --backtitle "$(backtitle)" --title "${T}" \
+    dialog --backtitle "$(backtitle)" --colors --title "${T}" \
       --msgbox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
   fi
 }
@@ -1708,7 +1708,7 @@ function updateMenu() {
     echo "u \"$(TEXT "Local upload")\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
-    dialog --backtitle "$(backtitle)" \
+    dialog --backtitle "$(backtitle)" --colors \
       --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -1768,7 +1768,7 @@ function updateMenu() {
     p)
       RET=1
       while true; do
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Update")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Update")" \
           --inputbox "$(TEXT "Please enter a proxy server url")" 0 0 "${PROXY}" \
           2>${TMP_PATH}/resp
         RET=$?
@@ -1779,7 +1779,7 @@ function updateMenu() {
         elif [[ "${PROXYSERVER}" =~ "^(https?|ftp)://[^\s/$.?#].[^\s]*$" ]]; then
           break
         else
-          dialog --backtitle "$(backtitle)" --title "$(TEXT "Update")" \
+          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Update")" \
             --yesno "$(TEXT "Invalid proxy server url, continue?")" 0 0
           RET=$?
           [ ${RET} -eq 0 ] && break
@@ -1790,7 +1790,7 @@ function updateMenu() {
 
     u)
       if ! tty | grep -q "/dev/pts"; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Update")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Update")" \
           --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
         return
       fi
@@ -1800,7 +1800,7 @@ function updateMenu() {
       MSG+="$(TEXT "Upload addons.zip will update Addons.\n")"
       MSG+="$(TEXT "Upload modules.zip will update Modules.\n")"
       MSG+="$(TEXT "Upload rp-lkms.zip will update LKMs.\n")"
-      dialog --backtitle "$(backtitle)" --title "$(TEXT "Update")" \
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Update")" \
         --msgbox "${MSG}" 0 0
       EXTS=("update.zip" "addons.zip" "modules.zip" "rp-lkms.zip")
       TMP_UP_PATH="${TMP_PATH}/users"
@@ -1817,7 +1817,7 @@ function updateMenu() {
       done
       popd
       if [ -z "${USER_FILE}" ]; then
-        dialog --backtitle "$(backtitle)" --title "$(TEXT "Update")" \
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Update")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       else
         rm "${TMP_PATH}/${USER_FILE}"
@@ -1831,7 +1831,7 @@ function updateMenu() {
         elif [ "${USER_FILE}" = "rp-lkms.zip" ]; then
           updateExts "LKMs" "0"
         else
-          dialog --backtitle "$(backtitle)" --title "$(TEXT "Update")" \
+          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Update")" \
             --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
         fi
       fi
@@ -1879,7 +1879,7 @@ while true; do
   echo "p \"$(TEXT "Update menu")\"" >>"${TMP_PATH}/menu"
   echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
-  dialog --backtitle "$(backtitle)" \
+  dialog --backtitle "$(backtitle)" --colors \
     --default-item ${NEXT} --menu "$(TEXT "Choose the option")" 0 0 0 --file "${TMP_PATH}/menu" \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && break
@@ -1928,7 +1928,7 @@ while true; do
     NEXT="m"
     ;;
   c)
-    dialog --backtitle "$(backtitle)" --title "$(TEXT "Cleaning")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cleaning")" \
       --prgbox "rm -rfv \"${CACHE_PATH}/dl\"" 0 0
     NEXT="d"
     ;;
@@ -1939,7 +1939,7 @@ while true; do
   e)
     NEXT="e"
     while true; do
-      dialog --backtitle "$(backtitle)" \
+      dialog --backtitle "$(backtitle)" --colors \
         --default-item ${NEXT} --menu "$(TEXT "Choose a action")" 0 0 0 \
         p "$(TEXT "Poweroff")" \
         r "$(TEXT "Reboot")" \

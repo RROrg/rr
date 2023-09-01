@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-24 20:08+0800\n"
+"POT-Creation-Date: 2023-09-01 08:27+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,47 +89,55 @@ msgstr ""
 msgid "Reboot to boot directly in DSM"
 msgstr ""
 
-#: boot.sh:180 init.sh:179
+#: boot.sh:178 init.sh:179
 msgid "Detected %s network cards."
 msgstr ""
 
-#: boot.sh:181 init.sh:180
+#: boot.sh:179 init.sh:180
 msgid "Checking Connect."
 msgstr ""
 
-#: boot.sh:199
+#: boot.sh:197
 msgid "Waiting IP.(For reference only)"
 msgstr ""
 
-#: boot.sh:206 init.sh:205
+#: boot.sh:204 init.sh:205
 msgid "DOWN"
 msgstr ""
 
-#: boot.sh:210 init.sh:209
+#: boot.sh:208 init.sh:209
 msgid "NOT CONNECTED"
 msgstr ""
 
-#: boot.sh:214 init.sh:213
+#: boot.sh:212 init.sh:213
 msgid "TIMEOUT"
 msgstr ""
 
-#: boot.sh:220
+#: boot.sh:218
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr ""
 
-#: boot.sh:229
+#: boot.sh:230
+msgid "%2ds (accessing arpl will interrupt boot)"
+msgstr ""
+
+#: boot.sh:234
+msgid "A new access is connected, the boot process is interrupted."
+msgstr ""
+
+#: boot.sh:245
 msgid "Loading DSM kernel..."
 msgstr ""
 
-#: boot.sh:233
+#: boot.sh:249
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr ""
 
-#: boot.sh:238
+#: boot.sh:254
 msgid "Booting..."
 msgstr ""
 
-#: boot.sh:240
+#: boot.sh:256
 msgid ""
 "[This interface will not be operational. Please use the http://find.synology."
 "com/ find DSM and connect.]"
@@ -265,7 +273,7 @@ msgstr ""
 msgid "Reconfiguring Synoinfo, Addons and Modules"
 msgstr ""
 
-#: menu.sh:268 menu.sh:414 menu.sh:555 menu.sh:696 menu.sh:1700
+#: menu.sh:268 menu.sh:414 menu.sh:555 menu.sh:696 menu.sh:1712
 msgid "Choose a option"
 msgstr ""
 
@@ -289,8 +297,8 @@ msgstr ""
 msgid "Upload a external addon"
 msgstr ""
 
-#: menu.sh:274 menu.sh:421 menu.sh:551 menu.sh:691 menu.sh:1023 menu.sh:1708
-#: menu.sh:1876 menu.sh:1944
+#: menu.sh:274 menu.sh:421 menu.sh:551 menu.sh:691 menu.sh:1023 menu.sh:1709
+#: menu.sh:1880 menu.sh:1948
 msgid "Exit"
 msgstr ""
 
@@ -320,7 +328,7 @@ msgstr ""
 msgid "Select addon to remove"
 msgstr ""
 
-#: menu.sh:355 menu.sh:1275 menu.sh:1306 menu.sh:1339 menu.sh:1790
+#: menu.sh:355 menu.sh:1275 menu.sh:1306 menu.sh:1339 menu.sh:1794
 msgid "This feature is only available when accessed via web/ssh."
 msgstr ""
 
@@ -328,7 +336,7 @@ msgstr ""
 msgid "Please upload the *.addons file."
 msgstr ""
 
-#: menu.sh:373 menu.sh:526 menu.sh:1817 menu.sh:1831
+#: menu.sh:373 menu.sh:526 menu.sh:1821 menu.sh:1835
 msgid "Not a valid file, please try again!"
 msgstr ""
 
@@ -622,7 +630,7 @@ msgstr ""
 msgid "Addon %s not found!"
 msgstr ""
 
-#: menu.sh:979 menu.sh:1927
+#: menu.sh:979 menu.sh:1931
 msgid "Cleaning"
 msgstr ""
 
@@ -639,7 +647,7 @@ msgid "Switch direct boot:"
 msgstr ""
 
 #: menu.sh:999
-msgid "Time of timeout of wait ip in boot:"
+msgid "Timeout of boot wait:"
 msgstr ""
 
 #: menu.sh:1000
@@ -714,7 +722,7 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: menu.sh:1026 menu.sh:1879
+#: menu.sh:1026 menu.sh:1883
 msgid "Choose the option"
 msgstr ""
 
@@ -914,7 +922,7 @@ msgstr ""
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr ""
 
-#: menu.sh:1505 menu.sh:1870
+#: menu.sh:1505 menu.sh:1874
 msgid "Choose a language"
 msgstr ""
 
@@ -926,9 +934,9 @@ msgstr ""
 msgid "Choice a keymap"
 msgstr ""
 
-#: menu.sh:1550 menu.sh:1599 menu.sh:1650 menu.sh:1713 menu.sh:1717
-#: menu.sh:1721 menu.sh:1725 menu.sh:1733 menu.sh:1741 menu.sh:1749
-#: menu.sh:1757
+#: menu.sh:1550 menu.sh:1599 menu.sh:1650 menu.sh:1717 menu.sh:1721
+#: menu.sh:1725 menu.sh:1729 menu.sh:1737 menu.sh:1745 menu.sh:1753
+#: menu.sh:1761
 msgid "Update %s"
 msgstr ""
 
@@ -990,23 +998,23 @@ msgstr ""
 msgid "%s updated with success!"
 msgstr ""
 
-#: menu.sh:1701
+#: menu.sh:1700
 msgid "Update all"
 msgstr ""
 
-#: menu.sh:1702
+#: menu.sh:1701
 msgid "Update arpl"
 msgstr ""
 
-#: menu.sh:1703
+#: menu.sh:1702
 msgid "Update addons"
 msgstr ""
 
-#: menu.sh:1704
+#: menu.sh:1703
 msgid "Update modules"
 msgstr ""
 
-#: menu.sh:1705
+#: menu.sh:1704
 msgid "Update LKMs"
 msgstr ""
 
@@ -1014,129 +1022,129 @@ msgstr ""
 msgid "Set proxy server"
 msgstr ""
 
-#: menu.sh:1707
+#: menu.sh:1708
 msgid "Local upload"
 msgstr ""
 
-#: menu.sh:1713 menu.sh:1741
+#: menu.sh:1717 menu.sh:1745
 msgid "addons"
 msgstr ""
 
-#: menu.sh:1717 menu.sh:1749
+#: menu.sh:1721 menu.sh:1753
 msgid "modules"
 msgstr ""
 
-#: menu.sh:1721 menu.sh:1757
+#: menu.sh:1725 menu.sh:1761
 msgid "LKMs"
 msgstr ""
 
-#: menu.sh:1725 menu.sh:1733
+#: menu.sh:1729 menu.sh:1737
 msgid "arpl"
 msgstr ""
 
-#: menu.sh:1767 menu.sh:1778 menu.sh:1789 menu.sh:1799 menu.sh:1816
-#: menu.sh:1830
+#: menu.sh:1771 menu.sh:1782 menu.sh:1793 menu.sh:1803 menu.sh:1820
+#: menu.sh:1834
 msgid "Update"
 msgstr ""
 
-#: menu.sh:1768
+#: menu.sh:1772
 msgid "Please enter a proxy server url"
 msgstr ""
 
-#: menu.sh:1779
+#: menu.sh:1783
 msgid "Invalid proxy server url, continue?"
 msgstr ""
 
-#: menu.sh:1794
+#: menu.sh:1798
 msgid ""
 "Please keep the attachment name consistent with the attachment name on "
 "Github.\\n"
 msgstr ""
 
-#: menu.sh:1795
+#: menu.sh:1799
 msgid "Upload update.zip will update arpl.\\n"
 msgstr ""
 
-#: menu.sh:1796
+#: menu.sh:1800
 msgid "Upload addons.zip will update Addons.\\n"
 msgstr ""
 
-#: menu.sh:1797
+#: menu.sh:1801
 msgid "Upload modules.zip will update Modules.\\n"
 msgstr ""
 
-#: menu.sh:1798
+#: menu.sh:1802
 msgid "Upload rp-lkms.zip will update LKMs.\\n"
 msgstr ""
 
-#: menu.sh:1851
+#: menu.sh:1855
 msgid "Choose a model"
 msgstr ""
 
-#: menu.sh:1853
+#: menu.sh:1857
 msgid "Choose a version"
 msgstr ""
 
-#: menu.sh:1855
+#: menu.sh:1859
 msgid "Addons menu"
 msgstr ""
 
-#: menu.sh:1856
+#: menu.sh:1860
 msgid "Modules menu"
 msgstr ""
 
-#: menu.sh:1857
+#: menu.sh:1861
 msgid "Cmdline menu"
 msgstr ""
 
-#: menu.sh:1858
+#: menu.sh:1862
 msgid "Synoinfo menu"
 msgstr ""
 
-#: menu.sh:1861
+#: menu.sh:1865
 msgid "Advanced menu"
 msgstr ""
 
-#: menu.sh:1864
+#: menu.sh:1868
 msgid "Build the loader"
 msgstr ""
 
-#: menu.sh:1868
+#: menu.sh:1872
 msgid "Boot the loader"
 msgstr ""
 
-#: menu.sh:1871
+#: menu.sh:1875
 msgid "Choose a keymap"
 msgstr ""
 
-#: menu.sh:1873
+#: menu.sh:1877
 msgid "Clean disk cache"
 msgstr ""
 
-#: menu.sh:1875
+#: menu.sh:1879
 msgid "Update menu"
 msgstr ""
 
-#: menu.sh:1939
+#: menu.sh:1943
 msgid "Choose a action"
 msgstr ""
 
-#: menu.sh:1940
+#: menu.sh:1944
 msgid "Poweroff"
 msgstr ""
 
-#: menu.sh:1941
+#: menu.sh:1945
 msgid "Reboot"
 msgstr ""
 
-#: menu.sh:1942
+#: menu.sh:1946
 msgid "Reboot to arpl"
 msgstr ""
 
-#: menu.sh:1943
+#: menu.sh:1947
 msgid "Back to shell"
 msgstr ""
 
-#: menu.sh:1969
+#: menu.sh:1973
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr ""
