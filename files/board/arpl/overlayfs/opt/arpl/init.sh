@@ -78,6 +78,7 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "dsmlogo" "true" "${USER_CONFIG_FILE}"
   writeConfigKey "directboot" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "notsetmacs" "false" "${USER_CONFIG_FILE}"
+  writeConfigKey "prerelease" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "bootwait" "10" "${USER_CONFIG_FILE}"
   writeConfigKey "kernelway" "power" "${USER_CONFIG_FILE}"
   writeConfigKey "model" "" "${USER_CONFIG_FILE}"
