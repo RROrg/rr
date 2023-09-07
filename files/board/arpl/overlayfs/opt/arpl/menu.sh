@@ -30,6 +30,7 @@ LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
 DIRECTBOOT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 NOTSETMACS="$(readConfigKey "notsetmacs" "${USER_CONFIG_FILE}")"
+PRERELEASE="$(readConfigKey "prerelease" "${USER_CONFIG_FILE}")"
 BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
 KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
@@ -1553,10 +1554,14 @@ function downloadExts() {
 
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --infobox "$(TEXT "Checking last version")" 0 0
-  # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/arpl-addons/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-  # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
-  LATESTURL="$(curl -skL -w %{url_effective} -o /dev/null "${PROXY}${3}/releases/latest")"
-  TAG="${LATESTURL##*/}"
+  if [ "${PRERELEASE}" = "true" ]; then
+    TAG="$(curl -skL "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | head -1 | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/')"
+  else
+    # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/arpl-addons/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
+    # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
+    LATESTURL="$(curl -skL -w %{url_effective} -o /dev/null "${PROXY}${3}/releases/latest")"
+    TAG="${LATESTURL##*/}"
+  fi
   [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
   if [ -z "${TAG}" ]; then
     if [ ! "${5}" = "0" ]; then
@@ -1708,6 +1713,7 @@ function updateMenu() {
       echo "p \"$(TEXT "Set proxy server")\"" >>"${TMP_PATH}/menu"
     fi
     echo "u \"$(TEXT "Local upload")\"" >>"${TMP_PATH}/menu"
+    echo "b \"$(TEXT "Pre Release:") \Z4${PRERELEASE}\Zn\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
     dialog --backtitle "$(backtitle)" --colors \
@@ -1837,6 +1843,11 @@ function updateMenu() {
             --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
         fi
       fi
+      ;;
+    b) 
+      [ "${PRERELEASE}" = "false" ] && PRERELEASE='true' || PRERELEASE='false'
+      writeConfigKey "prerelease" "${PRERELEASE}" "${USER_CONFIG_FILE}"
+      NEXT="e"
       ;;
     e) return ;;
     esac

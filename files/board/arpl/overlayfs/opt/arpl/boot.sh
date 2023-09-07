@@ -227,11 +227,11 @@ else
   w | awk '{print $1" "$2" "$4" "$5" "$6}' >WB
   MSG=""
   while test ${BOOTWAIT} -ge 0; do
-    MSG="$(printf "$(TEXT "%2ds (accessing arpl will interrupt boot)")" "${BOOTWAIT}")"
+    MSG="$(printf "\033[1;33m$(TEXT "%2ds (accessing arpl will interrupt boot)")\033[0m" "${BOOTWAIT}")"
     echo -en "\r${MSG}"
     w | awk '{print $1" "$2" "$4" "$5" "$6}' >WC
     if ! diff WB WC >/dev/null 2>&1; then
-      echo -en "\r$(TEXT "A new access is connected, the boot process is interrupted.")\n"
+      echo -en "\r\033[1;33m$(TEXT "A new access is connected, the boot process is interrupted.")\033[0m\n"
       rm -f WB WC
       exit 0
     fi
