@@ -32,6 +32,10 @@
   3. 内存需要大于 4GB.
   4. DT的型号不支持sas控制器.
 
+# GPU
+* iGPU: https://jim.plus/
+* vGPU: https://blog.kkk.rs/
+
 # ARPL:
 * ### [命令输入方法演示](https://www.bilibili.com/video/BV1T84y1P7Kq)  https://www.bilibili.com/video/BV1T84y1P7Kq  
 
