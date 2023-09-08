@@ -1296,7 +1296,7 @@ function advancedMenu() {
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "Not a valid dts file, please try again!")" 0 0
       else
-        mkdir -p "${USER_UP_PATH}"
+        [ -d "{USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
         cp -f "${USER_FILE}" "${USER_UP_PATH}/${MODEL}.dts"
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
@@ -1844,7 +1844,7 @@ function updateMenu() {
         fi
       fi
       ;;
-    b) 
+    b)
       [ "${PRERELEASE}" = "false" ] && PRERELEASE='true' || PRERELEASE='false'
       writeConfigKey "prerelease" "${PRERELEASE}" "${USER_CONFIG_FILE}"
       NEXT="e"
@@ -1852,6 +1852,15 @@ function updateMenu() {
     e) return ;;
     esac
   done
+}
+
+function notepadMenu() {
+  [ -d "${USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
+  [ -f "${USER_UP_PATH}/notepad" ] || echo "$(TEXT "This person is very lazy and hasn't written anything.")" >"${USER_UP_PATH}/notepad"
+  dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Edit")" \
+    --editbox "${USER_UP_PATH}/notepad" 0 0 2>"${TMP_PATH}/notepad"
+  [ $? -ne 0 ] && return
+  mv "${TMP_PATH}/notepad" "${USER_UP_PATH}/notepad"
 }
 
 ###############################################################################
@@ -1890,6 +1899,7 @@ while true; do
     echo "c \"$(TEXT "Clean disk cache")\"" >>"${TMP_PATH}/menu"
   fi
   echo "p \"$(TEXT "Update menu")\"" >>"${TMP_PATH}/menu"
+  echo "t \"$(TEXT "Notepad")\"" >>"${TMP_PATH}/menu"
   echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
   dialog --backtitle "$(backtitle)" --colors \
@@ -1947,6 +1957,10 @@ while true; do
     ;;
   p)
     updateMenu
+    NEXT="d"
+    ;;
+  t)
+    notepadMenu
     NEXT="d"
     ;;
   e)
