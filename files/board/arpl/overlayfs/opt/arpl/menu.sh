@@ -1563,7 +1563,7 @@ function downloadExts() {
     TAG="${LATESTURL##*/}"
   fi
   [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
-  if [ -z "${TAG}" ]; then
+  if [ -z "${TAG}" -o "${TAG}" = "latest" ]; then
     if [ ! "${5}" = "0" ]; then
       dialog --backtitle "$(backtitle)" --colors --title "${T}" \
         --infobox "$(TEXT "Error checking new version")" 0 0
