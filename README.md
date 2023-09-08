@@ -16,6 +16,10 @@
 * modules: https://github.com/wjz304/arpl-modules
 * rp-lkms: https://github.com/wjz304/redpill-lkm
 
+### About GPU: 
+* iGPU: https://jim.plus/
+* vGPU: https://blog.kkk.rs/
+
 ## 说明 - Instructions
 * [GUIDE](./guide.md)
  
