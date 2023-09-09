@@ -178,6 +178,19 @@ function _set_conf_kv() {
 }
 
 ###############################################################################
+# Get fastest url in list
+# @ - url list
+function _get_fastest() {
+  local speedlist=""
+  for I in $@; do
+    speed=$(ping -c 1 -W 5 ${I} 2>/dev/null | awk '/time=/ {print $7}' | cut -d '=' -f 2)
+    speedlist+="${I} ${speed:-999}\n"
+  done
+  fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1 | awk '{print $1}')"
+  echo "${fastest}"
+}
+
+###############################################################################
 # Find and mount the DSM root filesystem
 # (based on pocopico's TCRP code)
 function findAndMountDSMRoot() {
