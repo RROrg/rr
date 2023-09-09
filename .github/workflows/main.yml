@@ -102,7 +102,7 @@ jobs:
             if [ "`echo ${{ inputs.version }} | cut -d '.' -f 1,2`" = "`date +'%y.%-m'`" ]; then
               VERSION="${{ inputs.version }}"
             else
-              LATEST_TAG="`curl -skL "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r ".tag_name" 2>/dev/null`"
+              LATEST_TAG="`curl -skL "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r ".[0].tag_name" 2>/dev/null`"
               if [ -n "${LATEST_TAG}" -a "`echo ${LATEST_TAG} | cut -d '.' -f 1,2`" = "`date +'%y.%-m'`" ]; then  # format %y.%-m.$i
                 VERSION="`echo ${LATEST_TAG} | awk -F '.' '{$3=$3+1}1' OFS='.'`"
               else
@@ -139,9 +139,9 @@ jobs:
 
           convertpo2mo "files/board/arpl/overlayfs/opt/arpl/lang"
           getExtractor "files/board/arpl/p3/extractor"
-          getLKMs "files/board/arpl/p3/lkms"
-          getAddons "files/board/arpl/p3/addons"
-          getModules "files/board/arpl/p3/modules"
+          getLKMs "files/board/arpl/p3/lkms" ${{ inputs.prerelease }}
+          getAddons "files/board/arpl/p3/addons" ${{ inputs.prerelease }}
+          getModules "files/board/arpl/p3/modules" ${{ inputs.prerelease }}
 
           echo "OK"
 

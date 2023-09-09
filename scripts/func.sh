@@ -68,12 +68,17 @@ function getExtractor() {
 
 # Get latest LKMs
 # $1 path
+# $2 (true|false[d]) include prerelease
 function getLKMs() {
   echo "Getting LKMs begin"
   local DEST_PATH="${1:-lkms}"
   local CACHE_FILE="/tmp/rp-lkms.zip"
   rm -f "${CACHE_FILE}"
-  TAG=$(curl -s "https://api.github.com/repos/wjz304/redpill-lkm/releases/latest" | grep -oP '"tag_name": "\K(.*)(?=")')
+  if [ "${2}" = "true" ]; then
+    TAG=$(curl -s "https://api.github.com/repos/wjz304/redpill-lkm/releases" | jq -r ".[0].tag_name")
+  else
+    TAG=$(curl -s "https://api.github.com/repos/wjz304/redpill-lkm/releases/latest" | jq -r ".tag_name")
+  fi
   STATUS=$(curl -w "%{http_code}" -L "https://github.com/wjz304/redpill-lkm/releases/download/${TAG}/rp-lkms.zip" -o "${CACHE_FILE}")
   echo "TAG=${TAG}; Status=${STATUS}"
   [ ${STATUS} -ne 200 ] && exit 1
@@ -87,12 +92,17 @@ function getLKMs() {
 
 # Get latest addons and install its
 # $1 path
+# $2 (true|false[d]) include prerelease
 function getAddons() {
   echo "Getting Addons begin"
   local DEST_PATH="${1:-addons}"
   local CACHE_DIR="/tmp/addons"
   local CACHE_FILE="/tmp/addons.zip"
-  TAG=$(curl -s https://api.github.com/repos/wjz304/arpl-addons/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+  if [ "${2}" = "true" ]; then
+    TAG=$(curl -s "https://api.github.com/repos/wjz304/arpl-addons/releases" | jq -r ".[0].tag_name")
+  else
+    TAG=$(curl -s "https://api.github.com/repos/wjz304/arpl-addons/releases/latest" | jq -r ".tag_name")
+  fi
   STATUS=$(curl -w "%{http_code}" -L "https://github.com/wjz304/arpl-addons/releases/download/${TAG}/addons.zip" -o "${CACHE_FILE}")
   echo "TAG=${TAG}; Status=${STATUS}"
   [ ${STATUS} -ne 200 ] && exit 1
@@ -115,12 +125,17 @@ function getAddons() {
 
 # Get latest modules
 # $1 path
+# $2 (true|false[d]) include prerelease
 function getModules() {
   echo "Getting Modules begin"
   local DEST_PATH="${1:-addons}"
   local CACHE_FILE="/tmp/modules.zip"
   rm -f "${CACHE_FILE}"
-  TAG=$(curl -s https://api.github.com/repos/wjz304/arpl-modules/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+  if [ "${2}" = "true" ]; then
+    TAG=$(curl -s "https://api.github.com/repos/wjz304/arpl-modules/releases" | jq -r ".[0].tag_name")
+  else
+    TAG=$(curl -s "https://api.github.com/repos/wjz304/arpl-modules/releases/latest" | jq -r ".tag_name")
+  fi
   STATUS=$(curl -w "%{http_code}" -L "https://github.com/wjz304/arpl-modules/releases/download/${TAG}/modules.zip" -o "${CACHE_FILE}")
   echo "TAG=${TAG}; Status=${STATUS}"
   [ ${STATUS} -ne 200 ] && exit 1
