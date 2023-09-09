@@ -185,9 +185,10 @@ function productversMenu() {
       --infobox "$(TEXT "Get pat data ..")" 0 0
     idx=0
     while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
-      speed_a=$(ping -c 1 -W 5 www.synology.com | awk '/time=/ {print $7}' | cut -d '=' -f 2)
-      speed_b=$(ping -c 1 -W 5 www.synology.cn | awk '/time=/ {print $7}' | cut -d '=' -f 2)
-      fastest="$(echo -e "https://www.synology.com/api/support/findDownloadInfo?lang=en-us ${speed_a:-999}\nhttps://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn ${speed_b:-999}" | sort -k2n | head -1 | awk '{print $1}')"
+      fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
+      [ "${fastest}" = "www.synology.cn" ] &&
+        fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
+        fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
       patdata=$(curl -skL "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
       if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
         if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
@@ -772,14 +773,7 @@ function extractDsmFiles() {
       rm -rf "${CACHE_PATH}/dl"
     fi
     mkdir -p "${CACHE_PATH}/dl"
-
-    mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
-    mirrorspeeds=""
-    for I in ${mirrors[@]}; do
-      speed=$(ping -c 1 -W 5 ${I} | awk '/time=/ {print $7}' | cut -d '=' -f 2)
-      mirrorspeeds+="${I} ${speed:-999}\n"
-    done
-    fastest="$(echo -e "${mirrorspeeds}" | tr -s '\n' | sort -k2n | head -1 | awk '{print $1}')"
+    fastest=$(_get_fastest "global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
     mirror="$(echo ${PATURL} | sed 's|^http[s]*://\([^/]*\).*|\1|')"
     if echo "${mirrors[@]}" | grep -wq "${mirror}" && [ "${mirror}" != "${fastest}" ]; then
       echo "$(printf "$(TEXT "Based on the current network situation, switch to %s mirror to downloading.")" "${fastest}")"
@@ -928,7 +922,8 @@ function extractDsmFiles() {
 function getLogo() {
   rm -f "${CACHE_PATH}/logo.png"
   if [ "${DSMLOGO}" = "true" ]; then
-    STATUS=$(curl -skL -w "%{http_code}" "https://www.synology.com/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${CACHE_PATH}/logo.png")
+    fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
+    STATUS=$(curl -skL -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${CACHE_PATH}/logo.png")
     if [ $? -ne 0 -o ${STATUS} -ne 200 -o -f "${CACHE_PATH}/logo.png" ]; then
       convert -rotate 180 "${CACHE_PATH}/logo.png" "${CACHE_PATH}/logo.png" 2>/dev/null
       magick montage "${CACHE_PATH}/logo.png" -background 'none' -tile '3x3' -geometry '350x210' "${CACHE_PATH}/logo.png" 2>/dev/null
