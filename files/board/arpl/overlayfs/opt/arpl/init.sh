@@ -80,7 +80,9 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "notsetmacs" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "prerelease" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "bootwait" "10" "${USER_CONFIG_FILE}"
+  writeConfigKey "bootipwait" "10" "${USER_CONFIG_FILE}"
   writeConfigKey "kernelway" "power" "${USER_CONFIG_FILE}"
+  writeConfigKey "odp" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "model" "" "${USER_CONFIG_FILE}"
   writeConfigKey "productver" "" "${USER_CONFIG_FILE}"
   writeConfigKey "buildnum" "" "${USER_CONFIG_FILE}"
@@ -211,7 +213,7 @@ for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
       break
     fi
     if [ ${COUNT} -eq 15 ]; then
-      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "TIMEOUT")\n"
+      echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "TIMEOUT (Please check the IP on the router.)")\n"
       break
     fi
     COUNT=$((${COUNT} + 1))

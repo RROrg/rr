@@ -39,6 +39,7 @@ LAYOUT="$(readConfigKey "layout" "${USER_CONFIG_FILE}")"
 KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
 PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
 PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
+ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")"  # official drivers priorities
 
 # Check if DSM buildnumber changed
 . "${RAMDISK_PATH}/etc/VERSION"
@@ -125,6 +126,7 @@ mkdir -p "${TMP_PATH}/modules"
 tar -zxf "${MODULES_PATH}/${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.tgz" -C "${TMP_PATH}/modules"
 for F in $(ls "${TMP_PATH}/modules/"*.ko); do
   M=$(basename ${F})
+  [ "${ODP}" = "true" -a -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] && continue
   if arrayExistItem "${M:0:-3}" "${!USERMODULES[@]}"; then
     cp -f "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
   else
