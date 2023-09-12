@@ -178,7 +178,9 @@ else
   echo "$(printf "$(TEXT "Detected %s network cards.")" "${#ETHX[@]}")"
   echo "$(TEXT "Checking Connect.")"
   COUNT=0
-  while [ ${COUNT} -lt 32 ]; do
+  BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
+  [ -z "${BOOTIPWAIT}" ] && BOOTIPWAIT=10
+  while [ ${COUNT} -lt $((${BOOTIPWAIT} + 32)) ]; do
     hasConnect="false"
     for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
       if ethtool ${ETHX[${N}]} | grep 'Link detected' | grep -q 'yes'; then
@@ -208,8 +210,8 @@ else
         echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "NOT CONNECTED")\n"
         break
       fi
-      if [ ${COUNT} -eq 8 ]; then # Under normal circumstances, no errors should occur here.
-        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "TIMEOUT")\n"
+      if [ ${COUNT} -eq ${BOOTIPWAIT} ]; then # Under normal circumstances, no errors should occur here.
+        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "TIMEOUT (Please check the IP on the router.)")\n"
         break
       fi
       COUNT=$((${COUNT} + 1))
@@ -253,7 +255,7 @@ else
 fi
 echo -e "\033[1;37m$(TEXT "Booting...")\033[0m"
 for T in $(w | grep -v "TTY" | awk -F' ' '{print $2}'); do
-  echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please use the http://find.synology.com/ find DSM and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
+  echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational.\nPlease wait for a few minutes before using the http://find.synology.com/ or Synology Assistant find DSM and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
 done
 KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
 [ "${KERNELWAY}" = "kexec" ] && kexec -f -e || poweroff

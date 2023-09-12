@@ -32,7 +32,9 @@ DIRECTBOOT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 NOTSETMACS="$(readConfigKey "notsetmacs" "${USER_CONFIG_FILE}")"
 PRERELEASE="$(readConfigKey "prerelease" "${USER_CONFIG_FILE}")"
 BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
+BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
 KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
+ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")"  # official drivers priorities
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 
 ###############################################################################
@@ -420,6 +422,7 @@ function moduleMenu() {
       d "$(TEXT "Deselect all modules")" \
       c "$(TEXT "Choose modules to include")" \
       o "$(TEXT "Upload a external module")" \
+      p "$(TEXT "Priority use of official drivers:") \Z4${ODP}\Zn" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
@@ -527,6 +530,10 @@ function moduleMenu() {
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       fi
+      ;;
+    p)
+      [ "${ODP}" = "false" ] && ODP='true' || ODP='false'
+      writeConfigKey "odp" "${ODP}" "${USER_CONFIG_FILE}"
       ;;
     e)
       break
@@ -994,6 +1001,7 @@ function advancedMenu() {
     if loaderIsConfigured; then
       echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >>"${TMP_PATH}/menu"
       if [ "${DIRECTBOOT}" = "false" ]; then
+        echo "i \"$(TEXT "Timeout of get ip in boot:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
         echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\"" >>"${TMP_PATH}/menu"
         echo "k \"$(TEXT "kernel switching method:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
       fi
@@ -1034,6 +1042,18 @@ function advancedMenu() {
     q)
       [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
       writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
+      NEXT="e"
+      ;;
+    i)
+      ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
+        --default-item "${BOOTIPWAIT}" --no-items --menu "$(TEXT "Choose a waiting time(seconds)")" 0 0 0 ${ITEMS} \
+        2>${TMP_PATH}/resp
+      [ $? -ne 0 ] && return
+      resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
+      [ -z "${resp}" ] && return
+      BOOTIPWAIT=${resp}
+      writeConfigKey "bootipwait" "${BOOTIPWAIT}" "${USER_CONFIG_FILE}"
       NEXT="e"
       ;;
     w)
