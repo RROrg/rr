@@ -13,6 +13,11 @@ cmdline: &cmdline
   vender_format_version: 2
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
+patch: &patch
+  - "ramdisk-etc-rc-*.patch"
+  - "ramdisk-init-script-v5-*.patch"
+  - "ramdisk-post-init-script-*.patch"
+  - "ramdisk-disable-root-pwd-*.patch"
 platform: "epyc7002"
 unique: "synology_epyc7002_sa6400"
 serial:
@@ -33,11 +38,7 @@ productvers:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-sa6400-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
+    patch: *patch
 
   "7.2":
     kpre: "7.2"
@@ -47,8 +48,4 @@ productvers:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    patch:
-      - "ramdisk-64216-disable-root-pwd.patch"
-      - "ramdisk-64216-sa6400-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
+    patch: *patch
