@@ -15,6 +15,12 @@ cmdline: &cmdline
   syno_hdd_powerup_seq: 0
   vender_format_version: 2
   elevator: elevator
+patch: &patch
+  - "ramdisk-etc-rc-*.patch"
+  - "ramdisk-init-script-v4-*.patch"
+  - "ramdisk-post-init-script-*.patch"
+  - "ramdisk-disable-root-pwd-*.patch"
+  - "ramdisk-disable-disabled-ports-*.patch"
 platform: "apollolake"
 unique: "synology_apollolake_1019+"
 serial:
@@ -37,12 +43,7 @@ productvers:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-25556-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-25556-post-init-script.patch"
-      - "ramdisk-common-disable-disabled-ports.patch"
+    patch: *patch
 
   "7.0":
     kver: "4.4.180"
@@ -51,12 +52,7 @@ productvers:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-common-post-init-script.patch"
-      - "ramdisk-common-disable-disabled-ports.patch"
+    patch: *patch
 
   "7.1":
     kver: "4.4.180"
@@ -65,12 +61,7 @@ productvers:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
-      - "ramdisk-42661-disable-disabled-ports.patch"
+    patch: *patch
 
   "7.2":
     kver: "4.4.302"
@@ -79,9 +70,4 @@ productvers:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    patch:
-      - "ramdisk-64216-disable-root-pwd.patch"
-      - "ramdisk-64216-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
-      - "ramdisk-42661-disable-disabled-ports.patch"
+    patch: *patch

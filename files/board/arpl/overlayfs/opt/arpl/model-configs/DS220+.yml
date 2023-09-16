@@ -16,6 +16,11 @@ cmdline: &cmdline
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
   elevator: elevator
+patch: &patch
+  - "ramdisk-etc-rc-*.patch"
+  - "ramdisk-init-script-v4-*.patch"
+  - "ramdisk-post-init-script-*.patch"
+  - "ramdisk-disable-root-pwd-*.patch"
 platform: "geminilake"
 unique: "synology_geminilake_220+"
 serial:
@@ -35,11 +40,7 @@ productvers:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-25556-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-25556-post-init-script.patch"
+    patch: *patch
 
   "7.0":
     kver: "4.4.180"
@@ -48,11 +49,7 @@ productvers:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-common-post-init-script.patch"
+    patch: *patch
 
   "7.1":
     kver: "4.4.180"
@@ -61,11 +58,7 @@ productvers:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    patch:
-      - "ramdisk-common-disable-root-pwd.patch"
-      - "ramdisk-common-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
+    patch: *patch
 
   "7.2":
     kver: "4.4.302"
@@ -74,8 +67,4 @@ productvers:
       <<: *cmdline
     synoinfo:
       <<: *synoinfo
-    patch:
-      - "ramdisk-64216-disable-root-pwd.patch"
-      - "ramdisk-64216-init-script.patch"
-      - "ramdisk-common-etc-rc.patch"
-      - "ramdisk-42951-post-init-script.patch"
+    patch: *patch

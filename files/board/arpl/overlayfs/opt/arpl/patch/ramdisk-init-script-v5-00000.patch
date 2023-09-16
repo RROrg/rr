@@ -1,10 +1,9 @@
 --- a/linuxrc.syno.impl
 +++ b/linuxrc.syno.impl
-@@ -49,6 +49,10 @@
+@@ -49,6 +49,9 @@
  UnknownSynoPartitionMigrationFlag="/.unknown_syno_partition_migrate"
  IncompatibleRootDevice="/.incompatible_root_device"
  
-+set -x
 +insmod /usr/lib/modules/rp.ko
 +/addons/addons.sh early
 +
