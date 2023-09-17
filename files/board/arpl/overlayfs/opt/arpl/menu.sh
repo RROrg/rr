@@ -384,6 +384,7 @@ function addonMenu() {
         fi
         ADDON="$(untarAddon "${TMP_UP_PATH}/${USER_FILE}")"
         if [ -n "${ADDON}" ]; then
+          [ -f "${CACHE_PATH}/addons/VERSION" ] && rm -f "${CACHE_PATH}/addons/VERSION"
           dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
             --msgbox "$(printf "$(TEXT "Addon '%s' added to loader, Please enable it in 'Add an addon' menu.")" "${ADDON}")" 0 0
         else
@@ -523,6 +524,7 @@ function moduleMenu() {
       popd
       if [ -n "${USER_FILE}" -a "${USER_FILE##*.}" = "ko" ]; then
         addToModules ${PLATFORM} "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${TMP_UP_PATH}/${USER_FILE}"
+        [ -f "${CACHE_PATH}/modules/VERSION" ] && rm -f "${CACHE_PATH}/modules/VERSION"
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
           --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${USER_FILE}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" 0 0
         rm -f "${TMP_UP_PATH}/${USER_FILE}"
@@ -1716,14 +1718,18 @@ function updateExts() {
 ###############################################################################
 function updateMenu() {
   PROXY="$(readConfigKey "proxy" "${USER_CONFIG_FILE}")"
+  CUR_ARPL_VER="${ARPL_VERSION:-0}"
+  CUR_ADDONS_VER="$(cat "${CACHE_PATH}/addons/VERSION" 2>/dev/null)"
+  CUR_MODULES_VER="$(cat "${CACHE_PATH}/modules/VERSION" 2>/dev/null)"
+  CUR_LKMS_VER="$(cat "${CACHE_PATH}/lkms/VERSION" 2>/dev/null)"
   [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
   while true; do
     rm "${TMP_PATH}/menu"
     echo "a \"$(TEXT "Update all")\"" >>"${TMP_PATH}/menu"
-    echo "r \"$(TEXT "Update arpl")\"" >>"${TMP_PATH}/menu"
-    echo "d \"$(TEXT "Update addons")\"" >>"${TMP_PATH}/menu"
-    echo "m \"$(TEXT "Update modules")\"" >>"${TMP_PATH}/menu"
-    echo "l \"$(TEXT "Update LKMs")\"" >>"${TMP_PATH}/menu"
+    echo "r \"$(TEXT "Update arpl")(${CUR_ARPL_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "d \"$(TEXT "Update addons")(${CUR_ADDONS_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "m \"$(TEXT "Update modules")(${CUR_MODULES_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "l \"$(TEXT "Update LKMs")(${CUR_LKMS_VER:-None})\"" >>"${TMP_PATH}/menu"
     if [ -n "${DEBUG}" ]; then
       echo "p \"$(TEXT "Set proxy server")\"" >>"${TMP_PATH}/menu"
     fi
@@ -1738,52 +1744,44 @@ function updateMenu() {
     case "$(<${TMP_PATH}/resp)" in
     a)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      CURVER="$(cat "${CACHE_PATH}/addons/VERSION" 2>/dev/null)"
-      downloadExts "addons" "${CURVER:-0}" "https://github.com/wjz304/arpl-addons" "addons" "1"
+      downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/wjz304/arpl-addons" "addons" "1"
       [ $? -eq 0 ] && updateExts "addons" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      CURVER="$(cat "${CACHE_PATH}/modules/VERSION" 2>/dev/null)"
-      downloadExts "modules" "${CURVER:-0}" "https://github.com/wjz304/arpl-modules" "modules" "1"
+      downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/wjz304/arpl-modules" "modules" "1"
       [ $? -eq 0 ] && updateExts "modules" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      CURVER="$(cat "${CACHE_PATH}/lkms/VERSION" 2>/dev/null)"
-      downloadExts "LKMs" "${CURVER:-0}" "https://github.com/wjz304/redpill-lkm" "rp-lkms" "1"
+      downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/wjz304/redpill-lkm" "rp-lkms" "1"
       [ $? -eq 0 ] && updateExts "LKMs" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "arpl")")"
-      CURVER="${ARPL_VERSION:-0}"
-      downloadExts "arpl" "${CURVER}" "https://github.com/wjz304/arpl-i18n" "update" "0"
+      downloadExts "arpl" "${CUR_ARPL_VER:-None}" "https://github.com/wjz304/arpl-i18n" "update" "0"
       [ $? -ne 0 ] && continue
       updateArpl "arpl"
       ;;
 
     r)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "arpl")")"
-      CURVER="${ARPL_VERSION:-0}"
-      downloadExts "arpl" "${CURVER}" "https://github.com/wjz304/arpl-i18n" "update" "0"
+      downloadExts "arpl" "${CUR_ARPL_VER:-None}" "https://github.com/wjz304/arpl-i18n" "update" "0"
       [ $? -ne 0 ] && continue
       updateArpl "arpl"
       ;;
 
     d)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      CURVER="$(cat "${CACHE_PATH}/addons/VERSION" 2>/dev/null)"
-      downloadExts "addons" "${CURVER:-0}" "https://github.com/wjz304/arpl-addons" "addons" "0"
+      downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/wjz304/arpl-addons" "addons" "0"
       [ $? -ne 0 ] && continue
       updateExts "addons" "0"
       ;;
 
     m)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      CURVER="$(cat "${CACHE_PATH}/modules/VERSION" 2>/dev/null)"
-      downloadExts "modules" "${CURVER:-0}" "https://github.com/wjz304/arpl-modules" "modules" "0"
+      downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/wjz304/arpl-modules" "modules" "0"
       [ $? -ne 0 ] && continue
       updateExts "modules" "0"
       ;;
 
     l)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      CURVER="$(cat "${CACHE_PATH}/lkms/VERSION" 2>/dev/null)"
-      downloadExts "LKMs" "${CURVER:-0}" "https://github.com/wjz304/redpill-lkm" "rp-lkms" "0"
+      downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/wjz304/redpill-lkm" "rp-lkms" "0"
       [ $? -ne 0 ] && continue
       updateExts "LKMs" "0"
       ;;
