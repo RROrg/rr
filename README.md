@@ -59,6 +59,13 @@
 * 中文简体: https://www.bilibili.com/video/BV1jk4y1Y7B7  
     ##### `(From: http://mi-d.cn)`
 
+## 免责声明 - Disclaimer
+* 硬盘有价，数据无价，任何对引导的修改都是有风险的，本人不承担数据丢失的责任。
+* 本工具仅用作学习交流，严禁用于商业用途。
+----
+* The hard drive has a price, but the data is priceless. Any modification to the bootloader is risky. I will not be responsible for data loss.
+* This tool is only for learning and communication, and commercial use is strictly prohibited.
+
 ## 打赏一下
 * > ### 作者: Ing  
 * > QQ群1: 21609194 [点击链接加入QQ群](https://qm.qq.com/cgi-bin/qm/qr?k=z5O89os88QEKXCbz-0gwtEz1AeQiCwk3)
