@@ -1717,13 +1717,13 @@ function updateExts() {
 
 ###############################################################################
 function updateMenu() {
-  PROXY="$(readConfigKey "proxy" "${USER_CONFIG_FILE}")"
-  CUR_ARPL_VER="${ARPL_VERSION:-0}"
-  CUR_ADDONS_VER="$(cat "${CACHE_PATH}/addons/VERSION" 2>/dev/null)"
-  CUR_MODULES_VER="$(cat "${CACHE_PATH}/modules/VERSION" 2>/dev/null)"
-  CUR_LKMS_VER="$(cat "${CACHE_PATH}/lkms/VERSION" 2>/dev/null)"
-  [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
   while true; do
+    CUR_ARPL_VER="${ARPL_VERSION:-0}"
+    CUR_ADDONS_VER="$(cat "${CACHE_PATH}/addons/VERSION" 2>/dev/null)"
+    CUR_MODULES_VER="$(cat "${CACHE_PATH}/modules/VERSION" 2>/dev/null)"
+    CUR_LKMS_VER="$(cat "${CACHE_PATH}/lkms/VERSION" 2>/dev/null)"
+    PROXY="$(readConfigKey "proxy" "${USER_CONFIG_FILE}")"
+    [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
     rm "${TMP_PATH}/menu"
     echo "a \"$(TEXT "Update all")\"" >>"${TMP_PATH}/menu"
     echo "r \"$(TEXT "Update arpl")(${CUR_ARPL_VER:-None})\"" >>"${TMP_PATH}/menu"
