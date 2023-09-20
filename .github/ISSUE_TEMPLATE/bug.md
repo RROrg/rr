@@ -13,13 +13,19 @@ Install ENV:
  * NIC:  
 
 Arpl version:  
+ * arpl:  
+ * addons:  
+ * modules:  
+ * lkms:  
 
-DSM model:  
-DSM version:  
+DSM: 
+ * model:  
+ * version:  
 
 Issue:  
 
 logs:  
 
+(Plz review the content of #173, #175, #226 first)  
 ...
 
