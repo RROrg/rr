@@ -22,7 +22,7 @@ jobs:
 
       - name: Check Issues
         run: |
-          if echo "${{ github.event.issue.body }}" | grep -q "DS"; then 
+          if echo "${{ github.event.issue.body }}" | grep -q "ENV"; then 
             echo "FALG=true" >> $GITHUB_ENV
           else
             echo "FALG=false" >> $GITHUB_ENV
