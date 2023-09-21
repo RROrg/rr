@@ -22,7 +22,9 @@
 
 ## 说明 - Instructions
 * [GUIDE](./guide.md)
- 
+* [About get logs](https://github.com/wjz304/arpl-i18n/issues/173)
+* [About not find DSM after "boot the loader"](https://github.com/wjz304/arpl-i18n/issues/175)
+* [About DT(Device Tree) and *portcfg/maxdisks](https://github.com/wjz304/arpl-i18n/issues/226)
 
 ## 翻译 - Translation
 * 其他语言的翻译 - Language translation work:

@@ -1689,7 +1689,7 @@ function updateExts() {
       tar -xaf "${PKG}" -C "${ADDONS_PATH}/${ADDON}" >/dev/null 2>&1
     done
   elif [ "${1}" = "modules" ]; then
-    rm "${MODULES_PATH}/"*
+    rm -rf "${MODULES_PATH}/"*
     unzip ${TMP_PATH}/modules.zip -d "${MODULES_PATH}" >/dev/null 2>&1
     # Rebuild modules if model/buildnumber is selected
     PLATFORM="$(readModelKey "${MODEL}" "platform")"
