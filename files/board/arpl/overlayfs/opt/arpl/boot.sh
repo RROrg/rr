@@ -69,21 +69,14 @@ SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 
-BPN="$(dmidecode -s 'baseboard-product-name' | sed 's/Default string//')"
-SPN="$(dmidecode -s 'system-product-name' | sed 's/Default string//')"
+DMI="$(dmesg | grep -i "DMI:" | sed 's/\[.*\] DMI: //i')"
 CPU="$(echo $(cat /proc/cpuinfo | grep 'model name' | uniq | awk -F':' '{print $2}'))"
 MEM="$(free -m | grep -i mem | awk '{print$2}') MB"
 
 echo -e "$(TEXT "Model:") \033[1;36m${MODEL}\033[0m"
 echo -e "$(TEXT "Build:") \033[1;36m${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))\033[0m"
 echo -e "$(TEXT "LKM:  ") \033[1;36m${LKM}\033[0m"
-if [ -n "${BPN}" ]; then 
-  echo -e "$(TEXT "BPN:  ") \033[1;36m${BPN}\033[0m"
-elif [ -n "${SPN}" ]; then 
-  echo -e "$(TEXT "SPN:  ") \033[1;36m${SPN}\033[0m"
-else
-  echo -e "$(TEXT "MBN:  ") \033[1;36mUnknown\033[0m"
-fi
+echo -e "$(TEXT "DMI:  ") \033[1;36m${DMI}\033[0m"
 echo -e "$(TEXT "CPU:  ") \033[1;36m${CPU}\033[0m"
 echo -e "$(TEXT "MEM:  ") \033[1;36m${MEM}\033[0m"
 
