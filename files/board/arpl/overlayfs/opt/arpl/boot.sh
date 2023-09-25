@@ -29,7 +29,7 @@ printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
 
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
 if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" -a -f "${CACHE_PATH}/logo.png" ]; then
-  echo | fbv -acuf "${CACHE_PATH}/logo.png" >/dev/null 2>/dev/null
+  echo | fbv -acuf "${CACHE_PATH}/logo.png" >/dev/null 2>/dev/null || true
 fi
 
 # Check if DSM zImage changed, patch it if necessary
