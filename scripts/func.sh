@@ -57,9 +57,9 @@ function getExtractor() {
 
   # Copy only necessary files
   for f in libcurl.so.4 libmbedcrypto.so.5 libmbedtls.so.13 libmbedx509.so.1 libmsgpackc.so.2 libsodium.so libsynocodesign-ng-virtual-junior-wins.so.7; do
-    cp "${CACHE_DIR}/ramdisk/usr/lib/${f}" "${DEST_PATH}"
+    cp -f "${CACHE_DIR}/ramdisk/usr/lib/${f}" "${DEST_PATH}"
   done
-  cp "${CACHE_DIR}/ramdisk/usr/syno/bin/scemd" "${DEST_PATH}/syno_extract_system_patch"
+  cp -f "${CACHE_DIR}/ramdisk/usr/syno/bin/scemd" "${DEST_PATH}/syno_extract_system_patch"
 
   # Clean up
   rm -rf ${CACHE_DIR}

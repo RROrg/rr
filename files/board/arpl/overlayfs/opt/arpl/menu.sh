@@ -281,7 +281,7 @@ function addonMenu() {
     case "$(<${TMP_PATH}/resp)" in
     a)
       NEXT='a'
-      rm "${TMP_PATH}/menu"
+      rm -f "${TMP_PATH}/menu"
       while read ADDON DESC; do
         arrayExistItem "${ADDON}" "${!ADDONS[@]}" && continue # Check if addon has already been added
         echo "${ADDON} \"${DESC}\"" >>"${TMP_PATH}/menu"
@@ -798,7 +798,7 @@ function extractDsmFiles() {
     fi
     STATUS=$(curl -k -w "%{http_code}" -L "${PATURL}" -o "${PAT_PATH}" --progress-bar)
     if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-      rm "${PAT_PATH}"
+      rm -f "${PAT_PATH}"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
         --msgbox "$(TEXT "Check internet or cache disk space")" 0 0
       return 1
@@ -860,7 +860,7 @@ function extractDsmFiles() {
         fi
         STATUS=$(curl -k -w "%{http_code}" -L "${OLDPATURL}" -o "${OLDPAT_PATH}" --progress-bar)
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
-          rm "${OLDPAT_PATH}"
+          rm -f "${OLDPAT_PATH}"
           dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
             --msgbox "$(TEXT "Check internet or cache disk space")" 0 0
           return 1
@@ -885,9 +885,9 @@ function extractDsmFiles() {
       ) >/dev/null 2>&1 || true
       # Copy only necessary files
       for f in libcurl.so.4 libmbedcrypto.so.5 libmbedtls.so.13 libmbedx509.so.1 libmsgpackc.so.2 libsodium.so libsynocodesign-ng-virtual-junior-wins.so.7; do
-        cp "${RAMDISK_PATH}/usr/lib/${f}" "${EXTRACTOR_PATH}"
+        cp -f "${RAMDISK_PATH}/usr/lib/${f}" "${EXTRACTOR_PATH}"
       done
-      cp "${RAMDISK_PATH}/usr/syno/bin/scemd" "${EXTRACTOR_PATH}/${EXTRACTOR_BIN}"
+      cp -f "${RAMDISK_PATH}/usr/syno/bin/scemd" "${EXTRACTOR_PATH}/${EXTRACTOR_BIN}"
       rm -rf "${RAMDISK_PATH}"
     fi
     # Uses the extractor to untar pat file
@@ -917,12 +917,12 @@ function extractDsmFiles() {
   echo "$(TEXT "OK")"
 
   echo -n "$(TEXT "Copying files: ")"
-  cp "${UNTAR_PAT_PATH}/grub_cksum.syno" "${BOOTLOADER_PATH}"
-  cp "${UNTAR_PAT_PATH}/GRUB_VER" "${BOOTLOADER_PATH}"
-  cp "${UNTAR_PAT_PATH}/grub_cksum.syno" "${SLPART_PATH}"
-  cp "${UNTAR_PAT_PATH}/GRUB_VER" "${SLPART_PATH}"
-  cp "${UNTAR_PAT_PATH}/zImage" "${ORI_ZIMAGE_FILE}"
-  cp "${UNTAR_PAT_PATH}/rd.gz" "${ORI_RDGZ_FILE}"
+  cp -f "${UNTAR_PAT_PATH}/grub_cksum.syno" "${BOOTLOADER_PATH}"
+  cp -f "${UNTAR_PAT_PATH}/GRUB_VER" "${BOOTLOADER_PATH}"
+  cp -f "${UNTAR_PAT_PATH}/grub_cksum.syno" "${SLPART_PATH}"
+  cp -f "${UNTAR_PAT_PATH}/GRUB_VER" "${SLPART_PATH}"
+  cp -f "${UNTAR_PAT_PATH}/zImage" "${ORI_ZIMAGE_FILE}"
+  cp -f "${UNTAR_PAT_PATH}/rd.gz" "${ORI_RDGZ_FILE}"
   rm -rf "${UNTAR_PAT_PATH}"
   echo "$(TEXT "OK")"
 }
@@ -996,7 +996,7 @@ function make() {
 function advancedMenu() {
   NEXT="l"
   while true; do
-    rm "${TMP_PATH}/menu"
+    rm -f "${TMP_PATH}/menu"
     if [ -n "${PRODUCTVER}" ]; then
       echo "l \"$(TEXT "Switch LKM version:") \Z4${LKM}\Zn\"" >>"${TMP_PATH}/menu"
     fi
@@ -1219,7 +1219,7 @@ function advancedMenu() {
       for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK}1"); do
         mount ${I} "${TMP_PATH}/sdX1"
         if [ -f "${TMP_PATH}/sdX1/etc/shadow" ]; then
-          cp "${TMP_PATH}/sdX1/etc/shadow" "${TMP_PATH}/shadow_bak"
+          cp -f "${TMP_PATH}/sdX1/etc/shadow" "${TMP_PATH}/shadow_bak"
           SHADOW_FILE="${TMP_PATH}/shadow_bak"
         fi
         umount "${I}"
@@ -1280,7 +1280,7 @@ function advancedMenu() {
         xz -dc <"${ARPL_RAMDISK_FILE}" | cpio -idm
       ) >/dev/null 2>&1 || true
       rm -rf "${RDXZ_PATH}/opt/arpl"
-      cp -rf "/opt" "${RDXZ_PATH}/"
+      cp -Rf "/opt" "${RDXZ_PATH}/"
       (
         cd "${RDXZ_PATH}"
         find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 >"${ARPL_RAMDISK_FILE}"
@@ -1453,8 +1453,8 @@ function tryRecoveryDSM() {
         if [ -n "${MODEL}" ]; then
           productversMenu "${majorversion}.${minorversion}"
           if [ -n "${PRODUCTVER}" ]; then
-            cp "${DSMROOT_PATH}/.syno/patch/zImage" "${SLPART_PATH}"
-            cp "${DSMROOT_PATH}/.syno/patch/rd.gz" "${SLPART_PATH}"
+            cp -f "${DSMROOT_PATH}/.syno/patch/zImage" "${SLPART_PATH}"
+            cp -f "${DSMROOT_PATH}/.syno/patch/rd.gz" "${SLPART_PATH}"
             MSG="$(printf "$(TEXT "Found a installation:\nModel: %s\nProductversion: %s")" "${MODEL}" "${PRODUCTVER}")"
             SN=$(_get_conf_kv SN "${DSMROOT_PATH}/etc/synoinfo.conf")
             if [ -n "${SN}" ]; then
@@ -1484,7 +1484,7 @@ function editUserConfig() {
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Edit with caution")" \
       --editbox "${USER_CONFIG_FILE}" 0 0 2>"${TMP_PATH}/userconfig"
     [ $? -ne 0 ] && return
-    mv "${TMP_PATH}/userconfig" "${USER_CONFIG_FILE}"
+    mv -f "${TMP_PATH}/userconfig" "${USER_CONFIG_FILE}"
     ERRORS=$(yq eval "${USER_CONFIG_FILE}" 2>&1)
     [ $? -eq 0 ] && break
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Edit with caution")" \
@@ -1660,7 +1660,7 @@ function updateArpl() {
       tar -zxf "${TMP_PATH}/$(basename "${KEY}").tgz" -C "${VALUE}"
     else
       mkdir -p "$(dirname "${VALUE}")"
-      mv "${TMP_PATH}/$(basename "${KEY}")" "${VALUE}"
+      mv -f "${TMP_PATH}/$(basename "${KEY}")" "${VALUE}"
     fi
   done < <(readConfigMap "replace" "${TMP_PATH}/update-list.yml")
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
@@ -1724,7 +1724,7 @@ function updateMenu() {
     CUR_LKMS_VER="$(cat "${CACHE_PATH}/lkms/VERSION" 2>/dev/null)"
     PROXY="$(readConfigKey "proxy" "${USER_CONFIG_FILE}")"
     [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
-    rm "${TMP_PATH}/menu"
+    rm -f "${TMP_PATH}/menu"
     echo "a \"$(TEXT "Update all")\"" >>"${TMP_PATH}/menu"
     echo "r \"$(TEXT "Update arpl")(${CUR_ARPL_VER:-None})\"" >>"${TMP_PATH}/menu"
     echo "d \"$(TEXT "Update addons")(${CUR_ADDONS_VER:-None})\"" >>"${TMP_PATH}/menu"
@@ -1841,8 +1841,8 @@ function updateMenu() {
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Update")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       else
-        rm "${TMP_PATH}/${USER_FILE}"
-        mv "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/${USER_FILE}"
+        rm -f "${TMP_PATH}/${USER_FILE}"
+        mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/${USER_FILE}"
         if [ "${USER_FILE}" = "update.zip" ]; then
           updateArpl "arpl"
         elif [ "${USER_FILE}" = "addons.zip" ]; then
@@ -1873,7 +1873,7 @@ function notepadMenu() {
   dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Edit")" \
     --editbox "${USER_UP_PATH}/notepad" 0 0 2>"${TMP_PATH}/notepad"
   [ $? -ne 0 ] && return
-  mv "${TMP_PATH}/notepad" "${USER_UP_PATH}/notepad"
+  mv -f "${TMP_PATH}/notepad" "${USER_UP_PATH}/notepad"
 }
 
 ###############################################################################

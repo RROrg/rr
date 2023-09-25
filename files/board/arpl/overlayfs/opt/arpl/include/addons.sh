@@ -51,9 +51,9 @@ function installAddon() {
   fi
   # If has files to copy, copy it, else return error
   [ ${HAS_FILES} -ne 1 ] && return 1
-  cp "${TMP_PATH}/${ADDON}/install.sh" "${RAMDISK_PATH}/addons/${ADDON}.sh" 2>"${LOG_FILE}" || dieLog
+  cp -f "${TMP_PATH}/${ADDON}/install.sh" "${RAMDISK_PATH}/addons/${ADDON}.sh" 2>"${LOG_FILE}" || dieLog
   chmod +x "${RAMDISK_PATH}/addons/${ADDON}.sh"
-  [ -d ${TMP_PATH}/${ADDON}/root ] && (cp -R "${TMP_PATH}/${ADDON}/root/"* "${RAMDISK_PATH}/" 2>"${LOG_FILE}" || dieLog)
+  [ -d ${TMP_PATH}/${ADDON}/root ] && (cp -Rf "${TMP_PATH}/${ADDON}/root/"* "${RAMDISK_PATH}/" 2>"${LOG_FILE}" || dieLog)
   rm -rf "${TMP_PATH}/${ADDON}"
   return 0
 }
@@ -69,6 +69,6 @@ function untarAddon() {
   ADDON=$(readConfigKey "name" "${TMP_PATH}/addon/manifest.yml")
   [ -z "${ADDON}" ] && return
   rm -rf "${ADDONS_PATH}/${ADDON}"
-  mv "${TMP_PATH}/addon" "${ADDONS_PATH}/${ADDON}"
+  mv -f "${TMP_PATH}/addon" "${ADDONS_PATH}/${ADDON}"
   echo "${ADDON}"
 }
