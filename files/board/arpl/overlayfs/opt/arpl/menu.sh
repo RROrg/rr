@@ -182,37 +182,43 @@ function productversMenu() {
         --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
       # return
     fi
-    # get online pat data
-    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
-      --infobox "$(TEXT "Get pat data ..")" 0 0
-    idx=0
-    while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
-      fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
-      [ "${fastest}" = "www.synology.cn" ] &&
-        fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
-        fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
-      patdata=$(curl -skL "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
-      if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
-        if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
-          paturl=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].url')
-          patsum=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].checksum')
-          paturl=${paturl%%\?*}
-          break
+    while true; do
+      # get online pat data
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
+        --infobox "$(TEXT "Get pat data ..")" 0 0
+      idx=0
+      while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
+        fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
+        [ "${fastest}" = "www.synology.cn" ] &&
+          fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
+          fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
+        patdata=$(curl -skL "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
+        if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
+          if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
+            paturl=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].url')
+            patsum=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].checksum')
+            paturl=${paturl%%\?*}
+            break
+          fi
         fi
+        idx=$((${idx} + 1))
+      done
+      if [ -z "${paturl}" -o -z "${patsum}" ]; then
+        MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.")"
+        paturl=""
+        patsum=""
+      else
+        MSG="$(TEXT "Successfully to get pat data,\nPlease confirm or modify as needed.")"
       fi
-      idx=$((${idx} + 1))
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
+        --extra-button --extra-label "$(TEXT "Retry")" \
+        --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
+        2>"${TMP_PATH}/resp"
+      RET=$?
+      [ ${RET} -eq 0 ] && break      # ok-button
+      [ ${RET} -eq 3 ] && continue   # extra-button
+      return  # 1 or 255             # cancel-button or ESC
     done
-    if [ -z "${paturl}" -o -z "${patsum}" ]; then
-      MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.")"
-      paturl=""
-      patsum=""
-    else
-      MSG="$(TEXT "Successfully to get pat data,\nPlease confirm or modify as needed.")"
-    fi
-    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
-      --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
-      2>"${TMP_PATH}/resp"
-    [ $? -ne 0 ] && return
     paturl="$(cat "${TMP_PATH}/resp" | tail -n +1 | head -1)"
     patsum="$(cat "${TMP_PATH}/resp" | tail -n +2 | head -1)"
     [ -z "${paturl}" -o -z "${patsum}" ] && return
@@ -403,38 +409,69 @@ function moduleMenu() {
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
   KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
   KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
-
-  dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-    --infobox "$(TEXT "Reading modules")" 0 0
-  ALLMODULES=$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
-  unset USERMODULES
-  declare -A USERMODULES
-  while IFS=': ' read KEY VALUE; do
-    [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
-  done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
-  NEXT="s"
+  NEXT="c"
   # loop menu
   while true; do
     dialog --backtitle "$(backtitle)" --colors \
       --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 \
-      s "$(TEXT "Show selected modules")" \
+      c "$(TEXT "Show/Select modules")" \
       l "$(TEXT "Select loaded modules")" \
-      a "$(TEXT "Select all modules")" \
-      d "$(TEXT "Deselect all modules")" \
-      c "$(TEXT "Choose modules to include")" \
       o "$(TEXT "Upload a external module")" \
       p "$(TEXT "Priority use of official drivers:") \Z4${ODP}\Zn" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
     case "$(<${TMP_PATH}/resp)" in
-    s)
-      ITEMS=""
-      for KEY in ${!USERMODULES[@]}; do
-        ITEMS+="${KEY}: ${USERMODULES[$KEY]}\n"
+    c)
+      while true; do
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
+          --infobox "$(TEXT "Reading modules")" 0 0
+        ALLMODULES=$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+        unset USERMODULES
+        declare -A USERMODULES
+        while IFS=': ' read KEY VALUE; do
+          [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
+        done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
+        rm -f "${TMP_PATH}/opts"
+        while read ID DESC; do
+          arrayExistItem "${ID}" "${!USERMODULES[@]}" && ACT="on" || ACT="off"
+          echo "${ID} ${DESC} ${ACT}" >>"${TMP_PATH}/opts"
+        done <<<${ALLMODULES}
+        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
+          --extra-button --extra-label "$(TEXT "Select all")" \
+          --help-button --help-label "$(TEXT "Deselect all")" \
+          --checklist "$(TEXT "Select modules to include")" 0 0 0 --file "${TMP_PATH}/opts" \
+          2>${TMP_PATH}/resp
+        RET=$?
+        case ${RET} in
+        0) # ok-button
+          resp=$(<${TMP_PATH}/resp)
+          writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+          for ID in ${resp}; do
+            writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+          done
+          DIRTY=1
+          break
+          ;;
+        3) # extra-button
+          writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+          while read ID DESC; do
+            writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+          done <<<${ALLMODULES}
+          DIRTY=1
+          ;;
+        2) # help-button
+          writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+          DIRTY=1
+          ;;
+        1) # cancel-button
+          break
+          ;;
+        255) # ESC
+          break
+          ;;
+        esac
       done
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-        --msgbox "${ITEMS}" 0 0
       ;;
     l)
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
@@ -444,61 +481,12 @@ function moduleMenu() {
         KOLIST+="$(getdepends "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${I}") ${I} "
       done
       KOLIST=($(echo ${KOLIST} | tr ' ' '\n' | sort -u))
-      unset USERMODULES
-      declare -A USERMODULES
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
       for ID in ${KOLIST[@]}; do
-        USERMODULES["${ID}"]=""
         writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
       done
       DIRTY=1
       ;;
-    a)
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-        --infobox "$(TEXT "Selecting all modules")" 0 0
-      unset USERMODULES
-      declare -A USERMODULES
-      writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-      while read ID DESC; do
-        USERMODULES["${ID}"]=""
-        writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
-      done <<<${ALLMODULES}
-      DIRTY=1
-      ;;
-
-    d)
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-        --infobox "$(TEXT "Deselecting all modules")" 0 0
-      writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-      unset USERMODULES
-      declare -A USERMODULES
-      DIRTY=1
-      ;;
-
-    c)
-      rm -f "${TMP_PATH}/opts"
-      while read ID DESC; do
-        arrayExistItem "${ID}" "${!USERMODULES[@]}" && ACT="on" || ACT="off"
-        echo "${ID} ${DESC} ${ACT}" >>"${TMP_PATH}/opts"
-      done <<<${ALLMODULES}
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-        --checklist "$(TEXT "Select modules to include")" 0 0 0 --file "${TMP_PATH}/opts" \
-        2>${TMP_PATH}/resp
-      [ $? -ne 0 ] && continue
-      resp=$(<${TMP_PATH}/resp)
-      [ -z "${resp}" ] && continue
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-        --infobox "$(TEXT "Writing to user config")" 0 0
-      unset USERMODULES
-      declare -A USERMODULES
-      writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-      for ID in ${resp}; do
-        USERMODULES["${ID}"]=""
-        writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
-      done
-      DIRTY=1
-      ;;
-
     o)
       MSG=""
       MSG+="$(TEXT "This function is experimental and dangerous. If you don't know much, please exit.\n")"
