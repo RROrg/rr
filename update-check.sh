@@ -30,7 +30,7 @@ for N in $(1 8); do
   deleteConfigKey "cmdline.mac${N}" "${USER_CONFIG_FILE}"
   deleteConfigKey "original-mac${N}" "${USER_CONFIG_FILE}"
 done
-writeConfigKey "cmdline.netif_num" "1" "${USER_CONFIG_FILE}"
+deleteConfigKey "cmdline.netif_num" "${USER_CONFIG_FILE}"
 writeConfigKey "mac1" "001132$(printf '%02x%02x%02x' $((${RANDOM} % 256)) $((${RANDOM} % 256)) $((${RANDOM} % 256)))" "${USER_CONFIG_FILE}"
 
 exit 0
