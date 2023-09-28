@@ -60,14 +60,11 @@ if [ "${RAMDISK_HASH_CUR}" != "${RAMDISK_HASH}" ]; then
 fi
 
 # Load necessary variables
-VID="$(readConfigKey "vid" "${USER_CONFIG_FILE}")"
-PID="$(readConfigKey "pid" "${USER_CONFIG_FILE}")"
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
 BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
 SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
-SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 
 DMI="$(dmesg | grep -i "DMI:" | sed 's/\[.*\] DMI: //i')"
 CPU="$(echo $(cat /proc/cpuinfo | grep 'model name' | uniq | awk -F':' '{print $2}'))"
@@ -85,17 +82,22 @@ if [ ! -f "${MODEL_CONFIG_PATH}/${MODEL}.yml" ] || [ -z "$(readConfigKey "produc
   exit 1
 fi
 
+VID="$(readConfigKey "vid" "${USER_CONFIG_FILE}")"
+PID="$(readConfigKey "pid" "${USER_CONFIG_FILE}")"
+SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
+MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
+
 declare -A CMDLINE
 
-# Fixed values
-CMDLINE['netif_num']=0
 # Automatic values
 CMDLINE['syno_hw_version']="${MODEL}"
-[ -z "${VID}" ] && VID="0x0000" # Sanity check
-[ -z "${PID}" ] && PID="0x0000" # Sanity check
+[ -z "${VID}" ] && VID="0x46f4" # Sanity check
+[ -z "${PID}" ] && PID="0x0001" # Sanity check
 CMDLINE['vid']="${VID}"
 CMDLINE['pid']="${PID}"
 CMDLINE['sn']="${SN}"
+CMDLINE['mac1']="${MAC1}"
+CMDLINE['netif_num']="1"
 
 # Read cmdline
 while IFS=': ' read KEY VALUE; do
@@ -115,61 +117,22 @@ if [ ! "${BUS}" = "usb" ]; then
   DOM="$(readModelKey "${MODEL}" "dom")"
 fi
 
-NOTSETMACS="$(readConfigKey "notsetmacs" "${USER_CONFIG_FILE}")"
-if [ "${NOTSETMACS}" = "true" ]; then
-  # Currently, only up to 8 are supported.  (<==> menu.sh L396, <==> lkm: MAX_NET_IFACES)
-  for N in $(seq 1 8); do
-    [ -n "${CMDLINE["mac${N}"]}" ] && unset CMDLINE["mac${N}"]
-  done
-  unset CMDLINE['netif_num']
-  echo -e "\033[1;33m*** $(printf "$(TEXT "'Not set MACs' is enabled.")") ***\033[0m"
-else
-  # Validate netif_num
-  MACS=()
-  # Currently, only up to 8 are supported.  (<==> menu.sh L396, <==> lkm: MAX_NET_IFACES)
-  for N in $(seq 1 8); do
-    [ -n "${CMDLINE["mac${N}"]}" ] && MACS+=(${CMDLINE["mac${N}"]})
-  done
-  NETIF_NUM=${#MACS[*]}
-  # set netif_num to custom mac amount, netif_num must be equal to the MACX amount, otherwise the kernel will panic.
-  CMDLINE["netif_num"]=${NETIF_NUM} # The current original CMDLINE['netif_num'] is no longer in use, Consider deleting.
-  # real network cards amount
-  NETRL_NUM=$(ls /sys/class/net/ | grep eth | wc -l)
-  if [ ${NETIF_NUM} -le ${NETRL_NUM} ]; then
-    echo -e "\033[1;33m*** $(printf "$(TEXT "Detected %s network cards, %s MACs were customized, the rest will use the original MACs.")" "${NETRL_NUM}" "${CMDLINE["netif_num"]}") ***\033[0m"
-    ETHX=($(ls /sys/class/net/ | grep eth)) # real network cards list
-    for N in $(seq $(expr ${NETIF_NUM} + 1) ${NETRL_NUM}); do
-      MACR="$(cat /sys/class/net/${ETHX[$(expr ${N} - 1)]}/address | sed 's/://g')"
-      # no duplicates
-      while [[ "${MACS[*]}" =~ "$MACR" ]]; do # no duplicates
-        MACR="${MACR:0:10}$(printf "%02x" $((0x${MACR:10:2} + 1)))"
-      done
-      CMDLINE["mac${N}"]="${MACR}"
-    done
-    CMDLINE["netif_num"]=${NETRL_NUM}
-  fi
-fi
 # Prepare command line
 CMDLINE_LINE=""
 grep -q "force_junior" /proc/cmdline && CMDLINE_LINE+="force_junior "
 [ ${EFI} -eq 1 ] && CMDLINE_LINE+="withefi " || CMDLINE_LINE+="noefi "
 [ ! "${BUS}" = "usb" ] && CMDLINE_LINE+="synoboot_satadom=${DOM} dom_szmax=${SIZE} "
-CMDLINE_LINE+="console=ttyS0,115200n8 earlyprintk earlycon=uart8250,io,0x3f8,115200n8 root=/dev/md0 loglevel=15 log_buf_len=32M"
-CMDLINE_DIRECT="${CMDLINE_LINE}"
+CMDLINE_LINE+="console=ttyS0,115200n8 earlyprintk earlycon=uart8250,io,0x3f8,115200n8 root=/dev/md0 skip_vender_mac_interfaces=0,1,2,3,4,5,6,7 loglevel=15 log_buf_len=32M"
 for KEY in ${!CMDLINE[@]}; do
   VALUE="${CMDLINE[${KEY}]}"
   CMDLINE_LINE+=" ${KEY}"
-  CMDLINE_DIRECT+=" ${KEY}"
   [ -n "${VALUE}" ] && CMDLINE_LINE+="=${VALUE}"
-  [ -n "${VALUE}" ] && CMDLINE_DIRECT+="=${VALUE}"
 done
-# Escape special chars
-#CMDLINE_LINE=`echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g'`
-CMDLINE_DIRECT=$(echo ${CMDLINE_DIRECT} | sed 's/>/\\\\>/g')
 echo -e "$(TEXT "Cmdline:\n")\033[1;36m${CMDLINE_LINE}\033[0m"
 
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 if [ "${DIRECT}" = "true" ]; then
+  CMDLINE_DIRECT=$(echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g') # Escape special chars
   grub-editenv ${GRUB_PATH}/grubenv set dsm_cmdline="${CMDLINE_DIRECT}"
   echo -e "\033[1;33m$(TEXT "Reboot to boot directly in DSM")\033[0m"
   grub-editenv ${GRUB_PATH}/grubenv set next_entry="direct"
@@ -243,22 +206,22 @@ else
     BOOTWAIT=$((BOOTWAIT - 1))
   done
   rm -f WB WC
-  echo -en "\r$(printf "%$((${#MSG} * 3))s" " ")\n"
-fi
+  echo -en "\r$(printf "%$((${#MSG} * 2))s" " ")\n"
 
-echo -e "\033[1;37m$(TEXT "Loading DSM kernel...")\033[0m"
+  echo -e "\033[1;37m$(TEXT "Loading DSM kernel...")\033[0m"
 
-# Executes DSM kernel via KEXEC
-if [ "${KVER:0:1}" = "3" -a ${EFI} -eq 1 ]; then
-  echo -e "\033[1;33m$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")\033[0m"
-  kexec --noefi -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
-else
-  kexec -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
+  # Executes DSM kernel via KEXEC
+  if [ "${KVER:0:1}" = "3" -a ${EFI} -eq 1 ]; then
+    echo -e "\033[1;33m$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")\033[0m"
+    kexec --noefi -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
+  else
+    kexec -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
+  fi
+  echo -e "\033[1;37m$(TEXT "Booting...")\033[0m"
+  for T in $(w | grep -v "TTY" | awk -F' ' '{print $2}'); do
+    echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational.\nPlease wait for a few minutes before using the http://find.synology.com/ or Synology Assistant find DSM and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
+  done
+  KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
+  [ "${KERNELWAY}" = "kexec" ] && kexec -f -e || poweroff
+  exit 0
 fi
-echo -e "\033[1;37m$(TEXT "Booting...")\033[0m"
-for T in $(w | grep -v "TTY" | awk -F' ' '{print $2}'); do
-  echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational.\nPlease wait for a few minutes before using the http://find.synology.com/ or Synology Assistant find DSM and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
-done
-KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
-[ "${KERNELWAY}" = "kexec" ] && kexec -f -e || poweroff
-exit 0

@@ -29,13 +29,13 @@ KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
 DIRECTBOOT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
-NOTSETMACS="$(readConfigKey "notsetmacs" "${USER_CONFIG_FILE}")"
 PRERELEASE="$(readConfigKey "prerelease" "${USER_CONFIG_FILE}")"
 BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
 BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
 KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
-ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")"  # official drivers priorities
+ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")" # official drivers priorities
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
+MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
 
 ###############################################################################
 # Mounts backtitle dynamically
@@ -151,6 +151,11 @@ function modelMenu() {
     writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
     SN=$(generateSerial "${MODEL}")
     writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
+    NETIF_NUM=1
+    MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
+    for I in $(seq 1 ${NETIF_NUM}); do
+      writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
+    done
     DIRTY=1
   fi
 }
@@ -170,92 +175,95 @@ function productversMenu() {
     if ! arrayExistItem "${1}" ${ITEMS}; then return; fi
     resp="${1}"
   fi
-  if [ "${PRODUCTVER}" != "${resp}" ]; then
-    local KVER=$(readModelKey "${MODEL}" "productvers.[${resp}].kver")
-    if [ -d "/sys/firmware/efi" -a "${KVER:0:1}" = "3" ]; then
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
-        --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
-      return
-    fi
-    if [ ! "usb" = "$(udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2)" -a "${KVER:0:1}" = "5" ]; then
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
-        --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
-      # return
-    fi
-    while true; do
-      # get online pat data
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
-        --infobox "$(TEXT "Get pat data ..")" 0 0
-      idx=0
-      while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
-        fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
-        [ "${fastest}" = "www.synology.cn" ] &&
-          fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
-          fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
-        patdata=$(curl -skL "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
-        if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
-          if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
-            paturl=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].url')
-            patsum=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].checksum')
-            paturl=${paturl%%\?*}
-            break
-          fi
-        fi
-        idx=$((${idx} + 1))
-      done
-      if [ -z "${paturl}" -o -z "${patsum}" ]; then
-        MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.")"
-        paturl=""
-        patsum=""
-      else
-        MSG="$(TEXT "Successfully to get pat data,\nPlease confirm or modify as needed.")"
-      fi
-      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
-        --extra-button --extra-label "$(TEXT "Retry")" \
-        --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
-        2>"${TMP_PATH}/resp"
-      RET=$?
-      [ ${RET} -eq 0 ] && break      # ok-button
-      [ ${RET} -eq 3 ] && continue   # extra-button
-      return  # 1 or 255             # cancel-button or ESC
-    done
-    paturl="$(cat "${TMP_PATH}/resp" | tail -n +1 | head -1)"
-    patsum="$(cat "${TMP_PATH}/resp" | tail -n +2 | head -1)"
-    [ -z "${paturl}" -o -z "${patsum}" ] && return
-    writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
-    writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
-    PRODUCTVER=${resp}
-    writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
-    BUILDNUM=""
-    SMALLNUM=""
-    writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
-    writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
+  if [ "${PRODUCTVER}" = "${resp}" ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
-      --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
-    # Delete synoinfo and reload model/build synoinfo
-    writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
-    while IFS=': ' read KEY VALUE; do
-      writeConfigKey "synoinfo.${KEY}" "${VALUE}" "${USER_CONFIG_FILE}"
-    done < <(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
-    # Check addons
-    PLATFORM="$(readModelKey "${MODEL}" "platform")"
-    KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-    KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
-    while IFS=': ' read ADDON PARAM; do
-      [ -z "${ADDON}" ] && continue
-      if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
-        deleteConfigKey "addons.${ADDON}" "${USER_CONFIG_FILE}"
-      fi
-    done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
-    # Rebuild modules
-    writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-    while read ID DESC; do
-      writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
-    done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
-    # Remove old files
-    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
-    DIRTY=1
+      --yesno "$(printf "$(TEXT "The current version has been set to %s. Do you want to reset the version?")" "${PRODUCTVER}")" 0 0
+    [ $? -ne 0 ] && return
   fi
+  local KVER=$(readModelKey "${MODEL}" "productvers.[${resp}].kver")
+  if [ -d "/sys/firmware/efi" -a "${KVER:0:1}" = "3" ]; then
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
+      --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
+    return
+  fi
+  if [ ! "usb" = "$(udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2)" -a "${KVER:0:1}" = "5" ]; then
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
+      --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
+    # return
+  fi
+  while true; do
+    # get online pat data
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
+      --infobox "$(TEXT "Get pat data ..")" 0 0
+    idx=0
+    while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
+      fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
+      [ "${fastest}" = "www.synology.cn" ] &&
+        fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
+        fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
+      patdata=$(curl -skL "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
+      if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
+        if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
+          paturl=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].url')
+          patsum=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].checksum')
+          paturl=${paturl%%\?*}
+          break
+        fi
+      fi
+      idx=$((${idx} + 1))
+    done
+    if [ -z "${paturl}" -o -z "${patsum}" ]; then
+      MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.")"
+      paturl=""
+      patsum=""
+    else
+      MSG="$(TEXT "Successfully to get pat data,\nPlease confirm or modify as needed.")"
+    fi
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
+      --extra-button --extra-label "$(TEXT "Retry")" \
+      --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
+      2>"${TMP_PATH}/resp"
+    RET=$?
+    [ ${RET} -eq 0 ] && break    # ok-button
+    [ ${RET} -eq 3 ] && continue # extra-button
+    return                       # 1 or 255  # cancel-button or ESC
+  done
+  paturl="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
+  patsum="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
+  [ -z "${paturl}" -o -z "${patsum}" ] && return
+  writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
+  writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
+  PRODUCTVER=${resp}
+  writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
+  BUILDNUM=""
+  SMALLNUM=""
+  writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
+  writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
+  dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
+    --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
+  # Delete synoinfo and reload model/build synoinfo
+  writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
+  while IFS=': ' read KEY VALUE; do
+    writeConfigKey "synoinfo.${KEY}" "${VALUE}" "${USER_CONFIG_FILE}"
+  done < <(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
+  # Check addons
+  PLATFORM="$(readModelKey "${MODEL}" "platform")"
+  KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+  KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+  while IFS=': ' read ADDON PARAM; do
+    [ -z "${ADDON}" ] && continue
+    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
+      deleteConfigKey "addons.${ADDON}" "${USER_CONFIG_FILE}"
+    fi
+  done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
+  # Rebuild modules
+  writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+  while read ID DESC; do
+    writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+  done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+  # Remove old files
+  rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
+  DIRTY=1
 }
 
 ###############################################################################
@@ -542,9 +550,8 @@ function cmdlineMenu() {
   echo "a \"$(TEXT "Add/edit a cmdline item")\"" >"${TMP_PATH}/menu"
   echo "d \"$(TEXT "Delete cmdline item(s)")\"" >>"${TMP_PATH}/menu"
   if [ -n "${MODEL}" ]; then
-    echo "s \"$(TEXT "Define a serial number")\"" >>"${TMP_PATH}/menu"
+    echo "s \"$(TEXT "Define SN/MAC")\"" >>"${TMP_PATH}/menu"
   fi
-  echo "c \"$(TEXT "Define a custom MAC")\"" >>"${TMP_PATH}/menu"
   echo "v \"$(TEXT "Show user added cmdline")\"" >>"${TMP_PATH}/menu"
   echo "m \"$(TEXT "Show model inherent cmdline")\"" >>"${TMP_PATH}/menu"
   echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
@@ -592,66 +599,42 @@ function cmdlineMenu() {
       done
       ;;
     s)
+      MSG="$(TEXT "Note: (MAC will not be set to NIC)")"
+      sn="${SN}"
+      mac1="${MAC1}"
       while true; do
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
-          --inputbox "$(TEXT "Please enter a serial number ")" 0 0 "" \
-          2>${TMP_PATH}/resp
-        [ $? -ne 0 ] && break 2
-        SERIAL=$(cat ${TMP_PATH}/resp)
-        if [ -z "${SERIAL}" ]; then
-          return
-        elif [ $(validateSerial ${MODEL} ${SERIAL}) -eq 1 ]; then
+          --extra-button --extra-label "$(TEXT "Random")" \
+          --form "${MSG}" 10 110 2 "sn" 1 1 "${sn}" 1 5 100 0 "mac1" 2 1 "${mac1}" 2 5 100 0 \
+          2>"${TMP_PATH}/resp"
+        RET=$?
+        case ${RET} in
+        0) # ok-button
+          sn="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
+          mac1="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
+          if [ -z "${sn}" -o -z "${mac1}" ]; then
+            dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
+              --yesno "$(TEXT "Invalid SN/MAC, retry?")" 0 0
+            [ $? -eq 0 ] && break
+          fi
+          SN="${sn}"
+          writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
+          MAC1="${mac1}"
+          writeConfigKey "mac1" "${MAC1}" "${USER_CONFIG_FILE}"
           break
-        fi
-        # At present, the SN rules are not complete, and many SNs are not truly invalid, so not provide tips now.
-        break
-        dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
-          --yesno "$(TEXT "Invalid serial, continue?")" 0 0
-        [ $? -eq 0 ] && break
-      done
-      SN="${SERIAL}"
-      writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
-      ;;
-    c)
-      ETHX=($(ls /sys/class/net/ | grep eth)) # real network cards list
-      for N in $( # Currently, only up to 8 are supported.  (<==> boot.sh L96, <==> lkm: MAX_NET_IFACES)
-        seq 1 8
-      ); do
-        MACR="$(cat /sys/class/net/${ETHX[$(expr ${N} - 1)]}/address | sed 's/://g')"
-        MACF=${CMDLINE["mac${N}"]}
-        [ -n "${MACF}" ] && MAC=${MACF} || MAC=${MACR}
-        RET=1
-        while true; do
-          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
-            --inputbox "$(printf "$(TEXT "Type a custom MAC address of %s")" "mac${N}")" 0 0 "${MAC}" \
-            2>${TMP_PATH}/resp
-          RET=$?
-          [ ${RET} -ne 0 ] && break 2
-          MAC="$(<"${TMP_PATH}/resp")"
-          [ -z "${MAC}" ] && MAC="$(readConfigKey "original-mac${i}" "${USER_CONFIG_FILE}")"
-          [ -z "${MAC}" ] && MAC="${MACFS[$(expr ${i} - 1)]}"
-          MACF="$(echo "${MAC}" | sed "s/:\|-\| //g")"
-          [ ${#MACF} -eq 12 ] && break
-          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
-            --msgbox "$(TEXT "Invalid MAC")" 0 0
-        done
-        if [ ${RET} -eq 0 ]; then
-          CMDLINE["mac${N}"]="${MACF}"
-          CMDLINE["netif_num"]=${N}
-          writeConfigKey "cmdline.mac${N}" "${MACF}" "${USER_CONFIG_FILE}"
-          writeConfigKey "cmdline.netif_num" "${N}" "${USER_CONFIG_FILE}"
-          MAC="${MACF:0:2}:${MACF:2:2}:${MACF:4:2}:${MACF:6:2}:${MACF:8:2}:${MACF:10:2}"
-          ip link set dev ${ETHX[$(expr ${N} - 1)]} address "${MAC}" 2>&1 |
-            dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
-              --progressbox "$(TEXT "Changing MAC")" 20 70
-          /etc/init.d/S41dhcpcd restart 2>&1 |
-            dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
-              --progressbox "$(TEXT "Renewing IP")" 20 70
-          # IP=`ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*/\1: \2 /p' | head -1`
-          dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cmdline")" \
-            --yesno "$(TEXT "Continue to custom MAC?")" 0 0
-          [ $? -ne 0 ] && break
-        fi
+          ;;
+        3) # extra-button
+          sn=$(generateSerial "${MODEL}")
+          MACS=($(generateMacAddress "${MODEL}" 1))
+          mac1=${MACS[0]}
+          ;;
+        1) # cancel-button
+          break
+          ;;
+        255) # ESC
+          break
+          ;;
+        esac
       done
       ;;
     v)
@@ -996,7 +979,7 @@ function advancedMenu() {
         echo "k \"$(TEXT "kernel switching method:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
       fi
     fi
-    echo "m \"$(TEXT "Switch 'Do not set MACs':") \Z4${NOTSETMACS}\Zn\"" >>"${TMP_PATH}/menu"
+    echo "m \"$(TEXT "Set static IP")\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\"" >>"${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\"" >>"${TMP_PATH}/menu"
@@ -1064,8 +1047,44 @@ function advancedMenu() {
       NEXT="e"
       ;;
     m)
-      [ "${NOTSETMACS}" = "false" ] && NOTSETMACS='true' || NOTSETMACS='false'
-      writeConfigKey "notsetmacs" "${NOTSETMACS}" "${USER_CONFIG_FILE}"
+      MSG="$(TEXT "Temporary IP: (UI will not refresh)")"
+      ITEMS=""
+      IDX=0
+      ETHX=($(ls /sys/class/net/ | grep eth)) # real network cards list
+      for ETH in ${ETHX[@]}; do
+        [ ${IDX} -gt 7 ] && break # Currently, only up to 8 are supported.  (<==> boot.sh L96, <==> lkm: MAX_NET_IFACES)
+        IDX=$((${IDX} + 1))
+        MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
+        IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
+        ITEMS+="${ETH}(${MACR}) ${IDX} 1 ${IPR:-\"\"} ${IDX} 22 20 16 "
+      done
+      echo ${ITEMS} >"${TMP_PATH}/opts"
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
+        --form "${MSG}" 10 44 ${IDX} --file "${TMP_PATH}/opts" \
+        2>"${TMP_PATH}/resp"
+      [ $? -ne 0 ] && continue
+      (
+      IDX=1
+      for ETH in ${ETHX[@]}; do
+        MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
+        IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
+        IPC="$(cat "${TMP_PATH}/resp" | sed -n "${IDX}p")"
+        if [ -n "${IPC}" -a "${IPR}" != "${IPC}" ]; then
+          if ! echo "${IPC}" | grep -q "/"; then
+            IPC="${IPC}/24"
+          fi
+          ip addr add ${IPC} dev ${ETH}
+          writeConfigKey "network.${MACR}" "${IPC}" "${USER_CONFIG_FILE}"
+          sleep 1
+        elif [ -z "${IPC}" ]; then
+          deleteConfigKey "network.${MACR}" "${USER_CONFIG_FILE}"
+        fi
+        IDX=$((${IDX} + 1))
+      done
+      sleep 1
+      IP=$(ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*/\1: \2 /p' | head -1)
+      ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
+        --progressbox "$(TEXT "Set IP..")" 20 70
       NEXT="e"
       ;;
     u)
@@ -1135,8 +1154,8 @@ function advancedMenu() {
         --form "${MSG}" 10 110 2 "URL" 1 1 "${PATURL}" 1 5 100 0 "MD5" 2 1 "${PATSUM}" 2 5 100 0 \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && return
-      paturl="$(cat "${TMP_PATH}/resp" | tail -n +1 | head -1)"
-      patsum="$(cat "${TMP_PATH}/resp" | tail -n +2 | head -1)"
+      paturl="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
+      patsum="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
       if [ ! ${paturl} = ${PATURL} ] || [ ! ${patsum} = ${PATSUM} ]; then
         writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
         writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
