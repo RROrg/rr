@@ -104,6 +104,21 @@ function generateSerial() {
 }
 
 ###############################################################################
+# Generate a MAC address for a model
+# 1 - Model
+# 2 - number
+# Returns serial number
+function generateMacAddress() {
+  PRE="$(readModelArray "${1}" "serial.macpre")"
+  SUF="$(printf '%02x%02x%02x' $((${RANDOM} % 256)) $((${RANDOM} % 256)) $((${RANDOM} % 256)))"
+  NUM=${2:-1}
+  for I in $(seq 1 ${NUM}); do
+    printf '%06x%06x' $((0x${PRE:-"001132"})) $(($((0x${SUF})) + ${I}))
+    [ ${I} -lt ${NUM} ] && printf ' '
+  done
+}
+
+###############################################################################
 # Validate a serial number for a model
 # 1 - Model
 # 2 - Serial number to test

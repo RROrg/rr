@@ -77,7 +77,6 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "lkm" "prod" "${USER_CONFIG_FILE}"
   writeConfigKey "dsmlogo" "true" "${USER_CONFIG_FILE}"
   writeConfigKey "directboot" "false" "${USER_CONFIG_FILE}"
-  writeConfigKey "notsetmacs" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "prerelease" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "bootwait" "10" "${USER_CONFIG_FILE}"
   writeConfigKey "bootipwait" "10" "${USER_CONFIG_FILE}"
@@ -90,6 +89,7 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "paturl" "" "${USER_CONFIG_FILE}"
   writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
   writeConfigKey "sn" "" "${USER_CONFIG_FILE}"
+  writeConfigKey "mac1" "" "${USER_CONFIG_FILE}"
   # writeConfigKey "maxdisks" "" "${USER_CONFIG_FILE}"
   writeConfigKey "layout" "qwerty" "${USER_CONFIG_FILE}"
   writeConfigKey "keymap" "" "${USER_CONFIG_FILE}"
@@ -102,30 +102,20 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "addons.acpid" "" "${USER_CONFIG_FILE}"
   writeConfigKey "addons.reboottoarpl" "" "${USER_CONFIG_FILE}"
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-  # When the user has not customized, Use 1 to maintain normal startup parameters.
-  # writeConfigKey "cmdline.netif_num" "1" "${USER_CONFIG_FILE}"
-  # writeConfigKey "cmdline.mac1" "`cat /sys/class/net/${ETHX[0]}/address | sed 's/://g'`" "${USER_CONFIG_FILE}"
 fi
 
-for N in $(seq 1 ${#ETHX[@]}); do
-  MACR="$(cat /sys/class/net/${ETHX[$(expr ${N} - 1)]}/address | sed 's/://g')"
-  # Set custom MAC if defined
-  MACF="$(readConfigKey "cmdline.mac${N}" "${USER_CONFIG_FILE}")"
-  if [ -n "${MACF}" -a "${MACF}" != "${MACR}" ]; then
-    MAC="${MACF:0:2}:${MACF:2:2}:${MACF:4:2}:${MACF:6:2}:${MACF:8:2}:${MACF:10:2}"
-    echo "$(printf "$(TEXT "Setting %s MAC to %s")" "${ETHX[$(expr ${N} - 1)]}" "${MAC}")"
-    ip link set dev ${ETHX[$(expr ${N} - 1)]} address ${MAC} >/dev/null 2>&1 &&
-      (/etc/init.d/S41dhcpcd restart >/dev/null 2>&1 &) || true
+for ETH in ${ETHX[@]}; do
+  MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
+  IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
+  if [ -n "${IPR}" ]; then
+    ip addr add ${IPC}/24 dev ${ETH}
+    sleep 1
   fi
-  # Initialize with real MAC
-  writeConfigKey "original-mac${N}" "${MACR}" "${USER_CONFIG_FILE}"
-  # Enable Wake on Lan, ignore errors
-  ethtool -s ${ETHX[$(expr ${N} - 1)]} wol g 2>/dev/null
 done
 
 # Get the VID/PID if we are in USB
-VID="0x0000"
-PID="0x0000"
+VID="0x46f4"
+PID="0x0001"
 BUS=$(udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2)
 [ "${BUS}" = "ata" ] && BUS="sata"
 
