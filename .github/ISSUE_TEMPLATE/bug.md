@@ -7,12 +7,12 @@ assignees: ''
 
 ---
 
-Install ENV:  
- * motherboard:  
+Install ENV: (You can find it in the boot interface.)  
+ * DMI:  
  * CPU:  
  * NIC:  
 
-Arpl version:  
+Arpl version: (You can find it in the update menu.)  
  * arpl:  
  * addons:  
  * modules:  
