@@ -12,9 +12,9 @@ fi
 # Convert po2mo, Get extractor, LKM, addons and Modules
 convertpo2mo "files/board/arpl/overlayfs/opt/arpl/lang"
 getExtractor "files/board/arpl/p3/extractor"
-getLKMs "files/board/arpl/p3/lkms"
-getAddons "files/board/arpl/p3/addons"
-getModules "files/board/arpl/p3/modules"
+getLKMs "files/board/arpl/p3/lkms" true
+getAddons "files/board/arpl/p3/addons" true
+getModules "files/board/arpl/p3/modules" true
 
 # Remove old files
 rm -rf ".buildroot/output/target/opt/arpl"

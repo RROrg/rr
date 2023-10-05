@@ -25,12 +25,16 @@ if loaderIsConfigured; then
 fi
 
 # 23.9.7
+MAC1="$(readConfigKey "cmdline.mac1" "${USER_CONFIG_FILE}")"
 deleteConfigKey "notsetmacs" "${USER_CONFIG_FILE}"
 for N in $(1 8); do
   deleteConfigKey "cmdline.mac${N}" "${USER_CONFIG_FILE}"
   deleteConfigKey "original-mac${N}" "${USER_CONFIG_FILE}"
 done
 deleteConfigKey "cmdline.netif_num" "${USER_CONFIG_FILE}"
-writeConfigKey "mac1" "001132$(printf '%02x%02x%02x' $((${RANDOM} % 256)) $((${RANDOM} % 256)) $((${RANDOM} % 256)))" "${USER_CONFIG_FILE}"
+[ -n "${MAC1}" ] && writeConfigKey "mac1" "${MAC1}" "${USER_CONFIG_FILE}"
+
+MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
+[ -z "${MAC1}" ] && writeConfigKey "mac1" "001132$(printf '%02x%02x%02x' $((${RANDOM} % 256)) $((${RANDOM} % 256)) $((${RANDOM} % 256)))" "${USER_CONFIG_FILE}"
 
 exit 0
