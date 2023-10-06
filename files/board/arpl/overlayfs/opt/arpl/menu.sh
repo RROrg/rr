@@ -1002,7 +1002,7 @@ function advancedMenu() {
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-      --default-item "${NEXT}" --menu "$(TEXT "Choose the option")" 0 0 0 --file "${TMP_PATH}/menu" \
+      --default-item "${NEXT}" --menu "$(TEXT "Advanced option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
     case $(<"${TMP_PATH}/resp") in
@@ -1923,7 +1923,7 @@ while true; do
   echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
   dialog --backtitle "$(backtitle)" --colors \
-    --default-item ${NEXT} --menu "$(TEXT "Choose the option")" 0 0 0 --file "${TMP_PATH}/menu" \
+    --default-item ${NEXT} --menu "$(TEXT "Main menu")" 0 0 0 --file "${TMP_PATH}/menu" \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && break
   case $(<"${TMP_PATH}/resp") in
