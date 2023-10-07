@@ -30,7 +30,7 @@
   1. 引导盘只支持 sata / usb.
   2. 安装盘要大于 32GB.
   3. 内存需要大于 4GB.
-  4. DT的型号不支持sas控制器.
+  4. DT的型号不支持HBA扩展卡.
 
 # GPU
 * iGPU: https://jim.plus/
