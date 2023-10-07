@@ -981,6 +981,7 @@ function advancedMenu() {
     fi
     echo "m \"$(TEXT "Set static IP")\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
+    echo "h \"$(TEXT "Edit grub.cfg file manually")\"" >>"${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\"" >>"${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show SATA(s) # ports and drives")\"" >>"${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
@@ -1089,6 +1090,10 @@ function advancedMenu() {
       ;;
     u)
       editUserConfig
+      NEXT="e"
+      ;;
+    h)
+      editGrubCfg
       NEXT="e"
       ;;
     t) tryRecoveryDSM ;;
@@ -1511,6 +1516,18 @@ function editUserConfig() {
     rm -f "${MOD_RDGZ_FILE}"
   fi
   DIRTY=1
+}
+
+###############################################################################
+# Permits user edit the grub.cfg
+function editGrubCfg() {
+  while true; do
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Edit with caution")" \
+      --editbox "${GRUB_PATH}/grub.cfg" 0 0 2>"${TMP_PATH}/usergrub.cfg"
+    [ $? -ne 0 ] && return
+    mv -f "${TMP_PATH}/usergrub.cfg" "${GRUB_PATH}/grub.cfg"
+    break
+  done
 }
 
 ###############################################################################
