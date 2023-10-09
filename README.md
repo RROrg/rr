@@ -45,7 +45,7 @@
 
 * Translation maintenance personnel:
    * zh_CN: @wjz304
-   * zh_TW: @豪哥幫幫忙
+   * zh_TW: @豪客幫
 
 ## 教程 - Usage 
 * English: https://www.youtube.com/watch?v=VB67_FG5y-E
@@ -57,7 +57,7 @@
 * ภาษาไทย: https://www.youtube.com/watch?v=4sGrMMEQQ6I
     ##### `(From: @stnology)`
 * 中文繁體: https://www.youtube.com/watch?v=cW2eRCjtAEs
-    ##### `(From: @豪哥幫幫忙)`
+    ##### `(From: @豪客幫)`
 * 中文简体: https://www.bilibili.com/video/BV1jk4y1Y7B7  
     ##### `(From: http://mi-d.cn)`
 
