@@ -81,6 +81,7 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "bootwait" "10" "${USER_CONFIG_FILE}"
   writeConfigKey "bootipwait" "10" "${USER_CONFIG_FILE}"
   writeConfigKey "kernelway" "power" "${USER_CONFIG_FILE}"
+  writeConfigKey "kernelpanic" "5" "${USER_CONFIG_FILE}"
   writeConfigKey "odp" "false" "${USER_CONFIG_FILE}"
   writeConfigKey "model" "" "${USER_CONFIG_FILE}"
   writeConfigKey "productver" "" "${USER_CONFIG_FILE}"

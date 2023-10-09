@@ -33,6 +33,7 @@ PRERELEASE="$(readConfigKey "prerelease" "${USER_CONFIG_FILE}")"
 BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
 BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
 KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
+KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
 ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")" # official drivers priorities
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
@@ -770,8 +771,9 @@ function extractDsmFiles() {
     STATUS=$(curl -k -w "%{http_code}" -L "${PATURL}" -o "${PAT_PATH}" --progress-bar)
     if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
       rm -f "${PAT_PATH}"
+      MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d")" "${STATUS}")"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-        --msgbox "$(TEXT "Check internet or cache disk space")" 0 0
+        --msgbox "${MSG}" 0 0
       return 1
     fi
   fi
@@ -832,8 +834,9 @@ function extractDsmFiles() {
         STATUS=$(curl -k -w "%{http_code}" -L "${OLDPATURL}" -o "${OLDPAT_PATH}" --progress-bar)
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           rm -f "${OLDPAT_PATH}"
+          MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d")" "${STATUS}")"
           dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-            --msgbox "$(TEXT "Check internet or cache disk space")" 0 0
+            --msgbox "${MSG}" 0 0
           return 1
         fi
       fi
@@ -941,14 +944,14 @@ function make() {
   /opt/arpl/zimage-patch.sh
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-      --msgbox "$(TEXT "zImage not patched:\n")$(<"${LOG_FILE}")" 0 0
+      --msgbox "$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" 0 0
     return 1
   fi
 
   /opt/arpl/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-      --msgbox "$(TEXT "Ramdisk not patched:\n")$(<"${LOG_FILE}")" 0 0
+      --msgbox "$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" 0 0
     return 1
   fi
   PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
@@ -977,6 +980,7 @@ function advancedMenu() {
         echo "i \"$(TEXT "Timeout of get ip in boot:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
         echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\"" >>"${TMP_PATH}/menu"
         echo "k \"$(TEXT "kernel switching method:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
+        echo "n \"$(TEXT "Reboot on kernel panic:") \Z4${KERNELPANIC}\Zn\"" >>"${TMP_PATH}/menu"
       fi
     fi
     echo "m \"$(TEXT "Set static IP")\"" >>"${TMP_PATH}/menu"
@@ -1021,7 +1025,7 @@ function advancedMenu() {
     i)
       ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --default-item "${BOOTIPWAIT}" --no-items --menu "$(TEXT "Choose a waiting time(seconds)")" 0 0 0 ${ITEMS} \
+        --default-item "${BOOTIPWAIT}" --no-items --menu "$(TEXT "Choose a time(seconds)")" 0 0 0 ${ITEMS} \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
       resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
@@ -1033,7 +1037,7 @@ function advancedMenu() {
     w)
       ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --default-item "${BOOTWAIT}" --no-items --menu "$(TEXT "Choose a waiting time(seconds)")" 0 0 0 ${ITEMS} \
+        --default-item "${BOOTWAIT}" --no-items --menu "$(TEXT "Choose a time(seconds)")" 0 0 0 ${ITEMS} \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
       resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
@@ -1045,6 +1049,21 @@ function advancedMenu() {
     k)
       [ "${KERNELWAY}" = "kexec" ] && KERNELWAY='power' || KERNELWAY='kexec'
       writeConfigKey "kernelway" "${KERNELWAY}" "${USER_CONFIG_FILE}"
+      NEXT="e"
+      ;;
+    n)
+      rm -f "${TMP_PATH}/opts"
+      echo "5 \"Reboot after 5 seconds\"" >>"${TMP_PATH}/opts"
+      echo "0 \"No reboot\"" >>"${TMP_PATH}/opts"
+      echo "-1 \"Restart immediately\"" >>"${TMP_PATH}/opts"
+      dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
+        --default-item "${KERNELPANIC}" --menu "$(TEXT "Choose a time(seconds)")" 0 0 0 --file "${TMP_PATH}/opts" \
+        2>${TMP_PATH}/resp
+      [ $? -ne 0 ] && return
+      resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
+      [ -z "${resp}" ] && return
+      KERNELPANIC=${resp}
+      writeConfigKey "kernelpanic" "${KERNELPANIC}" "${USER_CONFIG_FILE}"
       NEXT="e"
       ;;
     m)
