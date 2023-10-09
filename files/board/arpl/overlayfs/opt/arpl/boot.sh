@@ -39,7 +39,7 @@ if [ "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print$1}')" != "${ZIMAGE_HASH}" ]
   /opt/arpl/zimage-patch.sh
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-      --msgbox "$(TEXT "zImage not patched:\n")$(<"${LOG_FILE}")" 12 70
+      --msgbox "$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" 12 70
     exit 1
   fi
 fi
@@ -52,7 +52,7 @@ if [ "${RAMDISK_HASH_CUR}" != "${RAMDISK_HASH}" ]; then
   /opt/arpl/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-      --msgbox "$(TEXT "Ramdisk not patched:\n")$(<"${LOG_FILE}")" 12 70
+      --msgbox "$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" 12 70
     exit 1
   fi
   # Update SHA256 hash
@@ -78,7 +78,7 @@ echo -e "$(TEXT "CPU:  ") \033[1;36m${CPU}\033[0m"
 echo -e "$(TEXT "MEM:  ") \033[1;36m${MEM}\033[0m"
 
 if [ ! -f "${MODEL_CONFIG_PATH}/${MODEL}.yml" ] || [ -z "$(readConfigKey "productvers.[${PRODUCTVER}]" "${MODEL_CONFIG_PATH}/${MODEL}.yml")" ]; then
-  echo -e "\033[1;33m*** $(printf "$(TEXT "The current version of arpl does not support booting %s-%s, please rebuild.")" "${MODEL}" "${PRODUCTVER}") ***\033[0m"
+  echo -e "\033[1;33m*** $(printf "$(TEXT "The current version of bootloader does not support booting %s-%s, please upgrade and rebuild.")" "${MODEL}" "${PRODUCTVER}") ***\033[0m"
   exit 1
 fi
 
@@ -109,6 +109,7 @@ done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
 
 #
 KVER=$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")
+KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
 
 if [ ! "${BUS}" = "usb" ]; then
   LOADER_DEVICE_NAME=$(echo ${LOADER_DISK} | sed 's|/dev/||')
@@ -122,7 +123,7 @@ CMDLINE_LINE=""
 grep -q "force_junior" /proc/cmdline && CMDLINE_LINE+="force_junior "
 [ ${EFI} -eq 1 ] && CMDLINE_LINE+="withefi " || CMDLINE_LINE+="noefi "
 [ ! "${BUS}" = "usb" ] && CMDLINE_LINE+="synoboot_satadom=${DOM} dom_szmax=${SIZE} "
-CMDLINE_LINE+="console=ttyS0,115200n8 earlyprintk earlycon=uart8250,io,0x3f8,115200n8 root=/dev/md0 skip_vender_mac_interfaces=0,1,2,3,4,5,6,7 loglevel=15 log_buf_len=32M"
+CMDLINE_LINE+="panic=${KERNELPANIC:-0} console=ttyS0,115200n8 earlyprintk earlycon=uart8250,io,0x3f8,115200n8 root=/dev/md0 skip_vender_mac_interfaces=0,1,2,3,4,5,6,7 loglevel=15 log_buf_len=32M"
 for KEY in ${!CMDLINE[@]}; do
   VALUE="${CMDLINE[${KEY}]}"
   CMDLINE_LINE+=" ${KEY}"
@@ -194,11 +195,11 @@ else
   w | awk '{print $1" "$2" "$4" "$5" "$6}' >WB
   MSG=""
   while test ${BOOTWAIT} -ge 0; do
-    MSG="$(printf "\033[1;33m$(TEXT "%2ds (accessing arpl will interrupt boot)")\033[0m" "${BOOTWAIT}")"
+    MSG="$(printf "\033[1;33m$(TEXT "%2ds (Changing access(ssh/web) status will interrupt boot)")\033[0m" "${BOOTWAIT}")"
     echo -en "\r${MSG}"
     w | awk '{print $1" "$2" "$4" "$5" "$6}' >WC
     if ! diff WB WC >/dev/null 2>&1; then
-      echo -en "\r\033[1;33m$(TEXT "A new access is connected, the boot process is interrupted.")\033[0m\n"
+      echo -en "\r\033[1;33m$(TEXT "access(ssh/web) status has changed and booting is interrupted.")\033[0m\n"
       rm -f WB WC
       exit 0
     fi
