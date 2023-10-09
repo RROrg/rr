@@ -96,6 +96,7 @@ VID="$(readConfigKey "vid" "${USER_CONFIG_FILE}")"
 PID="$(readConfigKey "pid" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
+KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
 
 declare -A CMDLINE
 
@@ -109,6 +110,32 @@ CMDLINE['sn']="${SN}"
 CMDLINE['mac1']="${MAC1}"
 CMDLINE['netif_num']="1"
 
+# set fixed cmdline
+if grep -q "force_junior" /proc/cmdline; then
+  CMDLINE['force_junior']=""
+fi
+if [ ${EFI} -eq 1 ]; then
+  CMDLINE['withefi']=""
+else
+  CMDLINE['noefi']=""
+fi
+if [ ! "${BUS}" = "usb" ]; then
+  LOADER_DEVICE_NAME=$(echo ${LOADER_DISK} | sed 's|/dev/||')
+  SIZE=$(($(cat /sys/block/${LOADER_DEVICE_NAME}/size) / 2048 + 10))
+  # Read SATADoM type
+  DOM="$(readModelKey "${MODEL}" "dom")"
+  CMDLINE['synoboot_satadom']="${DOM}"
+  CMDLINE['dom_szmax']="${SIZE}"
+fi
+CMDLINE['panic']="${KERNELPANIC:-0}"
+CMDLINE['console']="ttyS0,115200n8"
+CMDLINE['earlyprintk']=""
+CMDLINE['earlycon']="uart8250,io,0x3f8,115200n8"
+CMDLINE['root']="/dev/md0"
+CMDLINE['skip_vender_mac_interfaces']="0,1,2,3,4,5,6,7"
+CMDLINE['loglevel']="15"
+CMDLINE['log_buf_len']="32M"
+
 # Read cmdline
 while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
@@ -117,28 +144,14 @@ while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
 done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
 
-#
-KVER=$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")
-KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
-
-if [ ! "${BUS}" = "usb" ]; then
-  LOADER_DEVICE_NAME=$(echo ${LOADER_DISK} | sed 's|/dev/||')
-  SIZE=$(($(cat /sys/block/${LOADER_DEVICE_NAME}/size) / 2048 + 10))
-  # Read SATADoM type
-  DOM="$(readModelKey "${MODEL}" "dom")"
-fi
-
 # Prepare command line
 CMDLINE_LINE=""
-grep -q "force_junior" /proc/cmdline && CMDLINE_LINE+="force_junior "
-[ ${EFI} -eq 1 ] && CMDLINE_LINE+="withefi " || CMDLINE_LINE+="noefi "
-[ ! "${BUS}" = "usb" ] && CMDLINE_LINE+="synoboot_satadom=${DOM} dom_szmax=${SIZE} "
-CMDLINE_LINE+="panic=${KERNELPANIC:-0} console=ttyS0,115200n8 earlyprintk earlycon=uart8250,io,0x3f8,115200n8 root=/dev/md0 skip_vender_mac_interfaces=0,1,2,3,4,5,6,7 loglevel=15 log_buf_len=32M"
 for KEY in ${!CMDLINE[@]}; do
   VALUE="${CMDLINE[${KEY}]}"
   CMDLINE_LINE+=" ${KEY}"
   [ -n "${VALUE}" ] && CMDLINE_LINE+="=${VALUE}"
 done
+CMDLINE_LINE=$(echo "${CMDLINE_LINE}" | sed 's/^ //') # Remove leading space
 echo -e "$(TEXT "Cmdline:\n")\033[1;36m${CMDLINE_LINE}\033[0m"
 
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
@@ -222,6 +235,7 @@ else
   echo -e "\033[1;37m$(TEXT "Loading DSM kernel...")\033[0m"
 
   # Executes DSM kernel via KEXEC
+  KVER=$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")
   if [ "${KVER:0:1}" = "3" -a ${EFI} -eq 1 ]; then
     echo -e "\033[1;33m$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")\033[0m"
     kexec --noefi -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
