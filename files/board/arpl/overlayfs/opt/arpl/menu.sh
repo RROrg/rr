@@ -119,6 +119,7 @@ function modelMenu() {
       done < <(cat "${TMP_PATH}/modellist" | sort -r -n -k 2)
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
       [ ${FLGBETA} -eq 0 ] && echo "b \"\Z1$(TEXT "Show all models")\Zn\"" >>"${TMP_PATH}/menu"
+      echo "c \"\Z1$(TEXT "Compatibility judgment")\Zn\"" >>"${TMP_PATH}/menu"
       dialog --backtitle "$(backtitle)" --colors \
         --menu "$(TEXT "Choose the model")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
@@ -131,6 +132,47 @@ function modelMenu() {
       fi
       if [ "${resp}" = "b" ]; then
         FLGBETA=1
+        continue
+      fi
+      if [ "${resp}" = "c" ]; then
+        models=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
+        [ $(lspci -d ::300 | grep 8086 | wc -l) -gt 0 ] && iGPU=1 || iGPU=0
+        [ $(lspci -d ::107 | wc -l) -gt 0 ] && LSI=1 || LSI=0
+        [ $(lspci -d ::108 | wc -l) -gt 0 ] && NVME=1 || NVME=0
+        if [ "${NVME}" = "1" ]; then
+          for PCI in $(lspci -d ::108 | awk '{print $1}'); do
+            if [ ! -d "/sys/devices/pci0000:00/0000:${PCI}/nvme" ]; then
+              NVME=2
+              break
+            fi
+          done
+        fi
+        rm -f "${TMP_PATH}/opts"
+        echo "$(printf "%-16s %8s %8s %8s" "model" "iGPU" "HBA" "M.2")" >>"${TMP_PATH}/opts"
+        while read M Y; do
+          PLATFORM=$(readModelKey "${M}" "platform")
+          DT="$(readModelKey "${M}" "dt")"
+          I915=" "
+          HBA=" "
+          M_2=" "
+          if [ "${iGPU}" = "1" ]; then
+            [ "${PLATFORM}" = "apollolake" -o "${PLATFORM}" = "geminilake" ] && I915="*"
+          fi
+          if [ "${LSI}" = "1" ]; then
+            [ ! "${DT}" = "true" ] && HBA="*   "
+          fi
+          if [ "${NVME}" = "1" ]; then
+            [ "${DT}" = "true" ] && M_2="*   "
+          fi
+          if [ "${NVME}" = "2" ]; then
+            if echo ${models[@]} | grep -q ${M}; then 
+              M_2="*   "
+            fi
+          fi
+          echo "$(printf "%-16s %8s %8s %8s" "${M}" "${I915}" "${HBA}" "${M_2}")" >>"${TMP_PATH}/opts"
+        done < <(cat "${TMP_PATH}/modellist" | sort -r -n -k 2)
+        dialog --backtitle "$(backtitle)" --colors \
+          --textbox "${TMP_PATH}/opts" 0 0
         continue
       fi
       break
@@ -1084,25 +1126,25 @@ function advancedMenu() {
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
       (
-      IDX=1
-      for ETH in ${ETHX[@]}; do
-        MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
-        IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
-        IPC="$(cat "${TMP_PATH}/resp" | sed -n "${IDX}p")"
-        if [ -n "${IPC}" -a "${IPR}" != "${IPC}" ]; then
-          if ! echo "${IPC}" | grep -q "/"; then
-            IPC="${IPC}/24"
+        IDX=1
+        for ETH in ${ETHX[@]}; do
+          MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
+          IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
+          IPC="$(cat "${TMP_PATH}/resp" | sed -n "${IDX}p")"
+          if [ -n "${IPC}" -a "${IPR}" != "${IPC}" ]; then
+            if ! echo "${IPC}" | grep -q "/"; then
+              IPC="${IPC}/24"
+            fi
+            ip addr add ${IPC} dev ${ETH}
+            writeConfigKey "network.${MACR}" "${IPC}" "${USER_CONFIG_FILE}"
+            sleep 1
+          elif [ -z "${IPC}" ]; then
+            deleteConfigKey "network.${MACR}" "${USER_CONFIG_FILE}"
           fi
-          ip addr add ${IPC} dev ${ETH}
-          writeConfigKey "network.${MACR}" "${IPC}" "${USER_CONFIG_FILE}"
-          sleep 1
-        elif [ -z "${IPC}" ]; then
-          deleteConfigKey "network.${MACR}" "${USER_CONFIG_FILE}"
-        fi
-        IDX=$((${IDX} + 1))
-      done
-      sleep 1
-      IP=$(ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*/\1: \2 /p' | head -1)
+          IDX=$((${IDX} + 1))
+        done
+        sleep 1
+        IP=$(ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*/\1: \2 /p' | head -1)
       ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Set IP..")" 20 70
       NEXT="e"
