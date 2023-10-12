@@ -1022,8 +1022,8 @@ function advancedMenu() {
         echo "i \"$(TEXT "Timeout of get ip in boot:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
         echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\"" >>"${TMP_PATH}/menu"
         echo "k \"$(TEXT "kernel switching method:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
-        echo "n \"$(TEXT "Reboot on kernel panic:") \Z4${KERNELPANIC}\Zn\"" >>"${TMP_PATH}/menu"
       fi
+      echo "n \"$(TEXT "Reboot on kernel panic:") \Z4${KERNELPANIC}\Zn\"" >>"${TMP_PATH}/menu"
     fi
     echo "m \"$(TEXT "Set static IP")\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
