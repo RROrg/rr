@@ -186,23 +186,28 @@
 * log:
   ```
   # 驱动相关
-  lsmod                                            # 查看已加载驱动  
-  ls -ld /sys/class/net/*/device/driver            # 查看已加载网卡和对应驱动  
+  lsmod                                            # 查看已加载驱动
+  ls -ld /sys/class/net/*/device/driver            # 查看已加载网卡和对应驱动
   cat /sys/class/net/*/address                     # 查看已加载网卡的MAC地址
 
-  # 磁盘相关   
-  fdisk -l                                         # 查看硬盘信息 
-  ls /sys/block/                                   # 查看块设备  
-  ls /sys/block/sd*                                # 查看识别的 sata 硬盘 (非设备树(dtb)的型号)    
-  ls /sys/block/sata*                              # 查看识别的 sata 硬盘  (设备树(dtb)的型号)  
-  ls /sys/block/nvme*                              # 查看识别的 nvme 硬盘  
+  # 磁盘相关
+  fdisk -l                                         # 查看硬盘信息
+  lspci -d ::106                                   # 查看 ATA 控制器
+  lspci -d ::107                                   # 查看 HBA 控制器
+  ls -l /sys/class/scsi_host                       # 查看硬盘 host 信息
+  ls /sys/block/                                   # 查看块设备
+  ls /sys/block/sd*                                # 查看识别的 sata 硬盘 (非设备树(dtb)的型号)
+  ls /sys/block/sata*                              # 查看识别的 sata 硬盘  (设备树(dtb)的型号)
+  ls /sys/block/nvme*                              # 查看识别的 nvme 硬盘
   cat /sys/block/sd*/device/syno_block_info        # 查看识别的 sata 硬盘挂载点 (非设备树(dtb)的型号)  
-  cat /sys/block/sata*/device/syno_block_info      # 查看识别的 sata 硬盘挂载点 (设备树(dtb)的型号)  
-  cat /sys/block/nvme*/device/syno_block_info      # 查看识别的 nvme 硬盘挂载点  
+  cat /sys/block/sata*/device/syno_block_info      # 查看识别的 sata 硬盘挂载点 (设备树(dtb)的型号)
+  cat /sys/block/nvme*/device/syno_block_info      # 查看识别的 nvme 硬盘挂载点
 
+  # 服务相关
   systemctl                                        # 查看服务  
+  netstat -tunlp                                   # 查看端口  
 
-  # 日志相关   
+  # 日志相关
   dmesg                                            # 内核日志
   cat /proc/cmdlime                                # 引导参数
   cat /var/log/linuxrc.syno.log                    # 引导态下启动日志
