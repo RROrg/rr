@@ -823,7 +823,7 @@ function extractDsmFiles() {
   echo -n "$(printf "$(TEXT "Checking hash of %s: ")" "${PAT_FILE}")"
   if [ "$(md5sum ${PAT_PATH} | awk '{print $1}')" != "${PATSUM}" ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-      --msgbox "$(TEXT "md5 Hash of pat not match, try again!")" 0 0
+      --msgbox "$(TEXT "md5 hash of pat not match, Please reget pat data from the version menu and try again!")" 0 0
     rm -f ${PAT_PATH}
     return 1
   fi
@@ -1279,7 +1279,7 @@ function advancedMenu() {
       fi
       (
         for I in ${RESP}; do
-          mkfs.ext4 -T largefile4 "${I}"
+          echo y | mkfs.ext4 -T largefile4 "${I}" 2>&1
         done
       ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Formatting ...")" 20 70

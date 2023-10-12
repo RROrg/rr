@@ -105,6 +105,8 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
 fi
 
+# _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
+
 for ETH in ${ETHX[@]}; do
   MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
   IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
