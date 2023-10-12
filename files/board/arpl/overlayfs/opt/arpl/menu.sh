@@ -1145,8 +1145,8 @@ function advancedMenu() {
         done
         sleep 1
         IP=$(ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*/\1: \2 /p' | head -1)
-      ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --progressbox "$(TEXT "Set IP..")" 20 70
+      ) 2>&1 | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
+        --progressbox "$(TEXT "Setting IP ...")" 20 100
       NEXT="e"
       ;;
     u)
@@ -1247,8 +1247,8 @@ function advancedMenu() {
           umount "${I}"
         done
         rm -rf "${TMP_PATH}/sdX1"
-      ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --progressbox "$(TEXT "Removing ...")" 20 70
+      ) 2>&1 | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
+        --progressbox "$(TEXT "Removing ...")" 20 100
       MSG="$(TEXT "Remove VERSION file for all disks completed.")"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "${MSG}" 0 0
@@ -1279,10 +1279,10 @@ function advancedMenu() {
       fi
       (
         for I in ${RESP}; do
-          echo y | mkfs.ext4 -T largefile4 "${I}" 2>&1
+          echo y | mkfs.ext4 -T largefile4 "${I}"
         done
-      ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --progressbox "$(TEXT "Formatting ...")" 20 70
+      ) 2>&1 | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
+        --progressbox "$(TEXT "Formatting ...")" 20 100
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "Formatting is complete.")" 0 0
       ;;
@@ -1332,8 +1332,8 @@ function advancedMenu() {
           umount "${I}"
         done
         rm -rf "${TMP_PATH}/sdX1"
-      ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --progressbox "$(TEXT "Resetting ...")" 20 70
+      ) 2>&1 | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
+        --progressbox "$(TEXT "Resetting ...")" 20 100
       [ -f "${SHADOW_FILE}" ] && rm -rf "${SHADOW_FILE}"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "Password reset completed.")" 0 0
@@ -1483,8 +1483,8 @@ function advancedMenu() {
         source ~/.bashrc
         opkg update
         #opkg install python3 python3-pip
-      ) | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
-        --progressbox "$(TEXT "opkg installing ...")" 20 70
+      ) 2>&1 | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
+        --progressbox "$(TEXT "opkg installing ...")" 20 100
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "opkg install is complete. Please reconnect to SSH/web, or execute 'source ~/.bashrc'")" 0 0
       ;;
