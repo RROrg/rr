@@ -74,14 +74,14 @@ jobs:
           cp -Ru files/* .buildroot
           cd .buildroot
           echo "Generating default config"
-          make BR2_EXTERNAL=../external arpl_defconfig
+          make BR2_EXTERNAL=./external arpl_defconfig
 
       # Download sources if not cached
       - name: Download buildroot packages source
         if: steps.dl-cache.outputs.cache-hit != 'true'
         run: |
           cd .buildroot
-          make BR2_EXTERNAL=../external source
+          make BR2_EXTERNAL=./external source
 
       # Prepare buildroot for first make
       - name: Prepare buildroot
@@ -89,7 +89,7 @@ jobs:
         run: |
           echo "First make"
           cd .buildroot
-          make BR2_EXTERNAL=../external
+          make BR2_EXTERNAL=./external
 
       # calculates the version number and push
       - name: Calculate version
@@ -160,9 +160,9 @@ jobs:
 
           cd .buildroot
           echo "Generating default config"
-          make BR2_EXTERNAL=../external arpl_defconfig
+          make BR2_EXTERNAL=./external arpl_defconfig
           echo "Building..."
-          make BR2_EXTERNAL=../external
+          make BR2_EXTERNAL=./external
           cd -
           # qemu-img convert -O vmdk arpl.img arpl-dyn.vmdk
           # qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
