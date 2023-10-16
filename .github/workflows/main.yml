@@ -51,14 +51,6 @@ jobs:
           sudo apt install -y jq gawk gettext libelf-dev qemu-utils
           sudo snap install yq
 
-      # Check dl cache
-      - name: Cache downloads
-        id: dl-cache
-        uses: actions/cache@v3
-        with:
-          path: ~/dl
-          key: ${{ runner.os }}-dl
-
       # Check buildroot cache
       - name: Cache buildroot
         id: br-cache
@@ -77,22 +69,11 @@ jobs:
           cp -Ru files/* .buildroot
           cd .buildroot
           echo "Generating default config"
-          make BR2_EXTERNAL=./external arpl_defconfig
-
-      # Download sources if not cached
-      - name: Download buildroot packages source
-        if: steps.dl-cache.outputs.cache-hit != 'true'
-        run: |
-          cd .buildroot
-          make BR2_EXTERNAL=./external source
-
-      # Prepare buildroot for first make
-      - name: Prepare buildroot
-        if: steps.br-cache.outputs.cache-hit != 'true'
-        run: |
-          echo "First make"
-          cd .buildroot
-          make BR2_EXTERNAL=./external
+          make BR2_EXTERNAL=./external -j$(nproc) arpl_defconfig
+          echo "Download sources if not cached"
+          make BR2_EXTERNAL=./external -j$(nproc) source
+          echo "Prepare buildroot for first make"
+          make BR2_EXTERNAL=./external -j$(nproc)
 
       # calculates the version number and push
       - name: Calculate version
@@ -163,9 +144,9 @@ jobs:
 
           cd .buildroot
           echo "Generating default config"
-          make BR2_EXTERNAL=./external arpl_defconfig
+          make BR2_EXTERNAL=./external -j$(nproc) arpl_defconfig
           echo "Building..."
-          make BR2_EXTERNAL=./external
+          make BR2_EXTERNAL=./external -j$(nproc)
           cd -
           # qemu-img convert -O vmdk arpl.img arpl-dyn.vmdk
           # qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
@@ -218,3 +199,4 @@ jobs:
             # arpl-i18n-${{ env.VERSION }}.vmdk-dyn.zip
             # arpl-i18n-${{ env.VERSION }}.vmdk-flat.zip
             update.zip
+
