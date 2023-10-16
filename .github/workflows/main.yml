@@ -43,6 +43,9 @@ jobs:
 
           # Clean up disk space
           docker rmi $(docker images -q)
+          sudo apt update
+          sudo apt -y purge azure-cli* docker* llvm* google* dotnet* powershell* sphinxsearch* mysql* php* 
+          sudo apt -y full-upgrade
 
           sudo apt update
           sudo apt install -y jq gawk gettext libelf-dev qemu-utils
