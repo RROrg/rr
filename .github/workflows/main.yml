@@ -51,17 +51,17 @@ jobs:
           sudo apt install -y jq gawk gettext libelf-dev qemu-utils
           sudo snap install yq
 
-      # Check buildroot cache
+      # Restore buildroot cache
       - name: Cache buildroot
-        id: br-cache
-        uses: actions/cache@v3
+        id: re-cache
+        uses: actions/cache/restore@v3
         with:
           path: .buildroot
           key: ${{ runner.os }}-${{ hashFiles('files/configs/arpl_defconfig') }}
 
-      # Clone buildroot repository (if not cached)
-      - name: Clone buildroot
-        if: steps.br-cache.outputs.cache-hit != 'true'
+      # build buildroot repository (if not restore cached)
+      - name: Build buildroot
+        if: steps.re-cache.outputs.cache-hit != 'true'
         run: |
           git clone --single-branch -b 2023.02.x https://github.com/buildroot/buildroot.git .buildroot
           # Copy files
@@ -74,6 +74,15 @@ jobs:
           make BR2_EXTERNAL=./external -j$(nproc) source
           echo "Prepare buildroot for first make"
           make BR2_EXTERNAL=./external -j$(nproc)
+
+      # Save buildroot cache
+      - name: Save buildroot
+        if: steps.re-cache.outputs.cache-hit != 'true'
+        id: cache-primes-save
+        uses: actions/cache/save@v3
+        with:
+          path: .buildroot
+          key: ${{ runner.os }}-${{ hashFiles('files/configs/arpl_defconfig') }}
 
       # calculates the version number and push
       - name: Calculate version
