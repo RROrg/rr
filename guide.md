@@ -36,103 +36,25 @@
 * iGPU: https://jim.plus/
 * vGPU: https://blog.kkk.rs/
 
-# ARPL:
-* ### [命令输入方法演示](https://www.bilibili.com/video/BV1T84y1P7Kq)  https://www.bilibili.com/video/BV1T84y1P7Kq  
-
-* arpl各版本间切换(手动方式, 全量) (Any version):  
+# RR:
+* RR 各版本间切换(手动方式, 全量):  
     ```shell
-    # 在 shell 中下载需要的版本或者手动上传到/opt/arpl/下
-    # Download the required version in the shell or manually upload it to/opt/arpl/
-    curl -kL -o /opt/arpl/arpl.zip https://github.com/wjz304/arpl-i18n/releases/download/23.4.5/arpl-i18n-23.4.5.img.zip
+    # 在 shell 中下载需要的版本或者手动上传到 ~/ 下
+    # Download the required version in the shell or manually upload it to ~/
+    curl -kL -o ~/rr.zip https://github.com/wjz304/rr/releases/download/23.4.5/rr-23.11.1.img.zip
     # 卸载挂载的引导盘
     # Uninstalling the mounted boot disk
     umount /mnt/p1 /mnt/p2 /mnt/p3
     # 解压 并写入到引导盘
     # Decompress and write to the boot disk
-    unzip -p arpl.zip | dd of=`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1` bs=1M conv=fsync
+    # 获取当前的引导盘
+    LOADER_DISK="$(blkid | grep 'LABEL="RR3"' | cut -d3 -f1)"
+    unzip -p rr.zip | dd of=${LOADER_DISK} bs=1M conv=fsync
     # 重启 reboot
     reboot
     ```
-* arpl各版本间切换(菜单更新, 增量)(arpl / arpl-zh_CN / arpl-i18n(ver < 23.4.5)):  
-    ```shell
-    # shell 下输入以下命令修改更新 repo. 
-    # 如果要切换原版修改第二条命令中的 wjz304/arpl-i18n 为 fbelavenuto/arpl
-    # 如果切换中文版修改第二条命令中的 wjz304/arpl-i18n 为 wjz304/arpl-zh_CN
-    # Enter the following command under the shell to modify and update repo
-    # If you want to switch the original version and modify wjz304/arpl-i18n to fbelavenuto/arpl in the second command.
-    # If you switch to the Chinese version and modify the wjz304/arpl-i18n to wjz304/arpl_zh_CN in the second command.
-    CURREPO=`grep "github.com.*update" menu.sh | sed -r 's/.*com\/(.*)\/releases.*/\1/'`
-    sed -i "s|${CURREPO}|wjz304/arpl-i18n|g" /opt/arpl/menu.sh
-    # 进入设置菜单执行更新arpl操作即可. 更新后请重启.
-    # Simply enter the main menu and perform the update arpl operation. Please restart after the update.
-    ```
-* arpl 备份 (Any version):
-    ```shell
-    # 备份为 disk.img.gz, 自行导出.
-    dd if=`blkid | grep 'LABEL="ARPL3"' | cut -d3 -f1` | gzip > disk.img.gz
-    # 结合 transfer.sh 直接导出链接
-    curl -skL --insecure -w '\n' --upload-file disk.img.gz https://transfer.sh
-    ```
-* arpl 持久化 /opt/arpl 目录的修改 (Any version):
-    ```shell
-    RDXZ_PATH=/tmp/rdxz_tmp
-    mkdir -p "${RDXZ_PATH}"
-    (cd "${RDXZ_PATH}"; xz -dc < "/mnt/p3/initrd-arpl" | cpio -idm) >/dev/null 2>&1 || true
-    rm -rf "${RDXZ_PATH}/opt/arpl"
-    cp -rf "/opt/arpl" "${RDXZ_PATH}/opt"
-    (cd "${RDXZ_PATH}"; find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 > "/mnt/p3/initrd-arpl") || true
-    rm -rf "${RDXZ_PATH}"
-    ```
-* arpl 修改所有的pat下载源 (Any version):
-    ```shell
-    sed -i 's/global.synologydownload.com/cndl.synology.cn/g' /opt/arpl/menu.sh `find /opt/arpl/model-configs/ -type f'`
-    sed -i 's/global.download.synology.com/cndl.synology.cn/g' /opt/arpl/menu.sh `find /opt/arpl/model-configs/ -type f'`
-    ```
-* arpl 更新慢的解决办法 (arpl-zh_CN / arpl):
-    ```shell
-    sed -i 's|https://.*/https://|https://|g' /opt/arpl/menu.sh 
-    sed -i 's|https://github.com|https://ghproxy.homeboyc.cn/&|g' /opt/arpl/menu.sh 
-    sed -i 's|https://api.github.com|http://ghproxy.homeboyc.cn/&|g' /opt/arpl/menu.sh
-    ```
-* arpl 去掉pat的hash校验 (Any version):
-    ```shell
-    sed -i 's/HASH}" ]/& \&\& false/g' /opt/arpl/menu.sh
-    ```
-* arpl 下获取网卡驱动 (Any version):
-    ```shell
-    for i in `ls /sys/class/net | grep -v 'lo'`; do echo $i -- `ethtool -i $i | grep driver`; done
-    ```
-* arpl 使用自定义的dts文件 (arpl(ver > v1.1-beta2a / arpl-zh_CN):
-    ```shell
-    # 将dts文件放到/mnt/p1下,并重命名为model.dts. "/mnt/p1/model.dts"
-    sed -i '/^.*\/addons\/disks.sh.*$/a [ -f "\/mnt\/p1\/model.dts" ] \&\& cp "\/mnt\/p1\/model.dts" "${RAMDISK_PATH}\/addons\/model.dts"' /opt/arpl/ramdisk-patch.sh
-    ```
-* arpl 离线安装 (arpl_zh_CN(ver > ++-v1.3) / arpl-i18n(ver < 23.7.0>)):
-    ```shell
-    1. arpl 下
-    # arpl下获取型号版本的pat下载地址 (替换以下命令中的 版本号和型号部分)
-    yq eval '.builds.42218.pat.url' "/opt/arpl/model-configs/DS3622xs+.yml"
-    # 将pat重命名为<型号>-<版本>.pat, 放入 /mnt/p3/dl/ 下
-    # 例: /mnt/p3/dl/DS3622xs+-42218.pat
 
-    2. pc 下
-    # 通过 DG等其他软件打开arpl.img, 将pat重命名为<型号>-<版本>.pat, 放入 第3个分区的 /dl/ 下.
-    ```
-* arpl 增删驱动 (Any version):
-    ```shell
-    # 1.首先你要有对应平台的驱动 比如 SA6400 7.1.1 增加 r8125
-    # 略
-    # 2.解包
-    mkdir -p /mnt/p3/modules/epyc7002-5.10.55
-    gzip -dc /mnt/p3/modules/epyc7002-5.10.55.tgz | tar xf - -C /mnt/p3/modules/epyc7002-5.10.55
-    # 3.放入或删除驱动
-    # 略
-    # 4.打包
-    tar -cf /mnt/p3/modules/epyc7002-5.10.55.tar -C /mnt/p3/modules/epyc7002-5.10.55 .
-    gzip -c /mnt/p3/modules/epyc7002-5.10.55.tar > /mnt/p3/modules/epyc7002-5.10.55.tgz
-    rm -rf /mnt/p3/modules/epyc7002-5.10.55.tar /mnt/p3/modules/epyc7002-5.10.55
-    ```
-* arpl 开机强行进入到arpl (Any version):
+* RR 开机强行进入到 RR shell:
     ```shell
     # 在 wait IP 的时候, 快速的连上, 杀死 boot.sh 进程.
     kill `ps | grep -v grep | grep boot.sh | awk '{print $1}'`
@@ -160,10 +82,10 @@
     mount /dev/synoboot2 /tmp/synoboot2
     ls /tmp/synoboot2/
     ```
-* dsm下重启到arpl(免键盘) (Any version):
+* dsm下重启到RR(免键盘) (Any version):
     ```shell
     sudo -i  # 输入密码
-    /usr/bin/arpl-reboot.sh "config"
+    /usr/bin/rr-reboot.sh "config"
     ```
 * dsm下修改sn (Any version):
     ```shell

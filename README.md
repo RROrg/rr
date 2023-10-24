@@ -1,20 +1,12 @@
-# Automated Redpill Loader (i18n)
+# Redpill Recovery (arpl-i18n)
 
-本库为 arpl i18n (多语言优化版): 
+This project is a system for redpill’s preinstallation and recovery environment.
 
-### 原版：
-<b>https://github.com/fbelavenuto/arpl</b>
-* [arpl说明](https://github.com/fbelavenuto/arpl/blob/main/README.md)
-
-### 汉化：
-<b>https://github.com/wjz304/arpl-zh_CN</b>
-* 仅同步汉化原版, 所以功能与原版保持一致.
-
-### i18n: 
-<b>https://github.com/wjz304/arpl-i18n</b>
-* addons: https://github.com/wjz304/arpl-addons
-* modules: https://github.com/wjz304/arpl-modules
-* rp-lkms: https://github.com/wjz304/redpill-lkm
+### 组件: 
+<b>https://github.com/wjz304/rr</b>
+* addons: https://github.com/wjz304/rr-addons
+* modules: https://github.com/wjz304/rr-modules
+* rp-lkms: https://github.com/wjz304/rr-lkms
 
 ### About GPU: 
 * iGPU: https://jim.plus/
@@ -22,21 +14,21 @@
 
 ## 说明 - Instructions
 * [GUIDE](./guide.md)
-* [About get logs](https://github.com/wjz304/arpl-i18n/issues/173)
-* [About not find DSM after "boot the loader"](https://github.com/wjz304/arpl-i18n/issues/175)
-* [About DT(Device Tree) and *portcfg/maxdisks](https://github.com/wjz304/arpl-i18n/issues/226)
+* [About get logs](https://github.com/wjz304/rr/issues/173)
+* [About not find DSM after "boot the loader"](https://github.com/wjz304/rr/issues/175)
+* [About DT(Device Tree) and *portcfg/maxdisks](https://github.com/wjz304/rr/issues/226)
 
 ## 翻译 - Translation
 * 其他语言的翻译 - Language translation work:
     ```shell
     # If it does not involve adding or deleting, the following process is not required.
     sudo apt install gettext
-    git clone https://github.com/wjz304/arpl-i18n.git
-    cd files/board/arpl/overlayfs/opt/arpl
-    xgettext -L Shell --keyword=TEXT *.sh -o lang/arpl.pot
-    sed -i 's/charset=CHARSET/charset=UTF-8/' lang/arpl.pot
+    git clone https://github.com/wjz304/rr.git
+    cd files/initrd/opt/rr
+    xgettext -L Shell --keyword=TEXT *.sh -o lang/rr.pot
+    sed -i 's/charset=CHARSET/charset=UTF-8/' lang/rr.pot
     # You need to replace the language you need and translate the po file.
-    msginit -i lang/arpl.pot -l zh_CN.UTF-8 -o lang/zh_CN.po
+    msginit -i lang/rr.pot -l zh_CN.UTF-8 -o lang/zh_CN.po
     # This process will be automatically processed during packaging.
     msgfmt lang/zh_CN.po -o lang/zh_CN.mo
     ```
@@ -67,6 +59,12 @@
 ----
 * The hard drive has a price, but the data is priceless. Any modification to the bootloader is risky. I will not be responsible for data loss.
 * This tool is only for learning and communication, and commercial use is strictly prohibited.
+
+
+### 鸣谢 - Credits
+arpl: https://github.com/fbelavenuto/arpl  
+redpill: https://github.com/RedPill-TTG  
+Framework: https://github.com/buildroot/buildroot  
 
 ## 打赏一下
 * > ### 作者: Ing  

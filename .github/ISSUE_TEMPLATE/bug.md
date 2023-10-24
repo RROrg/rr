@@ -12,8 +12,8 @@ Install ENV: (You can find it in the boot interface.)
  * CPU:  
  * NIC:  
 
-Arpl version: (You can find it in the update menu.)  
- * arpl:  
+RR version: (You can find it in the update menu.)  
+ * RR:  
  * addons:  
  * modules:  
  * lkms:  

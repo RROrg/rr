@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-name: Build arpl
+name: Build RR
 
 on:
   push:
@@ -34,6 +34,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
+        with:
+          lfs: 'true'
 
       # Install dependencies
       - name: Install dependencies
@@ -41,48 +43,8 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-          # Clean up disk space
-          docker rmi $(docker images -q)
           sudo apt update
-          sudo apt -y purge azure-cli* docker* llvm* google* dotnet* powershell* sphinxsearch* mysql* php* 
-          sudo apt -y full-upgrade
-
-          sudo apt update
-          sudo apt install -y jq gawk gettext libelf-dev qemu-utils
-          sudo snap install yq
-
-      # Restore buildroot cache
-      - name: Cache buildroot
-        id: re-cache
-        uses: actions/cache/restore@v3
-        with:
-          path: .buildroot
-          key: ${{ runner.os }}-${{ hashFiles('files/configs/arpl_defconfig') }}
-
-      # build buildroot repository (if not restore cached)
-      - name: Build buildroot
-        if: steps.re-cache.outputs.cache-hit != 'true'
-        run: |
-          git clone --single-branch -b 2023.02.x https://github.com/buildroot/buildroot.git .buildroot
-          # Copy files
-          echo "Copying files"
-          cp -Ru files/* .buildroot
-          cd .buildroot
-          echo "Generating default config"
-          make BR2_EXTERNAL=./external -j$(nproc) arpl_defconfig
-          echo "Download sources if not cached"
-          make BR2_EXTERNAL=./external -j$(nproc) source
-          echo "Prepare buildroot for first make"
-          make BR2_EXTERNAL=./external -j$(nproc)
-
-      # Save buildroot cache
-      - name: Save buildroot
-        if: steps.re-cache.outputs.cache-hit != 'true'
-        id: cache-primes-save
-        uses: actions/cache/save@v3
-        with:
-          path: .buildroot
-          key: ${{ runner.os }}-${{ hashFiles('files/configs/arpl_defconfig') }}
+          sudo apt install -y jq cpio gettext
 
       # calculates the version number and push
       - name: Calculate version
@@ -112,8 +74,8 @@ jobs:
           if [ -n "${VERSION}" ]; then
             # Modify Source File
             echo "${VERSION}" > VERSION
-            echo "${VERSION}" > files/board/arpl/p1/ARPL-VERSION
-            sed 's/^ARPL_VERSION=.*/ARPL_VERSION="'${VERSION}'"/' -i files/board/arpl/overlayfs/opt/arpl/include/consts.sh
+            echo "${VERSION}" > files/p1/RR_VERSION
+            sed 's/^RR_VERSION=.*/RR_VERSION="'${VERSION}'"/' -i files/initrd/opt/rr/include/consts.sh
 
             git checkout main
             git pull
@@ -125,50 +87,70 @@ jobs:
             fi
           fi
 
-      # Convert po2mo, Get extractor, LKM, addons and Modules
-      - name: Convert po2mo, Get extractor, LKM, addons and Modules
+      # Convert po2mo, Get extractor, LKMs, addons and Modules
+      - name: Convert po2mo, Get extractor, LKMs, addons and Modules
         run: |
           . scripts/func.sh
 
-          convertpo2mo "files/board/arpl/overlayfs/opt/arpl/lang"
-          getExtractor "files/board/arpl/p3/extractor"
-          getLKMs "files/board/arpl/p3/lkms" ${{ inputs.prerelease }}
-          getAddons "files/board/arpl/p3/addons" ${{ inputs.prerelease }}
-          getModules "files/board/arpl/p3/modules" ${{ inputs.prerelease }}
+          convertpo2mo "files/initrd/opt/rr/lang"
+          getExtractor "files/p3/extractor"
+          getLKMs "files/p3/lkms" ${{ inputs.prerelease }}
+          getAddons "files/p3/addons" ${{ inputs.prerelease }}
+          getModules "files/p3/modules" ${{ inputs.prerelease }}
 
           echo "OK"
 
-      # Build incremental from caches
+      # Build incremental
       - name: Build image
         run: |
-          # Remove old files
-          rm -rf .buildroot/output/target/opt/arpl
-          rm -rf .buildroot/board/arpl/overlayfs
-          rm -rf .buildroot/board/arpl/p1
-          rm -rf .buildroot/board/arpl/p3
+          . scripts/func.sh
 
-          # Copy files
+          gzip -dc "files/grub.img.gz" >"rr.img"
+          fdisk -l "rr.img"
+          
+          LOOPX=$(sudo losetup -f)
+          sudo losetup -P "${LOOPX}" "rr.img"
+
+          echo "Mounting image file"
+          mkdir -p "/tmp/p1"
+          mkdir -p "/tmp/p3"
+          sudo mount ${LOOPX}p1 "/tmp/p1"
+          sudo mount ${LOOPX}p3 "/tmp/p3"
+
+          echo "Get Buildroot"
+          getBuildroot "2023.02.x" "br"
+          [ ! -f "br/bzImage-rr" -o ! -f "br/initrd-rr" ] && return 1
+          
+          echo "Repack initrd"
+          cp -f "br/bzImage-rr" "files/p3/bzImage-rr"
+          repackInitrd "br/initrd-rr" "files/initrd" "files/p3/initrd-rr"
+
           echo "Copying files"
-          cp -Ru files/* .buildroot/
+          sudo cp -Rf "files/p1/"* "/tmp/p1"
+          sudo cp -Rf "files/p3/"* "/tmp/p3"
+          sync
 
-          cd .buildroot
-          echo "Generating default config"
-          make BR2_EXTERNAL=./external -j$(nproc) arpl_defconfig
-          echo "Building..."
-          make BR2_EXTERNAL=./external -j$(nproc)
-          cd -
-          # qemu-img convert -O vmdk arpl.img arpl-dyn.vmdk
-          # qemu-img convert -O vmdk -o adapter_type=lsilogic arpl.img -o subformat=monolithicFlat arpl.vmdk
+          echo "Unmount image file"
+          sudo umount "/tmp/p1"
+          sudo umount "/tmp/p3"
+          rmdir "/tmp/p1"
+          rmdir "/tmp/p3"
+
+          sudo losetup --detach ${LOOPX}
+
+          # echo "Image Converter"
+          # qemu-img convert -O vmdk rr.img rr-dyn.vmdk
+          # qemu-img convert -O vmdk -o adapter_type=lsilogic rr.img -o subformat=monolithicFlat rr.vmdk
 
       # Zip image and generate checksum
       - name: Pack
         run: |
           if [ -n "${{ env.VERSION }}" ]; then
-            zip -9 "arpl-i18n-${{ env.VERSION }}.img.zip" arpl.img
-            # zip -9 "arpl-i18n-${{ env.VERSION }}.vmdk-dyn.zip" arpl-dyn.vmdk
-            # zip -9 "arpl-i18n-${{ env.VERSION }}.vmdk-flat.zip" arpl.vmdk arpl-flat.vmdk
+            zip -9 "rr-${{ env.VERSION }}.img.zip" rr.img
+            # zip -9 "rr-${{ env.VERSION }}.vmdk-dyn.zip" rr-dyn.vmdk
+            # zip -9 "rr-${{ env.VERSION }}.vmdk-flat.zip" rr.vmdk rr-flat.vmdk
           else
-            zip -9 "arpl-i18n.img.zip" arpl.img
+            zip -9 "rr.img.zip" rr.img
           fi
           sha256sum update-list.yml update-check.sh > sha256sum
           zip -9j update.zip update-list.yml update-check.sh
@@ -192,7 +174,7 @@ jobs:
         with:
           name: Images
           path: |
-            arpl-i18n.img.zip
+            rr.img.zip
             update.zip
           retention-days: 5
 
@@ -204,8 +186,8 @@ jobs:
           tag_name: ${{ env.VERSION }}
           prerelease: ${{ inputs.prerelease }}
           files: |
-            arpl-i18n-${{ env.VERSION }}.img.zip
-            # arpl-i18n-${{ env.VERSION }}.vmdk-dyn.zip
-            # arpl-i18n-${{ env.VERSION }}.vmdk-flat.zip
+            rr-${{ env.VERSION }}.img.zip
+            # rr-${{ env.VERSION }}.vmdk-dyn.zip
+            # rr-${{ env.VERSION }}.vmdk-flat.zip
             update.zip
 
