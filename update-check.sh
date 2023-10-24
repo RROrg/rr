@@ -4,7 +4,7 @@
 [ ! -f /mnt/p1/boot/grub/grub.cfg ] && exit 1
 
 # 23.7.0
-. /opt/arpl/include/functions.sh
+. /opt/rr/include/functions.sh
 if loaderIsConfigured; then
   if [ -f "${ORI_RDGZ_FILE}" ]; then
     rm -rf "${RAMDISK_PATH}"

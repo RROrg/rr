@@ -32,7 +32,7 @@ jobs:
 
       - name: Make Grub
         run: |
-          . scripts/grub.sh "grub-2.06" "i386-pc i386-efi x86_64-efi"
+          . scripts/grub.sh "grub-2.06" "i386-pc i386-efi x86_64-efi" "RR"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -46,7 +46,7 @@ jobs:
         run: |
           if [ -f "grub.img.gz" ]; then
             echo "Copy img ..."
-            mv -f grub.img.gz files/board/arpl/grub.img.gz 
+            mv -f grub.img.gz files/grub.img.gz
 
             echo "Git push ..."
             git pull
