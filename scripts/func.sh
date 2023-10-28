@@ -176,7 +176,7 @@ function getModules() {
 # repack initrd
 # $1 initrd file  
 # $2 plugin path
-# $3 output path
+# $3 output file
 function repackInitrd() {
   INITRD_FILE="${1}"
   PLUGIN_PATH="${2}"

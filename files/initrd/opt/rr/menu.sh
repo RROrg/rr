@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 
-. /opt/rr/include/functions.sh
-. /opt/rr/include/addons.sh
-. /opt/rr/include/modules.sh
+[ -z "${WORK_PATH}" -o ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+. ${WORK_PATH}/include/functions.sh
+. ${WORK_PATH}/include/addons.sh
+. ${WORK_PATH}/include/modules.sh
+
+[ -z "${LOADER_DISK}" ] && die "$(TEXT "Loader is not init!")"
 
 # Check partition 3 space, if < 2GiB is necessary clean cache folder
 CLEARCACHE=0
-LOADER_DISK="$(blkid | grep 'LABEL="RR3"' | cut -d3 -f1)"
-LOADER_DEVICE_NAME=$(echo "${LOADER_DISK}" | sed 's|/dev/||')
-if [ $(cat "/sys/block/${LOADER_DEVICE_NAME}/${LOADER_DEVICE_NAME}3/size") -lt 4194304 ]; then
+if [ $(cat "/sys/block/${LOADER_DISK/\/dev\//}/${LOADER_DISK_PART3/\/dev\//}/size") -lt 4194304 ]; then
   CLEARCACHE=1
 fi
 
 # Get actual IP
-IP=$(ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*/\1: \2 /p' | head -1)
+IP="$(getIP)"
 
-# Dirty flag
-DIRTY=0
 # Debug flag
 # DEBUG=0
 
@@ -93,10 +93,11 @@ function modelMenu() {
       Y=$(echo ${M} | tr -cd "[0-9]")
       Y=${Y:0-2}
       echo "${M} ${Y}" >>"${TMP_PATH}/modellist"
-    done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sed 's/.*\///; s/\.yml//')
+    done < <(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml | sed 's/.*\///; s/\.yml//')
 
     while true; do
       echo -n "" >"${TMP_PATH}/menu"
+      echo "c \"\Z1$(TEXT "Compatibility judgment")\Zn\"" >>"${TMP_PATH}/menu"
       FLGNEX=0
       while read M Y; do
         PLATFORM=$(readModelKey "${M}" "platform")
@@ -119,21 +120,12 @@ function modelMenu() {
       done < <(cat "${TMP_PATH}/modellist" | sort -r -n -k 2)
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
       [ ${FLGBETA} -eq 0 ] && echo "b \"\Z1$(TEXT "Show all models")\Zn\"" >>"${TMP_PATH}/menu"
-      echo "c \"\Z1$(TEXT "Compatibility judgment")\Zn\"" >>"${TMP_PATH}/menu"
       dialog --backtitle "$(backtitle)" --colors \
         --menu "$(TEXT "Choose the model")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
       resp=$(<${TMP_PATH}/resp)
       [ -z "${resp}" ] && return
-      if [ "${resp}" = "f" ]; then
-        RESTRICT=0
-        continue
-      fi
-      if [ "${resp}" = "b" ]; then
-        FLGBETA=1
-        continue
-      fi
       if [ "${resp}" = "c" ]; then
         models=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
         [ $(lspci -d ::300 | grep 8086 | wc -l) -gt 0 ] && iGPU=1 || iGPU=0
@@ -165,7 +157,7 @@ function modelMenu() {
             [ "${DT}" = "true" ] && M_2="*   "
           fi
           if [ "${NVME}" = "2" ]; then
-            if echo ${models[@]} | grep -q ${M}; then 
+            if echo ${models[@]} | grep -q ${M}; then
               M_2="*   "
             fi
           fi
@@ -173,6 +165,14 @@ function modelMenu() {
         done < <(cat "${TMP_PATH}/modellist" | sort -r -n -k 2)
         dialog --backtitle "$(backtitle)" --colors \
           --textbox "${TMP_PATH}/opts" 0 0
+        continue
+      fi
+      if [ "${resp}" = "f" ]; then
+        RESTRICT=0
+        continue
+      fi
+      if [ "${resp}" = "b" ]; then
+        FLGBETA=1
         continue
       fi
       break
@@ -199,14 +199,14 @@ function modelMenu() {
     for I in $(seq 1 ${NETIF_NUM}); do
       writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
     done
-    DIRTY=1
+    touch ${PART1_PATH}/.build
   fi
 }
 
 ###############################################################################
 # Shows available buildnumbers from a model to user choose one
 function productversMenu() {
-  ITEMS="$(readConfigEntriesArray "productvers" "${MODEL_CONFIG_PATH}/${MODEL}.yml" | sort -r)"
+  ITEMS="$(readConfigEntriesArray "productvers" "${WORK_PATH}/model-configs/${MODEL}.yml" | sort -r)"
   if [ -z "${1}" ]; then
     dialog --backtitle "$(backtitle)" --colors \
       --no-items --menu "$(TEXT "Choose a product version")" 0 0 0 ${ITEMS} \
@@ -229,15 +229,15 @@ function productversMenu() {
       --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
     return
   fi
-  if [ ! "usb" = "$(udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2)" -a "${KVER:0:1}" = "5" ]; then
-    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
-      --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
-    # return
-  fi
+  # if [ ! "usb" = "$(getBus "${LOADER_DISK}")" -a "${KVER:0:1}" = "5" ]; then
+  #   dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
+  #     --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
+  #   # return
+  # fi
   while true; do
     # get online pat data
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Product Version")" \
-      --infobox "$(TEXT "Get pat data ..")" 0 0
+      --infobox "$(TEXT "Get pat data ...")" 0 0
     idx=0
     while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
       fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
@@ -306,7 +306,7 @@ function productversMenu() {
   done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
   # Remove old files
   rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
-  DIRTY=1
+  touch ${PART1_PATH}/.build
 }
 
 ###############################################################################
@@ -362,7 +362,7 @@ function addonMenu() {
       VALUE="$(<"${TMP_PATH}/resp")"
       ADDONS[${ADDON}]="${VALUE}"
       writeConfigKey "addons.${ADDON}" "${VALUE}" "${USER_CONFIG_FILE}"
-      DIRTY=1
+      touch ${PART1_PATH}/.build
       ;;
     d)
       NEXT='d'
@@ -385,7 +385,7 @@ function addonMenu() {
         unset ADDONS[${I}]
         deleteConfigKey "addons.${I}" "${USER_CONFIG_FILE}"
       done
-      DIRTY=1
+      touch ${PART1_PATH}/.build
       ;;
     s)
       NEXT='s'
@@ -441,7 +441,7 @@ function addonMenu() {
         fi
         ADDON="$(untarAddon "${TMP_UP_PATH}/${USER_FILE}")"
         if [ -n "${ADDON}" ]; then
-          [ -f "${CACHE_PATH}/addons/VERSION" ] && rm -f "${CACHE_PATH}/addons/VERSION"
+          [ -f "${PART3_PATH}/addons/VERSION" ] && rm -f "${PART3_PATH}/addons/VERSION"
           dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Addons")" \
             --msgbox "$(printf "$(TEXT "Addon '%s' added to loader, Please enable it in 'Add an addon' menu.")" "${ADDON}")" 0 0
         else
@@ -501,7 +501,7 @@ function moduleMenu() {
           for ID in ${resp}; do
             writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
           done
-          DIRTY=1
+          touch ${PART1_PATH}/.build
           break
           ;;
         3) # extra-button
@@ -509,11 +509,11 @@ function moduleMenu() {
           while read ID DESC; do
             writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
           done <<<${ALLMODULES}
-          DIRTY=1
+          touch ${PART1_PATH}/.build
           ;;
         2) # help-button
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-          DIRTY=1
+          touch ${PART1_PATH}/.build
           ;;
         1) # cancel-button
           break
@@ -536,7 +536,7 @@ function moduleMenu() {
       for ID in ${KOLIST[@]}; do
         writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
       done
-      DIRTY=1
+      touch ${PART1_PATH}/.build
       ;;
     o)
       MSG=""
@@ -563,7 +563,7 @@ function moduleMenu() {
       popd
       if [ -n "${USER_FILE}" -a "${USER_FILE##*.}" = "ko" ]; then
         addToModules ${PLATFORM} "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${TMP_UP_PATH}/${USER_FILE}"
-        [ -f "${CACHE_PATH}/modules/VERSION" ] && rm -f "${CACHE_PATH}/modules/VERSION"
+        [ -f "${PART3_PATH}/modules/VERSION" ] && rm -f "${PART3_PATH}/modules/VERSION"
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
           --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${USER_FILE}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" 0 0
         rm -f "${TMP_UP_PATH}/${USER_FILE}"
@@ -736,7 +736,7 @@ function synoinfoMenu() {
       VALUE="$(<"${TMP_PATH}/resp")"
       SYNOINFO[${NAME}]="${VALUE}"
       writeConfigKey "synoinfo.${NAME}" "${VALUE}" "${USER_CONFIG_FILE}"
-      DIRTY=1
+      touch ${PART1_PATH}/.build
       ;;
     d)
       if [ ${#SYNOINFO[@]} -eq 0 ]; then
@@ -758,7 +758,7 @@ function synoinfoMenu() {
         unset SYNOINFO[${I}]
         deleteConfigKey "synoinfo.${I}" "${USER_CONFIG_FILE}"
       done
-      DIRTY=1
+      touch ${PART1_PATH}/.build
       ;;
     s)
       ITEMS=""
@@ -779,11 +779,12 @@ function extractDsmFiles() {
   PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
   PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
 
-  SPACELEFT=$(df --block-size=1 | awk '/'${LOADER_DEVICE_NAME}'3/{print $4}') # Check disk space left
+  # Check disk space left
+  SPACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
 
   PAT_FILE="${MODEL}-${PRODUCTVER}.pat"
-  PAT_PATH="${CACHE_PATH}/dl/${PAT_FILE}"
-  EXTRACTOR_PATH="${CACHE_PATH}/extractor"
+  PAT_PATH="${PART3_PATH}/dl/${PAT_FILE}"
+  EXTRACTOR_PATH="${PART3_PATH}/extractor"
   EXTRACTOR_BIN="syno_extract_system_patch"
   OLDPATURL="https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
 
@@ -793,10 +794,11 @@ function extractDsmFiles() {
     # If we have little disk space, clean cache folder
     if [ ${CLEARCACHE} -eq 1 ]; then
       echo "$(TEXT "Cleaning cache")"
-      rm -rf "${CACHE_PATH}/dl"
+      rm -rf "${PART3_PATH}/dl"
     fi
-    mkdir -p "${CACHE_PATH}/dl"
-    fastest=$(_get_fastest "global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
+    mkdir -p "${PART3_PATH}/dl"
+    mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
+    fastest=$(_get_fastest ${mirrors[@]})
     mirror="$(echo ${PATURL} | sed 's|^http[s]*://\([^/]*\).*|\1|')"
     if echo "${mirrors[@]}" | grep -wq "${mirror}" && [ "${mirror}" != "${fastest}" ]; then
       echo "$(printf "$(TEXT "Based on the current network situation, switch to %s mirror to downloading.")" "${fastest}")"
@@ -810,7 +812,7 @@ function extractDsmFiles() {
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
     fi
-    STATUS=$(curl -k -w "%{http_code}" -L "${PATURL}" -o "${PAT_PATH}" --progress-bar)
+    STATUS=$(curl -k -w "%{http_code}" -L "${PATURL}" -o "${PAT_PATH}")
     if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
       rm -f "${PAT_PATH}"
       MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d")" "${STATUS}")"
@@ -854,7 +856,7 @@ function extractDsmFiles() {
     ;;
   esac
 
-  SPACELEFT=$(df --block-size=1 | awk '/'${LOADER_DEVICE_NAME}'3/{print$4}') # Check disk space left
+  SPACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}') # Check disk space left
 
   if [ "${isencrypted}" = "yes" ]; then
     # Check existance of extractor
@@ -864,7 +866,7 @@ function extractDsmFiles() {
       # Extractor not exists, get it.
       mkdir -p "${EXTRACTOR_PATH}"
       # Check if old pat already downloaded
-      OLDPAT_PATH="${CACHE_PATH}/dl/DS3622xs+-42218.pat"
+      OLDPAT_PATH="${PART3_PATH}/dl/DS3622xs+-42218.pat"
       if [ ! -f "${OLDPAT_PATH}" ]; then
         echo "$(TEXT "Downloading old pat to extract synology .pat extractor...")"
         # Discover remote file size
@@ -873,7 +875,7 @@ function extractDsmFiles() {
           # No disk space to download, change it to RAMDISK
           OLDPAT_PATH="${TMP_PATH}/DS3622xs+-42218.pat"
         fi
-        STATUS=$(curl -k -w "%{http_code}" -L "${OLDPATURL}" -o "${OLDPAT_PATH}" --progress-bar)
+        STATUS=$(curl -k -w "%{http_code}" -L "${OLDPATURL}" -o "${OLDPAT_PATH}")
         if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
           rm -f "${OLDPAT_PATH}"
           MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d")" "${STATUS}")"
@@ -933,38 +935,19 @@ function extractDsmFiles() {
   echo "$(TEXT "OK")"
 
   echo -n "$(TEXT "Copying files: ")"
-  cp -f "${UNTAR_PAT_PATH}/grub_cksum.syno" "${BOOTLOADER_PATH}"
-  cp -f "${UNTAR_PAT_PATH}/GRUB_VER" "${BOOTLOADER_PATH}"
-  cp -f "${UNTAR_PAT_PATH}/grub_cksum.syno" "${SLPART_PATH}"
-  cp -f "${UNTAR_PAT_PATH}/GRUB_VER" "${SLPART_PATH}"
+  cp -f "${UNTAR_PAT_PATH}/grub_cksum.syno" "${PART1_PATH}"
+  cp -f "${UNTAR_PAT_PATH}/GRUB_VER" "${PART1_PATH}"
+  cp -f "${UNTAR_PAT_PATH}/grub_cksum.syno" "${PART2_PATH}"
+  cp -f "${UNTAR_PAT_PATH}/GRUB_VER" "${PART2_PATH}"
   cp -f "${UNTAR_PAT_PATH}/zImage" "${ORI_ZIMAGE_FILE}"
   cp -f "${UNTAR_PAT_PATH}/rd.gz" "${ORI_RDGZ_FILE}"
   rm -rf "${UNTAR_PAT_PATH}"
   echo "$(TEXT "OK")"
 }
 
-# 1 - model
-function getLogo() {
-  rm -f "${CACHE_PATH}/logo.png"
-  if [ "${DSMLOGO}" = "true" ]; then
-    fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
-    STATUS=$(curl -skL -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${CACHE_PATH}/logo.png")
-    if [ $? -ne 0 -o ${STATUS} -ne 200 -o -f "${CACHE_PATH}/logo.png" ]; then
-      convert -rotate 180 "${CACHE_PATH}/logo.png" "${CACHE_PATH}/logo.png" 2>/dev/null
-      magick montage "${CACHE_PATH}/logo.png" -background 'none' -tile '3x3' -geometry '350x210' "${CACHE_PATH}/logo.png" 2>/dev/null
-      convert -rotate 180 "${CACHE_PATH}/logo.png" "${CACHE_PATH}/logo.png" 2>/dev/null
-    fi
-  fi
-}
-
 ###############################################################################
 # Where the magic happens!
 function make() {
-  # clear
-  clear
-  # get logo.png
-  getLogo "${MODEL}"
-
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
   KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
   KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
@@ -983,19 +966,24 @@ function make() {
     [ $? -ne 0 ] && return 1
   fi
 
-  /opt/rr/zimage-patch.sh
+  # Check disk space left
+  SPACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
+  [ ${SPACELEFT} -le 268435456 ] && rm -rf "${PART3_PATH}/dl"
+
+  ${WORK_PATH}/zimage-patch.sh
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" 0 0
     return 1
   fi
 
-  /opt/rr/ramdisk-patch.sh
+  ${WORK_PATH}/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" 0 0
     return 1
   fi
+  rm -f ${PART1_PATH}/.build
   PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
   BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
   SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
@@ -1003,7 +991,6 @@ function make() {
   rm -rf "${UNTAR_PAT_PATH}"
   echo "$(TEXT "Ready!")"
   sleep 3
-  DIRTY=0
   return 0
 }
 
@@ -1045,7 +1032,7 @@ function advancedMenu() {
       echo "r \"$(TEXT "Restore bootloader disk # test")\"" >>"${TMP_PATH}/menu"
     fi
     echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
-    echo "g \"$(TEXT "Show dsm logo:") \Z4${DSMLOGO}\Zn\"" >>"${TMP_PATH}/menu"
+    echo "g \"$(TEXT "Show QR logo:") \Z4${DSMLOGO}\Zn\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
@@ -1056,7 +1043,7 @@ function advancedMenu() {
     l)
       LKM=$([ "${LKM}" = "dev" ] && echo 'prod' || ([ "${LKM}" = "test" ] && echo 'dev' || echo 'test'))
       writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
-      DIRTY=1
+      touch ${PART1_PATH}/.build
       NEXT="l"
       ;;
     q)
@@ -1144,7 +1131,7 @@ function advancedMenu() {
           IDX=$((${IDX} + 1))
         done
         sleep 1
-        IP=$(ip route 2>/dev/null | sed -n 's/.* via .* dev \(.*\)  src \(.*\)  metric .*/\1: \2 /p' | head -1)
+        IP="$(getIP)"
       ) 2>&1 | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Setting IP ...")" 20 100
       NEXT="e"
@@ -1226,7 +1213,7 @@ function advancedMenu() {
         writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
         writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
         rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
-        DIRTY=1
+        touch ${PART1_PATH}/.build
       fi
       ;;
     a)
@@ -1239,7 +1226,7 @@ function advancedMenu() {
       [ $? -ne 0 ] && return
       (
         mkdir -p "${TMP_PATH}/sdX1"
-        for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK}1"); do
+        for I in $(ls /dev/sd.*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
           mount "${I}" "${TMP_PATH}/sdX1"
           [ -f "${TMP_PATH}/sdX1/etc/VERSION" ] && rm -f "${TMP_PATH}/sdX1/etc/VERSION"
           [ -f "${TMP_PATH}/sdX1/etc.defaults/VERSION" ] && rm -f "${TMP_PATH}/sdX1/etc.defaults/VERSION"
@@ -1257,7 +1244,7 @@ function advancedMenu() {
       rm -f "${TMP_PATH}/opts"
       while read POSITION NAME; do
         [ -z "${POSITION}" -o -z "${NAME}" ] && continue
-        echo "${POSITION}" | grep -q "${LOADER_DEVICE_NAME}" && continue
+        echo "${POSITION}" | grep -q "${LOADER_DISK}" && continue
         echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
       done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd|/dev/nvme" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
@@ -1289,7 +1276,7 @@ function advancedMenu() {
     x)
       SHADOW_FILE=""
       mkdir -p "${TMP_PATH}/sdX1"
-      for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK}1"); do
+      for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
         mount ${I} "${TMP_PATH}/sdX1"
         if [ -f "${TMP_PATH}/sdX1/etc/shadow" ]; then
           cp -f "${TMP_PATH}/sdX1/etc/shadow" "${TMP_PATH}/shadow_bak"
@@ -1325,7 +1312,7 @@ function advancedMenu() {
       NEWPASSWD="$(python -c "import crypt,getpass;pw=\"${VALUE}\";print(crypt.crypt(pw))")"
       (
         mkdir -p "${TMP_PATH}/sdX1"
-        for I in $(ls /dev/sd*1 2>/dev/null | grep -v ${LOADER_DISK}1); do
+        for I in $(ls /dev/sd.*1 2>/dev/null | grep -v ${LOADER_DISK_PART1}); do
           mount "${I}" "${TMP_PATH}/sdX1"
           sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "${TMP_PATH}/sdX1/etc/shadow"
           sync
@@ -1391,7 +1378,7 @@ function advancedMenu() {
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
       fi
-      DIRTY=1
+      touch ${PART1_PATH}/.build
       ;;
     b)
       if ! tty | grep -q "/dev/pts"; then
@@ -1412,7 +1399,7 @@ function advancedMenu() {
         return
       fi
       if [ -z "${SSH_TTY}" ]; then # web
-        IP_HEAD="$(ip route show 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p' | head -1)"
+        IP_HEAD="$(getIP)"
         echo "http://${IP_HEAD}/backup.img.gz" >${TMP_PATH}/resp
         echo "            ↑                  " >>${TMP_PATH}/resp
         echo "$(TEXT "Click on the address above to download.")" >>${TMP_PATH}/resp
@@ -1448,19 +1435,19 @@ function advancedMenu() {
         break
       done
       popd
-      if [ -z "${IFTOOL}" -o -z "${TMP_UP_PATH}/${USER_FILE}" ]; then
+      if [ -z "${IFTOOL}" -o ! -f "${TMP_UP_PATH}/${USER_FILE}" ]; then
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --msgbox "$(printf "$(TEXT "Not a valid .zip/.img.gz file, please try again!")" "${USER_FILE}")" 0 0
       else
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?")" 0 0
         [ $? -ne 0 ] && (
-          rm -f "${LOADER_DISK}"
+          rm -f "${TMP_UP_PATH}/${USER_FILE}"
           return
         )
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Advanced")" \
           --infobox "$(TEXT "Writing...")" 0 0
-        umount "${BOOTLOADER_PATH}" "${SLPART_PATH}" "${CACHE_PATH}"
+        umount "${PART1_PATH}" "${PART2_PATH}" "${PART3_PATH}"
         if [ "${IFTOOL}" = "zip" ]; then
           unzip -p "${TMP_UP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
         elif [ "${IFTOOL}" = "gzip" ]; then
@@ -1520,12 +1507,12 @@ function tryRecoveryDSM() {
           [ "${unique}" = "${UNIQUE}" ] || continue
           # Found
           modelMenu "${M}"
-        done < <(find "${MODEL_CONFIG_PATH}" -maxdepth 1 -name \*.yml | sort)
+        done < <(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml | sort)
         if [ -n "${MODEL}" ]; then
           productversMenu "${majorversion}.${minorversion}"
           if [ -n "${PRODUCTVER}" ]; then
-            cp -f "${DSMROOT_PATH}/.syno/patch/zImage" "${SLPART_PATH}"
-            cp -f "${DSMROOT_PATH}/.syno/patch/rd.gz" "${SLPART_PATH}"
+            cp -f "${DSMROOT_PATH}/.syno/patch/zImage" "${PART2_PATH}"
+            cp -f "${DSMROOT_PATH}/.syno/patch/rd.gz" "${PART2_PATH}"
             MSG="$(printf "$(TEXT "Found a installation:\nModel: %s\nProductversion: %s")" "${MODEL}" "${PRODUCTVER}")"
             SN=$(_get_conf_kv SN "${DSMROOT_PATH}/etc/synoinfo.conf")
             if [ -n "${SN}" ]; then
@@ -1574,7 +1561,7 @@ function editUserConfig() {
     rm -f "${MOD_ZIMAGE_FILE}"
     rm -f "${MOD_RDGZ_FILE}"
   fi
-  DIRTY=1
+  touch ${PART1_PATH}/.build
 }
 
 ###############################################################################
@@ -1592,12 +1579,13 @@ function editGrubCfg() {
 ###############################################################################
 # Calls boot.sh to boot into DSM kernel/ramdisk
 function boot() {
-  [ ${DIRTY} -eq 1 ] && dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Alert")" \
+  [ -f ${PART1_PATH}/.build ] && dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Alert")" \
     --yesno "$(TEXT "Config changed, would you like to rebuild the loader?")" 0 0
   if [ $? -eq 0 ]; then
-    make || return
+    make 2>&1 | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Main menu")" --cr-wrap --no-collapse \
+      --progressbox "$(TEXT "Making ...")" 20 100 || return
   fi
-  boot.sh
+  ${WORK_PATH}/boot.sh
 }
 
 ###############################################################################
@@ -1610,7 +1598,7 @@ function languageMenu() {
   resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
   [ -z "${resp}" ] && return
   LANGUAGE=${resp}
-  echo "${LANGUAGE}.UTF-8" >${BOOTLOADER_PATH}/.locale
+  echo "${LANGUAGE}.UTF-8" >${PART1_PATH}/.locale
   export LANG="${LANGUAGE}.UTF-8"
 }
 
@@ -1684,10 +1672,11 @@ function downloadExts() {
       [ $? -ne 0 ] && return 1
     fi
   fi
-  dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-    --infobox "$(TEXT "Downloading last version")" 0 0
-  rm -f "${TMP_PATH}/${4}.zip"
-  STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
+  (
+    rm -f "${TMP_PATH}/${4}.zip"
+    STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
+  ) 2>&1 | dialog --backtitle "$(backtitle)" --colors --title "${T}" \
+    --progressbox "$(TEXT "Downloading ...")" 20 100
   if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
     if [ ! "${5}" = "0" ]; then
       dialog --backtitle "$(backtitle)" --colors --title "${T}" \
@@ -1748,7 +1737,7 @@ function updateRR() {
   done < <(readConfigMap "replace" "${TMP_PATH}/update-list.yml")
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --msgbox "$(printf "$(TEXT "RR updated with success to %s!\nReboot?")" "${TAG}")" 0 0
-  rr-reboot.sh config
+  rebootTo config
 }
 
 # 1 - ext name
@@ -1788,7 +1777,7 @@ function updateExts() {
     rm -rf "${LKM_PATH}/"*
     unzip "${TMP_PATH}/rp-lkms.zip" -d "${LKM_PATH}" >/dev/null 2>&1
   fi
-  DIRTY=1
+  touch ${PART1_PATH}/.build
   if [ ! "${2}" = "0" ]; then
     dialog --backtitle "$(backtitle)" --colors --title "${T}" \
       --infobox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
@@ -1802,9 +1791,9 @@ function updateExts() {
 function updateMenu() {
   while true; do
     CUR_RR_VER="${RR_VERSION:-0}"
-    CUR_ADDONS_VER="$(cat "${CACHE_PATH}/addons/VERSION" 2>/dev/null)"
-    CUR_MODULES_VER="$(cat "${CACHE_PATH}/modules/VERSION" 2>/dev/null)"
-    CUR_LKMS_VER="$(cat "${CACHE_PATH}/lkms/VERSION" 2>/dev/null)"
+    CUR_ADDONS_VER="$(cat "${PART3_PATH}/addons/VERSION" 2>/dev/null)"
+    CUR_MODULES_VER="$(cat "${PART3_PATH}/modules/VERSION" 2>/dev/null)"
+    CUR_LKMS_VER="$(cat "${PART3_PATH}/lkms/VERSION" 2>/dev/null)"
     PROXY="$(readConfigKey "proxy" "${USER_CONFIG_FILE}")"
     [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
     rm -f "${TMP_PATH}/menu"
@@ -1963,7 +1952,7 @@ function notepadMenu() {
 ###############################################################################
 
 if [ "x$1" = "xb" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]; then
-  install-addons.sh
+  updateAddons
   make
   boot && exit 0 || sleep 5
 fi
@@ -1991,7 +1980,7 @@ while true; do
   fi
   echo "l \"$(TEXT "Choose a language")\"" >>"${TMP_PATH}/menu"
   echo "k \"$(TEXT "Choose a keymap")\"" >>"${TMP_PATH}/menu"
-  if [ ${CLEARCACHE} -eq 1 -a -d "${CACHE_PATH}/dl" ]; then
+  if [ ${CLEARCACHE} -eq 1 -a -d "${PART3_PATH}/dl" ]; then
     echo "c \"$(TEXT "Clean disk cache")\"" >>"${TMP_PATH}/menu"
   fi
   echo "p \"$(TEXT "Update menu")\"" >>"${TMP_PATH}/menu"
@@ -2032,7 +2021,8 @@ while true; do
     NEXT="d"
     ;;
   d)
-    make
+    make 2>&1 | dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Main menu")" --cr-wrap --no-collapse \
+      --progressbox "$(TEXT "Making ...")" 20 100
     NEXT="b"
     ;;
   b)
@@ -2048,7 +2038,7 @@ while true; do
     ;;
   c)
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cleaning")" \
-      --prgbox "rm -rfv \"${CACHE_PATH}/dl\"" 0 0
+      --prgbox "rm -rfv \"${PART3_PATH}/dl\"" 0 0
     NEXT="d"
     ;;
   p)
@@ -2079,7 +2069,7 @@ while true; do
         reboot
         ;;
       c)
-        rr-reboot.sh config
+        rebootTo config
         ;;
       s)
         break 2

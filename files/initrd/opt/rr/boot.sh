@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
 set -e
+[ -z "${WORK_PATH}" -o ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-. /opt/rr/include/functions.sh
+. ${WORK_PATH}/include/functions.sh
 
+[ -z "${LOADER_DISK}" ] && die "$(TEXT "Loader is not init!")"
 # Sanity check
 loaderIsConfigured || die "$(TEXT "Loader is not configured!")"
 
 # Check if machine has EFI
 [ -d /sys/firmware/efi ] && EFI=1 || EFI=0
 
-LOADER_DISK="$(blkid | grep 'LABEL="RR3"' | cut -d3 -f1)"
-BUS=$(udevadm info --query property --name ${LOADER_DISK} | grep ID_BUS | cut -d= -f2)
-[ "${BUS}" = "ata" ] && BUS="sata"
+BUS=$(getBus "${LOADER_DISK}")
 
 # Print text centralized
 clear
@@ -23,20 +23,15 @@ printf "\033[1;44m%*s\033[A\n" ${COLUMNS} ""
 printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
 printf "\033[1;44m%*s\033[0m\n" ${COLUMNS} ""
 TITLE="BOOTING:"
-[ -d "/sys/firmware/efi" ] && TITLE+=" [UEFI]" || TITLE+=" [BIOS]"
+[ ${EFI} -eq 1 ] && TITLE+=" [UEFI]" || TITLE+=" [BIOS]"
 [ "${BUS}" = "usb" ] && TITLE+=" [${BUS^^} flashdisk]" || TITLE+=" [${BUS^^} DoM]"
 printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
 
-DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
-if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" -a -f "${CACHE_PATH}/logo.png" ]; then
-  echo | fbv -acuf "${CACHE_PATH}/logo.png" >/dev/null 2>/dev/null || true
-fi
-
 # Check if DSM zImage changed, patch it if necessary
 ZIMAGE_HASH="$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")"
-if [ "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print$1}')" != "${ZIMAGE_HASH}" ]; then
+if [ -f ${PART1_PATH}/.build -o "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print$1}')" != "${ZIMAGE_HASH}" ]; then
   echo -e "\033[1;43m$(TEXT "DSM zImage changed")\033[0m"
-  /opt/rr/zimage-patch.sh
+  ${WORK_PATH}/zimage-patch.sh
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" 12 70
@@ -47,9 +42,9 @@ fi
 # Check if DSM ramdisk changed, patch it if necessary
 RAMDISK_HASH="$(readConfigKey "ramdisk-hash" "${USER_CONFIG_FILE}")"
 RAMDISK_HASH_CUR="$(sha256sum "${ORI_RDGZ_FILE}" | awk '{print $1}')"
-if [ "${RAMDISK_HASH_CUR}" != "${RAMDISK_HASH}" ]; then
+if [ -f ${PART1_PATH}/.build -o "${RAMDISK_HASH_CUR}" != "${RAMDISK_HASH}" ]; then
   echo -e "\033[1;43m$(TEXT "DSM Ramdisk changed")\033[0m"
-  /opt/rr/ramdisk-patch.sh
+  ${WORK_PATH}/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" 12 70
@@ -58,6 +53,7 @@ if [ "${RAMDISK_HASH_CUR}" != "${RAMDISK_HASH}" ]; then
   # Update SHA256 hash
   writeConfigKey "ramdisk-hash" "${RAMDISK_HASH_CUR}" "${USER_CONFIG_FILE}"
 fi
+[ -f ${PART1_PATH}/.build ] && rm -f ${PART1_PATH}/.build
 
 # Load necessary variables
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
@@ -77,26 +73,28 @@ echo -e "$(TEXT "DMI:  ") \033[1;36m${DMI}\033[0m"
 echo -e "$(TEXT "CPU:  ") \033[1;36m${CPU}\033[0m"
 echo -e "$(TEXT "MEM:  ") \033[1;36m${MEM}\033[0m"
 
-if [ ! -f "${MODEL_CONFIG_PATH}/${MODEL}.yml" ] || [ -z "$(readConfigKey "productvers.[${PRODUCTVER}]" "${MODEL_CONFIG_PATH}/${MODEL}.yml")" ]; then
+if [ ! -f "${WORK_PATH}/model-configs/${MODEL}.yml" ] || [ -z "$(readModelKey ${MODEL} "productvers.[${PRODUCTVER}]")" ]; then
   echo -e "\033[1;33m*** $(printf "$(TEXT "The current version of bootloader does not support booting %s-%s, please upgrade and rebuild.")" "${MODEL}" "${PRODUCTVER}") ***\033[0m"
   exit 1
 fi
 
 HASATA=0
-for D in $(lsblk -dnp -o name); do
+for D in $(lsblk -dpno NAME); do
   [ "${D}" = "${LOADER_DISK}" ] && continue
-  if [ "$(udevadm info --query property --name ${D} | grep ID_BUS | cut -d= -f2)" = "ata" ]; then
+  if [ "$(getBus "${D}")" = "sata" -o "$(getBus "${D}")" = "scsi" ]; then
     HASATA=1
     break
   fi
 done
-[ ${HASATA} = "0" ] &&  echo -e "\033[1;33m*** $(TEXT "Please insert at least one sata disk for system installation, except for the bootloader disk.") ***\033[0m"
+[ ${HASATA} = "0" ] && echo -e "\033[1;33m*** $(TEXT "Please insert at least one sata/scsi disk for system installation, except for the bootloader disk.") ***\033[0m"
 
 VID="$(readConfigKey "vid" "${USER_CONFIG_FILE}")"
 PID="$(readConfigKey "pid" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
 KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
+
+NETIFNUM=$(ls /sys/class/net/ | grep eth | wc -l); [ ${NETIFNUM} -eq 0 ] && NETIFNUM=1
 
 declare -A CMDLINE
 
@@ -108,7 +106,7 @@ CMDLINE['vid']="${VID}"
 CMDLINE['pid']="${PID}"
 CMDLINE['sn']="${SN}"
 CMDLINE['mac1']="${MAC1}"
-CMDLINE['netif_num']="1"
+CMDLINE['netif_num']="${NETIFNUM}"
 
 # set fixed cmdline
 if grep -q "force_junior" /proc/cmdline; then
@@ -120,8 +118,7 @@ else
   CMDLINE['noefi']=""
 fi
 if [ ! "${BUS}" = "usb" ]; then
-  LOADER_DEVICE_NAME=$(echo ${LOADER_DISK} | sed 's|/dev/||')
-  SIZE=$(($(cat /sys/block/${LOADER_DEVICE_NAME}/size) / 2048 + 10))
+  SIZE=$(($(cat /sys/block/${LOADER_DISK/\/dev\//}/size) / 2048 + 10))
   # Read SATADoM type
   DOM="$(readModelKey "${MODEL}" "dom")"
   CMDLINE['synoboot_satadom']="${DOM}"
@@ -204,7 +201,7 @@ else
         break
       fi
       COUNT=$((${COUNT} + 1))
-      IP=$(ip route show dev ${ETHX[${N}]} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p')
+      IP="$(getIP ${ETHX[${N}]})"
       if [ -n "${IP}" ]; then
         echo -en "\r${ETHX[${N}]}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}")\n"
         break
@@ -234,6 +231,14 @@ else
 
   echo -e "\033[1;37m$(TEXT "Loading DSM kernel...")\033[0m"
 
+  DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
+  if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" ]; then
+    IP="$(getIP)"
+    [ -n "${IP}" ] && URL="http://${IP}:5000" || URL="http://find.synology.com/"
+    python ${WORK_PATH}/include/functions.py makeqr -d "${URL}" -l "br" -o "${TMP_PATH}/qrcode.png"
+    [ -f "${TMP_PATH}/qrcode.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode.png" >/dev/null 2>/dev/null || true
+  fi
+
   # Executes DSM kernel via KEXEC
   KVER=$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")
   if [ "${KVER:0:1}" = "3" -a ${EFI} -eq 1 ]; then
@@ -244,7 +249,7 @@ else
   fi
   echo -e "\033[1;37m$(TEXT "Booting...")\033[0m"
   for T in $(w | grep -v "TTY" | awk -F' ' '{print $2}'); do
-    echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational.\nPlease wait for a few minutes before using the http://find.synology.com/ or Synology Assistant find DSM and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
+    echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
   done
   KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
   [ "${KERNELWAY}" = "kexec" ] && kexec -f -e || poweroff

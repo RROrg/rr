@@ -8,6 +8,7 @@ synoinfo: &synoinfo
   support_syno_hybrid_raid:
   supportraidgroup:
   supportsas: "no"
+  supportsas_v2: "yes"
   maxlanport: "8"
   netif_seq: "0 1 2 3 4 5 6 7"
 cmdline: &cmdline
@@ -16,6 +17,7 @@ cmdline: &cmdline
   syno_hdd_powerup_seq: 0
   vender_format_version: 2
   elevator: elevator
+  modprobe.blacklist: mpt3sas
 patch: &patch
   - "ramdisk-etc-rc-*.patch"
   - "ramdisk-init-script-v4-*.patch"

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-. /opt/rr/include/functions.sh
-. /opt/rr/include/addons.sh
+[ -z "${WORK_PATH}" -o ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+. ${WORK_PATH}/include/functions.sh
+. ${WORK_PATH}/include/addons.sh
 
 set -o pipefail # Get exit code from process piped
 
@@ -12,12 +14,6 @@ echo -n "Patching Ramdisk"
 
 # Remove old rd.gz patched
 rm -f "${MOD_RDGZ_FILE}"
-
-# Check disk space left
-LOADER_DISK="$(blkid | grep 'LABEL="RR3"' | cut -d3 -f1)"
-LOADER_DEVICE_NAME=$(echo ${LOADER_DISK} | sed 's|/dev/||')
-SPACELEFT=$(df --block-size=1 | awk '/'${LOADER_DEVICE_NAME}'3/{print$4}')
-[ ${SPACELEFT} -le 268435456 ] && rm -rf "${CACHE_PATH}/dl"
 
 # Unzipping ramdisk
 echo -n "."
@@ -93,7 +89,7 @@ done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
 while read PE; do
   RET=1
   echo "Patching with ${PE}" >"${LOG_FILE}" 2>&1
-  for PF in $(ls ${PATCH_PATH}/${PE}); do
+  for PF in $(ls ${WORK_PATH}/patch/${PE}); do
     echo -n "."
     echo "Patching with ${PF}" >>"${LOG_FILE}" 2>&1
     (
@@ -116,7 +112,7 @@ _set_conf_kv "SN" "${SN}" "${RAMDISK_PATH}/etc/synoinfo.conf" >"${LOG_FILE}" 2>&
 
 # Patch /sbin/init.post
 echo -n "."
-grep -v -e '^[\t ]*#' -e '^$' "${PATCH_PATH}/config-manipulators.sh" >"${TMP_PATH}/rp.txt"
+grep -v -e '^[\t ]*#' -e '^$' "${WORK_PATH}/patch/config-manipulators.sh" >"${TMP_PATH}/rp.txt"
 sed -e "/@@@CONFIG-MANIPULATORS-TOOLS@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
 rm -f "${TMP_PATH}/rp.txt"
 touch "${TMP_PATH}/rp.txt"
@@ -150,7 +146,7 @@ rm -rf "${TMP_PATH}/modules"
 
 echo -n "."
 # Copying fake modprobe
-cp -f "${PATCH_PATH}/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
+cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
 # Copying LKM to /usr/lib/modules
 gzip -dc "${LKM_PATH}/rp-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko"
 
@@ -170,6 +166,10 @@ echo "export MCHECKSUM=${PATSUM}" >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export LAYOUT=${LAYOUT}" >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export KEYMAP=${KEYMAP}" >>"${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
+
+# Required addons: restore
+installAddon revert
+echo "/addons/revert.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 
 # Required addons: eudev, disks, localrss, wol
 installAddon eudev
@@ -198,7 +198,7 @@ echo "inetd" >>"${RAMDISK_PATH}/addons/addons.sh"
 [ "2" = "${BUILDNUM:0:1}" ] && sed -i 's/function //g' $(find "${RAMDISK_PATH}/addons/" -type f -name "*.sh")
 
 # Build modules dependencies
-/opt/rr/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
+${WORK_PATH}/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
 
 # Network card configuration file
 for N in $(seq 0 7); do
