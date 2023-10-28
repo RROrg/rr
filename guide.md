@@ -107,6 +107,15 @@
 ## DEBUG
 * log:
   ```
+  # 内核相关
+  sysctl -n kernel.syno_serial                     # 查看当前鉴权的SN
+  cat /proc/sys/kernel/syno_serial                 # 查看当前鉴权的SN
+  sysctl -n kernel.syno_mac_address1               # 查看当前鉴权的mcac1 (kernel.syno_mac_addresses)
+  cat /proc/sys/kernel/syno_mac_address1           # 查看当前鉴权的mcac1 (/proc/sys/kernel/syno_mac_addresses)
+  sysctl -n kernel.syno_internal_netif_num         # 查看当前鉴权的网卡数量
+  cat /proc/sys/kernel/syno_internal_netif_num     # 查看当前鉴权的网卡数量
+  nproc                                            # 查看当前线程数
+  
   # 驱动相关
   lsmod                                            # 查看已加载驱动
   ls -ld /sys/class/net/*/device/driver            # 查看已加载网卡和对应驱动
@@ -128,6 +137,7 @@
   # 服务相关
   systemctl                                        # 查看服务  
   netstat -tunlp                                   # 查看端口  
+  systemctl disable cpufreq.service                # 禁用 CPU 频率调节器
 
   # 日志相关
   dmesg                                            # 内核日志

@@ -4,13 +4,8 @@ set -e
 
 . scripts/func.sh
 
-# Convert po2mo, Get extractor, LKM, addons and Modules
+# Convert po2mo
 convertpo2mo "files/initrd/opt/rr/lang"
-getExtractor "files/p3/extractor"
-getLKMs "files/p3/lkms" true
-getAddons "files/p3/addons" true
-getModules "files/p3/modules" true
-
 
 IMAGE_FILE="rr.img"
 gzip -dc "files/grub.img.gz" >"${IMAGE_FILE}"
@@ -30,12 +25,20 @@ getBuildroot "2023.02.x" "br"
 [ ! -f "br/bzImage-rr" -o ! -f "br/initrd-rr" ] && return 1
 
 echo "Repack initrd"
-cp -f "br/bzImage-rr" "files/p3/bzImage-rr"
-repackInitrd "br/initrd-rr" "files/initrd" "files/p3/initrd-rr"
+cp -f "br/bzImage-rr" "/tmp/p3/bzImage-rr"
+repackInitrd "br/initrd-rr" "files/initrd" "/tmp/p3/initrd-rr"
 
 echo "Copying files"
 sudo cp -Rf "files/p1/"* "/tmp/p1"
 sudo cp -Rf "files/p3/"* "/tmp/p3"
+# Get extractor, LKM, addons and Modules
+getLKMs "/tmp/p3/lkms" true
+getAddons "/tmp/p3/addons" true
+getModules "/tmp/p3/modules" true
+getExtractor "/tmp/p3/extractor"
+
+read -p "Press enter to continue"
+
 sync
 
 echo "Unmount image file"

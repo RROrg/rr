@@ -26,6 +26,15 @@ function readConfigKey() {
 }
 
 ###############################################################################
+# Write to yaml config file if key not exists
+# 1 - Path of Key
+# 2 - Value
+# 3 - Path of yaml config file
+function initConfigKey() {
+  [ -z "$(readConfigKey "${1}" "${3}")" ] && writeConfigKey "${1}" "${2}" "${3}" || true
+}
+
+###############################################################################
 # Read Entries as map(key=value) from yaml config file
 # 1 - Path of key
 # 2 - Path of yaml config file

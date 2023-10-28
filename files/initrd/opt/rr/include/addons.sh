@@ -53,7 +53,7 @@ function installAddon() {
   [ ${HAS_FILES} -ne 1 ] && return 1
   cp -f "${TMP_PATH}/${ADDON}/install.sh" "${RAMDISK_PATH}/addons/${ADDON}.sh" 2>"${LOG_FILE}" || dieLog
   chmod +x "${RAMDISK_PATH}/addons/${ADDON}.sh"
-  [ -d ${TMP_PATH}/${ADDON}/root ] && (cp -Rf "${TMP_PATH}/${ADDON}/root/"* "${RAMDISK_PATH}/" 2>"${LOG_FILE}" || dieLog)
+  [ -d ${TMP_PATH}/${ADDON}/root ] && (cp -rnf "${TMP_PATH}/${ADDON}/root/"* "${RAMDISK_PATH}/" 2>"${LOG_FILE}" || dieLog)
   rm -rf "${TMP_PATH}/${ADDON}"
   return 0
 }
@@ -71,4 +71,17 @@ function untarAddon() {
   rm -rf "${ADDONS_PATH}/${ADDON}"
   mv -f "${TMP_PATH}/addon" "${ADDONS_PATH}/${ADDON}"
   echo "${ADDON}"
+}
+
+###############################################################################
+# Detect if has new local plugins to install/reinstall
+function updateAddons() {
+  for F in $(ls ${PART3_PATH}/*.addon 2>/dev/null); do
+    ADDON=$(basename "${F}" | sed 's|.addon||')
+    rm -rf "${ADDONS_PATH}/${ADDON}"
+    mkdir -p "${ADDONS_PATH}/${ADDON}"
+    echo "Installing ${F} to ${ADDONS_PATH}/${ADDON}"
+    tar -xaf "${F}" -C "${ADDONS_PATH}/${ADDON}"
+    rm -f "${F}"
+  done
 }

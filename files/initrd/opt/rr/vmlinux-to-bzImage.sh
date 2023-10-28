@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Based on code and ideas from @jumkey
 
-. /opt/rr/include/functions.sh
+[ -z "${WORK_PATH}" -o ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+. ${WORK_PATH}/include/functions.sh
 
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"

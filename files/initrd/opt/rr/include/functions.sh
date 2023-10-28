@@ -1,6 +1,9 @@
-. /opt/rr/include/i18n.sh
-. /opt/rr/include/consts.sh
-. /opt/rr/include/configFile.sh
+
+[ -z "${WORK_PATH}" -o ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" >/dev/null 2>&1 && pwd)"
+
+. ${WORK_PATH}/include/consts.sh
+. ${WORK_PATH}/include/configFile.sh
+. ${WORK_PATH}/include/i18n.sh
 
 ###############################################################################
 # Read key value from model config file
@@ -8,7 +11,7 @@
 # 2 - Key
 # Return Value
 function readModelKey() {
-  readConfigKey "${2}" "${MODEL_CONFIG_PATH}/${1}.yml"
+  readConfigKey "${2}" "${WORK_PATH}/model-configs/${1}.yml"
 }
 
 ###############################################################################
@@ -17,7 +20,7 @@ function readModelKey() {
 # 2 - Path of key
 # Returns map of values
 function readModelMap() {
-  readConfigMap "${2}" "${MODEL_CONFIG_PATH}/${1}.yml"
+  readConfigMap "${2}" "${WORK_PATH}/model-configs/${1}.yml"
 }
 
 ###############################################################################
@@ -26,7 +29,7 @@ function readModelMap() {
 # 2 - Path of key
 # Returns array/map of values
 function readModelArray() {
-  readConfigArray "${2}" "${MODEL_CONFIG_PATH}/${1}.yml"
+  readConfigArray "${2}" "${WORK_PATH}/model-configs/${1}.yml"
 }
 
 ###############################################################################
@@ -239,37 +242,81 @@ EOF
   fi
   ETHLIST="$(echo -e "${ETHLIST}" | grep -v '^$')"
 
-  echo -e "${ETHLIST}" > /tmp/ethlist
-  # cat /tmp/ethlist
+  echo -e "${ETHLIST}" >${TMP_PATH}/ethlist
+  # cat ${TMP_PATH}/ethlist
 
   # sort
   IDX=0
   while true; do
-    # cat /tmp/ethlist 
-    [ ${IDX} -ge $(wc -l < /tmp/ethlist) ] && break
-    ETH=$(cat /tmp/ethlist | sed -n "$((${IDX} + 1))p" | awk '{print $3}')
+    # cat ${TMP_PATH}/ethlist
+    [ ${IDX} -ge $(wc -l <${TMP_PATH}/ethlist) ] && break
+    ETH=$(cat ${TMP_PATH}/ethlist | sed -n "$((${IDX} + 1))p" | awk '{print $3}')
     # echo "ETH: ${ETH}"
     if [ -n "${ETH}" ] && [ ! "${ETH}" = "eth${IDX}" ]; then
       # echo "change ${ETH} <=> eth${IDX}"
       ip link set dev eth${IDX} down
       ip link set dev ${ETH} down
       sleep 1
-      ip link set dev eth${IDX} name tmp
+      ip link set dev eth${IDX} name ethN
       ip link set dev ${ETH} name eth${IDX}
-      ip link set dev tmp name ${ETH}
+      ip link set dev ethN name ${ETH}
       sleep 1
       ip link set dev eth${IDX} up
       ip link set dev ${ETH} up
       sleep 1
-      sed -i "s/eth${IDX}/tmp/" /tmp/ethlist
-      sed -i "s/${ETH}/eth${IDX}/" /tmp/ethlist
-      sed -i "s/tmp/${ETH}/" /tmp/ethlist
+      sed -i "s/eth${IDX}/ethN/" ${TMP_PATH}/ethlist
+      sed -i "s/${ETH}/eth${IDX}/" ${TMP_PATH}/ethlist
+      sed -i "s/ethN/${ETH}/" ${TMP_PATH}/ethlist
       sleep 1
     fi
     IDX=$((${IDX} + 1))
   done
 
-  rm -f /tmp/ethlist
+  rm -f ${TMP_PATH}/ethlist
+}
+
+###############################################################################
+# get bus of disk
+# 1 - device path
+function getBus() {
+  BUS=""
+  # usb/ata(sata/ide)/scsi
+  [ -z "${BUS}" ] && BUS=$(udevadm info --query property --name "${1}" 2>/dev/null | grep ID_BUS | cut -d= -f2 | sed 's/ata/sata/')
+  # usb/sata(sata/ide)/nvme
+  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,TRAN 2>/dev/null | grep "${1}" | awk '{print $2}')
+  # usb/scsi(sata/ide)/virtio(scsi/virtio)/nvme
+  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1}" | awk -F':' '{print $(NF-1)}')
+  echo "${BUS}"
+}
+
+###############################################################################
+# get IP
+# 1 - ethN
+function getIP() {
+  IP=""
+  if [ -n "${1}" -a -d "/sys/class/net/${1}" ]; then
+    IP=$(ip route show dev ${1} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p')
+    [ -z "${IP}" ] && IP=$(ip addr show ${1} | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
+  else
+    IP=$(ip route show 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p' | head -1)
+    [ -z "${IP}" ] && IP=$(ip addr show | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
+  fi
+  echo "${IP}"
+}
+
+###############################################################################
+# get logo of model
+# 1 - model
+function getLogo() {
+  MODEL="${1}"
+  rm -f "${PART3_PATH}/logo.png"
+  fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
+  STATUS=$(curl -skL -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
+  if [ $? -ne 0 -o ${STATUS} -ne 200 -o -f "${PART3_PATH}/logo.png" ]; then
+    convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
+    magick montage "${PART3_PATH}/logo.png" -background 'none' -tile '3x3' -geometry '350x210' "${PART3_PATH}/logo.png" 2>/dev/null
+    convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
+  fi
 }
 
 ###############################################################################
@@ -277,7 +324,7 @@ EOF
 # (based on pocopico's TCRP code)
 function findAndMountDSMRoot() {
   [ $(mount | grep -i "${DSMROOT_PATH}" | wc -l) -gt 0 ] && return 0
-  dsmrootdisk="$(blkid /dev/sd* | grep -i raid | awk '{print $1 " " $4}' | grep UUID | grep sd[a-z]1 | head -1 | awk -F ":" '{print $1}')"
+  dsmrootdisk="$(blkid | grep -i linux_raid_member | grep /dev/.*1: | head -1)"
   [ -z "${dsmrootdisk}" ] && return -1
   [ $(mount | grep -i "${DSMROOT_PATH}" | wc -l) -eq 0 ] && mount -t ext4 "${dsmrootdisk}" "${DSMROOT_PATH}"
   if [ $(mount | grep -i "${DSMROOT_PATH}" | wc -l) -eq 0 ]; then
@@ -285,4 +332,17 @@ function findAndMountDSMRoot() {
     return -1
   fi
   return 0
+}
+
+###############################################################################
+# Rebooting
+# (based on pocopico's TCRP code)
+function rebootTo() {
+  [ "${1}" != "junior" -a "${1}" != "config" ] && exit 1
+  # echo "Rebooting to ${1} mode"
+  GRUBPATH="$(dirname $(find ${PART1_PATH}/ -name grub.cfg | head -1))"
+  ENVFILE="${GRUBPATH}/grubenv"
+  [ ! -f "${ENVFILE}" ] && grub-editenv ${ENVFILE} create
+  grub-editenv ${ENVFILE} set next_entry="${1}"
+  reboot
 }
