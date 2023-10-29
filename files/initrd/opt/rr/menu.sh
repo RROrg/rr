@@ -35,6 +35,7 @@ BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
 KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
 KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
 ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")" # official drivers priorities
+HDDSORT="$(readConfigKey "hddsort" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
 
@@ -476,7 +477,7 @@ function moduleMenu() {
     c)
       while true; do
         dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Modules")" \
-          --infobox "$(TEXT "Reading modules")" 0 0
+          --infobox "$(TEXT "Reading modules ...")" 0 0
         ALLMODULES=$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
         unset USERMODULES
         declare -A USERMODULES
@@ -793,7 +794,7 @@ function extractDsmFiles() {
   else
     # If we have little disk space, clean cache folder
     if [ ${CLEARCACHE} -eq 1 ]; then
-      echo "$(TEXT "Cleaning cache")"
+      echo "$(TEXT "Cleaning cache ...")"
       rm -rf "${PART3_PATH}/dl"
     fi
     mkdir -p "${PART3_PATH}/dl"
@@ -805,7 +806,7 @@ function extractDsmFiles() {
       PATURL="$(echo ${PATURL} | sed "s/${mirror}/${fastest}/")"
       OLDPATURL="https://${fastest}/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
     fi
-    echo "$(printf "$(TEXT "Downloading %s")" "${PAT_FILE}")"
+    echo "$(printf "$(TEXT "Downloading %s ...")" "${PAT_FILE}")"
     # Discover remote file size
     FILESIZE=$(curl -k -sLI "${PATURL}" | grep -i Content-Length | awk '{print$2}')
     if [ 0${FILESIZE} -ge 0${SPACELEFT} ]; then
@@ -813,9 +814,10 @@ function extractDsmFiles() {
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
     fi
     STATUS=$(curl -k -w "%{http_code}" -L "${PATURL}" -o "${PAT_PATH}")
-    if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+    RET=$?
+    if [ ${RET} -ne 0 -o ${STATUS} -ne 200 ]; then
       rm -f "${PAT_PATH}"
-      MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d")" "${STATUS}")"
+      MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d")" "${RET}" "${STATUS}")"
       dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
         --msgbox "${MSG}" 0 0
       return 1
@@ -824,9 +826,9 @@ function extractDsmFiles() {
 
   echo -n "$(printf "$(TEXT "Checking hash of %s: ")" "${PAT_FILE}")"
   if [ "$(md5sum ${PAT_PATH} | awk '{print $1}')" != "${PATSUM}" ]; then
+    rm -f ${PAT_PATH}
     dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
       --msgbox "$(TEXT "md5 hash of pat not match, Please reget pat data from the version menu and try again!")" 0 0
-    rm -f ${PAT_PATH}
     return 1
   fi
   echo "$(TEXT "OK")"
@@ -876,9 +878,10 @@ function extractDsmFiles() {
           OLDPAT_PATH="${TMP_PATH}/DS3622xs+-42218.pat"
         fi
         STATUS=$(curl -k -w "%{http_code}" -L "${OLDPATURL}" -o "${OLDPAT_PATH}")
-        if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+        RET=$?
+        if [ ${RET} -ne 0 -o ${STATUS} -ne 200 ]; then
           rm -f "${OLDPAT_PATH}"
-          MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d")" "${STATUS}")"
+          MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d")" "${RET}" "${STATUS}")"
           dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
             --msgbox "${MSG}" 0 0
           return 1
@@ -987,7 +990,7 @@ function make() {
   PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
   BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
   SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
-  echo "$(TEXT "Cleaning")"
+  echo "$(TEXT "Cleaning ...")"
   rm -rf "${UNTAR_PAT_PATH}"
   echo "$(TEXT "Ready!")"
   sleep 3
@@ -1002,6 +1005,7 @@ function advancedMenu() {
     rm -f "${TMP_PATH}/menu"
     if [ -n "${PRODUCTVER}" ]; then
       echo "l \"$(TEXT "Switch LKM version:") \Z4${LKM}\Zn\"" >>"${TMP_PATH}/menu"
+      echo "j \"$(TEXT "HDD sort:") \Z4${HDDSORT}\Zn\"" >>"${TMP_PATH}/menu"
     fi
     if loaderIsConfigured; then
       echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >>"${TMP_PATH}/menu"
@@ -1043,6 +1047,12 @@ function advancedMenu() {
     l)
       LKM=$([ "${LKM}" = "dev" ] && echo 'prod' || ([ "${LKM}" = "test" ] && echo 'dev' || echo 'test'))
       writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
+      touch ${PART1_PATH}/.build
+      NEXT="l"
+      ;;
+    j)
+      [ "${HDDSORT}" = "true" ] && HDDSORT='false' || HDDSORT='true'
+      writeConfigKey "hddsort" "${HDDSORT}" "${USER_CONFIG_FILE}"
       touch ${PART1_PATH}/.build
       NEXT="l"
       ;;
@@ -1487,7 +1497,7 @@ function advancedMenu() {
 # Try to recovery a DSM already installed
 function tryRecoveryDSM() {
   dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Try recovery DSM")" \
-    --infobox "$(TEXT "Trying to recovery a DSM installed system")" 0 0
+    --infobox "$(TEXT "Trying to recovery a DSM installed system ...")" 0 0
   if findAndMountDSMRoot; then
     MODEL=""
     PRODUCTVER=""
@@ -1641,7 +1651,7 @@ function downloadExts() {
   T="$(printf "$(TEXT "Update %s")" "${1}")"
 
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-    --infobox "$(TEXT "Checking last version")" 0 0
+    --infobox "$(TEXT "Checking last version ...")" 0 0
   if [ "${PRERELEASE}" = "true" ]; then
     TAG="$(curl -skL "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | head -1 | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/')"
   else
@@ -1654,10 +1664,10 @@ function downloadExts() {
   if [ -z "${TAG}" -o "${TAG}" = "latest" ]; then
     if [ ! "${5}" = "0" ]; then
       dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-        --infobox "$(TEXT "Error checking new version")" 0 0
+        --infobox "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")" 0 0
     else
       dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-        --msgbox "$(TEXT "Error checking new version")" 0 0
+        --msgbox "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")" 0 0
     fi
     return 1
   fi
@@ -1675,15 +1685,16 @@ function downloadExts() {
   (
     rm -f "${TMP_PATH}/${4}.zip"
     STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
+    RET=$?
   ) 2>&1 | dialog --backtitle "$(backtitle)" --colors --title "${T}" \
     --progressbox "$(TEXT "Downloading ...")" 20 100
-  if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+  if [ ${RET} -ne 0 -o ${STATUS} -ne 200 ]; then
     if [ ! "${5}" = "0" ]; then
       dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-        --infobox "$(TEXT "Error downloading new version")" 0 0
+        --infobox "$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")" 0 0
     else
       dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-        --msgbox "$(TEXT "Error downloading new version")" 0 0
+        --msgbox "$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")" 0 0
     fi
     return 1
   fi
@@ -1719,7 +1730,7 @@ function updateRR() {
     fi
   fi
   dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-    --infobox "$(TEXT "Installing new files")" 0 0
+    --infobox "$(TEXT "Installing new files ...")" 0 0
   # Process update-list.yml
   while read F; do
     [ -f "${F}" ] && rm -f "${F}"
@@ -1751,7 +1762,7 @@ function updateExts() {
     mkdir -p "${TMP_PATH}/addons"
     unzip "${TMP_PATH}/addons.zip" -d "${TMP_PATH}/addons" >/dev/null 2>&1
     dialog --backtitle "$(backtitle)" --colors --title "${T}" \
-      --infobox "$(printf "$(TEXT "Installing new %s")" "${1}")" 0 0
+      --infobox "$(printf "$(TEXT "Installing new %s ...")" "${1}")" 0 0
     rm -Rf "${ADDONS_PATH}/"*
     [ -f "${TMP_PATH}/addons/VERSION" ] && cp -f "${TMP_PATH}/addons/VERSION" "${ADDONS_PATH}/"
     for PKG in $(ls ${TMP_PATH}/addons/*.addon); do
@@ -2037,7 +2048,7 @@ while true; do
     NEXT="m"
     ;;
   c)
-    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cleaning")" \
+    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Cleaning ...")" \
       --prgbox "rm -rfv \"${PART3_PATH}/dl\"" 0 0
     NEXT="d"
     ;;

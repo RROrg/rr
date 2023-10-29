@@ -36,6 +36,7 @@ KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
 PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
 PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
 ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")" # official drivers priorities
+HDDSORT="$(readConfigKey "hddsort" "${USER_CONFIG_FILE}")"
 
 # Check if DSM buildnumber changed
 . "${RAMDISK_PATH}/etc/VERSION"
@@ -59,7 +60,6 @@ writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
 
 echo -n "."
 # Read model data
-UNIQUE=$(readModelKey "${MODEL}" "unique")
 PLATFORM="$(readModelKey "${MODEL}" "platform")"
 KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
 KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
@@ -151,10 +151,6 @@ cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modpr
 gzip -dc "${LKM_PATH}/rp-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko"
 
 # Addons
-#MAXDISKS=`readConfigKey "maxdisks" "${USER_CONFIG_FILE}"`
-# Check if model needs Device-tree dynamic patch
-DT="$(readModelKey "${MODEL}" "dt")"
-
 echo -n "."
 mkdir -p "${RAMDISK_PATH}/addons"
 echo "#!/bin/sh" >"${RAMDISK_PATH}/addons/addons.sh"
@@ -175,7 +171,7 @@ echo "/addons/revert.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FI
 installAddon eudev
 echo "/addons/eudev.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 installAddon disks
-echo "/addons/disks.sh \${1} ${DT} ${UNIQUE}" >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
+echo "/addons/disks.sh \${1} ${HDDSORT} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 [ -f "${USER_UP_PATH}/${MODEL}.dts" ] && cp "${USER_UP_PATH}/${MODEL}.dts" "${RAMDISK_PATH}/addons/model.dts"
 installAddon localrss
 echo "/addons/localrss.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
