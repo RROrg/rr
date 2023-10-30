@@ -1501,8 +1501,6 @@ function tryRecoveryDSM() {
   if findAndMountDSMRoot; then
     MODEL=""
     PRODUCTVER=""
-    BUILDNUM=""
-    SMALLNUM=""
     if [ -f "${DSMROOT_PATH}/.syno/patch/VERSION" ]; then
       eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep unique)
       eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep majorversion)
@@ -1523,16 +1521,16 @@ function tryRecoveryDSM() {
           if [ -n "${PRODUCTVER}" ]; then
             cp -f "${DSMROOT_PATH}/.syno/patch/zImage" "${PART2_PATH}"
             cp -f "${DSMROOT_PATH}/.syno/patch/rd.gz" "${PART2_PATH}"
-            MSG="$(printf "$(TEXT "Found a installation:\nModel: %s\nProductversion: %s")" "${MODEL}" "${PRODUCTVER}")"
+            BUILDNUM=${buildnumber}
+            SMALLNUM=${smallfixnumber}
+            writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
+            writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
+            MSG="$(printf "$(TEXT "Found a installation:\nModel: %s\nProductversion: %s")" "${MODEL}" "${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))")"
             SN=$(_get_conf_kv SN "${DSMROOT_PATH}/etc/synoinfo.conf")
             if [ -n "${SN}" ]; then
               writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
               MSG+="$(printf "$(TEXT "\nSerial: %s")" "${SN}")"
             fi
-            BUILDNUM=${buildnumber}
-            SMALLNUM=${smallfixnumber}
-            writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
-            writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
             dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Try recovery DSM")" \
               --msgbox "${MSG}" 0 0
           fi
