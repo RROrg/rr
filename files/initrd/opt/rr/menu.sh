@@ -290,7 +290,7 @@ function productversMenu() {
   # Delete synoinfo and reload model/build synoinfo
   writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
   while IFS=': ' read KEY VALUE; do
-    writeConfigKey "synoinfo.${KEY}" "${VALUE}" "${USER_CONFIG_FILE}"
+    writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
   done < <(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
   # Check addons
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
@@ -299,13 +299,13 @@ function productversMenu() {
   while IFS=': ' read ADDON PARAM; do
     [ -z "${ADDON}" ] && continue
     if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
-      deleteConfigKey "addons.${ADDON}" "${USER_CONFIG_FILE}"
+      deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
     fi
   done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
   # Rebuild modules
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
   while read ID DESC; do
-    writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+    writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
   done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
   # Remove old files
   rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
@@ -365,7 +365,7 @@ function addonMenu() {
       [ $? -ne 0 ] && continue
       VALUE="$(<"${TMP_PATH}/resp")"
       ADDONS[${ADDON}]="${VALUE}"
-      writeConfigKey "addons.${ADDON}" "${VALUE}" "${USER_CONFIG_FILE}"
+      writeConfigKey "addons.\"${ADDON}\"" "${VALUE}" "${USER_CONFIG_FILE}"
       touch ${PART1_PATH}/.build
       ;;
     d)
@@ -387,7 +387,7 @@ function addonMenu() {
       [ -z "${ADDON}" ] && continue
       for I in ${ADDON}; do
         unset ADDONS[${I}]
-        deleteConfigKey "addons.${I}" "${USER_CONFIG_FILE}"
+        deleteConfigKey "addons.\"${I}\"" "${USER_CONFIG_FILE}"
       done
       touch ${PART1_PATH}/.build
       ;;
@@ -496,7 +496,7 @@ function moduleMenu() {
           resp=$(<${TMP_PATH}/resp)
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
           for ID in ${resp}; do
-            writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+            writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
           done
           touch ${PART1_PATH}/.build
           break
@@ -504,7 +504,7 @@ function moduleMenu() {
         3) # extra-button
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
           while read ID DESC; do
-            writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+            writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
           done <<<${ALLMODULES}
           touch ${PART1_PATH}/.build
           ;;
@@ -531,7 +531,7 @@ function moduleMenu() {
       KOLIST=($(echo ${KOLIST} | tr ' ' '\n' | sort -u))
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
       for ID in ${KOLIST[@]}; do
-        writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+        writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
       done
       touch ${PART1_PATH}/.build
       ;;
@@ -600,7 +600,7 @@ function cmdlineMenu() {
       MSG=""
       MSG+="$(TEXT "Commonly used cmdlines:\n")"
       MSG+="$(TEXT " * \Z4disable_mtrr_trim=\Zn\n    disables kernel trim any uncacheable memory out.\n")"
-      MSG+="$(TEXT " * \Z4\"intel_idle.max_cstate\"=1\Zn\n    Set the maximum C-state depth allowed by the intel_idle driver.\n")"
+      MSG+="$(TEXT " * \Z4intel_idle.max_cstate=1\Zn\n    Set the maximum C-state depth allowed by the intel_idle driver.\n")"
       MSG+="$(TEXT " * \Z4SataPortMap=??\Zn\n    Sata Port Map.\n")"
       MSG+="$(TEXT " * \Z4DiskIdxMap=??\Zn\n    Disk Index Map, Modify disk name sequence.\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
@@ -614,12 +614,12 @@ function cmdlineMenu() {
         0) # ok-button
           NAME="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
           VALUE="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
-          if [ -z "${NAME}" ]; then
+          if [ -z "${NAME//\"/}" ]; then
             DIALOG --title "$(TEXT "Cmdline")" \
               --yesno "$(TEXT "Invalid parameter name, retry?")" 0 0
             [ $? -eq 0 ] && break
           fi
-          writeConfigKey "cmdline.[${NAME}]" "${VALUE}" "${USER_CONFIG_FILE}"
+          writeConfigKey "cmdline.\"${NAME//\"/}\"" "${VALUE}" "${USER_CONFIG_FILE}"
           break
           ;;
         1) # cancel-button
@@ -655,7 +655,7 @@ function cmdlineMenu() {
       [ -z "${RESP}" ] && continue
       for I in ${RESP}; do
         unset CMDLINE[${I}]
-        deleteConfigKey "cmdline.${I}" "${USER_CONFIG_FILE}"
+        deleteConfigKey "cmdline.\"${I}\"" "${USER_CONFIG_FILE}"
       done
       ;;
     s)
@@ -740,12 +740,12 @@ function synoinfoMenu() {
         0) # ok-button
           NAME="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
           VALUE="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
-          if [ -z "${NAME}" ]; then
+          if [ -z "${NAME//\"/}" ]; then
             DIALOG --title "$(TEXT "Cmdline")" \
               --yesno "$(TEXT "Invalid parameter name, retry?")" 0 0
             [ $? -eq 0 ] && break
           fi
-          writeConfigKey "synoinfo.[${NAME}]" "${VALUE}" "${USER_CONFIG_FILE}"
+          writeConfigKey "synoinfo.\"${NAME//\"/}\"" "${VALUE}" "${USER_CONFIG_FILE}"
           touch ${PART1_PATH}/.build
           break
           ;;
@@ -782,7 +782,7 @@ function synoinfoMenu() {
       [ -z "${RESP}" ] && continue
       for I in ${RESP}; do
         unset SYNOINFO[${I}]
-        deleteConfigKey "synoinfo.${I}" "${USER_CONFIG_FILE}"
+        deleteConfigKey "synoinfo.\"${I}\"" "${USER_CONFIG_FILE}"
       done
       touch ${PART1_PATH}/.build
       ;;
@@ -1027,7 +1027,7 @@ function advancedMenu() {
     rm -f "${TMP_PATH}/menu"
     if [ -n "${PRODUCTVER}" ]; then
       echo "l \"$(TEXT "Switch LKM version:") \Z4${LKM}\Zn\"" >>"${TMP_PATH}/menu"
-      echo "j \"$(TEXT "HDD sort:") \Z4${HDDSORT}\Zn\"" >>"${TMP_PATH}/menu"
+      echo "j \"$(TEXT "HDD sort(hotplug):") \Z4${HDDSORT}\Zn\"" >>"${TMP_PATH}/menu"
     fi
     if loaderIsConfigured; then
       echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >>"${TMP_PATH}/menu"
@@ -1824,7 +1824,7 @@ function updateExts() {
     if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
       while read ID DESC; do
-        writeConfigKey "modules.${ID}" "" "${USER_CONFIG_FILE}"
+        writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
       done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
     fi
   elif [ "${1}" = "LKMs" ]; then
