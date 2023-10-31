@@ -33,8 +33,7 @@ if [ -f ${PART1_PATH}/.build -o "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print$
   echo -e "\033[1;43m$(TEXT "DSM zImage changed")\033[0m"
   ${WORK_PATH}/zimage-patch.sh
   if [ $? -ne 0 ]; then
-    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-      --msgbox "$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" 12 70
+      echo -e "\033[1;43m$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")\033[0m"
     exit 1
   fi
 fi
@@ -46,8 +45,7 @@ if [ -f ${PART1_PATH}/.build -o "${RAMDISK_HASH_CUR}" != "${RAMDISK_HASH}" ]; th
   echo -e "\033[1;43m$(TEXT "DSM Ramdisk changed")\033[0m"
   ${WORK_PATH}/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
-    dialog --backtitle "$(backtitle)" --colors --title "$(TEXT "Error")" \
-      --msgbox "$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" 12 70
+    echo -e "\033[1;43m$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")\033[0m"
     exit 1
   fi
   # Update SHA256 hash
