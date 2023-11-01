@@ -90,9 +90,10 @@ VID="$(readConfigKey "vid" "${USER_CONFIG_FILE}")"
 PID="$(readConfigKey "pid" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
+MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
 KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
 
-NETIFNUM=$(ls /sys/class/net/ | grep eth | wc -l); [ ${NETIFNUM} -eq 0 ] && NETIFNUM=1
+NETIFNUM=$(ls /sys/class/net/ | grep eth | wc -l); [ ${NETIFNUM} -lt 2 ] && NETIFNUM=2
 
 declare -A CMDLINE
 
@@ -103,7 +104,8 @@ CMDLINE['syno_hw_version']="${MODEL}"
 CMDLINE['vid']="${VID}"
 CMDLINE['pid']="${PID}"
 CMDLINE['sn']="${SN}"
-CMDLINE['mac1']="${MAC1}"
+[ -n "${MAC1}" ] && CMDLINE['mac1']="${MAC1}"
+[ -n "${MAC2}" ] && CMDLINE['mac2']="${MAC2}"
 CMDLINE['netif_num']="${NETIFNUM}"
 
 # set fixed cmdline
