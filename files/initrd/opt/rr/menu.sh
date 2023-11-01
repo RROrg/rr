@@ -40,6 +40,7 @@ ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")" # official drivers priorities
 HDDSORT="$(readConfigKey "hddsort" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
+MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
 
 ###############################################################################
 # Mounts backtitle dynamically
@@ -123,7 +124,7 @@ function modelMenu() {
       done < <(cat "${TMP_PATH}/modellist" | sort -r -n -k 2)
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
       [ ${FLGBETA} -eq 0 ] && echo "b \"\Z1$(TEXT "Show all models")\Zn\"" >>"${TMP_PATH}/menu"
-      DIALOG \
+      DIALOG --title "$(TEXT "Model")" \
         --menu "$(TEXT "Choose the model")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
@@ -166,7 +167,7 @@ function modelMenu() {
           fi
           echo "$(printf "%-16s %8s %8s %8s" "${M}" "${I915}" "${HBA}" "${M_2}")" >>"${TMP_PATH}/opts"
         done < <(cat "${TMP_PATH}/modellist" | sort -r -n -k 2)
-        DIALOG \
+        DIALOG --title "$(TEXT "Model")" \
           --textbox "${TMP_PATH}/opts" 0 0
         continue
       fi
@@ -197,7 +198,7 @@ function modelMenu() {
     writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
     SN=$(generateSerial "${MODEL}")
     writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
-    NETIF_NUM=1
+    NETIF_NUM=2
     MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
     for I in $(seq 1 ${NETIF_NUM}); do
       writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
@@ -211,7 +212,7 @@ function modelMenu() {
 function productversMenu() {
   ITEMS="$(readConfigEntriesArray "productvers" "${WORK_PATH}/model-configs/${MODEL}.yml" | sort -r)"
   if [ -z "${1}" ]; then
-    DIALOG \
+    DIALOG --title "$(TEXT "Product Version")" \
       --no-items --menu "$(TEXT "Choose a product version")" 0 0 0 ${ITEMS} \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -330,7 +331,7 @@ function addonMenu() {
       [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
     done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
 
-    DIALOG \
+    DIALOG --title "$(TEXT "Addons")" \
       --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 \
       a "$(TEXT "Add an addon")" \
       d "$(TEXT "Delete addons")" \
@@ -460,7 +461,7 @@ function moduleMenu() {
   NEXT="c"
   # loop menu
   while true; do
-    DIALOG \
+    DIALOG --title "$(TEXT "Modules")" \
       --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 \
       c "$(TEXT "Show/Select modules")" \
       l "$(TEXT "Select loaded modules")" \
@@ -591,7 +592,7 @@ function cmdlineMenu() {
     fi
     echo "m \"$(TEXT "Show model inherent cmdline")\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
-    DIALOG \
+    DIALOG --title "$(TEXT "Cmdline")" \
       --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -662,16 +663,18 @@ function cmdlineMenu() {
       MSG="$(TEXT "Note: (MAC will not be set to NIC)")"
       sn="${SN}"
       mac1="${MAC1}"
+      mac2="${MAC2}"
       while true; do
         DIALOG --title "$(TEXT "Cmdline")" \
           --extra-button --extra-label "$(TEXT "Random")" \
-          --form "${MSG}" 10 60 2 "sn" 1 1 "${sn}" 1 5 50 0 "mac1" 2 1 "${mac1}" 2 5 50 0 \
+          --form "${MSG}" 11 60 3 "sn" 1 1 "${sn}" 1 5 50 0 "mac1" 2 1 "${mac1}" 2 5 50 0 "mac2" 3 1 "${mac2}" 3 5 50 0 \
           2>"${TMP_PATH}/resp"
         RET=$?
         case ${RET} in
         0) # ok-button
           sn="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
           mac1="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
+          mac2="$(cat "${TMP_PATH}/resp" | sed -n '3p')"
           if [ -z "${sn}" -o -z "${mac1}" ]; then
             DIALOG --title "$(TEXT "Cmdline")" \
               --yesno "$(TEXT "Invalid SN/MAC, retry?")" 0 0
@@ -681,12 +684,15 @@ function cmdlineMenu() {
           writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
           MAC1="${mac1}"
           writeConfigKey "mac1" "${MAC1}" "${USER_CONFIG_FILE}"
+          MAC2="${mac2}"
+          writeConfigKey "mac2" "${MAC2}" "${USER_CONFIG_FILE}"
           break
           ;;
         3) # extra-button
           sn=$(generateSerial "${MODEL}")
-          MACS=($(generateMacAddress "${MODEL}" 1))
+          MACS=($(generateMacAddress "${MODEL}" 2))
           mac1=${MACS[0]}
+          mac2=${MACS[1]}
           ;;
         1) # cancel-button
           break
@@ -717,7 +723,7 @@ function synoinfoMenu() {
     echo "a \"$(TEXT "Add/edit a synoinfo item")\"" >"${TMP_PATH}/menu"
     echo "d \"$(TEXT "Show/Delete synoinfo items")\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
-    DIALOG \
+    DIALOG --title "$(TEXT "Synoinfo")" \
       --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -732,7 +738,7 @@ function synoinfoMenu() {
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
       while true; do
-        DIALOG --title "$(TEXT "Cmdline")" \
+        DIALOG --title "$(TEXT "Synoinfo")" \
           --form "${MSG}" ${LINENUM:-16} 70 2 "Name:" 1 1 "" 1 10 55 0 "Value:" 2 1 "" 2 10 55 0 \
           2>"${TMP_PATH}/resp"
         RET=$?
@@ -741,7 +747,7 @@ function synoinfoMenu() {
           NAME="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
           VALUE="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
           if [ -z "${NAME//\"/}" ]; then
-            DIALOG --title "$(TEXT "Cmdline")" \
+            DIALOG --title "$(TEXT "Synoinfo")" \
               --yesno "$(TEXT "Invalid parameter name, retry?")" 0 0
             [ $? -eq 0 ] && break
           fi
@@ -1863,7 +1869,7 @@ function updateMenu() {
     echo "b \"$(TEXT "Pre Release:") \Z4${PRERELEASE}\Zn\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
-    DIALOG \
+    DIALOG --title "$(TEXT "Update")" \
       --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
@@ -1996,7 +2002,7 @@ function updateMenu() {
 function notepadMenu() {
   [ -d "${USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
   [ -f "${USER_UP_PATH}/notepad" ] || echo "$(TEXT "This person is very lazy and hasn't written anything.")" >"${USER_UP_PATH}/notepad"
-  DIALOG --title "$(TEXT "Edit")" \
+  DIALOG \
     --editbox "${USER_UP_PATH}/notepad" 0 0 2>"${TMP_PATH}/notepad"
   [ $? -ne 0 ] && return
   mv -f "${TMP_PATH}/notepad" "${USER_UP_PATH}/notepad"
@@ -2041,8 +2047,8 @@ while true; do
   echo "t \"$(TEXT "Notepad")\"" >>"${TMP_PATH}/menu"
   echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
-  DIALOG \
-    --default-item ${NEXT} --menu "$(TEXT "Main menu")" 0 0 0 --file "${TMP_PATH}/menu" \
+  DIALOG --title "$(TEXT "Main menu")" \
+    --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && break
   case $(<"${TMP_PATH}/resp") in
@@ -2090,7 +2096,7 @@ while true; do
     NEXT="m"
     ;;
   c)
-    DIALOG --title "$(TEXT "Cleaning ...")" \
+    DIALOG \
       --prgbox "rm -rfv \"${PART3_PATH}/dl\"" 0 0
     NEXT="d"
     ;;
