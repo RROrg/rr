@@ -420,7 +420,7 @@ function addonMenu() {
       rm -rf ${TMP_UP_PATH}
       mkdir -p ${TMP_UP_PATH}
       pushd ${TMP_UP_PATH}
-      rz -be
+      rz -be -B 536870912
       for F in $(ls -A); do
         USER_FILE=${F}
         break
@@ -553,7 +553,7 @@ function moduleMenu() {
       rm -rf ${TMP_UP_PATH}
       mkdir -p ${TMP_UP_PATH}
       pushd ${TMP_UP_PATH}
-      rz -be
+      rz -be -B 536870912
       for F in $(ls -A); do
         USER_FILE=${F}
         break
@@ -1313,31 +1313,32 @@ function advancedMenu() {
         --msgbox "$(TEXT "Formatting is complete.")" 0 0
       ;;
     x)
-      SHADOW_FILE=""
+      rm -f "${TMP_PATH}/menu"
       mkdir -p "${TMP_PATH}/sdX1"
       for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
         mount ${I} "${TMP_PATH}/sdX1"
         if [ -f "${TMP_PATH}/sdX1/etc/shadow" ]; then
-          cp -f "${TMP_PATH}/sdX1/etc/shadow" "${TMP_PATH}/shadow_bak"
-          SHADOW_FILE="${TMP_PATH}/shadow_bak"
+          for U in $(cat "${TMP_PATH}/sdX1/etc/shadow" | awk -F ':' '{if ($2 != "*" && $2 != "!!") {print $1;}}'); do
+            grep -q "status=on" "${TMP_PATH}//usr/syno/etc/packages/SecureSignIn/preference/${U}/method.config" 2>/dev/null
+            [ $? -eq 0 ] && SS="SecureSignIn" || SS="            "
+            printf "\"%-36s %-16s\"\n" "${U}" "${SS}" >>"${TMP_PATH}/menu"
+          done
         fi
         umount "${I}"
-        [ -n "${SHADOW_FILE}" ] && break
+        [ -f "${TMP_PATH}/menu" ] && break
       done
       rm -rf "${TMP_PATH}/sdX1"
-      if [ -z "${SHADOW_FILE}" ]; then
+      if [ ! -f "${TMP_PATH}/menu" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "The installed Syno system not found in the currently inserted disks!")" 0 0
         return
       fi
-      ITEMS="$(cat "${SHADOW_FILE}" | awk -F ':' '{if ($2 != "*" && $2 != "!!") {print $1;}}')"
       DIALOG --title "$(TEXT "Advanced")" \
-        --no-items --menu "$(TEXT "Choose a user name")" 0 0 0 ${ITEMS} \
+        --no-items --menu "$(TEXT "Choose a user name")" 0 0 0  --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
-      USER="$(<${TMP_PATH}/resp)"
+      USER="$(cat "${TMP_PATH}/resp" | awk '{print $1}')"
       [ -z "${USER}" ] && return
-      OLDPASSWD="$(cat "${SHADOW_FILE}" | grep "^${USER}:" | awk -F ':' '{print $2}')"
       while true; do
         DIALOG --title "$(TEXT "Advanced")" \
           --inputbox "$(printf "$(TEXT "Type a new password for user '%s'")" "${USER}")" 0 70 "${CMDLINE[${NAME}]}" \
@@ -1353,7 +1354,9 @@ function advancedMenu() {
         mkdir -p "${TMP_PATH}/sdX1"
         for I in $(ls /dev/sd.*1 2>/dev/null | grep -v ${LOADER_DISK_PART1}); do
           mount "${I}" "${TMP_PATH}/sdX1"
-          sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "${TMP_PATH}/sdX1/etc/shadow"
+          OLDPASSWD="$(cat "${TMP_PATH}/sdX1/etc/shadow" | grep "^${USER}:" | awk -F ':' '{print $2}')"
+          [ -n "${OLDPASSWD}" ] && sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "${TMP_PATH}/sdX1/etc/shadow"
+          sed -i "s|status=on|status=off|g" "${TMP_PATH}//usr/syno/etc/packages/SecureSignIn/preference/${USER}/method.config" 2>/dev/null
           sync
           umount "${I}"
         done
@@ -1398,7 +1401,7 @@ function advancedMenu() {
       rm -rf "${TMP_UP_PATH}"
       mkdir -p "${TMP_UP_PATH}"
       pushd "${TMP_UP_PATH}"
-      rz -be
+      rz -be -B 536870912
       for F in $(ls -A); do
         USER_FILE="${TMP_UP_PATH}/${F}"
         dtc -q -I dts -O dtb "${F}" >"test.dtb"
@@ -1444,7 +1447,7 @@ function advancedMenu() {
         DIALOG --title "$(TEXT "Advanced")" \
           --editbox "${TMP_PATH}/resp" 10 100
       else # ssh
-        sz -be /var/www/data/backup.img.gz
+        sz -be -B 536870912 /var/www/data/backup.img.gz
       fi
       DIALOG --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "backup is complete.")" 0 0
@@ -1464,7 +1467,7 @@ function advancedMenu() {
       rm -rf "${TMP_UP_PATH}"
       mkdir -p "${TMP_UP_PATH}"
       pushd "${TMP_UP_PATH}"
-      rz -be
+      rz -be -B 536870912
       for F in $(ls -A); do
         USER_FILE="${F}"
         [ "${F##*.}" = "zip" -a $(unzip -l "${TMP_UP_PATH}/${USER_FILE}" | grep -c "\.img$") -eq 1 ] && IFTOOL="zip"
@@ -1507,7 +1510,7 @@ function advancedMenu() {
           DIALOG --title "$(TEXT "Advanced")" \
             --msgbox "$(printf "$(TEXT "Please via %s to download the logs,\nAnd go to github to create an issue and upload the logs.")" "${URL}")" 0 0
         else
-          sz -be "${TMP_PATH}/logs.tar.gz"
+          sz -be -B 536870912 "${TMP_PATH}/logs.tar.gz"
           DIALOG --title "$(TEXT "Advanced")" \
             --msgbox "$(TEXT "Please go to github to create an issue and upload the logs.")" 0 0
         fi
@@ -1961,7 +1964,7 @@ function updateMenu() {
       rm -rf "${TMP_UP_PATH}"
       mkdir -p "${TMP_UP_PATH}"
       pushd "${TMP_UP_PATH}"
-      rz -be
+      rz -be -B 536870912
       for F in $(ls -A); do
         for I in ${EXTS[@]}; do
           [[ "${I}" == "${F}" ]] && USER_FILE="${F}"
