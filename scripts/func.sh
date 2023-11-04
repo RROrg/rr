@@ -203,3 +203,35 @@ function repackInitrd() {
   ) || true
   sudo rm -rf "${RDXZ_PATH}"
 }
+
+# resizeimg
+# $1 input file  
+# $2 changsize MB eg: +50M -50M
+# $3 output file
+function resizeImg() {
+  INPUT_FILE="${1}"
+  CHANGE_SIZE="${2}"
+  OUTPUT_FILE="${3:-${INPUT_FILE}}"
+
+  [ -z "${INPUT_FILE}" -o ! -f "${INPUT_FILE}" ] && exit 1
+  [ -z "${CHANGE_SIZE}" ] && exit 1
+  
+  INPUT_FILE="$(readlink -f "${INPUT_FILE}")"
+  OUTPUT_FILE="$(readlink -f "${OUTPUT_FILE}")"
+
+  
+  SIZE=$(($(du -m "${INPUT_FILE}" | awk '{print $1}')$(echo "${CHANGE_SIZE}" | sed 's/M//g; s/b//g')))
+  [ -z "${SIZE}" -o "${SIZE}" -lt 0 ] && exit 1
+
+  if [ ! "${INPUT_FILE}" = "${OUTPUT_FILE}" ]; then
+    sudo cp -f "${INPUT_FILE}" "${OUTPUT_FILE}"
+  fi
+
+  sudo truncate -s ${SIZE}M "${OUTPUT_FILE}"
+  echo -e "d\n\nn\n\n\n\n\nn\nw" | sudo fdisk "${OUTPUT_FILE}"
+  LOOPX=$(sudo losetup -f)
+  sudo losetup -P ${LOOPX} "${OUTPUT_FILE}"
+  sudo e2fsck -fp $(ls ${LOOPX}* | sort -n | tail -1)
+  sudo resize2fs $(ls ${LOOPX}* | sort -n | tail -1)
+  sudo losetup -d ${LOOPX}
+}
