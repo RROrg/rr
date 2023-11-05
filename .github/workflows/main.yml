@@ -144,24 +144,24 @@ jobs:
 
           sudo losetup --detach ${LOOPX}
 
-          echo "Create RR_4GB image"
-          resizeImg "rr.img" "+3072M" "rr_4GB.img"
+          echo "Create RR_6GB image"
+          resizeImg "rr.img" "+5120M" "rr_6GB.img"
 
-          # echo "Image Converter"
-          # qemu-img convert -O vmdk rr.img rr-dyn.vmdk
-          # qemu-img convert -O vmdk -o adapter_type=lsilogic rr.img -o subformat=monolithicFlat rr.vmdk
+          echo "Image Converter"
+          qemu-img convert -O vmdk rr.img rr-dyn.vmdk
+          qemu-img convert -O vmdk -o adapter_type=lsilogic rr.img -o subformat=monolithicFlat rr.vmdk
 
       # Zip image and generate checksum
       - name: Pack
         run: |
           if [ -n "${{ env.VERSION }}" ]; then
             zip -9 "rr-${{ env.VERSION }}.img.zip" rr.img
-            zip -9 "rr_4GB-${{ env.VERSION }}.img.zip" rr_4GB.img
-            # zip -9 "rr-${{ env.VERSION }}.vmdk-dyn.zip" rr-dyn.vmdk
-            # zip -9 "rr-${{ env.VERSION }}.vmdk-flat.zip" rr.vmdk rr-flat.vmdk
+            zip -9 "rr_6GB-${{ env.VERSION }}.img.zip" rr_6GB.img
+            zip -9 "rr-${{ env.VERSION }}.vmdk-dyn.zip" rr-dyn.vmdk
+            zip -9 "rr-${{ env.VERSION }}.vmdk-flat.zip" rr.vmdk rr-flat.vmdk
           else
             zip -9 "rr.img.zip" rr.img
-            zip -9 "rr_4GB.img.zip" rr_4GB.img
+            zip -9 "rr_6GB.img.zip" rr_6GB.img
           fi
           sha256sum update-list.yml update-check.sh > sha256sum
           zip -9j update.zip update-list.yml update-check.sh
@@ -186,7 +186,7 @@ jobs:
           name: Images
           path: |
             rr.img.zip
-            rr_4GB.img.zip
+            rr_6GB.img.zip
             update.zip
           retention-days: 5
 
@@ -200,7 +200,7 @@ jobs:
           files: |
             rr-${{ env.VERSION }}.img.zip
             rr_4GB-${{ env.VERSION }}.img.zip
-            # rr-${{ env.VERSION }}.vmdk-dyn.zip
-            # rr-${{ env.VERSION }}.vmdk-flat.zip
+            rr-${{ env.VERSION }}.vmdk-dyn.zip
+            rr-${{ env.VERSION }}.vmdk-flat.zip
             update.zip
 
