@@ -167,13 +167,13 @@ jobs:
           zip -9j update.zip update-list.yml update-check.sh
           while read F; do
             if [ -d "${F}" ]; then
-              FTGZ="`basename "${F}"`.tgz"
+              FTGZ="$(basename "${F}").tgz"
               tar -czf "${FTGZ}" -C "${F}" .
               sha256sum "${FTGZ}" >> sha256sum
               zip -9j update.zip "${FTGZ}"
-              rm "${FTGZ}"
+              rm -f "${FTGZ}"
             else
-              (cd `dirname ${F}` && sha256sum `basename ${F}`) >> sha256sum
+              (cd $(dirname "${F}") && sha256sum $(basename "${F}")) >> sha256sum
               zip -9j update.zip "${F}"
             fi
           done < <(yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml)

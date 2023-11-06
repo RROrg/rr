@@ -33,7 +33,7 @@ if [ -f ${PART1_PATH}/.build -o "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print$
   echo -e "\033[1;43m$(TEXT "DSM zImage changed")\033[0m"
   ${WORK_PATH}/zimage-patch.sh
   if [ $? -ne 0 ]; then
-      echo -e "\033[1;43m$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")\033[0m"
+    echo -e "\033[1;43m$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")\033[0m"
     exit 1
   fi
 fi
@@ -93,8 +93,6 @@ MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
 MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
 KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
 
-NETIFNUM=$(ls /sys/class/net/ | grep eth | wc -l); [ ${NETIFNUM} -lt 2 ] && NETIFNUM=2
-
 declare -A CMDLINE
 
 # Automatic values
@@ -104,9 +102,11 @@ CMDLINE['syno_hw_version']="${MODEL}"
 CMDLINE['vid']="${VID}"
 CMDLINE['pid']="${PID}"
 CMDLINE['sn']="${SN}"
-[ -n "${MAC1}" ] && CMDLINE['mac1']="${MAC1}"
-[ -n "${MAC2}" ] && CMDLINE['mac2']="${MAC2}"
-CMDLINE['netif_num']="${NETIFNUM}"
+
+CMDLINE['netif_num']="0"
+[ -z "${MAC1}" -a -n "${MAC2}" ] && MAC1=${MAC2} && MAC2="" # Sanity check
+[ -n "${MAC1}" ] && CMDLINE['mac1']="${MAC1}" && CMDLINE['netif_num']="1"
+[ -n "${MAC2}" ] && CMDLINE['mac2']="${MAC2}" && CMDLINE['netif_num']="2"
 
 # set fixed cmdline
 if grep -q "force_junior" /proc/cmdline; then

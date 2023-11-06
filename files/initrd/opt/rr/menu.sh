@@ -1265,7 +1265,7 @@ function advancedMenu() {
       [ $? -ne 0 ] && return
       (
         mkdir -p "${TMP_PATH}/sdX1"
-        for I in $(ls /dev/sd.*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
+        for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
           mount "${I}" "${TMP_PATH}/sdX1"
           [ -f "${TMP_PATH}/sdX1/etc/VERSION" ] && rm -f "${TMP_PATH}/sdX1/etc/VERSION"
           [ -f "${TMP_PATH}/sdX1/etc.defaults/VERSION" ] && rm -f "${TMP_PATH}/sdX1/etc.defaults/VERSION"
@@ -1319,7 +1319,7 @@ function advancedMenu() {
         mount ${I} "${TMP_PATH}/sdX1"
         if [ -f "${TMP_PATH}/sdX1/etc/shadow" ]; then
           for U in $(cat "${TMP_PATH}/sdX1/etc/shadow" | awk -F ':' '{if ($2 != "*" && $2 != "!!") {print $1;}}'); do
-            grep -q "status=on" "${TMP_PATH}//usr/syno/etc/packages/SecureSignIn/preference/${U}/method.config" 2>/dev/null
+            grep -q "status=on" "${TMP_PATH}/sdX1/usr/syno/etc/packages/SecureSignIn/preference/${U}/method.config" 2>/dev/null
             [ $? -eq 0 ] && SS="SecureSignIn" || SS="            "
             printf "\"%-36s %-16s\"\n" "${U}" "${SS}" >>"${TMP_PATH}/menu"
           done
@@ -1349,21 +1349,20 @@ function advancedMenu() {
         DIALOG --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "Invalid password")" 0 0
       done
-      NEWPASSWD="$(python -c "import crypt,getpass;pw=\"${VALUE}\";print(crypt.crypt(pw))")"
+      NEWPASSWD="$(python -c "from passlib.hash import sha512_crypt;pw=\"${VALUE}\";print(sha512_crypt.using(rounds=5000).hash(pw))")"
       (
         mkdir -p "${TMP_PATH}/sdX1"
-        for I in $(ls /dev/sd.*1 2>/dev/null | grep -v ${LOADER_DISK_PART1}); do
+        for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
           mount "${I}" "${TMP_PATH}/sdX1"
           OLDPASSWD="$(cat "${TMP_PATH}/sdX1/etc/shadow" | grep "^${USER}:" | awk -F ':' '{print $2}')"
-          [ -n "${OLDPASSWD}" ] && sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "${TMP_PATH}/sdX1/etc/shadow"
-          sed -i "s|status=on|status=off|g" "${TMP_PATH}//usr/syno/etc/packages/SecureSignIn/preference/${USER}/method.config" 2>/dev/null
+          [ -n "${NEWPASSWD}" -a -n "${OLDPASSWD}" ] && sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "${TMP_PATH}/sdX1/etc/shadow"
+          sed -i "s|status=on|status=off|g" "${TMP_PATH}/sdX1/usr/syno/etc/packages/SecureSignIn/preference/${USER}/method.config" 2>/dev/null
           sync
           umount "${I}"
         done
         rm -rf "${TMP_PATH}/sdX1"
       ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Resetting ...")" 20 100
-      [ -f "${SHADOW_FILE}" ] && rm -rf "${SHADOW_FILE}"
       DIALOG --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "Password reset completed.")" 0 0
       ;;
