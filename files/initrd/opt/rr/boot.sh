@@ -160,17 +160,17 @@ if [ "${DIRECT}" = "true" ]; then
   reboot
   exit 0
 else
-  ETHX=($(ls /sys/class/net/ | grep eth)) # real network cards list
-  echo "$(printf "$(TEXT "Detected %s network cards.")" "${#ETHX[@]}")"
+  ETHX=$(ls /sys/class/net/ | grep -v lo)
+  echo "$(printf "$(TEXT "Detected %s network cards.")" "$(echo ${ETHX} | wc -w)")"
   echo "$(TEXT "Checking Connect.")"
   COUNT=0
   BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
   [ -z "${BOOTIPWAIT}" ] && BOOTIPWAIT=10
   while [ ${COUNT} -lt $((${BOOTIPWAIT} + 32)) ]; do
     hasConnect="false"
-    for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
-      if ethtool ${ETHX[${N}]} | grep 'Link detected' | grep -q 'yes'; then
-        echo -en "${ETHX[${N}]} "
+    for N in ${ETHX}; do
+      if ethtool ${N} | grep 'Link detected' | grep -q 'yes'; then
+        echo -en "${N} "
         hasConnect="true"
       fi
     done
@@ -183,27 +183,27 @@ else
     sleep 1
   done
   echo "$(TEXT "Waiting IP.(For reference only)")"
-  for N in $(seq 0 $(expr ${#ETHX[@]} - 1)); do
+  for N in ${ETHX}; do
     COUNT=0
-    DRIVER=$(ls -ld /sys/class/net/${ETHX[${N}]}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
-    echo -en "${ETHX[${N}]}(${DRIVER}): "
+    DRIVER=$(ls -ld /sys/class/net/${N}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
+    echo -en "${N}(${DRIVER}): "
     while true; do
-      if ! ip link show ${ETHX[${N}]} | grep -q 'UP'; then
-        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "DOWN")\n"
+      if ! ip link show ${N} | grep -q 'UP'; then
+        echo -en "\r${N}(${DRIVER}): $(TEXT "DOWN")\n"
         break
       fi
-      if ethtool ${ETHX[${N}]} | grep 'Link detected' | grep -q 'no'; then
-        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "NOT CONNECTED")\n"
+      if ethtool ${N} | grep 'Link detected' | grep -q 'no'; then
+        echo -en "\r${N}(${DRIVER}): $(TEXT "NOT CONNECTED")\n"
         break
       fi
       if [ ${COUNT} -eq ${BOOTIPWAIT} ]; then # Under normal circumstances, no errors should occur here.
-        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(TEXT "TIMEOUT (Please check the IP on the router.)")\n"
+        echo -en "\r${N}(${DRIVER}): $(TEXT "TIMEOUT (Please check the IP on the router.)")\n"
         break
       fi
       COUNT=$((${COUNT} + 1))
-      IP="$(getIP ${ETHX[${N}]})"
+      IP="$(getIP ${N})"
       if [ -n "${IP}" ]; then
-        echo -en "\r${ETHX[${N}]}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}")\n"
+        echo -en "\r${N}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}")\n"
         break
       fi
       echo -n "."

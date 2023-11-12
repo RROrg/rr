@@ -1018,7 +1018,7 @@ function make() {
     --progressbox "$(TEXT "Making ...")" 20 100
   if [ -f "${MKERR_FILE}" ]; then
     DIALOG --title "$(TEXT "Error")" \
-    --msgbox "$(cat ${MKERR_FILE})" 0 0
+      --msgbox "$(cat ${MKERR_FILE})" 0 0
     return 1
   else
     return 0
@@ -1045,6 +1045,7 @@ function advancedMenu() {
       echo "n \"$(TEXT "Reboot on kernel panic:") \Z4${KERNELPANIC}\Zn\"" >>"${TMP_PATH}/menu"
     fi
     echo "m \"$(TEXT "Set static IP")\"" >>"${TMP_PATH}/menu"
+    echo "y \"$(TEXT "Set wireless account")\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
     echo "h \"$(TEXT "Edit grub.cfg file manually")\"" >>"${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\"" >>"${TMP_PATH}/menu"
@@ -1138,8 +1139,8 @@ function advancedMenu() {
       MSG="$(TEXT "Temporary IP: (UI will not refresh)")"
       ITEMS=""
       IDX=0
-      ETHX=($(ls /sys/class/net/ | grep eth)) # real network cards list
-      for ETH in ${ETHX[@]}; do
+      ETHX=$(ls /sys/class/net/ | grep -v lo)
+      for ETH in ${ETHX}; do
         [ ${IDX} -gt 7 ] && break # Currently, only up to 8 are supported.  (<==> boot.sh L96, <==> lkm: MAX_NET_IFACES)
         IDX=$((${IDX} + 1))
         MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
@@ -1153,7 +1154,7 @@ function advancedMenu() {
       [ $? -ne 0 ] && continue
       (
         IDX=1
-        for ETH in ${ETHX[@]}; do
+        for ETH in ${ETHX}; do
           MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
           IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
           IPC="$(cat "${TMP_PATH}/resp" | sed -n "${IDX}p")"
@@ -1174,6 +1175,63 @@ function advancedMenu() {
       ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Setting IP ...")" 20 100
       NEXT="e"
+      ;;
+    y)
+      DIALOG --title "$(TEXT "Advanced")" \
+        --infobox "$(TEXT "Scanning ...")" 0 0
+      ITEM=$(iw wlan0 scan | grep SSID: | awk '{print $2}')
+      MSG=""
+      MSG+="$(TEXT "Scanned SSIDs:\n")"
+      for I in $(iw wlan0 scan | grep SSID: | awk '{print $2}'); do MSG+="${I}\n"; done
+      LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
+      while true; do
+        SSID=$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep -i SSID | cut -d'=' -f2)
+        PSK=$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep -i PSK | cut -d'=' -f2)
+        SSID="${SSID//\"/}"
+        PSK="${PSK//\"/}"
+        DIALOG --title "$(TEXT "Advanced")" \
+          --form "${MSG}" ${LINENUM:-16} 62 2 "SSID" 1 1 "${SSID}" 1 7 50 0 " PSK" 2 1 "${PSK}" 2 7 50 0 \
+          2>"${TMP_PATH}/resp"
+        RET=$?
+        case ${RET} in
+        0) # ok-button
+          SSID="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
+          PSK="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
+          if [ -z "${SSID}" -o -z "${PSK}" ]; then
+            DIALOG --title "$(TEXT "Advanced")" \
+              --yesno "$(TEXT "Invalid SSID/PSK, retry?")" 0 0
+            [ $? -eq 0 ] && break
+          fi
+          (
+            rm -f ${PART1_PATH}/wpa_supplicant.conf
+            echo "ctrl_interface=/var/run/wpa_supplicant" >>${PART1_PATH}/wpa_supplicant.conf
+            echo "update_config=1" >>${PART1_PATH}/wpa_supplicant.conf
+            echo "network={" >>${PART1_PATH}/wpa_supplicant.conf
+            echo "        ssid=\"${SSID}\"" >>${PART1_PATH}/wpa_supplicant.conf
+            echo "        psk=\"${PSK}\"" >>${PART1_PATH}/wpa_supplicant.conf
+            echo "}" >>${PART1_PATH}/wpa_supplicant.conf
+
+            for ETH in $(ls /sys/class/net/ | grep wlan); do
+              connectwlanif "${ETH}" && sleep 1
+              MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
+              IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
+              if [ -n "${IPR}" ]; then
+                ip addr add ${IPC}/24 dev ${ETH}
+                sleep 1
+              fi
+            done
+          ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
+            --progressbox "$(TEXT "Setting ...")" 20 100
+          break
+          ;;
+        1) # cancel-button
+          break
+          ;;
+        255) # ESC
+          break
+          ;;
+        esac
+      done
       ;;
     u)
       editUserConfig
@@ -1334,7 +1392,7 @@ function advancedMenu() {
         return
       fi
       DIALOG --title "$(TEXT "Advanced")" \
-        --no-items --menu "$(TEXT "Choose a user name")" 0 0 0  --file "${TMP_PATH}/menu" \
+        --no-items --menu "$(TEXT "Choose a user name")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
       USER="$(cat "${TMP_PATH}/resp" | awk '{print $1}')"
