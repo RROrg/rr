@@ -156,6 +156,7 @@ mkdir -p "${RAMDISK_PATH}/addons"
 echo "#!/bin/sh" >"${RAMDISK_PATH}/addons/addons.sh"
 echo 'echo "addons.sh called with params ${@}"' >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export LOADERLABEL=RR" >>"${RAMDISK_PATH}/addons/addons.sh"
+echo "export LOADERVERSION=${RR_VERSION}" >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export PLATFORM=${PLATFORM}" >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export MODEL=${MODEL}" >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export MLINK=${PATURL}" >>"${RAMDISK_PATH}/addons/addons.sh"
@@ -201,6 +202,12 @@ ${WORK_PATH}/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
 for N in $(seq 0 7); do
   echo -e "DEVICE=eth${N}\nBOOTPROTO=dhcp\nONBOOT=yes\nIPV6INIT=dhcp\nIPV6_ACCEPT_RA=1" >"${RAMDISK_PATH}/etc/sysconfig/network-scripts/ifcfg-eth${N}"
 done
+
+# issues/313
+if [ ${PLATFORM} = "epyc7002" ]; then
+  sed -i 's#/dev/console#/var/log/lrc#g' ${RAMDISK_PATH}/usr/bin/busybox
+  sed -i '/^echo "START/a \\nmknod -m 0666 /dev/console c 1 3' ${RAMDISK_PATH}/linuxrc.syno
+fi
 
 # Reassembly ramdisk
 echo -n "."
