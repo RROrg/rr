@@ -1,4 +1,3 @@
-
 [ -z "${WORK_PATH}" -o ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" >/dev/null 2>&1 && pwd)"
 
 . ${WORK_PATH}/include/consts.sh
@@ -345,4 +344,22 @@ function rebootTo() {
   [ ! -f "${ENVFILE}" ] && grub-editenv ${ENVFILE} create
   grub-editenv ${ENVFILE} set next_entry="${1}"
   reboot
+}
+
+###############################################################################
+# connect wlanif
+# 1 netif name
+function connectwlanif() {
+  [ ! -d "/sys/class/net/${1}" ] && return 1
+
+  CONF=""
+  [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf.${1}" ] && CONF="${PART1_PATH}/wpa_supplicant.conf.${1}"
+  [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf" ] && CONF="${PART1_PATH}/wpa_supplicant.conf"
+  [ -z "${CONF}" ] && return 2
+
+  if [ -f "/var/run/wpa_supplicant.pid.${1}" ]; then
+    kill -9 $(cat /var/run/wpa_supplicant.pid.${1})
+    rm -f /var/run/wpa_supplicant.pid.${1}
+  fi
+  wpa_supplicant -i ${1} -c "${CONF}" -B -P "/var/run/wpa_supplicant.pid.${1}" >/dev/null 2>&1
 }
