@@ -18,7 +18,7 @@ printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
 printf "\033[1;44m%*s\033[0m\n" ${COLUMNS} ""
 
 # Get first MAC address
-ETHX=$(ls /sys/class/net/ | grep -v lo)
+ETHX=$(ls /sys/class/net/ | grep -v lo | true)
 # No network devices
 [ $(echo ${ETHX} | wc -w) -le 0 ] && die "$(TEXT "Network devices not found!")"
 
