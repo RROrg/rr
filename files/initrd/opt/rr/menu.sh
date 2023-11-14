@@ -152,10 +152,10 @@ function modelMenu() {
           HBA=" "
           M_2=" "
           if [ "${iGPU}" = "1" ]; then
-            [ "${PLATFORM}" = "apollolake" -o "${PLATFORM}" = "geminilake" ] && I915="*"
+            [ "${PLATFORM}" = "apollolake" -o "${PLATFORM}" = "geminilake" -o "${PLATFORM}" = "epyc7002" ] && I915="*"
           fi
           if [ "${LSI}" = "1" ]; then
-            [ ! "${DT}" = "true" ] && HBA="*   "
+            [ ! "${DT}" = "true" -o "${PLATFORM}" = "epyc7002" ] && HBA="*   "
           fi
           if [ "${NVME}" = "1" ]; then
             [ "${DT}" = "true" ] && M_2="*   "
