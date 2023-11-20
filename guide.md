@@ -27,14 +27,15 @@
      * https://www.synology.com/en-us/support/RAID_calculator
 
 # 安装条件
-  1. 引导盘只支持 sata / usb.
+  1. 引导盘要大于 2GB.
   2. 安装盘要大于 32GB.
   3. 内存需要大于 4GB.
-  4. DT的型号不支持HBA扩展卡.
+  4. DT的型号（kver 4.4）目前不支持HBA扩展卡.
 
 # GPU
-* iGPU: https://jim.plus/
 * vGPU: https://blog.kkk.rs/
+* iGPU: https://jim.plus/
+* iGPU: https://github.com/MoetaYuko/intel-gpu-i915-backports
 
 # RR:
 * RR 各版本间切换(手动方式, 全量):  
