@@ -160,7 +160,7 @@ if [ "${DIRECT}" = "true" ]; then
   reboot
   exit 0
 else
-  ETHX=$(ls /sys/class/net/ | grep -v lo || true)
+  ETHX=$(ls /sys/class/net/ | grep -v lo) || true
   echo "$(printf "$(TEXT "Detected %s network cards.")" "$(echo ${ETHX} | wc -w)")"
   echo "$(TEXT "Checking Connect.")"
   COUNT=0

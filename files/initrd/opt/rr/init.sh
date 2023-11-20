@@ -18,7 +18,7 @@ printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
 printf "\033[1;44m%*s\033[0m\n" ${COLUMNS} ""
 
 # Get first MAC address
-ETHX=$(ls /sys/class/net/ | grep -v lo || true)
+ETHX=$(ls /sys/class/net/ | grep -v lo) || true
 # No network devices
 [ $(echo ${ETHX} | wc -w) -le 0 ] && die "$(TEXT "Network devices not found!")"
 
@@ -79,8 +79,8 @@ BUS=$(getBus "${LOADER_DISK}")
 if [ "${BUS}" = "usb" ]; then
   VID="0x$(udevadm info --query property --name ${LOADER_DISK} | grep ID_VENDOR_ID | cut -d= -f2)"
   PID="0x$(udevadm info --query property --name ${LOADER_DISK} | grep ID_MODEL_ID | cut -d= -f2)"
-elif [ "${BUS}" != "sata" -a "${BUS}" != "scsi" -a "${BUS}" != "nvme" ]; then
-  die "$(TEXT "Loader disk neither USB or SATA/SCSI/NVME DoM")"
+elif [ "${BUS}" != "sata" -a "${BUS}" != "scsi" -a "${BUS}" != "nvme" -a "${BUS}" != "mmc" ]; then
+  die "$(TEXT "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM")"
 fi
 
 # Save variables to user config file
