@@ -2,6 +2,33 @@
 
 This project is a system for redpill’s preinstallation and recovery environment.
 
+## 免责声明 - Disclaimer
+* 硬盘有价，数据无价，任何对引导的修改都是有风险的，本人不承担数据丢失的责任。
+* 本工具仅用作学习交流，严禁用于商业用途。
+----
+* The hard drive has a price, but the data is priceless. Any modification to the bootloader is risky. I will not be responsible for data loss.
+* This tool is only for learning and communication, and commercial use is strictly prohibited.
+
+
+### 鸣谢 - Credits
+* Arpl: @fbelavenuto
+  * https://github.com/fbelavenuto/arpl
+* Redpill: @RedPill-TTG @pocopico @jim3ma
+  * https://github.com/RedPill-TTG
+  * https://github.com/XPEnology-Community/redpill-lkm5
+* Framework:
+  * https://github.com/buildroot/buildroot
+  * https://github.com/eudev-project/eudev
+* Addons: @xbl3 @FOXBI @arabezar @007revad
+  * https://github.com/xbl3/synocodectool-patch
+  * https://github.com/FOXBI/ch_cpuinfo (https://github.com/arabezar/ch_cpuinfo)
+  * https://github.com/007revad/Synology_HDD_db
+  * https://github.com/007revad/Synology_enable_M2_volume
+* Modules: @jim3ma @MoetaYuko
+  * https://github.com/jim3ma/synology-igc
+  * https://github.com/MoetaYuko/intel-gpu-i915-backports
+
+
 ### 组件: 
 <b>https://github.com/wjz304/rr</b>
 * addons: https://github.com/wjz304/rr-addons
@@ -9,8 +36,9 @@ This project is a system for redpill’s preinstallation and recovery environmen
 * rp-lkms: https://github.com/wjz304/rr-lkms
 
 ### About GPU: 
-* iGPU: https://jim.plus/
 * vGPU: https://blog.kkk.rs/
+* iGPU: https://jim.plus/
+* iGPU: https://github.com/MoetaYuko/intel-gpu-i915-backports
 
 ## 说明 - Instructions
 * [GUIDE](./guide.md)
@@ -53,18 +81,6 @@ This project is a system for redpill’s preinstallation and recovery environmen
 * 中文简体: https://www.bilibili.com/video/BV1jk4y1Y7B7  
     ##### `(From: http://mi-d.cn)`
 
-## 免责声明 - Disclaimer
-* 硬盘有价，数据无价，任何对引导的修改都是有风险的，本人不承担数据丢失的责任。
-* 本工具仅用作学习交流，严禁用于商业用途。
-----
-* The hard drive has a price, but the data is priceless. Any modification to the bootloader is risky. I will not be responsible for data loss.
-* This tool is only for learning and communication, and commercial use is strictly prohibited.
-
-
-### 鸣谢 - Credits
-arpl: https://github.com/fbelavenuto/arpl  
-redpill: https://github.com/RedPill-TTG  
-Framework: https://github.com/buildroot/buildroot  
 
 ## 打赏一下
 * > ### 作者: Ing  
