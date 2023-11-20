@@ -604,6 +604,8 @@ function cmdlineMenu() {
       MSG+="$(TEXT " * \Z4intel_idle.max_cstate=1\Zn\n    Set the maximum C-state depth allowed by the intel_idle driver.\n")"
       MSG+="$(TEXT " * \Z4SataPortMap=??\Zn\n    Sata Port Map.\n")"
       MSG+="$(TEXT " * \Z4DiskIdxMap=??\Zn\n    Disk Index Map, Modify disk name sequence.\n")"
+      MSG+="$(TEXT " * \Zi915.enable_guc=2\Zn\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\n")"
+      MSG+="$(TEXT " * \Zi915.max_vfs=7\Zn\n     Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
       while true; do
@@ -1282,6 +1284,14 @@ function advancedMenu() {
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
+      [ $(ls -l /sys/class/mmc_host | grep mmc_host | wc -l) -gt 0 ] && MSG+="\nMMC:\n"
+      for PCI in $(lspci -d ::805 | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+        PORTNUM=$(ls -l /sys/class/mmc_host | grep "${PCI}" | wc -l)
+        [ ${PORTNUM} -eq 0 ] && continue
+        MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
+        NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
+      done
       [ $(lspci -d ::108 | wc -l) -gt 0 ] && MSG+="\nNVME:\n"
       for PCI in $(lspci -d ::108 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
@@ -1343,7 +1353,7 @@ function advancedMenu() {
         [ -z "${POSITION}" -o -z "${NAME}" ] && continue
         echo "${POSITION}" | grep -q "${LOADER_DISK}" && continue
         echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
-      done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd|/dev/nvme" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
+      done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd|/dev/mmc|/dev/nvme" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
       DIALOG --title "$(TEXT "Advanced")" \
         --checklist "$(TEXT "Advanced")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>${TMP_PATH}/resp
