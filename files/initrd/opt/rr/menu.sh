@@ -604,8 +604,8 @@ function cmdlineMenu() {
       MSG+="$(TEXT " * \Z4intel_idle.max_cstate=1\Zn\n    Set the maximum C-state depth allowed by the intel_idle driver.\n")"
       MSG+="$(TEXT " * \Z4SataPortMap=??\Zn\n    Sata Port Map.\n")"
       MSG+="$(TEXT " * \Z4DiskIdxMap=??\Zn\n    Disk Index Map, Modify disk name sequence.\n")"
-      MSG+="$(TEXT " * \Zi915.enable_guc=2\Zn\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\n")"
-      MSG+="$(TEXT " * \Zi915.max_vfs=7\Zn\n     Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\n")"
+      MSG+="$(TEXT " * \Z4i915.enable_guc=2\Zn\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\n")"
+      MSG+="$(TEXT " * \Z4i915.max_vfs=7\Zn\n     Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
       while true; do
@@ -1007,9 +1007,6 @@ function make() {
       break
     fi
     rm -f ${PART1_PATH}/.build
-    PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
-    BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
-    SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
     echo "$(TEXT "Cleaning ...")"
     rm -rf "${UNTAR_PAT_PATH}"
     echo "$(TEXT "Ready!")"
@@ -1023,6 +1020,9 @@ function make() {
       --msgbox "$(cat ${MKERR_FILE})" 0 0
     return 1
   else
+    PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+    BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
+    SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
     return 0
   fi
 }
@@ -1287,7 +1287,7 @@ function advancedMenu() {
       [ $(ls -l /sys/class/mmc_host | grep mmc_host | wc -l) -gt 0 ] && MSG+="\nMMC:\n"
       for PCI in $(lspci -d ::805 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
-        PORTNUM=$(ls -l /sys/class/mmc_host | grep "${PCI}" | wc -l)
+        PORTNUM=$(ls -l /sys/block/mmc* | grep "${PCI}" | wc -l)
         [ ${PORTNUM} -eq 0 ] && continue
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
@@ -1354,6 +1354,11 @@ function advancedMenu() {
         echo "${POSITION}" | grep -q "${LOADER_DISK}" && continue
         echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
       done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd|/dev/mmc|/dev/nvme" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
+      if [ ! -f "${TMP_PATH}/opts" ]; then
+        DIALOG --title "$(TEXT "Advanced")" \
+          --msgbox "$(TEXT "No disk found!")" 0 0
+        return
+      fi
       DIALOG --title "$(TEXT "Advanced")" \
         --checklist "$(TEXT "Advanced")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>${TMP_PATH}/resp
