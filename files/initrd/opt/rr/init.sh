@@ -68,7 +68,7 @@ for ETH in ${ETHX}; do
     ip addr add ${IPC}/24 dev ${ETH}
     sleep 1
   fi
-  ethtool -s ${ETH} wol g 2>/dev/null
+  [ "${ETH::3}" = "eth" ] && ethtool -s ${ETH} wol g 2>/dev/null
 done
 
 # Get the VID/PID if we are in USB
