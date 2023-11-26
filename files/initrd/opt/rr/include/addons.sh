@@ -53,7 +53,7 @@ function installAddon() {
   [ ${HAS_FILES} -ne 1 ] && return 1
   cp -f "${TMP_PATH}/${ADDON}/install.sh" "${RAMDISK_PATH}/addons/${ADDON}.sh" 2>"${LOG_FILE}" || dieLog
   chmod +x "${RAMDISK_PATH}/addons/${ADDON}.sh"
-  [ -d ${TMP_PATH}/${ADDON}/root ] && (cp -rnf "${TMP_PATH}/${ADDON}/root/"* "${RAMDISK_PATH}/" 2>"${LOG_FILE}" || dieLog)
+  [ -d ${TMP_PATH}/${ADDON}/root ] && (cp -rf "${TMP_PATH}/${ADDON}/root/"* "${RAMDISK_PATH}/" 2>"${LOG_FILE}" || dieLog)
   rm -rf "${TMP_PATH}/${ADDON}"
   return 0
 }
