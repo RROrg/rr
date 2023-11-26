@@ -42,6 +42,12 @@ SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
 MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
 
+PROXY=$(readConfigKey "global_proxy" "${USER_CONFIG_FILE}")
+if [ -n "${PROXY}" ]; then
+  export http_proxy="${PROXY}"
+  export https_proxy="${PROXY}"
+fi
+
 ###############################################################################
 # Mounts backtitle dynamically
 function backtitle() {
@@ -537,6 +543,11 @@ function moduleMenu() {
       touch ${PART1_PATH}/.build
       ;;
     o)
+      if ! tty | grep -q "/dev/pts"; then
+        DIALOG --title "$(TEXT "Modules")" \
+          --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+        return
+      fi
       MSG=""
       MSG+="$(TEXT "This function is experimental and dangerous. If you don't know much, please exit.\n")"
       MSG+="$(TEXT "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\n")"
@@ -1069,6 +1080,8 @@ function advancedMenu() {
     echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
     echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
     echo "g \"$(TEXT "Show QR logo:") \Z4${DSMLOGO}\Zn\"" >>"${TMP_PATH}/menu"
+    echo "1 \"$(TEXT "Set global proxy")\"" >>"${TMP_PATH}/menu"
+    echo "2 \"$(TEXT "Set github proxy")\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
     DIALOG --title "$(TEXT "Advanced")" \
@@ -1572,6 +1585,7 @@ function advancedMenu() {
         exit
       fi
       ;;
+      
     v)
       if [ -d "${PART1_PATH}/logs" ]; then
         rm -f "${TMP_PATH}/logs.tar.gz"
@@ -1614,6 +1628,67 @@ function advancedMenu() {
       [ "${DSMLOGO}" = "true" ] && DSMLOGO='false' || DSMLOGO='true'
       writeConfigKey "dsmlogo" "${DSMLOGO}" "${USER_CONFIG_FILE}"
       NEXT="e"
+      ;;
+    1)
+      RET=1
+      PROXY=$(readConfigKey "global_proxy" "${USER_CONFIG_FILE}")
+      while true; do
+        DIALOG --title "$(TEXT "Advanced")" \
+          --inputbox "$(TEXT "Please enter a proxy server url.(e.g., http://192.168.1.1:7981/)")" 0 70 "${PROXY}" \
+          2>${TMP_PATH}/resp
+        RET=$?
+        [ ${RET} -ne 0 ] && break
+        PROXY=$(cat ${TMP_PATH}/resp)
+        if [ -z "${PROXY}" ]; then
+          break
+        elif echo "${PROXY}" | grep -Eq "^(https?|socks5)://[^\s/$.?#].[^\s]*$"; then
+          break
+        else
+          DIALOG --title "$(TEXT "Advanced")" \
+            --yesno "$(TEXT "Invalid proxy server url, continue?")" 0 0
+          RET=$?
+          [ ${RET} -eq 0 ] && break
+        fi
+      done
+      [ ${RET} -ne 0 ] && return
+
+      if [ -z "${PROXY}" ]; then
+        deleteConfigKey "global_proxy" "${USER_CONFIG_FILE}"
+        unset http_proxy
+        unset https_proxy
+      else
+        writeConfigKey "global_proxy" "${PROXY}" "${USER_CONFIG_FILE}"
+        export http_proxy="${PROXY}"
+        export https_proxy="${PROXY}"
+      fi
+      ;;
+    2)
+      RET=1
+      PROXY=$(readConfigKey "github_proxy" "${USER_CONFIG_FILE}")
+      while true; do
+        DIALOG --title "$(TEXT "Advanced")" \
+          --inputbox "$(TEXT "Please enter a proxy server url.(e.g., https://mirror.ghproxy.com/)")" 0 70 "${PROXY}" \
+          2>${TMP_PATH}/resp
+        RET=$?
+        [ ${RET} -ne 0 ] && break
+        PROXY=$(cat ${TMP_PATH}/resp)
+        if [ -z "${PROXY}" ]; then
+          break
+        elif echo "${PROXY}" | grep -Eq "^(https?|socks5)://[^\s/$.?#].[^\s]*$"; then
+          break
+        else
+          DIALOG --title "$(TEXT "Advanced")" \
+            --yesno "$(TEXT "Invalid proxy server url, continue?")" 0 0
+          RET=$?
+          [ ${RET} -eq 0 ] && break
+        fi
+      done
+      [ ${RET} -ne 0 ] && return
+      if [ -z "${PROXY}" ]; then
+        deleteConfigKey "github_proxy" "${USER_CONFIG_FILE}"
+      else
+        writeConfigKey "github_proxy" "${PROXY}" "${USER_CONFIG_FILE}"
+      fi
       ;;
     e) break ;;
     esac
@@ -1739,7 +1814,7 @@ function languageMenu() {
 ###############################################################################
 # Shows available keymaps to user choose one
 function keymapMenu() {
-  OPTIONS="azerty bepo carpalx colemak dvorak fgGIod neo olpc qwerty qwertz"
+  OPTIONS="$(ls /usr/share/keymaps/i386 | grep -v include)"
   DIALOG \
     --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a layout")" 0 0 0 ${OPTIONS} \
     2>${TMP_PATH}/resp
@@ -1770,7 +1845,7 @@ function keymapMenu() {
 # 4 - attachment name
 # 5 - silent
 function downloadExts() {
-  PROXY="$(readConfigKey "proxy" "${USER_CONFIG_FILE}")"
+  PROXY="$(readConfigKey "github_proxy" "${USER_CONFIG_FILE}")"
   [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
   T="$(printf "$(TEXT "Update %s")" "${1}")"
 
@@ -1929,17 +2004,12 @@ function updateMenu() {
     CUR_ADDONS_VER="$(cat "${PART3_PATH}/addons/VERSION" 2>/dev/null)"
     CUR_MODULES_VER="$(cat "${PART3_PATH}/modules/VERSION" 2>/dev/null)"
     CUR_LKMS_VER="$(cat "${PART3_PATH}/lkms/VERSION" 2>/dev/null)"
-    PROXY="$(readConfigKey "proxy" "${USER_CONFIG_FILE}")"
-    [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
     rm -f "${TMP_PATH}/menu"
     echo "a \"$(TEXT "Update all")\"" >>"${TMP_PATH}/menu"
     echo "r \"$(TEXT "Update RR")(${CUR_RR_VER:-None})\"" >>"${TMP_PATH}/menu"
     echo "d \"$(TEXT "Update addons")(${CUR_ADDONS_VER:-None})\"" >>"${TMP_PATH}/menu"
     echo "m \"$(TEXT "Update modules")(${CUR_MODULES_VER:-None})\"" >>"${TMP_PATH}/menu"
     echo "l \"$(TEXT "Update LKMs")(${CUR_LKMS_VER:-None})\"" >>"${TMP_PATH}/menu"
-    if [ -n "${DEBUG}" ]; then
-      echo "p \"$(TEXT "Set proxy server")\"" >>"${TMP_PATH}/menu"
-    fi
     echo "u \"$(TEXT "Local upload")\"" >>"${TMP_PATH}/menu"
     echo "b \"$(TEXT "Pre Release:") \Z4${PRERELEASE}\Zn\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
@@ -1964,58 +2034,30 @@ function updateMenu() {
       [ $? -ne 0 ] && continue
       updateRR "RR"
       ;;
-
     r)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
       downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/wjz304/rr" "update" "0"
       [ $? -ne 0 ] && continue
       updateRR "RR"
       ;;
-
     d)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
       downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/wjz304/rr-addons" "addons" "0"
       [ $? -ne 0 ] && continue
       updateExts "addons" "0"
       ;;
-
     m)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
       downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/wjz304/rr-modules" "modules" "0"
       [ $? -ne 0 ] && continue
       updateExts "modules" "0"
       ;;
-
     l)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
       downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/wjz304/rr-lkms" "rp-lkms" "0"
       [ $? -ne 0 ] && continue
       updateExts "LKMs" "0"
       ;;
-
-    p)
-      RET=1
-      while true; do
-        DIALOG --title "$(TEXT "Update")" \
-          --inputbox "$(TEXT "Please enter a proxy server url")" 0 70 "${PROXY}" \
-          2>${TMP_PATH}/resp
-        RET=$?
-        [ ${RET} -ne 0 ] && break
-        PROXY=$(cat ${TMP_PATH}/resp)
-        if [ -z "${PROXYSERVER}" ]; then
-          break
-        elif [[ "${PROXYSERVER}" =~ "^(https?|ftp)://[^\s/$.?#].[^\s]*$" ]]; then
-          break
-        else
-          DIALOG --title "$(TEXT "Update")" \
-            --yesno "$(TEXT "Invalid proxy server url, continue?")" 0 0
-          RET=$?
-          [ ${RET} -eq 0 ] && break
-        fi
-      done
-      [ ${RET} -eq 0 ] && writeConfigKey "proxy" "${PROXY}" "${USER_CONFIG_FILE}"
-      ;;
-
     u)
       if ! tty | grep -q "/dev/pts"; then
         DIALOG --title "$(TEXT "Update")" \

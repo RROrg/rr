@@ -117,8 +117,13 @@
   cat /proc/sys/kernel/syno_internal_netif_num     # 查看当前鉴权的网卡数量
   nproc                                            # 查看当前线程数
   
-  # 驱动相关
+  # 设备相关
   lsmod                                            # 查看已加载驱动
+  lsusb                                            # 查看USB设备
+  lsblk                                            # 查看磁盘设备
+  lspci -Qnn                                       # 查看PCI设备
+
+  # 驱动相关
   ls -ld /sys/class/net/*/device/driver            # 查看已加载网卡和对应驱动
   cat /sys/class/net/*/address                     # 查看已加载网卡的MAC地址
 
@@ -126,11 +131,16 @@
   fdisk -l                                         # 查看硬盘信息
   lspci -d ::106                                   # 查看 ATA 控制器
   lspci -d ::107                                   # 查看 HBA 控制器
-  ls -l /sys/class/scsi_host                       # 查看硬盘 host 信息
+  lspci -d ::108                                   # 查看 NVME 控制器
+  lspci -d ::805                                   # 查看 SD Card 控制器
+  ls -l /sys/class/scsi_host                       # 查看 ATA 硬盘 host 信息
+  ls -l /sys/class/mmc_host                        # 查看 SD Card 硬盘 host 信息
+  ls -l /sys/class/nvme                            # 查看 NVME 硬盘 host 信息
   ls /sys/block/                                   # 查看块设备
   ls /sys/block/sd*                                # 查看识别的 sata 硬盘 (非设备树(dtb)的型号)
   ls /sys/block/sata*                              # 查看识别的 sata 硬盘  (设备树(dtb)的型号)
   ls /sys/block/nvme*                              # 查看识别的 nvme 硬盘
+  ls /sys/block/mmc*                               # 查看识别的 SD Card 硬盘
   cat /sys/block/sd*/device/syno_block_info        # 查看识别的 sata 硬盘挂载点 (非设备树(dtb)的型号)  
   cat /sys/block/sata*/device/syno_block_info      # 查看识别的 sata 硬盘挂载点 (设备树(dtb)的型号)
   cat /sys/block/nvme*/device/syno_block_info      # 查看识别的 nvme 硬盘挂载点
