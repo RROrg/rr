@@ -23,7 +23,7 @@ sudo mount ${LOOPX}p1 "/tmp/files/p1"
 sudo mount ${LOOPX}p3 "/tmp/files/p3"
 
 echo "Get Buildroot"
-[ ! -f "br/bzImage-rr" -o ! -f "br/initrd-rr" ] && getBuildroot "2023.02.x" "br"
+[ ! -f "br/bzImage-rr" -o ! -f "br/initrd-rr" ] && getBuildroot "2023.08.x" "br"
 [ ! -f "br/bzImage-rr" -o ! -f "br/initrd-rr" ] && return 1
 
 read -p "Press enter to continue"
