@@ -73,22 +73,25 @@ function getExtractor() {
 # $2 path
 function getBuildroot() {
   echo "Getting Buildroot begin"
-  local TAG="${1:-latest}"
-  local DEST_PATH="${2:-buildroot}"
-
+  local DEST_PATH="${1:-buildroot}"
+  rm -rf "${DEST_PATH}"
+  mkdir -p "${DEST_PATH}"
   if [ "${1}" = "latest" ]; then
     TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases" | jq -r ".[0].tag_name")
+  else
+    TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases/latest" | jq -r ".tag_name")
   fi
-  [ ! -d "${DEST_PATH}" ] && mkdir -p "${DEST_PATH}"
-  rm -rf "${DEST_PATH}/bzImage-rr"
-  STATUS=$(curl -w "%{http_code}" -LH "Authorization: token ${TOKEN}" "https://github.com/RROrg/rr-buildroot/releases/download/${TAG}/bzImage" -o "${DEST_PATH}/bzImage-rr")
-  echo "TAG=${TAG}; Status=${STATUS}"
-  [ ${STATUS} -ne 200 ] && exit 1
-
-  rm -rf "${DEST_PATH}/initrd-rr"
-  STATUS=$(curl -w "%{http_code}" -LH "Authorization: token ${TOKEN}" "https://github.com/RROrg/rr-buildroot/releases/download/${TAG}/rootfs.cpio.xz" -o "${DEST_PATH}/initrd-rr")
-  echo "TAG=${TAG}; Status=${STATUS}"
-  [ ${STATUS} -ne 200 ] && exit 1
+  while read ID NAME; do
+    if [ "${NAME}" = "bzImage" ]; then
+      STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-buildroot/releases/assets/${ID}" -o "${DEST_PATH}/bzImage-rr")
+      echo "TAG=${TAG}; Status=${STATUS}"
+      [ ${STATUS} -ne 200 ] && exit 1
+    elif [ "${NAME}" = "rootfs.cpio.xz" ]; then
+      STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-buildroot/releases/assets/${ID}" -o "${DEST_PATH}/initrd-rr")
+      echo "TAG=${TAG}; Status=${STATUS}"
+      [ ${STATUS} -ne 200 ] && exit 1
+    fi
+  done < <(curl -skLH "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
 
   echo "Getting Buildroot end"
 }
@@ -106,9 +109,14 @@ function getLKMs() {
   else
     TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases/latest" | jq -r ".tag_name")
   fi
-  STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" "https://github.com/RROrg/rr-lkms/releases/download/${TAG}/rp-lkms.zip" -o "${CACHE_FILE}")
-  echo "TAG=${TAG}; Status=${STATUS}"
-  [ ${STATUS} -ne 200 ] && exit 1
+  while read ID NAME; do
+    if [ "${NAME}" = "rp-lkms.zip" ]; then
+      STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-lkms/releases/assets/${ID}" -o "${CACHE_FILE}")
+      echo "TAG=${TAG}; Status=${STATUS}"
+      [ ${STATUS} -ne 200 ] && exit 1
+    fi
+  done < <(curl -skLH "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  [ ! -f "${CACHE_FILE}" ] && exit 1
   # Unzip LKMs
   rm -rf "${DEST_PATH}"
   mkdir -p "${DEST_PATH}"
@@ -130,9 +138,14 @@ function getAddons() {
   else
     TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases/latest" | jq -r ".tag_name")
   fi
-  STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" "https://github.com/RROrg/rr-addons/releases/download/${TAG}/addons.zip" -o "${CACHE_FILE}")
-  echo "TAG=${TAG}; Status=${STATUS}"
-  [ ${STATUS} -ne 200 ] && exit 1
+  while read ID NAME; do
+    if [ "${NAME}" = "addons.zip" ]; then
+      STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-addons/releases/assets/${ID}" -o "${CACHE_FILE}")
+      echo "TAG=${TAG}; Status=${STATUS}"
+      [ ${STATUS} -ne 200 ] && exit 1
+    fi
+  done < <(curl -skLH "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  [ ! -f "${CACHE_FILE}" ] && exit 1
   rm -rf "${DEST_PATH}"
   mkdir -p "${DEST_PATH}"
   # Install Addons
@@ -163,9 +176,14 @@ function getModules() {
   else
     TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases/latest" | jq -r ".tag_name")
   fi
-  STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" "https://github.com/RROrg/rr-modules/releases/download/${TAG}/modules.zip" -o "${CACHE_FILE}")
-  echo "TAG=${TAG}; Status=${STATUS}"
-  [ ${STATUS} -ne 200 ] && exit 1
+  while read ID NAME; do
+    if [ "${NAME}" = "modules.zip" ]; then
+      STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-modules/releases/assets/${ID}" -o "${CACHE_FILE}")
+      echo "TAG=${TAG}; Status=${STATUS}"
+      [ ${STATUS} -ne 200 ] && exit 1
+    fi
+  done < <(curl -skLH "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  [ ! -f "${CACHE_FILE}" ] && exit 1
   # Unzip Modules
   rm -rf "${DEST_PATH}"
   mkdir -p "${DEST_PATH}"
@@ -174,9 +192,8 @@ function getModules() {
   echo "Getting Modules end"
 }
 
-
 # repack initrd
-# $1 initrd file  
+# $1 initrd file
 # $2 plugin path
 # $3 output file
 function repackInitrd() {
@@ -186,7 +203,7 @@ function repackInitrd() {
 
   [ -z "${INITRD_FILE}" -o ! -f "${INITRD_FILE}" ] && exit 1
   [ -z "${PLUGIN_PATH}" -o ! -d "${PLUGIN_PATH}" ] && exit 1
-  
+
   INITRD_FILE="$(readlink -f "${INITRD_FILE}")"
   PLUGIN_PATH="$(readlink -f "${PLUGIN_PATH}")"
   OUTPUT_PATH="$(readlink -f "${OUTPUT_PATH}")"
@@ -207,7 +224,7 @@ function repackInitrd() {
 }
 
 # resizeimg
-# $1 input file  
+# $1 input file
 # $2 changsize MB eg: +50M -50M
 # $3 output file
 function resizeImg() {
@@ -217,11 +234,10 @@ function resizeImg() {
 
   [ -z "${INPUT_FILE}" -o ! -f "${INPUT_FILE}" ] && exit 1
   [ -z "${CHANGE_SIZE}" ] && exit 1
-  
+
   INPUT_FILE="$(readlink -f "${INPUT_FILE}")"
   OUTPUT_FILE="$(readlink -f "${OUTPUT_FILE}")"
 
-  
   SIZE=$(($(du -m "${INPUT_FILE}" | awk '{print $1}')$(echo "${CHANGE_SIZE}" | sed 's/M//g; s/b//g')))
   [ -z "${SIZE}" -o "${SIZE}" -lt 0 ] && exit 1
 
