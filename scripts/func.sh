@@ -6,6 +6,8 @@
 # See /LICENSE for more information.
 #
 
+export TOKEN="${1}"
+
 # Convert po2mo
 # $1 path
 function convertpo2mo() {
@@ -75,16 +77,16 @@ function getBuildroot() {
   local DEST_PATH="${2:-buildroot}"
 
   if [ "${1}" = "latest" ]; then
-    TAG=$(curl -s "https://api.github.com/repos/wjz304/rr-lkms/releases" | jq -r ".[0].tag_name")
+    TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases" | jq -r ".[0].tag_name")
   fi
   [ ! -d "${DEST_PATH}" ] && mkdir -p "${DEST_PATH}"
   rm -rf "${DEST_PATH}/bzImage-rr"
-  STATUS=$(curl -w "%{http_code}" -L "https://github.com/wjz304/rr-buildroot/releases/download/${TAG}/bzImage" -o "${DEST_PATH}/bzImage-rr")
+  STATUS=$(curl -w "%{http_code}" -LH "Authorization: token ${TOKEN}" "https://github.com/RROrg/rr-buildroot/releases/download/${TAG}/bzImage" -o "${DEST_PATH}/bzImage-rr")
   echo "TAG=${TAG}; Status=${STATUS}"
   [ ${STATUS} -ne 200 ] && exit 1
 
   rm -rf "${DEST_PATH}/initrd-rr"
-  STATUS=$(curl -w "%{http_code}" -L "https://github.com/wjz304/rr-buildroot/releases/download/${TAG}/rootfs.cpio.xz" -o "${DEST_PATH}/initrd-rr")
+  STATUS=$(curl -w "%{http_code}" -LH "Authorization: token ${TOKEN}" "https://github.com/RROrg/rr-buildroot/releases/download/${TAG}/rootfs.cpio.xz" -o "${DEST_PATH}/initrd-rr")
   echo "TAG=${TAG}; Status=${STATUS}"
   [ ${STATUS} -ne 200 ] && exit 1
 
@@ -100,11 +102,11 @@ function getLKMs() {
   local CACHE_FILE="/tmp/rp-lkms.zip"
   rm -f "${CACHE_FILE}"
   if [ "${2}" = "true" ]; then
-    TAG=$(curl -s "https://api.github.com/repos/wjz304/rr-lkms/releases" | jq -r ".[0].tag_name")
+    TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases" | jq -r ".[0].tag_name")
   else
-    TAG=$(curl -s "https://api.github.com/repos/wjz304/rr-lkms/releases/latest" | jq -r ".tag_name")
+    TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases/latest" | jq -r ".tag_name")
   fi
-  STATUS=$(curl -w "%{http_code}" -L "https://github.com/wjz304/rr-lkms/releases/download/${TAG}/rp-lkms.zip" -o "${CACHE_FILE}")
+  STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" "https://github.com/RROrg/rr-lkms/releases/download/${TAG}/rp-lkms.zip" -o "${CACHE_FILE}")
   echo "TAG=${TAG}; Status=${STATUS}"
   [ ${STATUS} -ne 200 ] && exit 1
   # Unzip LKMs
@@ -124,11 +126,11 @@ function getAddons() {
   local CACHE_DIR="/tmp/addons"
   local CACHE_FILE="/tmp/addons.zip"
   if [ "${2}" = "true" ]; then
-    TAG=$(curl -s "https://api.github.com/repos/wjz304/rr-addons/releases" | jq -r ".[0].tag_name")
+    TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases" | jq -r ".[0].tag_name")
   else
-    TAG=$(curl -s "https://api.github.com/repos/wjz304/rr-addons/releases/latest" | jq -r ".tag_name")
+    TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases/latest" | jq -r ".tag_name")
   fi
-  STATUS=$(curl -w "%{http_code}" -L "https://github.com/wjz304/rr-addons/releases/download/${TAG}/addons.zip" -o "${CACHE_FILE}")
+  STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" "https://github.com/RROrg/rr-addons/releases/download/${TAG}/addons.zip" -o "${CACHE_FILE}")
   echo "TAG=${TAG}; Status=${STATUS}"
   [ ${STATUS} -ne 200 ] && exit 1
   rm -rf "${DEST_PATH}"
@@ -157,11 +159,11 @@ function getModules() {
   local CACHE_FILE="/tmp/modules.zip"
   rm -f "${CACHE_FILE}"
   if [ "${2}" = "true" ]; then
-    TAG=$(curl -s "https://api.github.com/repos/wjz304/rr-modules/releases" | jq -r ".[0].tag_name")
+    TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases" | jq -r ".[0].tag_name")
   else
-    TAG=$(curl -s "https://api.github.com/repos/wjz304/rr-modules/releases/latest" | jq -r ".tag_name")
+    TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases/latest" | jq -r ".tag_name")
   fi
-  STATUS=$(curl -w "%{http_code}" -L "https://github.com/wjz304/rr-modules/releases/download/${TAG}/modules.zip" -o "${CACHE_FILE}")
+  STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" "https://github.com/RROrg/rr-modules/releases/download/${TAG}/modules.zip" -o "${CACHE_FILE}")
   echo "TAG=${TAG}; Status=${STATUS}"
   [ ${STATUS} -ne 200 ] && exit 1
   # Unzip Modules
