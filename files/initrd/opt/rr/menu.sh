@@ -1069,6 +1069,7 @@ function advancedMenu() {
     echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"
     echo "f \"$(TEXT "Format disk(s) # Without loader disk")\"" >>"${TMP_PATH}/menu"
     echo "x \"$(TEXT "Reset DSM system password")\"" >>"${TMP_PATH}/menu"
+    echo "z \"$(TEXT "Force enable telnet of DSM system")\"" >>"${TMP_PATH}/menu"
     echo "p \"$(TEXT "Save modifications of '/opt/rr'")\"" >>"${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a "true" = "$(readModelKey "${MODEL}" "dt")" ]; then
       echo "d \"$(TEXT "Custom dts file # Need rebuild")\"" >>"${TMP_PATH}/menu"
@@ -1404,11 +1405,14 @@ function advancedMenu() {
       for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
         mount ${I} "${TMP_PATH}/sdX1"
         if [ -f "${TMP_PATH}/sdX1/etc/shadow" ]; then
-          for U in $(cat "${TMP_PATH}/sdX1/etc/shadow" | awk -F ':' '{if ($2 != "*" && $2 != "!!") {print $1;}}'); do
+          while read L; do
+            U=$(echo "${L}" | awk -F ':' '{if ($2 != "*" && $2 != "!!") print $1;}')
+            [ -z "${U}" ] && continue
+            E=$(echo "${L}" | awk -F ':' '{if ($8 == "1") print "disabled"; else print "        ";}')
             grep -q "status=on" "${TMP_PATH}/sdX1/usr/syno/etc/packages/SecureSignIn/preference/${U}/method.config" 2>/dev/null
-            [ $? -eq 0 ] && SS="SecureSignIn" || SS="            "
-            printf "\"%-36s %-16s\"\n" "${U}" "${SS}" >>"${TMP_PATH}/menu"
-          done
+            [ $? -eq 0 ] && S="SecureSignIn" || S="            "
+            printf "\"%-36s %-10s %-14s\"\n" "${U}" "${E}" "${S}" >>"${TMP_PATH}/menu"
+          done < <(cat "${TMP_PATH}/sdX1/etc/shadow")
         fi
         umount "${I}"
         [ -f "${TMP_PATH}/menu" ] && break
@@ -1441,7 +1445,10 @@ function advancedMenu() {
         for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
           mount "${I}" "${TMP_PATH}/sdX1"
           OLDPASSWD="$(cat "${TMP_PATH}/sdX1/etc/shadow" | grep "^${USER}:" | awk -F ':' '{print $2}')"
-          [ -n "${NEWPASSWD}" -a -n "${OLDPASSWD}" ] && sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "${TMP_PATH}/sdX1/etc/shadow"
+          if [ -n "${NEWPASSWD}" -a -n "${OLDPASSWD}" ]; then
+            sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "${TMP_PATH}/sdX1/etc/shadow"
+            sed -i "/^${USER}:/ s/\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\)/\1:\2:\3:\4:\5:\6:\7::\9/" "${TMP_PATH}/sdX1/etc/shadow"
+          fi
           sed -i "s|status=on|status=off|g" "${TMP_PATH}/sdX1/usr/syno/etc/packages/SecureSignIn/preference/${USER}/method.config" 2>/dev/null
           sync
           umount "${I}"
@@ -1451,6 +1458,26 @@ function advancedMenu() {
         --progressbox "$(TEXT "Resetting ...")" 20 100
       DIALOG --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "Password reset completed.")" 0 0
+      ;;
+    z)
+      DIALOG --title "$(TEXT "Advanced")" \
+        --yesno "$(TEXT "Please insert all disks before continuing.\n")" 0 0
+      [ $? -ne 0 ] && return
+      (
+        mkdir -p "${TMP_PATH}/sdX1"
+        for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
+          mount "${I}" "${TMP_PATH}/sdX1"
+          echo '#telnet	stream	tcp	nowait	root	/usr/bin/telnetd	telnetd' >"${TMP_PATH}/sdX1/etc/inetd.conf"
+          echo 'telnet	stream	tcp6	nowait	root	/usr/bin/telnetd	telnetd -h' >>"${TMP_PATH}/sdX1/etc/inetd.conf"
+          echo 'telnet	stream	tcp	nowait	root	/usr/bin/telnetd	telnetd -h' >>"${TMP_PATH}/sdX1/etc/inetd.conf"
+          sync
+          umount "${I}"
+        done
+        rm -rf "${TMP_PATH}/sdX1"
+      ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
+        --progressbox "$(TEXT "Enabling ...")" 20 100
+      DIALOG --title "$(TEXT "Advanced")" \
+        --msgbox "$(TEXT "Telnet is enabled.")" 0 0
       ;;
     p)
       DIALOG --title "$(TEXT "Advanced")" \
@@ -1585,7 +1612,7 @@ function advancedMenu() {
         exit
       fi
       ;;
-      
+
     v)
       if [ -d "${PART1_PATH}/logs" ]; then
         rm -f "${TMP_PATH}/logs.tar.gz"
