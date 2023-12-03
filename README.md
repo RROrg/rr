@@ -19,8 +19,8 @@ This project is a system for redpill’s preinstallation and recovery environmen
 * Framework:
   * https://github.com/buildroot/buildroot
   * https://github.com/eudev-project/eudev
-* Addons: @xbl3 @FOXBI @arabezar @007revad
-  * https://github.com/xbl3/synocodectool-patch
+* Addons: @xbl3 @wirgen @FOXBI @arabezar @007revad
+  * https://github.com/xbl3/synocodectool-patch (https://github.com/wirgen/synocodectool-patch)
   * https://github.com/FOXBI/ch_cpuinfo (https://github.com/arabezar/ch_cpuinfo)
   * https://github.com/007revad/Synology_HDD_db
   * https://github.com/007revad/Synology_enable_M2_volume
