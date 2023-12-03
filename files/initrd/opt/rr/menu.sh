@@ -2093,13 +2093,13 @@ function updateMenu() {
       fi
       MSG=""
       MSG+="$(TEXT "Please keep the attachment name consistent with the attachment name on Github.\n")"
-      MSG+="$(TEXT "Upload update.zip will update RR.\n")"
-      MSG+="$(TEXT "Upload addons.zip will update Addons.\n")"
-      MSG+="$(TEXT "Upload modules.zip will update Modules.\n")"
-      MSG+="$(TEXT "Upload rp-lkms.zip will update LKMs.\n")"
+      MSG+="$(TEXT "Upload update*.zip will update RR.\n")"
+      MSG+="$(TEXT "Upload addons*.zip will update Addons.\n")"
+      MSG+="$(TEXT "Upload modules*.zip will update Modules.\n")"
+      MSG+="$(TEXT "Upload rp-lkms*.zip will update LKMs.\n")"
       DIALOG --title "$(TEXT "Update")" \
         --msgbox "${MSG}" 0 0
-      EXTS=("update.zip" "addons.zip" "modules.zip" "rp-lkms.zip")
+      EXTS=(update*.zip addons*.zip modules*.zip rp-lkms*.zip)
       TMP_UP_PATH="${TMP_PATH}/users"
       USER_FILE=""
       rm -rf "${TMP_UP_PATH}"
@@ -2108,7 +2108,7 @@ function updateMenu() {
       rz -be -B 536870912
       for F in $(ls -A); do
         for I in ${EXTS[@]}; do
-          [[ "${I}" == "${F}" ]] && USER_FILE="${F}"
+          [[ "${F}" = ${I} ]] && USER_FILE="${F}"
         done
         break
       done
@@ -2117,15 +2117,21 @@ function updateMenu() {
         DIALOG --title "$(TEXT "Update")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       else
-        rm -f "${TMP_PATH}/${USER_FILE}"
-        mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/${USER_FILE}"
-        if [ "${USER_FILE}" = "update.zip" ]; then
+        if [[ "${USER_FILE}" = update*.zip ]]; then
+          rm -f "${TMP_PATH}/update.zip"
+          mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/update.zip"
           updateRR "RR"
-        elif [ "${USER_FILE}" = "addons.zip" ]; then
+        elif [[ "${USER_FILE}" = addons*.zip ]]; then
+          rm -f "${TMP_PATH}/addons.zip"
+          mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/addons.zip"
           updateExts "addons" "0"
-        elif [ "${USER_FILE}" = "modules.zip" ]; then
+        elif [[ "${USER_FILE}" = modules*.zip ]]; then
+          rm -f "${TMP_PATH}/modules.zip"
+          mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/modules.zip"
           updateExts "modules" "0"
-        elif [ "${USER_FILE}" = "rp-lkms.zip" ]; then
+        elif [[ "${USER_FILE}" = rp-lkms*.zip ]]; then
+          rm -f "${TMP_PATH}/rp-lkms.zip"
+          mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/rp-lkms.zip"
           updateExts "LKMs" "0"
         else
           DIALOG --title "$(TEXT "Update")" \
