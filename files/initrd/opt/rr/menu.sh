@@ -1881,8 +1881,6 @@ function downloadExts() {
   if [ "${PRERELEASE}" = "true" ]; then
     TAG="$(curl -skL "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | head -1 | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/')"
   else
-    # TAG=`curl -skL "${PROXY}https://api.github.com/repos/wjz304/rr-addons/releases/latest" | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}'`
-    # In the absence of authentication, the default API access count for GitHub is 60 per hour, so removing the use of api.github.com
     LATESTURL="$(curl -skL -w %{url_effective} -o /dev/null "${PROXY}${3}/releases/latest")"
     TAG="${LATESTURL##*/}"
   fi
@@ -2048,40 +2046,40 @@ function updateMenu() {
     case "$(<${TMP_PATH}/resp)" in
     a)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/wjz304/rr-addons" "addons" "1"
+      downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "1"
       [ $? -eq 0 ] && updateExts "addons" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/wjz304/rr-modules" "modules" "1"
+      downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "1"
       [ $? -eq 0 ] && updateExts "modules" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/wjz304/rr-lkms" "rp-lkms" "1"
+      downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "1"
       [ $? -eq 0 ] && updateExts "LKMs" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
-      downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/wjz304/rr" "update" "0"
+      downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "0"
       [ $? -ne 0 ] && continue
       updateRR "RR"
       ;;
     r)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
-      downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/wjz304/rr" "update" "0"
+      downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "0"
       [ $? -ne 0 ] && continue
       updateRR "RR"
       ;;
     d)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/wjz304/rr-addons" "addons" "0"
+      downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "0"
       [ $? -ne 0 ] && continue
       updateExts "addons" "0"
       ;;
     m)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/wjz304/rr-modules" "modules" "0"
+      downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "0"
       [ $? -ne 0 ] && continue
       updateExts "modules" "0"
       ;;
     l)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/wjz304/rr-lkms" "rp-lkms" "0"
+      downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "0"
       [ $? -ne 0 ] && continue
       updateExts "LKMs" "0"
       ;;
