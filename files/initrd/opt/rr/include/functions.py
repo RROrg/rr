@@ -13,7 +13,7 @@ WORK_PATH = os.path.abspath(os.path.dirname(__file__))
 @click.group()
 def cli():
     """
-    The CLI is a commands to arpl.
+    The CLI is a commands to RR.
     """
     pass
 
