@@ -1257,7 +1257,10 @@ function advancedMenu() {
       editGrubCfg
       NEXT="e"
       ;;
-    t) tryRecoveryDSM ;;
+    t)
+      tryRecoveryDSM
+      NEXT="e"
+      ;;
     s)
       MSG=""
       NUMPORTS=0

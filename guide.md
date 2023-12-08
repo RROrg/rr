@@ -109,23 +109,23 @@
 * log:
   ```
   # 内核相关
-  sysctl -n kernel.syno_serial                     # 查看当前鉴权的SN
-  cat /proc/sys/kernel/syno_serial                 # 查看当前鉴权的SN
-  sysctl -n kernel.syno_mac_address1               # 查看当前鉴权的mcac1 (kernel.syno_mac_addresses)
-  cat /proc/sys/kernel/syno_mac_address1           # 查看当前鉴权的mcac1 (/proc/sys/kernel/syno_mac_addresses)
+  sysctl -n kernel.syno_serial                     # 查看当前鉴权的 SN
+  cat /proc/sys/kernel/syno_serial                 # 查看当前鉴权的 SN
+  sysctl -n kernel.syno_mac_address1               # 查看当前鉴权的 mac1 (kernel.syno_mac_addresses)
+  cat /proc/sys/kernel/syno_mac_address1           # 查看当前鉴权的 mac1 (/proc/sys/kernel/syno_mac_addresses)
   sysctl -n kernel.syno_internal_netif_num         # 查看当前鉴权的网卡数量
   cat /proc/sys/kernel/syno_internal_netif_num     # 查看当前鉴权的网卡数量
   nproc                                            # 查看当前线程数
   
   # 设备相关
   lsmod                                            # 查看已加载驱动
-  lsusb                                            # 查看USB设备
+  lsusb                                            # 查看 USB 设备
   lsblk                                            # 查看磁盘设备
-  lspci -Qnn                                       # 查看PCI设备
+  lspci -Qnn                                       # 查看 PCI 设备
 
   # 驱动相关
   ls -ld /sys/class/net/*/device/driver            # 查看已加载网卡和对应驱动
-  cat /sys/class/net/*/address                     # 查看已加载网卡的MAC地址
+  cat /sys/class/net/*/address                     # 查看已加载网卡的 MAC 地址
 
   # 磁盘相关
   fdisk -l                                         # 查看硬盘信息

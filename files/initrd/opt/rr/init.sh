@@ -175,7 +175,7 @@ echo
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
 if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" ]; then
   IP="$(getIP)"
-  [ -n "${IP}" ] && URL="http://${IP}:7681" || URL="http://arpl:7681/"
+  [ -n "${IP}" ] && URL="http://${IP}:7681" || URL="http://rr:7681/"
   python ${WORK_PATH}/include/functions.py makeqr -d "${URL}" -l "bl" -o "${TMP_PATH}/qrcode.png"
   [ -f "${TMP_PATH}/qrcode.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode.png" >/dev/null 2>/dev/null || true
 fi
