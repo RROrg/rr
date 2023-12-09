@@ -833,6 +833,7 @@ function extractDsmFiles() {
     if [ ${CLEARCACHE} -eq 1 ]; then
       echo "$(TEXT "Cleaning cache ...")"
       rm -rf "${PART3_PATH}/dl"
+      CLEARCACHE=0
     fi
     mkdir -p "${PART3_PATH}/dl"
     mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
@@ -1074,10 +1075,8 @@ function advancedMenu() {
     if [ -n "${MODEL}" -a "true" = "$(readModelKey "${MODEL}" "dt")" ]; then
       echo "d \"$(TEXT "Custom dts file # Need rebuild")\"" >>"${TMP_PATH}/menu"
     fi
-    if [ -n "${DEBUG}" ]; then
-      echo "b \"$(TEXT "Backup bootloader disk # test")\"" >>"${TMP_PATH}/menu"
-      echo "r \"$(TEXT "Restore bootloader disk # test")\"" >>"${TMP_PATH}/menu"
-    fi
+    # echo "b \"$(TEXT "Backup bootloader disk # test")\"" >>"${TMP_PATH}/menu"
+    echo "r \"$(TEXT "Clone bootloader disk to another disk")\"" >>"${TMP_PATH}/menu"
     echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
     echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
     echo "g \"$(TEXT "Show QR logo:") \Z4${DSMLOGO}\Zn\"" >>"${TMP_PATH}/menu"
@@ -1366,11 +1365,11 @@ function advancedMenu() {
       ;;
     f)
       rm -f "${TMP_PATH}/opts"
-      while read POSITION NAME; do
-        [ -z "${POSITION}" -o -z "${NAME}" ] && continue
-        echo "${POSITION}" | grep -q "${LOADER_DISK}" && continue
-        echo "\"${POSITION}\" \"${NAME}\" \"off\"" >>"${TMP_PATH}/opts"
-      done < <(ls -l /dev/disk/by-id/ | sed 's|../..|/dev|g' | grep -E "/dev/sd|/dev/mmc|/dev/nvme" | awk -F' ' '{print $NF" "$(NF-2)}' | sort -uk 1,1)
+      while read KNAME ID; do
+        [ -z "${KNAME}" -o -z "${ID}" ] && continue
+        echo "${KNAME}" | grep -q "${LOADER_DISK}" && continue
+        echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
+      done < <(lsblk -pno KNAME,ID)
       if [ ! -f "${TMP_PATH}/opts" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "No disk found!")" 0 0
@@ -1535,87 +1534,75 @@ function advancedMenu() {
       fi
       touch ${PART1_PATH}/.build
       ;;
-    b)
-      if ! tty | grep -q "/dev/pts"; then
-        DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
-        return
-      fi
-      DIALOG --title "$(TEXT "Advanced")" \
-        --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?")" 0 0
-      [ $? -ne 0 ] && return
-      DIALOG --title "$(TEXT "Advanced")" \
-        --infobox "$(TEXT "Backuping...")" 0 0
-      rm -f /var/www/data/backup.img.gz # thttpd root path
-      dd if="${LOADER_DISK}" bs=1M conv=fsync | gzip >/var/www/data/backup.img.gz
-      if [ $? -ne 0]; then
-        DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "$(TEXT "Failed to generate backup. There may be insufficient memory. Please clear the cache and try again!")" 0 0
-        return
-      fi
-      if [ -z "${SSH_TTY}" ]; then # web
-        IP_HEAD="$(getIP)"
-        echo "http://${IP_HEAD}/backup.img.gz" >${TMP_PATH}/resp
-        echo "            ↑                  " >>${TMP_PATH}/resp
-        echo "$(TEXT "Click on the address above to download.")" >>${TMP_PATH}/resp
-        echo "$(TEXT "Please confirm the completion of the download before closing this window.")" >>${TMP_PATH}/resp
-        DIALOG --title "$(TEXT "Advanced")" \
-          --editbox "${TMP_PATH}/resp" 10 100
-      else # ssh
-        sz -be -B 536870912 /var/www/data/backup.img.gz
-      fi
-      DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox "$(TEXT "backup is complete.")" 0 0
-      rm -f /var/www/data/backup.img.gz
-      ;;
+    # b)
+    #   ;;
     r)
-      if ! tty | grep -q "/dev/pts"; then
+      rm -f "${TMP_PATH}/opts"
+      while read KNAME ID; do
+        [ -z "${KNAME}" -o -z "${ID}" ] && continue
+        echo "${KNAME}" | grep -q "${LOADER_DISK}" && continue
+        echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
+      done < <(lsblk -dpno KNAME,ID)
+      if [ ! -f "${TMP_PATH}/opts" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+          --msgbox "$(TEXT "No disk found!")" 0 0
         return
       fi
       DIALOG --title "$(TEXT "Advanced")" \
-        --yesno "$(TEXT "Please upload the backup file.\nCurrently, zip(github) and img.gz(backup) compressed file formats are supported.")" 0 0
+        --radiolist "$(TEXT "Choose a disk to clone to")" 0 0 0 --file "${TMP_PATH}/opts" \
+        2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
-      IFTOOL=""
-      TMP_UP_PATH="${TMP_PATH}/users"
-      rm -rf "${TMP_UP_PATH}"
-      mkdir -p "${TMP_UP_PATH}"
-      pushd "${TMP_UP_PATH}"
-      rz -be -B 536870912
-      for F in $(ls -A); do
-        USER_FILE="${F}"
-        [ "${F##*.}" = "zip" -a $(unzip -l "${TMP_UP_PATH}/${USER_FILE}" | grep -c "\.img$") -eq 1 ] && IFTOOL="zip"
-        [ "${F##*.}" = "gz" -a "${F#*.}" = "img.gz" ] && IFTOOL="gzip"
-        break
-      done
-      popd
-      if [ -z "${IFTOOL}" -o ! -f "${TMP_UP_PATH}/${USER_FILE}" ]; then
+      RESP=$(<"${TMP_PATH}/resp")
+      if [ -z "${RESP}" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "$(printf "$(TEXT "Not a valid .zip/.img.gz file, please try again!")" "${USER_FILE}")" 0 0
+          --msgbox "$(TEXT "No disk selected!")" 0 0
+        return
       else
-        DIALOG --title "$(TEXT "Advanced")" \
-          --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?")" 0 0
-        [ $? -ne 0 ] && (
-          rm -f "${TMP_UP_PATH}/${USER_FILE}"
+        SIZE=$(df -m ${RESP} | awk 'NR==2{print $2}')
+        if [ ${SIZE:-0} -lt 1024 ]; then
+          DIALOG --title "$(TEXT "Advanced")" \
+            --msgbox "$(TEXT "Disk %s size is less than 1GB and cannot be cloned!")" 0 0
           return
-        )
-        DIALOG --title "$(TEXT "Advanced")" \
-          --infobox "$(TEXT "Writing...")" 0 0
-        umount "${PART1_PATH}" "${PART2_PATH}" "${PART3_PATH}"
-        if [ "${IFTOOL}" = "zip" ]; then
-          unzip -p "${TMP_UP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
-        elif [ "${IFTOOL}" = "gzip" ]; then
-          gzip -dc "${TMP_UP_PATH}/${USER_FILE}" | dd of="${LOADER_DISK}" bs=1M conv=fsync
         fi
+        MSG=""
+        MSG+="$(printf "$(TEXT "Warning:\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \nDo you want to continue?")" "${RESP}")" 
         DIALOG --title "$(TEXT "Advanced")" \
-          --yesno "$(printf "$(TEXT "Restore bootloader disk with success to %s!\nReboot?")" "${USER_FILE}")" 0 0
-        [ $? -ne 0 ] && continue
-        reboot
-        exit
+          --yesno "${MSG}" 0 0
+        [ $? -ne 0 ] && return
       fi
-      ;;
+      (
+        rm -rf "${PART3_PATH}/dl"
+        CLEARCACHE=0
 
+        gzip -dc "${WORK_PATH}/grub.img.gz" | dd of="${RESP}" bs=1M conv=fsync status=progress
+        hdparm -z "${RESP}"  # reset disk cache
+        fdisk -l "${RESP}"
+        sleep 3
+
+        mkdir -p "${TMP_PATH}/sdX1"
+        mount "$(lsblk "${RESP}" -pno KNAME,LABEL | grep RR1 | awk '{print $1}')" "${TMP_PATH}/sdX1"
+        cp -vRf "${PART1_PATH}/". "${TMP_PATH}/sdX1/"
+        sync
+        umount "${TMP_PATH}/sdX1"
+
+        mkdir -p "${TMP_PATH}/sdX2"
+        mount "$(lsblk "${RESP}" -pno KNAME,LABEL | grep RR2 | awk '{print $1}')" "${TMP_PATH}/sdX2"
+        cp -vRf "${PART2_PATH}/". "${TMP_PATH}/sdX2/"
+        sync
+        umount "${TMP_PATH}/sdX2"
+
+        mkdir -p "${TMP_PATH}/sdX3"
+        mount "$(lsblk "${RESP}" -pno KNAME,LABEL | grep RR3 | awk '{print $1}')" "${TMP_PATH}/sdX3"
+        cp -vRf "${PART3_PATH}/". "${TMP_PATH}/sdX3/"
+        sync
+        umount "${TMP_PATH}/sdX3"
+        sleep 3
+      ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
+        --progressbox "$(TEXT "Cloning ...")" 20 100
+      DIALOG --title "${T}" \
+        --msgbox "$(printf "$(TEXT "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\nReboot?")" "${RESP}")" 0 0
+      rebootTo config
+      ;;
     v)
       if [ -d "${PART1_PATH}/logs" ]; then
         rm -f "${TMP_PATH}/logs.tar.gz"

@@ -48,6 +48,16 @@ sudo mkdir -p ${NAME}1/boot/grub
 cat >device.map <<EOF
 (hd0)   ${LOOPX}
 EOF
+# mv: failed to preserve ownership for 'RR1/boot/grub/device.map': Operation not permitted
+#
+# This problem can actually be ignored. The file has been moved successfully.
+#
+# This error usually occurs when you try to move a file on a file system that does not support ownership, such as FAT32 or NTFS. 
+# On these file systems, the owners and groups of all files are fixed and cannot be changed.
+#
+# If you need to move files on such a file system, 
+# you can use the --no-preserve=ownership option to tell the mv command not to try to preserve ownership of the files.
+# 
 sudo mv device.map ${NAME}1/boot/grub/device.map
 
 for B in ${BIOS}; do
