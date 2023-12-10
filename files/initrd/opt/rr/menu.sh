@@ -414,9 +414,9 @@ function addonMenu() {
         --msgbox "${MSG}" 0 0
       ;;
     o)
-      if ! tty | grep -q "/dev/pts"; then
+      if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         DIALOG --title "$(TEXT "Addons")" \
-          --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+          --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
         return
       fi
       DIALOG --title "$(TEXT "Addons")" \
@@ -543,9 +543,9 @@ function moduleMenu() {
       touch ${PART1_PATH}/.build
       ;;
     o)
-      if ! tty | grep -q "/dev/pts"; then
+      if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         DIALOG --title "$(TEXT "Modules")" \
-          --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+          --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
         return
       fi
       MSG=""
@@ -1504,9 +1504,9 @@ function advancedMenu() {
         --msgbox ""$(TEXT "Save is complete.")"" 0 0
       ;;
     d)
-      if ! tty | grep -q "/dev/pts"; then
+      if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+          --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
         return
       fi
       DIALOG --title "$(TEXT "Advanced")" \
@@ -1639,7 +1639,7 @@ function advancedMenu() {
       ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "opkg installing ...")" 20 100
       DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox "$(TEXT "opkg install is complete. Please reconnect to SSH/web, or execute 'source ~/.bashrc'")" 0 0
+        --msgbox "$(TEXT "opkg install is complete. Please reconnect to ssh/web, or execute 'source ~/.bashrc'")" 0 0
       ;;
     g)
       [ "${DSMLOGO}" = "true" ] && DSMLOGO='false' || DSMLOGO='true'
@@ -2074,9 +2074,9 @@ function updateMenu() {
       updateExts "LKMs" "0"
       ;;
     u)
-      if ! tty | grep -q "/dev/pts"; then
+      if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         DIALOG --title "$(TEXT "Update")" \
-          --msgbox "$(TEXT "This feature is only available when accessed via web/ssh.")" 0 0
+          --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
         return
       fi
       MSG=""
