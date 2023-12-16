@@ -126,6 +126,8 @@ if [ ! "${BUS}" = "usb" ]; then
 fi
 CMDLINE['panic']="${KERNELPANIC:-0}"
 CMDLINE['console']="ttyS0,115200n8"
+CMDLINE['no_console_suspend']="1"
+CMDLINE['consoleblank']="0"
 CMDLINE['earlyprintk']=""
 CMDLINE['earlycon']="uart8250,io,0x3f8,115200n8"
 CMDLINE['root']="/dev/md0"
@@ -229,7 +231,7 @@ else
   rm -f WB WC
   echo -en "\r$(printf "%$((${#MSG} * 2))s" " ")\n"
 
-  echo -e "\033[1;37m$(TEXT "Loading DSM kernel...")\033[0m"
+  echo -e "\033[1;37m$(TEXT "Loading DSM kernel ...")\033[0m"
 
   DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
   if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" ]; then
@@ -247,7 +249,7 @@ else
   else
     kexec -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
   fi
-  echo -e "\033[1;37m$(TEXT "Booting...")\033[0m"
+  echo -e "\033[1;37m$(TEXT "Booting ...")\033[0m"
   for T in $(w | grep -v "TTY" | awk -F' ' '{print $2}'); do
     echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
   done
