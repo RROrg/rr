@@ -1,15 +1,15 @@
 # Chinese translations for RR package.
 # Copyright (C) 2023 THE RR'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the RR package.
-# ing <wjz304@qq.com>, 2023.
+# ing <ing@ing-pc.>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-09 23:21+0800\n"
-"PO-Revision-Date: 2023-12-09 23:28+0800\n"
-"Last-Translator: ing <wjz304@qq.com>\n"
+"POT-Creation-Date: 2023-12-16 18:02+0800\n"
+"PO-Revision-Date: 2023-12-16 18:09+0800\n"
+"Last-Translator: ing <ing@ing-pc.>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -85,63 +85,63 @@ msgid ""
 "for the bootloader disk."
 msgstr "除引导盘外, 请至少插入一块 sata/scsi 磁盘进行系统安装."
 
-#: boot.sh:152
+#: boot.sh:154
 msgid "Cmdline:\\n"
 msgstr "Cmdline:\\n"
 
-#: boot.sh:158
+#: boot.sh:160
 msgid "Reboot to boot directly in DSM"
 msgstr "重启并直接进入 DSM 引导"
 
-#: boot.sh:164 init.sh:119
+#: boot.sh:166 init.sh:119
 msgid "Detected %s network cards."
 msgstr "检测到 %s 个网卡."
 
-#: boot.sh:165 init.sh:120
+#: boot.sh:167 init.sh:120
 msgid "Checking Connect."
 msgstr "检查连接."
 
-#: boot.sh:185
+#: boot.sh:187
 msgid "Waiting IP.(For reference only)"
 msgstr "获取 IP.(仅供参考)"
 
-#: boot.sh:192 init.sh:145
+#: boot.sh:194 init.sh:145
 msgid "DOWN"
 msgstr "关闭"
 
-#: boot.sh:196 init.sh:149
+#: boot.sh:198 init.sh:149
 msgid "NOT CONNECTED"
 msgstr "未连接"
 
-#: boot.sh:200 init.sh:153
+#: boot.sh:202 init.sh:153
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "超时 (请检查路由器上的IP.)"
 
-#: boot.sh:206
+#: boot.sh:208
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr "在浏览器中访问 \\033[1;34mhttp://%s:5000\\033[0m 链接 DSM."
 
-#: boot.sh:218
+#: boot.sh:220
 msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
 msgstr "%2ds ((ssh/web)连接状态改变将中断启动)"
 
-#: boot.sh:222
+#: boot.sh:224
 msgid "access(ssh/web) status has changed and booting is interrupted."
 msgstr "(ssh/web)连接状态已改变, 启动被中断."
 
-#: boot.sh:232
-msgid "Loading DSM kernel..."
-msgstr "加载 DSM 内核..."
+#: boot.sh:234
+msgid "Loading DSM kernel ..."
+msgstr "加载 DSM 内核 ..."
 
-#: boot.sh:245
+#: boot.sh:247
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "警告, 使用'--noefi'参数运行'kexec', 可能有不好的事情发生!!"
 
-#: boot.sh:250
-msgid "Booting..."
-msgstr "引导中..."
-
 #: boot.sh:252
+msgid "Booting ..."
+msgstr "引导中 ..."
+
+#: boot.sh:254
 msgid ""
 "[This interface will not be operational. Please wait a few minutes.\\nFind "
 "DSM via http://find.synology.com/ or Synology Assistant and connect.]"
@@ -321,7 +321,9 @@ msgid ""
 msgstr "名称颜色为\"\\Z4蓝色\\Zn\"的为已添加, 颜色为\"黑色\"的为未添加.\\n\\n"
 
 #: menu.sh:419 menu.sh:548 menu.sh:1509 menu.sh:2079
-msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol)."
+msgid ""
+"This feature is only available when accessed via ssh (Requires a terminal "
+"that supports ZModem protocol)."
 msgstr "此功能仅在通过 ssh 访问时可用(需要支持ZModem协议的终端)."
 
 #: menu.sh:423
@@ -623,8 +625,8 @@ msgid "Downloading old pat to extract synology .pat extractor..."
 msgstr "下载旧 pat, 提取 .pat 解密程序中..."
 
 #: menu.sh:948 menu.sh:951
-msgid "Extracting..."
-msgstr "解压中..."
+msgid "Extracting ..."
+msgstr "解压中 ..."
 
 #: menu.sh:962
 msgid "pat Invalid, try again!"
@@ -794,7 +796,7 @@ msgstr "临时 IP: (UI 不会刷新)"
 
 #: menu.sh:1191
 msgid "Setting IP ..."
-msgstr "设置 IP.."
+msgstr "设置 IP ..."
 
 #: menu.sh:1196
 msgid "Scanning ..."
@@ -844,7 +846,7 @@ msgstr "警告:\\n该操作不可逆, 请提前备份重要数据. 是否继续?
 
 #: menu.sh:1361
 msgid "Removing ..."
-msgstr "删除中..."
+msgstr "删除中 ..."
 
 #: menu.sh:1362
 msgid "Remove VERSION file for all disks completed."
@@ -861,7 +863,7 @@ msgstr "警告:\\n当前的硬盘处于 raid 中，是否仍要格式化?"
 
 #: menu.sh:1400
 msgid "Formatting ..."
-msgstr "格式化中..."
+msgstr "格式化中 ..."
 
 #: menu.sh:1402
 msgid "Formatting is complete."
@@ -911,7 +913,7 @@ msgstr "警告:\\n请不要中途停止, 否则将导致 RR 引导损毁, 是否
 
 #: menu.sh:1489
 msgid "Saving ..."
-msgstr "保存中..."
+msgstr "保存中 ..."
 
 #: menu.sh:1504
 msgid "Save is complete."

@@ -928,7 +928,7 @@ function extractDsmFiles() {
       if [ $? -ne 0 ]; then
         rm -f "${OLDPAT_PATH}"
         rm -rf "${RAMDISK_PATH}"
-        echo -e "${LOG_FILE}" >"${MKERR_FILE}"
+        cat "${LOG_FILE}" >"${MKERR_FILE}"
         return 1
       fi
       [ ${CLEARCACHE} -eq 1 ] && rm -f "${OLDPAT_PATH}"
@@ -945,13 +945,13 @@ function extractDsmFiles() {
       rm -rf "${RAMDISK_PATH}"
     fi
     # Uses the extractor to untar pat file
-    echo "$(TEXT "Extracting...")"
+    echo "$(TEXT "Extracting ...")"
     LD_LIBRARY_PATH=${EXTRACTOR_PATH} "${EXTRACTOR_PATH}/${EXTRACTOR_BIN}" "${PAT_PATH}" "${UNTAR_PAT_PATH}" || true
   else
-    echo "$(TEXT "Extracting...")"
+    echo "$(TEXT "Extracting ...")"
     tar -xf "${PAT_PATH}" -C "${UNTAR_PAT_PATH}" >"${LOG_FILE}" 2>&1
     if [ $? -ne 0 ]; then
-      echo -e "${LOG_FILE}" >"${MKERR_FILE}"
+      cat "${LOG_FILE}" >"${MKERR_FILE}"
       return 1
     fi
   fi
