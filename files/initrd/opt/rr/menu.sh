@@ -414,7 +414,7 @@ function addonMenu() {
         --msgbox "${MSG}" 0 0
       ;;
     o)
-      if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+      if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         DIALOG --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
         return
@@ -543,7 +543,7 @@ function moduleMenu() {
       touch ${PART1_PATH}/.build
       ;;
     o)
-      if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+      if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         DIALOG --title "$(TEXT "Modules")" \
           --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
         return
@@ -1504,7 +1504,7 @@ function advancedMenu() {
         --msgbox ""$(TEXT "Save is complete.")"" 0 0
       ;;
     d)
-      if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+      if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
         return
