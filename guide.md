@@ -27,10 +27,12 @@
      * https://www.synology.com/en-us/support/RAID_calculator
 
 # 安装条件
-  1. 引导盘要大于 2GB.
-  2. 安装盘要大于 32GB.
-  3. 内存需要大于 4GB.
-  4. DT的型号（kver 4.4）目前不支持HBA扩展卡.
+  1. 引导盘：当前支持 SATA/SCSI/NVME/MMC/IDE or USB 设备, 且要大于 2GB. (SCSI比较复杂,并不是全部可用)
+  2. 安装盘: 至少需要1个SATA接口硬盘 或者 1个 MMC 作为存储设备. 且要大于 32GB 才可创建存储池.
+  3. 内存: 需要大于 4GB.
+  4. DT的型号目前不支持HBA扩展卡(较新版本的RR引导 SA6400 支持).
+  5. NVME的PCIPATH有两种格式, 多层路径的兼容 DT 的型号, 单层路径的兼容 DS918+ 等型号.
+  
 
 # GPU
 * vGPU: https://blog.kkk.rs/
