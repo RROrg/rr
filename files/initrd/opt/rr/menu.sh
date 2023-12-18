@@ -744,6 +744,7 @@ function synoinfoMenu() {
     a)
       MSG=""
       MSG+="$(TEXT "Commonly used synoinfo:\n")"
+      MSG+="$(TEXT " * \Z4support_emmc_boot=yes\Zn\n    Only use EMMC as the system disk(applicable without Sata).\n")"
       MSG+="$(TEXT " * \Z4maxdisks=??\Zn\n    Maximum number of disks supported.\n")"
       MSG+="$(TEXT " * \Z4internalportcfg=0x????\Zn\n    Internal(sata) disks mask.\n")"
       MSG+="$(TEXT " * \Z4esataportcfg=0x????\Zn\n    Esata disks mask.\n")"
