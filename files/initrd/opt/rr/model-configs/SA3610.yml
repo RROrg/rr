@@ -9,13 +9,16 @@ synoinfo: &synoinfo
   support_syno_hybrid_raid:
   supportraidgroup:
   supportsas: "no"
-  supportsas_v2: "yes"
+  supportsas_v2_r1: "no"
+  support_multipath: "yes"
   maxlanport: "8"
   netif_seq: "0 1 2 3 4 5 6 7"
 cmdline: &cmdline
+  SASmodel: 1
   HddHotplug: 0
   syno_hdd_detect: 0
   syno_hdd_powerup_seq: 0
+  SMBusHddDynamicPower: 1
   vender_format_version: 2
   elevator: elevator
   modprobe.blacklist: mpt3sas
