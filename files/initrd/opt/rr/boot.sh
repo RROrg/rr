@@ -254,6 +254,6 @@ else
     echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
   done
   KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
-  [ "${KERNELWAY}" = "kexec" ] && kexec -f -e || poweroff
+  [ "${KERNELWAY}" = "kexec" ] && kexec -i -a -e || poweroff
   exit 0
 fi
