@@ -139,7 +139,7 @@ function modelMenu() {
       if [ "${resp}" = "c" ]; then
         models=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
         [ $(lspci -d ::300 | grep 8086 | wc -l) -gt 0 ] && iGPU=1 || iGPU=0
-        [ $(lspci -d ::107 | wc -l) -gt 0 ] && LSI=1 || LSI=0
+        [ $(lspci -d ::104 | wc -l) -gt 0 -o $(lspci -d ::107 | wc -l) -gt 0 ] && LSI=1 || LSI=0
         [ $(lspci -d ::108 | wc -l) -gt 0 ] && NVME=1 || NVME=0
         if [ "${NVME}" = "1" ]; then
           for PCI in $(lspci -d ::108 | awk '{print $1}'); do
@@ -209,6 +209,11 @@ function modelMenu() {
     for I in $(seq 1 ${NETIF_NUM}); do
       writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
     done
+    writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
+    writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+    # Remove old files
+    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
+    rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"*
     touch ${PART1_PATH}/.build
   fi
 }
@@ -316,6 +321,7 @@ function productversMenu() {
   done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
   # Remove old files
   rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}"
+  rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"*
   touch ${PART1_PATH}/.build
 }
 
@@ -1284,11 +1290,27 @@ function advancedMenu() {
         done
         MSG+="\n"
       done
-      [ $(lspci -d ::107 | wc -l) -gt 0 ] && MSG+="\nLSI:\n"
+      [ $(lspci -d ::104 | wc -l) -gt 0 ] && MSG+="\nRAID:\n"
+      for PCI in $(lspci -d ::104 | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+        PORT=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
+        PORTNUM=$(lsscsi -b | grep -v - | grep "\[${PORT}:" | wc -l)
+        MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
+        NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
+      done
+      [ $(lspci -d ::107 | wc -l) -gt 0 ] && MSG+="\nHBA:\n"
       for PCI in $(lspci -d ::107 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
         PORT=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
         PORTNUM=$(lsscsi -b | grep -v - | grep "\[${PORT}:" | wc -l)
+        MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
+        NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
+      done
+      [ $(lspci -d ::100 | wc -l) -gt 0 ] && MSG+="\nVIRTIO:\n"
+      for PCI in $(lspci -d ::100 | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+        PORTNUM=$(ls -l /sys/block/vd* | grep "${PCI}" | wc -l)
+        [ ${PORTNUM} -eq 0 ] && continue
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
@@ -1367,7 +1389,9 @@ function advancedMenu() {
     f)
       rm -f "${TMP_PATH}/opts"
       while read KNAME ID; do
-        [ -z "${KNAME}" -o -z "${ID}" ] && continue
+        [ -z "${KNAME}" ] && continue
+        [[ "${KNAME}" = /dev/md* ]] && continue
+        [ -z "${ID}" ] && ID="Unknown"
         echo "${KNAME}" | grep -q "${LOADER_DISK}" && continue
         echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
       done < <(lsblk -pno KNAME,ID)
