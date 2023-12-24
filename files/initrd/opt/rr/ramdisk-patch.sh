@@ -209,6 +209,10 @@ if [ ${PLATFORM} = "epyc7002" ]; then
   sed -i '/^echo "START/a \\nmknod -m 0666 /dev/console c 1 3' ${RAMDISK_PATH}/linuxrc.syno
 fi
 
+# if [ ${PLATFORM} = "broadwellntbap" ]; then
+#   sed -i 's/broadwellntbap/xbroadwellntbap/' ${RAMDISK_PATH}/usr/syno/share/environments.sh
+# fi
+
 # Reassembly ramdisk
 echo -n "."
 if [ "${RD_COMPRESSED}" == "true" ]; then
