@@ -2,19 +2,19 @@ id: "HD6500"
 synoinfo: &synoinfo
   supportext4: "yes"
   internal_disk_without_led_mask: "no"
-  support_install_only_dev: "no"
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
   support_led_brightness_adjustment: "no"
   support_syno_hybrid_raid:
   supportraidgroup:
   supportsas: "no"
-  supportsas_v2: "yes"
+  support_multipath: "yes"
+  support_install_only_dev: "no"
   maxlanport: "8"
   netif_seq: "0 1 2 3 4 5 6 7"
   buzzeroffen: "0xffff"
 cmdline: &cmdline
-  synoboot2:
+  SASmodel: 1
   SMBusHddDynamicPower: 1
   vender_format_version: 2
   syno_ttyS0: "serial,0x3f8"
