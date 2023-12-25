@@ -20,7 +20,6 @@ cmdline: &cmdline
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
   elevator: elevator
-  modprobe.blacklist: mpt3sas
 patch: &patch
   - "ramdisk-etc-rc-*.patch"
   - "ramdisk-init-script-v4-*.patch"
@@ -36,7 +35,7 @@ serial:
 dom: 1
 dt: true
 disks: 24
-beta: true
+beta: false
 productvers:
   "6.2":
     kver: "4.4.59"
