@@ -679,7 +679,7 @@ function cmdlineMenu() {
       done
       ;;
     s)
-      MSG="$(TEXT "Note: (MAC will not be set to NIC)")"
+      MSG="$(TEXT "Note: (MAC will not be set to NIC, Only for activation services.)")"
       sn="${SN}"
       mac1="${MAC1}"
       mac2="${MAC2}"
@@ -1070,7 +1070,7 @@ function advancedMenu() {
     echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
     echo "h \"$(TEXT "Edit grub.cfg file manually")\"" >>"${TMP_PATH}/menu"
     echo "t \"$(TEXT "Try to recovery a DSM installed system")\"" >>"${TMP_PATH}/menu"
-    echo "s \"$(TEXT "Show SATA(s) # ports and drives")\"" >>"${TMP_PATH}/menu"
+    echo "s \"$(TEXT "Show disks information")\"" >>"${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
       echo "c \"$(TEXT "show/modify the current pat data")\"" >>"${TMP_PATH}/menu"
     fi
@@ -1511,7 +1511,7 @@ function advancedMenu() {
         --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?")" 0 0
       [ $? -ne 0 ] && return
       DIALOG --title "$(TEXT "Advanced")" \
-        --infobox "$(TEXT "Saving ...")" 0 0
+        --infobox "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 0 0
       RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
       mkdir -p "${RDXZ_PATH}"
       (
