@@ -38,6 +38,7 @@ KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
 KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
 ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")" # official drivers priorities
 HDDSORT="$(readConfigKey "hddsort" "${USER_CONFIG_FILE}")"
+EMMCBOOT="$(readConfigKey "emmcboot" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
 MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
@@ -750,7 +751,6 @@ function synoinfoMenu() {
     a)
       MSG=""
       MSG+="$(TEXT "Commonly used synoinfo:\n")"
-      MSG+="$(TEXT " * \Z4support_emmc_boot=yes\Zn\n    Only use EMMC as the system disk(applicable without Sata).\n")"
       MSG+="$(TEXT " * \Z4maxdisks=??\Zn\n    Maximum number of disks supported.\n")"
       MSG+="$(TEXT " * \Z4internalportcfg=0x????\Zn\n    Internal(sata) disks mask.\n")"
       MSG+="$(TEXT " * \Z4esataportcfg=0x????\Zn\n    Esata disks mask.\n")"
@@ -1074,7 +1074,7 @@ function advancedMenu() {
     if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
       echo "c \"$(TEXT "show/modify the current pat data")\"" >>"${TMP_PATH}/menu"
     fi
-    echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"
+    echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"  
     echo "f \"$(TEXT "Format disk(s) # Without loader disk")\"" >>"${TMP_PATH}/menu"
     echo "x \"$(TEXT "Reset DSM system password")\"" >>"${TMP_PATH}/menu"
     echo "z \"$(TEXT "Force enable telnet of DSM system")\"" >>"${TMP_PATH}/menu"
@@ -1082,7 +1082,9 @@ function advancedMenu() {
     if [ -n "${MODEL}" -a "true" = "$(readModelKey "${MODEL}" "dt")" ]; then
       echo "d \"$(TEXT "Custom dts file # Need rebuild")\"" >>"${TMP_PATH}/menu"
     fi
-    # echo "b \"$(TEXT "Backup bootloader disk # test")\"" >>"${TMP_PATH}/menu"
+    if [ -b "/dev/mmcblk0" ]; then
+      echo "b \"$(TEXT "Use EMMC as the system disk:") \Z4${EMMCBOOT}\Zn\"" >>"${TMP_PATH}/menu"
+    fi
     echo "r \"$(TEXT "Clone bootloader disk to another disk")\"" >>"${TMP_PATH}/menu"
     echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
     echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
@@ -1106,12 +1108,12 @@ function advancedMenu() {
       [ "${HDDSORT}" = "true" ] && HDDSORT='false' || HDDSORT='true'
       writeConfigKey "hddsort" "${HDDSORT}" "${USER_CONFIG_FILE}"
       touch ${PART1_PATH}/.build
-      NEXT="l"
+      NEXT="j"
       ;;
     q)
       [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
       writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
-      NEXT="e"
+      NEXT="q"
       ;;
     i)
       ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
@@ -1123,7 +1125,7 @@ function advancedMenu() {
       [ -z "${resp}" ] && return
       BOOTIPWAIT=${resp}
       writeConfigKey "bootipwait" "${BOOTIPWAIT}" "${USER_CONFIG_FILE}"
-      NEXT="e"
+      NEXT="i"
       ;;
     w)
       ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
@@ -1135,12 +1137,12 @@ function advancedMenu() {
       [ -z "${resp}" ] && return
       BOOTWAIT=${resp}
       writeConfigKey "bootwait" "${BOOTWAIT}" "${USER_CONFIG_FILE}"
-      NEXT="e"
+      NEXT="w"
       ;;
     k)
       [ "${KERNELWAY}" = "kexec" ] && KERNELWAY='power' || KERNELWAY='kexec'
       writeConfigKey "kernelway" "${KERNELWAY}" "${USER_CONFIG_FILE}"
-      NEXT="e"
+      NEXT="k"
       ;;
     n)
       rm -f "${TMP_PATH}/opts"
@@ -1155,7 +1157,7 @@ function advancedMenu() {
       [ -z "${resp}" ] && return
       KERNELPANIC=${resp}
       writeConfigKey "kernelpanic" "${KERNELPANIC}" "${USER_CONFIG_FILE}"
-      NEXT="e"
+      NEXT="n"
       ;;
     m)
       MSG="$(TEXT "Temporary IP: (UI will not refresh)")"
@@ -1254,6 +1256,7 @@ function advancedMenu() {
           ;;
         esac
       done
+      NEXT="e"
       ;;
     u)
       editUserConfig
@@ -1559,8 +1562,27 @@ function advancedMenu() {
       fi
       touch ${PART1_PATH}/.build
       ;;
-    # b)
-    #   ;;
+    b)
+      if [ "${EMMCBOOT}" = "true" ]; then
+        EMMCBOOT='false'
+        writeConfigKey "emmcboot" "false" "${USER_CONFIG_FILE}"
+        deleteConfigKey "cmdline.root" "${USER_CONFIG_FILE}"
+        deleteConfigKey "synoinfo.disk_swap" "${USER_CONFIG_FILE}"
+        deleteConfigKey "synoinfo.supportraid" "${USER_CONFIG_FILE}"
+        deleteConfigKey "synoinfo.support_emmc_boot" "${USER_CONFIG_FILE}"
+        deleteConfigKey "synoinfo.support_install_only_dev" "${USER_CONFIG_FILE}"
+      else
+        EMMCBOOT='true'
+        writeConfigKey "emmcboot" "true" "${USER_CONFIG_FILE}"
+        writeConfigKey "cmdline.root" "/dev/mmcblk0p1" "${USER_CONFIG_FILE}"
+        writeConfigKey "synoinfo.disk_swap" "no" "${USER_CONFIG_FILE}"
+        writeConfigKey "synoinfo.supportraid" "no" "${USER_CONFIG_FILE}"
+        writeConfigKey "synoinfo.support_emmc_boot" "yes" "${USER_CONFIG_FILE}"
+        writeConfigKey "synoinfo.support_install_only_dev" "yes" "${USER_CONFIG_FILE}"
+      fi
+      touch ${PART1_PATH}/.build
+      NEXT="b"
+      ;;
     r)
       rm -f "${TMP_PATH}/opts"
       while read KNAME ID; do
@@ -1669,7 +1691,7 @@ function advancedMenu() {
     g)
       [ "${DSMLOGO}" = "true" ] && DSMLOGO='false' || DSMLOGO='true'
       writeConfigKey "dsmlogo" "${DSMLOGO}" "${USER_CONFIG_FILE}"
-      NEXT="e"
+      NEXT="g"
       ;;
     1)
       RET=1
