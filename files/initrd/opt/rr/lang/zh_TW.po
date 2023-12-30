@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-16 18:02+0800\n"
-"PO-Revision-Date: 2023-12-29 16:08+0800\n"
+"POT-Creation-Date: 2023-12-30 12:29+0800\n"
+"PO-Revision-Date: 2023-12-30 12:45+0800\n"
 "Last-Translator: March Fun <marchfun@marchfun-pc.>\n"
 "Language-Team: Chinese (Taiwan) <marchfun@marchfun-pc.>\n"
 "Language: zh_TW\n"
@@ -174,10 +174,22 @@ msgid "User config is on"
 msgstr "使用者設定已開啟"
 
 #: init.sh:173
+msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
+msgstr "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
+
+#: init.sh:174
+msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
+msgstr "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
+
+#: init.sh:175
+msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
+msgstr "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
+
+#: init.sh:177
 msgid "Default SSH Root password is"
 msgstr "預設 SSH 的 root 密碼為"
 
-#: init.sh:187
+#: init.sh:191
 msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
 msgstr "您的記憶體不足 4GB，如果在建立開機檔時出現錯誤，請增加記憶體。"
 
@@ -241,13 +253,11 @@ msgstr "重試"
 msgid "Reconfiguring Synoinfo, Addons and Modules"
 msgstr "重新設置 Syninfo、增益集和模組"
 
-#: menu.sh:347 menu.sh:365 menu.sh:370 menu.sh:376 menu.sh:388 menu.sh:396
-#: menu.sh:420 menu.sh:425 menu.sh:429 menu.sh:443 menu.sh:447 menu.sh:455
-#: menu.sh:458
+#: menu.sh:347 menu.sh:365 menu.sh:370 menu.sh:376 menu.sh:388 menu.sh:396 menu.sh:420 menu.sh:425 menu.sh:429 menu.sh:443 menu.sh:447 menu.sh:455 menu.sh:458
 msgid "Addons"
 msgstr "增益集"
 
-#: menu.sh:348 menu.sh:478 menu.sh:614 menu.sh:747 menu.sh:2080 menu.sh:2236
+#: menu.sh:348 menu.sh:478 menu.sh:614 menu.sh:747 menu.sh:2251
 msgid "Choose a option"
 msgstr "選擇選項"
 
@@ -267,8 +277,7 @@ msgstr "顯示所有增益集"
 msgid "Upload a external addon"
 msgstr "上傳外部增益集"
 
-#: menu.sh:353 menu.sh:483 menu.sh:612 menu.sh:745 menu.sh:1094 menu.sh:2077
-#: menu.sh:2233 menu.sh:2305
+#: menu.sh:353 menu.sh:483 menu.sh:612 menu.sh:745 menu.sh:1094 menu.sh:2077 menu.sh:2248 menu.sh:2320
 msgid "Exit"
 msgstr "退出"
 
@@ -296,7 +305,7 @@ msgstr "選擇要删除的增益集"
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n\\n"
 msgstr "名稱色彩為 \"\\Z4藍色\\Zn\" 者為已加入，色彩為 \"黑色\" 者為未加入。\\n\\n"
 
-#: menu.sh:426 menu.sh:555 menu.sh:1537 menu.sh:2126
+#: menu.sh:426 menu.sh:555 menu.sh:1537 menu.sh:2141
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol)."
 msgstr "此功能僅在透過 web/ssh 存取時可用。(需要支援 ZModem 協定的終端)。"
 
@@ -304,7 +313,7 @@ msgstr "此功能僅在透過 web/ssh 存取時可用。(需要支援 ZModem 協
 msgid "Please upload the *.addons file."
 msgstr "請上傳 *.addons 檔案。"
 
-#: menu.sh:444 menu.sh:588 menu.sh:2153 menu.sh:2173
+#: menu.sh:444 menu.sh:588 menu.sh:2168 menu.sh:2188
 msgid "Not a valid file, please try again!"
 msgstr "不是有效的檔案，請重試！"
 
@@ -320,8 +329,7 @@ msgstr "增益集 '%s' 已加入到開機中，請在「加入增益集」選單
 msgid "File format not recognized!"
 msgstr "檔案格式無法識別！"
 
-#: menu.sh:477 menu.sh:489 menu.sh:502 menu.sh:539 menu.sh:554 menu.sh:564
-#: menu.sh:567 menu.sh:583 menu.sh:587
+#: menu.sh:477 menu.sh:489 menu.sh:502 menu.sh:539 menu.sh:554 menu.sh:564 menu.sh:567 menu.sh:583 menu.sh:587
 msgid "Modules"
 msgstr "模組"
 
@@ -405,8 +413,7 @@ msgstr "自訂 SN/MAC"
 msgid "Show model inherent cmdline"
 msgstr "顯示型號預設的 cmdline"
 
-#: menu.sh:613 menu.sh:630 menu.sh:639 menu.sh:663 menu.sh:671 menu.sh:688
-#: menu.sh:699 menu.sh:731
+#: menu.sh:613 menu.sh:630 menu.sh:639 menu.sh:663 menu.sh:671 menu.sh:688 menu.sh:699 menu.sh:731
 msgid "Cmdline"
 msgstr "Cmdline"
 
@@ -594,7 +601,7 @@ msgstr "清除中..."
 msgid "Ready!"
 msgstr "已就绪！"
 
-#: menu.sh:1035 menu.sh:2235
+#: menu.sh:1035 menu.sh:2250
 msgid "Main menu"
 msgstr "主功能表"
 
@@ -714,17 +721,9 @@ msgstr "設定全域代理伺服器"
 msgid "Set github proxy"
 msgstr "設定 github 代理伺服器"
 
-#: menu.sh:1096 menu.sh:1120 menu.sh:1132 menu.sh:1152 menu.sh:1175
-#: menu.sh:1199 menu.sh:1204 menu.sh:1216 menu.sh:1225 menu.sh:1247
-#: menu.sh:1348 menu.sh:1355 menu.sh:1373 menu.sh:1386 menu.sh:1389
-#: menu.sh:1402 menu.sh:1406 menu.sh:1407 menu.sh:1412 menu.sh:1416
-#: menu.sh:1427 menu.sh:1429 menu.sh:1452 menu.sh:1456 menu.sh:1463
-#: menu.sh:1469 menu.sh:1487 menu.sh:1489 menu.sh:1493 menu.sh:1507
-#: menu.sh:1509 menu.sh:1513 menu.sh:1516 menu.sh:1531 menu.sh:1536
-#: menu.sh:1540 menu.sh:1555 menu.sh:1560 menu.sh:1594 menu.sh:1598
-#: menu.sh:1604 menu.sh:1610 menu.sh:1616 menu.sh:1647 menu.sh:1660
-#: menu.sh:1664 menu.sh:1674 menu.sh:1679 menu.sh:1686 menu.sh:1688
-#: menu.sh:1700 menu.sh:1711 menu.sh:1733 menu.sh:1744
+#: menu.sh:1096 menu.sh:1120 menu.sh:1132 menu.sh:1152 menu.sh:1175 menu.sh:1199 menu.sh:1204 menu.sh:1216 menu.sh:1225 menu.sh:1247 menu.sh:1348 menu.sh:1355 menu.sh:1373 menu.sh:1386 menu.sh:1389 menu.sh:1402 menu.sh:1406 menu.sh:1407 menu.sh:1412
+#: menu.sh:1416 menu.sh:1427 menu.sh:1429 menu.sh:1452 menu.sh:1456 menu.sh:1463 menu.sh:1469 menu.sh:1487 menu.sh:1489 menu.sh:1493 menu.sh:1507 menu.sh:1509 menu.sh:1513 menu.sh:1516 menu.sh:1531 menu.sh:1536 menu.sh:1540 menu.sh:1555 menu.sh:1560
+#: menu.sh:1594 menu.sh:1598 menu.sh:1604 menu.sh:1610 menu.sh:1616 menu.sh:1647 menu.sh:1660 menu.sh:1664 menu.sh:1674 menu.sh:1679 menu.sh:1686 menu.sh:1688 menu.sh:1700 menu.sh:1711 menu.sh:1733 menu.sh:1744
 msgid "Advanced"
 msgstr "進階"
 
@@ -976,7 +975,7 @@ msgstr "警告"
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "設置已變更，是否重新編譯開機檔？"
 
-#: menu.sh:1869 menu.sh:2226
+#: menu.sh:1869 menu.sh:2241
 msgid "Choose a language"
 msgstr "選擇語言"
 
@@ -988,9 +987,7 @@ msgstr "選擇佈局"
 msgid "Choice a keymap"
 msgstr "選擇鍵盤"
 
-#: menu.sh:1914 menu.sh:1967 menu.sh:2018 menu.sh:2085 menu.sh:2088
-#: menu.sh:2091 menu.sh:2094 menu.sh:2100 menu.sh:2106 menu.sh:2112
-#: menu.sh:2118
+#: menu.sh:1914 menu.sh:1967 menu.sh:2018 menu.sh:2085 menu.sh:2090 menu.sh:2095 menu.sh:2100 menu.sh:2107 menu.sh:2115 menu.sh:2123 menu.sh:2131
 msgid "Update %s"
 msgstr "更新 %s"
 
@@ -1078,122 +1075,126 @@ msgstr "本地上傳"
 msgid "Pre Release:"
 msgstr "預發佈:"
 
-#: menu.sh:2079 menu.sh:2125 menu.sh:2135 menu.sh:2152 menu.sh:2172
+#: menu.sh:2079 menu.sh:2140 menu.sh:2150 menu.sh:2167 menu.sh:2187
 msgid "Update"
 msgstr "更新"
 
-#: menu.sh:2085 menu.sh:2106
+#: menu.sh:2080
+msgid "Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip to /tmp/ will skip the download."
+msgstr "手動上傳 update.zip,addons.zip,modules.zip,rp-lkms.zip 到 /tmp/ 將跳過下載."
+
+#: menu.sh:2085 menu.sh:2115
 msgid "addons"
 msgstr "增益集"
 
-#: menu.sh:2088 menu.sh:2112
+#: menu.sh:2090 menu.sh:2123
 msgid "modules"
 msgstr "模組"
 
-#: menu.sh:2091 menu.sh:2118
+#: menu.sh:2095 menu.sh:2131
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:2094 menu.sh:2100
+#: menu.sh:2100 menu.sh:2107
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:2130
+#: menu.sh:2145
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
 msgstr "請保持附件名稱與 Github 上的附件名稱一致。\\n"
 
-#: menu.sh:2131
+#: menu.sh:2146
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "上傳 update*.zip 將更新 RR。\\n"
 
-#: menu.sh:2132
+#: menu.sh:2147
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "上傳 addons*.zip 將更新增益集。\\n"
 
-#: menu.sh:2133
+#: menu.sh:2148
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "上傳 modules*.zip 將更新模組。\\n"
 
-#: menu.sh:2134
+#: menu.sh:2149
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "上傳 rp-lkms*.zip 將更新 LKM。\\n"
 
-#: menu.sh:2189
+#: menu.sh:2204
 msgid "This person is very lazy and hasn't written anything."
 msgstr "這個人很懶，什麼也沒有寫。"
 
-#: menu.sh:2207
+#: menu.sh:2222
 msgid "Choose a model"
 msgstr "選擇型號"
 
-#: menu.sh:2209
+#: menu.sh:2224
 msgid "Choose a version"
 msgstr "選擇版本"
 
-#: menu.sh:2211
+#: menu.sh:2226
 msgid "Addons menu"
 msgstr "增益集"
 
-#: menu.sh:2212
+#: menu.sh:2227
 msgid "Modules menu"
 msgstr "模組"
 
-#: menu.sh:2213
+#: menu.sh:2228
 msgid "Cmdline menu"
 msgstr "設定 Cmdline"
 
-#: menu.sh:2214
+#: menu.sh:2229
 msgid "Synoinfo menu"
 msgstr "設定 Synoinfo"
 
-#: menu.sh:2217
+#: menu.sh:2232
 msgid "Advanced menu"
 msgstr "進階設定"
 
-#: menu.sh:2220
+#: menu.sh:2235
 msgid "Build the loader"
 msgstr "編譯開機檔"
 
-#: menu.sh:2224
+#: menu.sh:2239
 msgid "Boot the loader"
 msgstr "開機"
 
-#: menu.sh:2227
+#: menu.sh:2242
 msgid "Choose a keymap"
 msgstr "選擇鍵盤"
 
-#: menu.sh:2229
+#: menu.sh:2244
 msgid "Clean disk cache"
 msgstr "清除磁碟快取"
 
-#: menu.sh:2231
+#: menu.sh:2246
 msgid "Update menu"
 msgstr "更新"
 
-#: menu.sh:2232
+#: menu.sh:2247
 msgid "Notepad"
 msgstr "記事本"
 
-#: menu.sh:2300
+#: menu.sh:2315
 msgid "Choose a action"
 msgstr "選擇動作"
 
-#: menu.sh:2301
+#: menu.sh:2316
 msgid "Poweroff"
 msgstr "關機"
 
-#: menu.sh:2302
+#: menu.sh:2317
 msgid "Reboot"
 msgstr "重新開機"
 
-#: menu.sh:2303
+#: menu.sh:2318
 msgid "Reboot to RR"
 msgstr "重新開機進入 RR"
 
-#: menu.sh:2304
+#: menu.sh:2319
 msgid "Back to shell"
 msgstr "退回到 shell"
 
-#: menu.sh:2330
+#: menu.sh:2345
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "執行 \\033[1;32mmenu.sh\\033[0m 重新回到功能表"

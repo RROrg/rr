@@ -170,6 +170,10 @@ echo
 echo -e "$(TEXT "Call \033[1;32mmenu.sh\033[0m to configure loader")"
 echo
 echo -e "$(TEXT "User config is on") \033[1;32m${USER_CONFIG_FILE}\033[0m"
+echo -e "$(TEXT "TTYD: \033[1;34mhttp://rr:7681/\033[0m")"
+echo -e "$(TEXT "DUFS: \033[1;34mhttp://rr:7304/\033[0m")"
+echo -e "$(TEXT "TTYD&DUFS: \033[1;34mhttp://rr:80/\033[0m")"
+echo
 echo -e "$(TEXT "Default SSH Root password is") \033[1;31mrr\033[0m"
 echo
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-28 21:07+0800\n"
+"POT-Creation-Date: 2023-12-30 12:29+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -186,10 +186,22 @@ msgid "User config is on"
 msgstr ""
 
 #: init.sh:173
+msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
+msgstr ""
+
+#: init.sh:174
+msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
+msgstr ""
+
+#: init.sh:175
+msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
+msgstr ""
+
+#: init.sh:177
 msgid "Default SSH Root password is"
 msgstr ""
 
-#: init.sh:187
+#: init.sh:191
 msgid ""
 "You have less than 4GB of RAM, if errors occur in loader creation, please "
 "increase the amount of memory."
@@ -266,7 +278,7 @@ msgstr ""
 msgid "Addons"
 msgstr ""
 
-#: menu.sh:348 menu.sh:478 menu.sh:614 menu.sh:747 menu.sh:2080 menu.sh:2236
+#: menu.sh:348 menu.sh:478 menu.sh:614 menu.sh:747 menu.sh:2251
 msgid "Choose a option"
 msgstr ""
 
@@ -287,7 +299,7 @@ msgid "Upload a external addon"
 msgstr ""
 
 #: menu.sh:353 menu.sh:483 menu.sh:612 menu.sh:745 menu.sh:1094 menu.sh:2077
-#: menu.sh:2233 menu.sh:2305
+#: menu.sh:2248 menu.sh:2320
 msgid "Exit"
 msgstr ""
 
@@ -317,7 +329,7 @@ msgid ""
 "not added.\\n\\n"
 msgstr ""
 
-#: menu.sh:426 menu.sh:555 menu.sh:1537 menu.sh:2126
+#: menu.sh:426 menu.sh:555 menu.sh:1537 menu.sh:2141
 msgid ""
 "This feature is only available when accessed via ssh (Requires a terminal "
 "that supports ZModem protocol)."
@@ -327,7 +339,7 @@ msgstr ""
 msgid "Please upload the *.addons file."
 msgstr ""
 
-#: menu.sh:444 menu.sh:588 menu.sh:2153 menu.sh:2173
+#: menu.sh:444 menu.sh:588 menu.sh:2168 menu.sh:2188
 msgid "Not a valid file, please try again!"
 msgstr ""
 
@@ -639,7 +651,7 @@ msgstr ""
 msgid "Ready!"
 msgstr ""
 
-#: menu.sh:1035 menu.sh:2235
+#: menu.sh:1035 menu.sh:2250
 msgid "Main menu"
 msgstr ""
 
@@ -1043,7 +1055,7 @@ msgstr ""
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr ""
 
-#: menu.sh:1869 menu.sh:2226
+#: menu.sh:1869 menu.sh:2241
 msgid "Choose a language"
 msgstr ""
 
@@ -1055,9 +1067,9 @@ msgstr ""
 msgid "Choice a keymap"
 msgstr ""
 
-#: menu.sh:1914 menu.sh:1967 menu.sh:2018 menu.sh:2085 menu.sh:2088
-#: menu.sh:2091 menu.sh:2094 menu.sh:2100 menu.sh:2106 menu.sh:2112
-#: menu.sh:2118
+#: menu.sh:1914 menu.sh:1967 menu.sh:2018 menu.sh:2085 menu.sh:2090
+#: menu.sh:2095 menu.sh:2100 menu.sh:2107 menu.sh:2115 menu.sh:2123
+#: menu.sh:2131
 msgid "Update %s"
 msgstr ""
 
@@ -1147,124 +1159,130 @@ msgstr ""
 msgid "Pre Release:"
 msgstr ""
 
-#: menu.sh:2079 menu.sh:2125 menu.sh:2135 menu.sh:2152 menu.sh:2172
+#: menu.sh:2079 menu.sh:2140 menu.sh:2150 menu.sh:2167 menu.sh:2187
 msgid "Update"
 msgstr ""
 
-#: menu.sh:2085 menu.sh:2106
+#: menu.sh:2080
+msgid ""
+"Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip to /tmp/ "
+"will skip the download."
+msgstr ""
+
+#: menu.sh:2085 menu.sh:2115
 msgid "addons"
 msgstr ""
 
-#: menu.sh:2088 menu.sh:2112
+#: menu.sh:2090 menu.sh:2123
 msgid "modules"
 msgstr ""
 
-#: menu.sh:2091 menu.sh:2118
+#: menu.sh:2095 menu.sh:2131
 msgid "LKMs"
 msgstr ""
 
-#: menu.sh:2094 menu.sh:2100
+#: menu.sh:2100 menu.sh:2107
 msgid "RR"
 msgstr ""
 
-#: menu.sh:2130
+#: menu.sh:2145
 msgid ""
 "Please keep the attachment name consistent with the attachment name on "
 "Github.\\n"
 msgstr ""
 
-#: menu.sh:2131
+#: menu.sh:2146
 msgid "Upload update*.zip will update RR.\\n"
 msgstr ""
 
-#: menu.sh:2132
+#: menu.sh:2147
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr ""
 
-#: menu.sh:2133
+#: menu.sh:2148
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr ""
 
-#: menu.sh:2134
+#: menu.sh:2149
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr ""
 
-#: menu.sh:2189
+#: menu.sh:2204
 msgid "This person is very lazy and hasn't written anything."
 msgstr ""
 
-#: menu.sh:2207
+#: menu.sh:2222
 msgid "Choose a model"
 msgstr ""
 
-#: menu.sh:2209
+#: menu.sh:2224
 msgid "Choose a version"
 msgstr ""
 
-#: menu.sh:2211
+#: menu.sh:2226
 msgid "Addons menu"
 msgstr ""
 
-#: menu.sh:2212
+#: menu.sh:2227
 msgid "Modules menu"
 msgstr ""
 
-#: menu.sh:2213
+#: menu.sh:2228
 msgid "Cmdline menu"
 msgstr ""
 
-#: menu.sh:2214
+#: menu.sh:2229
 msgid "Synoinfo menu"
 msgstr ""
 
-#: menu.sh:2217
+#: menu.sh:2232
 msgid "Advanced menu"
 msgstr ""
 
-#: menu.sh:2220
+#: menu.sh:2235
 msgid "Build the loader"
 msgstr ""
 
-#: menu.sh:2224
+#: menu.sh:2239
 msgid "Boot the loader"
 msgstr ""
 
-#: menu.sh:2227
+#: menu.sh:2242
 msgid "Choose a keymap"
 msgstr ""
 
-#: menu.sh:2229
+#: menu.sh:2244
 msgid "Clean disk cache"
 msgstr ""
 
-#: menu.sh:2231
+#: menu.sh:2246
 msgid "Update menu"
 msgstr ""
 
-#: menu.sh:2232
+#: menu.sh:2247
 msgid "Notepad"
 msgstr ""
 
-#: menu.sh:2300
+#: menu.sh:2315
 msgid "Choose a action"
 msgstr ""
 
-#: menu.sh:2301
+#: menu.sh:2316
 msgid "Poweroff"
 msgstr ""
 
-#: menu.sh:2302
+#: menu.sh:2317
 msgid "Reboot"
 msgstr ""
 
-#: menu.sh:2303
+#: menu.sh:2318
 msgid "Reboot to RR"
 msgstr ""
 
-#: menu.sh:2304
+#: menu.sh:2319
 msgid "Back to shell"
 msgstr ""
 
-#: menu.sh:2330
+#: menu.sh:2345
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr ""
