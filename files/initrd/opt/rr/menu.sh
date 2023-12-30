@@ -348,14 +348,13 @@ function addonMenu() {
       --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 \
       a "$(TEXT "Add an addon")" \
       d "$(TEXT "Delete addons")" \
-      m "$(TEXT "Show all addons")" \
-      o "$(TEXT "Upload a external addon")" \
+      s "$(TEXT "Show all addons")" \
+      u "$(TEXT "Upload a external addon")" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "$(<${TMP_PATH}/resp)" in
     a)
-      NEXT='a'
       rm -f "${TMP_PATH}/menu"
       while read ADDON DESC; do
         arrayExistItem "${ADDON}" "${!ADDONS[@]}" && continue # Check if addon has already been added
@@ -383,7 +382,6 @@ function addonMenu() {
       touch ${PART1_PATH}/.build
       ;;
     d)
-      NEXT='d'
       if [ ${#ADDONS[@]} -eq 0 ]; then
         DIALOG --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "No user addons to remove")" 0 0
@@ -405,8 +403,7 @@ function addonMenu() {
       done
       touch ${PART1_PATH}/.build
       ;;
-    m)
-      NEXT='m'
+    s)
       MSG=""
       MSG+="$(TEXT "Name with color \"\Z4blue\Zn\" have been added, with color \"black\" are not added.\n\n")"
       while read MODULE DESC; do
@@ -420,7 +417,7 @@ function addonMenu() {
       DIALOG --title "$(TEXT "Addons")" \
         --msgbox "${MSG}" 0 0
       ;;
-    o)
+    u)
       if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         DIALOG --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
@@ -476,15 +473,15 @@ function moduleMenu() {
   while true; do
     DIALOG --title "$(TEXT "Modules")" \
       --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 \
-      c "$(TEXT "Show/Select modules")" \
+      s "$(TEXT "Show/Select modules")" \
       l "$(TEXT "Select loaded modules")" \
-      o "$(TEXT "Upload a external module")" \
+      u "$(TEXT "Upload a external module")" \
       p "$(TEXT "Priority use of official drivers:") \Z4${ODP}\Zn" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
     case "$(<${TMP_PATH}/resp)" in
-    c)
+    s)
       while true; do
         DIALOG --title "$(TEXT "Modules")" \
           --infobox "$(TEXT "Reading modules ...")" 0 0
@@ -549,7 +546,7 @@ function moduleMenu() {
       done
       touch ${PART1_PATH}/.build
       ;;
-    o)
+    u)
       if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         DIALOG --title "$(TEXT "Modules")" \
           --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
@@ -1082,6 +1079,7 @@ function advancedMenu() {
     if [ -n "${MODEL}" -a "true" = "$(readModelKey "${MODEL}" "dt")" ]; then
       echo "d \"$(TEXT "Custom dts file # Need rebuild")\"" >>"${TMP_PATH}/menu"
     fi
+    echo "0 \"$(TEXT "Custom patch script # Developer")\"" >>"${TMP_PATH}/menu"
     if [ -b "/dev/mmcblk0" ]; then
       echo "b \"$(TEXT "Use EMMC as the system disk:") \Z4${EMMCBOOT}\Zn\"" >>"${TMP_PATH}/menu"
     fi
@@ -1565,6 +1563,15 @@ function advancedMenu() {
           --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
       fi
       touch ${PART1_PATH}/.build
+      ;;
+    0)
+      MSG=""
+      MSG+="$(TEXT "This option is only informative.\n\n")"
+      MSG+="$(TEXT "This program reserves an interface for ramdisk custom patch scripts.\n")"
+      MSG+="$(TEXT "Call timing: called before ramdisk packaging.\n")"
+      MSG+="$(TEXT "Location: /mnt/p3/scripts/*.sh\n")"
+      DIALOG --title "$(TEXT "Advanced")" \
+        --msgbox "${MSG}" 0 0
       ;;
     b)
       if [ "${EMMCBOOT}" = "true" ]; then
