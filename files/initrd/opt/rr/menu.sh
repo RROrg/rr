@@ -1074,7 +1074,7 @@ function advancedMenu() {
     if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
       echo "c \"$(TEXT "show/modify the current pat data")\"" >>"${TMP_PATH}/menu"
     fi
-    echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"  
+    echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"
     echo "f \"$(TEXT "Format disk(s) # Without loader disk")\"" >>"${TMP_PATH}/menu"
     echo "x \"$(TEXT "Reset DSM system password")\"" >>"${TMP_PATH}/menu"
     echo "z \"$(TEXT "Force enable telnet of DSM system")\"" >>"${TMP_PATH}/menu"
@@ -1612,7 +1612,7 @@ function advancedMenu() {
           return
         fi
         MSG=""
-        MSG+="$(printf "$(TEXT "Warning:\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \nDo you want to continue?")" "${RESP}")" 
+        MSG+="$(printf "$(TEXT "Warning:\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \nDo you want to continue?")" "${RESP}")"
         DIALOG --title "$(TEXT "Advanced")" \
           --yesno "${MSG}" 0 0
         [ $? -ne 0 ] && return
@@ -1622,7 +1622,7 @@ function advancedMenu() {
         CLEARCACHE=0
 
         gzip -dc "${WORK_PATH}/grub.img.gz" | dd of="${RESP}" bs=1M conv=fsync status=progress
-        hdparm -z "${RESP}"  # reset disk cache
+        hdparm -z "${RESP}" # reset disk cache
         fdisk -l "${RESP}"
         sleep 3
 
@@ -2077,47 +2077,62 @@ function updateMenu() {
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
     DIALOG --title "$(TEXT "Update")" \
-      --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
+      --menu "$(TEXT "Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip to /tmp/ will skip the download.")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "$(<${TMP_PATH}/resp)" in
     a)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "1"
-      [ $? -eq 0 ] && updateExts "addons" "1"
+      if [ ! -f "${TMP_PATH}/addons.zip" ]; then
+        downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "1"
+      fi
+      [ -f "${TMP_PATH}/addons.zip" ] && updateExts "addons" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "1"
-      [ $? -eq 0 ] && updateExts "modules" "1"
+      if [ ! -f "${TMP_PATH}/modules.zip" ]; then
+        downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "1"
+      fi
+      [ -f "${TMP_PATH}/modules.zip" ] && updateExts "modules" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "1"
-      [ $? -eq 0 ] && updateExts "LKMs" "1"
+      if [ ! -f "${TMP_PATH}/rp-lkms.zip" ]; then
+        downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "1"
+      fi
+      [ -f "${TMP_PATH}/rp-lkms.zip" ] && updateExts "LKMs" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
-      downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "0"
-      [ $? -ne 0 ] && continue
-      updateRR "RR"
+      if [ ! -f "${TMP_PATH}/update.zip" ]; then
+        downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "0"
+      fi
+      [ -f "${TMP_PATH}/update.zip" ] && updateRR "RR"
       ;;
     r)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
-      downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "0"
-      [ $? -ne 0 ] && continue
+      if [ ! -f "${TMP_PATH}/update.zip" ]; then
+        downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "0"
+        [ $? -ne 0 ] && continue
+      fi
       updateRR "RR"
       ;;
     d)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "0"
-      [ $? -ne 0 ] && continue
+      if [ ! -f "${TMP_PATH}/addons.zip" ]; then
+        downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "0"
+        [ $? -ne 0 ] && continue
+      fi
       updateExts "addons" "0"
       ;;
     m)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "0"
-      [ $? -ne 0 ] && continue
+      if [ ! -f "${TMP_PATH}/modules.zip" ]; then
+        downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "0"
+        [ $? -ne 0 ] && continue
+      fi
       updateExts "modules" "0"
       ;;
     l)
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "0"
-      [ $? -ne 0 ] && continue
+      if [ ! -f "${TMP_PATH}/rp-lkms.zip" ]; then
+        downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "0"
+        [ $? -ne 0 ] && continue
+      fi
       updateExts "LKMs" "0"
       ;;
     u)
