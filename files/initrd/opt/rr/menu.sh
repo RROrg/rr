@@ -1422,7 +1422,11 @@ function advancedMenu() {
       fi
       (
         for I in ${RESP}; do
-          echo y | mkfs.ext4 -T largefile4 "${I}"
+          if [[ "${I}" = /dev/mmc* ]]; then
+            echo y | mkdosfs -F32 "${I}"
+          else
+            echo y | mkfs.ext4 -T largefile4 "${I}"
+          fi
         done
       ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Formatting ...")" 20 100
