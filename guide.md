@@ -132,9 +132,12 @@
   # 磁盘相关
   fdisk -l                                         # 查看硬盘信息
   lspci -d ::106                                   # 查看 ATA 控制器
+  lspci -d ::104                                   # 查看 RAID 控制器
   lspci -d ::107                                   # 查看 HBA 控制器
   lspci -d ::108                                   # 查看 NVME 控制器
+  lspci -d ::c03                                   # 查看 USB 控制器
   lspci -d ::805                                   # 查看 SD Card 控制器
+  lspci -d ::100                                   # 查看 VIRTIO 控制器
   ls -l /sys/class/scsi_host                       # 查看 ATA 硬盘 host 信息
   ls -l /sys/class/mmc_host                        # 查看 SD Card 硬盘 host 信息
   ls -l /sys/class/nvme                            # 查看 NVME 硬盘 host 信息
@@ -143,6 +146,7 @@
   ls /sys/block/sata*                              # 查看识别的 sata 硬盘  (设备树(dtb)的型号)
   ls /sys/block/nvme*                              # 查看识别的 nvme 硬盘
   ls /sys/block/mmc*                               # 查看识别的 SD Card 硬盘
+  ls /sys/block/usb*                               # 查看识别的 SD Card/USB 硬盘
   cat /sys/block/sd*/device/syno_block_info        # 查看识别的 sata 硬盘挂载点 (非设备树(dtb)的型号)  
   cat /sys/block/sata*/device/syno_block_info      # 查看识别的 sata 硬盘挂载点 (设备树(dtb)的型号)
   cat /sys/block/nvme*/device/syno_block_info      # 查看识别的 nvme 硬盘挂载点
@@ -155,11 +159,12 @@
   # 日志相关
   dmesg                                            # 内核日志
   cat /proc/cmdlime                                # 引导参数
-  cat /var/log/linuxrc.syno.log                    # 引导态下启动日志
+  cat /var/log/linuxrc.syno.log                    # 引导态下启动日志 (junior mode)
   cat /var/log/messages                            # 引导态下操作日志
+  cat /tmp/installer_sh.log                        # 安装日志 (junior mode)
 
   # Intel GPU
-  lspci -n | grep 0300 | cut -d " " -f 3           # PIDVID
+  lspci -nd ::300 | cut -d " " -f 3                # PIDVID
   ls /dev/dri                                      # 查看显卡设备
   cat /sys/kernel/debug/dri/0/i915_frequency_info  # 显卡驱动详细信息
 
