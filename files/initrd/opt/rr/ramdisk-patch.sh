@@ -213,6 +213,12 @@ fi
 #  sed -i 's/kvmx64/RRING/g' ${RAMDISK_PATH}/etc/synoinfo.conf ${RAMDISK_PATH}/etc/VERSION
 #fi
 
+# Call user patch scripts
+for F in $(ls -1 ${SCRIPTS_PATH}/*.sh 2>/dev/null); do
+  echo "Calling ${F}" >>"${LOG_FILE}" 2>&1
+  . "${F}" >>"${LOG_FILE}" 2>&1 || dieLog
+done
+
 # Reassembly ramdisk
 echo -n "."
 if [ "${RD_COMPRESSED}" == "true" ]; then
