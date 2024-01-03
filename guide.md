@@ -152,9 +152,17 @@
   cat /sys/block/nvme*/device/syno_block_info      # 查看识别的 nvme 硬盘挂载点
 
   # 服务相关
-  systemctl                                        # 查看服务  
+  journalctl -xe                                   # 查看服务日志
+  systemctl                                        # 查看服务
+  systemctl | grep failed                          # 查看失败的服务
+  systemctl list-unit-files                        # 查看服务配置文件
+  systemctl list-units                             # 查看服务状态
+  systemctl status cpufreq.service                 # 查看 CPU 频率调节器状态
+  systemctl start cpufreq.service                  # 启动 CPU 频率调节器
+  systemctl stop cpufreq.service                   # 停止 CPU 频率调节器
+  systemctl enable cpufreq.service                 # 开机启动 CPU 频率调节器
+  systemctl disable cpufreq.service                # 永久停止 CPU 频率调节器
   netstat -tunlp                                   # 查看端口  
-  systemctl disable cpufreq.service                # 禁用 CPU 频率调节器
 
   # 日志相关
   dmesg                                            # 内核日志
