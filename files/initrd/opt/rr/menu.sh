@@ -558,8 +558,10 @@ function addonMenu() {
       ;;
     u)
       if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+        MSG=""
+        MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
         DIALOG --title "$(TEXT "Addons")" \
-          --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
+          --msgbox "${MSG}" 0 0
         return
       fi
       DIALOG --title "$(TEXT "Addons")" \
@@ -569,7 +571,7 @@ function addonMenu() {
       rm -rf ${TMP_UP_PATH}
       mkdir -p ${TMP_UP_PATH}
       pushd ${TMP_UP_PATH}
-      rz -be -B 536870912
+      rz -be
       for F in $(ls -A); do
         USER_FILE=${F}
         break
@@ -687,8 +689,10 @@ function moduleMenu() {
       ;;
     u)
       if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+        MSG=""
+        MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
         DIALOG --title "$(TEXT "Modules")" \
-          --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
+          --msgbox "${MSG}" 0 0
         return
       fi
       MSG=""
@@ -707,7 +711,7 @@ function moduleMenu() {
       rm -rf ${TMP_UP_PATH}
       mkdir -p ${TMP_UP_PATH}
       pushd ${TMP_UP_PATH}
-      rz -be -B 536870912
+      rz -be
       for F in $(ls -A); do
         USER_FILE=${F}
         break
@@ -1170,14 +1174,14 @@ function make() {
       extractDsmFiles
       [ $? -ne 0 ] && break
     fi
-    
+
     if [[ "${LOADER_DISK}" = /dev/mmcblk* ]] || [ "${EMMCBOOT}" = "true" ]; then
       echo "$(TEXT "EMMC is used.")"
     else
       echo "$(TEXT "EMMC is not used. remove mmc modules.")"
       deleteConfigKey "modules.mmc_block" "${USER_CONFIG_FILE}"
       deleteConfigKey "modules.mmc_core" "${USER_CONFIG_FILE}"
-    fi 
+    fi
 
     # Check disk space left
     SPACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
@@ -1707,8 +1711,11 @@ function advancedMenu() {
       ;;
     d)
       if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+        MSG=""
+        MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
+        MSG+="$(printf "$(TEXT "Or upload the dts file to %s via DUFS, Will be automatically imported when building.")" "${USER_UP_PATH}/${MODEL}.dts")"
         DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
+          --msgbox "${MSG}" 0 0
         return
       fi
       DIALOG --title "$(TEXT "Advanced")" \
@@ -1717,7 +1724,7 @@ function advancedMenu() {
       rm -rf "${TMP_UP_PATH}"
       mkdir -p "${TMP_UP_PATH}"
       pushd "${TMP_UP_PATH}"
-      rz -be -B 536870912
+      rz -be
       for F in $(ls -A); do
         USER_FILE="${TMP_UP_PATH}/${F}"
         dtc -q -I dts -O dtb "${F}" >"test.dtb"
@@ -2320,8 +2327,11 @@ function updateMenu() {
       ;;
     u)
       if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+        MSG=""
+        MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
+        MSG+="$(TEXT "Or upload update.zip, addons.zip, modules.zip, rp-lkms.zip to /tmp/ via DUFS will skip the download.\n")"
         DIALOG --title "$(TEXT "Update")" \
-          --msgbox "$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")" 0 0
+          --msgbox "${MSG}" 0 0
         return
       fi
       MSG=""
@@ -2338,7 +2348,7 @@ function updateMenu() {
       rm -rf "${TMP_UP_PATH}"
       mkdir -p "${TMP_UP_PATH}"
       pushd "${TMP_UP_PATH}"
-      rz -be -B 536870912
+      rz -be
       for F in $(ls -A); do
         for I in ${EXTS[@]}; do
           [[ "${F}" = ${I} ]] && USER_FILE="${F}"
