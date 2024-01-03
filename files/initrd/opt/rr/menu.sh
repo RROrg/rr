@@ -1170,6 +1170,14 @@ function make() {
       extractDsmFiles
       [ $? -ne 0 ] && break
     fi
+    
+    if [[ "${LOADER_DISK}" = /dev/mmcblk* ]] || [ "${EMMCBOOT}" = "true" ]; then
+      echo "$(TEXT "EMMC is used.")"
+    else
+      echo "$(TEXT "EMMC is not used. remove mmc modules.")"
+      deleteConfigKey "modules.mmc_block" "${USER_CONFIG_FILE}"
+      deleteConfigKey "modules.mmc_core" "${USER_CONFIG_FILE}"
+    fi 
 
     # Check disk space left
     SPACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
