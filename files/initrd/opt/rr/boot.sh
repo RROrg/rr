@@ -92,11 +92,13 @@ SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
 MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
 KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
+EMMCBOOT="$(readConfigKey "emmcboot" "${USER_CONFIG_FILE}")"
 
 declare -A CMDLINE
 
 # Automatic values
-CMDLINE['syno_hw_version']="${MODEL}"
+MODELID="$(readModelKey ${MODEL} "id")"
+CMDLINE['syno_hw_version']="${MODELID:-${MODEL}}"
 [ -z "${VID}" ] && VID="0x46f4" # Sanity check
 [ -z "${PID}" ] && PID="0x0001" # Sanity check
 CMDLINE['vid']="${VID}"
@@ -134,6 +136,16 @@ CMDLINE['root']="/dev/md0"
 CMDLINE['skip_vender_mac_interfaces']="0,1,2,3,4,5,6,7"
 CMDLINE['loglevel']="15"
 CMDLINE['log_buf_len']="32M"
+
+if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ] && [ ! "${BUS}" = "mmc" ] && [ ! "${EMMCBOOT}" = "true" ]; then
+  [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
+  CMDLINE['modprobe.blacklist']+="sdhci,sdhci_pci,sdhci_acpi"
+fi
+
+if [ "$(readModelKey "${MODEL}" "dt")" = "true" ] && ! echo "epyc7002 purley broadwellnkv2" | grep -wq "$(readModelKey "${MODEL}" "platform")"; then
+  [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
+  CMDLINE['modprobe.blacklist']+="mpt3sas"
+fi
 
 # Read cmdline
 while IFS=': ' read KEY VALUE; do
