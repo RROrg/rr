@@ -136,17 +136,17 @@
   lspci -d ::107                                   # 查看 HBA 控制器
   lspci -d ::108                                   # 查看 NVME 控制器
   lspci -d ::c03                                   # 查看 USB 控制器
-  lspci -d ::805                                   # 查看 SD Card 控制器
+  lspci -d ::805                                   # 查看 MMC 控制器
   lspci -d ::100                                   # 查看 VIRTIO 控制器
   ls -l /sys/class/scsi_host                       # 查看 ATA 硬盘 host 信息
-  ls -l /sys/class/mmc_host                        # 查看 SD Card 硬盘 host 信息
+  ls -l /sys/class/mmc_host                        # 查看 MMC 硬盘 host 信息
   ls -l /sys/class/nvme                            # 查看 NVME 硬盘 host 信息
   ls /sys/block/                                   # 查看块设备
   ls /sys/block/sd*                                # 查看识别的 sata 硬盘 (非设备树(dtb)的型号)
   ls /sys/block/sata*                              # 查看识别的 sata 硬盘  (设备树(dtb)的型号)
   ls /sys/block/nvme*                              # 查看识别的 nvme 硬盘
-  ls /sys/block/mmc*                               # 查看识别的 SD Card 硬盘
-  ls /sys/block/usb*                               # 查看识别的 SD Card/USB 硬盘
+  ls /sys/block/mmc*                               # 查看识别的 mmc 硬盘
+  ls /sys/block/usb*                               # 查看识别的 usb 硬盘
   cat /sys/block/sd*/device/syno_block_info        # 查看识别的 sata 硬盘挂载点 (非设备树(dtb)的型号)  
   cat /sys/block/sata*/device/syno_block_info      # 查看识别的 sata 硬盘挂载点 (设备树(dtb)的型号)
   cat /sys/block/nvme*/device/syno_block_info      # 查看识别的 nvme 硬盘挂载点
@@ -163,6 +163,7 @@
   systemctl enable cpufreq.service                 # 开机启动 CPU 频率调节器
   systemctl disable cpufreq.service                # 永久停止 CPU 频率调节器
   netstat -tunlp                                   # 查看端口  
+  lsof -i :7681                                    # 查看 7681 端口占用情况
 
   # 日志相关
   dmesg                                            # 内核日志

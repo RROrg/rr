@@ -1,5 +1,8 @@
-id: "DS423+"
+id: "DS224+"
 synoinfo: &synoinfo
+  support_uasp: "yes"
+  support_printer: "yes"
+  support_usb_printer: "yes"
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
   support_led_brightness_adjustment: "no"
@@ -21,7 +24,7 @@ patch: &patch
   - "ramdisk-post-init-script-*.patch"
   - "ramdisk-disable-root-pwd-*.patch"
 platform: "geminilake"
-unique: "synology_geminilake_423+"
+unique: "synology_geminilake_224+"
 serial:
   prefix:
     - "2350"
