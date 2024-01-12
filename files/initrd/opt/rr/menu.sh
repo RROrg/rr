@@ -370,7 +370,7 @@ function ParsePat() {
       echo -e "$(TEXT "pat Invalid, try again!")" >"${MKERR_FILE}"
       break
     fi
-    
+
     MODELTMP=$(grep -E "MODEL=\".*\"" ${UNTAR_PAT_PATH}/GRUB_VER | sed 's/.*MODEL="\(.*\)".*/\1/')
     if [ -n "${MODELTMP}" ]; then
       if [ -f "${WORK_PATH}/model-configs/${MODELTMP}.yml" ]; then
@@ -630,6 +630,7 @@ function moduleMenu() {
       l "$(TEXT "Select loaded modules")" \
       u "$(TEXT "Upload a external module")" \
       p "$(TEXT "Priority use of official drivers:") \Z4${ODP}\Zn" \
+      f "$(TEXT "Edit modules that need to be copied to DSM")" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
@@ -743,6 +744,22 @@ function moduleMenu() {
     p)
       [ "${ODP}" = "false" ] && ODP='true' || ODP='false'
       writeConfigKey "odp" "${ODP}" "${USER_CONFIG_FILE}"
+      ;;
+    f)
+      if [ -f ${USER_UP_PATH}/modulelist ]; then
+        cp -f "${USER_UP_PATH}/modulelist" "${TMP_PATH}/modulelist.tmp"
+      else
+        cp -f "${WORK_PATH}/patch/modulelist" "${TMP_PATH}/modulelist.tmp"
+      fi
+      while true; do
+        DIALOG --title "$(TEXT "Edit with caution")" \
+          --editbox "${TMP_PATH}/modulelist.tmp" 0 0 2>"${TMP_PATH}/modulelist.user"
+        [ $? -ne 0 ] && return
+        [ ! -d "${USER_UP_PATH}" ] && mkdir -p "${USER_UP_PATH}"
+        mv -f "${TMP_PATH}/modulelist.user" "${USER_UP_PATH}/modulelist"
+        dos2unix "${USER_UP_PATH}/modulelist"
+        break
+      done
       ;;
     e)
       break
@@ -2012,6 +2029,7 @@ function editUserConfig() {
       --editbox "${USER_CONFIG_FILE}" 0 0 2>"${TMP_PATH}/userconfig"
     [ $? -ne 0 ] && return
     mv -f "${TMP_PATH}/userconfig" "${USER_CONFIG_FILE}"
+    dos2unix "${USER_CONFIG_FILE}"
     ERRORS=$(yq eval "${USER_CONFIG_FILE}" 2>&1)
     [ $? -eq 0 ] && break
     DIALOG --title "$(TEXT "Edit with caution")" \
@@ -2041,6 +2059,7 @@ function editGrubCfg() {
       --editbox "${GRUB_PATH}/grub.cfg" 0 0 2>"${TMP_PATH}/usergrub.cfg"
     [ $? -ne 0 ] && return
     mv -f "${TMP_PATH}/usergrub.cfg" "${GRUB_PATH}/grub.cfg"
+    dos2unix "${GRUB_PATH}/grub.cfg"
     break
   done
 }
@@ -2404,6 +2423,7 @@ function notepadMenu() {
     --editbox "${USER_UP_PATH}/notepad" 0 0 2>"${TMP_PATH}/notepad"
   [ $? -ne 0 ] && return
   mv -f "${TMP_PATH}/notepad" "${USER_UP_PATH}/notepad"
+  dos2unix "${USER_UP_PATH}/notepad"
 }
 
 ###############################################################################

@@ -1,0 +1,41 @@
+# `#: comment
+# $1: operation
+#     N: copy module to ramdisk, do not overwrite an existing file
+#     F: copy module to ramdisk, overwrite an existing file
+# $2: module file name (not module name)
+#
+# eg: N i915.ko
+
+# kvm
+N irqbypass.ko
+N kvm-intel.ko
+N kvm-amd.ko
+N kvm.ko
+
+# iwlwifi
+N libarc4.ko
+N cfg80211.ko
+N mac80211.ko
+N iwlwifi.ko
+N iwlmvm.ko
+N iwldvm.ko
+
+## i915
+#N i2c-algo-bit.ko
+#N dmabuf.ko
+#N i915-compat.ko
+#N drm_mipi_dsi.ko
+#N intel-gtt.ko
+#N drm_panel_orientation_quirks.ko
+#N hdmi.ko
+#N drm.ko
+#N drm_kms_helper.ko
+#N i915.ko
+## mei
+#N mei.ko
+#N mei-me.ko
+#N mei-gsc.ko
+#N mei-txe.ko
+#N mei_hdcp.ko
+#N mei_iaf.ko
+#N mei_pxp.ko

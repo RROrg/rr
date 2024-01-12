@@ -49,7 +49,7 @@ if [ -n "${PRODUCTVER}" -a -n "${BUILDNUM}" -a -n "${SMALLNUM}" ] &&
   echo -n "Patching Ramdisk."
   PATURL=""
   PATSUM=""
-fi
+  fi
 # Update new buildnumber
 PRODUCTVER=${majorversion}.${minorversion}
 BUILDNUM=${buildnumber}
@@ -197,6 +197,12 @@ echo "inetd" >>"${RAMDISK_PATH}/addons/addons.sh"
 
 # Build modules dependencies
 ${WORK_PATH}/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
+# Copying modulelist
+if [ -f "${USER_UP_PATH}/modulelist" ]; then
+  cp -f "${USER_UP_PATH}/modulelist" "${RAMDISK_PATH}/addons/modulelist"
+else
+  cp -f "${WORK_PATH}/patch/modulelist" "${RAMDISK_PATH}/addons/modulelist"
+fi
 
 # Network card configuration file
 for N in $(seq 0 7); do
