@@ -49,6 +49,8 @@ if [ -n "${PRODUCTVER}" -a -n "${BUILDNUM}" -a -n "${SMALLNUM}" ] &&
   echo -n "Patching Ramdisk."
   PATURL=""
   PATSUM=""
+  # Clean old pat file
+  rm -f "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" 2>/dev/null || true
   fi
 # Update new buildnumber
 PRODUCTVER=${majorversion}.${minorversion}
