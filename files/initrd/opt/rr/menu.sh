@@ -583,7 +583,7 @@ function addonMenu() {
       mkdir -p ${TMP_UP_PATH}
       pushd ${TMP_UP_PATH}
       rz -be
-      for F in $(ls -A); do
+      for F in $(ls -A 2>/dev/null); do
         USER_FILE=${F}
         break
       done
@@ -725,7 +725,7 @@ function moduleMenu() {
       mkdir -p ${TMP_UP_PATH}
       pushd ${TMP_UP_PATH}
       rz -be
-      for F in $(ls -A); do
+      for F in $(ls -A 2>/dev/null); do
         USER_FILE=${F}
         break
       done
@@ -1359,7 +1359,7 @@ function advancedMenu() {
       MSG="$(TEXT "Temporary IP: (UI will not refresh)")"
       ITEMS=""
       IDX=0
-      ETHX=$(ls /sys/class/net/ | grep -v lo)
+      ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo)
       for ETH in ${ETHX}; do
         [ ${IDX} -gt 7 ] && break # Currently, only up to 8 are supported.  (<==> boot.sh L96, <==> lkm: MAX_NET_IFACES)
         IDX=$((${IDX} + 1))
@@ -1431,7 +1431,7 @@ function advancedMenu() {
             echo "        psk=\"${PSK}\"" >>${PART1_PATH}/wpa_supplicant.conf
             echo "}" >>${PART1_PATH}/wpa_supplicant.conf
 
-            for ETH in $(ls /sys/class/net/ | grep wlan); do
+            for ETH in $(ls /sys/class/net/ 2>/dev/null | grep wlan); do
               connectwlanif "${ETH}" && sleep 1
               MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
               IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
@@ -1473,7 +1473,7 @@ function advancedMenu() {
       for PCI in $(lspci -d ::106 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
         MSG+="\Zb${NAME}\Zn\nPorts: "
-        PORTS=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
+        PORTS=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
         for P in ${PORTS}; do
           if lsscsi -b | grep -v - | grep -q "\[${P}:"; then
             DUMMY="$([ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd)" = "0" ] && echo 1 || echo 2)"
@@ -1492,28 +1492,28 @@ function advancedMenu() {
       [ $(lspci -d ::104 | wc -l) -gt 0 ] && MSG+="\nRAID:\n"
       for PCI in $(lspci -d ::104 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
-        PORT=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
+        PORT=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
         PORTNUM=$(lsscsi -b | grep -v - | grep "\[${PORT}:" | wc -l)
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
-      [ $(lspci -d ::107 | wc -l) -gt 0 ] && MSG+="\nHBA:\n"
+      [ $(lspci -d ::107 | wc -l) -gt 0 ] && MSG+="\nSerial Attached SCSI:\n"
       for PCI in $(lspci -d ::107 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
-        PORT=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
+        PORT=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
         PORTNUM=$(lsscsi -b | grep -v - | grep "\[${PORT}:" | wc -l)
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
-      [ $(lspci -d ::100 | wc -l) -gt 0 ] && MSG+="\nVIRTIO:\n"
+      [ $(lspci -d ::100 | wc -l) -gt 0 ] && MSG+="\nSCSI:\n"
       for PCI in $(lspci -d ::100 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
-        PORTNUM=$(ls -l /sys/block/vd* | grep "${PCI}" | wc -l)
+        PORTNUM=$(ls -l /sys/block/* 2>/dev/null | grep "${PCI}" | wc -l)
         [ ${PORTNUM} -eq 0 ] && continue
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
-      [ $(ls -l /sys/class/scsi_host | grep usb | wc -l) -gt 0 ] && MSG+="\nUSB:\n"
+      [ $(ls -l /sys/class/scsi_host 2>/dev/null | grep usb | wc -l) -gt 0 ] && MSG+="\nUSB:\n"
       for PCI in $(lspci -d ::c03 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
         PORT=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
@@ -1522,7 +1522,7 @@ function advancedMenu() {
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
-      [ $(ls -l /sys/class/mmc_host | grep mmc_host | wc -l) -gt 0 ] && MSG+="\nMMC:\n"
+      [ $(ls -l /sys/class/mmc_host 2>/dev/null | grep mmc_host | wc -l) -gt 0 ] && MSG+="\nMMC:\n"
       for PCI in $(lspci -d ::805 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
         PORTNUM=$(ls -l /sys/block/mmc* | grep "${PCI}" | wc -l)
@@ -1533,7 +1533,7 @@ function advancedMenu() {
       [ $(lspci -d ::108 | wc -l) -gt 0 ] && MSG+="\nNVME:\n"
       for PCI in $(lspci -d ::108 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
-        PORT=$(ls -l /sys/class/nvme | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/nvme//' | sort -n)
+        PORT=$(ls -l /sys/class/nvme 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/nvme//' | sort -n)
         PORTNUM=$(lsscsi -b | grep -v - | grep "\[N:${PORT}:" | wc -l)
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
@@ -1608,11 +1608,11 @@ function advancedMenu() {
       DIALOG --title "$(TEXT "Advanced")" \
         --yesno "$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")" 0 0
       [ $? -ne 0 ] && return
-      if [ $(ls /dev/md* | wc -l) -gt 0 ]; then
+      if [ $(ls /dev/md* 2>/dev/null | wc -l) -gt 0 ]; then
         DIALOG --title "$(TEXT "Advanced")" \
           --yesno "$(TEXT "Warning:\nThe current hds is in raid, do you still want to format them?")" 0 0
         [ $? -ne 0 ] && return
-        for I in $(ls /dev/md*); do
+        for I in $(ls /dev/md* 2>/dev/null); do
           mdadm -S "${I}"
         done
       fi
@@ -1747,7 +1747,7 @@ function advancedMenu() {
       mkdir -p "${TMP_UP_PATH}"
       pushd "${TMP_UP_PATH}"
       rz -be
-      for F in $(ls -A); do
+      for F in $(ls -A 2>/dev/null); do
         USER_FILE="${TMP_UP_PATH}/${F}"
         dtc -q -I dts -O dtb "${F}" >"test.dtb"
         RET=$?
@@ -2078,7 +2078,7 @@ function boot() {
 ###############################################################################
 # Shows language to user choose one
 function languageMenu() {
-  ITEMS="$(ls /usr/share/locale)"
+  ITEMS="$(ls /usr/share/locale 2>/dev/null)"
   DIALOG \
     --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a language")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
@@ -2092,7 +2092,7 @@ function languageMenu() {
 ###############################################################################
 # Shows available keymaps to user choose one
 function keymapMenu() {
-  OPTIONS="$(ls /usr/share/keymaps/i386 | grep -v include)"
+  OPTIONS="$(ls /usr/share/keymaps/i386 2>/dev/null | grep -v include)"
   DIALOG \
     --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a layout")" 0 0 0 ${OPTIONS} \
     2>${TMP_PATH}/resp
@@ -2103,7 +2103,7 @@ function keymapMenu() {
     OPTIONS+="${KM::-7} "
   done < <(
     cd /usr/share/keymaps/i386/${LAYOUT}
-    ls *.map.gz
+    ls *.map.gz 2>/dev/null
   )
   DIALOG \
     --default-item "${KEYMAP}" --no-items --menu "$(TEXT "Choice a keymap")" 0 0 0 ${OPTIONS} \
@@ -2240,7 +2240,7 @@ function updateExts() {
       --infobox "$(printf "$(TEXT "Installing new %s ...")" "${1}")" 0 0
     rm -Rf "${ADDONS_PATH}/"*
     [ -f "${TMP_PATH}/addons/VERSION" ] && cp -f "${TMP_PATH}/addons/VERSION" "${ADDONS_PATH}/"
-    for PKG in $(ls ${TMP_PATH}/addons/*.addon); do
+    for PKG in $(ls ${TMP_PATH}/addons/*.addon 2>/dev/null); do
       ADDON=$(basename ${PKG} | sed 's|.addon||')
       rm -rf "${ADDONS_PATH}/${ADDON}"
       mkdir -p "${ADDONS_PATH}/${ADDON}"
@@ -2373,7 +2373,7 @@ function updateMenu() {
       mkdir -p "${TMP_UP_PATH}"
       pushd "${TMP_UP_PATH}"
       rz -be
-      for F in $(ls -A); do
+      for F in $(ls -A 2>/dev/null); do
         for I in ${EXTS[@]}; do
           [[ "${F}" = ${I} ]] && USER_FILE="${F}"
         done

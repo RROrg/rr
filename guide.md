@@ -131,13 +131,16 @@
 
   # 磁盘相关
   fdisk -l                                         # 查看硬盘信息
-  lspci -d ::106                                   # 查看 ATA 控制器
-  lspci -d ::104                                   # 查看 RAID 控制器
-  lspci -d ::107                                   # 查看 HBA 控制器
-  lspci -d ::108                                   # 查看 NVME 控制器
-  lspci -d ::c03                                   # 查看 USB 控制器
-  lspci -d ::805                                   # 查看 MMC 控制器
-  lspci -d ::100                                   # 查看 VIRTIO 控制器
+  lspci -d ::100                                   # 查看 SCSI 存储控制器 https://admin.pci-ids.ucw.cz/read/PD/
+  lspci -d ::101                                   # 查看 IDE 接口
+  lspci -d ::102                                   # 查看 软盘 磁盘控制器
+  lspci -d ::103                                   # 查看 IPI 总线控制器
+  lspci -d ::104                                   # 查看 RAID 总线控制器
+  lspci -d ::105                                   # 查看 ATA 总线控制器
+  lspci -d ::106                                   # 查看 SATA 总线控制器
+  lspci -d ::107                                   # 查看 串行 Attached SCSI
+  lspci -d ::108                                   # 查看 NVM 控制器
+
   ls -l /sys/class/scsi_host                       # 查看 ATA 硬盘 host 信息
   ls -l /sys/class/mmc_host                        # 查看 MMC 硬盘 host 信息
   ls -l /sys/class/nvme                            # 查看 NVME 硬盘 host 信息
@@ -172,8 +175,13 @@
   cat /var/log/messages                            # 引导态下操作日志
   cat /tmp/installer_sh.log                        # 安装日志 (junior mode)
 
+  # 显卡相关
+  lspci -d ::300                                   # 查看 VGA 兼容控制器
+  lspci -d ::301                                   # 查看 XGA 控制器
+  lspci -d ::302                                   # 查看 3D 控制器（不是 VGA 兼容）
+
   # Intel GPU
-  lspci -nd ::300 | cut -d " " -f 3                # PIDVID
+  lspci -nd ::300 | cut -d " " -f 3                # PIDVID 
   ls /dev/dri                                      # 查看显卡设备
   cat /sys/kernel/debug/dri/0/i915_frequency_info  # 显卡驱动详细信息
 

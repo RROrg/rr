@@ -3,6 +3,7 @@
 if [ -d "/usr/share/locale" ]; then
   if [ $(ls ${WORK_PATH}/lang/*.mo 2>/dev/null | wc -l) -gt 0 ]; then
     for F in $(ls ${WORK_PATH}/lang/*.mo); do
+      mkdir -p "/usr/share/locale/$(basename "${F}" .mo)/LC_MESSAGES"
       install "${F}" "/usr/share/locale/$(basename "${F}" .mo)/LC_MESSAGES/rr.mo"
     done
   fi
