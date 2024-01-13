@@ -2078,7 +2078,7 @@ function boot() {
 ###############################################################################
 # Shows language to user choose one
 function languageMenu() {
-  ITEMS="$(ls /usr/share/locale 2>/dev/null)"
+  ITEMS="$(ls ${WORK_PATH}/lang/*.mo 2>/dev/null | sort | sed -r 's/.*\/(.*)\.mo$/\1/')"
   DIALOG \
     --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a language")" 0 0 0 ${ITEMS} 2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
@@ -2086,7 +2086,7 @@ function languageMenu() {
   [ -z "${resp}" ] && return
   LANGUAGE=${resp}
   echo "${LANGUAGE}.UTF-8" >${PART1_PATH}/.locale
-  export LANG="${LANGUAGE}.UTF-8"
+  export LC_ALL="${LANGUAGE}.UTF-8"
 }
 
 ###############################################################################
