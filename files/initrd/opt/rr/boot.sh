@@ -249,8 +249,11 @@ else
   if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" ]; then
     IP="$(getIP)"
     [ -n "${IP}" ] && URL="http://${IP}:5000" || URL="http://find.synology.com/"
-    python ${WORK_PATH}/include/functions.py makeqr -d "${URL}" -l "br" -o "${TMP_PATH}/qrcode.png"
-    [ -f "${TMP_PATH}/qrcode.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode.png" >/dev/null 2>/dev/null || true
+    python ${WORK_PATH}/include/functions.py makeqr -d "${URL}" -l "6" -o "${TMP_PATH}/qrcode_boot.png"
+    [ -f "${TMP_PATH}/qrcode_boot.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_boot.png" >/dev/null 2>/dev/null || true
+
+    python ${WORK_PATH}/include/functions.py makeqr -f "${WORK_PATH}/include/qhxg.png" -l "7" -o "${TMP_PATH}/qrcode_qhxg.png"
+    [ -f "${TMP_PATH}/qrcode_qhxg.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_qhxg.png" >/dev/null 2>/dev/null || true
   fi
 
   # Executes DSM kernel via KEXEC
