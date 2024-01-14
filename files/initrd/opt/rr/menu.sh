@@ -795,7 +795,7 @@ function cmdlineMenu() {
       MSG+="$(TEXT " * \Z4i915.enable_guc=2\Zn\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\n")"
       MSG+="$(TEXT " * \Z4i915.max_vfs=7\Zn\n     Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
-      LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
+      LINENUM=$(($(echo -e "${MSG}" | wc -l) + 10))
       while true; do
         DIALOG --title "$(TEXT "Cmdline")" \
           --form "${MSG}" ${LINENUM:-16} 70 2 "Name:" 1 1 "" 1 10 55 0 "Value:" 2 1 "" 2 10 55 0 \
@@ -1516,7 +1516,7 @@ function advancedMenu() {
       [ $(ls -l /sys/class/scsi_host 2>/dev/null | grep usb | wc -l) -gt 0 ] && MSG+="\nUSB:\n"
       for PCI in $(lspci -d ::c03 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
-        PORT=$(ls -l /sys/class/scsi_host | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
+        PORT=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
         PORTNUM=$(lsscsi -b | grep -v - | grep "\[${PORT}:" | wc -l)
         [ ${PORTNUM} -eq 0 ] && continue
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
@@ -1525,7 +1525,7 @@ function advancedMenu() {
       [ $(ls -l /sys/class/mmc_host 2>/dev/null | grep mmc_host | wc -l) -gt 0 ] && MSG+="\nMMC:\n"
       for PCI in $(lspci -d ::805 | awk '{print $1}'); do
         NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
-        PORTNUM=$(ls -l /sys/block/mmc* | grep "${PCI}" | wc -l)
+        PORTNUM=$(ls -l /sys/block/mmc* 2>/dev/null | grep "${PCI}" | wc -l)
         [ ${PORTNUM} -eq 0 ] && continue
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))

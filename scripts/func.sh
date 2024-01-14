@@ -13,13 +13,11 @@ export TOKEN="${1}"
 function convertpo2mo() {
   echo "Convert po2mo begin"
   local DEST_PATH="${1:-lang}"
-  if [ $(find ${DEST_PATH}/ -name "*.po" | wc -l) -gt 0 ]; then
-    for P in $(ls ${DEST_PATH}/*.po); do
-      # Use msgfmt command to compile the .po file into a binary .mo file
-      echo "msgfmt ${P} to ${P/.po/.mo}"
-      msgfmt ${P} -o ${P/.po/.mo}
-    done
-  fi
+  for P in $(ls ${DEST_PATH}/*.po 2>/dev/null); do
+    # Use msgfmt command to compile the .po file into a binary .mo file
+    echo "msgfmt ${P} to ${P/.po/.mo}"
+    msgfmt ${P} -o ${P/.po/.mo}
+  done
   echo "Convert po2mo end"
 }
 
@@ -154,7 +152,7 @@ function getAddons() {
   unzip "${CACHE_FILE}" -d "${CACHE_DIR}"
   echo "Installing addons to ${DEST_PATH}"
   [ -f /tmp/addons/VERSION ] && cp -f /tmp/addons/VERSION ${DEST_PATH}/
-  for PKG in $(ls ${CACHE_DIR}/*.addon); do
+  for PKG in $(ls ${CACHE_DIR}/*.addon 2>/dev/null); do
     ADDON=$(basename "${PKG}" .addon)
     mkdir -p "${DEST_PATH}/${ADDON}"
     echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
@@ -249,7 +247,7 @@ function resizeImg() {
   echo -e "d\n\nn\n\n\n\n\nn\nw" | sudo fdisk "${OUTPUT_FILE}"
   LOOPX=$(sudo losetup -f)
   sudo losetup -P ${LOOPX} "${OUTPUT_FILE}"
-  sudo e2fsck -fp $(ls ${LOOPX}* | sort -n | tail -1)
-  sudo resize2fs $(ls ${LOOPX}* | sort -n | tail -1)
+  sudo e2fsck -fp $(ls ${LOOPX}* 2>/dev/null | sort -n | tail -1)
+  sudo resize2fs $(ls ${LOOPX}* 2>/dev/null | sort -n | tail -1)
   sudo losetup -d ${LOOPX}
 }

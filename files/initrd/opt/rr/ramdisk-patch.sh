@@ -91,7 +91,7 @@ done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
 while read PE; do
   RET=1
   echo "Patching with ${PE}" >"${LOG_FILE}" 2>&1
-  for PF in $(ls ${WORK_PATH}/patch/${PE}); do
+  for PF in $(ls ${WORK_PATH}/patch/${PE} 2>/dev/null); do
     echo -n "."
     echo "Patching with ${PF}" >>"${LOG_FILE}" 2>&1
     (
@@ -132,7 +132,7 @@ echo -n "."
 rm -rf "${TMP_PATH}/modules"
 mkdir -p "${TMP_PATH}/modules"
 tar -zxf "${MODULES_PATH}/${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.tgz" -C "${TMP_PATH}/modules"
-for F in $(ls "${TMP_PATH}/modules/"*.ko); do
+for F in $(ls "${TMP_PATH}/modules/"*.ko 2>/dev/null); do
   M=$(basename ${F})
   [ "${ODP}" = "true" -a -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] && continue
   if arrayExistItem "${M:0:-3}" "${!USERMODULES[@]}"; then
