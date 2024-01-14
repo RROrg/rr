@@ -212,7 +212,7 @@ function _get_fastest() {
 # @1 -mac1,mac2,mac3...
 function _sort_netif() {
   ETHLIST=""
-  ETHX=$(ls /sys/class/net/ | grep eth) # real network cards list
+  ETHX=$(ls /sys/class/net/ 2>/dev/null | grep eth) # real network cards list
   for ETH in ${ETHX}; do
     MAC="$(cat /sys/class/net/${ETH}/address | sed 's/://g' | tr '[:upper:]' '[:lower:]')"
     BUS=$(ethtool -i ${ETH} | grep bus-info | awk '{print $2}')

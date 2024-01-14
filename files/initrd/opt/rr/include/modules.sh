@@ -10,7 +10,7 @@ function getAllModules() {
   mkdir -p "${TMP_PATH}/modules"
   tar -zxf "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" -C "${TMP_PATH}/modules"
   # Get list of all modules
-  for F in $(ls ${TMP_PATH}/modules/*.ko); do
+  for F in $(ls ${TMP_PATH}/modules/*.ko 2>/dev/null); do
     X=$(basename ${F})
     M=${X:0:-3}
     DESC=$(modinfo ${F} | awk -F':' '/description:/{ print $2}' | awk '{sub(/^[ ]+/,""); print}')
