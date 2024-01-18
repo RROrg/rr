@@ -268,6 +268,10 @@ else
   for T in $(w | grep -v "TTY" | awk -F' ' '{print $2}'); do
     echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
   done
+
+  # Clear logs for dbgutils addons
+  rm -rf "${PART1_PATH}/logs" >/dev/null 2>&1 || true
+
   KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
   [ "${KERNELWAY}" = "kexec" ] && kexec -i -a -e || poweroff
   exit 0
