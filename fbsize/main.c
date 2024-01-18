@@ -1,3 +1,11 @@
+/* 
+* Copyright (C) 2022 Ing <https://github.com/wjz304>
+*
+* This is free software, licensed under the MIT License.
+* See /LICENSE for more information.
+*
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
