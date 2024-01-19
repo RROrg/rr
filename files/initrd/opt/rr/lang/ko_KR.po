@@ -31,26 +31,26 @@ msgstr "Welcome to %s"
 
 #: boot.sh:33
 msgid "DSM zImage changed"
-msgstr "DSM 이미지 변경"
+msgstr "DSM zImage 변경
 
 #: boot.sh:36 menu.sh:1215
 msgid ""
 "zImage not patched,\\nPlease upgrade the bootloader version and try again."
 "\\nPatch error:\\n"
 msgstr ""
-"이미지가 패치되지 않았습니다,\\n부트로더 버전을 업그레이드하고 다시 시도해 보"
+"zImage 패치되지 않았습니다,\\n부트로더 버전을 업그레이드하고 다시 시도해 보"
 "세요.\\n패치 오류:\\n"
 
 #: boot.sh:45
 msgid "DSM Ramdisk changed"
-msgstr "DSM 램디스크 변경"
+msgstr "DSM Ramdisk 변경"
 
 #: boot.sh:48 menu.sh:1221
 msgid ""
 "Ramdisk not patched,\\nPlease upgrade the bootloader version and try again."
 "\\nPatch error:\\n"
 msgstr ""
-"램디스크가 패치되지 않았습니다,\\n부트로더 버전을 업그레이드하고 다시 시도해 "
+"Ramdisk 패치되지 않았습니다,\\n부트로더 버전을 업그레이드하고 다시 시도해 "
 "보세요.\\n패치 오류:\\n"
 
 #: boot.sh:67
@@ -115,7 +115,7 @@ msgstr "IP를 가져옵니다. (참고: 라우터에서 꼭 확인해보세요!!
 
 #: boot.sh:206 init.sh:146
 msgid "DOWN"
-msgstr "다운"
+msgstr "닫기"
 
 #: boot.sh:210 init.sh:150
 msgid "NOT CONNECTED"
@@ -139,7 +139,7 @@ msgstr "(ssh/web) 연결 상태가 변경되어 부팅이 중단되었습니다.
 
 #: boot.sh:246
 msgid "Loading DSM kernel ..."
-msgstr "DSM 커널 로드 ..."
+msgstr "DSM 커널 로드 중..."
 
 #: boot.sh:262
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
@@ -174,11 +174,11 @@ msgstr "부팅 디스크:"
 
 #: init.sh:100
 msgid "Loading keymap"
-msgstr "키보드 매핑 로드"
+msgstr "키맵 로드 중"
 
 #: init.sh:110
 msgid "User requested edit settings."
-msgstr "사용자의 요청으로 관리 모드로 부팅했습니다."
+msgstr "사용자 요청 편집 설정."
 
 #: init.sh:139
 msgid "Waiting IP."
@@ -198,7 +198,7 @@ msgstr "\\033[1;32mmenu.sh\\033[0m 명령어를 사용하여 로더를 구성할
 
 #: init.sh:172
 msgid "User config is on"
-msgstr "사용자 구성 위치는"
+msgstr "사용자 구성이 켜져 있습니다."
 
 #: init.sh:173
 msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
@@ -304,7 +304,7 @@ msgstr ""
 
 #: menu.sh:337
 msgid "Parse Pat"
-msgstr "pat 설치"
+msgstr "Pat 설치"
 
 #: menu.sh:345
 msgid "No pat file found in users folder!\\n"
@@ -333,7 +333,7 @@ msgstr "pat 파일이 유효하지 않습니다. 다시 시도하세요!"
 
 #: menu.sh:363
 msgid "Parse %s ..."
-msgstr "%s 설치 ..."
+msgstr "%s 분석 ..."
 
 #: menu.sh:388
 msgid "Currently, %s is not supported."
@@ -466,7 +466,7 @@ msgstr "공식 모듈 우선 사용:"
 
 #: menu.sh:633
 msgid "Edit modules that need to be copied to DSM"
-msgstr "DSM에 복사해야 하는 모듈 편집"
+msgstr "DSM 복사해야 하는 모듈 편집"
 
 #: menu.sh:641
 msgid "Reading modules ..."
@@ -693,11 +693,11 @@ msgstr "인터넷 또는 캐시 디스크 공간을 확인합니다.\\n오류: %
 
 #: menu.sh:1050
 msgid "Uncompressed tar"
-msgstr "비압축 tar"
+msgstr "압축되지 않은 tar"
 
 #: menu.sh:1054
 msgid "Compressed tar"
-msgstr "압축 tar"
+msgstr "압축된 tar"
 
 #: menu.sh:1058
 msgid "Encrypted"
@@ -713,7 +713,7 @@ msgstr ""
 
 #: menu.sh:1069 menu.sh:1161
 msgid "Disassembling %s: "
-msgstr "%s 압축 풀기: "
+msgstr "%s 압축 해제 중: "
 
 #: menu.sh:1076
 msgid "Extractor cached."
@@ -721,7 +721,7 @@ msgstr "복호화 프로그램이 이미 존재합니다."
 
 #: menu.sh:1082 menu.sh:1085
 msgid "Extracting ..."
-msgstr "압축을 푸는 중..."
+msgstr "압축 해제 중..."
 
 #: menu.sh:1118
 msgid "%s cached."
@@ -729,7 +729,7 @@ msgstr "%s가 캐시되었습니다."
 
 #: menu.sh:1122
 msgid "Cleaning cache ..."
-msgstr "캐시 청소 ..."
+msgstr "캐시 정리 중..."
 
 #: menu.sh:1131
 msgid ""
@@ -742,14 +742,14 @@ msgstr "Downloading %s ..."
 
 #: menu.sh:1151
 msgid "Checking hash of %s: "
-msgstr "%s의 hash를 확인하는 중:"
+msgstr "%s의 해시를 확인하는 중:"
 
 #: menu.sh:1154
 msgid ""
 "md5 hash of pat not match, Please reget pat data from the version menu and "
 "try again!"
 msgstr ""
-"PAT의 MD5 hash가 일치하지 않습니다. 버전 메뉴에서 PAT 데이터를 다시 가져와서 "
+"PAT의 MD5 해시가 일치하지 않습니다. 버전 메뉴에서 PAT 데이터를 다시 가져와서 "
 "다시 시도하세요!"
 
 #: menu.sh:1157 menu.sh:1173 menu.sh:1183
@@ -758,11 +758,11 @@ msgstr "OK"
 
 #: menu.sh:1168
 msgid "Setting hash: "
-msgstr "hash 설정: "
+msgstr "해시 설정: "
 
 #: menu.sh:1175
 msgid "Copying files: "
-msgstr "파일 복사: "
+msgstr "파일 복사 중: "
 
 #: menu.sh:1199
 msgid "Addon %s not found!"
@@ -790,7 +790,7 @@ msgstr "직접 부팅 전환:"
 
 #: menu.sh:1258
 msgid "Timeout of get ip in boot:"
-msgstr "부팅 시 IP 가져오기 시간 초과:"
+msgstr "IP 가져오기 시간 초과:"
 
 #: menu.sh:1259
 msgid "Timeout of boot wait:"
@@ -802,7 +802,7 @@ msgstr "커널 전환 방법:"
 
 #: menu.sh:1262
 msgid "Reboot on kernel panic:"
-msgstr "커널패닉 시 리부팅:"
+msgstr "커널패닉 시 재부팅:"
 
 #: menu.sh:1264
 msgid "Set static IP"
@@ -814,7 +814,7 @@ msgstr "무선 계정 설정"
 
 #: menu.sh:1266
 msgid "Edit user config file manually"
-msgstr "사용자 구성 파일을 수동으로 편집"
+msgstr "사용자 구성(config) 파일 편집"
 
 #: menu.sh:1267
 msgid "Edit grub.cfg file manually"
@@ -830,7 +830,7 @@ msgstr "디스크 정보 표시"
 
 #: menu.sh:1271
 msgid "show/modify the current pat data"
-msgstr "현재 pat 데이터 표시/수정"
+msgstr "현재 pat 다운로드 링크 표시/수정"
 
 #: menu.sh:1273
 msgid "Allow downgrade installation"
@@ -850,7 +850,7 @@ msgstr "DSM 시스템의 Telnet 강제 활성화"
 
 #: menu.sh:1277
 msgid "Save modifications of '/opt/rr'"
-msgstr "'/opt/rr' 수정사항 저장"
+msgstr "'/opt/rr'의 수정 사항 저장"
 
 #: menu.sh:1279
 msgid "Custom dts file # Need rebuild"
@@ -858,11 +858,11 @@ msgstr "사용자 정의 dts 파일 # 재빌드 필요"
 
 #: menu.sh:1281
 msgid "Custom patch script # Developer"
-msgstr "사용자 정의 패치 스크립트 # 개발자"
+msgstr "사용자 정의 패치 스크립트 # 개발"
 
 #: menu.sh:1283
 msgid "Use EMMC as the system disk:"
-msgstr "EMMC를 시스템 디스크로 사용합니다:"
+msgstr "EMMC를 시스템 디스크로 사용:"
 
 #: menu.sh:1285
 msgid "Clone bootloader disk to another disk"
@@ -874,7 +874,7 @@ msgstr "개발자에게 버그 신고하기"
 
 #: menu.sh:1287
 msgid "Install development tools"
-msgstr "개발 도구 설치"
+msgstr "개발자 도구 설치"
 
 #: menu.sh:1288
 msgid "Show QR logo:"
@@ -909,7 +909,7 @@ msgstr "고급"
 
 #: menu.sh:1295
 msgid "Advanced option"
-msgstr "고급 옵션"
+msgstr "고급 설정"
 
 #: menu.sh:1319 menu.sh:1331 menu.sh:1351
 msgid "Choose a time(seconds)"
@@ -953,14 +953,14 @@ msgstr ""
 
 #: menu.sh:1552
 msgid "pat: (editable)"
-msgstr "pat: (수정가능)"
+msgstr "pat: (편집가능)"
 
 #: menu.sh:1568
 msgid ""
 "This feature will allow you to downgrade the installation by removing the "
 "VERSION file from the first partition of all disks.\\n"
 msgstr ""
-"이 기능을 사용하면 모든 디스크의 첫 번째 파티션에서 VERSION 파일을 제거하여 "
+"이 기능을 사용하면 모든 디스크의 첫 번째 파티션에서 버전 파일을 제거하여 "
 "설치를 다운그레이드할 수 있습니다.\\n"
 
 #: menu.sh:1569
@@ -981,7 +981,7 @@ msgstr "제거 중..."
 
 #: menu.sh:1586
 msgid "Remove VERSION file for all disks completed."
-msgstr "모든 디스크의 VERSION 파일 제거가 완료되었습니다."
+msgstr "모든 디스크의 버전 파일 제거가 완료되었습니다."
 
 #: menu.sh:1601 menu.sh:1809
 msgid "No disk found!"
@@ -994,7 +994,7 @@ msgstr "경고:\\n현재 하드디스크가 RAID 상태입니다. 그래도 포�
 
 #: menu.sh:1630
 msgid "Formatting ..."
-msgstr "포맷하는 중..."
+msgstr "포맷 중..."
 
 #: menu.sh:1632
 msgid "Formatting is complete."
@@ -1041,7 +1041,7 @@ msgid ""
 "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. "
 "Do you want to continue?"
 msgstr ""
-"경고:\\n중간에 종료하지 마십시오. 그렇지 않으면 RR에 손상이 발생할 수 있습니"
+"경고:\\n중간에 종료하지 마십시오. 그렇지 않으면 RR 부팅이 손상이 발생할 수 있습니"
 "다. 계속하시겠습니까?"
 
 #: menu.sh:1719
@@ -1070,7 +1070,7 @@ msgstr ""
 
 #: menu.sh:1761
 msgid "Not a valid dts file, please try again!"
-msgstr "올바른 dts 파일이 아닙니다. 다시 시도하세요!"
+msgstr "dts 파일이 유효하지 않습니다. 다시 시도하세요!"
 
 #: menu.sh:1766
 msgid "A valid dts file, Automatically import at compile time."
@@ -1203,11 +1203,11 @@ msgstr ""
 
 #: menu.sh:1986 menu.sh:2021 menu.sh:2028
 msgid "Try recovery DSM"
-msgstr "복구 DSM 시도"
+msgstr "복구 DSM 시도 중"
 
 #: menu.sh:1987
 msgid "Trying to recovery a DSM installed system ..."
-msgstr "DSM이 설치된 시스템을 복구하는 중 ..."
+msgstr "DSM이 설치된 시스템을 복구하는 중..."
 
 #: menu.sh:2015
 msgid "Found a installation:\\nModel: %s\\nProductversion: %s"
@@ -1239,7 +1239,7 @@ msgstr "레이아웃 선택"
 
 #: menu.sh:2118
 msgid "Choice a keymap"
-msgstr "키보드 배열"
+msgstr "키맵 선택"
 
 #: menu.sh:2137 menu.sh:2190 menu.sh:2241 menu.sh:2308 menu.sh:2313
 #: menu.sh:2318 menu.sh:2323 menu.sh:2330 menu.sh:2338 menu.sh:2346
@@ -1249,7 +1249,7 @@ msgstr "업데이트 %s"
 
 #: menu.sh:2140
 msgid "Checking last version ..."
-msgstr "최신 버전 확인 중..."
+msgstr "새 버전 확인 중..."
 
 #: menu.sh:2151 menu.sh:2154
 msgid "Error checking new version.\\nError: TAG is %s"
@@ -1265,7 +1265,7 @@ msgstr "새 버전이 없습니다. 실제 버전은 %s\\n강제로 업데이트
 
 #: menu.sh:2174
 msgid "Downloading ..."
-msgstr "다운로드 중 ..."
+msgstr "다운로드 중..."
 
 #: menu.sh:2178 menu.sh:2181
 msgid "Error downloading new version.\\nError: %d:%d"
@@ -1273,7 +1273,7 @@ msgstr "새 버전을 다운로드하는 동안 오류가 발생했습니다.\\n
 
 #: menu.sh:2192 menu.sh:2243
 msgid "Extracting last version"
-msgstr "최신 버전 추출 중"
+msgstr "새 버전 추출 중"
 
 #: menu.sh:2196
 msgid "Error extracting update file"
@@ -1345,11 +1345,11 @@ msgstr ""
 
 #: menu.sh:2308 menu.sh:2338
 msgid "addons"
-msgstr "addons"
+msgstr "애드온"
 
 #: menu.sh:2313 menu.sh:2346
 msgid "modules"
-msgstr "modules"
+msgstr "모듈"
 
 #: menu.sh:2318 menu.sh:2354
 msgid "LKMs"
@@ -1439,7 +1439,7 @@ msgstr "키맵 선택"
 
 #: menu.sh:2476
 msgid "Clean disk cache"
-msgstr "디스크 캐시 정리"
+msgstr "디스크 캐시 지우기"
 
 #: menu.sh:2478
 msgid "Update menu"
