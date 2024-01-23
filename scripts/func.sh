@@ -34,7 +34,7 @@ function getExtractor() {
   local PAT_URL="https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
   local PAT_FILE="DSM_DS3622xs+_42218.pat"
   local STATUS=$(curl -# -w "%{http_code}" -L "${PAT_URL}" -o "${CACHE_DIR}/${PAT_FILE}")
-  if [ $? -ne 0 -o ${STATUS} -ne 200 ]; then
+  if [ $? -ne 0 -o ${STATUS:-0} -ne 200 ]; then
     echo "[E] DSM_DS3622xs%2B_42218.pat download error!"
     rm -rf ${CACHE_DIR}
     exit 1
@@ -83,11 +83,11 @@ function getBuildroot() {
     if [ "${NAME}" = "bzImage" ]; then
       STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-buildroot/releases/assets/${ID}" -o "${DEST_PATH}/bzImage-rr")
       echo "TAG=${TAG}; Status=${STATUS}"
-      [ ${STATUS} -ne 200 ] && exit 1
+      [ ${STATUS:-0} -ne 200 ] && exit 1
     elif [ "${NAME}" = "rootfs.cpio.xz" ]; then
       STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-buildroot/releases/assets/${ID}" -o "${DEST_PATH}/initrd-rr")
       echo "TAG=${TAG}; Status=${STATUS}"
-      [ ${STATUS} -ne 200 ] && exit 1
+      [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
   done < <(curl -skLH "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
 
@@ -111,7 +111,7 @@ function getLKMs() {
     if [ "${NAME}" = "rp-lkms.zip" ]; then
       STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-lkms/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
-      [ ${STATUS} -ne 200 ] && exit 1
+      [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
   done < <(curl -skLH "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
   [ ! -f "${CACHE_FILE}" ] && exit 1
@@ -140,7 +140,7 @@ function getAddons() {
     if [ "${NAME}" = "addons.zip" ]; then
       STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-addons/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
-      [ ${STATUS} -ne 200 ] && exit 1
+      [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
   done < <(curl -skLH "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
   [ ! -f "${CACHE_FILE}" ] && exit 1
@@ -178,7 +178,7 @@ function getModules() {
     if [ "${NAME}" = "modules.zip" ]; then
       STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-modules/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
-      [ ${STATUS} -ne 200 ] && exit 1
+      [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
   done < <(curl -skLH "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
   [ ! -f "${CACHE_FILE}" ] && exit 1

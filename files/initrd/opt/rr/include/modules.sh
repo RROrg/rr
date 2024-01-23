@@ -78,7 +78,7 @@ function getdepends() {
   function _getdepends() {
     if [ -f "${TMP_PATH}/modules/${1}.ko" ]; then
       depends=($(modinfo "${TMP_PATH}/modules/${1}.ko" | grep depends: | awk -F: '{print $2}' | awk '$1=$1' | sed 's/,/ /g'))
-      if [ ${#depends[*]} -gt 0 ]; then
+      if [ ${#depends[@]} -gt 0 ]; then
         for k in ${depends[@]}; do
           echo "${k}"
           _getdepends "${k}"
