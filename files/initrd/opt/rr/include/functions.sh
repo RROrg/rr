@@ -311,7 +311,7 @@ function getLogo() {
   rm -f "${PART3_PATH}/logo.png"
   fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
   STATUS=$(curl -skL -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
-  if [ $? -ne 0 -o ${STATUS} -ne 200 -o -f "${PART3_PATH}/logo.png" ]; then
+  if [ $? -ne 0 -o ${STATUS:-0} -ne 200 -o -f "${PART3_PATH}/logo.png" ]; then
     convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
     magick montage "${PART3_PATH}/logo.png" -background 'none' -tile '3x3' -geometry '350x210' "${PART3_PATH}/logo.png" 2>/dev/null
     convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
@@ -350,7 +350,7 @@ function rebootTo() {
 # connect wlanif
 # 1 netif name
 function connectwlanif() {
-  [ ! -d "/sys/class/net/${1}" ] && return 1
+  [ -z "${1}" -o ! -d "/sys/class/net/${1}" ] && return 1
 
   CONF=""
   [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf.${1}" ] && CONF="${PART1_PATH}/wpa_supplicant.conf.${1}"

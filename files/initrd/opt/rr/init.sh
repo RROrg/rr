@@ -189,8 +189,8 @@ if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" ]; then
 fi
 
 # Check memory
-RAM=$(free -m | awk '/Mem:/{print$2}')
-if [ ${RAM} -le 3500 ]; then
+RAM=$(free -m 2>/dev/null | awk '/Mem:/{print$2}')
+if [ ${RAM:-0} -le 3500 ]; then
   echo -e "\033[1;33m$(TEXT "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory.")\033[0m\n"
 fi
 

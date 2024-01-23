@@ -72,7 +72,7 @@ RD_COMPRESSED="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].rd-compres
 
 declare -A SYNOINFO
 declare -A ADDONS
-declare -A USERMODULES
+declare -A MODULES
 
 # Read synoinfo and addons from config
 while IFS=': ' read KEY VALUE; do
@@ -84,7 +84,7 @@ done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
 
 # Read modules from user config
 while IFS=': ' read KEY VALUE; do
-  [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
+  [ -n "${KEY}" ] && MODULES["${KEY}"]="${VALUE}"
 done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
 
 # Patches (diff -Naru OLDFILE NEWFILE > xxx.patch)
@@ -135,7 +135,7 @@ tar -zxf "${MODULES_PATH}/${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KV
 for F in $(ls "${TMP_PATH}/modules/"*.ko 2>/dev/null); do
   M=$(basename ${F})
   [ "${ODP}" = "true" -a -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] && continue
-  if arrayExistItem "${M:0:-3}" "${!USERMODULES[@]}"; then
+  if arrayExistItem "${M:0:-3}" "${!MODULES[@]}"; then
     cp -f "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
   else
     rm -f "${RAMDISK_PATH}/usr/lib/modules/${M}"

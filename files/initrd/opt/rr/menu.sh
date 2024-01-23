@@ -421,7 +421,7 @@ function ParsePat() {
     SPACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
     # Discover remote file size
     FILESIZE=$(du -sb "${PAT_PATH}" | awk '{print$1}')
-    if [ 0${FILESIZE} -ge 0${SPACELEFT} ]; then
+    if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
       # No disk space to copy, mv it to dl
       mv -f "${PAT_PATH}" "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat"
     else
@@ -629,6 +629,7 @@ function moduleMenu() {
       s "$(TEXT "Show/Select modules")" \
       l "$(TEXT "Select loaded modules")" \
       u "$(TEXT "Upload a external module")" \
+      i "$(TEXT "Deselect i915 with dependencies")" \
       p "$(TEXT "Priority use of official drivers:") \Z4${ODP}\Zn" \
       f "$(TEXT "Edit modules that need to be copied to DSM")" \
       e "$(TEXT "Exit")" \
@@ -739,6 +740,26 @@ function moduleMenu() {
       else
         DIALOG --title "$(TEXT "Modules")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
+      fi
+      ;;
+    i)
+      DEPS="$(getdepends "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" i915) i915"
+      DELS=()
+      while IFS=': ' read KEY VALUE; do
+        [ -z "${KEY}" ] && continue
+        if echo "${DEPS}" | grep -wq "${KEY}"; then
+          DELS+=("${KEY}")
+        fi
+      done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
+      if [ ${#DELS[@]} -eq 0 ]; then
+        DIALOG --title "$(TEXT "Modules")" \
+          --msgbox "$(TEXT "No i915 with dependencies module to deselect.")" 0 0
+      else
+        for ID in ${DELS[@]}; do
+          deleteConfigKey "modules.\"${ID}\"" "${USER_CONFIG_FILE}"
+        done
+        DIALOG --title "$(TEXT "Modules")" \
+          --msgbox "$(printf "$(TEXT "Module %s deselected.\n")" "${DELS[@]}")" 0 0
       fi
       ;;
     p)
@@ -1006,7 +1027,7 @@ function getSynoExtractor() {
 
   STATUS=$(curl -k -w "%{http_code}" -L "${OLDPAT_URL}" -o "${OLDPAT_PATH}")
   RET=$?
-  if [ ${RET} -ne 0 -o ${STATUS} -ne 200 ]; then
+  if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
     rm -f "${OLDPAT_PATH}"
     MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d")" "${RET}" "${STATUS}")"
     echo -e "${MSG}" >"${MKERR_FILE}"
@@ -1134,13 +1155,13 @@ function extractDsmFiles() {
     echo "$(printf "$(TEXT "Downloading %s ...")" "${PAT_FILE}")"
     # Discover remote file size
     FILESIZE=$(curl -k -sLI "${PATURL}" | grep -i Content-Length | awk '{print$2}')
-    if [ 0${FILESIZE} -ge 0${SPACELEFT} ]; then
+    if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
     fi
     STATUS=$(curl -k -w "%{http_code}" -L "${PATURL}" -o "${PAT_PATH}")
     RET=$?
-    if [ ${RET} -ne 0 -o ${STATUS} -ne 200 ]; then
+    if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
       rm -f "${PAT_PATH}"
       MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d")" "${RET}" "${STATUS}")"
       echo -e "${MSG}" >"${MKERR_FILE}"
@@ -1208,7 +1229,7 @@ function make() {
 
     # Check disk space left
     SPACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
-    [ ${SPACELEFT} -le 268435456 ] && rm -rf "${PART3_PATH}/dl"
+    [ ${SPACELEFT:-0} -le 268435456 ] && rm -rf "${PART3_PATH}/dl"
 
     ${WORK_PATH}/zimage-patch.sh
     if [ $? -ne 0 ]; then
@@ -2094,7 +2115,7 @@ function languageMenu() {
   done < <(ls ${WORK_PATH}/lang/*.mo 2>/dev/null | sort | sed -r 's/.*\/(.*)\.mo$/\1/')
 
   DIALOG \
-    --default-item "${LAYOUT}" --menu "$(TEXT "Choose a language")" 0 0 0  --file "${TMP_PATH}/menu" \
+    --default-item "${LAYOUT}" --menu "$(TEXT "Choose a language")" 0 0 0 --file "${TMP_PATH}/menu" \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
   resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
@@ -2178,7 +2199,7 @@ function downloadExts() {
     RET=$?
   ) 2>&1 | DIALOG --title "${T}" \
     --progressbox "$(TEXT "Downloading ...")" 20 100
-  if [ ${RET} -ne 0 -o ${STATUS} -ne 200 ]; then
+  if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
     if [ ! "${5}" = "0" ]; then
       DIALOG --title "${T}" \
         --infobox "$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")" 0 0
