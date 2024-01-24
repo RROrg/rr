@@ -13,8 +13,11 @@ function availableAddons() {
     checkAddonExist "${ADDON}" "${1}" "${2}" || continue
     SYSTEM=$(readConfigKey "system" "${D}/manifest.yml")
     [ "${SYSTEM}" = "true" ] && continue
-    DESC="$(readConfigKey "description" "${D}/manifest.yml")"
-    echo -e "${ADDON}\t${DESC}"
+    LOCALE="${LC_ALL%%.*}"
+    DESC=""
+    [ -z "${DESC}" ] && DESC="$(readConfigKey "description.${LOCALE:-"en_US"}" "${D}/manifest.yml")"
+    [ -z "${DESC}" ] && DESC="$(readConfigKey "description.en_US" "${D}/manifest.yml")"
+    echo -e "${ADDON}\t${DESC:-"unknown"}"
   done < <(find "${ADDONS_PATH}" -maxdepth 1 -type d | sort)
 }
 
