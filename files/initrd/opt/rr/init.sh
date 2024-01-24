@@ -56,6 +56,7 @@ initConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
 initConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
 initConfigKey "addons.misc" "" "${USER_CONFIG_FILE}"
 initConfigKey "addons.acpid" "" "${USER_CONFIG_FILE}"
+initConfigKey "addons.mountloader" "" "${USER_CONFIG_FILE}"
 initConfigKey "addons.reboottoloader" "" "${USER_CONFIG_FILE}"
 initConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
 
