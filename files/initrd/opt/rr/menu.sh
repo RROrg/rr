@@ -11,8 +11,9 @@
 alias DIALOG='dialog --backtitle "$(backtitle)" --colors --aspect 50'
 
 # Check partition 3 space, if < 2GiB is necessary clean cache folder
+PACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
 CLEARCACHE=0
-if [ $(cat "/sys/block/${LOADER_DISK/\/dev\//}/${LOADER_DISK_PART3/\/dev\//}/size") -lt 4194304 ]; then
+if [ ${PACELEFT:-0} -lt 4194304 ]; then
   CLEARCACHE=1
 fi
 
@@ -1294,7 +1295,7 @@ function advancedMenu() {
     echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"
     echo "f \"$(TEXT "Format disk(s) # Without loader disk")\"" >>"${TMP_PATH}/menu"
     echo "x \"$(TEXT "Reset DSM system password")\"" >>"${TMP_PATH}/menu"
-    echo "z \"$(TEXT "Force enable telnet of DSM system")\"" >>"${TMP_PATH}/menu"
+    echo "z \"$(TEXT "Force enable Telnet&SSH of DSM system")\"" >>"${TMP_PATH}/menu"
     echo "p \"$(TEXT "Save modifications of '/opt/rr'")\"" >>"${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a "true" = "$(readModelKey "${MODEL}" "dt")" ]; then
       echo "d \"$(TEXT "Custom dts file # Need rebuild")\"" >>"${TMP_PATH}/menu"
@@ -1717,20 +1718,29 @@ function advancedMenu() {
         --yesno "$(TEXT "Please insert all disks before continuing.\n")" 0 0
       [ $? -ne 0 ] && return
       (
+        ONBOOTUP=""
+        ONBOOTUP="${ONBOOTUP}synowebapi --exec api=SYNO.Core.Terminal method=set version=3 enable_telnet=true enable_ssh=true ssh_port=22 forbid_console=false\n"
+        ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
         mkdir -p "${TMP_PATH}/sdX1"
         for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
           mount "${I}" "${TMP_PATH}/sdX1"
-          echo '#telnet	stream	tcp	nowait	root	/usr/bin/telnetd	telnetd' >"${TMP_PATH}/sdX1/etc/inetd.conf"
-          echo 'telnet	stream	tcp6	nowait	root	/usr/bin/telnetd	telnetd -h' >>"${TMP_PATH}/sdX1/etc/inetd.conf"
-          echo 'telnet	stream	tcp	nowait	root	/usr/bin/telnetd	telnetd -h' >>"${TMP_PATH}/sdX1/etc/inetd.conf"
-          sync
+          if [ -f "${TMP_PATH}/sdX1/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
+            sqlite3 ${TMP_PATH}/sdX1/usr/syno/etc/esynoscheduler/esynoscheduler.db <<EOF
+DELETE FROM task WHERE task_name LIKE 'RRONBOOTUPRR';
+INSERT INTO task VALUES('RRONBOOTUPRR', '', 'bootup', '', 1, 0, 0, 0, '', 0, '$(echo -e ${ONBOOTUP})', 'script', '{}', '', '', '{}', '{}');
+EOF
+            sleep 1
+            sync
+            echo "true" > ${TMP_PATH}/isEnable
+          fi
           umount "${I}"
         done
         rm -rf "${TMP_PATH}/sdX1"
       ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "Enabling ...")" 20 100
+      [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "Telnet&SSH is enabled.")" || MSG="$(TEXT "Telnet&SSH is not enabled.")"
       DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox "$(TEXT "Telnet is enabled.")" 0 0
+        --msgbox "${MSG}" 0 0
       ;;
     p)
       DIALOG --title "$(TEXT "Advanced")" \
@@ -2499,7 +2509,7 @@ while true; do
   fi
   echo "l \"$(TEXT "Choose a language")\"" >>"${TMP_PATH}/menu"
   echo "k \"$(TEXT "Choose a keymap")\"" >>"${TMP_PATH}/menu"
-  if [ ${CLEARCACHE} -eq 1 -a -d "${PART3_PATH}/dl" ]; then
+  if [ ${CLEARCACHE} -eq 1 ]; then
     echo "c \"$(TEXT "Clean disk cache")\"" >>"${TMP_PATH}/menu"
   fi
   echo "p \"$(TEXT "Update menu")\"" >>"${TMP_PATH}/menu"

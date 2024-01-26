@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-23 13:12+0800\n"
-"PO-Revision-Date: 2024-01-23 13:19+0800\n"
+"POT-Creation-Date: 2024-01-26 12:07+0800\n"
+"PO-Revision-Date: 2024-01-26 12:16+0800\n"
 "Last-Translator: EXP <jeong1986>\n"
 "Language-Team: 한국인 (대한민국) <EXP>\n"
 "Language: ko_KR\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr "로더가 초기화되지 않았습니다!"
 
-#: boot.sh:10 init.sh:107
+#: boot.sh:10 init.sh:108
 msgid "Loader is not configured!"
 msgstr "로더가 구성되지 않았습니다!"
 
@@ -33,7 +33,7 @@ msgstr "Welcome to %s"
 msgid "DSM zImage changed"
 msgstr "DSM zImage 변경"
 
-#: boot.sh:36 menu.sh:1236
+#: boot.sh:36 menu.sh:1237
 msgid ""
 "zImage not patched,\\nPlease upgrade the bootloader version and try again."
 "\\nPatch error:\\n"
@@ -45,7 +45,7 @@ msgstr ""
 msgid "DSM Ramdisk changed"
 msgstr "DSM Ramdisk 변경"
 
-#: boot.sh:48 menu.sh:1242
+#: boot.sh:48 menu.sh:1243
 msgid ""
 "Ramdisk not patched,\\nPlease upgrade the bootloader version and try again."
 "\\nPatch error:\\n"
@@ -101,11 +101,11 @@ msgstr "Cmdline:\\n"
 msgid "Reboot to boot directly in DSM"
 msgstr "재부팅 후 DSM 부팅으로 바로 이동하기"
 
-#: boot.sh:178 init.sh:120
+#: boot.sh:178 init.sh:121
 msgid "Detected %s network cards."
 msgstr "%s개의 네트워크 카드가 감지되었습니다."
 
-#: boot.sh:179 init.sh:121
+#: boot.sh:179 init.sh:122
 msgid "Checking Connect."
 msgstr "연결을 확인하는 중입니다."
 
@@ -113,15 +113,15 @@ msgstr "연결을 확인하는 중입니다."
 msgid "Waiting IP.(For reference only)"
 msgstr "대기 중인 IP.(참고용)"
 
-#: boot.sh:206 init.sh:146
+#: boot.sh:206 init.sh:147
 msgid "DOWN"
 msgstr "닫기"
 
-#: boot.sh:210 init.sh:150
+#: boot.sh:210 init.sh:151
 msgid "NOT CONNECTED"
 msgstr "연결되지 않음"
 
-#: boot.sh:214 init.sh:154
+#: boot.sh:214 init.sh:155
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "시간 초과 (라우터에서 IP를 확인하세요!!)"
 
@@ -164,27 +164,27 @@ msgstr ""
 msgid "Network devices not found!"
 msgstr "네트워크 장치를 찾을 수 없습니다!"
 
-#: init.sh:84
+#: init.sh:85
 msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM"
 msgstr "부팅 디스크는 USB 또는 SATA/SCSI/NVME/MMC DoM만 지원됩니다"
 
-#: init.sh:92
+#: init.sh:93
 msgid "Loader disk:"
 msgstr "부팅 디스크:"
 
-#: init.sh:100
+#: init.sh:101
 msgid "Loading keymap"
 msgstr "키맵 로드 중"
 
-#: init.sh:110
+#: init.sh:111
 msgid "User requested edit settings."
 msgstr "사용자가 설정 변경을 요청했습니다."
 
-#: init.sh:139
+#: init.sh:140
 msgid "Waiting IP."
 msgstr "IP 주소를 가져옵니다."
 
-#: init.sh:160
+#: init.sh:161
 msgid ""
 "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web "
 "terminal."
@@ -192,77 +192,77 @@ msgstr ""
 "브라우저에서 \\033[1;34mhttp://%s:7681\\033[0m 로 이동하여,\n"
 "웹 터미널을 통해 로더를 구성할 수 있습니다."
 
-#: init.sh:170
+#: init.sh:171
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
 msgstr ""
 "\\033[1;32mmenu.sh\\033[0m 명령어를 사용하여 로더를 구성할 수 있습니다."
 
-#: init.sh:172
+#: init.sh:173
 msgid "User config is on"
 msgstr "사용자 구성이 활성화되어 있습니다."
 
-#: init.sh:173
+#: init.sh:174
 msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 msgstr "TTYD: \\033[1;34mhttp://rr:7681\\033[0m"
 
-#: init.sh:174
+#: init.sh:175
 msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 msgstr "DUFS: \\033[1;34mhttp://rr:7304\\033[0m"
 
-#: init.sh:175
+#: init.sh:176
 msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 msgstr "TTYD&DUFS: \\033[1;34mhttp://rr:80\\033[0m"
 
-#: init.sh:177
+#: init.sh:178
 msgid "Default SSH Root password is"
 msgstr "기본 SSH Root 비밀번호는"
 
-#: init.sh:194
+#: init.sh:195
 msgid ""
 "You have less than 4GB of RAM, if errors occur in loader creation, please "
 "increase the amount of memory."
 msgstr ""
 "RAM이 4GB 미만인 경우 부팅을 생성할 때 오류가 발생하면 메모리를 늘리세요."
 
-#: menu.sh:100 menu.sh:134 menu.sh:177
+#: menu.sh:101 menu.sh:135 menu.sh:178
 msgid "Model"
 msgstr "모델"
 
-#: menu.sh:101
+#: menu.sh:102
 msgid "Reading models"
 msgstr "모델 읽기"
 
-#: menu.sh:111
+#: menu.sh:112
 msgid "Compatibility judgment"
 msgstr "호환성 검사"
 
-#: menu.sh:132
+#: menu.sh:133
 msgid "Disable flags restriction"
 msgstr "플래그 제한 비활성화"
 
-#: menu.sh:133
+#: menu.sh:134
 msgid "Show all models"
 msgstr "모든 모델 보기"
 
-#: menu.sh:135
+#: menu.sh:136
 msgid "Choose the model"
 msgstr "모델을 선택 하세요"
 
-#: menu.sh:227 menu.sh:238 menu.sh:244 menu.sh:255 menu.sh:281 menu.sh:301
-#: menu.sh:351
+#: menu.sh:228 menu.sh:239 menu.sh:245 menu.sh:256 menu.sh:282 menu.sh:302
+#: menu.sh:352
 msgid "Product Version"
 msgstr "DSM 버전"
 
-#: menu.sh:228
+#: menu.sh:229
 msgid "Choose a product version"
 msgstr "버전 선택"
 
-#: menu.sh:239
+#: menu.sh:240
 msgid ""
 "The current version has been set to %s. Do you want to reset the version?"
 msgstr "현재 버전이 %s 로 설정되었습니다. 버전을 재설정 하시겠습니까?"
 
-#: menu.sh:245
+#: menu.sh:246
 msgid ""
 "This version does not support UEFI startup, Please select another version or "
 "switch the startup mode."
@@ -270,11 +270,11 @@ msgstr ""
 "이 버전은 UEFI 부팅이 지원되지 않습니다. 다른 버전을 선택하거나 부팅 모드를 "
 "전환하세요."
 
-#: menu.sh:256
+#: menu.sh:257
 msgid "Get pat data ..."
 msgstr "pat 데이터 가져오기.."
 
-#: menu.sh:275
+#: menu.sh:276
 msgid ""
 "Failed to get pat data,\\nPlease manually fill in the URL and md5sum of the "
 "corresponding version of pat."
@@ -282,20 +282,20 @@ msgstr ""
 "pat 데이터를 가져오지 못했습니다.\\n해당 pat 버전의 URL과 MD5를 수동으로 입력"
 "하세요"
 
-#: menu.sh:279
+#: menu.sh:280
 msgid "Successfully to get pat data,\\nPlease confirm or modify as needed."
 msgstr ""
 "pat 데이터를 성공적으로 가져왔습니다,\\n필요에 따라 확인하거나 수정하세요"
 
-#: menu.sh:282
+#: menu.sh:283
 msgid "Retry"
 msgstr "재시도"
 
-#: menu.sh:302 menu.sh:404
+#: menu.sh:303 menu.sh:405
 msgid "Reconfiguring Synoinfo, Addons and Modules"
 msgstr "synoinfo, 애드온 및 모듈 재구성"
 
-#: menu.sh:336
+#: menu.sh:337
 msgid ""
 "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous "
 "selection.\\nDo you want to continue?"
@@ -303,15 +303,15 @@ msgstr ""
 "%s 및 %s를 선택했습니다.\\n'Parse pat'이 이전 선택 항목을 덮어씁니다.\\n계속"
 "하시겠습니까?"
 
-#: menu.sh:337
+#: menu.sh:338
 msgid "Parse Pat"
 msgstr "Parse pat"
 
-#: menu.sh:345
+#: menu.sh:346
 msgid "No pat file found in users folder!\\n"
 msgstr "users 폴더에 Pat 파일을 찾을 수 없습니다!\\n"
 
-#: menu.sh:346
+#: menu.sh:347
 msgid ""
 "Please upload the pat file to /mnt/p3/users/ folder via DUFS and re-enter "
 "this option.\\n"
@@ -319,95 +319,95 @@ msgstr ""
 "DUFS를 통해 /mnt/p3/users/ 폴더에 Pat 파일을 업로드한 후 이 옵션을 다시 입력"
 "하세요.\\n"
 
-#: menu.sh:347 menu.sh:357 menu.sh:2329 menu.sh:2393 menu.sh:2403 menu.sh:2420
-#: menu.sh:2440
+#: menu.sh:348 menu.sh:358 menu.sh:2339 menu.sh:2403 menu.sh:2413 menu.sh:2430
+#: menu.sh:2450
 msgid "Update"
 msgstr "업데이트"
 
-#: menu.sh:352
+#: menu.sh:353
 msgid "Choose a pat file"
 msgstr "Pat 파일 선택"
 
-#: menu.sh:358 menu.sh:370 menu.sh:1118
+#: menu.sh:359 menu.sh:371 menu.sh:1119
 msgid "pat Invalid, try again!"
 msgstr "pat 파일이 유효하지 않습니다. 다시 시도하세요!"
 
-#: menu.sh:363
+#: menu.sh:364
 msgid "Parse %s ..."
 msgstr "%s 분석 ..."
 
-#: menu.sh:388
+#: menu.sh:389
 msgid "Currently, %s is not supported."
 msgstr "현재 %s는 지원되지 않습니다."
 
-#: menu.sh:400
+#: menu.sh:401
 msgid "Currently, %s of %s is not supported."
 msgstr "현재 %s-%s는 지원되지 않습니다."
 
-#: menu.sh:461 menu.sh:1252 menu.sh:2509
+#: menu.sh:462 menu.sh:1253 menu.sh:2519
 msgid "Main menu"
 msgstr "메인 메뉴"
 
-#: menu.sh:462 menu.sh:1253
+#: menu.sh:463 menu.sh:1254
 msgid "Making ..."
 msgstr "컴파일 중 ..."
 
-#: menu.sh:464 menu.sh:1255
+#: menu.sh:465 menu.sh:1256
 msgid "Error"
 msgstr "오류"
 
-#: menu.sh:497 menu.sh:514 menu.sh:519 menu.sh:525 menu.sh:536 menu.sh:544
-#: menu.sh:567 menu.sh:574 menu.sh:578 menu.sh:592 menu.sh:596 menu.sh:604
-#: menu.sh:607
+#: menu.sh:498 menu.sh:515 menu.sh:520 menu.sh:526 menu.sh:537 menu.sh:545
+#: menu.sh:568 menu.sh:575 menu.sh:579 menu.sh:593 menu.sh:597 menu.sh:605
+#: menu.sh:608
 msgid "Addons"
 msgstr "애드온"
 
-#: menu.sh:498 menu.sh:628 menu.sh:804 menu.sh:939 menu.sh:2510
+#: menu.sh:499 menu.sh:629 menu.sh:805 menu.sh:940 menu.sh:2520
 msgid "Choose a option"
 msgstr "옵션 선택"
 
-#: menu.sh:499
+#: menu.sh:500
 msgid "Add an addon"
 msgstr "애드온 추가"
 
-#: menu.sh:500
+#: menu.sh:501
 msgid "Delete addons"
 msgstr "애드온 제거"
 
-#: menu.sh:501
+#: menu.sh:502
 msgid "Show all addons"
 msgstr "모든 애드온 표시"
 
-#: menu.sh:502
+#: menu.sh:503
 msgid "Upload a external addon"
 msgstr "외부 애드온 업로드"
 
-#: menu.sh:503 menu.sh:635 menu.sh:802 menu.sh:937 menu.sh:1313 menu.sh:2327
-#: menu.sh:2507 menu.sh:2583
+#: menu.sh:504 menu.sh:636 menu.sh:803 menu.sh:938 menu.sh:1314 menu.sh:2337
+#: menu.sh:2517 menu.sh:2593
 msgid "Exit"
 msgstr "나가기"
 
-#: menu.sh:515
+#: menu.sh:516
 msgid "No available addons to add"
 msgstr "추가할 수 있는 애드온이 없습니다"
 
-#: menu.sh:520
+#: menu.sh:521
 msgid "Select an addon"
 msgstr "애드온 선택"
 
-#: menu.sh:526
+#: menu.sh:527
 msgid "Type a optional params to addon"
 msgstr "애드온에 추가할 환경 변수 입력합니다"
 
-#: menu.sh:537
+#: menu.sh:538
 msgid "No user addons to remove"
 msgstr "제거할 사용자 애드온이 없습니다"
 
-#: menu.sh:545
+#: menu.sh:546
 msgid "Select addon to remove"
 msgstr "제거할 애드온 선택 합니다"
 
-#: menu.sh:558
+#: menu.sh:559
 msgid ""
 "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are "
 "not added.\\n\\n"
@@ -415,7 +415,7 @@ msgstr ""
 "이름 색상이 \"\\Z4파랑색\\Zn\"인 경우 추가됨, \"검은색\"인 경우 추가되지 않"
 "음.\\n\\n"
 
-#: menu.sh:573 menu.sh:707 menu.sh:1760 menu.sh:2391
+#: menu.sh:574 menu.sh:708 menu.sh:1770 menu.sh:2401
 msgid ""
 "This feature is only available when accessed via ssh (Requires a terminal "
 "that supports ZModem protocol).\\n"
@@ -423,84 +423,84 @@ msgstr ""
 "이 기능은 ssh를 통해서만 액세스할 수 있습니다. (ZModem 프로토콜을 지원하는 터"
 "미널이 필요합니다.)\\n"
 
-#: menu.sh:579
+#: menu.sh:580
 msgid "Please upload the *.addons file."
 msgstr "*.addons 파일을 업로드하세요."
 
-#: menu.sh:593 menu.sh:742 menu.sh:2421 menu.sh:2441
+#: menu.sh:594 menu.sh:743 menu.sh:2431 menu.sh:2451
 msgid "Not a valid file, please try again!"
 msgstr "파일이 올바르지 않습니다. 다시 시도하세요!"
 
-#: menu.sh:597
+#: menu.sh:598
 msgid "The addon already exists. Do you want to overwrite it?"
 msgstr "애드온이 이미 존재합니다. 덮어쓰시겠습니까?"
 
-#: menu.sh:605
+#: menu.sh:606
 msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
 msgstr ""
 "로더에 애드온 '%s'를 추가했습니다. '애드온 추가' 메뉴에서 활성화하세요."
 
-#: menu.sh:608
+#: menu.sh:609
 msgid "File format not recognized!"
 msgstr "파일 형식이 인식되지 않습니다!"
 
-#: menu.sh:627 menu.sh:641 menu.sh:654 menu.sh:691 menu.sh:708 menu.sh:718
-#: menu.sh:721 menu.sh:737 menu.sh:741 menu.sh:755 menu.sh:761
+#: menu.sh:628 menu.sh:642 menu.sh:655 menu.sh:692 menu.sh:709 menu.sh:719
+#: menu.sh:722 menu.sh:738 menu.sh:742 menu.sh:756 menu.sh:762
 msgid "Modules"
 msgstr "모듈"
 
-#: menu.sh:629
+#: menu.sh:630
 msgid "Show/Select modules"
 msgstr "모듈 표시/선택"
 
-#: menu.sh:630
+#: menu.sh:631
 msgid "Select loaded modules"
 msgstr "인식된 모듈 선택"
 
-#: menu.sh:631
+#: menu.sh:632
 msgid "Upload a external module"
 msgstr "외부 모듈 업로드"
 
-#: menu.sh:632
+#: menu.sh:633
 msgid "Deselect i915 with dependencies"
 msgstr "종속성이 있는 i915 선택 취소"
 
-#: menu.sh:633
+#: menu.sh:634
 msgid "Priority use of official drivers:"
 msgstr "공식 모듈 우선 사용:"
 
-#: menu.sh:634
+#: menu.sh:635
 msgid "Edit modules that need to be copied to DSM"
 msgstr "DSM 복사해야 하는 모듈 편집"
 
-#: menu.sh:642
+#: menu.sh:643
 msgid "Reading modules ..."
 msgstr "모듈을 읽는 중..."
 
-#: menu.sh:655
+#: menu.sh:656
 msgid "Select all"
 msgstr "모두 선택"
 
-#: menu.sh:656
+#: menu.sh:657
 msgid "Deselect all"
 msgstr "모두 선택 해제"
 
-#: menu.sh:657
+#: menu.sh:658
 msgid "Select modules to include"
 msgstr "포함할 모듈 선택"
 
-#: menu.sh:692
+#: menu.sh:693
 msgid "Selecting loaded modules"
 msgstr "인식된 모듈 선택"
 
-#: menu.sh:713
+#: menu.sh:714
 msgid ""
 "This function is experimental and dangerous. If you don't know much, please "
 "exit.\\n"
 msgstr ""
 "이 기능은 실험적이고 위험합니다. 모르는 내용이 있으면 종료하시기 바랍니다.\\n"
 
-#: menu.sh:714
+#: menu.sh:715
 msgid ""
 "The imported .ko of this function will be implanted into the corresponding "
 "arch's modules package, which will affect all models of the arch.\\n"
@@ -508,7 +508,7 @@ msgstr ""
 ".ko 파일로 해당 기능을 가져오면 해당 아키텍처의 모듈 패키지에 삽입되어 해당 "
 "아키텍처의 모든 모델에 영향을 미칠 것입니다.\\n"
 
-#: menu.sh:715
+#: menu.sh:716
 msgid ""
 "This program will not determine the availability of imported modules or even "
 "make type judgments, as please double check if it is correct.\\n"
@@ -516,7 +516,7 @@ msgstr ""
 "프로그램은 가져온 모듈의 사용 가능 여부를 확인하거나 유형 판단을 하지 않습니"
 "다. 올바른지 다시 확인하십시오.\\n"
 
-#: menu.sh:716
+#: menu.sh:717
 msgid ""
 "If you want to remove it, please go to the \"Update Menu\" -> \"Update "
 "modules\" to forcibly update the modules. All imports will be reset.\\n"
@@ -524,56 +524,56 @@ msgstr ""
 "제거하려면 \"업데이트 메뉴\" -> \"모듈 업데이트\"로 이동하여 모듈을 강제로 업"
 "데이트하세요. 모든 가져오기가 초기화됩니다.\\n"
 
-#: menu.sh:717
+#: menu.sh:718
 msgid "Do you want to continue?"
 msgstr "계속하시겠습니까?"
 
-#: menu.sh:722
+#: menu.sh:723
 msgid "Please upload the *.ko file."
 msgstr ".ko 파일을 업로드하세요."
 
-#: menu.sh:738
+#: menu.sh:739
 msgid "Module '%s' added to %s-%s"
 msgstr "모듈 '%s'가 %s-%s에 추가됨"
 
-#: menu.sh:756
+#: menu.sh:757
 msgid "No i915 with dependencies module to deselect."
 msgstr "선택을 취소할 종속성 모듈이 있는 i915가 없습니다."
 
-#: menu.sh:762
+#: menu.sh:763
 msgid "Module %s deselected.\\n"
 msgstr "%s 모듈이 선택 취소되었습니다.\\n"
 
-#: menu.sh:776 menu.sh:2058 menu.sh:2065 menu.sh:2088
+#: menu.sh:777 menu.sh:2068 menu.sh:2075 menu.sh:2098
 msgid "Edit with caution"
 msgstr "신중하게 편집하세요"
 
-#: menu.sh:796
+#: menu.sh:797
 msgid "Add/Edit a cmdline item"
 msgstr "명령줄 추가/수정"
 
-#: menu.sh:797
+#: menu.sh:798
 msgid "Show/Delete cmdline items"
 msgstr "명령줄 보기/삭제"
 
-#: menu.sh:799
+#: menu.sh:800
 msgid "Define SN/MAC"
 msgstr "SN/MAC 사용자 지정"
 
-#: menu.sh:801
+#: menu.sh:802
 msgid "Show model inherent cmdline"
 msgstr "모델 기본 명령줄 보기"
 
-#: menu.sh:803 menu.sh:822 menu.sh:831 menu.sh:855 menu.sh:863 menu.sh:880
-#: menu.sh:891 menu.sh:923
+#: menu.sh:804 menu.sh:823 menu.sh:832 menu.sh:856 menu.sh:864 menu.sh:881
+#: menu.sh:892 menu.sh:924
 msgid "Cmdline"
 msgstr "명령줄"
 
-#: menu.sh:810
+#: menu.sh:811
 msgid "Commonly used cmdlines:\\n"
 msgstr "일반적으로 사용되는 명령줄:\\n"
 
-#: menu.sh:811
+#: menu.sh:812
 msgid ""
 " * \\Z4disable_mtrr_trim=\\Zn\\n    disables kernel trim any uncacheable "
 "memory out.\\n"
@@ -581,7 +581,7 @@ msgstr ""
 " * \\Z4disable_mtrr_trim=\\Zn\\n    커널이 캐시할 수 없는 메모리를 제거하는 "
 "것을 비활성화합니다.\\n"
 
-#: menu.sh:812
+#: menu.sh:813
 msgid ""
 " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Set the maximum C-state depth "
 "allowed by the intel_idle driver.\\n"
@@ -589,29 +589,29 @@ msgstr ""
 " * \\Z4intel_idle.max_cstate=1\\Zn\\n    intel_idle 드라이브에 허용되는 최대 "
 "C-state 깊이를 설정합니다.\\n"
 
-#: menu.sh:813
+#: menu.sh:814
 msgid ""
 " * \\Z4pcie_port_pm=off\\Zn\\n    Turn off the power management of the PCIe "
 "port.\\n"
 msgstr " * \\Z4pcie_port_pm=off\\Zn\\n    PCIe 포트의 전원 관리 끄기.\\n"
 
-#: menu.sh:814
+#: menu.sh:815
 msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
 msgstr ""
 " * \\Z4libata.force=noncq\\Zn\\n    모든 SATA 포트에 대해 NCQ를 비활성화합니"
 "다.\\n"
 
-#: menu.sh:815
+#: menu.sh:816
 msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.\\n"
 msgstr " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.\\n"
 
-#: menu.sh:816
+#: menu.sh:817
 msgid ""
 " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence.\\n"
 msgstr ""
 " * \\Z4DiskIdxMap=??\\Zn\\n    디스크 인덱스 맵, 디스크 이름 순서 수정.\\n"
 
-#: menu.sh:817
+#: menu.sh:818
 msgid ""
 " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics "
 "hardware.(value: 1,2 or 3)\\n"
@@ -619,7 +619,7 @@ msgstr ""
 " * \\Z4i915.enable_guc=2\\Zn\\n    Intel 그래픽 하드웨어에서 GuC 펌웨어를 활"
 "성화합니다(값: 1, 2 또는 3)\\n"
 
-#: menu.sh:818
+#: menu.sh:819
 msgid ""
 " * \\Z4i915.max_vfs=7\\Zn\\n     Set the maximum number of virtual functions "
 "(VFs) that can be created for Intel graphics hardware.\\n"
@@ -627,96 +627,96 @@ msgstr ""
 " * \\Z4i915.max_vfs=7\\Zn\\n     Intel 그래픽 하드웨어에 대해 생성할 수 있는 "
 "최대 가상 기능(VF) 수를 설정합니다.\\n"
 
-#: menu.sh:819 menu.sh:950
+#: menu.sh:820 menu.sh:951
 msgid "\\nEnter the parameter name and value you need to add.\\n"
 msgstr "\\n추가해야 하는 매개변수 이름과 값을 입력합니다.\\n"
 
-#: menu.sh:832 menu.sh:963
+#: menu.sh:833 menu.sh:964
 msgid "Invalid parameter name, retry?"
 msgstr "잘못된 매개변수 이름입니다. 다시 시도하시겠습니까?"
 
-#: menu.sh:856
+#: menu.sh:857
 msgid "No user cmdline to remove"
 msgstr "제거할 사용자 명령줄이 없습니다."
 
-#: menu.sh:864
+#: menu.sh:865
 msgid "Select cmdline to remove"
 msgstr "제거할 명령줄 선택"
 
-#: menu.sh:875
+#: menu.sh:876
 msgid "Note: (MAC will not be set to NIC, Only for activation services.)"
 msgstr ""
 "참고: (MAC은 NIC로 설정되지 않으며 활성화 서비스에 대해서만 설정됩니다.)"
 
-#: menu.sh:881
+#: menu.sh:882
 msgid "Random"
 msgstr "랜덤생성"
 
-#: menu.sh:892
+#: menu.sh:893
 msgid "Invalid SN/MAC, retry?"
 msgstr "SN/MAC가 잘못되었습니다. 다시 시도하시겠습니까?"
 
-#: menu.sh:935
+#: menu.sh:936
 msgid "Add/edit a synoinfo item"
 msgstr "synoinfo 항목 추가/편집"
 
-#: menu.sh:936
+#: menu.sh:937
 msgid "Show/Delete synoinfo items"
 msgstr "synoinfo 항목 보기/삭제"
 
-#: menu.sh:938 menu.sh:953 menu.sh:962 menu.sh:987 menu.sh:995
+#: menu.sh:939 menu.sh:954 menu.sh:963 menu.sh:988 menu.sh:996
 msgid "Synoinfo"
 msgstr "synoinfo"
 
-#: menu.sh:945
+#: menu.sh:946
 msgid "Commonly used synoinfo:\\n"
 msgstr "일반적으로 사용되는 synoinfo:\\n"
 
-#: menu.sh:946
+#: menu.sh:947
 msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
 msgstr " * \\Z4maxdisks=??\\Zn\\n    지원되는 최대 하드 디스크 수\\n"
 
-#: menu.sh:947
+#: menu.sh:948
 msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask.\\n"
 msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    내부(SATA) 디스크 마스크.\\n"
 
-#: menu.sh:948
+#: menu.sh:949
 msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask.\\n"
 msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Esata 디스크 마스크.\\n"
 
-#: menu.sh:949
+#: menu.sh:950
 msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask.\\n"
 msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    USB 디스크 마스크.\\n"
 
-#: menu.sh:988
+#: menu.sh:989
 msgid "No synoinfo entries to remove"
 msgstr "제거할 synoinfo 항목이 없습니다."
 
-#: menu.sh:996
+#: menu.sh:997
 msgid "Select synoinfo entry to remove"
 msgstr "제거할 synoinfo 항목 선택"
 
-#: menu.sh:1026
+#: menu.sh:1027
 msgid "Downloading old pat to extract synology .pat extractor..."
 msgstr "이전 Pat를 다운로드하여 synology .pat 추출기를 추출 중입니다..."
 
-#: menu.sh:1032 menu.sh:1166
+#: menu.sh:1033 menu.sh:1167
 msgid "Check internet or cache disk space.\\nError: %d:%d"
 msgstr "인터넷 또는 캐시 디스크 공간을 확인합니다.\\n오류: %d:%d"
 
-#: menu.sh:1071
+#: menu.sh:1072
 msgid "Uncompressed tar"
 msgstr "압축되지 않은 tar"
 
-#: menu.sh:1075
+#: menu.sh:1076
 msgid "Compressed tar"
 msgstr "압축된 tar"
 
-#: menu.sh:1079
+#: menu.sh:1080
 msgid "Encrypted"
 msgstr "암호화된"
 
-#: menu.sh:1083
+#: menu.sh:1084
 msgid ""
 "Could not determine if pat file is encrypted or not, maybe corrupted, try "
 "again!"
@@ -724,40 +724,40 @@ msgstr ""
 "pat 파일이 암호화되었는지 여부를 확인할 수 없습니다. 손상되었을 수 있습니다. "
 "다시 시도하세요!"
 
-#: menu.sh:1090 menu.sh:1182
+#: menu.sh:1091 menu.sh:1183
 msgid "Disassembling %s: "
 msgstr "%s 압축 해제 중: "
 
-#: menu.sh:1097
+#: menu.sh:1098
 msgid "Extractor cached."
 msgstr "복호화 프로그램이 이미 존재합니다."
 
-#: menu.sh:1103 menu.sh:1106
+#: menu.sh:1104 menu.sh:1107
 msgid "Extracting ..."
 msgstr "압축 해제 중..."
 
-#: menu.sh:1139
+#: menu.sh:1140
 msgid "%s cached."
 msgstr "%s가 캐시되었습니다."
 
-#: menu.sh:1143
+#: menu.sh:1144
 msgid "Cleaning cache ..."
 msgstr "캐시 정리 중..."
 
-#: menu.sh:1152
+#: menu.sh:1153
 msgid ""
 "Based on the current network situation, switch to %s mirror to downloading."
 msgstr "현재 네트워크 상황에 따라 %s 미러로 전환하여 다운로드합니다."
 
-#: menu.sh:1155
+#: menu.sh:1156
 msgid "Downloading %s ..."
 msgstr "Downloading %s ..."
 
-#: menu.sh:1172
+#: menu.sh:1173
 msgid "Checking hash of %s: "
 msgstr "%s의 해시를 확인하는 중:"
 
-#: menu.sh:1175
+#: menu.sh:1176
 msgid ""
 "md5 hash of pat not match, Please reget pat data from the version menu and "
 "try again!"
@@ -765,198 +765,198 @@ msgstr ""
 "PAT의 MD5 해시가 일치하지 않습니다. 버전 메뉴에서 PAT 데이터를 다시 가져와서 "
 "다시 시도하세요!"
 
-#: menu.sh:1178 menu.sh:1194 menu.sh:1204
+#: menu.sh:1179 menu.sh:1195 menu.sh:1205
 msgid "OK"
 msgstr "OK"
 
-#: menu.sh:1189
+#: menu.sh:1190
 msgid "Setting hash: "
 msgstr "해시 설정: "
 
-#: menu.sh:1196
+#: menu.sh:1197
 msgid "Copying files: "
 msgstr "파일 복사 중: "
 
-#: menu.sh:1220
+#: menu.sh:1221
 msgid "Addon %s not found!"
 msgstr "애드온 %s을 찾을 수 없습니다!"
 
-#: menu.sh:1246
+#: menu.sh:1247
 msgid "Cleaning ..."
 msgstr "정리 중..."
 
-#: menu.sh:1248
+#: menu.sh:1249
 msgid "Ready!"
 msgstr "준비됨!"
 
-#: menu.sh:1273
+#: menu.sh:1274
 msgid "Switch LKM version:"
 msgstr "LKM 버전을 전환:"
 
-#: menu.sh:1274
+#: menu.sh:1275
 msgid "HDD sort(hotplug):"
 msgstr "HDD 정렬(Hot Plug):"
 
-#: menu.sh:1277
+#: menu.sh:1278
 msgid "Switch direct boot:"
 msgstr "직접 부팅 전환:"
 
-#: menu.sh:1279
+#: menu.sh:1280
 msgid "Timeout of get ip in boot:"
 msgstr "IP 가져오기 시간(초):"
 
-#: menu.sh:1280
+#: menu.sh:1281
 msgid "Timeout of boot wait:"
 msgstr "부팅 대기 시간(초):"
 
-#: menu.sh:1281
+#: menu.sh:1282
 msgid "kernel switching method:"
 msgstr "커널 전환 방법:"
 
-#: menu.sh:1283
+#: menu.sh:1284
 msgid "Reboot on kernel panic:"
 msgstr "커널패닉 시 재부팅(초):"
 
-#: menu.sh:1285
+#: menu.sh:1286
 msgid "Set static IP"
 msgstr "고정 IP 설정"
 
-#: menu.sh:1286
+#: menu.sh:1287
 msgid "Set wireless account"
 msgstr "무선 계정 설정"
 
-#: menu.sh:1287
+#: menu.sh:1288
 msgid "Edit user config file manually"
 msgstr "사용자 구성 config 편집"
 
-#: menu.sh:1288
+#: menu.sh:1289
 msgid "Edit grub.cfg file manually"
 msgstr "grub.cfg 파일을 수동으로 편집하기"
 
-#: menu.sh:1289
+#: menu.sh:1290
 msgid "Try to recovery a DSM installed system"
 msgstr "DSM이 설치된 시스템 복구 시도"
 
-#: menu.sh:1290
+#: menu.sh:1291
 msgid "Show disks information"
 msgstr "디스크 정보 표시"
 
-#: menu.sh:1292
+#: menu.sh:1293
 msgid "show/modify the current pat data"
 msgstr "현재 pat 다운로드 링크 표시/수정"
 
-#: menu.sh:1294
+#: menu.sh:1295
 msgid "Allow downgrade installation"
 msgstr "다운그레이드 설치 허용"
 
-#: menu.sh:1295
+#: menu.sh:1296
 msgid "Format disk(s) # Without loader disk"
 msgstr "포맷 디스크 # 로더 디스크 없음"
 
-#: menu.sh:1296
+#: menu.sh:1297
 msgid "Reset DSM system password"
 msgstr "DSM 시스템 비밀번호 재설정"
 
-#: menu.sh:1297
-msgid "Force enable telnet of DSM system"
-msgstr "DSM 시스템의 Telnet 강제 활성화"
-
 #: menu.sh:1298
+msgid "Force enable Telnet&SSH of DSM system"
+msgstr "DSM 시스템의 Telnet&SSH 강제 활성화"
+
+#: menu.sh:1299
 msgid "Save modifications of '/opt/rr'"
 msgstr "'/opt/rr'의 수정 사항 저장"
 
-#: menu.sh:1300
+#: menu.sh:1301
 msgid "Custom dts file # Need rebuild"
 msgstr "사용자 정의 dts 파일 # 재빌드 필요"
 
-#: menu.sh:1302
+#: menu.sh:1303
 msgid "Custom patch script # Developer"
 msgstr "사용자 정의 패치 스크립트 # 개발"
 
-#: menu.sh:1304
+#: menu.sh:1305
 msgid "Use EMMC as the system disk:"
 msgstr "EMMC를 시스템 디스크로 사용:"
 
-#: menu.sh:1306
+#: menu.sh:1307
 msgid "Clone bootloader disk to another disk"
 msgstr "부트로더 디스크를 다른 디스크에 복제"
 
-#: menu.sh:1307
+#: menu.sh:1308
 msgid "Report bugs to the author"
 msgstr "개발자에게 버그 신고하기"
 
-#: menu.sh:1308
+#: menu.sh:1309
 msgid "Install development tools"
 msgstr "개발자 도구 설치"
 
-#: menu.sh:1309
+#: menu.sh:1310
 msgid "Show QR logo:"
 msgstr "QR 로고 표시:"
 
-#: menu.sh:1310
+#: menu.sh:1311
 msgid "Set global proxy"
 msgstr "글로벌 프록시 설정"
 
-#: menu.sh:1311
+#: menu.sh:1312
 msgid "Set github proxy"
 msgstr "Github 프록시 설정"
 
-#: menu.sh:1312
+#: menu.sh:1313
 msgid "Vigorously miracle"
 msgstr "Vigorously miracle"
 
-#: menu.sh:1315 menu.sh:1339 menu.sh:1351 menu.sh:1371 menu.sh:1394
-#: menu.sh:1418 menu.sh:1423 menu.sh:1435 menu.sh:1444 menu.sh:1466
-#: menu.sh:1567 menu.sh:1574 menu.sh:1592 menu.sh:1605 menu.sh:1608
-#: menu.sh:1621 menu.sh:1625 menu.sh:1626 menu.sh:1631 menu.sh:1635
-#: menu.sh:1650 menu.sh:1652 menu.sh:1675 menu.sh:1679 menu.sh:1686
-#: menu.sh:1692 menu.sh:1710 menu.sh:1712 menu.sh:1716 menu.sh:1730
-#: menu.sh:1732 menu.sh:1736 menu.sh:1739 menu.sh:1754 menu.sh:1762
-#: menu.sh:1766 menu.sh:1781 menu.sh:1786 menu.sh:1797 menu.sh:1829
-#: menu.sh:1833 menu.sh:1839 menu.sh:1845 menu.sh:1851 menu.sh:1882
-#: menu.sh:1895 menu.sh:1899 menu.sh:1909 menu.sh:1914 menu.sh:1921
-#: menu.sh:1923 menu.sh:1935 menu.sh:1946 menu.sh:1968 menu.sh:1979
-#: menu.sh:1996
+#: menu.sh:1316 menu.sh:1340 menu.sh:1352 menu.sh:1372 menu.sh:1395
+#: menu.sh:1419 menu.sh:1424 menu.sh:1436 menu.sh:1445 menu.sh:1467
+#: menu.sh:1568 menu.sh:1575 menu.sh:1593 menu.sh:1606 menu.sh:1609
+#: menu.sh:1622 menu.sh:1626 menu.sh:1627 menu.sh:1632 menu.sh:1636
+#: menu.sh:1651 menu.sh:1653 menu.sh:1676 menu.sh:1680 menu.sh:1687
+#: menu.sh:1693 menu.sh:1711 menu.sh:1713 menu.sh:1717 menu.sh:1739
+#: menu.sh:1742 menu.sh:1746 menu.sh:1749 menu.sh:1764 menu.sh:1772
+#: menu.sh:1776 menu.sh:1791 menu.sh:1796 menu.sh:1807 menu.sh:1839
+#: menu.sh:1843 menu.sh:1849 menu.sh:1855 menu.sh:1861 menu.sh:1892
+#: menu.sh:1905 menu.sh:1909 menu.sh:1919 menu.sh:1924 menu.sh:1931
+#: menu.sh:1933 menu.sh:1945 menu.sh:1956 menu.sh:1978 menu.sh:1989
+#: menu.sh:2006
 msgid "Advanced"
 msgstr "고급"
 
-#: menu.sh:1316
+#: menu.sh:1317
 msgid "Advanced option"
 msgstr "고급 설정"
 
-#: menu.sh:1340 menu.sh:1352 menu.sh:1372
+#: menu.sh:1341 menu.sh:1353 menu.sh:1373
 msgid "Choose a time(seconds)"
 msgstr "시간(초) 선택"
 
-#: menu.sh:1382
+#: menu.sh:1383
 msgid "Temporary IP: (UI will not refresh)"
 msgstr "임시 IP: (UI가 새로고침되지 않음)"
 
-#: menu.sh:1419
+#: menu.sh:1420
 msgid "Setting IP ..."
 msgstr "IP 설정 중..."
 
-#: menu.sh:1424
+#: menu.sh:1425
 msgid "Scanning ..."
 msgstr "검색 중..."
 
-#: menu.sh:1427
+#: menu.sh:1428
 msgid "Scanned SSIDs:\\n"
 msgstr "검색된 SSIDs:\\n"
 
-#: menu.sh:1445
+#: menu.sh:1446
 msgid "Invalid SSID/PSK, retry?"
 msgstr "SSID/PSK가 잘못되었습니다. 다시 시도하시겠습니까?"
 
-#: menu.sh:1467
+#: menu.sh:1468
 msgid "Setting ..."
 msgstr "설정 중..."
 
-#: menu.sh:1565
+#: menu.sh:1566
 msgid "\\nTotal of ports: %s\\n"
 msgstr "\\n총 포트 : %s\\n"
 
-#: menu.sh:1566
+#: menu.sh:1567
 msgid ""
 "\\nPorts with color \\Z1red\\Zn as DUMMY, color \\Z2\\Zbgreen\\Zn has drive "
 "connected."
@@ -964,11 +964,11 @@ msgstr ""
 "\\n\\Z1 빨간색\\Zn은 아날로그 포트, \\Z2\\Zb 녹색\\Zn은 구동되는 물리적 포트"
 "입니다."
 
-#: menu.sh:1573
+#: menu.sh:1574
 msgid "pat: (editable)"
 msgstr "pat: (편집가능)"
 
-#: menu.sh:1589
+#: menu.sh:1590
 msgid ""
 "This feature will allow you to downgrade the installation by removing the "
 "VERSION file from the first partition of all disks.\\n"
@@ -976,11 +976,11 @@ msgstr ""
 "이 기능을 사용하면 모든 디스크의 첫 번째 파티션에서 버전 파일을 제거하여 설치"
 "를 다운그레이드할 수 있습니다.\\n"
 
-#: menu.sh:1590
+#: menu.sh:1591
 msgid "Therefore, please insert all disks before continuing.\\n"
 msgstr "따라서 모든 디스크를 삽입한 후 작업을 진행하십시오.\\n"
 
-#: menu.sh:1591 menu.sh:1632
+#: menu.sh:1592 menu.sh:1633
 msgid ""
 "Warning:\\nThis operation is irreversible. Please backup important data. Do "
 "you want to continue?"
@@ -988,68 +988,72 @@ msgstr ""
 "경고:\\n이 작업은 되돌릴 수 없습니다. 중요한 데이터를 백업하십시오. 계속하시"
 "겠습니까?"
 
-#: menu.sh:1606
+#: menu.sh:1607
 msgid "Removing ..."
 msgstr "제거 중..."
 
-#: menu.sh:1607
+#: menu.sh:1608
 msgid "Remove VERSION file for all disks completed."
 msgstr "모든 디스크의 버전 파일 제거가 완료되었습니다."
 
-#: menu.sh:1622 menu.sh:1830
+#: menu.sh:1623 menu.sh:1840
 msgid "No disk found!"
 msgstr "디스크를 찾을 수 없습니다!"
 
-#: menu.sh:1636
+#: menu.sh:1637
 msgid ""
 "Warning:\\nThe current hds is in raid, do you still want to format them?"
 msgstr "경고:\\n현재 하드디스크가 RAID 상태입니다. 그래도 포맷하시겠습니까?"
 
-#: menu.sh:1651
+#: menu.sh:1652
 msgid "Formatting ..."
 msgstr "포맷 중..."
 
-#: menu.sh:1653
+#: menu.sh:1654
 msgid "Formatting is complete."
 msgstr "포맷이 완료되었습니다."
 
-#: menu.sh:1676
+#: menu.sh:1677
 msgid "The installed Syno system not found in the currently inserted disks!"
 msgstr "현재 삽입된 디스크에서 설치된 Synology 시스템을 찾을 수 없습니다!"
 
-#: menu.sh:1680
+#: menu.sh:1681
 msgid "Choose a user name"
 msgstr "사용자 이름 선택"
 
-#: menu.sh:1687
+#: menu.sh:1688
 msgid "Type a new password for user '%s'"
 msgstr "사용자 '%s'의 새 비밀번호를 입력하세요."
 
-#: menu.sh:1693
+#: menu.sh:1694
 msgid "Invalid password"
 msgstr "잘못된 비밀번호"
 
-#: menu.sh:1711
+#: menu.sh:1712
 msgid "Resetting ..."
 msgstr "재설정 중..."
 
-#: menu.sh:1713
+#: menu.sh:1714
 msgid "Password reset completed."
 msgstr "비밀번호 재설정이 완료되었습니다."
 
-#: menu.sh:1717
+#: menu.sh:1718
 msgid "Please insert all disks before continuing.\\n"
 msgstr "계속하기 전에 모든 디스크를 삽입하십시오.\\n"
 
-#: menu.sh:1731
+#: menu.sh:1740
 msgid "Enabling ..."
 msgstr "활성화 중..."
 
-#: menu.sh:1733
-msgid "Telnet is enabled."
-msgstr "Telnet이 활성화되었습니다."
+#: menu.sh:1741
+msgid "Telnet&SSH is enabled."
+msgstr "Telnet&SSH이 활성화되었습니다."
 
-#: menu.sh:1737
+#: menu.sh:1741
+msgid "Telnet&SSH is not enabled."
+msgstr "Telnet&SSH가 활성화되어 있지 않습니다."
+
+#: menu.sh:1747
 msgid ""
 "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. "
 "Do you want to continue?"
@@ -1057,23 +1061,23 @@ msgstr ""
 "경고:\\n중간에 종료하지 마십시오. 그렇지 않으면 RR 부팅이 손상이 발생할 수 있"
 "습니다. 계속하시겠습니까?"
 
-#: menu.sh:1740
+#: menu.sh:1750
 msgid ""
 "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
 msgstr "저장 중...\\n(보통 5~10분 정도 소요되니 조금만 기다려 주세요.)"
 
-#: menu.sh:1755
+#: menu.sh:1765
 msgid "Save is complete."
 msgstr "저장이 완료되었습니다."
 
-#: menu.sh:1761
+#: menu.sh:1771
 msgid ""
 "Or upload the dts file to %s via DUFS, Will be automatically imported when "
 "building."
 msgstr ""
 "또는 DUFS를 통해 %s에 dts 파일을 업로드하면 빌드할 때 자동으로 가져옵니다."
 
-#: menu.sh:1767
+#: menu.sh:1777
 msgid ""
 "Currently, only dts format files are supported. Please prepare and click to "
 "confirm uploading.\\n(saved in /mnt/p3/users/)"
@@ -1081,45 +1085,45 @@ msgstr ""
 "현재는 dts 형식의 파일만 지원됩니다. 준비 후 클릭하여 업로드를 확인해주세요."
 "\\n(/mnt/p3/users/에 저장됨)"
 
-#: menu.sh:1782
+#: menu.sh:1792
 msgid "Not a valid dts file, please try again!"
 msgstr "dts 파일이 유효하지 않습니다. 다시 시도하세요!"
 
-#: menu.sh:1787
+#: menu.sh:1797
 msgid "A valid dts file, Automatically import at compile time."
 msgstr "유효한 dts 파일로 컴파일 시 자동으로 가져옵니다."
 
-#: menu.sh:1793
+#: menu.sh:1803
 msgid "This option is only informative.\\n\\n"
 msgstr "이 옵션은 정보 제공용입니다.\\n\\n"
 
-#: menu.sh:1794
+#: menu.sh:1804
 msgid "This program reserves an interface for ramdisk custom patch scripts.\\n"
 msgstr ""
 "이 프로그램은 램디스크 사용자 지정 패치 스크립트를 위한 인터페이스를 예약합니"
 "다.\\n"
 
-#: menu.sh:1795
+#: menu.sh:1805
 msgid "Call timing: called before ramdisk packaging.\\n"
 msgstr "호출 타이밍: 램디스크 패키징 전에 호출됩니다.\\n"
 
-#: menu.sh:1796
+#: menu.sh:1806
 msgid "Location: /mnt/p3/scripts/*.sh\\n"
 msgstr "위치: /mnt/p3/scripts/*.sh\\n"
 
-#: menu.sh:1834
+#: menu.sh:1844
 msgid "Choose a disk to clone to"
 msgstr "복제할 디스크를 선택합니다."
 
-#: menu.sh:1840
+#: menu.sh:1850
 msgid "No disk selected!"
 msgstr "선택한 디스크가 없습니다!"
 
-#: menu.sh:1846
+#: menu.sh:1856
 msgid "Disk %s size is less than 1GB and cannot be cloned!"
 msgstr "디스크 %s 크기가 1GB 미만이어서 복제할 수 없습니다!"
 
-#: menu.sh:1850
+#: menu.sh:1860
 msgid ""
 "Warning:\\nDisk %s will be formatted and written to the bootloader. Please "
 "confirm that important data has been backed up. \\nDo you want to continue?"
@@ -1127,11 +1131,11 @@ msgstr ""
 "경고:\\n디스크 %s가 포맷되어 부트 로더에 기록됩니다. 중요한 데이터가 백업되었"
 "는지 확인하십시오. \\n계속하시겠습니까?"
 
-#: menu.sh:1883
+#: menu.sh:1893
 msgid "Cloning ..."
 msgstr "복제 중 ..."
 
-#: menu.sh:1885
+#: menu.sh:1895
 msgid ""
 "Bootloader has been cloned to disk %s, please remove the current bootloader "
 "disk!\\nReboot?"
@@ -1139,7 +1143,7 @@ msgstr ""
 "부트로더가 %s 디스크에 복제되었습니다. 현재 부트로더 디스크를 제거하십시오!"
 "\\n재부팅하시겠습니까?"
 
-#: menu.sh:1896
+#: menu.sh:1906
 msgid ""
 "Please via %s to download the logs,\\nAnd go to github to create an issue "
 "and upload the logs."
@@ -1147,31 +1151,31 @@ msgstr ""
 "%s를 통해 로그를 다운로드하고, github로 이동하여 이슈를 생성하고 로그를 업로"
 "드하세요."
 
-#: menu.sh:1900
+#: menu.sh:1910
 msgid "Please go to github to create an issue and upload the logs."
 msgstr "Github로 이동하여 이슈를 생성하고 로그를 업로드하세요."
 
-#: menu.sh:1904
+#: menu.sh:1914
 msgid "\\Z1No logs found!\\Zn\\n\\n"
 msgstr "\\Z1로그를 찾을 수 없습니다!\\Zn\\n\\n"
 
-#: menu.sh:1905
+#: menu.sh:1915
 msgid "Please do as follows:\\n"
 msgstr "다음과 같이 하세요:\\n"
 
-#: menu.sh:1906
+#: menu.sh:1916
 msgid " 1. Add dbgutils in addons and rebuild.\\n"
 msgstr "1. 애드온에 dbgutils를 추가하고 다시 빌드하세요.\\n"
 
-#: menu.sh:1907
+#: menu.sh:1917
 msgid " 2. Wait 10 minutes after booting.\\n"
 msgstr " 2. 부팅 후 10분간 기다립니다.\\n"
 
-#: menu.sh:1908
+#: menu.sh:1918
 msgid " 3. Reboot into RR and go to this option.\\n"
 msgstr " 3. RR로 재부팅하고 이 옵션으로 이동합니다.\\n"
 
-#: menu.sh:1915
+#: menu.sh:1925
 msgid ""
 "This option only installs opkg package management, allowing you to install "
 "more tools for use and debugging. Do you want to continue?"
@@ -1179,11 +1183,11 @@ msgstr ""
 "이 옵션은 opkg 패키지 관리만 설치하므로 사용 및 디버깅을 위한 더 많은 도구를 "
 "설치할 수 있습니다. 계속하시겠습니까?"
 
-#: menu.sh:1922
+#: menu.sh:1932
 msgid "opkg installing ..."
 msgstr "opkg 설치 중 ..."
 
-#: menu.sh:1924
+#: menu.sh:1934
 msgid ""
 "opkg install is complete. Please reconnect to ssh/web, or execute 'source ~/."
 "bashrc'"
@@ -1191,112 +1195,112 @@ msgstr ""
 "opkg 설치가 완료되었습니다. ssh/web에 다시 연결하거나 'source ~/.bashrc'를 실"
 "행하세요."
 
-#: menu.sh:1936
+#: menu.sh:1946
 msgid "Please enter a proxy server url.(e.g., http://192.168.1.1:7981/)"
 msgstr "프록시 서버 URL을 입력하세요(예: http://192.168.1.1:7981/)"
 
-#: menu.sh:1947 menu.sh:1980
+#: menu.sh:1957 menu.sh:1990
 msgid "Invalid proxy server url, continue?"
 msgstr "잘못된 프록시 서버 URL입니다. 계속하시겠습니까?"
 
-#: menu.sh:1969
+#: menu.sh:1979
 msgid "Please enter a proxy server url.(e.g., https://mirror.ghproxy.com/)"
 msgstr "프록시 서버 URL을 입력하세요(예: https://mirror.ghproxy.com/)"
 
-#: menu.sh:1994
+#: menu.sh:2004
 msgid "It is expected that all restrictions on DSM will be lifted,\\n"
 msgstr "DSM 에 대한 모든 제한이 해제될 것으로 예상됩니다.\\n"
 
-#: menu.sh:1995
+#: menu.sh:2005
 msgid ""
 "But since upgrading is not supported, I don not want to implement it for the "
 "time being.\\n"
 msgstr ""
 "하지만 업그레이드가 지원되지 않기 때문에 당분간 구현하고 싶지 않습니다.\\n"
 
-#: menu.sh:2007 menu.sh:2042 menu.sh:2049
+#: menu.sh:2017 menu.sh:2052 menu.sh:2059
 msgid "Try recovery DSM"
 msgstr "복구 DSM 시도 중"
 
-#: menu.sh:2008
+#: menu.sh:2018
 msgid "Trying to recovery a DSM installed system ..."
 msgstr "DSM이 설치된 시스템을 복구하는 중..."
 
-#: menu.sh:2036
+#: menu.sh:2046
 msgid "Found a installation:\\nModel: %s\\nProductversion: %s"
 msgstr "설치를 찾았습니다:\\n모델: %s\\n제품 버전: %s"
 
-#: menu.sh:2040
+#: menu.sh:2050
 msgid "\\nSerial: %s"
 msgstr "\\n일련번호: %s"
 
-#: menu.sh:2050
+#: menu.sh:2060
 msgid "Unfortunately I couldn't mount the DSM partition!"
 msgstr "안타깝게도 DSM 파티션을 마운트할 수 없었습니다!"
 
-#: menu.sh:2100
+#: menu.sh:2110
 msgid "Alert"
 msgstr "알림"
 
-#: menu.sh:2101
+#: menu.sh:2111
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "구성이 변경되었습니다. 로더를 다시 빌드하시겠습니까?"
 
-#: menu.sh:2118 menu.sh:2500
+#: menu.sh:2128 menu.sh:2510
 msgid "Choose a language"
 msgstr "언어 선택"
 
-#: menu.sh:2133
+#: menu.sh:2143
 msgid "Choose a layout"
 msgstr "레이아웃 선택"
 
-#: menu.sh:2145
+#: menu.sh:2155
 msgid "Choice a keymap"
 msgstr "키맵 선택"
 
-#: menu.sh:2164 menu.sh:2217 menu.sh:2268 menu.sh:2335 menu.sh:2340
-#: menu.sh:2345 menu.sh:2350 menu.sh:2357 menu.sh:2365 menu.sh:2373
-#: menu.sh:2381
+#: menu.sh:2174 menu.sh:2227 menu.sh:2278 menu.sh:2345 menu.sh:2350
+#: menu.sh:2355 menu.sh:2360 menu.sh:2367 menu.sh:2375 menu.sh:2383
+#: menu.sh:2391
 msgid "Update %s"
 msgstr "업데이트 %s"
 
-#: menu.sh:2167
+#: menu.sh:2177
 msgid "Checking last version ..."
 msgstr "새 버전 확인 중..."
 
-#: menu.sh:2178 menu.sh:2181
+#: menu.sh:2188 menu.sh:2191
 msgid "Error checking new version.\\nError: TAG is %s"
 msgstr "새 버전을 확인하는 동안 오류가 발생했습니다.\\n오류: 태그는 %s입니다."
 
-#: menu.sh:2188
+#: menu.sh:2198
 msgid "No new version."
 msgstr "새 버전이 없습니다."
 
-#: menu.sh:2192
+#: menu.sh:2202
 msgid "No new version. Actual version is %s\\nForce update?"
 msgstr "새 버전이 없습니다. 실제 버전은 %s\\n강제로 업데이트하시겠습니까?"
 
-#: menu.sh:2201
+#: menu.sh:2211
 msgid "Downloading ..."
 msgstr "다운로드 중..."
 
-#: menu.sh:2205 menu.sh:2208
+#: menu.sh:2215 menu.sh:2218
 msgid "Error downloading new version.\\nError: %d:%d"
 msgstr "새 버전을 다운로드하는 동안 오류가 발생했습니다.\\n오류: %d:%d"
 
-#: menu.sh:2219 menu.sh:2270
+#: menu.sh:2229 menu.sh:2280
 msgid "Extracting last version"
 msgstr "새 버전 추출 중"
 
-#: menu.sh:2223
+#: menu.sh:2233
 msgid "Error extracting update file"
 msgstr "업데이트 파일 추출 중 오류 발생"
 
-#: menu.sh:2230
+#: menu.sh:2240
 msgid "Checksum do not match!"
 msgstr "체크섬이 일치하지 않습니다!"
 
-#: menu.sh:2239
+#: menu.sh:2249
 msgid ""
 "The current version does not support upgrading to the latest update.zip. "
 "Please remake the bootloader disk!"
@@ -1304,51 +1308,51 @@ msgstr ""
 "현재 버전은 최신 update.zip으로 업그레이드를 지원하지 않습니다. 부트로더 디스"
 "크를 다시 제작하세요!"
 
-#: menu.sh:2244
+#: menu.sh:2254
 msgid "Installing new files ..."
 msgstr "새 파일 설치 중 ..."
 
-#: menu.sh:2261
+#: menu.sh:2271
 msgid "RR updated with success to %s!\\nReboot?"
 msgstr "RR이 %s!로 업데이트되었습니다!\\n재부팅하시겠습니까?"
 
-#: menu.sh:2276
+#: menu.sh:2286
 msgid "Installing new %s ..."
 msgstr "새 %s 설치 중 ..."
 
-#: menu.sh:2305 menu.sh:2308
+#: menu.sh:2315 menu.sh:2318
 msgid "%s updated with success!"
 msgstr "s가 성공적으로 업데이트되었습니다!"
 
-#: menu.sh:2320
+#: menu.sh:2330
 msgid "Update all"
 msgstr "모두 업데이트"
 
-#: menu.sh:2321
+#: menu.sh:2331
 msgid "Update RR"
 msgstr "RR 업데이트"
 
-#: menu.sh:2322
+#: menu.sh:2332
 msgid "Update addons"
 msgstr "애드온 업데이트"
 
-#: menu.sh:2323
+#: menu.sh:2333
 msgid "Update modules"
 msgstr "모듈 업데이트"
 
-#: menu.sh:2324
+#: menu.sh:2334
 msgid "Update LKMs"
 msgstr "LKM 업데이트"
 
-#: menu.sh:2325
+#: menu.sh:2335
 msgid "Local upload"
 msgstr "로컬 업로드"
 
-#: menu.sh:2326
+#: menu.sh:2336
 msgid "Pre Release:"
 msgstr "사전 릴리즈:"
 
-#: menu.sh:2330
+#: menu.sh:2340
 msgid ""
 "Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip to /tmp/ "
 "will skip the download."
@@ -1356,23 +1360,23 @@ msgstr ""
 "update.zip, addons.zip, modules.zip, rp-lkms.zip을 /tmp/에 수동으로 업로드하"
 "면 다운로드가 건너뛰게 됩니다."
 
-#: menu.sh:2335 menu.sh:2365
+#: menu.sh:2345 menu.sh:2375
 msgid "addons"
 msgstr "애드온"
 
-#: menu.sh:2340 menu.sh:2373
+#: menu.sh:2350 menu.sh:2383
 msgid "modules"
 msgstr "모듈"
 
-#: menu.sh:2345 menu.sh:2381
+#: menu.sh:2355 menu.sh:2391
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:2350 menu.sh:2357
+#: menu.sh:2360 menu.sh:2367
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:2392
+#: menu.sh:2402
 msgid ""
 "Or upload update.zip, addons.zip, modules.zip, rp-lkms.zip to /tmp/ via DUFS "
 "will skip the download.\\n"
@@ -1380,108 +1384,108 @@ msgstr ""
 "DUFS를 통해 update.zip, addons.zip, modules.zip, rp-lkms.zip을 /tmp/에 업로드"
 "하면 다운로드가 생략됩니다.\\n"
 
-#: menu.sh:2398
+#: menu.sh:2408
 msgid ""
 "Please keep the attachment name consistent with the attachment name on "
 "Github.\\n"
 msgstr "첨부 파일 이름은 Github의 첨부 파일 이름과 일치하도록 유지하세요.\\n"
 
-#: menu.sh:2399
+#: menu.sh:2409
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "update*.zip을 업로드하면 RR이 업데이트됩니다.\\n"
 
-#: menu.sh:2400
+#: menu.sh:2410
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "addons*.zip을 업로드하면 Addons 기능이 업데이트됩니다.\\n"
 
-#: menu.sh:2401
+#: menu.sh:2411
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "modules*.zip을 업로드하면 Modules이 업데이트됩니다.\\n"
 
-#: menu.sh:2402
+#: menu.sh:2412
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "rp-lkms*.zip을 업로드하면 LKMs이 업데이트됩니다.\\n"
 
-#: menu.sh:2457
+#: menu.sh:2467
 msgid "This person is very lazy and hasn't written anything."
 msgstr "이 사람은 매우 게으르고 아무것도 쓰지 않았습니다."
 
-#: menu.sh:2480
+#: menu.sh:2490
 msgid "Choose a model"
 msgstr "모델 선택"
 
-#: menu.sh:2482
+#: menu.sh:2492
 msgid "Choose a version"
 msgstr "버전 선택"
 
-#: menu.sh:2484
+#: menu.sh:2494
 msgid "Parse pat"
 msgstr "Parse pat"
 
-#: menu.sh:2486
+#: menu.sh:2496
 msgid "Addons menu"
 msgstr "애드온 설정"
 
-#: menu.sh:2487
+#: menu.sh:2497
 msgid "Modules menu"
 msgstr "모듈 설정"
 
-#: menu.sh:2488
+#: menu.sh:2498
 msgid "Cmdline menu"
 msgstr "명령줄 설정"
 
-#: menu.sh:2489
+#: menu.sh:2499
 msgid "Synoinfo menu"
 msgstr "synoinfo"
 
-#: menu.sh:2491
+#: menu.sh:2501
 msgid "Advanced menu"
 msgstr "고급 설정"
 
-#: menu.sh:2494
+#: menu.sh:2504
 msgid "Build the loader"
 msgstr "로더 빌드"
 
-#: menu.sh:2498
+#: menu.sh:2508
 msgid "Boot the loader"
 msgstr "로더 부팅"
 
-#: menu.sh:2501
+#: menu.sh:2511
 msgid "Choose a keymap"
 msgstr "키맵 선택"
 
-#: menu.sh:2503
+#: menu.sh:2513
 msgid "Clean disk cache"
 msgstr "디스크 캐시 지우기"
 
-#: menu.sh:2505
+#: menu.sh:2515
 msgid "Update menu"
 msgstr "업데이트"
 
-#: menu.sh:2506
+#: menu.sh:2516
 msgid "Notepad"
 msgstr "메모장"
 
-#: menu.sh:2578
+#: menu.sh:2588
 msgid "Choose a action"
 msgstr "작업 선택"
 
-#: menu.sh:2579
+#: menu.sh:2589
 msgid "Poweroff"
 msgstr "전원 끄기"
 
-#: menu.sh:2580
+#: menu.sh:2590
 msgid "Reboot"
 msgstr "재부팅"
 
-#: menu.sh:2581
+#: menu.sh:2591
 msgid "Reboot to RR"
 msgstr "RR로 재부팅"
 
-#: menu.sh:2582
+#: menu.sh:2592
 msgid "Back to shell"
 msgstr "Shell로 돌아가기"
 
-#: menu.sh:2608
+#: menu.sh:2618
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "\\033[1;32mmenu.sh\\033[0m 메뉴로 돌아가기"
