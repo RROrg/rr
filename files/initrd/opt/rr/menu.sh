@@ -11,9 +11,9 @@
 alias DIALOG='dialog --backtitle "$(backtitle)" --colors --aspect 50'
 
 # Check partition 3 space, if < 2GiB is necessary clean cache folder
-PACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
+PACELEFT=$(df -m ${LOADER_DISK_PART3} | awk 'NR==2 {print $4}')
 CLEARCACHE=0
-if [ ${PACELEFT:-0} -lt 4194304 ]; then
+if [ ${PACELEFT:-0} -lt 430 ]; then
   CLEARCACHE=1
 fi
 
@@ -419,9 +419,9 @@ function ParsePat() {
 
     mkdir -p "${PART3_PATH}/dl"
     # Check disk space left
-    SPACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
+    SPACELEFT=$(df -m ${LOADER_DISK_PART3} | awk 'NR==2 {print $4}')
     # Discover remote file size
-    FILESIZE=$(du -sb "${PAT_PATH}" | awk '{print$1}')
+    FILESIZE=$(du -m "${PAT_PATH}" | awk '{print $1}')
     if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
       # No disk space to copy, mv it to dl
       mv -f "${PAT_PATH}" "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat"
@@ -1130,9 +1130,6 @@ function extractDsmFiles() {
   PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
   PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
 
-  # Check disk space left
-  SPACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
-
   PAT_FILE="${MODEL}-${PRODUCTVER}.pat"
   PAT_PATH="${PART3_PATH}/dl/${PAT_FILE}"
 
@@ -1154,8 +1151,10 @@ function extractDsmFiles() {
       PATURL="$(echo ${PATURL} | sed "s/${mirror}/${fastest}/")"
     fi
     echo "$(printf "$(TEXT "Downloading %s ...")" "${PAT_FILE}")"
+    # Check disk space left
+    SPACELEFT=$(df --block-size=1 ${LOADER_DISK_PART3} | awk 'NR==2 {print $4}')
     # Discover remote file size
-    FILESIZE=$(curl -k -sLI "${PATURL}" | grep -i Content-Length | awk '{print$2}')
+    FILESIZE=$(curl -skLI "${PATURL}" | grep -i Content-Length | awk '{print$2}')
     if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
@@ -1227,10 +1226,6 @@ function make() {
       extractDsmFiles
       [ $? -ne 0 ] && break
     fi
-
-    # Check disk space left
-    SPACELEFT=$(df --block-size=1 | grep ${LOADER_DISK_PART3} | awk '{print $4}')
-    [ ${SPACELEFT:-0} -le 268435456 ] && rm -rf "${PART3_PATH}/dl"
 
     ${WORK_PATH}/zimage-patch.sh
     if [ $? -ne 0 ]; then
@@ -1731,7 +1726,7 @@ INSERT INTO task VALUES('RRONBOOTUPRR', '', 'bootup', '', 1, 0, 0, 0, '', 0, '$(
 EOF
             sleep 1
             sync
-            echo "true" > ${TMP_PATH}/isEnable
+            echo "true" >${TMP_PATH}/isEnable
           fi
           umount "${I}"
         done
@@ -1850,7 +1845,7 @@ EOF
           --msgbox "$(TEXT "No disk selected!")" 0 0
         return
       else
-        SIZE=$(df -m ${RESP} | awk 'NR==2{print $2}')
+        SIZE=$(df -m ${RESP} | awk 'NR==2 {print $2}')
         if [ ${SIZE:-0} -lt 1024 ]; then
           DIALOG --title "$(TEXT "Advanced")" \
             --msgbox "$(TEXT "Disk %s size is less than 1GB and cannot be cloned!")" 0 0
@@ -2509,7 +2504,7 @@ while true; do
   fi
   echo "l \"$(TEXT "Choose a language")\"" >>"${TMP_PATH}/menu"
   echo "k \"$(TEXT "Choose a keymap")\"" >>"${TMP_PATH}/menu"
-  if [ ${CLEARCACHE} -eq 1 ]; then
+  if [ 0$(du -m ${PART3_PATH}/dl 2>/dev/null | awk '{printf $1}') -gt 1 ]; then
     echo "c \"$(TEXT "Clean disk cache")\"" >>"${TMP_PATH}/menu"
   fi
   echo "p \"$(TEXT "Update menu")\"" >>"${TMP_PATH}/menu"
@@ -2570,7 +2565,7 @@ while true; do
     ;;
   c)
     DIALOG \
-      --prgbox "rm -rfv \"${PART3_PATH}/dl\"" 0 0
+      --prgbox "rm -rfv \"${PART3_PATH}/dl/\"*" 0 0
     NEXT="d"
     ;;
   p)
