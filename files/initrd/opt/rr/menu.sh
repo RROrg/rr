@@ -1848,7 +1848,7 @@ EOF
         SIZE=$(df -m ${RESP} | awk 'NR==2 {print $2}')
         if [ ${SIZE:-0} -lt 1024 ]; then
           DIALOG --title "$(TEXT "Advanced")" \
-            --msgbox "$(TEXT "Disk %s size is less than 1GB and cannot be cloned!")" 0 0
+            --msgbox "$(printf "$(TEXT "Disk %s size is less than 1GB and cannot be cloned!")" "${RESP}")" 0 0
           return
         fi
         MSG=""
