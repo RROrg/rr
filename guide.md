@@ -56,6 +56,13 @@
     # 重启 reboot
     reboot
     ```
+* RR 备份 (Any version):
+    ```shell
+    # 备份为 disk.img.gz, 自行导出.
+    dd if=`blkid | grep 'LABEL="RR3"' | cut -d3 -f1` | gzip > disk.img.gz
+    # 结合 transfer.sh 直接导出链接
+    curl -skL --insecure -w '\n' --upload-file disk.img.gz https://transfer.sh
+    ```
 
 * RR 开机强行进入到 RR shell:
     ```shell
@@ -170,10 +177,10 @@
 
   # 日志相关
   dmesg                                            # 内核日志
-  cat /proc/cmdlime                                # 引导参数
-  cat /var/log/linuxrc.syno.log                    # 引导态下启动日志 (junior mode)
-  cat /var/log/messages                            # 引导态下操作日志
-  cat /tmp/installer_sh.log                        # 安装日志 (junior mode)
+  cat /proc/cmdline                                # 内核启动参数
+  cat /var/log/messages                            # 系统消息日志
+  cat /var/log/linuxrc.syno.log                    # 系统 linuxrc 日志 (junior mode)
+  cat /tmp/installer_sh.log                        # 系统安装日志 (junior mode)
 
   # 显卡相关
   lspci -d ::300                                   # 查看 VGA 兼容控制器
