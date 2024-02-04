@@ -29,6 +29,7 @@ BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
 SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
 LAYOUT="$(readConfigKey "layout" "${USER_CONFIG_FILE}")"
 KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
+KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
 DIRECTBOOT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
@@ -169,7 +170,7 @@ function modelMenu() {
             [ "${DT}" = "true" ] && M_2="*   "
           fi
           if [ "${NVME}" = "2" ]; then
-            if echo ${models[@]} | grep -q ${M}; then
+            if echo "${models[@]}" | grep -wq "${M}"; then
               M_2="*   "
             fi
           fi
@@ -312,11 +313,11 @@ function productversMenu() {
   KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
   while IFS=': ' read ADDON PARAM; do
     [ -z "${ADDON}" ] && continue
-    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
+    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
       deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
     fi
   done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
-  # Rebuild modules
+  # Rewrite modules
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
   while read ID DESC; do
     writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
@@ -444,7 +445,7 @@ function ParsePat() {
     KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
     while IFS=': ' read ADDON PARAM; do
       [ -z "${ADDON}" ] && continue
-      if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KVER}"; then
+      if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
         deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
       fi
     done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
@@ -601,7 +602,7 @@ function addonMenu() {
         fi
         ADDON="$(untarAddon "${TMP_UP_PATH}/${USER_FILE}")"
         if [ -n "${ADDON}" ]; then
-          [ -f "${PART3_PATH}/addons/VERSION" ] && rm -f "${PART3_PATH}/addons/VERSION"
+          [ -f "${ADDONS_PATH}/VERSION" ] && rm -f "${ADDONS_PATH}/VERSION"
           DIALOG --title "$(TEXT "Addons")" \
             --msgbox "$(printf "$(TEXT "Addon '%s' added to loader, Please enable it in 'Add an addon' menu.")" "${ADDON}")" 0 0
         else
@@ -734,7 +735,7 @@ function moduleMenu() {
       popd
       if [ -n "${USER_FILE}" -a "${USER_FILE##*.}" = "ko" ]; then
         addToModules ${PLATFORM} "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${TMP_UP_PATH}/${USER_FILE}"
-        [ -f "${PART3_PATH}/modules/VERSION" ] && rm -f "${PART3_PATH}/modules/VERSION"
+        [ -f "${MODULES_PATH}/VERSION" ] && rm -f "${MODULES_PATH}/VERSION"
         DIALOG --title "$(TEXT "Modules")" \
           --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${USER_FILE}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" 0 0
         rm -f "${TMP_UP_PATH}/${USER_FILE}"
@@ -2257,11 +2258,20 @@ function updateRR() {
       rm -Rf "${VALUE}"
       mkdir -p "${VALUE}"
       tar -zxf "${TMP_PATH}/$(basename "${KEY}").tgz" -C "${VALUE}"
+      if [ "$(realpath "${VALUE}")" = "$(realpath "${MODULES_PATH}")" ]; then
+        if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
+          writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+          while read ID DESC; do
+            writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
+          done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+        fi
+      fi
     else
       mkdir -p "$(dirname "${VALUE}")"
       mv -f "${TMP_PATH}/$(basename "${KEY}")" "${VALUE}"
     fi
   done < <(readConfigMap "replace" "${TMP_PATH}/update-list.yml")
+  touch ${PART1_PATH}/.build
   DIALOG --title "${T}" \
     --msgbox "$(printf "$(TEXT "RR updated with success to %s!\nReboot?")" "${TAG}")" 0 0
   rebootTo config
@@ -2301,8 +2311,11 @@ function updateExts() {
       done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
     fi
   elif [ "${1}" = "LKMs" ]; then
-    rm -rf "${LKM_PATH}/"*
-    unzip "${TMP_PATH}/rp-lkms.zip" -d "${LKM_PATH}" >/dev/null 2>&1
+    rm -rf "${LKMS_PATH}/"*
+    unzip "${TMP_PATH}/rp-lkms.zip" -d "${LKMS_PATH}" >/dev/null 2>&1
+  elif [ "${1}" = "CKs" ]; then
+    rm -rf "${CKS_PATH}/"*
+    unzip "${TMP_PATH}/rr-cks.zip" -d "${CKS_PATH}" >/dev/null 2>&1
   fi
   touch ${PART1_PATH}/.build
   if [ ! "${2}" = "0" ]; then
@@ -2318,21 +2331,23 @@ function updateExts() {
 function updateMenu() {
   while true; do
     CUR_RR_VER="${RR_VERSION:-0}"
-    CUR_ADDONS_VER="$(cat "${PART3_PATH}/addons/VERSION" 2>/dev/null)"
-    CUR_MODULES_VER="$(cat "${PART3_PATH}/modules/VERSION" 2>/dev/null)"
-    CUR_LKMS_VER="$(cat "${PART3_PATH}/lkms/VERSION" 2>/dev/null)"
+    CUR_ADDONS_VER="$(cat "${ADDONS_PATH}/VERSION" 2>/dev/null)"
+    CUR_MODULES_VER="$(cat "${MODULES_PATH}/VERSION" 2>/dev/null)"
+    CUR_LKMS_VER="$(cat "${LKMS_PATH}/VERSION" 2>/dev/null)"
+    CUR_CKS_VER="$(cat "${CKS_PATH}/VERSION" 2>/dev/null)"
     rm -f "${TMP_PATH}/menu"
     echo "a \"$(TEXT "Update all")\"" >>"${TMP_PATH}/menu"
     echo "r \"$(TEXT "Update RR")(${CUR_RR_VER:-None})\"" >>"${TMP_PATH}/menu"
     echo "d \"$(TEXT "Update addons")(${CUR_ADDONS_VER:-None})\"" >>"${TMP_PATH}/menu"
     echo "m \"$(TEXT "Update modules")(${CUR_MODULES_VER:-None})\"" >>"${TMP_PATH}/menu"
     echo "l \"$(TEXT "Update LKMs")(${CUR_LKMS_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "c \"$(TEXT "Update CKs")(${CUR_CKS_VER:-None})\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Local upload")\"" >>"${TMP_PATH}/menu"
     echo "b \"$(TEXT "Pre Release:") \Z4${PRERELEASE}\Zn\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
     DIALOG --title "$(TEXT "Update")" \
-      --menu "$(TEXT "Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip to /tmp/ will skip the download.")" 0 0 0 --file "${TMP_PATH}/menu" \
+      --menu "$(TEXT "Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip,rr-cks.zip to /tmp/ will skip the download.")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "$(<${TMP_PATH}/resp)" in
@@ -2352,6 +2367,11 @@ function updateMenu() {
         downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "1"
       fi
       [ -f "${TMP_PATH}/rp-lkms.zip" ] && updateExts "LKMs" "1"
+      T="$(printf "$(TEXT "Update %s")" "$(TEXT "CKs")")"
+      if [ ! -f "${TMP_PATH}/rp-cks.zip" ]; then
+        downloadExts "CKs" "${CUR_CKS_VER:-None}" "https://github.com/XXXXXX/rr-cks" "rr-cks" "1"
+      fi
+      [ -f "${TMP_PATH}/rr-cks.zip" ] && updateExts "CKs" "1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
       if [ ! -f "${TMP_PATH}/update.zip" ]; then
         downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "0"
@@ -2390,11 +2410,19 @@ function updateMenu() {
       fi
       updateExts "LKMs" "0"
       ;;
+    c)
+      T="$(printf "$(TEXT "Update %s")" "$(TEXT "CKs")")"
+      if [ ! -f "${TMP_PATH}/rr-cks.zip" ]; then
+        downloadExts "CKs" "${CUR_CKS_VER:-None}" "https://github.com/XXXXXX/rr-cks" "rr-cks" "0"
+        [ $? -ne 0 ] && continue
+      fi
+      updateExts "CKs" "0"
+      ;;
     u)
       if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         MSG=""
         MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
-        MSG+="$(TEXT "Or upload update.zip, addons.zip, modules.zip, rp-lkms.zip to /tmp/ via DUFS will skip the download.\n")"
+        MSG+="$(TEXT "Or upload update.zip, addons.zip, modules.zip, rp-lkms.zip,rr-cks.zip to /tmp/ via DUFS will skip the download.\n")"
         DIALOG --title "$(TEXT "Update")" \
           --msgbox "${MSG}" 0 0
         return
@@ -2405,9 +2433,10 @@ function updateMenu() {
       MSG+="$(TEXT "Upload addons*.zip will update Addons.\n")"
       MSG+="$(TEXT "Upload modules*.zip will update Modules.\n")"
       MSG+="$(TEXT "Upload rp-lkms*.zip will update LKMs.\n")"
+      MSG+="$(TEXT "Upload rr-cks*.zip will update CKs.\n")"
       DIALOG --title "$(TEXT "Update")" \
         --msgbox "${MSG}" 0 0
-      EXTS=(update*.zip addons*.zip modules*.zip rp-lkms*.zip)
+      EXTS=(update*.zip addons*.zip modules*.zip rp-lkms*.zip rr-cks*.zip)
       TMP_UP_PATH="${TMP_PATH}/users"
       USER_FILE=""
       rm -rf "${TMP_UP_PATH}"
@@ -2441,6 +2470,10 @@ function updateMenu() {
           rm -f "${TMP_PATH}/rp-lkms.zip"
           mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/rp-lkms.zip"
           updateExts "LKMs" "0"
+        elif [[ "${USER_FILE}" = rr-cks*.zip ]]; then
+          rm -f "${TMP_PATH}/rr-cks.zip"
+          mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/rr-cks.zip"
+          updateExts "CKs" "0"
         else
           DIALOG --title "$(TEXT "Update")" \
             --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
@@ -2488,6 +2521,13 @@ while true; do
   fi
   echo "u \"$(TEXT "Parse pat")\"" >>"${TMP_PATH}/menu"
   if [ -n "${PRODUCTVER}" ]; then
+    PLATFORM="$(readModelKey "${MODEL}" "platform")"
+    KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+    KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+    if [ -f "${CKS_PATH}/bzImage-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.gz" ] &&
+      [ -f "${CKS_PATH}/modules-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.tgz" ]; then
+      echo "s \"$(TEXT "Kernel:") \Z4${KERNEL}\Zn\"" >>"${TMP_PATH}/menu"
+    fi
     echo "a \"$(TEXT "Addons menu")\"" >>"${TMP_PATH}/menu"
     echo "o \"$(TEXT "Modules menu")\"" >>"${TMP_PATH}/menu"
     echo "x \"$(TEXT "Cmdline menu")\"" >>"${TMP_PATH}/menu"
@@ -2527,6 +2567,25 @@ while true; do
   u)
     ParsePat
     NEXT="d"
+    ;;
+  s)
+    DIALOG --title "$(TEXT "Main menu")" \
+      --infobox "$(TEXT "Change ...")" 0 0
+    [ ! "${KERNEL}" = "custom" ] && KERNEL='custom' || KERNEL='official'
+    writeConfigKey "kernel" "${KERNEL}" "${USER_CONFIG_FILE}"
+    if [ "${ODP}" = "true" ]; then
+      ODP="false"
+      writeConfigKey "odp" "${ODP}" "${USER_CONFIG_FILE}"
+    fi
+    if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
+      writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+      while read ID DESC; do
+        writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
+      done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+    fi
+    touch ${PART1_PATH}/.build
+
+    NEXT="o"
     ;;
   a)
     addonMenu

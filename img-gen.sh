@@ -36,6 +36,7 @@ echo "Copying files"
 sudo cp -Rf "files/p1/"* "/tmp/files/p1"
 sudo cp -Rf "files/p3/"* "/tmp/files/p3"
 # Get extractor, LKM, addons and Modules
+getCKs "/tmp/files/p3/cks" true
 getLKMs "/tmp/files/p3/lkms" true
 getAddons "/tmp/files/p3/addons" true
 getModules "/tmp/files/p3/modules" true

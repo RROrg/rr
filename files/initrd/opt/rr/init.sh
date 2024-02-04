@@ -26,6 +26,8 @@ ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo) || true
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
   touch "${USER_CONFIG_FILE}"
 fi
+
+initConfigKey "kernel" "official" "${USER_CONFIG_FILE}"
 initConfigKey "lkm" "prod" "${USER_CONFIG_FILE}"
 initConfigKey "dsmlogo" "true" "${USER_CONFIG_FILE}"
 initConfigKey "directboot" "false" "${USER_CONFIG_FILE}"
@@ -195,8 +197,9 @@ if [ ${RAM:-0} -le 3500 ]; then
   echo -e "\033[1;33m$(TEXT "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory.")\033[0m\n"
 fi
 
+mkdir -p "${CKS_PATH}"
+mkdir -p "${LKMS_PATH}"
 mkdir -p "${ADDONS_PATH}"
-mkdir -p "${LKM_PATH}"
 mkdir -p "${MODULES_PATH}"
 
 updateAddons
