@@ -94,6 +94,35 @@ function getBuildroot() {
   echo "Getting Buildroot end"
 }
 
+# Get latest CKs
+# $1 path
+# $2 (true|false[d]) include prerelease
+function getCKs() {
+  echo "Getting CKs begin"
+  local DEST_PATH="${1:-cks}"
+  local CACHE_FILE="/tmp/rr-cks.zip"
+  rm -f "${CACHE_FILE}"
+  if [ "${2}" = "true" ]; then
+    TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-cks/releases" | jq -r ".[0].tag_name")
+  else
+    TAG=$(curl -skLH "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-cks/releases/latest" | jq -r ".tag_name")
+  fi
+  while read ID NAME; do
+    if [ "${NAME}" = "rr-cks.zip" ]; then
+      STATUS=$(curl -w "%{http_code}" -kLH "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-cks/releases/assets/${ID}" -o "${CACHE_FILE}")
+      echo "TAG=${TAG}; Status=${STATUS}"
+      [ ${STATUS:-0} -ne 200 ] && exit 1
+    fi
+  done < <(curl -skLH "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-cks/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  [ ! -f "${CACHE_FILE}" ] && exit 1
+  # Unzip CKs
+  rm -rf "${DEST_PATH}"
+  mkdir -p "${DEST_PATH}"
+  unzip "${CACHE_FILE}" -d "${DEST_PATH}"
+  rm -f "${CACHE_FILE}"
+  echo "Getting CKs end"
+}
+
 # Get latest LKMs
 # $1 path
 # $2 (true|false[d]) include prerelease

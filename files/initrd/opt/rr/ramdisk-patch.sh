@@ -4,6 +4,7 @@
 
 . ${WORK_PATH}/include/functions.sh
 . ${WORK_PATH}/include/addons.sh
+. ${WORK_PATH}/include/modules.sh
 
 set -o pipefail # Get exit code from process piped
 
@@ -29,6 +30,7 @@ MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
 BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
 SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
+KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 LAYOUT="$(readConfigKey "layout" "${USER_CONFIG_FILE}")"
@@ -51,7 +53,7 @@ if [ -n "${PRODUCTVER}" -a -n "${BUILDNUM}" -a -n "${SMALLNUM}" ] &&
   PATSUM=""
   # Clean old pat file
   rm -f "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" 2>/dev/null || true
-  fi
+fi
 # Update new buildnumber
 PRODUCTVER=${majorversion}.${minorversion}
 BUILDNUM=${buildnumber}
@@ -127,30 +129,15 @@ echo "_set_conf_kv 'SN' '${SN}' '/tmpRoot/etc.defaults/synoinfo.conf'" >>"${TMP_
 sed -e "/@@@CONFIG-GENERATED@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
 rm -f "${TMP_PATH}/rp.txt"
 
+# Extract ck modules to ramdisk
 echo -n "."
-# Extract modules to ramdisk
-rm -rf "${TMP_PATH}/modules"
-mkdir -p "${TMP_PATH}/modules"
-tar -zxf "${MODULES_PATH}/${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.tgz" -C "${TMP_PATH}/modules"
-for F in $(ls "${TMP_PATH}/modules/"*.ko 2>/dev/null); do
-  M=$(basename ${F})
-  [ "${ODP}" = "true" -a -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] && continue
-  if arrayExistItem "${M:0:-3}" "${!MODULES[@]}"; then
-    cp -f "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}"
-  else
-    rm -f "${RAMDISK_PATH}/usr/lib/modules/${M}"
-  fi
-done
-mkdir -p "${RAMDISK_PATH}/usr/lib/firmware"
-tar -zxf "${MODULES_PATH}/firmware.tgz" -C "${RAMDISK_PATH}/usr/lib/firmware"
-# Clean
-rm -rf "${TMP_PATH}/modules"
+installModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${!MODULES[@]}"
 
 echo -n "."
 # Copying fake modprobe
 cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
 # Copying LKM to /usr/lib/modules
-gzip -dc "${LKM_PATH}/rp-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko"
+gzip -dc "${LKMS_PATH}/rp-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko"
 
 # Addons
 echo -n "."
@@ -168,24 +155,24 @@ echo "export KEYMAP=${KEYMAP}" >>"${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
 
 # Required addons: restore
-installAddon revert
+installAddon "revert" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
 echo "/addons/revert.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 
 # Required addons: eudev, disks, localrss, wol
-installAddon eudev
+installAddon "eudev" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
 echo "/addons/eudev.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-installAddon disks
+installAddon "disks" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
 echo "/addons/disks.sh \${1} ${HDDSORT} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 [ -f "${USER_UP_PATH}/${MODEL}.dts" ] && cp -f "${USER_UP_PATH}/${MODEL}.dts" "${RAMDISK_PATH}/addons/model.dts"
-installAddon localrss
+installAddon "localrss" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
 echo "/addons/localrss.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-installAddon wol
+installAddon "wol" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
 echo "/addons/wol.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
 
 # User addons
 for ADDON in ${!ADDONS[@]}; do
   PARAMS=${ADDONS[${ADDON}]}
-  if ! installAddon ${ADDON}; then
+  if ! installAddon "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
     echo "ADDON ${ADDON} not found!" | tee -a "${LOG_FILE}"
     exit 1
   fi
@@ -222,6 +209,7 @@ fi
 #fi
 
 # Call user patch scripts
+echo -n "."
 for F in $(ls -1 ${SCRIPTS_PATH}/*.sh 2>/dev/null); do
   echo "Calling ${F}" >>"${LOG_FILE}" 2>&1
   . "${F}" >>"${LOG_FILE}" 2>&1 || dieLog
@@ -237,5 +225,10 @@ fi
 
 # Clean
 rm -rf "${RAMDISK_PATH}"
+
+# Update SHA256 hash
+echo -n "."
+RAMDISK_HASH_CUR="$(sha256sum "${ORI_RDGZ_FILE}" | awk '{print $1}')"
+writeConfigKey "ramdisk-hash" "${RAMDISK_HASH_CUR}" "${USER_CONFIG_FILE}"
 
 echo

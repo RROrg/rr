@@ -40,16 +40,13 @@ fi
 
 # Check if DSM ramdisk changed, patch it if necessary
 RAMDISK_HASH="$(readConfigKey "ramdisk-hash" "${USER_CONFIG_FILE}")"
-RAMDISK_HASH_CUR="$(sha256sum "${ORI_RDGZ_FILE}" | awk '{print $1}')"
-if [ -f ${PART1_PATH}/.build -o "${RAMDISK_HASH_CUR}" != "${RAMDISK_HASH}" ]; then
+if [ -f ${PART1_PATH}/.build -o "$(sha256sum "${ORI_RDGZ_FILE}" | awk '{print $1}')" != "${RAMDISK_HASH}" ]; then
   echo -e "\033[1;43m$(TEXT "DSM Ramdisk changed")\033[0m"
   ${WORK_PATH}/ramdisk-patch.sh
   if [ $? -ne 0 ]; then
     echo -e "\033[1;43m$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")\033[0m"
     exit 1
   fi
-  # Update SHA256 hash
-  writeConfigKey "ramdisk-hash" "${RAMDISK_HASH_CUR}" "${USER_CONFIG_FILE}"
 fi
 [ -f ${PART1_PATH}/.build ] && rm -f ${PART1_PATH}/.build
 
@@ -58,18 +55,20 @@ MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
 BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
 SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
+KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 
 DMI="$(dmesg | grep -i "DMI:" | sed 's/\[.*\] DMI: //i')"
 CPU="$(echo $(cat /proc/cpuinfo | grep 'model name' | uniq | awk -F':' '{print $2}'))"
 MEM="$(free -m | grep -i mem | awk '{print$2}') MB"
 
-echo -e "$(TEXT "Model:") \033[1;36m${MODEL}\033[0m"
-echo -e "$(TEXT "Build:") \033[1;36m${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))\033[0m"
-echo -e "$(TEXT "LKM:  ") \033[1;36m${LKM}\033[0m"
-echo -e "$(TEXT "DMI:  ") \033[1;36m${DMI}\033[0m"
-echo -e "$(TEXT "CPU:  ") \033[1;36m${CPU}\033[0m"
-echo -e "$(TEXT "MEM:  ") \033[1;36m${MEM}\033[0m"
+echo -e "$(TEXT "Model:   ") \033[1;36m${MODEL}\033[0m"
+echo -e "$(TEXT "Version: ") \033[1;36m${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))\033[0m"
+echo -e "$(TEXT "Kernel:  ") \033[1;36m${KERNEL}\033[0m"
+echo -e "$(TEXT "LKM:     ") \033[1;36m${LKM}\033[0m"
+echo -e "$(TEXT "DMI:     ") \033[1;36m${DMI}\033[0m"
+echo -e "$(TEXT "CPU:     ") \033[1;36m${CPU}\033[0m"
+echo -e "$(TEXT "MEM:     ") \033[1;36m${MEM}\033[0m"
 
 if [ ! -f "${WORK_PATH}/model-configs/${MODEL}.yml" ] || [ -z "$(readModelKey ${MODEL} "productvers.[${PRODUCTVER}]")" ]; then
   echo -e "\033[1;33m*** $(printf "$(TEXT "The current version of bootloader does not support booting %s-%s, please upgrade and rebuild.")" "${MODEL}" "${PRODUCTVER}") ***\033[0m"
