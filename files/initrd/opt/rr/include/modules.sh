@@ -38,7 +38,8 @@ function getAllModules() {
 function installModules() {
   local PLATFORM=${1}
   local KVER=${2}
-  local MLIST=${3}
+  shift 2
+  local MLIST="${@}"
 
   if [ -z "${PLATFORM}" -o -z "${KVER}" ]; then
     echo ""
