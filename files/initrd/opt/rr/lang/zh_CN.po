@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-04 01:14+0800\n"
-"PO-Revision-Date: 2024-02-04 01:29+0800\n"
+"POT-Creation-Date: 2024-02-18 21:57+0800\n"
+"PO-Revision-Date: 2024-02-18 21:58+0800\n"
 "Last-Translator: Ing <wjz304>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@RROrg>\n"
 "Language: zh_CN\n"
@@ -39,113 +39,113 @@ msgid ""
 "\\nPatch error:\\n"
 msgstr "zImage 打补丁失败,\\n请升级引导版本并重试.\\nPatch 错误:\\n"
 
-#: boot.sh:45
+#: boot.sh:44
 msgid "DSM Ramdisk changed"
 msgstr "DSM Ramdisk 已更改"
 
-#: boot.sh:48 menu.sh:1239
+#: boot.sh:47 menu.sh:1239
 msgid ""
 "Ramdisk not patched,\\nPlease upgrade the bootloader version and try again."
 "\\nPatch error:\\n"
 msgstr "Ramdisk 打补丁失败,\\n请升级引导版本并重试.\\nPatch 错误:\\n"
 
-#: boot.sh:66
+#: boot.sh:65
 msgid "Model:   "
 msgstr "型号:    "
 
-#: boot.sh:67
+#: boot.sh:66
 msgid "Version: "
 msgstr "版本:    "
 
-#: boot.sh:68
+#: boot.sh:67
 msgid "Kernel:  "
 msgstr "内核:    "
 
-#: boot.sh:69
+#: boot.sh:68
 msgid "LKM:     "
 msgstr "LKM:     "
 
-#: boot.sh:70
+#: boot.sh:69
 msgid "DMI:     "
 msgstr "DMI:     "
 
-#: boot.sh:71
+#: boot.sh:70
 msgid "CPU:     "
 msgstr "CPU:     "
 
-#: boot.sh:72
+#: boot.sh:71
 msgid "MEM:     "
 msgstr "MEM:     "
 
-#: boot.sh:75
+#: boot.sh:74
 msgid ""
 "The current version of bootloader does not support booting %s-%s, please "
 "upgrade and rebuild."
 msgstr "当前版本的引导盘不支持引导 %s-%s, 请升级并重新编译."
 
-#: boot.sh:87
+#: boot.sh:86
 msgid ""
 "Please insert at least one sata/scsi disk for system installation, except "
 "for the bootloader disk."
 msgstr "除引导盘外, 请至少插入一块 sata/scsi 磁盘进行系统安装."
 
-#: boot.sh:166
+#: boot.sh:165
 msgid "Cmdline:\\n"
 msgstr "Cmdline:\\n"
 
-#: boot.sh:172
+#: boot.sh:171
 msgid "Reboot to boot directly in DSM"
 msgstr "重启并直接进入 DSM 引导"
 
-#: boot.sh:178 init.sh:123
+#: boot.sh:177 init.sh:123
 msgid "Detected %s network cards."
 msgstr "检测到 %s 个网卡."
 
-#: boot.sh:179 init.sh:124
+#: boot.sh:178 init.sh:124
 msgid "Checking Connect."
 msgstr "检查连接."
 
-#: boot.sh:199
+#: boot.sh:198
 msgid "Waiting IP.(For reference only)"
 msgstr "获取 IP.(仅供参考)"
 
-#: boot.sh:206 init.sh:149
+#: boot.sh:205 init.sh:149
 msgid "DOWN"
 msgstr "关闭"
 
-#: boot.sh:210 init.sh:153
+#: boot.sh:209 init.sh:153
 msgid "NOT CONNECTED"
 msgstr "未连接"
 
-#: boot.sh:214 init.sh:157
+#: boot.sh:213 init.sh:157
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "超时 (请检查路由器上的IP.)"
 
-#: boot.sh:220
+#: boot.sh:219
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr "在浏览器中访问 \\033[1;34mhttp://%s:5000\\033[0m 链接 DSM."
 
-#: boot.sh:232
+#: boot.sh:231
 msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
 msgstr "%2ds ((ssh/web)连接状态改变将中断启动)"
 
-#: boot.sh:236
+#: boot.sh:235
 msgid "access(ssh/web) status has changed and booting is interrupted."
 msgstr "(ssh/web)连接状态已改变, 启动被中断."
 
-#: boot.sh:246
+#: boot.sh:245
 msgid "Loading DSM kernel ..."
 msgstr "加载 DSM 内核 ..."
 
-#: boot.sh:262
+#: boot.sh:261
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "警告, 使用'--noefi'参数运行'kexec', 可能有不好的事情发生!!"
 
-#: boot.sh:267
+#: boot.sh:266
 msgid "Booting ..."
 msgstr "引导中 ..."
 
-#: boot.sh:269
+#: boot.sh:268
 msgid ""
 "[This interface will not be operational. Please wait a few minutes.\\nFind "
 "DSM via http://find.synology.com/ or Synology Assistant and connect.]"
@@ -301,8 +301,8 @@ msgid ""
 msgstr ""
 "请通过 DUFS 将 pat 文件上传到 /mnt/p3/users/ 文件夹，然后重新输入此选项.\\n"
 
-#: menu.sh:349 menu.sh:359 menu.sh:2349 menu.sh:2426 menu.sh:2437 menu.sh:2454
-#: menu.sh:2478
+#: menu.sh:349 menu.sh:359 menu.sh:2401 menu.sh:2475 menu.sh:2486 menu.sh:2503
+#: menu.sh:2528
 msgid "Update"
 msgstr "更新"
 
@@ -326,7 +326,7 @@ msgstr "目前，不支持 %s."
 msgid "Currently, %s of %s is not supported."
 msgstr "目前，不支持 %s-%s."
 
-#: menu.sh:463 menu.sh:1249 menu.sh:2554 menu.sh:2572
+#: menu.sh:463 menu.sh:1249 menu.sh:2609 menu.sh:2627
 msgid "Main menu"
 msgstr "主菜单"
 
@@ -344,7 +344,7 @@ msgstr "错误"
 msgid "Addons"
 msgstr "插件"
 
-#: menu.sh:500 menu.sh:630 menu.sh:806 menu.sh:941 menu.sh:2555
+#: menu.sh:500 menu.sh:630 menu.sh:806 menu.sh:941 menu.sh:2610
 msgid "Choose a option"
 msgstr "选择一个选项"
 
@@ -364,8 +364,8 @@ msgstr "显示所有插件"
 msgid "Upload a external addon"
 msgstr "上传外部插件"
 
-#: menu.sh:505 menu.sh:637 menu.sh:804 menu.sh:939 menu.sh:1310 menu.sh:2347
-#: menu.sh:2552 menu.sh:2647
+#: menu.sh:505 menu.sh:637 menu.sh:804 menu.sh:939 menu.sh:1310 menu.sh:2399
+#: menu.sh:2607 menu.sh:2702
 msgid "Exit"
 msgstr "退出"
 
@@ -395,7 +395,7 @@ msgid ""
 "not added.\\n\\n"
 msgstr "名称颜色为\"\\Z4蓝色\\Zn\"的为已添加, 颜色为\"黑色\"的为未添加.\\n\\n"
 
-#: menu.sh:575 menu.sh:709 menu.sh:1766 menu.sh:2424
+#: menu.sh:575 menu.sh:709 menu.sh:1766 menu.sh:2473
 msgid ""
 "This feature is only available when accessed via ssh (Requires a terminal "
 "that supports ZModem protocol).\\n"
@@ -405,7 +405,7 @@ msgstr "此功能仅在通过 ssh 访问时可用(需要支持 ZModem 协议的�
 msgid "Please upload the *.addons file."
 msgstr "请上传 *.addons 文件."
 
-#: menu.sh:595 menu.sh:744 menu.sh:2455 menu.sh:2479
+#: menu.sh:595 menu.sh:744 menu.sh:2504 menu.sh:2529
 msgid "Not a valid file, please try again!"
 msgstr "不是有效的文件, 请重试!"
 
@@ -1190,7 +1190,7 @@ msgstr "警告"
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "配置已更改, 是否重新编译引导?"
 
-#: menu.sh:2124 menu.sh:2545
+#: menu.sh:2124 menu.sh:2600
 msgid "Choose a language"
 msgstr "选择语言"
 
@@ -1202,103 +1202,103 @@ msgstr "选择布局"
 msgid "Choice a keymap"
 msgstr "选择键盘映射"
 
-#: menu.sh:2170 menu.sh:2223 menu.sh:2283 menu.sh:2355 menu.sh:2360
-#: menu.sh:2365 menu.sh:2370 menu.sh:2375 menu.sh:2382 menu.sh:2390
-#: menu.sh:2398 menu.sh:2406 menu.sh:2414
+#: menu.sh:2170 menu.sh:2241 menu.sh:2325 menu.sh:2411 menu.sh:2416
+#: menu.sh:2421 menu.sh:2426 menu.sh:2433 menu.sh:2441 menu.sh:2447
+#: menu.sh:2453 menu.sh:2459 menu.sh:2465
 msgid "Update %s"
 msgstr "更新 %s"
 
-#: menu.sh:2173
+#: menu.sh:2172 menu.sh:2175
 msgid "Checking last version ..."
 msgstr "检测新版本中 ..."
 
-#: menu.sh:2184 menu.sh:2187
+#: menu.sh:2186 menu.sh:2189 menu.sh:2192 menu.sh:2198
 msgid "Error checking new version.\\nError: TAG is %s"
 msgstr "检测新版本错误.\\nError: TAG is %s"
 
-#: menu.sh:2194
-msgid "No new version."
-msgstr "没有新版本."
-
-#: menu.sh:2198
+#: menu.sh:2201
 msgid "No new version. Actual version is %s\\nForce update?"
 msgstr "没有新版本. 实际版本为 %s\\n强制更新?"
 
-#: menu.sh:2207
+#: menu.sh:2205
+msgid "No new version."
+msgstr "没有新版本."
+
+#: menu.sh:2221
 msgid "Downloading ..."
 msgstr "下载中 ..."
 
-#: menu.sh:2211 menu.sh:2214
+#: menu.sh:2225 menu.sh:2228 menu.sh:2231
 msgid "Error downloading new version.\\nError: %d:%d"
 msgstr "下载新版本错误.\\nError: %d:%d"
 
-#: menu.sh:2225 menu.sh:2285
+#: menu.sh:2243 menu.sh:2246 menu.sh:2327 menu.sh:2330
 msgid "Extracting last version"
 msgstr "解压新版本"
 
-#: menu.sh:2229
+#: menu.sh:2251 menu.sh:2254
 msgid "Error extracting update file"
 msgstr "更新文件解压错误"
 
-#: menu.sh:2236
+#: menu.sh:2262 menu.sh:2265
 msgid "Checksum do not match!"
 msgstr "Checksum 不匹配!"
 
-#: menu.sh:2245
+#: menu.sh:2275 menu.sh:2278
 msgid ""
 "The current version does not support upgrading to the latest update.zip. "
 "Please remake the bootloader disk!"
 msgstr "当前版本不支持最新的 update.zip 升级, 请重新制作引导盘!"
 
-#: menu.sh:2250
+#: menu.sh:2284 menu.sh:2287
 msgid "Installing new files ..."
 msgstr "安装更新中 ..."
 
-#: menu.sh:2276
+#: menu.sh:2314 menu.sh:2317
 msgid "RR updated with success to %s!\\nReboot?"
 msgstr "RR 更新成功 %s!\\n重启?"
 
-#: menu.sh:2291
+#: menu.sh:2337 menu.sh:2340
 msgid "Installing new %s ..."
 msgstr "安装新 %s 中 ..."
 
-#: menu.sh:2323 menu.sh:2326
+#: menu.sh:2372 menu.sh:2375 menu.sh:2378
 msgid "%s updated with success!"
 msgstr "%s 更新成功!"
 
-#: menu.sh:2339
+#: menu.sh:2391
 msgid "Update all"
 msgstr "更新全部"
 
-#: menu.sh:2340
+#: menu.sh:2392
 msgid "Update RR"
 msgstr "更新 RR"
 
-#: menu.sh:2341
+#: menu.sh:2393
 msgid "Update addons"
 msgstr "更新插件"
 
-#: menu.sh:2342
+#: menu.sh:2394
 msgid "Update modules"
 msgstr "更新模块"
 
-#: menu.sh:2343
+#: menu.sh:2395
 msgid "Update LKMs"
 msgstr "更新LKMs"
 
-#: menu.sh:2344
+#: menu.sh:2396
 msgid "Update CKs"
 msgstr "更新 CKs"
 
-#: menu.sh:2345
+#: menu.sh:2397
 msgid "Local upload"
 msgstr "本地上传"
 
-#: menu.sh:2346
+#: menu.sh:2398
 msgid "Pre Release:"
 msgstr "预发布:"
 
-#: menu.sh:2350
+#: menu.sh:2402
 msgid ""
 "Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip,rr-cks.zip "
 "to /tmp/ will skip the download."
@@ -1306,27 +1306,27 @@ msgstr ""
 "手动上传 update.zip,addons.zip,modules.zip,rp-lkms.zip,rr-cks.zip 到 /tmp/ 将"
 "跳过下载."
 
-#: menu.sh:2355 menu.sh:2390
+#: menu.sh:2411 menu.sh:2447
 msgid "addons"
 msgstr "插件"
 
-#: menu.sh:2360 menu.sh:2398
+#: menu.sh:2416 menu.sh:2453
 msgid "modules"
 msgstr "模块"
 
-#: menu.sh:2365 menu.sh:2406
+#: menu.sh:2421 menu.sh:2459
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:2370 menu.sh:2414
+#: menu.sh:2426 menu.sh:2465
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:2375 menu.sh:2382
+#: menu.sh:2433 menu.sh:2441
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:2425
+#: menu.sh:2474
 msgid ""
 "Or upload update.zip, addons.zip, modules.zip, rp-lkms.zip,rr-cks.zip to /"
 "tmp/ via DUFS will skip the download.\\n"
@@ -1334,120 +1334,120 @@ msgstr ""
 "或者通过 DUFS 上传 update.zip, addons.zip, modules.zip, rp-lkms.zip, rr-cks."
 "zip 到 /tmp/ 将跳过下载.\\n"
 
-#: menu.sh:2431
+#: menu.sh:2480
 msgid ""
 "Please keep the attachment name consistent with the attachment name on "
 "Github.\\n"
 msgstr "请保持附件名称与 github 上附件名称一致.\\n"
 
-#: menu.sh:2432
+#: menu.sh:2481
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "上传 update*.zip 将更新 RR.\\n"
 
-#: menu.sh:2433
+#: menu.sh:2482
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "上传 addons*.zip 将更新 插件.\\n"
 
-#: menu.sh:2434
+#: menu.sh:2483
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "上传 modules*.zip 将更新 模块.\\n"
 
-#: menu.sh:2435
+#: menu.sh:2484
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "上传 rp-lkms*.zip 将更新 LKMs.\\n"
 
-#: menu.sh:2436
+#: menu.sh:2485
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "上传 rr-cks*.zip 将更新 CKs.\\n"
 
-#: menu.sh:2495
+#: menu.sh:2546
 msgid "This person is very lazy and hasn't written anything."
 msgstr "这个人很懒, 什么也没有写."
 
-#: menu.sh:2518
+#: menu.sh:2573
 msgid "Choose a model"
 msgstr "选择型号"
 
-#: menu.sh:2520
+#: menu.sh:2575
 msgid "Choose a version"
 msgstr "选择版本"
 
-#: menu.sh:2522
+#: menu.sh:2577
 msgid "Parse pat"
 msgstr "解析 pat"
 
-#: menu.sh:2529
+#: menu.sh:2584
 msgid "Kernel:"
 msgstr "内核:"
 
-#: menu.sh:2531
+#: menu.sh:2586
 msgid "Addons menu"
 msgstr "插件"
 
-#: menu.sh:2532
+#: menu.sh:2587
 msgid "Modules menu"
 msgstr "模块"
 
-#: menu.sh:2533
+#: menu.sh:2588
 msgid "Cmdline menu"
 msgstr "设置 Cmdline"
 
-#: menu.sh:2534
+#: menu.sh:2589
 msgid "Synoinfo menu"
 msgstr "设置 Synoinfo"
 
-#: menu.sh:2536
+#: menu.sh:2591
 msgid "Advanced menu"
 msgstr "高级设置"
 
-#: menu.sh:2539
+#: menu.sh:2594
 msgid "Build the loader"
 msgstr "编译引导"
 
-#: menu.sh:2543
+#: menu.sh:2598
 msgid "Boot the loader"
 msgstr "启动"
 
-#: menu.sh:2546
+#: menu.sh:2601
 msgid "Choose a keymap"
 msgstr "选择键盘"
 
-#: menu.sh:2548
+#: menu.sh:2603
 msgid "Clean disk cache"
 msgstr "清除磁盘缓存"
 
-#: menu.sh:2550
+#: menu.sh:2605
 msgid "Update menu"
 msgstr "更新"
 
-#: menu.sh:2551
+#: menu.sh:2606
 msgid "Notepad"
 msgstr "备注"
 
-#: menu.sh:2573
+#: menu.sh:2628
 msgid "Change ..."
 msgstr "改变 ..."
 
-#: menu.sh:2642
+#: menu.sh:2697
 msgid "Choose a action"
 msgstr "选择动作"
 
-#: menu.sh:2643
+#: menu.sh:2698
 msgid "Poweroff"
 msgstr "关机"
 
-#: menu.sh:2644
+#: menu.sh:2699
 msgid "Reboot"
 msgstr "重启"
 
-#: menu.sh:2645
+#: menu.sh:2700
 msgid "Reboot to RR"
 msgstr "重启到 RR"
 
-#: menu.sh:2646
+#: menu.sh:2701
 msgid "Back to shell"
 msgstr "退出到 shell"
 
-#: menu.sh:2672
+#: menu.sh:2727
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "执行 \\033[1;32mmenu.sh\\033[0m 重新进入设置菜单"

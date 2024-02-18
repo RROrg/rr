@@ -2168,9 +2168,12 @@ function downloadExts() {
   PROXY="$(readConfigKey "github_proxy" "${USER_CONFIG_FILE}")"
   [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
   T="$(printf "$(TEXT "Update %s")" "${1}")"
-
-  DIALOG --title "${T}" \
-    --infobox "$(TEXT "Checking last version ...")" 0 0
+  if [ "${5}" = "-1" ]; then
+    echo "$(TEXT "Checking last version ...")"
+  else
+    DIALOG --title "${T}" \
+      --infobox "$(TEXT "Checking last version ...")" 0 0
+  fi
   if [ "${PRERELEASE}" = "true" ]; then
     TAG="$(curl -skL "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | head -1 | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/')"
   else
@@ -2179,39 +2182,53 @@ function downloadExts() {
   fi
   [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
   if [ -z "${TAG}" -o "${TAG}" = "latest" ]; then
-    if [ ! "${5}" = "0" ]; then
-      DIALOG --title "${T}" \
-        --infobox "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")" 0 0
-    else
+    if [ "${5}" = "-1" ]; then
+      echo "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")"
+    elif [ "${5}" = "0" ]; then
       DIALOG --title "${T}" \
         --msgbox "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")" 0 0
+    else
+      DIALOG --title "${T}" \
+        --infobox "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")" 0 0
     fi
     return 1
   fi
   if [ "${2}" = "${TAG}" ]; then
-    if [ ! "${5}" = "0" ]; then
-      DIALOG --title "${T}" \
-        --infobox "$(TEXT "No new version.")" 0 0
-      return 1
-    else
+    if [ "${5}" = "-1" ]; then
+      echo "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")"
+    elif [ "${5}" = "0" ]; then
       DIALOG --title "${T}" \
         --yesno "$(printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${2}")" 0 0
       [ $? -ne 0 ] && return 1
-    fi
-  fi
-  (
-    rm -f "${TMP_PATH}/${4}.zip"
-    STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
-    RET=$?
-  ) 2>&1 | DIALOG --title "${T}" \
-    --progressbox "$(TEXT "Downloading ...")" 20 100
-  if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
-    if [ ! "${5}" = "0" ]; then
-      DIALOG --title "${T}" \
-        --infobox "$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")" 0 0
     else
       DIALOG --title "${T}" \
+        --infobox "$(TEXT "No new version.")" 0 0
+      return 1
+    fi
+  fi
+  if [ "${5}" = "-1" ]; then
+    (
+      rm -f "${TMP_PATH}/${4}.zip"
+      STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
+      RET=$?
+    ) 2>&1
+  else
+    (
+      rm -f "${TMP_PATH}/${4}.zip"
+      STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
+      RET=$?
+    ) 2>&1 | DIALOG --title "${T}" \
+      --progressbox "$(TEXT "Downloading ...")" 20 100
+  fi
+  if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
+    if [ "${5}" = "-1" ]; then
+      echo "$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")"
+    elif [ "${5}" = "0" ]; then
+      DIALOG --title "${T}" \
         --msgbox "$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")" 0 0
+    else
+      DIALOG --title "${T}" \
+        --infobox "$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")" 0 0
     fi
     return 1
   fi
@@ -2219,21 +2236,34 @@ function downloadExts() {
 }
 
 # 1 - ext name
+# 2 - silent
 function updateRR() {
   T="$(printf "$(TEXT "Update %s")" "${1}")"
-  DIALOG --title "${T}" \
-    --infobox "$(TEXT "Extracting last version")" 0 0
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - $(TEXT "Extracting last version")"
+  else
+    DIALOG --title "${T}" \
+      --infobox "$(TEXT "Extracting last version")" 0 0
+  fi
   unzip -oq "${TMP_PATH}/update.zip" -d "${TMP_PATH}/"
   if [ $? -ne 0 ]; then
-    DIALOG --title "${T}" \
-      --msgbox "$(TEXT "Error extracting update file")" 0 0
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - $(TEXT "Error extracting update file")"
+    else
+      DIALOG --title "${T}" \
+        --msgbox "$(TEXT "Error extracting update file")" 0 0
+    fi
     return 1
   fi
   # Check checksums
   (cd /tmp && sha256sum --status -c sha256sum)
   if [ $? -ne 0 ]; then
-    DIALOG --title "${T}" \
-      --msgbox "$(TEXT "Checksum do not match!")" 0 0
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - $(TEXT "Checksum do not match!")"
+    else
+      DIALOG --title "${T}" \
+        --msgbox "$(TEXT "Checksum do not match!")" 0 0
+    fi
     return 1
   fi
   # Check conditions
@@ -2241,13 +2271,21 @@ function updateRR() {
     chmod +x "${TMP_PATH}/update-check.sh"
     ${TMP_PATH}/update-check.sh
     if [ $? -ne 0 ]; then
-      DIALOG --title "${T}" \
-        --msgbox "$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")" 0 0
+      if [ "${2}" = "-1" ]; then
+        echo "${T} - $(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")"
+      else
+        DIALOG --title "${T}" \
+          --msgbox "$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")" 0 0
+      fi
       return 1
     fi
   fi
-  DIALOG --title "${T}" \
-    --infobox "$(TEXT "Installing new files ...")" 0 0
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - $(TEXT "Installing new files ...")"
+  else
+    DIALOG --title "${T}" \
+      --infobox "$(TEXT "Installing new files ...")" 0 0
+  fi
   # Process update-list.yml
   while read F; do
     [ -f "${F}" ] && rm -f "${F}"
@@ -2272,23 +2310,35 @@ function updateRR() {
     fi
   done < <(readConfigMap "replace" "${TMP_PATH}/update-list.yml")
   touch ${PART1_PATH}/.build
-  DIALOG --title "${T}" \
-    --msgbox "$(printf "$(TEXT "RR updated with success to %s!\nReboot?")" "${TAG}")" 0 0
-  rebootTo config
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - $(printf "$(TEXT "RR updated with success to %s!\nReboot?")" "${TAG}")"
+  else
+    DIALOG --title "${T}" \
+      --msgbox "$(printf "$(TEXT "RR updated with success to %s!\nReboot?")" "${TAG}")" 0 0
+    rebootTo config
+  fi
 }
 
 # 1 - ext name
 # 2 - silent
 function updateExts() {
   T="$(printf "$(TEXT "Update %s")" "${1}")"
-  DIALOG --title "${T}" \
-    --infobox "$(TEXT "Extracting last version")" 0 0
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - $(TEXT "Extracting last version")"
+  else
+    DIALOG --title "${T}" \
+      --infobox "$(TEXT "Extracting last version")" 0 0
+  fi
   if [ "${1}" = "addons" ]; then
     rm -rf "${TMP_PATH}/addons"
     mkdir -p "${TMP_PATH}/addons"
     unzip "${TMP_PATH}/addons.zip" -d "${TMP_PATH}/addons" >/dev/null 2>&1
-    DIALOG --title "${T}" \
-      --infobox "$(printf "$(TEXT "Installing new %s ...")" "${1}")" 0 0
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - $(printf "$(TEXT "Installing new %s ...")" "${1}")"
+    else
+      DIALOG --title "${T}" \
+        --infobox "$(printf "$(TEXT "Installing new %s ...")" "${1}")" 0 0
+    fi
     rm -Rf "${ADDONS_PATH}/"*
     [ -f "${TMP_PATH}/addons/VERSION" ] && cp -f "${TMP_PATH}/addons/VERSION" "${ADDONS_PATH}/"
     for PKG in $(ls ${TMP_PATH}/addons/*.addon 2>/dev/null); do
@@ -2318,12 +2368,14 @@ function updateExts() {
     unzip "${TMP_PATH}/rr-cks.zip" -d "${CKS_PATH}" >/dev/null 2>&1
   fi
   touch ${PART1_PATH}/.build
-  if [ ! "${2}" = "0" ]; then
-    DIALOG --title "${T}" \
-      --infobox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
-  else
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - $(printf "$(TEXT "%s updated with success!")" "${1}")"
+  elif [ "${2}" = "0" ]; then
     DIALOG --title "${T}" \
       --msgbox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
+  else
+    DIALOG --title "${T}" \
+      --infobox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
   fi
 }
 
@@ -2345,78 +2397,75 @@ function updateMenu() {
     echo "u \"$(TEXT "Local upload")\"" >>"${TMP_PATH}/menu"
     echo "b \"$(TEXT "Pre Release:") \Z4${PRERELEASE}\Zn\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
-
-    DIALOG --title "$(TEXT "Update")" \
-      --menu "$(TEXT "Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip,rr-cks.zip to /tmp/ will skip the download.")" 0 0 0 --file "${TMP_PATH}/menu" \
-      2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && return
+    if [ -z "${1}" ]; then
+      DIALOG --title "$(TEXT "Update")" \
+        --menu "$(TEXT "Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip,rr-cks.zip to /tmp/ will skip the download.")" 0 0 0 --file "${TMP_PATH}/menu" \
+        2>${TMP_PATH}/resp
+      [ $? -ne 0 ] && return
+    else
+      echo "${1}" >"${TMP_PATH}/resp"
+    fi
     case "$(<${TMP_PATH}/resp)" in
     a)
+      [ -z "${1}" ] && SILENT="1" || SILENT="-1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
       if [ ! -f "${TMP_PATH}/addons.zip" ]; then
-        downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "1"
+        downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "${SILENT}"
       fi
-      [ -f "${TMP_PATH}/addons.zip" ] && updateExts "addons" "1"
+      [ -f "${TMP_PATH}/addons.zip" ] && updateExts "addons" "${SILENT}"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
       if [ ! -f "${TMP_PATH}/modules.zip" ]; then
-        downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "1"
+        downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "${SILENT}"
       fi
-      [ -f "${TMP_PATH}/modules.zip" ] && updateExts "modules" "1"
+      [ -f "${TMP_PATH}/modules.zip" ] && updateExts "modules" "${SILENT}"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
       if [ ! -f "${TMP_PATH}/rp-lkms.zip" ]; then
-        downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "1"
+        downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "${SILENT}"
       fi
-      [ -f "${TMP_PATH}/rp-lkms.zip" ] && updateExts "LKMs" "1"
+      [ -f "${TMP_PATH}/rp-lkms.zip" ] && updateExts "LKMs" "${SILENT}"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "CKs")")"
       if [ ! -f "${TMP_PATH}/rp-cks.zip" ]; then
-        downloadExts "CKs" "${CUR_CKS_VER:-None}" "https://github.com/XXXXXX/rr-cks" "rr-cks" "1"
+        downloadExts "CKs" "${CUR_CKS_VER:-None}" "https://github.com/XXXXXX/rr-cks" "rr-cks" "${SILENT}"
       fi
-      [ -f "${TMP_PATH}/rr-cks.zip" ] && updateExts "CKs" "1"
+      [ -f "${TMP_PATH}/rr-cks.zip" ] && updateExts "CKs" "${SILENT}"
+
+      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
       if [ ! -f "${TMP_PATH}/update.zip" ]; then
-        downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "0"
+        downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "${SILENT}"
       fi
-      [ -f "${TMP_PATH}/update.zip" ] && updateRR "RR"
+      [ -f "${TMP_PATH}/update.zip" ] && updateRR "RR" "${SILENT}"
       ;;
     r)
+      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
-      if [ ! -f "${TMP_PATH}/update.zip" ]; then
-        downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "0"
-        [ $? -ne 0 ] && continue
-      fi
-      updateRR "RR"
+      [ -f "${TMP_PATH}/update.zip" ] || downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "${SILENT}"
+      [ -f "${TMP_PATH}/update.zip" ] && updateRR "RR" "${SILENT}"
       ;;
     d)
+      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      if [ ! -f "${TMP_PATH}/addons.zip" ]; then
-        downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "0"
-        [ $? -ne 0 ] && continue
-      fi
-      updateExts "addons" "0"
+      [ -f "${TMP_PATH}/addons.zip" ] || downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "${SILENT}"
+      [ -f "${TMP_PATH}/addons.zip" ] && updateExts "addons" "${SILENT}"
       ;;
     m)
+      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      if [ ! -f "${TMP_PATH}/modules.zip" ]; then
-        downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "0"
-        [ $? -ne 0 ] && continue
-      fi
-      updateExts "modules" "0"
+      [ -f "${TMP_PATH}/modules.zip" ] || downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "${SILENT}"
+      [ -f "${TMP_PATH}/modules.zip" ] && updateExts "modules" "${SILENT}"
       ;;
     l)
+      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      if [ ! -f "${TMP_PATH}/rp-lkms.zip" ]; then
-        downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "0"
-        [ $? -ne 0 ] && continue
-      fi
-      updateExts "LKMs" "0"
+      [ -f "${TMP_PATH}/rp-lkms.zip" ] || downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "${SILENT}"
+      [ -f "${TMP_PATH}/rp-lkms.zip" ] && updateExts "LKMs" "${SILENT}"
       ;;
     c)
+      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
       T="$(printf "$(TEXT "Update %s")" "$(TEXT "CKs")")"
-      if [ ! -f "${TMP_PATH}/rr-cks.zip" ]; then
-        downloadExts "CKs" "${CUR_CKS_VER:-None}" "https://github.com/XXXXXX/rr-cks" "rr-cks" "0"
-        [ $? -ne 0 ] && continue
-      fi
-      updateExts "CKs" "0"
+      [ -f "${TMP_PATH}/rr-cks.zip" ] || downloadExts "CKs" "${CUR_CKS_VER:-None}" "https://github.com/XXXXXX/rr-cks" "rr-cks" "${SILENT}"
+
+      [ -f "${TMP_PATH}/rr-cks.zip" ] && updateExts "CKs" "${SILENT}"
       ;;
     u)
       if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
@@ -2454,26 +2503,27 @@ function updateMenu() {
         DIALOG --title "$(TEXT "Update")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       else
+        [ -z "${1}" ] && SILENT="0" || SILENT="-1"
         if [[ "${USER_FILE}" = update*.zip ]]; then
           rm -f "${TMP_PATH}/update.zip"
           mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/update.zip"
-          updateRR "RR"
+          updateRR "RR" "${SILENT}"
         elif [[ "${USER_FILE}" = addons*.zip ]]; then
           rm -f "${TMP_PATH}/addons.zip"
           mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/addons.zip"
-          updateExts "addons" "0"
+          updateExts "addons" "${SILENT}"
         elif [[ "${USER_FILE}" = modules*.zip ]]; then
           rm -f "${TMP_PATH}/modules.zip"
           mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/modules.zip"
-          updateExts "modules" "0"
+          updateExts "modules" "${SILENT}"
         elif [[ "${USER_FILE}" = rp-lkms*.zip ]]; then
           rm -f "${TMP_PATH}/rp-lkms.zip"
           mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/rp-lkms.zip"
-          updateExts "LKMs" "0"
+          updateExts "LKMs" "${SILENT}"
         elif [[ "${USER_FILE}" = rr-cks*.zip ]]; then
           rm -f "${TMP_PATH}/rr-cks.zip"
           mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/rr-cks.zip"
-          updateExts "CKs" "0"
+          updateExts "CKs" "${SILENT}"
         else
           DIALOG --title "$(TEXT "Update")" \
             --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
@@ -2487,6 +2537,7 @@ function updateMenu() {
       ;;
     e) return ;;
     esac
+    [ -z "${1}" ] || return
   done
 }
 
@@ -2502,8 +2553,12 @@ function notepadMenu() {
 
 ###############################################################################
 ###############################################################################
-
-if [ "x$1" = "xb" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]; then
+if [ "${1}" = "update" ]; then
+  EXT=${2:-"a"}
+  updateMenu "${EXT}"
+  exit 0
+fi
+if [ "${1}" = "boot" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]; then
   updateAddons
   make
   boot && exit 0 || sleep 5
