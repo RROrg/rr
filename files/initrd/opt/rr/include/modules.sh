@@ -65,7 +65,11 @@ function installModules() {
     fi
   done
   mkdir -p "${RAMDISK_PATH}/usr/lib/firmware"
-  tar -zxf "${MODULES_PATH}/firmware.tgz" -C "${RAMDISK_PATH}/usr/lib/firmware"
+  if [ "${KERNEL}" = "custom" ]; then
+    tar -zxf "${CKS_PATH}/firmware.tgz" -C "${RAMDISK_PATH}/usr/lib/firmware"
+  else
+    tar -zxf "${MODULES_PATH}/firmware.tgz" -C "${RAMDISK_PATH}/usr/lib/firmware"
+  fi
   # Clean
   rm -rf "${TMP_PATH}/modules"
 }
