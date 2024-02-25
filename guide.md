@@ -196,6 +196,15 @@
   ls /dev/nvid*                                    # 查看显卡设备
   nvidia-smi                                       # 显卡驱动详细信息
 
+  # 管理软件包
+  synopkg list                                     # 列出所有已安装软件包
+  synopkg info <package_name>                      # 查看软件包信息
+  synopkg install <package_path_or_url>            # 安装软件包
+  synopkg uninstall <package_name>                 # 卸载软件包
+  synopkg start <package_name>                     # 启动软件包
+  synopkg stop <package_name>                      # 停止软件包
+  synopkg restart <package_name>                   # 重启软件包
+
   # Get MD5
   certutil -hashfile xxx.pat MD5                   # windows
   md5sum xxx.pat                                   # linux/mac
