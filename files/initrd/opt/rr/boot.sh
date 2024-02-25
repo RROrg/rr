@@ -113,6 +113,10 @@ CMDLINE['netif_num']="0"
 if grep -q "force_junior" /proc/cmdline; then
   CMDLINE['force_junior']=""
 fi
+if grep -q "recovery" /proc/cmdline; then
+  CMDLINE['force_junior']=""
+  CMDLINE['recovery']=""
+fi
 if [ ${EFI} -eq 1 ]; then
   CMDLINE['withefi']=""
 else
