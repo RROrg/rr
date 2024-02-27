@@ -2298,6 +2298,9 @@ function updateRR() {
       mkdir -p "${VALUE}"
       tar -zxf "${TMP_PATH}/$(basename "${KEY}").tgz" -C "${VALUE}"
       if [ "$(realpath "${VALUE}")" = "$(realpath "${MODULES_PATH}")" ]; then
+        PLATFORM="$(readModelKey "${MODEL}" "platform")"
+        KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+        KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
         if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
           while read ID DESC; do
