@@ -1773,26 +1773,28 @@ EOF
       DIALOG --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\n(saved in /mnt/p3/users/)")" 0 0
       TMP_UP_PATH="${TMP_PATH}/users"
+      DTC_ERRLOG="/tmp/dtc.log"
       rm -rf "${TMP_UP_PATH}"
       mkdir -p "${TMP_UP_PATH}"
       pushd "${TMP_UP_PATH}"
       rz -be
       for F in $(ls -A 2>/dev/null); do
         USER_FILE="${TMP_UP_PATH}/${F}"
-        dtc -q -I dts -O dtb "${F}" >"test.dtb"
+        dtc -q -I dts -O dtb "${F}" >"test.dtb" 2>"${DTC_ERRLOG}"
         RET=$?
         break
       done
       popd
       if [ ${RET} -ne 0 -o -z "${USER_FILE}" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "$(TEXT "Not a valid dts file, please try again!")" 0 0
+          --msgbox "$(TEXT "Not a valid dts file, please try again!")\n\n$(<"${DTC_ERRLOG}")" 0 0
       else
         [ -d "{USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
         cp -f "${USER_FILE}" "${USER_UP_PATH}/${MODEL}.dts"
         DIALOG --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
       fi
+      rm -rf "${DTC_ERRLOG}"
       touch ${PART1_PATH}/.build
       ;;
     0)
