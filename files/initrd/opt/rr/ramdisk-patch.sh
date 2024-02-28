@@ -209,7 +209,11 @@ if [ ${PLATFORM} = "epyc7002" ]; then
   sed -i '/^echo "START/a \\nmknod -m 0666 /dev/console c 1 3' ${RAMDISK_PATH}/linuxrc.syno
 fi
 
-#if [ "${PLATFORM}" = "kvmx64" -o "${PLATFORM}" = "broadwellntbap" ]; then
+if [ "${PLATFORM}" = "broadwellntbap" ]; then
+  sed -i 's/IsUCOrXA="yes"/XIsUCOrXA="yes"/g; s/IsUCOrXA=yes/XIsUCOrXA=yes/g' ${RAMDISK_PATH}/usr/syno/share/environments.sh
+fi
+
+#if [ "${PLATFORM}" = "kvmx64" ]; then
 #  sed -i 's/kvmx64/RRING/g' ${RAMDISK_PATH}/etc/synoinfo.conf ${RAMDISK_PATH}/etc/VERSION
 #fi
 
