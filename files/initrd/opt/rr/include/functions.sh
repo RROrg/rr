@@ -10,7 +10,7 @@
 # 2 - Key
 # Return Value
 function readModelKey() {
-  readConfigKey "${2}" "${WORK_PATH}/model-configs/${1}.yml"
+  readConfigKey "${2}" "${WORK_PATH}/model-configs/${1}.yml" 2>/dev/null
 }
 
 ###############################################################################
@@ -19,7 +19,7 @@ function readModelKey() {
 # 2 - Path of key
 # Returns map of values
 function readModelMap() {
-  readConfigMap "${2}" "${WORK_PATH}/model-configs/${1}.yml"
+  readConfigMap "${2}" "${WORK_PATH}/model-configs/${1}.yml" 2>/dev/null
 }
 
 ###############################################################################
@@ -28,7 +28,7 @@ function readModelMap() {
 # 2 - Path of key
 # Returns array/map of values
 function readModelArray() {
-  readConfigArray "${2}" "${WORK_PATH}/model-configs/${1}.yml"
+  readConfigArray "${2}" "${WORK_PATH}/model-configs/${1}.yml" 2>/dev/null
 }
 
 ###############################################################################
