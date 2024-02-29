@@ -17,6 +17,7 @@ function availableAddons() {
     DESC=""
     [ -z "${DESC}" ] && DESC="$(readConfigKey "description.${LOCALE:-"en_US"}" "${D}/manifest.yml")"
     [ -z "${DESC}" ] && DESC="$(readConfigKey "description.en_US" "${D}/manifest.yml")"
+    [ -z "${DESC}" ] && DESC="$(readConfigKey "description" "${D}/manifest.yml")"
     echo -e "${ADDON}\t${DESC:-"unknown"}"
   done < <(find "${ADDONS_PATH}" -maxdepth 1 -type d | sort)
 }
