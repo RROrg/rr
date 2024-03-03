@@ -310,7 +310,7 @@ function getLogo() {
   MODEL="${1}"
   rm -f "${PART3_PATH}/logo.png"
   fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
-  STATUS=$(curl -skL -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
+  STATUS=$(curl -skL --connect-timeout 10 -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
   if [ $? -ne 0 -o ${STATUS:-0} -ne 200 -o -f "${PART3_PATH}/logo.png" ]; then
     convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
     magick montage "${PART3_PATH}/logo.png" -background 'none' -tile '3x3' -geometry '350x210' "${PART3_PATH}/logo.png" 2>/dev/null
