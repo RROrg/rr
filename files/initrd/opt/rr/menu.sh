@@ -263,7 +263,7 @@ function productversMenu() {
       [ "${fastest}" = "www.synology.cn" ] &&
         fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
         fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
-      patdata=$(curl -skL "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
+      patdata=$(curl -skL --connect-timeout 10 "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
       if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
         if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
           paturl=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].url')
@@ -1028,7 +1028,7 @@ function getSynoExtractor() {
 
   echo "$(TEXT "Downloading old pat to extract synology .pat extractor...")"
 
-  STATUS=$(curl -k -w "%{http_code}" -L "${OLDPAT_URL}" -o "${OLDPAT_PATH}")
+  STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${OLDPAT_URL}" -o "${OLDPAT_PATH}")
   RET=$?
   if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
     rm -f "${OLDPAT_PATH}"
@@ -1061,6 +1061,7 @@ function getSynoExtractor() {
 
   return 0
 }
+
 ###############################################################################
 # Extract linux and ramdisk files from the DSM .pat
 function extractPatFiles() {
@@ -1122,6 +1123,7 @@ function extractPatFiles() {
     return 1
   fi
 }
+
 ###############################################################################
 # Extract linux and ramdisk files from the DSM .pat
 function extractDsmFiles() {
@@ -1156,12 +1158,12 @@ function extractDsmFiles() {
     # Check disk space left
     SPACELEFT=$(df --block-size=1 ${LOADER_DISK_PART3} | awk 'NR==2 {print $4}')
     # Discover remote file size
-    FILESIZE=$(curl -skLI "${PATURL}" | grep -i Content-Length | awk '{print$2}')
+    FILESIZE=$(curl -skLI --connect-timeout 10 "${PATURL}" | grep -i Content-Length | awk '{print$2}')
     if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
     fi
-    STATUS=$(curl -k -w "%{http_code}" -L "${PATURL}" -o "${PAT_PATH}")
+    STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PATURL}" -o "${PAT_PATH}")
     RET=$?
     if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
       rm -f "${PAT_PATH}"
@@ -1262,6 +1264,103 @@ function make() {
 }
 
 ###############################################################################
+# Where the magic happens!
+function customDTS() {
+  # Loop menu
+  while true; do
+    [ -f "${USER_UP_PATH}/${MODEL}.dts" ] && CUSTOMDTS="Yes" || CUSTOMDTS="No"
+    DIALOG --title "$(TEXT "Custom DTS")" \
+      --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 \
+      % "$(TEXT "Custom dts: ") ${CUSTOMDTS}" \
+      u "$(TEXT "Upload dts file")" \
+      d "$(TEXT "Delete dts file")" \
+      i "$(TEXT "Edit dts file")" \
+      e "$(TEXT "Exit")" \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && return
+    case "$(<${TMP_PATH}/resp)" in
+    %) ;;
+    u)
+      if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+        MSG=""
+        MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
+        MSG+="$(printf "$(TEXT "Or upload the dts file to %s via DUFS, Will be automatically imported when building.")" "${USER_UP_PATH}/${MODEL}.dts")"
+        DIALOG --title "$(TEXT "Custom DTS")" \
+          --msgbox "${MSG}" 0 0
+        return
+      fi
+      DIALOG --title "$(TEXT "Custom DTS")" \
+        --msgbox "$(TEXT "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\n(saved in /mnt/p3/users/)")" 0 0
+      TMP_UP_PATH="${TMP_PATH}/users"
+      DTC_ERRLOG="/tmp/dtc.log"
+      rm -rf "${TMP_UP_PATH}"
+      mkdir -p "${TMP_UP_PATH}"
+      pushd "${TMP_UP_PATH}"
+      RET=1
+      rz -be
+      for F in $(ls -A 2>/dev/null); do
+        USER_FILE="${TMP_UP_PATH}/${F}"
+        dtc -q -I dts -O dtb "${F}" >"test.dtb" 2>"${DTC_ERRLOG}"
+        RET=$?
+        break
+      done
+      popd
+      if [ ${RET} -ne 0 -o -z "${USER_FILE}" ]; then
+        DIALOG --title "$(TEXT "Custom DTS")" \
+          --msgbox "$(TEXT "Not a valid dts file, please try again!")\n\n$(<"${DTC_ERRLOG}")" 0 0
+      else
+        [ -d "{USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
+        cp -f "${USER_FILE}" "${USER_UP_PATH}/${MODEL}.dts"
+        DIALOG --title "$(TEXT "Custom DTS")" \
+          --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
+      fi
+      rm -rf "${DTC_ERRLOG}"
+      touch ${PART1_PATH}/.build
+      ;;
+    d)
+      rm -f "${USER_UP_PATH}/${MODEL}.dts"
+      touch ${PART1_PATH}/.build
+      ;;
+    i)
+      rm -rf "${TMP_PATH}/model.dts"
+      if [ -f "${USER_UP_PATH}/${MODEL}.dts" ]; then
+        cp -f "${USER_UP_PATH}/${MODEL}.dts" "${TMP_PATH}/model.dts"
+      else
+        ODTB="$(ls ${PART2_PATH}/*.dtb 2>/dev/null | head -1)"
+        if [ -f "${ODTB}" ]; then
+          dtc -q -I dtb -O dts "${ODTB}" >"${TMP_PATH}/model.dts"
+        else
+          DIALOG --title "$(TEXT "Custom DTS")" \
+            --msgbox "$(TEXT "No dts file to edit. Please upload first!")" 0 0
+          continue
+        fi
+      fi
+      DTC_ERRLOG="/tmp/dtc.log"
+      while true; do
+        DIALOG --title "$(TEXT "Edit with caution")" \
+          --editbox "${TMP_PATH}/model.dts" 0 0 2>"${TMP_PATH}/modelEdit.dts"
+        [ $? -ne 0 ] && rm -f "${TMP_PATH}/model.dts" "${TMP_PATH}/modelEdit.dts" && return
+        dtc -q -I dts -O dtb "${TMP_PATH}/modelEdit.dts" >"test.dtb" 2>"${DTC_ERRLOG}"
+        if [ $? -ne 0 ]; then
+          DIALOG --title "$(TEXT "Custom DTS")" \
+            --msgbox "$(TEXT "Not a valid dts file, please try again!")\n\n$(<"${DTC_ERRLOG}")" 0 0
+        else
+          mkdir -p "${USER_UP_PATH}"
+          cp -f "${TMP_PATH}/modelEdit.dts" "${USER_UP_PATH}/${MODEL}.dts"
+          rm -r "${TMP_PATH}/model.dts" "${TMP_PATH}/modelEdit.dts"
+          touch ${PART1_PATH}/.build
+          break
+        fi
+      done
+      ;;
+    e)
+      return
+      ;;
+    esac
+  done
+}
+
+###############################################################################
 # Advanced menu
 function advancedMenu() {
   NEXT="l"
@@ -1295,7 +1394,7 @@ function advancedMenu() {
     echo "z \"$(TEXT "Force enable Telnet&SSH of DSM system")\"" >>"${TMP_PATH}/menu"
     echo "p \"$(TEXT "Save modifications of '/opt/rr'")\"" >>"${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a "true" = "$(readModelKey "${MODEL}" "dt")" ]; then
-      echo "d \"$(TEXT "Custom dts file # Need rebuild")\"" >>"${TMP_PATH}/menu"
+      echo "d \"$(TEXT "Custom DTS")\"" >>"${TMP_PATH}/menu"
     fi
     echo "0 \"$(TEXT "Custom patch script # Developer")\"" >>"${TMP_PATH}/menu"
     if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ]; then
@@ -1762,40 +1861,8 @@ EOF
         --msgbox ""$(TEXT "Save is complete.")"" 0 0
       ;;
     d)
-      if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
-        MSG=""
-        MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
-        MSG+="$(printf "$(TEXT "Or upload the dts file to %s via DUFS, Will be automatically imported when building.")" "${USER_UP_PATH}/${MODEL}.dts")"
-        DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "${MSG}" 0 0
-        return
-      fi
-      DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox "$(TEXT "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\n(saved in /mnt/p3/users/)")" 0 0
-      TMP_UP_PATH="${TMP_PATH}/users"
-      DTC_ERRLOG="/tmp/dtc.log"
-      rm -rf "${TMP_UP_PATH}"
-      mkdir -p "${TMP_UP_PATH}"
-      pushd "${TMP_UP_PATH}"
-      rz -be
-      for F in $(ls -A 2>/dev/null); do
-        USER_FILE="${TMP_UP_PATH}/${F}"
-        dtc -q -I dts -O dtb "${F}" >"test.dtb" 2>"${DTC_ERRLOG}"
-        RET=$?
-        break
-      done
-      popd
-      if [ ${RET} -ne 0 -o -z "${USER_FILE}" ]; then
-        DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "$(TEXT "Not a valid dts file, please try again!")\n\n$(<"${DTC_ERRLOG}")" 0 0
-      else
-        [ -d "{USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
-        cp -f "${USER_FILE}" "${USER_UP_PATH}/${MODEL}.dts"
-        DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
-      fi
-      rm -rf "${DTC_ERRLOG}"
-      touch ${PART1_PATH}/.build
+      customDTS
+      NEXT="e"
       ;;
     0)
       MSG=""
@@ -2178,9 +2245,9 @@ function downloadExts() {
       --infobox "$(TEXT "Checking last version ...")" 0 0
   fi
   if [ "${PRERELEASE}" = "true" ]; then
-    TAG="$(curl -skL "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | head -1 | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/')"
+    TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | head -1 | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/')"
   else
-    LATESTURL="$(curl -skL -w %{url_effective} -o /dev/null "${PROXY}${3}/releases/latest")"
+    LATESTURL="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${PROXY}${3}/releases/latest")"
     TAG="${LATESTURL##*/}"
   fi
   [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
@@ -2212,13 +2279,13 @@ function downloadExts() {
   if [ "${5}" = "-1" ]; then
     (
       rm -f "${TMP_PATH}/${4}.zip"
-      STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
+      STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
       RET=$?
     ) 2>&1
   else
     (
       rm -f "${TMP_PATH}/${4}.zip"
-      STATUS=$(curl -kL -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
+      STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
       RET=$?
     ) 2>&1 | DIALOG --title "${T}" \
       --progressbox "$(TEXT "Downloading ...")" 20 100
