@@ -67,30 +67,35 @@ function getExtractor() {
 }
 
 # Get latest Buildroot
-# $1 TAG
-# $2 path
+# $1 path
+# $2 (true|false[d]) include prerelease
 function getBuildroot() {
   echo "Getting Buildroot begin"
   local DEST_PATH="${1:-buildroot}"
-  rm -rf "${DEST_PATH}"
-  mkdir -p "${DEST_PATH}"
-  if [ "${1}" = "latest" ]; then
+  local CACHE_DIR="/tmp/buildroot"
+  local CACHE_FILE="/tmp/buildroot.zip"
+  rm -f "${CACHE_FILE}"
+  if [ "${2}" = "true" ]; then
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases" | jq -r ".[0].tag_name")
   else
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases/latest" | jq -r ".tag_name")
   fi
   while read ID NAME; do
-    if [ "${NAME}" = "bzImage" ]; then
-      STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-buildroot/releases/assets/${ID}" -o "${DEST_PATH}/bzImage-rr")
-      echo "TAG=${TAG}; Status=${STATUS}"
-      [ ${STATUS:-0} -ne 200 ] && exit 1
-    elif [ "${NAME}" = "rootfs.cpio.xz" ]; then
-      STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-buildroot/releases/assets/${ID}" -o "${DEST_PATH}/initrd-rr")
+    if [ "${NAME}" = "buildroot-${TAG}.zip" ]; then
+      STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-buildroot/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
   done < <(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
-
+  # Unzip Buildroot
+  rm -rf "${CACHE_DIR}"
+  mkdir -p "${CACHE_DIR}"
+  unzip "${CACHE_FILE}" -d "${CACHE_DIR}"
+  mkdir -p "${DEST_PATH}"
+  mv -f "${CACHE_DIR}/bzImage-rr" "${DEST_PATH}"
+  mv -f "${CACHE_DIR}/initrd-rr" "${DEST_PATH}"
+  rm -rf "${CACHE_DIR}"
+  rm -f "${CACHE_FILE}"
   echo "Getting Buildroot end"
 }
 
@@ -108,7 +113,7 @@ function getCKs() {
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-cks/releases/latest" | jq -r ".tag_name")
   fi
   while read ID NAME; do
-    if [ "${NAME}" = "rr-cks.zip" ]; then
+    if [ "${NAME}" = "rr-cks-${TAG}.zip" ]; then
       STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-cks/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
@@ -137,7 +142,7 @@ function getLKMs() {
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases/latest" | jq -r ".tag_name")
   fi
   while read ID NAME; do
-    if [ "${NAME}" = "rp-lkms.zip" ]; then
+    if [ "${NAME}" = "rp-lkms-${TAG}.zip" ]; then
       STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-lkms/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
@@ -166,7 +171,7 @@ function getAddons() {
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases/latest" | jq -r ".tag_name")
   fi
   while read ID NAME; do
-    if [ "${NAME}" = "addons.zip" ]; then
+    if [ "${NAME}" = "addons-${TAG}.zip" ]; then
       STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-addons/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
@@ -187,6 +192,8 @@ function getAddons() {
     echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
     tar -xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
   done
+  rm -rf "${CACHE_DIR}"
+  rm -f "${CACHE_FILE}"
   echo "Getting Addons end"
 }
 
@@ -204,7 +211,7 @@ function getModules() {
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases/latest" | jq -r ".tag_name")
   fi
   while read ID NAME; do
-    if [ "${NAME}" = "modules.zip" ]; then
+    if [ "${NAME}" = "modules-${TAG}.zip" ]; then
       STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "https://api.github.com/repos/RROrg/rr-modules/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1

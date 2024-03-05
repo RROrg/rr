@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-03 02:12+0800\n"
-"PO-Revision-Date: 2024-03-03 02:18+0800\n"
+"POT-Creation-Date: 2024-03-06 01:44+0800\n"
+"PO-Revision-Date: 2024-03-06 01:48+0800\n"
 "Last-Translator: Ing <wjz304>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@RROrg>\n"
 "Language: zh_CN\n"
@@ -301,8 +301,10 @@ msgid ""
 msgstr ""
 "请通过 DUFS 将 pat 文件上传到 /mnt/p3/users/ 文件夹，然后重新输入此选项.\\n"
 
-#: menu.sh:350 menu.sh:360 menu.sh:2474 menu.sh:2548 menu.sh:2559 menu.sh:2576
-#: menu.sh:2601
+#: menu.sh:350 menu.sh:360 menu.sh:2593 menu.sh:2594 menu.sh:2595 menu.sh:2596
+#: menu.sh:2597 menu.sh:2598 menu.sh:2604 menu.sh:2627 menu.sh:2638
+#: menu.sh:2649 menu.sh:2660 menu.sh:2674 menu.sh:2685 menu.sh:2702
+#: menu.sh:2721
 msgid "Update"
 msgstr "更新"
 
@@ -326,7 +328,7 @@ msgstr "目前，不支持 %s."
 msgid "Currently, %s of %s is not supported."
 msgstr "目前，不支持 %s-%s."
 
-#: menu.sh:464 menu.sh:1252 menu.sh:2682 menu.sh:2700
+#: menu.sh:464 menu.sh:1252 menu.sh:2803 menu.sh:2821
 msgid "Main menu"
 msgstr "主菜单"
 
@@ -340,11 +342,11 @@ msgstr "错误"
 
 #: menu.sh:500 menu.sh:517 menu.sh:522 menu.sh:528 menu.sh:539 menu.sh:547
 #: menu.sh:570 menu.sh:577 menu.sh:581 menu.sh:595 menu.sh:599 menu.sh:607
-#: menu.sh:610
+#: menu.sh:610 menu.sh:2414 menu.sh:2444 menu.sh:2595 menu.sh:2628 menu.sh:2632
 msgid "Addons"
 msgstr "插件"
 
-#: menu.sh:501 menu.sh:631 menu.sh:807 menu.sh:942 menu.sh:1273 menu.sh:2683
+#: menu.sh:501 menu.sh:631 menu.sh:807 menu.sh:942 menu.sh:1273 menu.sh:2804
 msgid "Choose a option"
 msgstr "选择一个选项"
 
@@ -365,7 +367,7 @@ msgid "Upload a external addon"
 msgstr "上传外部插件"
 
 #: menu.sh:506 menu.sh:638 menu.sh:805 menu.sh:940 menu.sh:1278 menu.sh:1410
-#: menu.sh:2472 menu.sh:2680 menu.sh:2775
+#: menu.sh:2601 menu.sh:2801 menu.sh:2896
 msgid "Exit"
 msgstr "退出"
 
@@ -395,7 +397,7 @@ msgid ""
 "not added.\\n\\n"
 msgstr "名称颜色为\"\\Z4蓝色\\Zn\"的为已添加, 颜色为\"黑色\"的为未添加.\\n\\n"
 
-#: menu.sh:576 menu.sh:710 menu.sh:1286 menu.sh:2546
+#: menu.sh:576 menu.sh:710 menu.sh:1286 menu.sh:2672
 msgid ""
 "This feature is only available when accessed via ssh (Requires a terminal "
 "that supports ZModem protocol).\\n"
@@ -405,7 +407,7 @@ msgstr "此功能仅在通过 ssh 访问时可用(需要支持 ZModem 协议的�
 msgid "Please upload the *.addons file."
 msgstr "请上传 *.addons 文件."
 
-#: menu.sh:596 menu.sh:745 menu.sh:2577 menu.sh:2602
+#: menu.sh:596 menu.sh:745 menu.sh:2703 menu.sh:2722
 msgid "Not a valid file, please try again!"
 msgstr "不是有效的文件, 请重试!"
 
@@ -422,7 +424,8 @@ msgid "File format not recognized!"
 msgstr "文件格式无法识别!"
 
 #: menu.sh:630 menu.sh:644 menu.sh:657 menu.sh:694 menu.sh:711 menu.sh:721
-#: menu.sh:724 menu.sh:740 menu.sh:744 menu.sh:758 menu.sh:764
+#: menu.sh:724 menu.sh:740 menu.sh:744 menu.sh:758 menu.sh:764 menu.sh:2459
+#: menu.sh:2494 menu.sh:2596 menu.sh:2639 menu.sh:2643
 msgid "Modules"
 msgstr "模块"
 
@@ -1210,7 +1213,7 @@ msgstr "警告"
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "配置已更改, 是否重新编译引导?"
 
-#: menu.sh:2194 menu.sh:2673
+#: menu.sh:2194 menu.sh:2794
 msgid "Choose a language"
 msgstr "选择语言"
 
@@ -1222,258 +1225,215 @@ msgstr "选择布局"
 msgid "Choice a keymap"
 msgstr "选择键盘映射"
 
-#: menu.sh:2240 menu.sh:2311 menu.sh:2398 menu.sh:2484 menu.sh:2489
-#: menu.sh:2494 menu.sh:2499 menu.sh:2506 menu.sh:2514 menu.sh:2520
-#: menu.sh:2526 menu.sh:2532 menu.sh:2538
+#: menu.sh:2240 menu.sh:2317 menu.sh:2414 menu.sh:2459 menu.sh:2509
+#: menu.sh:2548
 msgid "Update %s"
 msgstr "更新 %s"
 
-#: menu.sh:2242 menu.sh:2245
+#: menu.sh:2241
 msgid "Checking last version ..."
 msgstr "检测新版本中 ..."
 
-#: menu.sh:2256 menu.sh:2259 menu.sh:2262 menu.sh:2268
+#: menu.sh:2257
 msgid "Error checking new version.\\nError: TAG is %s"
 msgstr "检测新版本错误.\\nError: TAG is %s"
 
-#: menu.sh:2271
-msgid "No new version. Actual version is %s\\nForce update?"
-msgstr "没有新版本. 实际版本为 %s\\n强制更新?"
-
-#: menu.sh:2275
+#: menu.sh:2270
 msgid "No new version."
 msgstr "没有新版本."
 
-#: menu.sh:2291
+#: menu.sh:2274
+msgid "Actual version is %s\\nForce update?"
+msgstr "实际版本为 %s\\n强制更新?"
+
+#: menu.sh:2296
 msgid "Downloading ..."
 msgstr "下载中 ..."
 
-#: menu.sh:2295 menu.sh:2298 menu.sh:2301
+#: menu.sh:2299
 msgid "Error downloading new version.\\nError: %d:%d"
 msgstr "下载新版本错误.\\nError: %d:%d"
 
-#: menu.sh:2313 menu.sh:2316 menu.sh:2400 menu.sh:2403
-msgid "Extracting last version"
-msgstr "解压新版本"
+#: menu.sh:2317 menu.sh:2401 menu.sh:2594 menu.sh:2621
+msgid "RR"
+msgstr "RR"
 
-#: menu.sh:2321 menu.sh:2324
-msgid "Error extracting update file"
-msgstr "更新文件解压错误"
+#: menu.sh:2318 menu.sh:2415 menu.sh:2460 menu.sh:2510 menu.sh:2549
+msgid "Extracting update file ..."
+msgstr "解压更新文件 ..."
 
-#: menu.sh:2332 menu.sh:2335
+#: menu.sh:2329 menu.sh:2426 menu.sh:2471 menu.sh:2521 menu.sh:2560
+msgid "Error extracting update file."
+msgstr "更新文件解压错误."
+
+#: menu.sh:2341
 msgid "Checksum do not match!"
 msgstr "Checksum 不匹配!"
 
-#: menu.sh:2345 menu.sh:2348
+#: menu.sh:2355
 msgid ""
 "The current version does not support upgrading to the latest update.zip. "
 "Please remake the bootloader disk!"
 msgstr "当前版本不支持最新的 update.zip 升级, 请重新制作引导盘!"
 
-#: menu.sh:2354 menu.sh:2357
+#: menu.sh:2365
 msgid "Installing new files ..."
 msgstr "安装更新中 ..."
 
-#: menu.sh:2387 menu.sh:2390
-msgid "RR updated with success to %s!\\nReboot?"
-msgstr "RR 更新成功 %s!\\n重启?"
-
-#: menu.sh:2410 menu.sh:2413
-msgid "Installing new %s ..."
-msgstr "安装新 %s 中 ..."
-
-#: menu.sh:2445 menu.sh:2448 menu.sh:2451
+#: menu.sh:2401 menu.sh:2444 menu.sh:2494 menu.sh:2533 menu.sh:2572
 msgid "%s updated with success!"
 msgstr "%s 更新成功!"
 
-#: menu.sh:2464
-msgid "Update all"
-msgstr "更新全部"
+#: menu.sh:2401
+msgid "Reboot?"
+msgstr "重启?"
 
-#: menu.sh:2465
-msgid "Update RR"
-msgstr "更新 RR"
-
-#: menu.sh:2466
-msgid "Update addons"
-msgstr "更新插件"
-
-#: menu.sh:2467
-msgid "Update modules"
-msgstr "更新模块"
-
-#: menu.sh:2468
-msgid "Update LKMs"
-msgstr "更新LKMs"
-
-#: menu.sh:2469
-msgid "Update CKs"
-msgstr "更新 CKs"
-
-#: menu.sh:2470
-msgid "Local upload"
-msgstr "本地上传"
-
-#: menu.sh:2471
-msgid "Pre Release:"
-msgstr "预发布:"
-
-#: menu.sh:2475
-msgid ""
-"Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip,rr-cks.zip "
-"to /tmp/ will skip the download."
-msgstr ""
-"手动上传 update.zip,addons.zip,modules.zip,rp-lkms.zip,rr-cks.zip 到 /tmp/ 将"
-"跳过下载."
-
-#: menu.sh:2484 menu.sh:2520
-msgid "addons"
-msgstr "插件"
-
-#: menu.sh:2489 menu.sh:2526
-msgid "modules"
-msgstr "模块"
-
-#: menu.sh:2494 menu.sh:2532
+#: menu.sh:2509 menu.sh:2533 menu.sh:2597 menu.sh:2650 menu.sh:2654
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:2499 menu.sh:2538
+#: menu.sh:2548 menu.sh:2572 menu.sh:2598 menu.sh:2661 menu.sh:2665
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:2506 menu.sh:2514
-msgid "RR"
-msgstr "RR"
+#: menu.sh:2593 menu.sh:2615
+msgid "All"
+msgstr "全部"
 
-#: menu.sh:2547
+#: menu.sh:2599
+msgid "Local upload"
+msgstr "本地上传"
+
+#: menu.sh:2600
+msgid "Pre Release:"
+msgstr "预发布:"
+
+#: menu.sh:2605 menu.sh:2673
 msgid ""
-"Or upload update.zip, addons.zip, modules.zip, rp-lkms.zip,rr-cks.zip to /"
-"tmp/ via DUFS will skip the download.\\n"
+"Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*."
+"zip to /tmp/ will skip the download."
 msgstr ""
-"或者通过 DUFS 上传 update.zip, addons.zip, modules.zip, rp-lkms.zip, rr-cks."
-"zip 到 /tmp/ 将跳过下载.\\n"
+"手动上传 update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip 到 /"
+"tmp/ 将跳过下载."
 
-#: menu.sh:2553
+#: menu.sh:2628 menu.sh:2639 menu.sh:2650 menu.sh:2661
+msgid "No longer supports update %s separately. Please choose to update All/RR"
+msgstr "不再支持单独更新%s. 请选择更新全部/RR"
+
+#: menu.sh:2679
 msgid ""
 "Please keep the attachment name consistent with the attachment name on "
 "Github.\\n"
 msgstr "请保持附件名称与 github 上附件名称一致.\\n"
 
-#: menu.sh:2554
+#: menu.sh:2680
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "上传 update*.zip 将更新 RR.\\n"
 
-#: menu.sh:2555
+#: menu.sh:2681
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "上传 addons*.zip 将更新 插件.\\n"
 
-#: menu.sh:2556
+#: menu.sh:2682
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "上传 modules*.zip 将更新 模块.\\n"
 
-#: menu.sh:2557
+#: menu.sh:2683
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "上传 rp-lkms*.zip 将更新 LKMs.\\n"
 
-#: menu.sh:2558
+#: menu.sh:2684
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "上传 rr-cks*.zip 将更新 CKs.\\n"
 
-#: menu.sh:2619
+#: menu.sh:2740
 msgid "This person is very lazy and hasn't written anything."
 msgstr "这个人很懒, 什么也没有写."
 
-#: menu.sh:2646
+#: menu.sh:2767
 msgid "Choose a model"
 msgstr "选择型号"
 
-#: menu.sh:2648
+#: menu.sh:2769
 msgid "Choose a version"
 msgstr "选择版本"
 
-#: menu.sh:2650
+#: menu.sh:2771
 msgid "Parse pat"
 msgstr "解析 pat"
 
-#: menu.sh:2657
+#: menu.sh:2778
 msgid "Kernel:"
 msgstr "内核:"
 
-#: menu.sh:2659
+#: menu.sh:2780
 msgid "Addons menu"
 msgstr "插件"
 
-#: menu.sh:2660
+#: menu.sh:2781
 msgid "Modules menu"
 msgstr "模块"
 
-#: menu.sh:2661
+#: menu.sh:2782
 msgid "Cmdline menu"
 msgstr "设置 Cmdline"
 
-#: menu.sh:2662
+#: menu.sh:2783
 msgid "Synoinfo menu"
 msgstr "设置 Synoinfo"
 
-#: menu.sh:2664
+#: menu.sh:2785
 msgid "Advanced menu"
 msgstr "高级设置"
 
-#: menu.sh:2667
+#: menu.sh:2788
 msgid "Build the loader"
 msgstr "编译引导"
 
-#: menu.sh:2671
+#: menu.sh:2792
 msgid "Boot the loader"
 msgstr "启动"
 
-#: menu.sh:2674
+#: menu.sh:2795
 msgid "Choose a keymap"
 msgstr "选择键盘"
 
-#: menu.sh:2676
+#: menu.sh:2797
 msgid "Clean disk cache"
 msgstr "清除磁盘缓存"
 
-#: menu.sh:2678
+#: menu.sh:2799
 msgid "Update menu"
 msgstr "更新"
 
-#: menu.sh:2679
+#: menu.sh:2800
 msgid "Notepad"
 msgstr "备注"
 
-#: menu.sh:2701
+#: menu.sh:2822
 msgid "Change ..."
 msgstr "改变 ..."
 
-#: menu.sh:2770
+#: menu.sh:2891
 msgid "Choose a action"
 msgstr "选择动作"
 
-#: menu.sh:2771
+#: menu.sh:2892
 msgid "Poweroff"
 msgstr "关机"
 
-#: menu.sh:2772
+#: menu.sh:2893
 msgid "Reboot"
 msgstr "重启"
 
-#: menu.sh:2773
+#: menu.sh:2894
 msgid "Reboot to RR"
 msgstr "重启到 RR"
 
-#: menu.sh:2774
+#: menu.sh:2895
 msgid "Back to shell"
 msgstr "退出到 shell"
 
-#: menu.sh:2800
+#: menu.sh:2921
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "执行 \\033[1;32mmenu.sh\\033[0m 重新进入设置菜单"
-
-#~ msgid "Custom dts file"
-#~ msgstr "自定义 dts 文件"
-
-#~ msgid "DTS"
-#~ msgstr "DTS"
