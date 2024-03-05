@@ -2186,9 +2186,9 @@ function boot() {
 function languageMenu() {
   rm -f "${TMP_PATH}/menu"
   while read L; do
-    A="$(echo "$(strings "${WORK_PATH}/lang/${L}.mo" 2>/dev/null | grep "Last-Translator" | sed "s/Last-Translator://")")"
+    A="$(echo "$(strings "${WORK_PATH}/lang/${L}/LC_MESSAGES/rr.mo" 2>/dev/null | grep "Last-Translator" | sed "s/Last-Translator://")")"
     echo "${L} \"${A:-"anonymous"}\"" >>"${TMP_PATH}/menu"
-  done < <(ls ${WORK_PATH}/lang/*.mo 2>/dev/null | sort | sed -r 's/.*\/(.*)\.mo$/\1/')
+  done < <(ls ${WORK_PATH}/lang/*/LC_MESSAGES/rr.mo 2>/dev/null | sort | sed -r 's/.*\/lang\/(.*)\/LC_MESSAGES\/rr\.mo$/\1/')
 
   DIALOG \
     --default-item "${LAYOUT}" --menu "$(TEXT "Choose a language")" 0 0 0 --file "${TMP_PATH}/menu" \
