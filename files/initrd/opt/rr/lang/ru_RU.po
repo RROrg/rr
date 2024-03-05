@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-03 02:12+0800\n"
-"PO-Revision-Date: 2024-03-03 02:21+0800\n"
+"POT-Creation-Date: 2024-03-06 01:44+0800\n"
+"PO-Revision-Date: 2024-03-06 01:55+0800\n"
 "Last-Translator: Alex TG @xpenology_russian\n"
 "Language-Team: Русский перевод TG @xpenology_russian\n"
 "Language: ru_RU\n"
@@ -324,8 +324,10 @@ msgstr ""
 "Пожалуйста, загрузите файл pat в папку /mnt/p3/users/ через DUFS и повторно "
 "введите эту опцию.\\n"
 
-#: menu.sh:350 menu.sh:360 menu.sh:2474 menu.sh:2548 menu.sh:2559 menu.sh:2576
-#: menu.sh:2601
+#: menu.sh:350 menu.sh:360 menu.sh:2593 menu.sh:2594 menu.sh:2595 menu.sh:2596
+#: menu.sh:2597 menu.sh:2598 menu.sh:2604 menu.sh:2627 menu.sh:2638
+#: menu.sh:2649 menu.sh:2660 menu.sh:2674 menu.sh:2685 menu.sh:2702
+#: menu.sh:2721
 msgid "Update"
 msgstr "Обновить"
 
@@ -349,7 +351,7 @@ msgstr "В настоящее время %s не поддерживается."
 msgid "Currently, %s of %s is not supported."
 msgstr "В настоящее время %s-%s не поддерживается."
 
-#: menu.sh:464 menu.sh:1252 menu.sh:2682 menu.sh:2700
+#: menu.sh:464 menu.sh:1252 menu.sh:2803 menu.sh:2821
 msgid "Main menu"
 msgstr "Главное меню"
 
@@ -363,11 +365,11 @@ msgstr "Ошибка"
 
 #: menu.sh:500 menu.sh:517 menu.sh:522 menu.sh:528 menu.sh:539 menu.sh:547
 #: menu.sh:570 menu.sh:577 menu.sh:581 menu.sh:595 menu.sh:599 menu.sh:607
-#: menu.sh:610
+#: menu.sh:610 menu.sh:2414 menu.sh:2444 menu.sh:2595 menu.sh:2628 menu.sh:2632
 msgid "Addons"
 msgstr "Дополнения"
 
-#: menu.sh:501 menu.sh:631 menu.sh:807 menu.sh:942 menu.sh:1273 menu.sh:2683
+#: menu.sh:501 menu.sh:631 menu.sh:807 menu.sh:942 menu.sh:1273 menu.sh:2804
 msgid "Choose a option"
 msgstr "Выберите опцию"
 
@@ -388,7 +390,7 @@ msgid "Upload a external addon"
 msgstr "Загрузить внешнее дополнение"
 
 #: menu.sh:506 menu.sh:638 menu.sh:805 menu.sh:940 menu.sh:1278 menu.sh:1410
-#: menu.sh:2472 menu.sh:2680 menu.sh:2775
+#: menu.sh:2601 menu.sh:2801 menu.sh:2896
 msgid "Exit"
 msgstr "Выход"
 
@@ -420,7 +422,7 @@ msgstr ""
 "Имена с цветом \"\\Z4синий\\Zn\" были добавлены, с цветом \"черный\" не "
 "добавлены.\\n\\n"
 
-#: menu.sh:576 menu.sh:710 menu.sh:1286 menu.sh:2546
+#: menu.sh:576 menu.sh:710 menu.sh:1286 menu.sh:2672
 msgid ""
 "This feature is only available when accessed via ssh (Requires a terminal "
 "that supports ZModem protocol).\\n"
@@ -432,7 +434,7 @@ msgstr ""
 msgid "Please upload the *.addons file."
 msgstr "Пожалуйста, загрузите файл *.addons."
 
-#: menu.sh:596 menu.sh:745 menu.sh:2577 menu.sh:2602
+#: menu.sh:596 menu.sh:745 menu.sh:2703 menu.sh:2722
 msgid "Not a valid file, please try again!"
 msgstr "Недействительный файл, пожалуйста, попробуйте снова!"
 
@@ -451,7 +453,8 @@ msgid "File format not recognized!"
 msgstr "Формат файла не распознан!"
 
 #: menu.sh:630 menu.sh:644 menu.sh:657 menu.sh:694 menu.sh:711 menu.sh:721
-#: menu.sh:724 menu.sh:740 menu.sh:744 menu.sh:758 menu.sh:764
+#: menu.sh:724 menu.sh:740 menu.sh:744 menu.sh:758 menu.sh:764 menu.sh:2459
+#: menu.sh:2494 menu.sh:2596 menu.sh:2639 menu.sh:2643
 msgid "Modules"
 msgstr "Модули"
 
@@ -1297,7 +1300,7 @@ msgstr "Предупреждение"
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "Конфигурация изменена, хотите пересобрать загрузчик?"
 
-#: menu.sh:2194 menu.sh:2673
+#: menu.sh:2194 menu.sh:2794
 msgid "Choose a language"
 msgstr "Выберите язык"
 
@@ -1309,49 +1312,52 @@ msgstr "Выберите раскладку"
 msgid "Choice a keymap"
 msgstr "Выберите карту клавиш"
 
-#: menu.sh:2240 menu.sh:2311 menu.sh:2398 menu.sh:2484 menu.sh:2489
-#: menu.sh:2494 menu.sh:2499 menu.sh:2506 menu.sh:2514 menu.sh:2520
-#: menu.sh:2526 menu.sh:2532 menu.sh:2538
+#: menu.sh:2240 menu.sh:2317 menu.sh:2414 menu.sh:2459 menu.sh:2509
+#: menu.sh:2548
 msgid "Update %s"
 msgstr "Обновление %s"
 
-#: menu.sh:2242 menu.sh:2245
+#: menu.sh:2241
 msgid "Checking last version ..."
 msgstr "Проверка последней версии ..."
 
-#: menu.sh:2256 menu.sh:2259 menu.sh:2262 menu.sh:2268
+#: menu.sh:2257
 msgid "Error checking new version.\\nError: TAG is %s"
 msgstr "Ошибка проверки новой версии.\\nОшибка: TAG is %s"
 
-#: menu.sh:2271
-msgid "No new version. Actual version is %s\\nForce update?"
-msgstr "Новых версий нет. Текущая версия %s\\nПринудительное обновление?"
-
-#: menu.sh:2275
+#: menu.sh:2270
 msgid "No new version."
 msgstr "Новых версий нет."
 
-#: menu.sh:2291
+#: menu.sh:2274
+msgid "Actual version is %s\\nForce update?"
+msgstr "Текущая версия %s\\nПринудительное обновление?"
+
+#: menu.sh:2296
 msgid "Downloading ..."
 msgstr "Загрузка ..."
 
-#: menu.sh:2295 menu.sh:2298 menu.sh:2301
+#: menu.sh:2299
 msgid "Error downloading new version.\\nError: %d:%d"
 msgstr "Ошибка загрузки новой версии.\\nОшибка: %d:%d"
 
-#: menu.sh:2313 menu.sh:2316 menu.sh:2400 menu.sh:2403
-msgid "Extracting last version"
-msgstr "Извлечение последней версии"
+#: menu.sh:2317 menu.sh:2401 menu.sh:2594 menu.sh:2621
+msgid "RR"
+msgstr "RR"
 
-#: menu.sh:2321 menu.sh:2324
-msgid "Error extracting update file"
-msgstr "Ошибка извлечения файла обновления"
+#: menu.sh:2318 menu.sh:2415 menu.sh:2460 menu.sh:2510 menu.sh:2549
+msgid "Extracting update file ..."
+msgstr "Извлекается файл обновления ..."
 
-#: menu.sh:2332 menu.sh:2335
+#: menu.sh:2329 menu.sh:2426 menu.sh:2471 menu.sh:2521 menu.sh:2560
+msgid "Error extracting update file."
+msgstr "Ошибка извлечения файла обновления."
+
+#: menu.sh:2341
 msgid "Checksum do not match!"
 msgstr "Контрольные суммы не совпадают!"
 
-#: menu.sh:2345 menu.sh:2348
+#: menu.sh:2355
 msgid ""
 "The current version does not support upgrading to the latest update.zip. "
 "Please remake the bootloader disk!"
@@ -1359,91 +1365,52 @@ msgstr ""
 "Текущая версия не поддерживает обновление до последней версии update.zip. "
 "Пожалуйста, пересоздайте диск загрузчика!"
 
-#: menu.sh:2354 menu.sh:2357
+#: menu.sh:2365
 msgid "Installing new files ..."
 msgstr "Установка новых файлов ..."
 
-#: menu.sh:2387 menu.sh:2390
-msgid "RR updated with success to %s!\\nReboot?"
-msgstr "RR успешно обновлен до %s!\\nПерезагрузить?"
-
-#: menu.sh:2410 menu.sh:2413
-msgid "Installing new %s ..."
-msgstr "Установка нового %s ..."
-
-#: menu.sh:2445 menu.sh:2448 menu.sh:2451
+#: menu.sh:2401 menu.sh:2444 menu.sh:2494 menu.sh:2533 menu.sh:2572
 msgid "%s updated with success!"
 msgstr "%s успешно обновлен!"
 
-#: menu.sh:2464
-msgid "Update all"
-msgstr "Обновить все"
+#: menu.sh:2401
+msgid "Reboot?"
+msgstr "Перезагрузка?"
 
-#: menu.sh:2465
-msgid "Update RR"
-msgstr "Обновить RR"
-
-#: menu.sh:2466
-msgid "Update addons"
-msgstr "Обновить дополнения"
-
-#: menu.sh:2467
-msgid "Update modules"
-msgstr "Обновить модули"
-
-#: menu.sh:2468
-msgid "Update LKMs"
-msgstr "Обновить LKMs"
-
-#: menu.sh:2469
-msgid "Update CKs"
-msgstr "Обновить CKs"
-
-#: menu.sh:2470
-msgid "Local upload"
-msgstr "Локальная загрузка"
-
-#: menu.sh:2471
-msgid "Pre Release:"
-msgstr "Предварительный выпуск:"
-
-#: menu.sh:2475
-msgid ""
-"Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip,rr-cks.zip "
-"to /tmp/ will skip the download."
-msgstr ""
-"Ручная загрузка update.zip, addons.zip, modules.zip, rp-lkms.zip, rr-cks.zip "
-"в /tmp/ позволит пропустить скачивание."
-
-#: menu.sh:2484 menu.sh:2520
-msgid "addons"
-msgstr "дополнения"
-
-#: menu.sh:2489 menu.sh:2526
-msgid "modules"
-msgstr "модули"
-
-#: menu.sh:2494 menu.sh:2532
+#: menu.sh:2509 menu.sh:2533 menu.sh:2597 menu.sh:2650 menu.sh:2654
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:2499 menu.sh:2538
+#: menu.sh:2548 menu.sh:2572 menu.sh:2598 menu.sh:2661 menu.sh:2665
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:2506 menu.sh:2514
-msgid "RR"
-msgstr "RR"
+#: menu.sh:2593 menu.sh:2615
+msgid "All"
+msgstr "Все"
 
-#: menu.sh:2547
+#: menu.sh:2599
+msgid "Local upload"
+msgstr "Локальная загрузка"
+
+#: menu.sh:2600
+msgid "Pre Release:"
+msgstr "Предварительный выпуск:"
+
+#: menu.sh:2605 menu.sh:2673
 msgid ""
-"Or upload update.zip, addons.zip, modules.zip, rp-lkms.zip,rr-cks.zip to /"
-"tmp/ via DUFS will skip the download.\\n"
+"Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*."
+"zip to /tmp/ will skip the download."
 msgstr ""
-"Или загрузите update.zip, addons.zip, modules.zip, rp-lkms.zip, rr-cks.zip "
-"в /tmp/ через DUFS, чтобы пропустить скачивание.\\n"
+"Ручная загрузка update*.zip, addons*.zip, modules*.zip, rp-lkms*.zip, rr-"
+"cks*.zip в /tmp/ позволит пропустить скачивание."
 
-#: menu.sh:2553
+#: menu.sh:2628 menu.sh:2639 menu.sh:2650 menu.sh:2661
+msgid "No longer supports update %s separately. Please choose to update All/RR"
+msgstr ""
+"Отдельное обновление%s больше не поддерживается. Выберите Обновить все/RR"
+
+#: menu.sh:2679
 msgid ""
 "Please keep the attachment name consistent with the attachment name on "
 "Github.\\n"
@@ -1451,117 +1418,114 @@ msgstr ""
 "Пожалуйста, сохраните имя вложения в соответствии с именем вложения на "
 "Github.\\n"
 
-#: menu.sh:2554
+#: menu.sh:2680
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "Загрузка update*.zip обновит RR.\\n"
 
-#: menu.sh:2555
+#: menu.sh:2681
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "Загрузка addons*.zip обновит дополнения.\\n"
 
-#: menu.sh:2556
+#: menu.sh:2682
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "Загрузка modules*.zip обновит модули.\\n"
 
-#: menu.sh:2557
+#: menu.sh:2683
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "Загрузка rp-lkms*.zip обновит LKMs.\\n"
 
-#: menu.sh:2558
+#: menu.sh:2684
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "Загрузка rr-cks*.zip обновит CKs.\\n"
 
-#: menu.sh:2619
+#: menu.sh:2740
 msgid "This person is very lazy and hasn't written anything."
 msgstr "Этот человек очень ленив и ничего не написал."
 
-#: menu.sh:2646
+#: menu.sh:2767
 msgid "Choose a model"
 msgstr "Выберите модель"
 
-#: menu.sh:2648
+#: menu.sh:2769
 msgid "Choose a version"
 msgstr "Выберите версию"
 
-#: menu.sh:2650
+#: menu.sh:2771
 msgid "Parse pat"
 msgstr "Разобрать pat"
 
-#: menu.sh:2657
+#: menu.sh:2778
 msgid "Kernel:"
 msgstr "Ядро:"
 
-#: menu.sh:2659
+#: menu.sh:2780
 msgid "Addons menu"
 msgstr "Меню дополнений"
 
-#: menu.sh:2660
+#: menu.sh:2781
 msgid "Modules menu"
 msgstr "Меню модулей"
 
-#: menu.sh:2661
+#: menu.sh:2782
 msgid "Cmdline menu"
 msgstr "Настройка Cmdline"
 
-#: menu.sh:2662
+#: menu.sh:2783
 msgid "Synoinfo menu"
 msgstr "Настройка Synoinfo"
 
-#: menu.sh:2664
+#: menu.sh:2785
 msgid "Advanced menu"
 msgstr "Расширенные настройки"
 
-#: menu.sh:2667
+#: menu.sh:2788
 msgid "Build the loader"
 msgstr "Сборка загрузчика"
 
-#: menu.sh:2671
+#: menu.sh:2792
 msgid "Boot the loader"
 msgstr "Загрузить загрузчик"
 
-#: menu.sh:2674
+#: menu.sh:2795
 msgid "Choose a keymap"
 msgstr "Выбрать карту клавиш"
 
-#: menu.sh:2676
+#: menu.sh:2797
 msgid "Clean disk cache"
 msgstr "Очистить кэш диска"
 
-#: menu.sh:2678
+#: menu.sh:2799
 msgid "Update menu"
 msgstr "Меню обновлений"
 
-#: menu.sh:2679
+#: menu.sh:2800
 msgid "Notepad"
 msgstr "Блокнот"
 
-#: menu.sh:2701
+#: menu.sh:2822
 msgid "Change ..."
 msgstr "Изменять ..."
 
-#: menu.sh:2770
+#: menu.sh:2891
 msgid "Choose a action"
 msgstr "Выберите действие"
 
-#: menu.sh:2771
+#: menu.sh:2892
 msgid "Poweroff"
 msgstr "Выключение"
 
-#: menu.sh:2772
+#: menu.sh:2893
 msgid "Reboot"
 msgstr "Перезагрузка"
 
-#: menu.sh:2773
+#: menu.sh:2894
 msgid "Reboot to RR"
 msgstr "Перезагрузка в RR"
 
-#: menu.sh:2774
+#: menu.sh:2895
 msgid "Back to shell"
 msgstr "Вернуться в shell"
 
-#: menu.sh:2800
+#: menu.sh:2921
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "Вызовите \\033[1;32mmenu.sh\\033[0m для возврата в меню"
-
-#~ msgid "Custom dts file # Need rebuild"
-#~ msgstr "Пользовательский файл dts # Необходима пересборка"

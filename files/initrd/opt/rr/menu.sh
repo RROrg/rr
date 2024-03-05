@@ -21,7 +21,7 @@ fi
 IP="$(getIP)"
 
 # Debug flag
-# DEBUG=0
+# DEBUG=""
 
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
@@ -2238,12 +2238,14 @@ function downloadExts() {
   PROXY="$(readConfigKey "github_proxy" "${USER_CONFIG_FILE}")"
   [ -n "${PROXY}" ] && [[ "${PROXY: -1}" != "/" ]] && PROXY="${PROXY}/"
   T="$(printf "$(TEXT "Update %s")" "${1}")"
+  MSG="$(TEXT "Checking last version ...")"
   if [ "${5}" = "-1" ]; then
-    echo "$(TEXT "Checking last version ...")"
+    echo "${T} - ${MSG}"
   else
     DIALOG --title "${T}" \
-      --infobox "$(TEXT "Checking last version ...")" 0 0
+      --infobox "${MSG}" 0 0
   fi
+  TAG=""
   if [ "${PRERELEASE}" = "true" ]; then
     TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | head -1 | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/')"
   else
@@ -2252,178 +2254,232 @@ function downloadExts() {
   fi
   [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
   if [ -z "${TAG}" -o "${TAG}" = "latest" ]; then
+    MSG="$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")"
     if [ "${5}" = "-1" ]; then
-      echo "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")"
+      echo "${T} - ${MSG}"
     elif [ "${5}" = "0" ]; then
       DIALOG --title "${T}" \
-        --msgbox "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")" 0 0
+        --msgbox "${MSG}" 0 0
     else
       DIALOG --title "${T}" \
-        --infobox "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")" 0 0
+        --infobox "${MSG}" 0 0
     fi
     return 1
   fi
   if [ "${2}" = "${TAG}" ]; then
+    MSG="$(TEXT "No new version.")"
     if [ "${5}" = "-1" ]; then
-      echo "$(printf "$(TEXT "Error checking new version.\nError: TAG is %s")" "${TAG}")"
+      echo "${T} - ${MSG}"
     elif [ "${5}" = "0" ]; then
+      MSG+="$(printf "$(TEXT "Actual version is %s\nForce update?")" "${2}")"
       DIALOG --title "${T}" \
-        --yesno "$(printf "$(TEXT "No new version. Actual version is %s\nForce update?")" "${2}")" 0 0
+        --yesno "${MSG}" 0 0
       [ $? -ne 0 ] && return 1
     else
       DIALOG --title "${T}" \
-        --infobox "$(TEXT "No new version.")" 0 0
+        --infobox "${MSG}" 0 0
       return 1
     fi
   fi
   if [ "${5}" = "-1" ]; then
     (
-      rm -f "${TMP_PATH}/${4}.zip"
-      STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
+      rm -f ${TMP_PATH}/${4}*.zip
+      STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}-${TAG}.zip" -o "${TMP_PATH}/${4}-${TAG}.zip")
       RET=$?
     ) 2>&1
   else
     (
-      rm -f "${TMP_PATH}/${4}.zip"
-      STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}.zip" -o "${TMP_PATH}/${4}.zip")
+      rm -f ${TMP_PATH}/${4}*.zip
+      STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}-${TAG}.zip" -o "${TMP_PATH}/${4}-${TAG}.zip")
       RET=$?
     ) 2>&1 | DIALOG --title "${T}" \
       --progressbox "$(TEXT "Downloading ...")" 20 100
   fi
   if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
+    MSG="$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")"
     if [ "${5}" = "-1" ]; then
-      echo "$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")"
+      echo "${T} - ${MSG}"
     elif [ "${5}" = "0" ]; then
       DIALOG --title "${T}" \
-        --msgbox "$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")" 0 0
+        --msgbox "${MSG}" 0 0
     else
       DIALOG --title "${T}" \
-        --infobox "$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")" 0 0
+        --infobox "${MSG}" 0 0
     fi
     return 1
   fi
   return 0
 }
 
-# 1 - ext name
+# 1 - update file
 # 2 - silent
 function updateRR() {
-  T="$(printf "$(TEXT "Update %s")" "${1}")"
+  T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
+  MSG="$(TEXT "Extracting update file ...")"
   if [ "${2}" = "-1" ]; then
-    echo "${T} - $(TEXT "Extracting last version")"
+    echo "${T} - ${MSG}"
   else
     DIALOG --title "${T}" \
-      --infobox "$(TEXT "Extracting last version")" 0 0
+      --infobox "${MSG}" 0 0
   fi
-  unzip -oq "${TMP_PATH}/update.zip" -d "${TMP_PATH}/"
+  rm -rf "${TMP_PATH}/update"
+  mkdir -p "${TMP_PATH}/update"
+  unzip -oq "${1}" -d "${TMP_PATH}/update"
   if [ $? -ne 0 ]; then
+    MSG="$(TEXT "Error extracting update file.")"
     if [ "${2}" = "-1" ]; then
-      echo "${T} - $(TEXT "Error extracting update file")"
+      echo "${T} - ${MSG}"
     else
       DIALOG --title "${T}" \
-        --msgbox "$(TEXT "Error extracting update file")" 0 0
+        --msgbox "${MSG}" 0 0
     fi
     return 1
   fi
   # Check checksums
-  (cd /tmp && sha256sum --status -c sha256sum)
+  (cd "${TMP_PATH}/update" && sha256sum --status -c sha256sum)
   if [ $? -ne 0 ]; then
+    MSG="$(TEXT "Checksum do not match!")"
     if [ "${2}" = "-1" ]; then
-      echo "${T} - $(TEXT "Checksum do not match!")"
+      echo "${T} - ${MSG}"
     else
       DIALOG --title "${T}" \
-        --msgbox "$(TEXT "Checksum do not match!")" 0 0
+        --msgbox "${MSG}" 0 0
     fi
     return 1
   fi
   # Check conditions
-  if [ -f "${TMP_PATH}/update-check.sh" ]; then
-    chmod +x "${TMP_PATH}/update-check.sh"
-    ${TMP_PATH}/update-check.sh
+  if [ -f "${TMP_PATH}/update/update-check.sh" ]; then
+    chmod +x "${TMP_PATH}/update/update-check.sh"
+    ${TMP_PATH}/update/update-check.sh
     if [ $? -ne 0 ]; then
+      MSG="$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")"
       if [ "${2}" = "-1" ]; then
-        echo "${T} - $(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")"
+        echo "${T} - ${MSG}"
       else
         DIALOG --title "${T}" \
-          --msgbox "$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")" 0 0
+          --msgbox "${MSG}" 0 0
       fi
       return 1
     fi
   fi
+  MSG="$(TEXT "Installing new files ...")"
   if [ "${2}" = "-1" ]; then
-    echo "${T} - $(TEXT "Installing new files ...")"
+    echo "${T} - ${MSG}"
   else
     DIALOG --title "${T}" \
-      --infobox "$(TEXT "Installing new files ...")" 0 0
+      --infobox "${MSG}" 0 0
   fi
   # Process update-list.yml
   while read F; do
     [ -f "${F}" ] && rm -f "${F}"
     [ -d "${F}" ] && rm -Rf "${F}"
-  done < <(readConfigArray "remove" "${TMP_PATH}/update-list.yml")
+  done < <(readConfigArray "remove" "${TMP_PATH}/update/update-list.yml")
   while IFS=': ' read KEY VALUE; do
     if [ "${KEY: -1}" = "/" ]; then
       rm -Rf "${VALUE}"
       mkdir -p "${VALUE}"
-      tar -zxf "${TMP_PATH}/$(basename "${KEY}").tgz" -C "${VALUE}"
+      tar -zxf "${TMP_PATH}/update/$(basename "${KEY}").tgz" -C "${VALUE}"
       if [ "$(realpath "${VALUE}")" = "$(realpath "${MODULES_PATH}")" ]; then
-        PLATFORM="$(readModelKey "${MODEL}" "platform")"
-        KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-        KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
-        if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
-          writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-          while read ID DESC; do
-            writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
-          done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+        if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
+          PLATFORM="$(readModelKey "${MODEL}" "platform")"
+          KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+          KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+          if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
+            writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+            while read ID DESC; do
+              writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
+            done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+          fi
         fi
       fi
     else
       mkdir -p "$(dirname "${VALUE}")"
-      mv -f "${TMP_PATH}/$(basename "${KEY}")" "${VALUE}"
+      mv -f "${TMP_PATH}/update/$(basename "${KEY}")" "${VALUE}"
     fi
-  done < <(readConfigMap "replace" "${TMP_PATH}/update-list.yml")
+  done < <(readConfigMap "replace" "${TMP_PATH}/update/update-list.yml")
   touch ${PART1_PATH}/.build
+  MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "RR")")\n$(TEXT "Reboot?")"
   if [ "${2}" = "-1" ]; then
-    echo "${T} - $(printf "$(TEXT "RR updated with success to %s!\nReboot?")" "${TAG}")"
+    echo "${T} - ${MSG}"
   else
     DIALOG --title "${T}" \
-      --msgbox "$(printf "$(TEXT "RR updated with success to %s!\nReboot?")" "${TAG}")" 0 0
+      --msgbox "${MSG}" 0 0
     rebootTo config
   fi
 }
 
-# 1 - ext name
+# 1 - update file
 # 2 - silent
-function updateExts() {
-  T="$(printf "$(TEXT "Update %s")" "${1}")"
+function updateAddons() {
+  T="$(printf "$(TEXT "Update %s")" "$(TEXT "Addons")")"
+  MSG="$(TEXT "Extracting update file ...")"
   if [ "${2}" = "-1" ]; then
-    echo "${T} - $(TEXT "Extracting last version")"
+    echo "${T} - ${MSG}"
   else
     DIALOG --title "${T}" \
-      --infobox "$(TEXT "Extracting last version")" 0 0
+      --infobox "${MSG}" 0 0
   fi
-  if [ "${1}" = "addons" ]; then
-    rm -rf "${TMP_PATH}/addons"
-    mkdir -p "${TMP_PATH}/addons"
-    unzip "${TMP_PATH}/addons.zip" -d "${TMP_PATH}/addons" >/dev/null 2>&1
+  rm -rf "${TMP_PATH}/update"
+  mkdir -p "${TMP_PATH}/update"
+  unzip -oq "${1}" -d "${TMP_PATH}/update"
+  if [ $? -ne 0 ]; then
+    MSG="$(TEXT "Error extracting update file.")"
     if [ "${2}" = "-1" ]; then
-      echo "${T} - $(printf "$(TEXT "Installing new %s ...")" "${1}")"
+      echo "${T} - ${MSG}"
     else
       DIALOG --title "${T}" \
-        --infobox "$(printf "$(TEXT "Installing new %s ...")" "${1}")" 0 0
+        --msgbox "${MSG}" 0 0
     fi
-    rm -Rf "${ADDONS_PATH}/"*
-    [ -f "${TMP_PATH}/addons/VERSION" ] && cp -f "${TMP_PATH}/addons/VERSION" "${ADDONS_PATH}/"
-    for PKG in $(ls ${TMP_PATH}/addons/*.addon 2>/dev/null); do
-      ADDON=$(basename ${PKG} | sed 's|.addon||')
-      rm -rf "${ADDONS_PATH}/${ADDON}"
-      mkdir -p "${ADDONS_PATH}/${ADDON}"
-      tar -xaf "${PKG}" -C "${ADDONS_PATH}/${ADDON}" >/dev/null 2>&1
-    done
-  elif [ "${1}" = "modules" ]; then
-    rm -rf "${MODULES_PATH}/"*
-    unzip ${TMP_PATH}/modules.zip -d "${MODULES_PATH}" >/dev/null 2>&1
-    # Rebuild modules if model/buildnumber is selected
+    return 1
+  fi
+  rm -Rf "${ADDONS_PATH}/"*
+  [ -f "${TMP_PATH}/update/VERSION" ] && cp -f "${TMP_PATH}/update/VERSION" "${ADDONS_PATH}/"
+  for PKG in $(ls ${TMP_PATH}/update/*.addon 2>/dev/null); do
+    ADDON=$(basename ${PKG} | sed 's|.addon||')
+    rm -rf "${ADDONS_PATH}/${ADDON}"
+    mkdir -p "${ADDONS_PATH}/${ADDON}"
+    tar -xaf "${PKG}" -C "${ADDONS_PATH}/${ADDON}" >/dev/null 2>&1
+  done
+  touch ${PART1_PATH}/.build
+  MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "Addons")")"
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - ${MSG}"
+  elif [ "${2}" = "0" ]; then
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
+  else
+    DIALOG --title "${T}" \
+      --infobox "${MSG}" 0 0
+  fi
+}
+
+# 1 - update file
+# 2 - silent
+function updateModules() {
+  T="$(printf "$(TEXT "Update %s")" "$(TEXT "Modules")")"
+  MSG="$(TEXT "Extracting update file ...")"
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - ${MSG}"
+  else
+    DIALOG --title "${T}" \
+      --infobox "${MSG}" 0 0
+  fi
+  rm -rf "${TMP_PATH}/update"
+  mkdir -p "${TMP_PATH}/update"
+  unzip -oq "${1}" -d "${TMP_PATH}/update"
+  if [ $? -ne 0 ]; then
+    MSG="$(TEXT "Error extracting update file.")"
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - ${MSG}"
+    else
+      DIALOG --title "${T}" \
+        --msgbox "${MSG}" 0 0
+    fi
+    return 1
+  fi
+  rm -rf "${MODULES_PATH}/"*
+  cp -rf "${TMP_PATH}/update/"* "${MODULES_PATH}/"
+  if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
     PLATFORM="$(readModelKey "${MODEL}" "platform")"
     KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
     KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
@@ -2433,22 +2489,95 @@ function updateExts() {
         writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
       done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
     fi
-  elif [ "${1}" = "LKMs" ]; then
-    rm -rf "${LKMS_PATH}/"*
-    unzip "${TMP_PATH}/rp-lkms.zip" -d "${LKMS_PATH}" >/dev/null 2>&1
-  elif [ "${1}" = "CKs" ]; then
-    rm -rf "${CKS_PATH}/"*
-    unzip "${TMP_PATH}/rr-cks.zip" -d "${CKS_PATH}" >/dev/null 2>&1
   fi
   touch ${PART1_PATH}/.build
+  MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "Modules")")"
   if [ "${2}" = "-1" ]; then
-    echo "${T} - $(printf "$(TEXT "%s updated with success!")" "${1}")"
+    echo "${T} - ${MSG}"
   elif [ "${2}" = "0" ]; then
     DIALOG --title "${T}" \
-      --msgbox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
+      --msgbox "${MSG}" 0 0
   else
     DIALOG --title "${T}" \
-      --infobox "$(printf "$(TEXT "%s updated with success!")" "${1}")" 0 0
+      --infobox "${MSG}" 0 0
+  fi
+}
+
+# 1 - update file
+# 2 - silent
+function updateLKMs() {
+  T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
+  MSG="$(TEXT "Extracting update file ...")"
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - ${MSG}"
+  else
+    DIALOG --title "${T}" \
+      --infobox "${MSG}" 0 0
+  fi
+  rm -rf "${TMP_PATH}/update"
+  mkdir -p "${TMP_PATH}/update"
+  unzip -oq "${1}" -d "${TMP_PATH}/update"
+  if [ $? -ne 0 ]; then
+    MSG="$(TEXT "Error extracting update file.")"
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - ${MSG}"
+    else
+      DIALOG --title "${T}" \
+        --msgbox "${MSG}" 0 0
+    fi
+    return 1
+  fi
+  rm -rf "${LKMS_PATH}/"*
+  cp -rf "${TMP_PATH}/update/"* "${LKMS_PATH}/"
+  touch ${PART1_PATH}/.build
+  MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "LKMs")")"
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - ${MSG}"
+  elif [ "${2}" = "0" ]; then
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
+  else
+    DIALOG --title "${T}" \
+      --infobox "${MSG}" 0 0
+  fi
+}
+
+# 1 - update file
+# 2 - silent
+function updateCKs() {
+  T="$(printf "$(TEXT "Update %s")" "$(TEXT "CKs")")"
+  MSG="$(TEXT "Extracting update file ...")"
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - ${MSG}"
+  else
+    DIALOG --title "${T}" \
+      --infobox "${MSG}" 0 0
+  fi
+  rm -rf "${TMP_PATH}/update"
+  mkdir -p "${TMP_PATH}/update"
+  unzip -oq "${1}" -d "${TMP_PATH}/update"
+  if [ $? -ne 0 ]; then
+    MSG="$(TEXT "Error extracting update file.")"
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - ${MSG}"
+    else
+      DIALOG --title "${T}" \
+        --msgbox "${MSG}" 0 0
+    fi
+    return 1
+  fi
+  rm -rf "${CKS_PATH}/"*
+  cp -rf "${TMP_PATH}/update/"* "${CKS_PATH}/"
+  touch ${PART1_PATH}/.build
+  MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "CKs")")"
+  if [ "${2}" = "-1" ]; then
+    echo "${T} - ${MSG}"
+  elif [ "${2}" = "0" ]; then
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
+  else
+    DIALOG --title "${T}" \
+      --infobox "${MSG}" 0 0
   fi
 }
 
@@ -2461,90 +2590,87 @@ function updateMenu() {
     CUR_LKMS_VER="$(cat "${LKMS_PATH}/VERSION" 2>/dev/null)"
     CUR_CKS_VER="$(cat "${CKS_PATH}/VERSION" 2>/dev/null)"
     rm -f "${TMP_PATH}/menu"
-    echo "a \"$(TEXT "Update all")\"" >>"${TMP_PATH}/menu"
-    echo "r \"$(TEXT "Update RR")(${CUR_RR_VER:-None})\"" >>"${TMP_PATH}/menu"
-    echo "d \"$(TEXT "Update addons")(${CUR_ADDONS_VER:-None})\"" >>"${TMP_PATH}/menu"
-    echo "m \"$(TEXT "Update modules")(${CUR_MODULES_VER:-None})\"" >>"${TMP_PATH}/menu"
-    echo "l \"$(TEXT "Update LKMs")(${CUR_LKMS_VER:-None})\"" >>"${TMP_PATH}/menu"
-    echo "c \"$(TEXT "Update CKs")(${CUR_CKS_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "a \"$(TEXT "Update") $(TEXT "All")\"" >>"${TMP_PATH}/menu"
+    echo "r \"$(TEXT "Update") $(TEXT "RR")(${CUR_RR_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "d \"$(TEXT "Update") $(TEXT "Addons")(${CUR_ADDONS_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "m \"$(TEXT "Update") $(TEXT "Modules")(${CUR_MODULES_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "l \"$(TEXT "Update") $(TEXT "LKMs")(${CUR_LKMS_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "c \"$(TEXT "Update") $(TEXT "CKs")(${CUR_CKS_VER:-None})\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Local upload")\"" >>"${TMP_PATH}/menu"
     echo "b \"$(TEXT "Pre Release:") \Z4${PRERELEASE}\Zn\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
     if [ -z "${1}" ]; then
+      SILENT="0"
       DIALOG --title "$(TEXT "Update")" \
-        --menu "$(TEXT "Manually uploading update.zip,addons.zip,modules.zip,rp-lkms.zip,rr-cks.zip to /tmp/ will skip the download.")" 0 0 0 --file "${TMP_PATH}/menu" \
+        --menu "$(TEXT "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download.")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
     else
+      SILENT="-1"
       echo "${1}" >"${TMP_PATH}/resp"
     fi
     case "$(<${TMP_PATH}/resp)" in
     a)
-      [ -z "${1}" ] && SILENT="1" || SILENT="-1"
-      T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      if [ ! -f "${TMP_PATH}/addons.zip" ]; then
-        downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "${SILENT}"
-      fi
-      [ -f "${TMP_PATH}/addons.zip" ] && updateExts "addons" "${SILENT}"
-      T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      if [ ! -f "${TMP_PATH}/modules.zip" ]; then
-        downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "${SILENT}"
-      fi
-      [ -f "${TMP_PATH}/modules.zip" ] && updateExts "modules" "${SILENT}"
-      T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      if [ ! -f "${TMP_PATH}/rp-lkms.zip" ]; then
-        downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "${SILENT}"
-      fi
-      [ -f "${TMP_PATH}/rp-lkms.zip" ] && updateExts "LKMs" "${SILENT}"
-      T="$(printf "$(TEXT "Update %s")" "$(TEXT "CKs")")"
-      if [ ! -f "${TMP_PATH}/rp-cks.zip" ]; then
-        downloadExts "CKs" "${CUR_CKS_VER:-None}" "https://github.com/XXXXXX/rr-cks" "rr-cks" "${SILENT}"
-      fi
-      [ -f "${TMP_PATH}/rr-cks.zip" ] && updateExts "CKs" "${SILENT}"
-
-      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
-      T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
-      if [ ! -f "${TMP_PATH}/update.zip" ]; then
-        downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "${SILENT}"
-      fi
-      [ -f "${TMP_PATH}/update.zip" ] && updateRR "RR" "${SILENT}"
+      F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -z "${F}" ] && downloadExts "$(TEXT "All")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "updateall" "${SILENT}"
+      F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && updateRR "${F}" "${SILENT}"
       ;;
     r)
-      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
-      T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
-      [ -f "${TMP_PATH}/update.zip" ] || downloadExts "RR" "${CUR_RR_VER:-None}" "https://github.com/XXXXXX/rr" "update" "${SILENT}"
-      [ -f "${TMP_PATH}/update.zip" ] && updateRR "RR" "${SILENT}"
+      F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -z "${F}" ] && downloadExts "$(TEXT "RR")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "update" "${SILENT}"
+      F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && updateRR "${F}" "${SILENT}"
       ;;
     d)
-      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
-      T="$(printf "$(TEXT "Update %s")" "$(TEXT "addons")")"
-      [ -f "${TMP_PATH}/addons.zip" ] || downloadExts "addons" "${CUR_ADDONS_VER:-None}" "https://github.com/XXXXXX/rr-addons" "addons" "${SILENT}"
-      [ -f "${TMP_PATH}/addons.zip" ] && updateExts "addons" "${SILENT}"
+      if [ -z "${DEBUG}" ]; then
+        DIALOG --title "$(TEXT "Update")" \
+          --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "Addons")")" 0 0
+        continue
+      fi
+      F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -z "${F}" ] && downloadExts "$(TEXT "Addons")" "${CUR_ADDONS_VER:-None}" "https://github.com/RROrg/rr-addons" "addons" "${SILENT}"
+      F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && updateAddons "${F}" "${SILENT}"
       ;;
     m)
-      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
-      T="$(printf "$(TEXT "Update %s")" "$(TEXT "modules")")"
-      [ -f "${TMP_PATH}/modules.zip" ] || downloadExts "modules" "${CUR_MODULES_VER:-None}" "https://github.com/XXXXXX/rr-modules" "modules" "${SILENT}"
-      [ -f "${TMP_PATH}/modules.zip" ] && updateExts "modules" "${SILENT}"
+      if [ -z "${DEBUG}" ]; then
+        DIALOG --title "$(TEXT "Update")" \
+          --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "Modules")")" 0 0
+        continue
+      fi
+      F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -z "${F}" ] && downloadExts "$(TEXT "Modules")" "${CUR_MODULES_VER:-None}" "https://github.com/RROrg/rr-modules" "modules" "${SILENT}"
+      F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && updateModules "${F}" "${SILENT}"
       ;;
     l)
-      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
-      T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
-      [ -f "${TMP_PATH}/rp-lkms.zip" ] || downloadExts "LKMs" "${CUR_LKMS_VER:-None}" "https://github.com/XXXXXX/rr-lkms" "rp-lkms" "${SILENT}"
-      [ -f "${TMP_PATH}/rp-lkms.zip" ] && updateExts "LKMs" "${SILENT}"
+      if [ -z "${DEBUG}" ]; then
+        DIALOG --title "$(TEXT "Update")" \
+          --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "LKMs")")" 0 0
+        continue
+      fi
+      F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -z "${F}" ] && downloadExts "$(TEXT "LKMs")" "${CUR_LKMS_VER:-None}" "https://github.com/RROrg/rr-lkms" "rp-lkms" "${SILENT}"
+      F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && updateLKMs "${F}" "${SILENT}"
       ;;
     c)
-      [ -z "${1}" ] && SILENT="0" || SILENT="-1"
-      T="$(printf "$(TEXT "Update %s")" "$(TEXT "CKs")")"
-      [ -f "${TMP_PATH}/rr-cks.zip" ] || downloadExts "CKs" "${CUR_CKS_VER:-None}" "https://github.com/XXXXXX/rr-cks" "rr-cks" "${SILENT}"
-
-      [ -f "${TMP_PATH}/rr-cks.zip" ] && updateExts "CKs" "${SILENT}"
+      if [ -z "${DEBUG}" ]; then
+        DIALOG --title "$(TEXT "Update")" \
+          --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "CKs")")" 0 0
+        continue
+      fi
+      F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -z "${F}" ] && downloadExts "$(TEXT "CKs")" "${CUR_CKS_VER:-None}" "https://github.com/RROrg/rr-cks" "rr-cks" "${SILENT}"
+      F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && updateCKs "${F}" "${SILENT}"
       ;;
     u)
       if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         MSG=""
         MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
-        MSG+="$(TEXT "Or upload update.zip, addons.zip, modules.zip, rp-lkms.zip,rr-cks.zip to /tmp/ via DUFS will skip the download.\n")"
+        MSG+="$(TEXT "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download.")"
         DIALOG --title "$(TEXT "Update")" \
           --msgbox "${MSG}" 0 0
         return
@@ -2576,31 +2702,26 @@ function updateMenu() {
         DIALOG --title "$(TEXT "Update")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       else
-        [ -z "${1}" ] && SILENT="0" || SILENT="-1"
         if [[ "${USER_FILE}" = update*.zip ]]; then
-          rm -f "${TMP_PATH}/update.zip"
-          mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/update.zip"
-          updateRR "RR" "${SILENT}"
+          rm -f ${TMP_PATH}/update*.zip
+          updateRR "${USER_FILE}" "${SILENT}"
         elif [[ "${USER_FILE}" = addons*.zip ]]; then
-          rm -f "${TMP_PATH}/addons.zip"
-          mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/addons.zip"
-          updateExts "addons" "${SILENT}"
+          rm -f ${TMP_PATH}/addons*.zip
+          updateAddons "${USER_FILE}" "${SILENT}"
         elif [[ "${USER_FILE}" = modules*.zip ]]; then
-          rm -f "${TMP_PATH}/modules.zip"
-          mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/modules.zip"
-          updateExts "modules" "${SILENT}"
+          rm -f ${TMP_PATH}/modules*.zip
+          updateModules "${USER_FILE}" "${SILENT}"
         elif [[ "${USER_FILE}" = rp-lkms*.zip ]]; then
-          rm -f "${TMP_PATH}/rp-lkms.zip"
-          mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/rp-lkms.zip"
-          updateExts "LKMs" "${SILENT}"
+          rm -f ${TMP_PATH}/rp-lkms*.zip
+          updateLKMs "${USER_FILE}" "${SILENT}"
         elif [[ "${USER_FILE}" = rr-cks*.zip ]]; then
-          rm -f "${TMP_PATH}/rr-cks.zip"
-          mv -f "${TMP_UP_PATH}/${USER_FILE}" "${TMP_PATH}/rr-cks.zip"
-          updateExts "CKs" "${SILENT}"
+          rm -f ${TMP_PATH}/rr-cks*.zip
+          updateCKs "${USER_FILE}" "${SILENT}"
         else
           DIALOG --title "$(TEXT "Update")" \
             --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
         fi
+        rm -f "${USER_FILE}"
       fi
       ;;
     b)
