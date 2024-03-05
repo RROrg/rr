@@ -56,9 +56,10 @@ This project is a system for redpill’s preinstallation and recovery environmen
     xgettext -L Shell --keyword=TEXT *.sh -o lang/rr.pot
     sed -i 's/charset=CHARSET/charset=UTF-8/' lang/rr.pot
     # You need to replace the language you need and translate the po file.
-    msginit -i lang/rr.pot -l zh_CN.UTF-8 -o lang/zh_CN.po
+    mkdir -p lang/zh_CN/LC_MESSAGES
+    msginit -i lang/rr.pot -l zh_CN.UTF-8 -o lang/zh_CN/LC_MESSAGES/rr.po
     # This process will be automatically processed during packaging.
-    msgfmt lang/zh_CN.po -o lang/zh_CN.mo
+    msgfmt lang/zh_CN/LC_MESSAGES/rr.po -o lang/zh_CN/LC_MESSAGES/rr.mo
     ```
 * I am not proficient in language, and even my English is very poor. 
   Developers who are familiar with various languages are welcome to submit PR.
