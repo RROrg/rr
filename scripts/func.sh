@@ -13,7 +13,7 @@ export TOKEN="${1}"
 function convertpo2mo() {
   echo "Convert po2mo begin"
   local DEST_PATH="${1:-lang}"
-  for P in $(ls ${DEST_PATH}/*.po 2>/dev/null); do
+  for P in $(ls ${DEST_PATH}/*/LC_MESSAGES/rr.po 2>/dev/null); do
     # Use msgfmt command to compile the .po file into a binary .mo file
     echo "msgfmt ${P} to ${P/.po/.mo}"
     msgfmt ${P} -o ${P/.po/.mo}
