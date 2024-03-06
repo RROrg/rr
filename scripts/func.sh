@@ -86,7 +86,7 @@ function getBuildroot() {
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
-  done < <(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  done <<<$(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
   # Unzip Buildroot
   rm -rf "${CACHE_DIR}"
   mkdir -p "${CACHE_DIR}"
@@ -118,7 +118,7 @@ function getCKs() {
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
-  done < <(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-cks/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  done <<<$(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-cks/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
   [ ! -f "${CACHE_FILE}" ] && exit 1
   # Unzip CKs
   rm -rf "${DEST_PATH}"
@@ -147,7 +147,7 @@ function getLKMs() {
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
-  done < <(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  done <<<$(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
   [ ! -f "${CACHE_FILE}" ] && exit 1
   # Unzip LKMs
   rm -rf "${DEST_PATH}"
@@ -176,7 +176,7 @@ function getAddons() {
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
-  done < <(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  done <<<$(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
   [ ! -f "${CACHE_FILE}" ] && exit 1
   rm -rf "${DEST_PATH}"
   mkdir -p "${DEST_PATH}"
@@ -216,7 +216,7 @@ function getModules() {
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
-  done < <(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  done <<<$(curl -skL -H "Authorization: Bearer ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
   [ ! -f "${CACHE_FILE}" ] && exit 1
   # Unzip Modules
   rm -rf "${DEST_PATH}"

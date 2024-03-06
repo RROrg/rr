@@ -58,9 +58,8 @@ while read F; do
     (cd $(dirname "/tmp/${F}") && sha256sum $(basename "/tmp/${F}")) >>sha256sum
     zip -9j update.zip "/tmp/${F}"
   fi
-done < <(yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml)
+done <<<$(yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml)
 zip -9j update.zip sha256sum
-
 
 echo "Unmount image file"
 sudo umount "/tmp/files/p1"

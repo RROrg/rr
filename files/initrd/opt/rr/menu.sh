@@ -106,13 +106,13 @@ function modelMenu() {
       Y=$(echo ${M} | tr -cd "[0-9]")
       Y=${Y:0-2}
       echo "${M} ${Y}" >>"${TMP_PATH}/modellist"
-    done < <(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml | sed 's/.*\///; s/\.yml//')
+    done <<<$(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml | sed 's/.*\///; s/\.yml//')
 
     while true; do
       echo -n "" >"${TMP_PATH}/menu"
       echo "c \"\Z1$(TEXT "Compatibility judgment")\Zn\"" >>"${TMP_PATH}/menu"
       FLGNEX=0
-      while read M Y; do
+      while read M; do
         PLATFORM=$(readModelKey "${M}" "platform")
         DT="$(readModelKey "${M}" "dt")"
         BETA="$(readModelKey "${M}" "beta")"
@@ -130,7 +130,7 @@ function modelMenu() {
         fi
         [ "${DT}" = "true" ] && DT="DT" || DT=""
         [ ${COMPATIBLE} -eq 1 ] && echo "${M} \"$(printf "\Zb%-15s %-2s\Zn" "${PLATFORM}" "${DT}")\" " >>"${TMP_PATH}/menu"
-      done < <(cat "${TMP_PATH}/modellist" | sort -r -n -k 2)
+      done <<<$(cat "${TMP_PATH}/modellist" | sort -r -n -k 2 | awk '{print $1}')
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
       [ ${FLGBETA} -eq 0 ] && echo "b \"\Z1$(TEXT "Show all models")\Zn\"" >>"${TMP_PATH}/menu"
       DIALOG --title "$(TEXT "Model")" \
@@ -154,7 +154,7 @@ function modelMenu() {
         fi
         rm -f "${TMP_PATH}/opts"
         echo "$(printf "%-16s %8s %8s %8s" "model" "iGPU" "HBA" "M.2")" >>"${TMP_PATH}/opts"
-        while read M Y; do
+        while read M; do
           PLATFORM=$(readModelKey "${M}" "platform")
           DT="$(readModelKey "${M}" "dt")"
           I915=" "
@@ -175,7 +175,7 @@ function modelMenu() {
             fi
           fi
           echo "$(printf "%-16s %8s %8s %8s" "${M}" "${I915}" "${HBA}" "${M_2}")" >>"${TMP_PATH}/opts"
-        done < <(cat "${TMP_PATH}/modellist" | sort -r -n -k 2)
+        done <<<$(cat "${TMP_PATH}/modellist" | sort -r -n -k 2 | awk '{print $1}')
         DIALOG --title "$(TEXT "Model")" \
           --textbox "${TMP_PATH}/opts" 0 0
         continue
@@ -307,7 +307,7 @@ function productversMenu() {
   writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
   while IFS=': ' read KEY VALUE; do
     writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
-  done < <(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
+  done <<<$(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
   # Check addons
   PLATFORM="$(readModelKey "${MODEL}" "platform")"
   KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
@@ -317,12 +317,12 @@ function productversMenu() {
     if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
       deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
     fi
-  done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
+  done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
   # Rewrite modules
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
   while read ID DESC; do
     writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
-  done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+  done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
   # Remove old files
   rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1
   rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1
@@ -438,7 +438,7 @@ function ParsePat() {
     writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
     while IFS=': ' read KEY VALUE; do
       writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
-    done < <(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
+    done <<<$(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
 
     # Check addons
     PLATFORM="$(readModelKey "${MODEL}" "platform")"
@@ -449,12 +449,12 @@ function ParsePat() {
       if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
         deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
       fi
-    done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
+    done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
     # Rebuild modules
     writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
     while read ID DESC; do
       writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
-    done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+    done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
 
     # Remove old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1
@@ -495,7 +495,7 @@ function addonMenu() {
     declare -A ADDONS
     while IFS=': ' read KEY VALUE; do
       [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
-    done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
+    done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
 
     DIALOG --title "$(TEXT "Addons")" \
       --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 \
@@ -512,7 +512,7 @@ function addonMenu() {
       while read ADDON DESC; do
         arrayExistItem "${ADDON}" "${!ADDONS[@]}" && continue # Check if addon has already been added
         echo "${ADDON} \"${DESC}\"" >>"${TMP_PATH}/menu"
-      done < <(availableAddons "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+      done <<<$(availableAddons "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
       if [ ! -f "${TMP_PATH}/menu" ]; then
         DIALOG --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "No available addons to add")" 0 0
@@ -566,7 +566,7 @@ function addonMenu() {
           MSG+="${MODULE}"
         fi
         MSG+=": \Z5${DESC}\Zn\n"
-      done < <(availableAddons "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+      done <<<$(availableAddons "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
       DIALOG --title "$(TEXT "Addons")" \
         --msgbox "${MSG}" 0 0
       ;;
@@ -648,7 +648,7 @@ function moduleMenu() {
         declare -A USERMODULES
         while IFS=': ' read KEY VALUE; do
           [ -n "${KEY}" ] && USERMODULES["${KEY}"]="${VALUE}"
-        done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
+        done <<<$(readConfigMap "modules" "${USER_CONFIG_FILE}")
         rm -f "${TMP_PATH}/opts"
         while read ID DESC; do
           arrayExistItem "${ID}" "${!USERMODULES[@]}" && ACT="on" || ACT="off"
@@ -753,7 +753,7 @@ function moduleMenu() {
         if echo "${DEPS}" | grep -wq "${KEY}"; then
           DELS+=("${KEY}")
         fi
-      done < <(readConfigMap "modules" "${USER_CONFIG_FILE}")
+      done <<<$(readConfigMap "modules" "${USER_CONFIG_FILE}")
       if [ ${#DELS[@]} -eq 0 ]; then
         DIALOG --title "$(TEXT "Modules")" \
           --msgbox "$(TEXT "No i915 with dependencies module to deselect.")" 0 0
@@ -853,7 +853,7 @@ function cmdlineMenu() {
       declare -A CMDLINE
       while IFS=': ' read KEY VALUE; do
         [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
-      done < <(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
+      done <<<$(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
       if [ ${#CMDLINE[@]} -eq 0 ]; then
         DIALOG --title "$(TEXT "Cmdline")" \
           --msgbox "$(TEXT "No user cmdline to remove")" 0 0
@@ -922,7 +922,7 @@ function cmdlineMenu() {
       ITEMS=""
       while IFS=': ' read KEY VALUE; do
         ITEMS+="${KEY}: ${VALUE}\n"
-      done < <(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].cmdline")
+      done <<<$(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].cmdline")
       DIALOG --title "$(TEXT "Cmdline")" \
         --msgbox "${ITEMS}" 0 0
       ;;
@@ -985,7 +985,7 @@ function synoinfoMenu() {
       declare -A SYNOINFO
       while IFS=': ' read KEY VALUE; do
         [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
-      done < <(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")
+      done <<<$(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")
       if [ ${#SYNOINFO[@]} -eq 0 ]; then
         DIALOG --title "$(TEXT "Synoinfo")" \
           --msgbox "$(TEXT "No synoinfo entries to remove")" 0 0
@@ -1224,7 +1224,7 @@ function make() {
         echo -e "$(printf "$(TEXT "Addon %s not found!")" "${ADDON}")" >"${MKERR_FILE}"
         break 2
       fi
-    done < <(readConfigMap "addons" "${USER_CONFIG_FILE}")
+    done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
 
     if [ ! -f "${ORI_ZIMAGE_FILE}" -o ! -f "${ORI_RDGZ_FILE}" ]; then
       extractDsmFiles
@@ -1713,7 +1713,7 @@ function advancedMenu() {
         [ -z "${ID}" ] && ID="Unknown"
         echo "${KNAME}" | grep -q "${LOADER_DISK}" && continue
         echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
-      done < <(lsblk -pno KNAME,ID)
+      done <<<$(lsblk -pno KNAME,ID)
       if [ ! -f "${TMP_PATH}/opts" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "No disk found!")" 0 0
@@ -1762,7 +1762,7 @@ function advancedMenu() {
             grep -q "status=on" "${TMP_PATH}/sdX1/usr/syno/etc/packages/SecureSignIn/preference/${U}/method.config" 2>/dev/null
             [ $? -eq 0 ] && S="SecureSignIn" || S="            "
             printf "\"%-36s %-10s %-14s\"\n" "${U}" "${E}" "${S}" >>"${TMP_PATH}/menu"
-          done < <(cat "${TMP_PATH}/sdX1/etc/shadow")
+          done <<<$(cat "${TMP_PATH}/sdX1/etc/shadow")
         fi
         umount "${I}"
         [ -f "${TMP_PATH}/menu" ] && break
@@ -1900,7 +1900,7 @@ EOF
         [ -z "${KNAME}" -o -z "${ID}" ] && continue
         echo "${KNAME}" | grep -q "${LOADER_DISK}" && continue
         echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
-      done < <(lsblk -dpno KNAME,ID)
+      done <<<$(lsblk -dpno KNAME,ID)
       if [ ! -f "${TMP_PATH}/opts" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "No disk found!")" 0 0
@@ -2099,7 +2099,7 @@ function tryRecoveryDSM() {
           [ "${unique}" = "${UNIQUE}" ] || continue
           # Found
           modelMenu "${M}"
-        done < <(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml | sort)
+        done <<<$(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml | sort)
         if [ -n "${MODEL}" ]; then
           productversMenu "${majorversion}.${minorversion}"
           if [ -n "${PRODUCTVER}" ]; then
@@ -2188,7 +2188,7 @@ function languageMenu() {
   while read L; do
     A="$(echo "$(strings "${WORK_PATH}/lang/${L}/LC_MESSAGES/rr.mo" 2>/dev/null | grep "Last-Translator" | sed "s/Last-Translator://")")"
     echo "${L} \"${A:-"anonymous"}\"" >>"${TMP_PATH}/menu"
-  done < <(ls ${WORK_PATH}/lang/*/LC_MESSAGES/rr.mo 2>/dev/null | sort | sed -r 's/.*\/lang\/(.*)\/LC_MESSAGES\/rr\.mo$/\1/')
+  done <<<$(ls ${WORK_PATH}/lang/*/LC_MESSAGES/rr.mo 2>/dev/null | sort | sed -r 's/.*\/lang\/(.*)\/LC_MESSAGES\/rr\.mo$/\1/')
 
   DIALOG \
     --default-item "${LAYOUT}" --menu "$(TEXT "Choose a language")" 0 0 0 --file "${TMP_PATH}/menu" \
@@ -2213,7 +2213,7 @@ function keymapMenu() {
   OPTIONS=""
   while read KM; do
     OPTIONS+="${KM::-7} "
-  done < <(
+  done <<<$(
     cd /usr/share/keymaps/i386/${LAYOUT}
     ls *.map.gz 2>/dev/null
   )
@@ -2373,7 +2373,7 @@ function updateRR() {
   while read F; do
     [ -f "${F}" ] && rm -f "${F}"
     [ -d "${F}" ] && rm -Rf "${F}"
-  done < <(readConfigArray "remove" "${TMP_PATH}/update/update-list.yml")
+  done <<<$(readConfigArray "remove" "${TMP_PATH}/update/update-list.yml")
   while IFS=': ' read KEY VALUE; do
     if [ "${KEY: -1}" = "/" ]; then
       rm -Rf "${VALUE}"
@@ -2388,7 +2388,7 @@ function updateRR() {
             writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
             while read ID DESC; do
               writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
-            done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+            done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
           fi
         fi
       fi
@@ -2396,7 +2396,7 @@ function updateRR() {
       mkdir -p "$(dirname "${VALUE}")"
       mv -f "${TMP_PATH}/update/$(basename "${KEY}")" "${VALUE}"
     fi
-  done < <(readConfigMap "replace" "${TMP_PATH}/update/update-list.yml")
+  done <<<$(readConfigMap "replace" "${TMP_PATH}/update/update-list.yml")
   touch ${PART1_PATH}/.build
   MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "RR")")\n$(TEXT "Reboot?")"
   if [ "${2}" = "-1" ]; then
@@ -2487,7 +2487,7 @@ function updateModules() {
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
       while read ID DESC; do
         writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
-      done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+      done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
     fi
   fi
   touch ${PART1_PATH}/.build
@@ -2830,7 +2830,7 @@ while true; do
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
       while read ID DESC; do
         writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
-      done < <(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+      done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
     fi
     touch ${PART1_PATH}/.build
 
