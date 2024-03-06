@@ -29,7 +29,7 @@ printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
 
 # Check if DSM zImage changed, patch it if necessary
 ZIMAGE_HASH="$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")"
-if [ -f ${PART1_PATH}/.build -o "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print$1}')" != "${ZIMAGE_HASH}" ]; then
+if [ -f ${PART1_PATH}/.build -o "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print $1}')" != "${ZIMAGE_HASH}" ]; then
   echo -e "\033[1;43m$(TEXT "DSM zImage changed")\033[0m"
   ${WORK_PATH}/zimage-patch.sh
   if [ $? -ne 0 ]; then
@@ -58,9 +58,9 @@ SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
 KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 
-DMI="$(dmesg | grep -i "DMI:" | sed 's/\[.*\] DMI: //i')"
-CPU="$(echo $(cat /proc/cpuinfo | grep 'model name' | uniq | awk -F':' '{print $2}'))"
-MEM="$(free -m | grep -i mem | awk '{print$2}') MB"
+DMI="$(dmesg 2>/dev/null | grep -i "DMI:" | sed 's/\[.*\] DMI: //i')"
+CPU="$(echo $(cat /proc/cpuinfo 2>/dev/null | grep 'model name' | uniq | awk -F':' '{print $2}'))"
+MEM="$(free -m 2>/dev/null | grep -i mem | awk '{print $2}') MB"
 
 echo -e "$(TEXT "Model:   ") \033[1;36m${MODEL}\033[0m"
 echo -e "$(TEXT "Version: ") \033[1;36m${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))\033[0m"
@@ -186,7 +186,7 @@ else
   while [ ${COUNT} -lt $((${BOOTIPWAIT} + 32)) ]; do
     hasConnect="false"
     for N in ${ETHX}; do
-      if ethtool ${N} | grep 'Link detected' | grep -q 'yes'; then
+      if ethtool ${N} 2>/dev/null | grep 'Link detected' | grep -q 'yes'; then
         echo -en "${N} "
         hasConnect="true"
       fi
@@ -205,11 +205,11 @@ else
     DRIVER=$(ls -ld /sys/class/net/${N}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
     echo -en "${N}(${DRIVER}): "
     while true; do
-      if ! ip link show ${N} | grep -q 'UP'; then
+      if ! ip link show ${N} 2>/dev/null | grep -q 'UP'; then
         echo -en "\r${N}(${DRIVER}): $(TEXT "DOWN")\n"
         break
       fi
-      if ethtool ${N} | grep 'Link detected' | grep -q 'no'; then
+      if ethtool ${N} 2>/dev/null | grep 'Link detected' | grep -q 'no'; then
         echo -en "\r${N}(${DRIVER}): $(TEXT "NOT CONNECTED")\n"
         break
       fi
@@ -229,12 +229,12 @@ else
   done
   BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
   [ -z "${BOOTWAIT}" ] && BOOTWAIT=10
-  w | awk '{print $1" "$2" "$4" "$5" "$6}' >WB
+  w 2>/dev/null | awk '{print $1" "$2" "$4" "$5" "$6}' >WB
   MSG=""
   while test ${BOOTWAIT} -ge 0; do
     MSG="$(printf "\033[1;33m$(TEXT "%2ds (Changing access(ssh/web) status will interrupt boot)")\033[0m" "${BOOTWAIT}")"
     echo -en "\r${MSG}"
-    w | awk '{print $1" "$2" "$4" "$5" "$6}' >WC
+    w 2>/dev/null | awk '{print $1" "$2" "$4" "$5" "$6}' >WC
     if ! diff WB WC >/dev/null 2>&1; then
       echo -en "\r\033[1;33m$(TEXT "access(ssh/web) status has changed and booting is interrupted.")\033[0m\n"
       rm -f WB WC
@@ -268,7 +268,7 @@ else
     kexec -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
   fi
   echo -e "\033[1;37m$(TEXT "Booting ...")\033[0m"
-  for T in $(w | grep -v "TTY" | awk -F' ' '{print $2}'); do
+  for T in $(w 2>/dev/null | grep -v "TTY" | awk -F' ' '{print $2}'); do
     echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
   done
 

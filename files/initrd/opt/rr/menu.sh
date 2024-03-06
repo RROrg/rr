@@ -11,7 +11,7 @@
 alias DIALOG='dialog --backtitle "$(backtitle)" --colors --aspect 50'
 
 # Check partition 3 space, if < 2GiB is necessary clean cache folder
-PACELEFT=$(df -m ${LOADER_DISK_PART3} | awk 'NR==2 {print $4}')
+PACELEFT=$(df -m ${LOADER_DISK_PART3} 2>/dev/null | awk 'NR==2 {print $4}')
 CLEARCACHE=0
 if [ ${PACELEFT:-0} -lt 430 ]; then
   CLEARCACHE=1
@@ -106,7 +106,7 @@ function modelMenu() {
       Y=$(echo ${M} | tr -cd "[0-9]")
       Y=${Y:0-2}
       echo "${M} ${Y}" >>"${TMP_PATH}/modellist"
-    done <<<$(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml | sed 's/.*\///; s/\.yml//')
+    done <<<$(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml 2>/dev/null | sed 's/.*\///; s/\.yml//')
 
     while true; do
       echo -n "" >"${TMP_PATH}/menu"
@@ -141,11 +141,11 @@ function modelMenu() {
       [ -z "${resp}" ] && return
       if [ "${resp}" = "c" ]; then
         models=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
-        [ $(lspci -d ::300 | grep 8086 | wc -l) -gt 0 ] && iGPU=1 || iGPU=0
-        [ $(lspci -d ::104 | wc -l) -gt 0 -o $(lspci -d ::107 | wc -l) -gt 0 ] && LSI=1 || LSI=0
-        [ $(lspci -d ::108 | wc -l) -gt 0 ] && NVME=1 || NVME=0
+        [ $(lspci -d ::300 2>/dev/null | grep 8086 | wc -l) -gt 0 ] && iGPU=1 || iGPU=0
+        [ $(lspci -d ::104 2>/dev/null | wc -l) -gt 0 -o $(lspci -d ::107 2>/dev/null | wc -l) -gt 0 ] && LSI=1 || LSI=0
+        [ $(lspci -d ::108 2>/dev/null | wc -l) -gt 0 ] && NVME=1 || NVME=0
         if [ "${NVME}" = "1" ]; then
-          for PCI in $(lspci -d ::108 | awk '{print $1}'); do
+          for PCI in $(lspci -d ::108 2>/dev/null | awk '{print $1}'); do
             if [ ! -d "/sys/devices/pci0000:00/0000:${PCI}/nvme" ]; then
               NVME=2
               break
@@ -374,13 +374,13 @@ function ParsePat() {
       break
     fi
 
-    MODELTMP=$(grep -E "MODEL=\".*\"" ${UNTAR_PAT_PATH}/GRUB_VER | sed 's/.*MODEL="\(.*\)".*/\1/')
+    MODELTMP=$(grep -E "MODEL=\".*\"" ${UNTAR_PAT_PATH}/GRUB_VER 2>/dev/null | sed 's/.*MODEL="\(.*\)".*/\1/')
     if [ -n "${MODELTMP}" ]; then
       if [ -f "${WORK_PATH}/model-configs/${MODELTMP}.yml" ]; then
         MODEL=${MODELTMP}
       else
         IS_FIND="false"
-        for M in $(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml | sed 's/.*\///; s/\.yml//'); do
+        for M in $(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml 2>/dev/null | sed 's/.*\///; s/\.yml//'); do
           if [ "$(readModelKey "${M}" "id")" = "${MODELTMP}" ]; then
             MODEL=${M}
             IS_FIND="true"
@@ -421,9 +421,9 @@ function ParsePat() {
 
     mkdir -p "${PART3_PATH}/dl"
     # Check disk space left
-    SPACELEFT=$(df -m ${LOADER_DISK_PART3} | awk 'NR==2 {print $4}')
+    SPACELEFT=$(df -m ${LOADER_DISK_PART3} 2>/dev/null | awk 'NR==2 {print $4}')
     # Discover remote file size
-    FILESIZE=$(du -m "${PAT_PATH}" | awk '{print $1}')
+    FILESIZE=$(du -m "${PAT_PATH}" 2>/dev/null | awk '{print $1}')
     if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
       # No disk space to copy, mv it to dl
       mv -f "${PAT_PATH}" "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat"
@@ -694,7 +694,7 @@ function moduleMenu() {
       DIALOG --title "$(TEXT "Modules")" \
         --infobox "$(TEXT "Selecting loaded modules")" 0 0
       KOLIST=""
-      for I in $(lsmod | awk -F' ' '{print $1}' | grep -v 'Module'); do
+      for I in $(lsmod 2>/dev/null | awk -F' ' '{print $1}' | grep -v 'Module'); do
         KOLIST+="$(getdepends "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${I}") ${I} "
       done
       KOLIST=($(echo ${KOLIST} | tr ' ' '\n' | sort -u))
@@ -705,7 +705,7 @@ function moduleMenu() {
       touch ${PART1_PATH}/.build
       ;;
     u)
-      if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+      if ! tty 2>/dev/null | grep -q "/dev/pts"; then #if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         MSG=""
         MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
         DIALOG --title "$(TEXT "Modules")" \
@@ -1156,9 +1156,9 @@ function extractDsmFiles() {
     fi
     echo "$(printf "$(TEXT "Downloading %s ...")" "${PAT_FILE}")"
     # Check disk space left
-    SPACELEFT=$(df --block-size=1 ${LOADER_DISK_PART3} | awk 'NR==2 {print $4}')
+    SPACELEFT=$(df --block-size=1 ${LOADER_DISK_PART3} 2>/dev/null | awk 'NR==2 {print $4}')
     # Discover remote file size
-    FILESIZE=$(curl -skLI --connect-timeout 10 "${PATURL}" | grep -i Content-Length | awk '{print$2}')
+    FILESIZE=$(curl -skLI --connect-timeout 10 "${PATURL}" | grep -i Content-Length | tail -n 1 | awk '{print $2}')
     if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
@@ -1519,10 +1519,10 @@ function advancedMenu() {
     y)
       DIALOG --title "$(TEXT "Advanced")" \
         --infobox "$(TEXT "Scanning ...")" 0 0
-      ITEM=$(iw wlan0 scan | grep SSID: | awk '{print $2}')
+      ITEM=$(iw wlan0 scan 2>/dev/null | grep SSID: | awk '{print $2}')
       MSG=""
       MSG+="$(TEXT "Scanned SSIDs:\n")"
-      for I in $(iw wlan0 scan | grep SSID: | awk '{print $2}'); do MSG+="${I}\n"; done
+      for I in $(iw wlan0 scan 2>/dev/null | grep SSID: | awk '{print $2}'); do MSG+="${I}\n"; done
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
       while true; do
         SSID=$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep -i SSID | cut -d'=' -f2)
@@ -1553,7 +1553,7 @@ function advancedMenu() {
 
             for ETH in $(ls /sys/class/net/ 2>/dev/null | grep wlan); do
               connectwlanif "${ETH}" && sleep 1
-              MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
+              MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
               IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
               if [ -n "${IPR}" ]; then
                 ip addr add ${IPC}/24 dev ${ETH}
@@ -1589,13 +1589,13 @@ function advancedMenu() {
     s)
       MSG=""
       NUMPORTS=0
-      [ $(lspci -d ::106 | wc -l) -gt 0 ] && MSG+="\nATA:\n"
-      for PCI in $(lspci -d ::106 | awk '{print $1}'); do
-        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+      [ $(lspci -d ::106 2>/dev/null | wc -l) -gt 0 ] && MSG+="\nATA:\n"
+      for PCI in $(lspci -d ::106 2>/dev/null | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
         MSG+="\Zb${NAME}\Zn\nPorts: "
         PORTS=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
         for P in ${PORTS}; do
-          if lsscsi -b | grep -v - | grep -q "\[${P}:"; then
+          if lsscsi -b 2>/dev/null | grep -v - | grep -q "\[${P}:"; then
             DUMMY="$([ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd)" = "0" ] && echo 1 || echo 2)"
             if [ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd)" = "0" ]; then
               MSG+="\Z1$(printf "%02d" ${P})\Zn "
@@ -1609,52 +1609,52 @@ function advancedMenu() {
         done
         MSG+="\n"
       done
-      [ $(lspci -d ::104 | wc -l) -gt 0 ] && MSG+="\nRAID:\n"
-      for PCI in $(lspci -d ::104 | awk '{print $1}'); do
-        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+      [ $(lspci -d ::104 2>/dev/null | wc -l) -gt 0 ] && MSG+="\nRAID:\n"
+      for PCI in $(lspci -d ::104 2>/dev/null | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
         PORT=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
-        PORTNUM=$(lsscsi -b | grep -v - | grep "\[${PORT}:" | wc -l)
+        PORTNUM=$(lsscsi -b 2>/dev/null | grep -v - | grep "\[${PORT}:" | wc -l)
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
-      [ $(lspci -d ::107 | wc -l) -gt 0 ] && MSG+="\nSerial Attached SCSI:\n"
-      for PCI in $(lspci -d ::107 | awk '{print $1}'); do
-        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+      [ $(lspci -d ::107 2>/dev/null | wc -l) -gt 0 ] && MSG+="\nSerial Attached SCSI:\n"
+      for PCI in $(lspci -d ::107 2>/dev/null | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
         PORT=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
-        PORTNUM=$(lsscsi -b | grep -v - | grep "\[${PORT}:" | wc -l)
+        PORTNUM=$(lsscsi -b 2>/dev/null | grep -v - | grep "\[${PORT}:" | wc -l)
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
-      [ $(lspci -d ::100 | wc -l) -gt 0 ] && MSG+="\nSCSI:\n"
-      for PCI in $(lspci -d ::100 | awk '{print $1}'); do
-        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+      [ $(lspci -d ::100 2>/dev/null | wc -l) -gt 0 ] && MSG+="\nSCSI:\n"
+      for PCI in $(lspci -d ::100 2>/dev/null | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
         PORTNUM=$(ls -l /sys/block/* 2>/dev/null | grep "${PCI}" | wc -l)
         [ ${PORTNUM} -eq 0 ] && continue
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
       [ $(ls -l /sys/class/scsi_host 2>/dev/null | grep usb | wc -l) -gt 0 ] && MSG+="\nUSB:\n"
-      for PCI in $(lspci -d ::c03 | awk '{print $1}'); do
-        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+      for PCI in $(lspci -d ::c03 2>/dev/null | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
         PORT=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
-        PORTNUM=$(lsscsi -b | grep -v - | grep "\[${PORT}:" | wc -l)
+        PORTNUM=$(lsscsi -b 2>/dev/null | grep -v - | grep "\[${PORT}:" | wc -l)
         [ ${PORTNUM} -eq 0 ] && continue
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
       [ $(ls -l /sys/class/mmc_host 2>/dev/null | grep mmc_host | wc -l) -gt 0 ] && MSG+="\nMMC:\n"
-      for PCI in $(lspci -d ::805 | awk '{print $1}'); do
-        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+      for PCI in $(lspci -d ::805 2>/dev/null | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
         PORTNUM=$(ls -l /sys/block/mmc* 2>/dev/null | grep "${PCI}" | wc -l)
         [ ${PORTNUM} -eq 0 ] && continue
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
-      [ $(lspci -d ::108 | wc -l) -gt 0 ] && MSG+="\nNVME:\n"
-      for PCI in $(lspci -d ::108 | awk '{print $1}'); do
-        NAME=$(lspci -s "${PCI}" | sed "s/\ .*://")
+      [ $(lspci -d ::108 2>/dev/null | wc -l) -gt 0 ] && MSG+="\nNVME:\n"
+      for PCI in $(lspci -d ::108 2>/dev/null | awk '{print $1}'); do
+        NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
         PORT=$(ls -l /sys/class/nvme 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/nvme//' | sort -n)
-        PORTNUM=$(lsscsi -b | grep -v - | grep "\[N:${PORT}:" | wc -l)
+        PORTNUM=$(lsscsi -b 2>/dev/null | grep -v - | grep "\[N:${PORT}:" | wc -l)
         MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
         NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
       done
@@ -1777,7 +1777,7 @@ function advancedMenu() {
         --no-items --menu "$(TEXT "Choose a user name")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
-      USER="$(cat "${TMP_PATH}/resp" | awk '{print $1}')"
+      USER="$(cat "${TMP_PATH}/resp" 2>/dev/null | awk '{print $1}')"
       [ -z "${USER}" ] && return
       while true; do
         DIALOG --title "$(TEXT "Advanced")" \
@@ -1794,7 +1794,7 @@ function advancedMenu() {
         mkdir -p "${TMP_PATH}/sdX1"
         for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
           mount "${I}" "${TMP_PATH}/sdX1"
-          OLDPASSWD="$(cat "${TMP_PATH}/sdX1/etc/shadow" | grep "^${USER}:" | awk -F ':' '{print $2}')"
+          OLDPASSWD="$(cat "${TMP_PATH}/sdX1/etc/shadow" 2>/dev/null | grep "^${USER}:" | awk -F ':' '{print $2}')"
           if [ -n "${NEWPASSWD}" -a -n "${OLDPASSWD}" ]; then
             sed -i "s|${OLDPASSWD}|${NEWPASSWD}|g" "${TMP_PATH}/sdX1/etc/shadow"
             sed -i "/^${USER}:/ s/\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\)/\1:\2:\3:\4:\5:\6:\7::\9/" "${TMP_PATH}/sdX1/etc/shadow"
@@ -1916,7 +1916,7 @@ EOF
           --msgbox "$(TEXT "No disk selected!")" 0 0
         return
       else
-        SIZE=$(df -m ${RESP} | awk 'NR==2 {print $2}')
+        SIZE=$(df -m ${RESP} 2>/dev/null | awk 'NR==2 {print $2}')
         if [ ${SIZE:-0} -lt 1024 ]; then
           DIALOG --title "$(TEXT "Advanced")" \
             --msgbox "$(printf "$(TEXT "Disk %s size is less than 1GB and cannot be cloned!")" "${RESP}")" 0 0
@@ -1938,19 +1938,19 @@ EOF
         sleep 3
 
         mkdir -p "${TMP_PATH}/sdX1"
-        mount "$(lsblk "${RESP}" -pno KNAME,LABEL | grep RR1 | awk '{print $1}')" "${TMP_PATH}/sdX1"
+        mount "$(lsblk "${RESP}" -pno KNAME,LABEL 2>/dev/null | grep RR1 | awk '{print $1}')" "${TMP_PATH}/sdX1"
         cp -vRf "${PART1_PATH}/". "${TMP_PATH}/sdX1/"
         sync
         umount "${TMP_PATH}/sdX1"
 
         mkdir -p "${TMP_PATH}/sdX2"
-        mount "$(lsblk "${RESP}" -pno KNAME,LABEL | grep RR2 | awk '{print $1}')" "${TMP_PATH}/sdX2"
+        mount "$(lsblk "${RESP}" -pno KNAME,LABEL 2>/dev/null | grep RR2 | awk '{print $1}')" "${TMP_PATH}/sdX2"
         cp -vRf "${PART2_PATH}/". "${TMP_PATH}/sdX2/"
         sync
         umount "${TMP_PATH}/sdX2"
 
         mkdir -p "${TMP_PATH}/sdX3"
-        mount "$(lsblk "${RESP}" -pno KNAME,LABEL | grep RR3 | awk '{print $1}')" "${TMP_PATH}/sdX3"
+        mount "$(lsblk "${RESP}" -pno KNAME,LABEL 2>/dev/null | grep RR3 | awk '{print $1}')" "${TMP_PATH}/sdX3"
         cp -vRf "${PART3_PATH}/". "${TMP_PATH}/sdX3/"
         sync
         umount "${TMP_PATH}/sdX3"
@@ -2086,11 +2086,11 @@ function tryRecoveryDSM() {
     MODEL=""
     PRODUCTVER=""
     if [ -f "${DSMROOT_PATH}/.syno/patch/VERSION" ]; then
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep unique)
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep majorversion)
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep minorversion)
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep buildnumber)
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION | grep smallfixnumber)
+      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION 2>/dev/null | grep unique)
+      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION 2>/dev/null | grep majorversion)
+      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION 2>/dev/null | grep minorversion)
+      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION 2>/dev/null | grep buildnumber)
+      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION 2>/dev/null | grep smallfixnumber)
       if [ -n "${unique}" ]; then
         while read F; do
           M="$(basename ${F})"
@@ -2099,7 +2099,7 @@ function tryRecoveryDSM() {
           [ "${unique}" = "${UNIQUE}" ] || continue
           # Found
           modelMenu "${M}"
-        done <<<$(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml | sort)
+        done <<<$(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml 2>/dev/null | sort)
         if [ -n "${MODEL}" ]; then
           productversMenu "${majorversion}.${minorversion}"
           if [ -n "${PRODUCTVER}" ]; then
@@ -2667,7 +2667,7 @@ function updateMenu() {
       [ -n "${F}" ] && updateCKs "${F}" "${SILENT}"
       ;;
     u)
-      if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+      if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         MSG=""
         MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
         MSG+="$(TEXT "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download.")"

@@ -65,7 +65,7 @@ initConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
 
 for ETH in ${ETHX}; do
   [ "${ETH::4}" = "wlan" ] && connectwlanif "${ETH}" && sleep 1
-  MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
+  MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
   IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
   if [ -n "${IPR}" ]; then
     ip addr add ${IPC}/24 dev ${ETH}
@@ -80,8 +80,8 @@ PID="0x0001"
 BUS=$(getBus "${LOADER_DISK}")
 
 if [ "${BUS}" = "usb" ]; then
-  VID="0x$(udevadm info --query property --name ${LOADER_DISK} | grep ID_VENDOR_ID | cut -d= -f2)"
-  PID="0x$(udevadm info --query property --name ${LOADER_DISK} | grep ID_MODEL_ID | cut -d= -f2)"
+  VID="0x$(udevadm info --query property --name ${LOADER_DISK} 2>/dev/null | grep ID_VENDOR_ID | cut -d= -f2)"
+  PID="0x$(udevadm info --query property --name ${LOADER_DISK} 2>/dev/null | grep ID_MODEL_ID | cut -d= -f2)"
 elif [ "${BUS}" != "sata" -a "${BUS}" != "scsi" -a "${BUS}" != "nvme" -a "${BUS}" != "mmc" ]; then
   die "$(TEXT "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM")"
 fi
@@ -125,7 +125,7 @@ COUNT=0
 while [ ${COUNT} -lt 30 ]; do
   hasConnect="false"
   for N in ${ETHX}; do
-    if ethtool ${N} | grep 'Link detected' | grep -q 'yes'; then
+    if ethtool ${N} 2>/dev/null | grep 'Link detected' | grep -q 'yes'; then
       echo -en "${N} "
       hasConnect="true"
     fi
@@ -144,11 +144,11 @@ for N in ${ETHX}; do
   DRIVER=$(ls -ld /sys/class/net/${N}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
   echo -en "${N}(${DRIVER}): "
   while true; do
-    if ! ip link show ${N} | grep -q 'UP'; then
+    if ! ip link show ${N} 2>/dev/null | grep -q 'UP'; then
       echo -en "\r${N}(${DRIVER}): $(TEXT "DOWN")\n"
       break
     fi
-    if ethtool ${N} | grep 'Link detected' | grep -q 'no'; then
+    if ethtool ${N} 2>/dev/null | grep 'Link detected' | grep -q 'no'; then
       echo -en "\r${N}(${DRIVER}): $(TEXT "NOT CONNECTED")\n"
       break
     fi
@@ -191,7 +191,7 @@ if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" ]; then
 fi
 
 # Check memory
-RAM=$(free -m 2>/dev/null | awk '/Mem:/{print$2}')
+RAM=$(free -m 2>/dev/null | awk '/Mem:/{print $2}')
 if [ ${RAM:-0} -le 3500 ]; then
   echo -e "\033[1;33m$(TEXT "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory.")\033[0m\n"
 fi
