@@ -7,7 +7,7 @@ function availableAddons() {
     echo ""
     return 1
   fi
-  while read D; do
+  for D in $(find "${ADDONS_PATH}" -maxdepth 1 -type d | sort); do
     [ ! -f "${D}/manifest.yml" ] && continue
     ADDON=$(basename ${D})
     checkAddonExist "${ADDON}" "${1}" "${2}" || continue
@@ -19,7 +19,7 @@ function availableAddons() {
     [ -z "${DESC}" ] && DESC="$(readConfigKey "description.en_US" "${D}/manifest.yml")"
     [ -z "${DESC}" ] && DESC="$(readConfigKey "description" "${D}/manifest.yml")"
     echo -e "${ADDON}\t${DESC:-"unknown"}"
-  done < <(find "${ADDONS_PATH}" -maxdepth 1 -type d | sort)
+  done
 }
 
 ###############################################################################
