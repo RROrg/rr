@@ -7,7 +7,7 @@ function availableAddons() {
     echo ""
     return 1
   fi
-  for D in $(find "${ADDONS_PATH}" -maxdepth 1 -type d | sort); do
+  for D in $(find "${ADDONS_PATH}" -maxdepth 1 -type d 2>/dev/null | sort); do
     [ ! -f "${D}/manifest.yml" ] && continue
     ADDON=$(basename ${D})
     checkAddonExist "${ADDON}" "${1}" "${2}" || continue

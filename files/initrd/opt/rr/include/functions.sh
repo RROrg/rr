@@ -214,8 +214,8 @@ function _sort_netif() {
   ETHLIST=""
   ETHX=$(ls /sys/class/net/ 2>/dev/null | grep eth) # real network cards list
   for ETH in ${ETHX}; do
-    MAC="$(cat /sys/class/net/${ETH}/address | sed 's/://g' | tr '[:upper:]' '[:lower:]')"
-    BUS=$(ethtool -i ${ETH} | grep bus-info | awk '{print $2}')
+    MAC="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g' | tr '[:upper:]' '[:lower:]')"
+    BUS=$(ethtool -i ${ETH} 2>/dev/null | grep bus-info | awk '{print $2}')
     ETHLIST="${ETHLIST}${BUS} ${MAC} ${ETH}\n"
   done
 
@@ -295,10 +295,10 @@ function getIP() {
   IP=""
   if [ -n "${1}" -a -d "/sys/class/net/${1}" ]; then
     IP=$(ip route show dev ${1} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p')
-    [ -z "${IP}" ] && IP=$(ip addr show ${1} | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
+    [ -z "${IP}" ] && IP=$(ip addr show ${1} 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
   else
     IP=$(ip route show 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p' | head -1)
-    [ -z "${IP}" ] && IP=$(ip addr show | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
+    [ -z "${IP}" ] && IP=$(ip addr show 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
   fi
   echo "${IP}"
 }
@@ -322,12 +322,12 @@ function getLogo() {
 # Find and mount the DSM root filesystem
 # (based on pocopico's TCRP code)
 function findAndMountDSMRoot() {
-  [ $(mount | grep -i "${DSMROOT_PATH}" | wc -l) -gt 0 ] && return 0
-  dsmrootdisk="$(blkid | grep -i linux_raid_member | grep -E "/dev/.*1: " | head -1 | awk -F ":" '{print $1}')"
+  [ $(mount 2>/dev/null | grep -i "${DSMROOT_PATH}" | wc -l) -gt 0 ] && return 0
+  dsmrootdisk="$(blkid 2>/dev/null | grep -i linux_raid_member | grep -E "/dev/.*1: " | head -1 | awk -F ":" '{print $1}')"
   [ -z "${dsmrootdisk}" ] && return -1
   [ ! -d "${DSMROOT_PATH}" ] && mkdir -p "${DSMROOT_PATH}"
-  [ $(mount | grep -i "${DSMROOT_PATH}" | wc -l) -eq 0 ] && mount -t ext4 "${dsmrootdisk}" "${DSMROOT_PATH}"
-  if [ $(mount | grep -i "${DSMROOT_PATH}" | wc -l) -eq 0 ]; then
+  [ $(mount 2>/dev/null | grep -i "${DSMROOT_PATH}" | wc -l) -eq 0 ] && mount -t ext4 "${dsmrootdisk}" "${DSMROOT_PATH}"
+  if [ $(mount 2>/dev/null | grep -i "${DSMROOT_PATH}" | wc -l) -eq 0 ]; then
     echo "Failed to mount"
     return -1
   fi
@@ -339,7 +339,7 @@ function findAndMountDSMRoot() {
 function rebootTo() {
   [ "${1}" != "junior" -a "${1}" != "config" ] && exit 1
   # echo "Rebooting to ${1} mode"
-  GRUBPATH="$(dirname $(find ${PART1_PATH}/ -name grub.cfg | head -1))"
+  GRUBPATH="$(dirname $(find ${PART1_PATH}/ -name grub.cfg 2>/dev/null | head -1))"
   ENVFILE="${GRUBPATH}/grubenv"
   [ ! -f "${ENVFILE}" ] && grub-editenv ${ENVFILE} create
   grub-editenv ${ENVFILE} set next_entry="${1}"

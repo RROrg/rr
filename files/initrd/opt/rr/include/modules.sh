@@ -23,7 +23,7 @@ function getAllModules() {
   for F in $(ls ${TMP_PATH}/modules/*.ko 2>/dev/null); do
     local X=$(basename ${F})
     local M=${X:0:-3}
-    local DESC=$(modinfo ${F} | awk -F':' '/description:/{ print $2}' | awk '{sub(/^[ ]+/,""); print}')
+    local DESC=$(modinfo ${F} 2>/dev/null | awk -F':' '/description:/{ print $2}' | awk '{sub(/^[ ]+/,""); print}')
     [ -z "${DESC}" ] && DESC="${X}"
     echo "${M} \"${DESC}\""
   done
@@ -144,7 +144,7 @@ function delToModules() {
 function getdepends() {
   function _getdepends() {
     if [ -f "${TMP_PATH}/modules/${1}.ko" ]; then
-      depends=($(modinfo "${TMP_PATH}/modules/${1}.ko" | grep depends: | awk -F: '{print $2}' | awk '$1=$1' | sed 's/,/ /g'))
+      depends=($(modinfo "${TMP_PATH}/modules/${1}.ko" 2>/dev/null | grep depends: | awk -F: '{print $2}' | awk '$1=$1' | sed 's/,/ /g'))
       if [ ${#depends[@]} -gt 0 ]; then
         for k in ${depends[@]}; do
           echo "${k}"
