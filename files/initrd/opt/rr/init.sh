@@ -77,11 +77,13 @@ done
 # Get the VID/PID if we are in USB
 VID="0x46f4"
 PID="0x0001"
+TYPE="DoM"
 BUS=$(getBus "${LOADER_DISK}")
 
 if [ "${BUS}" = "usb" ]; then
   VID="0x$(udevadm info --query property --name ${LOADER_DISK} 2>/dev/null | grep ID_VENDOR_ID | cut -d= -f2)"
   PID="0x$(udevadm info --query property --name ${LOADER_DISK} 2>/dev/null | grep ID_MODEL_ID | cut -d= -f2)"
+  TYPE="flashdisk"
 elif [ "${BUS}" != "sata" -a "${BUS}" != "scsi" -a "${BUS}" != "nvme" -a "${BUS}" != "mmc" ]; then
   die "$(TEXT "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM")"
 fi
@@ -91,7 +93,7 @@ writeConfigKey "vid" ${VID} "${USER_CONFIG_FILE}"
 writeConfigKey "pid" ${PID} "${USER_CONFIG_FILE}"
 
 # Inform user
-echo -e "$(TEXT "Loader disk:") \033[1;32m${LOADER_DISK}\033[0m (\033[1;32m${BUS^^} flashdisk\033[0m)"
+echo -e "$(TEXT "Loader disk:") \033[1;32m${LOADER_DISK}\033[0m (\033[1;32m${BUS^^} ${TYPE}\033[0m)"
 
 # Load keymap name
 LAYOUT="$(readConfigKey "layout" "${USER_CONFIG_FILE}")"
@@ -120,18 +122,17 @@ fi
 
 # Wait for an IP
 echo "$(printf "$(TEXT "Detected %s network cards.")" "$(echo ${ETHX} | wc -w)")"
-echo "$(TEXT "Checking Connect.")"
+echo -en "$(TEXT "Checking Connect.")"
 COUNT=0
 while [ ${COUNT} -lt 30 ]; do
-  hasConnect="false"
+  MSG=""
   for N in ${ETHX}; do
     if ethtool ${N} 2>/dev/null | grep 'Link detected' | grep -q 'yes'; then
-      echo -en "${N} "
-      hasConnect="true"
+      MSG+="${N} "
     fi
   done
-  if [ "${hasConnect}" = "true" ]; then
-    echo -en "connected.\n"
+  if [ -n "${MSG}" ]; then
+    echo -en "\r${MSG}$(TEXT "connected.")\n"
     break
   fi
   COUNT=$((${COUNT} + 1))
@@ -176,7 +177,7 @@ echo -e "$(TEXT "TTYD: \033[1;34mhttp://rr:7681/\033[0m")"
 echo -e "$(TEXT "DUFS: \033[1;34mhttp://rr:7304/\033[0m")"
 echo -e "$(TEXT "TTYD&DUFS: \033[1;34mhttp://rr:80/\033[0m")"
 echo
-echo -e "$(TEXT "Default SSH Root password is") \033[1;31mrr\033[0m"
+echo -e "$(TEXT "Default SSH \033[1;31mroot\033[0m password is") \033[1;31mrr\033[0m"
 echo
 
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"

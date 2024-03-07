@@ -171,35 +171,34 @@ echo -e "$(TEXT "Cmdline:\n")\033[1;36m${CMDLINE_LINE}\033[0m"
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 if [ "${DIRECT}" = "true" ]; then
   CMDLINE_DIRECT=$(echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g') # Escape special chars
-  grub-editenv ${GRUB_PATH}/grubenv set dsm_cmdline="${CMDLINE_DIRECT}"
+  grub-editenv ${USER_GRUBENVFILE} set dsm_cmdline="${CMDLINE_DIRECT}"
   echo -e "\033[1;33m$(TEXT "Reboot to boot directly in DSM")\033[0m"
-  grub-editenv ${GRUB_PATH}/grubenv set next_entry="direct"
+  grub-editenv ${USER_GRUBENVFILE} set next_entry="direct"
   reboot
   exit 0
 else
   ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo) || true
   echo "$(printf "$(TEXT "Detected %s network cards.")" "$(echo ${ETHX} | wc -w)")"
-  echo "$(TEXT "Checking Connect.")"
+  echo -en "$(TEXT "Checking Connect.")"
   COUNT=0
   BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
   [ -z "${BOOTIPWAIT}" ] && BOOTIPWAIT=10
   while [ ${COUNT} -lt $((${BOOTIPWAIT} + 32)) ]; do
-    hasConnect="false"
+    MSG=""
     for N in ${ETHX}; do
       if ethtool ${N} 2>/dev/null | grep 'Link detected' | grep -q 'yes'; then
-        echo -en "${N} "
-        hasConnect="true"
+        MSG+="${N} "
       fi
     done
-    if [ ${hasConnect} = "true" ]; then
-      echo -en "connected.\n"
+    if [ -n "${MSG}" ]; then
+      echo -en "\r${MSG}$(TEXT "connected.")\n"
       break
     fi
     COUNT=$((${COUNT} + 1))
     echo -n "."
     sleep 1
   done
-  echo "$(TEXT "Waiting IP.(For reference only)")"
+  echo "$(TEXT "Waiting IP.")"
   for N in ${ETHX}; do
     COUNT=0
     DRIVER=$(ls -ld /sys/class/net/${N}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
