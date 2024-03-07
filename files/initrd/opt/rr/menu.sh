@@ -258,8 +258,13 @@ function productversMenu() {
     DIALOG --title "$(TEXT "Product Version")" \
       --infobox "$(TEXT "Get pat data ...")" 0 0
     idx=0
+    NETERR=0
     while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
       fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
+      if [ $? -ne 0 ]; then
+        NETERR=1
+        continue
+      fi
       [ "${fastest}" = "www.synology.cn" ] &&
         fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
         fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
@@ -275,11 +280,17 @@ function productversMenu() {
       idx=$((${idx} + 1))
     done
     if [ -z "${paturl}" -o -z "${patsum}" ]; then
-      MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.")"
+      if [ ${NETERR} -ne 0 ]; then
+        MSG=""
+        MSG+="$(TEXT "Network error, please check the network connection and try again.")"
+        MSG+="\n$(TEXT "Or use 'Parse pat' function for installation.")"
+      else
+        MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.\nOr click 'Retry'.")"
+      fi
       paturl=""
       patsum=""
     else
-      MSG="$(TEXT "Successfully to get pat data,\nPlease confirm or modify as needed.")"
+      MSG="$(TEXT "Successfully to get pat data, Please confirm.\nOr modify the URL and md5sum to you need.")"
     fi
     DIALOG --title "$(TEXT "Product Version")" \
       --extra-button --extra-label "$(TEXT "Retry")" \
@@ -342,11 +353,11 @@ function ParsePat() {
     [ $? -ne 0 ] && return
   fi
   PAT_PATH=""
-  ITEMS="$(ls ${USER_UP_PATH}/*.pat 2>/dev/null)"
+  ITEMS="$(ls ${TMP_PATH}/pats/*.pat 2>/dev/null)"
   if [ -z "${ITEMS}" ]; then
     MSG=""
-    MSG+="$(TEXT "No pat file found in users folder!\n")"
-    MSG+="$(TEXT "Please upload the pat file to /mnt/p3/users/ folder via DUFS and re-enter this option.\n")"
+    MSG+="$(TEXT "No pat file found in /tmp/pats/ folder!\n")"
+    MSG+="$(TEXT "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\n")"
     DIALOG --title "$(TEXT "Update")" \
       --msgbox "${MSG}" 0 0
     return
@@ -1018,6 +1029,11 @@ function getSynoExtractor() {
   MKERR_FILE="${TMP_PATH}/makeerror.log"
   mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
   fastest=$(_get_fastest ${mirrors[@]})
+  if [ $? -ne 0 ]; then
+    MSG="$(TEXT "Network error, please check the network connection and try again.")"
+    echo -e "${MSG}" >"${MKERR_FILE}"
+    return 1
+  fi
   OLDPAT_URL="https://${fastest}/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
   OLDPAT_PATH="${TMP_PATH}/DS3622xs+-42218.pat"
   EXTRACTOR_PATH="${PART3_PATH}/extractor"
@@ -1149,6 +1165,11 @@ function extractDsmFiles() {
     mkdir -p "${PART3_PATH}/dl"
     mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
     fastest=$(_get_fastest ${mirrors[@]})
+    if [ $? -ne 0 ]; then
+      MSG="$(TEXT "Network error, please check the network connection and try again.")"
+      echo -e "${MSG}" >"${MKERR_FILE}"
+      return 1
+    fi
     mirror="$(echo ${PATURL} | sed 's|^http[s]*://\([^/]*\).*|\1|')"
     if echo "${mirrors[@]}" | grep -wq "${mirror}" && [ "${mirror}" != "${fastest}" ]; then
       echo "$(printf "$(TEXT "Based on the current network situation, switch to %s mirror to downloading.")" "${fastest}")"
@@ -2162,10 +2183,10 @@ function editUserConfig() {
 function editGrubCfg() {
   while true; do
     DIALOG --title "$(TEXT "Edit with caution")" \
-      --editbox "${GRUB_PATH}/grub.cfg" 0 0 2>"${TMP_PATH}/usergrub.cfg"
+      --editbox "${USER_GRUB_CONFIG}" 0 0 2>"${TMP_PATH}/usergrub.cfg"
     [ $? -ne 0 ] && return
-    mv -f "${TMP_PATH}/usergrub.cfg" "${GRUB_PATH}/grub.cfg"
-    dos2unix "${GRUB_PATH}/grub.cfg"
+    mv -f "${TMP_PATH}/usergrub.cfg" "${USER_GRUB_CONFIG}"
+    dos2unix "${USER_GRUB_CONFIG}"
     break
   done
 }

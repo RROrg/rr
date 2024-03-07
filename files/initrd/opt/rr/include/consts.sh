@@ -13,8 +13,10 @@ UNTAR_PAT_PATH="${TMP_PATH}/pat"
 RAMDISK_PATH="${TMP_PATH}/ramdisk"
 LOG_FILE="${TMP_PATH}/log.txt"
 
+USER_GRUB_CONFIG="${PART1_PATH}/boot/grub/grub.cfg"
+USER_GRUBENVFILE="${PART1_PATH}/boot/grub/grubenv"
 USER_CONFIG_FILE="${PART1_PATH}/user-config.yml"
-GRUB_PATH="${PART1_PATH}/boot/grub"
+USER_LOCALE_FILE="${PART1_PATH}/.locale"
 
 ORI_ZIMAGE_FILE="${PART2_PATH}/zImage"
 ORI_RDGZ_FILE="${PART2_PATH}/rd.gz"

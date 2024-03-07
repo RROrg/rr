@@ -201,10 +201,13 @@ function _get_fastest() {
   local speedlist=""
   for I in $@; do
     speed=$(ping -c 1 -W 5 ${I} 2>/dev/null | awk '/time=/ {print $7}' | cut -d '=' -f 2)
-    speedlist+="${I} ${speed:-999}\n"
+    speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
   done
-  fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1 | awk '{print $1}')"
-  echo "${fastest}"
+  fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1)"
+  URL="$(echo "${fastest}" | awk '{print $1}')"
+  SPD="$(echo "${fastest}" | awk '{print $2}')"
+  echo "${URL}"
+  [ ${SPD:-999} -ge 999 ] && return 1 || return 0
 }
 
 ###############################################################################
@@ -295,10 +298,10 @@ function getIP() {
   IP=""
   if [ -n "${1}" -a -d "/sys/class/net/${1}" ]; then
     IP=$(ip route show dev ${1} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p')
-    [ -z "${IP}" ] && IP=$(ip addr show ${1} 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
+    [ -z "${IP}" ] && IP=$(ip addr show ${1} scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
   else
     IP=$(ip route show 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p' | head -1)
-    [ -z "${IP}" ] && IP=$(ip addr show 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
+    [ -z "${IP}" ] && IP=$(ip addr show scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
   fi
   echo "${IP}"
 }
@@ -310,12 +313,17 @@ function getLogo() {
   MODEL="${1}"
   rm -f "${PART3_PATH}/logo.png"
   fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
-  STATUS=$(curl -skL --connect-timeout 10 -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
-  if [ $? -ne 0 -o ${STATUS:-0} -ne 200 -o -f "${PART3_PATH}/logo.png" ]; then
-    convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
-    magick montage "${PART3_PATH}/logo.png" -background 'none' -tile '3x3' -geometry '350x210' "${PART3_PATH}/logo.png" 2>/dev/null
-    convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
+  if [ $? -ne 0 ]; then
+    return 1
   fi
+  STATUS=$(curl -skL --connect-timeout 10 -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
+  if [ $? -ne 0 -o ${STATUS:-0} -ne 200 -o ! -f "${PART3_PATH}/logo.png" ]; then
+    return 1
+  fi
+  convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
+  magick montage "${PART3_PATH}/logo.png" -background 'none' -tile '3x3' -geometry '350x210' "${PART3_PATH}/logo.png" 2>/dev/null
+  convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
+  return 0
 }
 
 ###############################################################################

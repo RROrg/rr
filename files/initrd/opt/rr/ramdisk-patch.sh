@@ -198,6 +198,26 @@ else
   cp -f "${WORK_PATH}/patch/modulelist" "${RAMDISK_PATH}/addons/modulelist"
 fi
 
+# backup current loader configs
+BACKUP_PATH="${RAMDISK_PATH}/usr/rr/backup"
+rm -rf "${BACKUP_PATH}"
+for F in "${USER_GRUB_CONFIG}" "${USER_CONFIG_FILE}" "${USER_LOCALE_FILE}" "${USER_UP_PATH}" "${SCRIPTS_PATH}"; do
+  if [ -f "${F}" ]; then
+    FD="$(dirname "${F}")"
+    mkdir -p "${FD/\/mnt/${BACKUP_PATH}}"
+    cp -f "${F}" "${FD/\/mnt/${BACKUP_PATH}}"
+  elif [ -d "${F}" ]; then
+    SIZE="$(du -sm "${F}" 2>/dev/null | awk '{print $1}')"
+    if [ ${SIZE:-0} -gt 4 ]; then
+      echo "Backup of ${F} skipped, size is ${SIZE}MB" >>"${LOG_FILE}" 2>&1
+      continue
+    fi
+    FD="$(dirname "${F}")"
+    mkdir -p "${FD/\/mnt/${BACKUP_PATH}}"
+    cp -rf "${F}" "${FD/\/mnt/${BACKUP_PATH}}"
+  fi
+done
+
 # Network card configuration file
 for N in $(seq 0 7); do
   echo -e "DEVICE=eth${N}\nBOOTPROTO=dhcp\nONBOOT=yes\nIPV6INIT=dhcp\nIPV6_ACCEPT_RA=1" >"${RAMDISK_PATH}/etc/sysconfig/network-scripts/ifcfg-eth${N}"
