@@ -6,28 +6,12 @@
 # See /LICENSE for more information.
 #
 
-GRUB=${1:-"grub-2.06"}
+GRUB=${1:-"grub-2.12"}
 BIOS=${2:-"i386-pc i386-efi x86_64-efi"}
 NAME=${3:-"RR"}
 
-curl -#kLO https://ftp.gnu.org/gnu/grub/${GRUB}.tar.gz
-tar -zxvf ${GRUB}.tar.gz
 
-pushd ${GRUB}
-for B in ${BIOS}; do
-  b=${B}
-  b=(${b//-/ })
-  echo "Make ${b[@]} ..."
-
-  mkdir -p ${B}
-  pushd ${B}
-  ../configure --prefix=$PWD/usr -sbindir=$PWD/sbin --sysconfdir=$PWD/etc --disable-werror --target=${b[0]} --with-platform=${b[1]}
-  make
-  make install
-  popd
-done
-popd
-
+# Create image
 rm -f grub.img
 dd if=/dev/zero of=grub.img bs=1M seek=1024 count=0
 echo -e "n\np\n1\n\n+50M\nn\np\n2\n\n+50M\nn\np\n3\n\n\na\n1\nw\nq\n" | fdisk grub.img
@@ -60,7 +44,27 @@ EOF
 # 
 sudo mv device.map ${NAME}1/boot/grub/device.map
 
+
+# Install grub
+git clone --depth=1 -b ${GRUB} https://git.savannah.gnu.org/git/grub.git grub
+pushd grub
+./bootstrap
+./autogen.sh 
+popd
+
 for B in ${BIOS}; do
+  b=(${B//-/ })
+  echo "Make ${B} ..."
+  mkdir -p grub/${B}
+  RET=0
+  pushd grub/${B}
+  ../configure --prefix=$PWD/usr -sbindir=$PWD/sbin --sysconfdir=$PWD/etc --disable-werror --target=${b[0]} --with-platform=${b[1]}
+  make -j$(nproc) && make -j$(nproc) install
+  RET=$?
+  popd
+  [ ${RET:-0} -ne 0 ] && break
+
+  echo "Install ${B} ..."
   args=""
   args+=" ${LOOPX} --target=${B} --no-floppy --recheck --grub-mkdevicemap=${NAME}1/boot/grub/device.map --boot-directory=${NAME}1/boot"
   if [[ "${B}" == *"efi" ]]; then
@@ -68,7 +72,7 @@ for B in ${BIOS}; do
   else
     args+=" --root-directory=${NAME}1"
   fi
-  sudo ${GRUB}/${B}/grub-install ${args}
+  sudo grub/${B}/grub-install ${args}
 done
 
 if [ -d ${NAME}1/boot/grub/fonts -a -f /usr/share/grub/unicode.pf2 ]; then
