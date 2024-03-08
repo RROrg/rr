@@ -6,7 +6,6 @@ RR_TITLE="RR v${RR_VERSION}"
 PART1_PATH="/mnt/p1"
 PART2_PATH="/mnt/p2"
 PART3_PATH="/mnt/p3"
-DSMROOT_PATH="/mnt/dsmroot"
 TMP_PATH="/tmp"
 
 UNTAR_PAT_PATH="${TMP_PATH}/pat"

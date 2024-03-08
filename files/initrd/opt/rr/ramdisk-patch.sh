@@ -40,6 +40,9 @@ PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
 ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")" # official drivers priorities
 HDDSORT="$(readConfigKey "hddsort" "${USER_CONFIG_FILE}")"
 
+[ "${PATURL:0:1}" = "#" ] && PATURL=""
+[ "${PATSUM:0:1}" = "#" ] && PATSUM=""
+
 # Check if DSM buildnumber changed
 . "${RAMDISK_PATH}/etc/VERSION"
 
