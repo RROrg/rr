@@ -442,7 +442,7 @@ function ParsePat() {
       cp -f "${PAT_PATH}" "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat"
     fi
     MD5SUM="$(md5sum "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" | awk '{print $1}')"
-    writeConfigKey "paturl" "" "${USER_CONFIG_FILE}"
+    writeConfigKey "paturl" "#PARSEPAT" "${USER_CONFIG_FILE}"
     writeConfigKey "patsum" "${MD5SUM}" "${USER_CONFIG_FILE}"
 
     # Delete synoinfo and reload model/build synoinfo
@@ -1156,6 +1156,18 @@ function extractDsmFiles() {
   if [ -f "${PAT_PATH}" ]; then
     echo "$(printf "$(TEXT "%s cached.")" "${PAT_FILE}")"
   else
+    if [ "${PATURL}" = "#PARSEPAT" ]; then
+      echo -e "$(TEXT "The cache has been cleared. Please re 'Parse pat' before build.")" >"${MKERR_FILE}"
+      return 1
+    fi
+    if [ "${PATURL}" = "#RECOVERY" ]; then
+      echo -e "$(TEXT "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build.")" >"${MKERR_FILE}"
+      return 1
+    fi
+    if [ -z "${PATURL}" -o "${PATURL:0:1}" = "#" ]; then
+      echo -e "$(TEXT "The pat url is empty. Please re 'Choose a version' before build.")" >"${MKERR_FILE}"
+      return 1
+    fi
     # If we have little disk space, clean cache folder
     if [ ${CLEARCACHE} -eq 1 ]; then
       echo "$(TEXT "Cleaning cache ...")"
@@ -1404,7 +1416,7 @@ function advancedMenu() {
     echo "y \"$(TEXT "Set wireless account")\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
     echo "h \"$(TEXT "Edit grub.cfg file manually")\"" >>"${TMP_PATH}/menu"
-    echo "t \"$(TEXT "Try to recovery a DSM installed system")\"" >>"${TMP_PATH}/menu"
+    echo "t \"$(TEXT "Try to recovery a installed DSM system")\"" >>"${TMP_PATH}/menu"
     echo "s \"$(TEXT "Show disks information")\"" >>"${TMP_PATH}/menu"
     if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
       echo "c \"$(TEXT "show/modify the current pat data")\"" >>"${TMP_PATH}/menu"
@@ -2102,50 +2114,165 @@ EOF
 # Try to recovery a DSM already installed
 function tryRecoveryDSM() {
   DIALOG --title "$(TEXT "Try recovery DSM")" \
-    --infobox "$(TEXT "Trying to recovery a DSM installed system ...")" 0 0
-  if findAndMountDSMRoot; then
-    MODEL=""
-    PRODUCTVER=""
-    if [ -f "${DSMROOT_PATH}/.syno/patch/VERSION" ]; then
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION 2>/dev/null | grep unique)
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION 2>/dev/null | grep majorversion)
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION 2>/dev/null | grep minorversion)
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION 2>/dev/null | grep buildnumber)
-      eval $(cat ${DSMROOT_PATH}/.syno/patch/VERSION 2>/dev/null | grep smallfixnumber)
-      if [ -n "${unique}" ]; then
-        while read F; do
-          M="$(basename ${F})"
-          M="${M::-4}"
-          UNIQUE=$(readModelKey "${M}" "unique")
-          [ "${unique}" = "${UNIQUE}" ] || continue
-          # Found
-          modelMenu "${M}"
-        done <<<$(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml 2>/dev/null | sort)
-        if [ -n "${MODEL}" ]; then
-          productversMenu "${majorversion}.${minorversion}"
-          if [ -n "${PRODUCTVER}" ]; then
-            cp -f "${DSMROOT_PATH}/.syno/patch/zImage" "${PART2_PATH}"
-            cp -f "${DSMROOT_PATH}/.syno/patch/rd.gz" "${PART2_PATH}"
-            BUILDNUM=${buildnumber}
-            SMALLNUM=${smallfixnumber}
-            writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
-            writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
-            MSG="$(printf "$(TEXT "Found a installation:\nModel: %s\nProductversion: %s")" "${MODEL}" "${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))")"
-            SN=$(_get_conf_kv SN "${DSMROOT_PATH}/etc/synoinfo.conf")
-            if [ -n "${SN}" ]; then
-              writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
-              MSG+="$(printf "$(TEXT "\nSerial: %s")" "${SN}")"
-            fi
-            DIALOG --title "$(TEXT "Try recovery DSM")" \
-              --msgbox "${MSG}" 0 0
-          fi
-        fi
-      fi
-    fi
-  else
+    --infobox "$(TEXT "Trying to recovery a installed DSM system ...")" 0 0
+  DSMROOTDISK="$(blkid 2>/dev/null | grep -i linux_raid_member | grep -E "/dev/.*1: " | head -1 | awk -F ":" '{print $1}')"
+  if [ -z "${DSMROOTDISK}" ]; then
     DIALOG --title "$(TEXT "Try recovery DSM")" \
       --msgbox "$(TEXT "Unfortunately I couldn't mount the DSM partition!")" 0 0
+    return
   fi
+
+  rm -rf "${TMP_PATH}/sdX1"
+  mkdir -p "${TMP_PATH}/sdX1"
+  mount "${DSMROOTDISK}" "${TMP_PATH}/sdX1"
+
+  function __umountDSMRootDisk() {
+    umount "${TMP_PATH}/sdX1"
+    rm -rf "${TMP_PATH}/sdX1"
+  }
+
+  DIALOG --title "$(TEXT "Try recovery DSM")" \
+    --infobox "$(TEXT "Checking for backup of user's configuration for bootloader ...")" 0 0
+  if [ -f "${TMP_PATH}/sdX1/usr/rr/backup/p1/user-config.yml" ]; then
+    R_MODEL="$(readConfigKey "model" "${TMP_PATH}/sdX1/usr/rr/backup/p1/user-config.yml")"
+    R_PRODUCTVER="$(readConfigKey "productver" "${TMP_PATH}/sdX1/usr/rr/backup/p1/user-config.yml")"
+    R_BUILDNUM="$(readConfigKey "buildnum" "${TMP_PATH}/sdX1/usr/rr/backup/p1/user-config.yml")"
+    R_SMALLNUM="$(readConfigKey "smallnum" "${TMP_PATH}/sdX1/usr/rr/backup/p1/user-config.yml")"
+    R_PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
+    R_PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
+    if [ -n "${R_MODEL}" ] && [ -f "${WORK_PATH}/model-configs/${R_MODEL}.yml" ] &&
+      [ -n "${R_PRODUCTVER}" ] && arrayExistItem "${R_PRODUCTVER}" "$(readConfigEntriesArray "productvers" "${WORK_PATH}/model-configs/${R_MODEL}.yml" | sort -r)" &&
+      [ -n "${R_BUILDNUM}" ] && [ -n "${R_SMALLNUM}" ]; then
+      if [ "${R_PATURL:0:1}" = "#" ] || [ -z "${R_PATSUM}" ]; then
+        if [ -f "${TMP_PATH}/sdX1/.syno/patch/VERSION" ] &&
+          [ -f "${TMP_PATH}/sdX1/.syno/patch/zImage" ] &&
+          [ -f "${TMP_PATH}/sdX1/.syno/patch/rd.gz" ]; then
+          cp -f "${TMP_PATH}/sdX1/.syno/patch/zImage" "${ORI_ZIMAGE_FILE}"
+          cp -f "${TMP_PATH}/sdX1/.syno/patch/rd.gz" "${ORI_RDGZ_FILE}"
+        else
+          __umountDSMRootDisk
+          DIALOG --title "$(TEXT "Try recovery DSM")" \
+            --msgbox "$(TEXT "Found a backup of the user's configuration, but the system is damaged and will not be restored. Please reselect model and build.")" 0 0
+          return
+        fi
+      else
+        cp -rf "${TMP_PATH}/sdX1/usr/rr/backup/p1/*" "${PART1_PATH}"
+        if [ -d "${TMP_PATH}/sdX1/usr/rr/backup/p3" ]; then
+          cp -rf "${TMP_PATH}/sdX1/usr/rr/backup/p3/*" "${PART3_PATH}"
+        fi
+        if [ -f "${TMP_PATH}/sdX1/.syno/patch/VERSION" ] &&
+          [ -f "${TMP_PATH}/sdX1/.syno/patch/zImage" ] &&
+          [ -f "${TMP_PATH}/sdX1/.syno/patch/rd.gz" ]; then
+          cp -f "${TMP_PATH}/sdX1/.syno/patch/zImage" "${ORI_ZIMAGE_FILE}"
+          cp -f "${TMP_PATH}/sdX1/.syno/patch/rd.gz" "${ORI_RDGZ_FILE}"
+        fi
+        __umountDSMRootDisk
+        DIALOG --title "$(TEXT "Try recovery DSM")" \
+          --msgbox "$(TEXT "Found a backup of the user's configuration, and restored it. Please rebuild and boot.")" 0 0
+        exec "$0"
+        return
+      fi
+    fi
+  fi
+
+  DIALOG --title "$(TEXT "Try recovery DSM")" \
+    --infobox "$(TEXT "Checking for installed DSM system ...")" 0 0
+  if [ -f "${TMP_PATH}/sdX1/.syno/patch/VERSION" ] &&
+    [ -f "${TMP_PATH}/sdX1/.syno/patch/zImage" ] &&
+    [ -f "${TMP_PATH}/sdX1/.syno/patch/rd.gz" ]; then
+    R_MODEL=""
+    R_PRODUCTVER=""
+    R_BUILDNUM=""
+    R_SMALLNUM=""
+    R_SN=""
+    R_MAC1=""
+    R_MAC2=""
+    unique="$(_get_conf_kv unique "${TMP_PATH}/sdX1/.syno/patch/VERSION")"
+    majorversion="$(_get_conf_kv majorversion "${TMP_PATH}/sdX1/.syno/patch/VERSION")"
+    minorversion="$(_get_conf_kv minorversion "${TMP_PATH}/sdX1/.syno/patch/VERSION")"
+    buildnumber="$(_get_conf_kv buildnumber "${TMP_PATH}/sdX1/.syno/patch/VERSION")"
+    smallfixnumber="$(_get_conf_kv smallfixnumber "${TMP_PATH}/sdX1/.syno/patch/VERSION")"
+    while read F; do
+      M="$(basename ${F} .yml)"
+      UNIQUE=$(readModelKey "${M}" "unique")
+      [ "${unique}" = "${UNIQUE}" ] && R_MODEL="${M}" && break
+    done <<<$(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml 2>/dev/null | sort)
+    if [ -n "${R_MODEL}" ]; then
+      ITEMS="$(readConfigEntriesArray "productvers" "${WORK_PATH}/model-configs/${R_MODEL}.yml" | sort -r)"
+      if arrayExistItem "${majorversion}.${minorversion}" ${ITEMS}; then
+        R_PRODUCTVER="${majorversion}.${minorversion}"
+      fi
+    fi
+    R_BUILDNUM=${buildnumber}
+    R_SMALLNUM=${smallfixnumber}
+    if [ -f "${TMP_PATH}/sdX1/etc/synoinfo.conf" ]; then
+      R_SN=$(_get_conf_kv SN "${TMP_PATH}/sdX1/etc/synoinfo.conf")
+    fi
+
+    if [ -n "${R_MODEL}" ] && [ -n "${R_PRODUCTVER}" ] && [ -n "${R_BUILDNUM}" ] && [ -n "${R_SMALLNUM}" ]; then
+      cp -f "${TMP_PATH}/sdX1/.syno/patch/zImage" "${ORI_ZIMAGE_FILE}"
+      cp -f "${TMP_PATH}/sdX1/.syno/patch/rd.gz" "${ORI_RDGZ_FILE}"
+
+      MODEL="${R_MODEL}"
+      PRODUCTVER="${R_PRODUCTVER}"
+      BUILDNUM=${R_BUILDNUM}
+      SMALLNUM=${R_SMALLNUM}
+      if [ -n "${R_SN}" ]; then
+        SN=${R_SN}
+      else
+        SN=$(generateSerial "${MODEL}")
+      fi
+
+      writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
+      writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
+      writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
+      writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
+      writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
+      NETIF_NUM=2
+      MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
+      for I in $(seq 1 ${NETIF_NUM}); do
+        writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
+      done
+      writeConfigKey "paturl" "#RECOVERY" "${USER_CONFIG_FILE}"
+      writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
+
+      # Delete synoinfo and reload model/build synoinfo
+      writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
+      while IFS=': ' read KEY VALUE; do
+        writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
+      done <<<$(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
+
+      # Check addons
+      PLATFORM="$(readModelKey "${MODEL}" "platform")"
+      KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+      KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+      while IFS=': ' read ADDON PARAM; do
+        [ -z "${ADDON}" ] && continue
+        if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
+          deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
+        fi
+      done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
+      # Rebuild modules
+      writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+      while read ID DESC; do
+        writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
+      done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+
+      __umountDSMRootDisk
+      DIALOG --title "$(TEXT "Try recovery DSM")" \
+        --msgbox "$(TEXT "Found a installed DSM system and restored it. Please rebuild and boot.")" 0 0
+      return
+    else
+      __umountDSMRootDisk
+      DIALOG --title "$(TEXT "Try recovery DSM")" \
+        --msgbox "$(TEXT "Found a installed DSM system, but the system is damaged and will not be restored. Please reselect model and build.")" 0 0
+      return
+    fi
+  fi
+  __umountDSMRootDisk
+  DIALOG --title "$(TEXT "Try recovery DSM")" \
+    --msgbox "$(TEXT "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build.")" 0 0
+  return
 }
 
 ###############################################################################

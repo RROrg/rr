@@ -169,7 +169,7 @@ function arrayExistItem() {
 # 1 - key
 # 2 - file
 function _get_conf_kv() {
-  grep "${1}" "${2}" | sed "s|^${1}=\"\(.*\)\"$|\1|g"
+  grep "${1}" "${2}" 2>/dev/null | sed "s|^${1}=\"\(.*\)\"$|\1|g"
 }
 
 ###############################################################################
@@ -180,13 +180,13 @@ function _get_conf_kv() {
 function _set_conf_kv() {
   # Delete
   if [ -z "${2}" ]; then
-    sed -i "${3}" -e "s/^${1}=.*$//"
+    sed -i "${3}" -e "s/^${1}=.*$//" 2>/dev/null
     return $?
   fi
 
   # Replace
   if grep -q "^${1}=" "${3}"; then
-    sed -i "${3}" -e "s\"^${1}=.*\"${1}=\\\"${2}\\\"\""
+    sed -i "${3}" -e "s\"^${1}=.*\"${1}=\\\"${2}\\\"\"" 2>/dev/null
     return $?
   fi
 
@@ -326,21 +326,7 @@ function getLogo() {
   return 0
 }
 
-###############################################################################
-# Find and mount the DSM root filesystem
-# (based on pocopico's TCRP code)
-function findAndMountDSMRoot() {
-  [ $(mount 2>/dev/null | grep -i "${DSMROOT_PATH}" | wc -l) -gt 0 ] && return 0
-  dsmrootdisk="$(blkid 2>/dev/null | grep -i linux_raid_member | grep -E "/dev/.*1: " | head -1 | awk -F ":" '{print $1}')"
-  [ -z "${dsmrootdisk}" ] && return -1
-  [ ! -d "${DSMROOT_PATH}" ] && mkdir -p "${DSMROOT_PATH}"
-  [ $(mount 2>/dev/null | grep -i "${DSMROOT_PATH}" | wc -l) -eq 0 ] && mount -t ext4 "${dsmrootdisk}" "${DSMROOT_PATH}"
-  if [ $(mount 2>/dev/null | grep -i "${DSMROOT_PATH}" | wc -l) -eq 0 ]; then
-    echo "Failed to mount"
-    return -1
-  fi
-  return 0
-}
+
 
 ###############################################################################
 # Rebooting
