@@ -2911,7 +2911,7 @@ if [ "${1}" = "boot" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigure
 fi
 # Main loop
 NEXT="m"
-[ -n "$(ls ${USER_UP_PATH}/*.pat 2>/dev/null)" ] && NEXT="u"
+[ -n "$(ls ${TMP_PATH}/pats/*.pat)" ] && NEXT="u"
 [ -f "${PART1_PATH}/.build" ] && NEXT="d"
 [ -n "${MODEL}" ] && NEXT="v"
 while true; do
