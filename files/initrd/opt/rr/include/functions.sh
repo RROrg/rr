@@ -326,8 +326,6 @@ function getLogo() {
   return 0
 }
 
-
-
 ###############################################################################
 # Rebooting
 function rebootTo() {

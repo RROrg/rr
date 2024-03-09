@@ -190,10 +190,12 @@ done
 # Enable Telnet
 echo "inetd" >>"${RAMDISK_PATH}/addons/addons.sh"
 
+# Remove function from scripts
 [ "2" = "${BUILDNUM:0:1}" ] && sed -i 's/function //g' $(find "${RAMDISK_PATH}/addons/" -type f -name "*.sh")
 
 # Build modules dependencies
-${WORK_PATH}/depmod -a -b ${RAMDISK_PATH} 2>/dev/null
+# ${WORK_PATH}/depmod -a -b ${RAMDISK_PATH} 2>/dev/null  # addon eudev will do this
+
 # Copying modulelist
 if [ -f "${USER_UP_PATH}/modulelist" ]; then
   cp -f "${USER_UP_PATH}/modulelist" "${RAMDISK_PATH}/addons/modulelist"
