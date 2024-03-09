@@ -23,14 +23,13 @@ sudo mount ${LOOPX}p1 "/tmp/files/p1"
 sudo mount ${LOOPX}p3 "/tmp/files/p3"
 
 echo "Get Buildroot"
-[ ! -f "br/bzImage-rr" -o ! -f "br/initrd-rr" ] && getBuildroot "br" "latest"
-[ ! -f "br/bzImage-rr" -o ! -f "br/initrd-rr" ] && return 1
+[ ! -f "/tmp/files/p3/bzImage-rr" -o ! -f "/tmp/files/p3/initrd-rr" ] && getBuildroot "/tmp/files/p3" true
+[ ! -f "/tmp/files/p3/bzImage-rr" -o ! -f "/tmp/files/p3/initrd-rr" ] && return 1
 
 read -p "Press enter to continue"
 
 echo "Repack initrd"
-sudo cp -f "br/bzImage-rr" "/tmp/files/p3/bzImage-rr"
-repackInitrd "br/initrd-rr" "files/initrd" "/tmp/files/p3/initrd-rr"
+repackInitrd "/tmp/files/p3/initrd-rr" "files/initrd"
 
 echo "Copying files"
 sudo cp -Rf "files/p1/"* "/tmp/files/p1"
