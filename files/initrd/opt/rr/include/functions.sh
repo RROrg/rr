@@ -205,9 +205,9 @@ function _get_fastest() {
   done
   fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1)"
   URL="$(echo "${fastest}" | awk '{print $1}')"
-  SPD="$(echo "${fastest}" | awk '{print $2}')"
+  SPD="$(echo "${fastest}" | awk '{print $2}')"  # It is a float type
   echo "${URL}"
-  [ ${SPD:-999} -ge 999 ] && return 1 || return 0
+  [ $(printf "%.0f" ${SPD:-999}) -ge 999 ] && return 1 || return 0
 }
 
 ###############################################################################
