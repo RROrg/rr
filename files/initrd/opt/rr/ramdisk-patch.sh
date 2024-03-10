@@ -101,7 +101,7 @@ while read PE; do
     echo "Patching with ${PF}" >>"${LOG_FILE}" 2>&1
     (
       cd "${RAMDISK_PATH}"
-      patch -p1 -i "${PF}" >>"${LOG_FILE}" 2>&1
+      busybox patch -p1 -i "${PF}" >>"${LOG_FILE}" 2>&1  # busybox patch and gun patch have different processing methods and parameters.
     )
     RET=$?
     [ ${RET} -eq 0 ] && break

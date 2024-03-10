@@ -60,3 +60,11 @@ function readConfigArray() {
 function readConfigEntriesArray() {
   yq eval '.'${1}' | explode(.) | to_entries | map([.key])[] | .[]' "${2}" 2>/dev/null
 }
+
+###############################################################################
+# Check yaml config file
+# 1 - Path of yaml config file
+# Returns error information
+function checkConfigFile() {
+  yq eval "${1}" 2>&1
+}

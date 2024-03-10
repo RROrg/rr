@@ -1191,7 +1191,7 @@ function extractDsmFiles() {
     # Check disk space left
     SPACELEFT=$(df --block-size=1 ${LOADER_DISK_PART3} 2>/dev/null | awk 'NR==2 {print $4}')
     # Discover remote file size
-    FILESIZE=$(curl -skLI --connect-timeout 10 "${PATURL}" | grep -i Content-Length | tail -n 1 | awk '{print $2}')
+    FILESIZE=$(curl -skLI --connect-timeout 10 "${PATURL}" | grep -i Content-Length | tail -n 1 | tr -d '\r\n' | awk '{print $2}')
     if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
@@ -2288,7 +2288,7 @@ function editUserConfig() {
     [ $? -ne 0 ] && return
     mv -f "${TMP_PATH}/userconfig" "${USER_CONFIG_FILE}"
     dos2unix "${USER_CONFIG_FILE}"
-    ERRORS=$(yq eval "${USER_CONFIG_FILE}" 2>&1)
+    ERRORS=$(checkConfigFile "${USER_CONFIG_FILE}")
     [ $? -eq 0 ] && break
     DIALOG --title "$(TEXT "Edit with caution")" \
       --msgbox "${ERRORS}" 0 0
