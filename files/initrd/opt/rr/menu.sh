@@ -233,76 +233,88 @@ function productversMenu() {
     [ $? -ne 0 ] && return
     resp=$(<${TMP_PATH}/resp)
     [ -z "${resp}" ] && return
+
+    if [ "${PRODUCTVER}" = "${resp}" ]; then
+      DIALOG --title "$(TEXT "Product Version")" \
+        --yesno "$(printf "$(TEXT "The current version has been set to %s. Do you want to reset the version?")" "${PRODUCTVER}")" 0 0
+      [ $? -ne 0 ] && return
+    fi
   else
     if ! arrayExistItem "${1}" ${ITEMS}; then return; fi
     resp="${1}"
   fi
-  if [ "${PRODUCTVER}" = "${resp}" ]; then
-    DIALOG --title "$(TEXT "Product Version")" \
-      --yesno "$(printf "$(TEXT "The current version has been set to %s. Do you want to reset the version?")" "${PRODUCTVER}")" 0 0
-    [ $? -ne 0 ] && return
-  fi
+
   local KVER=$(readModelKey "${MODEL}" "productvers.[${resp}].kver")
   if [ -d "/sys/firmware/efi" -a "${KVER:0:1}" = "3" ]; then
-    DIALOG --title "$(TEXT "Product Version")" \
-      --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
+    if [ -z "${1}" ]; then
+      DIALOG --title "$(TEXT "Product Version")" \
+        --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
+    fi
     return
   fi
   # if [ ! "usb" = "$(getBus "${LOADER_DISK}")" -a "${KVER:0:1}" = "5" ]; then
-  #   DIALOG --title "$(TEXT "Product Version")" \
-  #     --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
-  #   # return
+  #   if [ -z "${1}" ]; then
+  #     DIALOG --title "$(TEXT "Product Version")" \
+  #       --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
+  #   fi
+  #   return
   # fi
-  while true; do
-    # get online pat data
-    DIALOG --title "$(TEXT "Product Version")" \
-      --infobox "$(TEXT "Get pat data ...")" 0 0
-    idx=0
-    NETERR=0
-    while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
-      fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
-      if [ $? -ne 0 ]; then
-        NETERR=1
-        continue
-      fi
-      [ "${fastest}" = "www.synology.cn" ] &&
-        fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
-        fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
-      patdata=$(curl -skL --connect-timeout 10 "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
-      if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
-        if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
-          paturl=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].url')
-          patsum=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].checksum')
-          paturl=${paturl%%\?*}
-          break
+  if [ -z "${2}" -a -z "${3}" ]; then
+    while true; do
+      # get online pat data
+      idx=1
+      NETERR=0
+      while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
+        DIALOG --title "$(TEXT "Product Version")" \
+          --infobox "$(TEXT "Get pat data ...") (${idx}/3)" 0 0
+        idx=$((${idx} + 1))
+        NETERR=0
+        fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
+        if [ $? -ne 0 ]; then
+          NETERR=1
+          continue
         fi
-      fi
-      idx=$((${idx} + 1))
-    done
-    if [ -z "${paturl}" -o -z "${patsum}" ]; then
-      if [ ${NETERR} -ne 0 ]; then
-        MSG=""
-        MSG+="$(TEXT "Network error, please check the network connection and try again.")"
-        MSG+="\n$(TEXT "Or use 'Parse pat' function for installation.")"
+        [ "${fastest}" = "www.synology.cn" ] &&
+          fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
+          fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
+        patdata=$(curl -skL --connect-timeout 10 "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
+        if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
+          if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
+            paturl=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].url')
+            patsum=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].checksum')
+            paturl=${paturl%%\?*}
+            break
+          fi
+        fi
+      done
+      if [ -z "${paturl}" -o -z "${patsum}" ]; then
+        if [ ${NETERR} -ne 0 ]; then
+          MSG=""
+          MSG+="$(TEXT "Network error, please check the network connection and try again.")"
+          MSG+="\n$(TEXT "Or use 'Parse pat' function for installation.")"
+        else
+          MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.\nOr click 'Retry'.")"
+        fi
+        paturl=""
+        patsum=""
       else
-        MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.\nOr click 'Retry'.")"
+        MSG="$(TEXT "Successfully to get pat data, Please confirm.\nOr modify the URL and md5sum to you need.")"
       fi
-      paturl=""
-      patsum=""
-    else
-      MSG="$(TEXT "Successfully to get pat data, Please confirm.\nOr modify the URL and md5sum to you need.")"
-    fi
-    DIALOG --title "$(TEXT "Product Version")" \
-      --extra-button --extra-label "$(TEXT "Retry")" \
-      --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
-      2>"${TMP_PATH}/resp"
-    RET=$?
-    [ ${RET} -eq 0 ] && break    # ok-button
-    [ ${RET} -eq 3 ] && continue # extra-button
-    return                       # 1 or 255  # cancel-button or ESC
-  done
-  paturl="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
-  patsum="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
+      DIALOG --title "$(TEXT "Product Version")" \
+        --extra-button --extra-label "$(TEXT "Retry")" \
+        --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
+        2>"${TMP_PATH}/resp"
+      RET=$?
+      [ ${RET} -eq 0 ] && break    # ok-button
+      [ ${RET} -eq 3 ] && continue # extra-button
+      return                       # 1 or 255  # cancel-button or ESC
+    done
+    paturl="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
+    patsum="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
+  else
+    paturl="${2}"
+    patsum="${3}"
+  fi
   [ -z "${paturl}" -o -z "${patsum}" ] && return
   writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
   writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
@@ -312,8 +324,10 @@ function productversMenu() {
   SMALLNUM=""
   writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
   writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
-  DIALOG --title "$(TEXT "Product Version")" \
-    --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
+  if [ -z "${1}" ]; then
+    DIALOG --title "$(TEXT "Product Version")" \
+      --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
+  fi
   # Delete synoinfo and reload model/build synoinfo
   writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
   while IFS=': ' read KEY VALUE; do
@@ -2903,6 +2917,10 @@ if [ "${1}" = "update" ]; then
   EXT=${2:-"a"}
   updateMenu "${EXT}"
   exit 0
+fi
+if [ "${1}" = "make" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]; then
+  make
+  exit
 fi
 if [ "${1}" = "boot" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]; then
   make
