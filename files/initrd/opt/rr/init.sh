@@ -117,7 +117,7 @@ fi
 
 # If is to boot automatically, do it
 if [ ${BOOT} -eq 1 ]; then
-  boot.sh && exit 0
+  ${WORK_PATH}/boot.sh && exit 0
 fi
 
 # Wait for an IP
