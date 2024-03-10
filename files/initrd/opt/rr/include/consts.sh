@@ -2,11 +2,11 @@ RR_VERSION="24.3.1"
 RR_TITLE="RR v${RR_VERSION}"
 
 # Define paths
-
-PART1_PATH="/mnt/p1"
-PART2_PATH="/mnt/p2"
-PART3_PATH="/mnt/p3"
-TMP_PATH="/tmp"
+# CHROOT_PATH: Defined during PC debugging.
+PART1_PATH="${CHROOT_PATH}/mnt/p1"
+PART2_PATH="${CHROOT_PATH}/mnt/p2"
+PART3_PATH="${CHROOT_PATH}/mnt/p3"
+TMP_PATH="${CHROOT_PATH}/tmp"
 
 UNTAR_PAT_PATH="${TMP_PATH}/pat"
 RAMDISK_PATH="${TMP_PATH}/ramdisk"

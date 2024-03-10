@@ -13,17 +13,17 @@ This project is a system for redpill’s preinstallation and recovery environmen
 ### 鸣谢 - Credits
 * Arpl: @fbelavenuto
   * https://github.com/fbelavenuto/arpl
-* Redpill: @RedPill-TTG @pocopico @jim3ma
+* Redpill: @RedPill-TTG @pocopico @jim3ma @fbelavenuto @MoetaYuko
   * https://github.com/RedPill-TTG
   * https://github.com/XPEnology-Community/redpill-lkm5
+  * https://github.com/MoetaYuko/linux_dsm_epyc7002
 * Framework:
   * https://github.com/buildroot/buildroot
   * https://github.com/eudev-project/eudev
-* Addons: @xbl3 @wirgen @FOXBI @arabezar @007revad
+* Addons: @xbl3 @wirgen @007revad @PeterSuh-Q3
   * https://github.com/xbl3/synocodectool-patch (https://github.com/wirgen/synocodectool-patch)
-  * https://github.com/FOXBI/ch_cpuinfo (https://github.com/arabezar/ch_cpuinfo)
   * https://github.com/007revad/Synology_HDD_db
-  * https://github.com/007revad/Synology_enable_M2_volume
+  * https://github.com/007revad/Synology_enable_M2_volume (base)
 * Modules: @jim3ma @MoetaYuko
   * https://github.com/jim3ma/synology-igc
   * https://github.com/MoetaYuko/intel-gpu-i915-backports
@@ -31,20 +31,24 @@ This project is a system for redpill’s preinstallation and recovery environmen
 
 ### 组件: 
 <b>https://github.com/wjz304/rr</b>
-* addons: https://github.com/wjz304/rr-addons
-* modules: https://github.com/wjz304/rr-modules
-* rp-lkms: https://github.com/wjz304/rr-lkms
+
 
 ### About GPU: 
-* vGPU: https://blog.kkk.rs/
-* iGPU: https://jim.plus/
-* iGPU: https://github.com/MoetaYuko/intel-gpu-i915-backports
+* vGPU:
+  * https://blog.kkk.rs/  
+  * https://github.com/pdbear/syno_nvidia_gpu_driver/
+* iGPU:
+  * https://jim.plus/  
+* iGPU:
+  * https://github.com/MoetaYuko/intel-gpu-i915-backports
+
 
 ## 说明 - Instructions
 * [GUIDE](./guide.md)
 * [About get logs](https://github.com/wjz304/rr/issues/173)
 * [About not find DSM after "boot the loader"](https://github.com/wjz304/rr/issues/175)
 * [About DT(Device Tree) and *portcfg/maxdisks](https://github.com/wjz304/rr/issues/226)
+
 
 ## 翻译 - Translation
 * 其他语言的翻译 - Language translation work:
@@ -65,31 +69,25 @@ This project is a system for redpill’s preinstallation and recovery environmen
   Developers who are familiar with various languages are welcome to submit PR.
 
 * Translation maintenance personnel:
+   * en_US: @wjz304
+   * ko_KR: @EXP <jeong1986>
+   * ru_RU: @Alex TG
    * zh_CN: @wjz304
-   * zh_TW: @豪客幫
-
-## 教程 - Usage 
-* English: https://www.youtube.com/watch?v=VB67_FG5y-E
-    ##### `(From: @NETVN82)`
-* Español: https://www.youtube.com/watch?v=KC6oCcAyoV4
-    ##### `(From: @Jay tech 2023)`
-* 한국어: https://www.youtube.com/watch?v=4O7EfU6MT60
-    ##### `(From: @pageinnet)`
-* ภาษาไทย: https://www.youtube.com/watch?v=4sGrMMEQQ6I
-    ##### `(From: @stnology)`
-* 中文繁體: https://www.youtube.com/watch?v=cW2eRCjtAEs
-    ##### `(From: @豪客幫)`
-* 中文简体: https://www.bilibili.com/video/BV1jk4y1Y7B7  
-    ##### `(From: http://mi-d.cn)`
+   * zh_HK: @wjz304
+   * zh_TW: @March Fun <https://cyber.suma.tw/> (豪客幫)
 
 
 ## 打赏一下
-* > ### 作者: Ing  
-* > QQ群1: 21609194 [点击链接加入QQ群](https://qm.qq.com/cgi-bin/qm/qr?k=z5O89os88QEKXCbz-0gwtEz1AeQiCwk3)
-* > QQ群2: 73119176 [点击链接加入QQ群](https://qm.qq.com/cgi-bin/qm/qr?k=6GFSrSYX2LTd9PD0r0hl_YJZsfLp53Oh)
-* > QQ频道: redpill2syno [点击链接加入QQ频道](https://pd.qq.com/s/5nmli9qgn)
-* > TG频道: redpill2syno [点击链接加入TG频道](https://t.me/redpill2syno)
-* <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/20220908134226.jpg" width="400">
+* 
+  * ### 作者: Ing  
+  * QQ群1: 21609194 [点击链接加入QQ群](https://qm.qq.com/q/YTPvSXfeU0)
+  * QQ群2: 73119176 [点击链接加入QQ群](https://qm.qq.com/q/YV1B0NFvWK)
+  * QQ群3: 51929774 [点击链接加入QQ群](https://qm.qq.com/q/aVjM3Wb6KY)
+  * QQ群4: 49756829 [点击链接加入QQ群](https://qm.qq.com/q/9PHzmZDkqI)
+  * QQ频道: RR Org [点击链接加入QQ频道](https://pd.qq.com/s/aklqb0uij)
+  * TG频道: RR Org [点击链接加入TG频道](https://t.me/RR_Org)
+
+* * <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/20220908134226.jpg" width="400">
 
 
 
