@@ -201,5 +201,3 @@ mkdir -p "${CKS_PATH}"
 mkdir -p "${LKMS_PATH}"
 mkdir -p "${ADDONS_PATH}"
 mkdir -p "${MODULES_PATH}"
-
-updateAddons
