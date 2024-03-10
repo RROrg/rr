@@ -2587,7 +2587,7 @@ function updateAddons() {
   rm -Rf "${ADDONS_PATH}/"*
   [ -f "${TMP_PATH}/update/VERSION" ] && cp -f "${TMP_PATH}/update/VERSION" "${ADDONS_PATH}/"
   for PKG in $(ls ${TMP_PATH}/update/*.addon 2>/dev/null); do
-    ADDON=$(basename ${PKG} | sed 's|.addon||')
+    ADDON=$(basename ${PKG} .addon)
     rm -rf "${ADDONS_PATH}/${ADDON}"
     mkdir -p "${ADDONS_PATH}/${ADDON}"
     tar -xaf "${PKG}" -C "${ADDONS_PATH}/${ADDON}" >/dev/null 2>&1
@@ -2905,7 +2905,6 @@ if [ "${1}" = "update" ]; then
   exit 0
 fi
 if [ "${1}" = "boot" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]; then
-  updateAddons
   make
   boot && exit 0 || sleep 5
 fi

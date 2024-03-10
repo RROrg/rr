@@ -93,16 +93,3 @@ function untarAddon() {
   mv -f "${TMP_PATH}/addon" "${ADDONS_PATH}/${ADDON}"
   echo "${ADDON}"
 }
-
-###############################################################################
-# Detect if has new local plugins to install/reinstall
-function updateAddons() {
-  for F in $(ls ${PART3_PATH}/*.addon 2>/dev/null); do
-    local ADDON=$(basename "${F}" | sed 's|.addon||')
-    rm -rf "${ADDONS_PATH}/${ADDON}"
-    mkdir -p "${ADDONS_PATH}/${ADDON}"
-    echo "Installing ${F} to ${ADDONS_PATH}/${ADDON}"
-    tar -xaf "${F}" -C "${ADDONS_PATH}/${ADDON}"
-    rm -f "${F}"
-  done
-}
