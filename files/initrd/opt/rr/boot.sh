@@ -123,7 +123,9 @@ else
   CMDLINE['noefi']=""
 fi
 if [ ! "${BUS}" = "usb" ]; then
-  SIZE=$(($(cat /sys/block/${LOADER_DISK/\/dev\//}/size) / 2048 + 10))
+  SZ=$(blockdev --getsz ${LOADER_DISK} 2>/dev/null)  # SZ=$(cat /sys/block/${LOADER_DISK/\/dev\//}/size)
+  SS=$(blockdev --getss ${LOADER_DISK} 2>/dev/null)  # SS=$(cat /sys/block/${LOADER_DISK/\/dev\//}/queue/hw_sector_size)
+  SIZE=$((${SZ} * ${SS} / 1024 / 1024 + 10))
   # Read SATADoM type
   DOM="$(readModelKey "${MODEL}" "dom")"
   CMDLINE['synoboot_satadom']="${DOM}"
