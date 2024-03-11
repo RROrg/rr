@@ -366,6 +366,7 @@ function ParsePat() {
       --yesno "${MSG}" 0 0
     [ $? -ne 0 ] && return
   fi
+  mkdir -p "${TMP_PATH}/pats"
   PAT_PATH=""
   ITEMS="$(ls ${TMP_PATH}/pats/*.pat 2>/dev/null)"
   if [ -z "${ITEMS}" ]; then
@@ -486,7 +487,7 @@ function ParsePat() {
     rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1
     touch ${PART1_PATH}/.build
     break
-  done 2>&1 | DIALOG --title "$(TEXT "Main menu")" --cr-wrap --no-collapse \
+  done 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
     --progressbox "$(TEXT "Making ...")" 20 100
   if [ -f "${MKERR_FILE}" ]; then
     DIALOG --title "$(TEXT "Error")" \
@@ -1261,17 +1262,6 @@ function make() {
   MKERR_FILE="${TMP_PATH}/makeerror.log"
   rm -f "${MKERR_FILE}"
   while true; do
-    PLATFORM="$(readModelKey "${MODEL}" "platform")"
-    KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-    KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
-    # Check if all addon exists
-    while IFS=': ' read ADDON PARAM; do
-      [ -z "${ADDON}" ] && continue
-      if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
-        echo -e "$(printf "$(TEXT "Addon %s not found!")" "${ADDON}")" >"${MKERR_FILE}"
-        break 2
-      fi
-    done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
 
     if [ ! -f "${ORI_ZIMAGE_FILE}" -o ! -f "${ORI_RDGZ_FILE}" ]; then
       extractDsmFiles
@@ -1296,7 +1286,7 @@ function make() {
     rm -f "${MKERR_FILE}"
     sleep 3
     break
-  done 2>&1 | DIALOG --title "$(TEXT "Main menu")" --cr-wrap --no-collapse \
+  done 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
     --progressbox "$(TEXT "Making ...")" 20 100
   if [ -f "${MKERR_FILE}" ]; then
     DIALOG --title "$(TEXT "Error")" \

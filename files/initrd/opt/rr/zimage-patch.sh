@@ -7,7 +7,10 @@
 set -o pipefail # Get exit code from process piped
 
 # Sanity check
-[ -f "${ORI_ZIMAGE_FILE}" ] || (die "${ORI_ZIMAGE_FILE} not found!" | tee -a "${LOG_FILE}")
+if [ ! -f "${ORI_ZIMAGE_FILE}" ]; then
+  echo "ERROR: ${ORI_ZIMAGE_FILE} not found!" >"${LOG_FILE}"
+  exit 1
+fi
 
 echo -n "Patching zImage"
 
@@ -26,13 +29,13 @@ if [ "${KERNEL}" = "custom" ]; then
 else
   echo -n "."
   # Extract vmlinux
-  ${WORK_PATH}/bzImage-to-vmlinux.sh "${ORI_ZIMAGE_FILE}" "${TMP_PATH}/vmlinux" >"${LOG_FILE}" 2>&1 || dieLog
+  ${WORK_PATH}/bzImage-to-vmlinux.sh "${ORI_ZIMAGE_FILE}" "${TMP_PATH}/vmlinux" >"${LOG_FILE}" 2>&1 || exit 1
   echo -n "."
   # Patch boot params and ramdisk check
-  ${WORK_PATH}/kpatch "${TMP_PATH}/vmlinux" "${TMP_PATH}/vmlinux-mod" >"${LOG_FILE}" 2>&1 || dieLog
+  ${WORK_PATH}/kpatch "${TMP_PATH}/vmlinux" "${TMP_PATH}/vmlinux-mod" >"${LOG_FILE}" 2>&1 || exit 1
   echo -n "."
   # rebuild zImage
-  ${WORK_PATH}/vmlinux-to-bzImage.sh "${TMP_PATH}/vmlinux-mod" "${MOD_ZIMAGE_FILE}" >"${LOG_FILE}" 2>&1 || dieLog
+  ${WORK_PATH}/vmlinux-to-bzImage.sh "${TMP_PATH}/vmlinux-mod" "${MOD_ZIMAGE_FILE}" >"${LOG_FILE}" 2>&1 || exit 1
 fi
 
 echo -n "."
