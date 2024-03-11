@@ -60,23 +60,23 @@ if [ ${KVER_MAJOR} -eq 4 ] || [ ${KVER_MAJOR} -eq 3 ]; then
   #  unknown             114460
   #)                     114570
   #crc32                 4
-  gzip -dc "${WORK_PATH}/bzImage-template-v4.gz" >"${ZIMAGE_MOD}"
+  gzip -dc "${WORK_PATH}/bzImage-template-v4.gz" >"${ZIMAGE_MOD}" || exit 1
 
-  dd if="${VMLINUX_MOD}" of="${ZIMAGE_MOD}" bs=16494 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=15745134 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=15745244 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
+  dd if="${VMLINUX_MOD}" of="${ZIMAGE_MOD}" bs=16494 seek=1 conv=notrunc || exit 1
+  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=15745134 seek=1 conv=notrunc || exit 1
+  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=15745244 seek=1 conv=notrunc || exit 1
 
   RUN_SIZE=$(objdump -h ${VMLINUX_MOD} | sh "${WORK_PATH}/calc_run_size.sh")
-  size_le ${RUN_SIZE} | dd of=${ZIMAGE_MOD} bs=15745210 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-  size_le $(($((16#$(crc32 "${ZIMAGE_MOD}" | awk '{print $1}'))) ^ 0xFFFFFFFF)) | dd of="${ZIMAGE_MOD}" conv=notrunc oflag=append >"${LOG_FILE}" 2>&1 || dieLog
+  size_le ${RUN_SIZE} | dd of=${ZIMAGE_MOD} bs=15745210 seek=1 conv=notrunc|| exit 1
+  size_le $(($((16#$(crc32 "${ZIMAGE_MOD}" | awk '{print $1}'))) ^ 0xFFFFFFFF)) | dd of="${ZIMAGE_MOD}" conv=notrunc oflag=append || exit 1
 else
   # Kernel version 5.x
-  gzip -dc "${WORK_PATH}/bzImage-template-v5.gz" >"${ZIMAGE_MOD}"
+  gzip -dc "${WORK_PATH}/bzImage-template-v5.gz" >"${ZIMAGE_MOD}" || exit 1
 
-  dd if="${VMLINUX_MOD}" of="${ZIMAGE_MOD}" bs=14561 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=34463421 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=34479132 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-  #  RUN_SIZE=`objdump -h ${VMLINUX_MOD} | sh "${WORK_PATH}/calc_run_size.sh"`
-  #  size_le ${RUN_SIZE} | dd of=${ZIMAGE_MOD} bs=34626904 seek=1 conv=notrunc >"${LOG_FILE}" 2>&1 || dieLog
-  size_le $(($((16#$(crc32 "${ZIMAGE_MOD}" | awk '{print $1}'))) ^ 0xFFFFFFFF)) | dd of="${ZIMAGE_MOD}" conv=notrunc oflag=append >"${LOG_FILE}" 2>&1 || dieLog
+  dd if="${VMLINUX_MOD}" of="${ZIMAGE_MOD}" bs=14561 seek=1 conv=notrunc || exit 1
+  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=34463421 seek=1 conv=notrunc || exit 1
+  file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=34479132 seek=1 conv=notrunc || exit 1
+  #  RUN_SIZE=$(objdump -h ${VMLINUX_MOD} | sh "${WORK_PATH}/calc_run_size.sh")
+  #  size_le ${RUN_SIZE} | dd of=${ZIMAGE_MOD} bs=34626904 seek=1 conv=notrunc || exit 1
+  size_le $(($((16#$(crc32 "${ZIMAGE_MOD}" | awk '{print $1}'))) ^ 0xFFFFFFFF)) | dd of="${ZIMAGE_MOD}" conv=notrunc oflag=append || exit 1
 fi

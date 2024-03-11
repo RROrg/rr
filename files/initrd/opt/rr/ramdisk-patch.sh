@@ -9,7 +9,10 @@
 set -o pipefail # Get exit code from process piped
 
 # Sanity check
-[ -f "${ORI_RDGZ_FILE}" ] || (die "${ORI_RDGZ_FILE} not found!" | tee -a "${LOG_FILE}")
+if [ ! -f "${ORI_RDGZ_FILE}" ]; then
+  echo "ERROR: ${ORI_RDGZ_FILE} not found!" >"${LOG_FILE}"
+  exit 1
+fi
 
 echo -n "Patching Ramdisk"
 
@@ -73,7 +76,10 @@ KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
 RD_COMPRESSED="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].rd-compressed")"
 
 # Sanity check
-[ -z "${PLATFORM}" -o -z "${KVER}" ] && (die "ERROR: Configuration for model ${MODEL} and productversion ${PRODUCTVER} not found." | tee -a "${LOG_FILE}")
+if [ -z "${PLATFORM}" -o -z "${KVER}" ]; then
+  echo "ERROR: Configuration for model ${MODEL} and productversion ${PRODUCTVER} not found." >"${LOG_FILE}"
+  exit 1
+fi
 
 declare -A SYNOINFO
 declare -A ADDONS
@@ -95,27 +101,29 @@ done <<<$(readConfigMap "modules" "${USER_CONFIG_FILE}")
 # Patches (diff -Naru OLDFILE NEWFILE > xxx.patch)
 while read PE; do
   RET=1
-  echo "Patching with ${PE}" >"${LOG_FILE}" 2>&1
+  echo "Patching with ${PE}" >"${LOG_FILE}"
   for PF in $(ls ${WORK_PATH}/patch/${PE} 2>/dev/null); do
     echo -n "."
-    echo "Patching with ${PF}" >>"${LOG_FILE}" 2>&1
+    echo "Patching with ${PF}" >>"${LOG_FILE}"
     (
       cd "${RAMDISK_PATH}"
-      busybox patch -p1 -i "${PF}" >>"${LOG_FILE}" 2>&1  # busybox patch and gun patch have different processing methods and parameters.
+      busybox patch -p1 -i "${PF}" >>"${LOG_FILE}" 2>&1 # busybox patch and gun patch have different processing methods and parameters.
     )
     RET=$?
     [ ${RET} -eq 0 ] && break
   done
-  [ ${RET} -ne 0 ] && dieLog
+  [ ${RET} -ne 0 ] && exit 1
 done <<<$(readModelArray "${MODEL}" "productvers.[${PRODUCTVER}].patch")
 
 # Patch /etc/synoinfo.conf
 echo -n "."
-for KEY in ${!SYNOINFO[@]}; do
-  _set_conf_kv "${KEY}" "${SYNOINFO[${KEY}]}" "${RAMDISK_PATH}/etc/synoinfo.conf" >"${LOG_FILE}" 2>&1 || dieLog
-done
 # Add serial number to synoinfo.conf, to help to recovery a installed DSM
-_set_conf_kv "SN" "${SN}" "${RAMDISK_PATH}/etc/synoinfo.conf" >"${LOG_FILE}" 2>&1 || dieLog
+echo "Set synoinfo SN" >"${LOG_FILE}"
+_set_conf_kv "SN" "${SN}" "${RAMDISK_PATH}/etc/synoinfo.conf" >>"${LOG_FILE}" 2>&1 || exit 1
+for KEY in ${!SYNOINFO[@]}; do
+  echo "Set synoinfo ${KEY}" >>"${LOG_FILE}"
+  _set_conf_kv "${KEY}" "${SYNOINFO[${KEY}]}" "${RAMDISK_PATH}/etc/synoinfo.conf" >>"${LOG_FILE}" 2>&1 || exit 1
+done
 
 # Patch /sbin/init.post
 echo -n "."
@@ -134,16 +142,17 @@ rm -f "${TMP_PATH}/rp.txt"
 
 # Extract ck modules to ramdisk
 echo -n "."
-installModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${!MODULES[@]}"
+installModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${!MODULES[@]}" || exit 1
 
 echo -n "."
 # Copying fake modprobe
 cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
 # Copying LKM to /usr/lib/modules
-gzip -dc "${LKMS_PATH}/rp-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko"
+gzip -dc "${LKMS_PATH}/rp-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko" 2>"${LOG_FILE}" || exit 1
 
 # Addons
 echo -n "."
+echo "Create addons.sh" >"${LOG_FILE}"
 mkdir -p "${RAMDISK_PATH}/addons"
 echo "#!/bin/sh" >"${RAMDISK_PATH}/addons/addons.sh"
 echo 'echo "addons.sh called with params ${@}"' >>"${RAMDISK_PATH}/addons/addons.sh"
@@ -158,38 +167,30 @@ echo "export LAYOUT=${LAYOUT}" >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export KEYMAP=${KEYMAP}" >>"${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
 
-# Required addons: restore
-installAddon "revert" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
-echo "/addons/revert.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-
-# Required addons: misc
-installAddon "misc" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
-echo "/addons/misc.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-
-# Required addons: eudev, disks, localrss, wol
-installAddon "eudev" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
-echo "/addons/eudev.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-installAddon "disks" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
-echo "/addons/disks.sh \${1} ${HDDSORT} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-[ -f "${USER_UP_PATH}/${MODEL}.dts" ] && cp -f "${USER_UP_PATH}/${MODEL}.dts" "${RAMDISK_PATH}/addons/model.dts"
-installAddon "localrss" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
-echo "/addons/localrss.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
-installAddon "wol" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"
-echo "/addons/wol.sh \${1} " >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
+# Required addons: "revert" "misc" "eudev" "disks" "localrss" "wol"
+# This order cannot be changed.
+for ADDON in "revert" "misc" "eudev" "disks" "localrss" "wol"; do
+  PARAMS=""
+  if [ "${ADDON}" = "disks" ]; then
+    PARAMS=${HDDSORT}
+    [ -f "${USER_UP_PATH}/${MODEL}.dts" ] && cp -f "${USER_UP_PATH}/${MODEL}.dts" "${RAMDISK_PATH}/addons/model.dts"
+  fi
+  installAddon "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" || exit 1
+  echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >>"${RAMDISK_PATH}/addons/addons.sh" 2>>"${LOG_FILE}" || exit 1
+done
 
 # User addons
 for ADDON in ${!ADDONS[@]}; do
   PARAMS=${ADDONS[${ADDON}]}
-  if ! installAddon "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
-    echo "ADDON ${ADDON} not found!" | tee -a "${LOG_FILE}"
-    exit 1
-  fi
-  echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >>"${RAMDISK_PATH}/addons/addons.sh" 2>"${LOG_FILE}" || dieLog
+  installAddon "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" || exit 1
+  echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >>"${RAMDISK_PATH}/addons/addons.sh" 2>>"${LOG_FILE}" || exit 1
 done
 
 # Enable Telnet
 echo "inetd" >>"${RAMDISK_PATH}/addons/addons.sh"
 
+echo -n "."
+echo "Modify files" >"${LOG_FILE}"
 # Remove function from scripts
 [ "2" = "${BUILDNUM:0:1}" ] && sed -i 's/function //g' $(find "${RAMDISK_PATH}/addons/" -type f -name "*.sh")
 
@@ -214,7 +215,7 @@ for F in "${USER_GRUB_CONFIG}" "${USER_CONFIG_FILE}" "${USER_LOCALE_FILE}" "${US
   elif [ -d "${F}" ]; then
     SIZE="$(du -sm "${F}" 2>/dev/null | awk '{print $1}')"
     if [ ${SIZE:-0} -gt 4 ]; then
-      echo "Backup of ${F} skipped, size is ${SIZE}MB" >>"${LOG_FILE}" 2>&1
+      echo "Backup of ${F} skipped, size is ${SIZE}MB" >>"${LOG_FILE}"
       continue
     fi
     FD="$(dirname "${F}")"
@@ -245,16 +246,16 @@ fi
 # Call user patch scripts
 echo -n "."
 for F in $(ls -1 ${SCRIPTS_PATH}/*.sh 2>/dev/null); do
-  echo "Calling ${F}" >>"${LOG_FILE}" 2>&1
-  . "${F}" >>"${LOG_FILE}" 2>&1 || dieLog
+  echo "Calling ${F}" >"${LOG_FILE}"
+  . "${F}" >>"${LOG_FILE}" 2>&1 || exit 1
 done
 
 # Reassembly ramdisk
 echo -n "."
 if [ "${RD_COMPRESSED}" == "true" ]; then
-  (cd "${RAMDISK_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | xz -9 --format=lzma >"${MOD_RDGZ_FILE}") >"${LOG_FILE}" 2>&1 || dieLog
+  (cd "${RAMDISK_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | xz -9 --format=lzma >"${MOD_RDGZ_FILE}") >"${LOG_FILE}" 2>&1 || exit 1
 else
-  (cd "${RAMDISK_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root >"${MOD_RDGZ_FILE}") >"${LOG_FILE}" 2>&1 || dieLog
+  (cd "${RAMDISK_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root >"${MOD_RDGZ_FILE}") >"${LOG_FILE}" 2>&1 || exit 1
 fi
 
 # Clean
