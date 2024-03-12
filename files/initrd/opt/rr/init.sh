@@ -85,7 +85,12 @@ if [ "${BUS}" = "usb" ]; then
   PID="0x$(udevadm info --query property --name ${LOADER_DISK} 2>/dev/null | grep ID_MODEL_ID | cut -d= -f2)"
   TYPE="flashdisk"
 elif [ "${BUS}" != "sata" -a "${BUS}" != "scsi" -a "${BUS}" != "nvme" -a "${BUS}" != "mmc" ]; then
-  die "$(TEXT "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM")"
+  if [ "LOCALBUILD" = "${LOADER_DISK}" ]; then
+    echo "LOCALBUILD MODE"
+    TYPE="PC"
+  else
+    die "$(TEXT "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM")"
+  fi
 fi
 
 # Save variables to user config file
