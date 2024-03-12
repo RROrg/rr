@@ -2124,8 +2124,8 @@ function advancedMenu() {
       echo "z \"$(TEXT "Force enable Telnet&SSH of DSM system")\"" >>"${TMP_PATH}/menu"
       echo "r \"$(TEXT "Clone bootloader disk to another disk")\"" >>"${TMP_PATH}/menu"
       echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
-      echo "p \"$(TEXT "Save modifications of '/opt/rr'")\"" >>"${TMP_PATH}/menu"
       echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
+      echo "p \"$(TEXT "Save modifications of '/opt/rr'")\"" >>"${TMP_PATH}/menu"
     fi
     echo "g \"$(TEXT "Show QR logo:") \Z4${DSMLOGO}\Zn\"" >>"${TMP_PATH}/menu"
     echo "1 \"$(TEXT "Set global proxy")\"" >>"${TMP_PATH}/menu"
@@ -2322,29 +2322,6 @@ function advancedMenu() {
       fi
       NEXT="e"
       ;;
-    p)
-      DIALOG --title "$(TEXT "Advanced")" \
-        --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?")" 0 0
-      [ $? -ne 0 ] && return
-      DIALOG --title "$(TEXT "Advanced")" \
-        --infobox "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 0 0
-      RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
-      mkdir -p "${RDXZ_PATH}"
-      (
-        cd "${RDXZ_PATH}"
-        xz -dc <"${RR_RAMDISK_FILE}" | cpio -idm
-      ) >/dev/null 2>&1 || true
-      rm -rf "${RDXZ_PATH}/opt/rr"
-      cp -Rf "/opt" "${RDXZ_PATH}/"
-      (
-        cd "${RDXZ_PATH}"
-        find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 >"${RR_RAMDISK_FILE}"
-      ) || true
-      rm -rf "${RDXZ_PATH}"
-      DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox ""$(TEXT "Save is complete.")"" 0 0
-      NEXT="e"
-      ;;
     o)
       DIALOG --title "$(TEXT "Advanced")" \
         --yesno "$(TEXT "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?")" 0 0
@@ -2357,6 +2334,30 @@ function advancedMenu() {
         --progressbox "$(TEXT "opkg installing ...")" 20 100
       DIALOG --title "$(TEXT "Advanced")" \
         --msgbox "$(TEXT "opkg install is complete. Please reconnect to ssh/web, or execute 'source ~/.bashrc'")" 0 0
+      NEXT="e"
+      ;;
+    p)
+      DIALOG --title "$(TEXT "Advanced")" \
+        --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?")" 0 0
+      [ $? -ne 0 ] && return
+      DIALOG --title "$(TEXT "Advanced")" \
+        --infobox "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 0 0
+      RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
+      rm -rf "${RDXZ_PATH}"
+      mkdir -p "${RDXZ_PATH}"
+      (
+        cd "${RDXZ_PATH}"
+        xz -dc <"${RR_RAMDISK_FILE}" | cpio -idm
+      ) >/dev/null 2>&1 || true
+      rm -rf "${RDXZ_PATH}/opt/rr"
+      cp -Rf "$(dirname ${WORK_PATH})" "${RDXZ_PATH}/"
+      (
+        cd "${RDXZ_PATH}"
+        find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 >"${RR_RAMDISK_FILE}"
+      ) || true
+      rm -rf "${RDXZ_PATH}"
+      DIALOG --title "$(TEXT "Advanced")" \
+        --msgbox ""$(TEXT "Save is complete.")"" 0 0
       NEXT="e"
       ;;
     g)
