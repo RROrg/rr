@@ -5,6 +5,9 @@
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
 #
+# sudo apt update
+# sudo apt install -y autoconf automake autopoint gettext build-essential bison flex libtool dosfstools e2fsprogs
+#
 
 GRUB=${1:-"grub-2.12"}
 BIOS=${2:-"i386-pc i386-efi x86_64-efi"}
@@ -46,6 +49,7 @@ sudo mv device.map ${NAME}1/boot/grub/device.map
 
 
 # Install grub
+rm -rf grub
 git clone --depth=1 -b ${GRUB} https://git.savannah.gnu.org/git/grub.git grub
 pushd grub
 ./bootstrap
@@ -85,4 +89,5 @@ sudo umount ${LOOPX}p1
 sudo losetup -d ${LOOPX}
 sudo rm -rf ${NAME}1
 
+rm -f grub.img.gz
 gzip grub.img
