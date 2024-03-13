@@ -361,8 +361,7 @@ function productversMenu() {
 ###############################################################################
 # Parse Pat
 function ParsePat() {
-  MKERR_FILE="${TMP_PATH}/makeerror.log"
-  rm -f "${MKERR_FILE}"
+  rm -f "${LOG_FILE}"
 
   if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
     MSG="$(printf "$(TEXT "You have selected the %s and %s.\n'Parse Pat' will overwrite the previous selection.\nDo you want to continue?")" "${MODEL}" "${PRODUCTVER}")"
@@ -400,7 +399,7 @@ function ParsePat() {
       return 1
     fi
     if [ ! -f "${UNTAR_PAT_PATH}/GRUB_VER" -o ! -f "${UNTAR_PAT_PATH}/VERSION" ]; then
-      echo -e "$(TEXT "pat Invalid, try again!")" >"${MKERR_FILE}"
+      echo -e "$(TEXT "pat Invalid, try again!")" >"${LOG_FILE}"
       break
     fi
 
@@ -418,7 +417,7 @@ function ParsePat() {
           fi
         done
         if [ "${IS_FIND}" = "false" ]; then
-          echo "$(printf "$(TEXT "Currently, %s is not supported.")" "${MODELTMP}")" >"${MKERR_FILE}"
+          echo "$(printf "$(TEXT "Currently, %s is not supported.")" "${MODELTMP}")" >"${LOG_FILE}"
           break
         fi
       fi
@@ -430,7 +429,7 @@ function ParsePat() {
       BUILDNUM=${buildnumber}
       SMALLNUM=${smallfixnumber}
     else
-      echo "$(printf "$(TEXT "Currently, %s of %s is not supported.")" "${majorversion}.${minorversion}" "${MODEL}")" >"${MKERR_FILE}"
+      echo "$(printf "$(TEXT "Currently, %s of %s is not supported.")" "${majorversion}.${minorversion}" "${MODEL}")" >"${LOG_FILE}"
       break
     fi
 
@@ -493,9 +492,10 @@ function ParsePat() {
     break
   done 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
     --progressbox "$(TEXT "Making ...")" 20 100
-  if [ -f "${MKERR_FILE}" ]; then
+  if [ -f "${LOG_FILE}" ]; then
     DIALOG --title "$(TEXT "Error")" \
-      --msgbox "$(cat ${MKERR_FILE})" 0 0
+      --msgbox "$(cat ${LOG_FILE})" 0 0
+    rm -f "${LOG_FILE}"
     return 1
   else
     MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
@@ -505,6 +505,7 @@ function ParsePat() {
     SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
     MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
     MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
+    rm -f "${LOG_FILE}"
     return 0
   fi
 }
@@ -601,7 +602,7 @@ function addonMenu() {
         --msgbox "${MSG}" 0 0
       ;;
     u)
-      if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+      if ! tty 2>/dev/null | grep -q "/dev/pts"; then #if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         MSG=""
         MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
         DIALOG --title "$(TEXT "Addons")" \
@@ -1045,12 +1046,12 @@ function synoinfoMenu() {
 ###############################################################################
 # Extract linux and ramdisk files from the DSM .pat
 function getSynoExtractor() {
-  MKERR_FILE="${TMP_PATH}/makeerror.log"
+  rm -f "${LOG_FILE}"
   mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
   fastest=$(_get_fastest ${mirrors[@]})
   if [ $? -ne 0 ]; then
     MSG="$(TEXT "Network error, please check the network connection and try again.")"
-    echo -e "${MSG}" >"${MKERR_FILE}"
+    echo -e "${MSG}" >"${LOG_FILE}"
     return 1
   fi
   OLDPAT_URL="https://${fastest}/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
@@ -1068,14 +1069,14 @@ function getSynoExtractor() {
   if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
     rm -f "${OLDPAT_PATH}"
     MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d")" "${RET}" "${STATUS}")"
-    echo -e "${MSG}" >"${MKERR_FILE}"
+    echo -e "${MSG}" >"${LOG_FILE}"
     return 1
   fi
 
   # Extract DSM ramdisk file from PAT
   rm -rf "${RAMDISK_PATH}"
   mkdir -p "${RAMDISK_PATH}"
-  tar -xf "${OLDPAT_PATH}" -C "${RAMDISK_PATH}" rd.gz >"${MKERR_FILE}" 2>&1
+  tar -xf "${OLDPAT_PATH}" -C "${RAMDISK_PATH}" rd.gz 2>"${LOG_FILE}"
   if [ $? -ne 0 ]; then
     rm -f "${OLDPAT_PATH}"
     rm -rf "${RAMDISK_PATH}"
@@ -1100,7 +1101,7 @@ function getSynoExtractor() {
 ###############################################################################
 # Extract linux and ramdisk files from the DSM .pat
 function extractPatFiles() {
-  MKERR_FILE="${TMP_PATH}/makeerror.log"
+  rm -f "${LOG_FILE}"
   PAT_PATH="${1}"
   EXT_PATH="${2}"
 
@@ -1119,7 +1120,7 @@ function extractPatFiles() {
     isencrypted="yes"
     ;;
   *)
-    echo -e "$(TEXT "Could not determine if pat file is encrypted or not, maybe corrupted, try again!")" >"${MKERR_FILE}"
+    echo -e "$(TEXT "Could not determine if pat file is encrypted or not, maybe corrupted, try again!")" >"${LOG_FILE}"
     return 1
     ;;
   esac
@@ -1145,7 +1146,6 @@ function extractPatFiles() {
     echo "$(TEXT "Extracting ...")"
     tar -xf "${PAT_PATH}" -C "${EXT_PATH}" >"${LOG_FILE}" 2>&1
     if [ $? -ne 0 ]; then
-      cat "${LOG_FILE}" >"${MKERR_FILE}"
       return 1
     fi
   fi
@@ -1154,7 +1154,7 @@ function extractPatFiles() {
     [ ! -f ${EXT_PATH}/GRUB_VER ] ||
     [ ! -f ${EXT_PATH}/zImage ] ||
     [ ! -f ${EXT_PATH}/rd.gz ]; then
-    echo -e "$(TEXT "pat Invalid, try again!")" >"${MKERR_FILE}"
+    echo -e "$(TEXT "pat Invalid, try again!")" >"${LOG_FILE}"
     return 1
   fi
 }
@@ -1162,7 +1162,7 @@ function extractPatFiles() {
 ###############################################################################
 # Extract linux and ramdisk files from the DSM .pat
 function extractDsmFiles() {
-  MKERR_FILE="${TMP_PATH}/makeerror.log"
+  rm -f "${LOG_FILE}"
   EXTRACTOR_PATH="${PART3_PATH}/extractor"
   EXTRACTOR_BIN="syno_extract_system_patch"
 
@@ -1176,15 +1176,15 @@ function extractDsmFiles() {
     echo "$(printf "$(TEXT "%s cached.")" "${PAT_FILE}")"
   else
     if [ "${PATURL}" = "#PARSEPAT" ]; then
-      echo -e "$(TEXT "The cache has been cleared. Please re 'Parse pat' before build.")" >"${MKERR_FILE}"
+      echo -e "$(TEXT "The cache has been cleared. Please re 'Parse pat' before build.")" >"${LOG_FILE}"
       return 1
     fi
     if [ "${PATURL}" = "#RECOVERY" ]; then
-      echo -e "$(TEXT "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build.")" >"${MKERR_FILE}"
+      echo -e "$(TEXT "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build.")" >"${LOG_FILE}"
       return 1
     fi
     if [ -z "${PATURL}" -o "${PATURL:0:1}" = "#" ]; then
-      echo -e "$(TEXT "The pat url is empty. Please re 'Choose a version' before build.")" >"${MKERR_FILE}"
+      echo -e "$(TEXT "The pat url is empty. Please re 'Choose a version' before build.")" >"${LOG_FILE}"
       return 1
     fi
     # If we have little disk space, clean cache folder
@@ -1198,7 +1198,7 @@ function extractDsmFiles() {
     fastest=$(_get_fastest ${mirrors[@]})
     if [ $? -ne 0 ]; then
       MSG="$(TEXT "Network error, please check the network connection and try again.")"
-      echo -e "${MSG}" >"${MKERR_FILE}"
+      echo -e "${MSG}" >"${LOG_FILE}"
       return 1
     fi
     mirror="$(echo ${PATURL} | sed 's|^http[s]*://\([^/]*\).*|\1|')"
@@ -1220,7 +1220,7 @@ function extractDsmFiles() {
     if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
       rm -f "${PAT_PATH}"
       MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d")" "${RET}" "${STATUS}")"
-      echo -e "${MSG}" >"${MKERR_FILE}"
+      echo -e "${MSG}" >"${LOG_FILE}"
       return 1
     fi
   fi
@@ -1228,7 +1228,7 @@ function extractDsmFiles() {
   echo -n "$(printf "$(TEXT "Checking hash of %s: ")" "${PAT_FILE}")"
   if [ "$(md5sum ${PAT_PATH} | awk '{print $1}')" != "${PATSUM}" ]; then
     rm -f ${PAT_PATH}
-    echo -e "$(TEXT "md5 hash of pat not match, Please reget pat data from the version menu and try again!")" >"${MKERR_FILE}"
+    echo -e "$(TEXT "md5 hash of pat not match, Please reget pat data from the version menu and try again!")" >"${LOG_FILE}"
     return 1
   fi
   echo "$(TEXT "OK")"
@@ -1263,10 +1263,8 @@ function extractDsmFiles() {
 ###############################################################################
 # Where the magic happens!
 function make() {
-  MKERR_FILE="${TMP_PATH}/makeerror.log"
-  rm -f "${MKERR_FILE}"
+  rm -f "${LOG_FILE}"
   while true; do
-
     if [ ! -f "${ORI_ZIMAGE_FILE}" -o ! -f "${ORI_RDGZ_FILE}" ]; then
       extractDsmFiles
       [ $? -ne 0 ] && break
@@ -1274,27 +1272,28 @@ function make() {
 
     ${WORK_PATH}/zimage-patch.sh
     if [ $? -ne 0 ]; then
-      echo -e "$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" >"${MKERR_FILE}"
+      echo -e "$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" >"${LOG_FILE}"
       break
     fi
 
     ${WORK_PATH}/ramdisk-patch.sh
     if [ $? -ne 0 ]; then
-      echo -e "$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" >"${MKERR_FILE}"
+      echo -e "$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" >"${LOG_FILE}"
       break
     fi
     rm -f ${PART1_PATH}/.build
     echo "$(TEXT "Cleaning ...")"
     rm -rf "${UNTAR_PAT_PATH}"
+    rm -f "${LOG_FILE}"
     echo "$(TEXT "Ready!")"
-    rm -f "${MKERR_FILE}"
     sleep 3
     break
   done 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
     --progressbox "$(TEXT "Making ...")" 20 100
-  if [ -f "${MKERR_FILE}" ]; then
+  if [ -f "${LOG_FILE}" ]; then
     DIALOG --title "$(TEXT "Error")" \
-      --msgbox "$(cat ${MKERR_FILE})" 0 0
+      --msgbox "$(cat ${LOG_FILE})" 0 0
+    rm -f "${LOG_FILE}"
     return 1
   else
     PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
@@ -1322,7 +1321,7 @@ function customDTS() {
     case "$(<${TMP_PATH}/resp)" in
     %) ;;
     u)
-      if ! tty | grep -q "/dev/pts"; then #if ! tty | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
+      if ! tty 2>/dev/null | grep -q "/dev/pts"; then #if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         MSG=""
         MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
         MSG+="$(printf "$(TEXT "Or upload the dts file to %s via DUFS, Will be automatically imported when building.")" "${USER_UP_PATH}/${MODEL}.dts")"
@@ -1454,7 +1453,7 @@ function setStaticIP() {
   for ETH in ${ETHX}; do
     [ ${IDX} -gt 7 ] && break # Currently, only up to 8 are supported.  (<==> boot.sh L96, <==> lkm: MAX_NET_IFACES)
     IDX=$((${IDX} + 1))
-    MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
+    MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
     IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
     ITEMS+="${ETH}(${MACR}) ${IDX} 1 ${IPR:-\"\"} ${IDX} 22 20 16 "
   done
@@ -1466,7 +1465,7 @@ function setStaticIP() {
   (
     IDX=1
     for ETH in ${ETHX}; do
-      MACR="$(cat /sys/class/net/${ETH}/address | sed 's/://g')"
+      MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
       IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
       IPC="$(cat "${TMP_PATH}/resp" | sed -n "${IDX}p")"
       if [ -n "${IPC}" -a "${IPR}" != "${IPC}" ]; then
@@ -1561,8 +1560,8 @@ function showDisksInfo() {
     PORTS=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
     for P in ${PORTS}; do
       if lsscsi -b 2>/dev/null | grep -v - | grep -q "\[${P}:"; then
-        DUMMY="$([ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd)" = "0" ] && echo 1 || echo 2)"
-        if [ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd)" = "0" ]; then
+        DUMMY="$([ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd 2>/dev/null)" = "0" ] && echo 1 || echo 2)"
+        if [ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd 2>/dev/null)" = "0" ]; then
           MSG+="\Z1$(printf "%02d" ${P})\Zn "
         else
           MSG+="\Z2$(printf "%02d" ${P})\Zn "
@@ -1626,6 +1625,7 @@ function showDisksInfo() {
   MSG+="\n"
   MSG+="$(printf "$(TEXT "\nTotal of ports: %s\n")" "${NUMPORTS}")"
   MSG+="$(TEXT "\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected.")"
+  [ ${NUMPORTS} -eq 0 ] && MSG="\n$(TEXT "No disk found!")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
   return
@@ -1638,8 +1638,8 @@ function formatDisks() {
   while read KNAME ID; do
     [ -z "${KNAME}" ] && continue
     [[ "${KNAME}" = /dev/md* ]] && continue
-    [ -z "${ID}" ] && ID="Unknown"
     echo "${KNAME}" | grep -q "${LOADER_DISK}" && continue
+    [ -z "${ID}" ] && ID="Unknown"
     echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
   done <<<$(lsblk -pno KNAME,ID)
   if [ ! -f "${TMP_PATH}/opts" ]; then
@@ -1889,7 +1889,7 @@ function resetDSMPassword() {
         grep -q "status=on" "${TMP_PATH}/sdX1/usr/syno/etc/packages/SecureSignIn/preference/${U}/method.config" 2>/dev/null
         [ $? -eq 0 ] && S="SecureSignIn" || S="            "
         printf "\"%-36s %-10s %-14s\"\n" "${U}" "${E}" "${S}" >>"${TMP_PATH}/menu"
-      done <<<$(cat "${TMP_PATH}/sdX1/etc/shadow")
+      done <<<$(cat "${TMP_PATH}/sdX1/etc/shadow" 2>/dev/null)
     fi
     umount "${I}"
     [ -f "${TMP_PATH}/menu" ] && break
@@ -2086,6 +2086,7 @@ function setProxy() {
   fi
   return
 }
+
 ###############################################################################
 # Advanced menu
 function advancedMenu() {
@@ -2540,9 +2541,9 @@ function updateRR() {
   fi
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
-  unzip -oq "${1}" -d "${TMP_PATH}/update"
+  unzip -oq "${1}" -d "${TMP_PATH}/update" 2>"${LOG_FILE}"
   if [ $? -ne 0 ]; then
-    MSG="$(TEXT "Error extracting update file.")"
+    MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -2637,9 +2638,9 @@ function updateAddons() {
   fi
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
-  unzip -oq "${1}" -d "${TMP_PATH}/update"
+  unzip -oq "${1}" -d "${TMP_PATH}/update" 2>"${LOG_FILE}"
   if [ $? -ne 0 ]; then
-    MSG="$(TEXT "Error extracting update file.")"
+    MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -2682,9 +2683,9 @@ function updateModules() {
   fi
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
-  unzip -oq "${1}" -d "${TMP_PATH}/update"
+  unzip -oq "${1}" -d "${TMP_PATH}/update" 2>"${LOG_FILE}"
   if [ $? -ne 0 ]; then
-    MSG="$(TEXT "Error extracting update file.")"
+    MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -2732,9 +2733,9 @@ function updateLKMs() {
   fi
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
-  unzip -oq "${1}" -d "${TMP_PATH}/update"
+  unzip -oq "${1}" -d "${TMP_PATH}/update" 2>"${LOG_FILE}"
   if [ $? -ne 0 ]; then
-    MSG="$(TEXT "Error extracting update file.")"
+    MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -2771,9 +2772,9 @@ function updateCKs() {
   fi
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
-  unzip -oq "${1}" -d "${TMP_PATH}/update"
+  unzip -oq "${1}" -d "${TMP_PATH}/update" 2>"${LOG_FILE}"
   if [ $? -ne 0 ]; then
-    MSG="$(TEXT "Error extracting update file.")"
+    MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
