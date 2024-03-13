@@ -77,17 +77,17 @@ This project is a system for redpill’s preinstallation and recovery environmen
    * zh_TW: @March Fun <https://cyber.suma.tw/> (豪客幫)
 
 
-## 打赏一下
-* 
-  * ### 作者: Ing  
-  * QQ群1: 21609194 [点击链接加入QQ群](https://qm.qq.com/q/YTPvSXfeU0)
-  * QQ群2: 73119176 [点击链接加入QQ群](https://qm.qq.com/q/YV1B0NFvWK)
-  * QQ群3: 51929774 [点击链接加入QQ群](https://qm.qq.com/q/aVjM3Wb6KY)
-  * QQ群4: 49756829 [点击链接加入QQ群](https://qm.qq.com/q/9PHzmZDkqI)
-  * QQ频道: RR Org [点击链接加入QQ频道](https://pd.qq.com/s/aklqb0uij)
-  * TG频道: RR Org [点击链接加入TG频道](https://t.me/RR_Org)
+## Group
+* `QQ群1: 21609194` [`点击加入QQ群`](https://qm.qq.com/q/YTPvSXfeU0)
+* `QQ群2: 73119176` [`点击加入QQ群`](https://qm.qq.com/q/YV1B0NFvWK)
+* `QQ群3: 51929774` [`点击加入QQ群`](https://qm.qq.com/q/aVjM3Wb6KY)
+* `QQ群4: 49756829` [`点击加入QQ群`](https://qm.qq.com/q/9PHzmZDkqI)
+* `QQ Channel: RROrg` [`点击加入QQ频道`](https://pd.qq.com/s/aklqb0uij)
+* `TG Channel: RROrg` [`Click to join`](https://t.me/RR_Org)
 
+## 打赏一下
 * * <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/20220908134226.jpg" width="400">
+
 
 
 
