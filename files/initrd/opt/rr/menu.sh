@@ -11,9 +11,9 @@
 alias DIALOG='dialog --backtitle "$(backtitle)" --colors --aspect 50'
 
 # Check partition 3 space, if < 2GiB is necessary clean cache folder
-PACELEFT=$(df -m ${LOADER_DISK_PART3} 2>/dev/null | awk 'NR==2 {print $4}')
+SPACELEFT=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
 CLEARCACHE=0
-if [ ${PACELEFT:-0} -lt 430 ]; then
+if [ ${SPACELEFT:-0} -lt 430 ]; then
   CLEARCACHE=1
 fi
 
@@ -450,7 +450,7 @@ function ParsePat() {
 
     mkdir -p "${PART3_PATH}/dl"
     # Check disk space left
-    SPACELEFT=$(df -m ${LOADER_DISK_PART3} 2>/dev/null | awk 'NR==2 {print $4}')
+    SPACELEFT=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
     # Discover remote file size
     FILESIZE=$(du -m "${PAT_PATH}" 2>/dev/null | awk '{print $1}')
     if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
@@ -1208,7 +1208,7 @@ function extractDsmFiles() {
     fi
     echo "$(printf "$(TEXT "Downloading %s ...")" "${PAT_FILE}")"
     # Check disk space left
-    SPACELEFT=$(df --block-size=1 ${LOADER_DISK_PART3} 2>/dev/null | awk 'NR==2 {print $4}')
+    SPACELEFT=$(df --block-size=1 ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
     # Discover remote file size
     FILESIZE=$(curl -skLI --connect-timeout 10 "${PATURL}" | grep -i Content-Length | tail -n 1 | tr -d '\r\n' | awk '{print $2}')
     if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
@@ -1269,6 +1269,16 @@ function make() {
       extractDsmFiles
       [ $? -ne 0 ] && break
     fi
+
+    while true; do
+      SIZE=256 # initrd-dsm + zImage-dsm ≈ 210M
+      SPACELEFT=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
+      [ ${SPACELEFT:-0} -ge ${SIZE} ] && break
+      [ -f ${MOD_ZIMAGE_FILE} ] && rm -f "${MOD_ZIMAGE_FILE}" && continue
+      [ -f ${MOD_RDGZ_FILE} ] && rm -f "${MOD_RDGZ_FILE}" && continue
+      echo -e "$(TEXT "No disk space left, please clean the cache and try again!")" >"${LOG_FILE}"
+      break 2
+    done
 
     ${WORK_PATH}/zimage-patch.sh
     if [ $? -ne 0 ]; then
