@@ -2931,24 +2931,24 @@ function updateMenu() {
       else
         if [[ "${USER_FILE}" = update*.zip ]]; then
           rm -f ${TMP_PATH}/update*.zip
-          updateRR "${USER_FILE}" "${SILENT}"
+          updateRR "${TMP_UP_PATH}/${USER_FILE}" "${SILENT}"
         elif [[ "${USER_FILE}" = addons*.zip ]]; then
           rm -f ${TMP_PATH}/addons*.zip
-          updateAddons "${USER_FILE}" "${SILENT}"
+          updateAddons "${TMP_UP_PATH}/${USER_FILE}" "${SILENT}"
         elif [[ "${USER_FILE}" = modules*.zip ]]; then
           rm -f ${TMP_PATH}/modules*.zip
-          updateModules "${USER_FILE}" "${SILENT}"
+          updateModules "${TMP_UP_PATH}/${USER_FILE}" "${SILENT}"
         elif [[ "${USER_FILE}" = rp-lkms*.zip ]]; then
           rm -f ${TMP_PATH}/rp-lkms*.zip
-          updateLKMs "${USER_FILE}" "${SILENT}"
+          updateLKMs "${TMP_UP_PATH}/${USER_FILE}" "${SILENT}"
         elif [[ "${USER_FILE}" = rr-cks*.zip ]]; then
           rm -f ${TMP_PATH}/rr-cks*.zip
-          updateCKs "${USER_FILE}" "${SILENT}"
+          updateCKs "${TMP_UP_PATH}/${USER_FILE}" "${SILENT}"
         else
           DIALOG --title "$(TEXT "Update")" \
             --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
         fi
-        rm -f "${USER_FILE}"
+        rm -f "${TMP_UP_PATH}/${USER_FILE}"
       fi
       ;;
     b)
