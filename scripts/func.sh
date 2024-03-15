@@ -6,7 +6,7 @@
 # See /LICENSE for more information.
 #
 
-export TOKEN="${1}"
+[ -n "${1}" ] && export TOKEN="${1}"
 
 # Convert po2mo
 # $1 path
