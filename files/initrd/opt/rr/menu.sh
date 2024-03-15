@@ -2551,7 +2551,7 @@ function updateRR() {
   fi
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
-  unzip -oq "${1}" -d "${TMP_PATH}/update" 2>"${LOG_FILE}"
+  unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
     MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
@@ -2648,7 +2648,7 @@ function updateAddons() {
   fi
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
-  unzip -oq "${1}" -d "${TMP_PATH}/update" 2>"${LOG_FILE}"
+  unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
     MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
@@ -2693,7 +2693,7 @@ function updateModules() {
   fi
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
-  unzip -oq "${1}" -d "${TMP_PATH}/update" 2>"${LOG_FILE}"
+  unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
     MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
@@ -2743,7 +2743,7 @@ function updateLKMs() {
   fi
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
-  unzip -oq "${1}" -d "${TMP_PATH}/update" 2>"${LOG_FILE}"
+  unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
     MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
@@ -2782,7 +2782,7 @@ function updateCKs() {
   fi
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
-  unzip -oq "${1}" -d "${TMP_PATH}/update" 2>"${LOG_FILE}"
+  unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
     MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
