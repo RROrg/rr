@@ -304,11 +304,16 @@ function productversMenu() {
       else
         MSG="$(TEXT "Successfully to get pat data, Please confirm.\nOr modify the URL and md5sum to you need.")"
       fi
-      DIALOG --title "$(TEXT "Product Version")" \
-        --extra-button --extra-label "$(TEXT "Retry")" \
-        --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
-        2>"${TMP_PATH}/resp"
-      RET=$?
+      if [ -z "${1}" ]; then
+        DIALOG --title "$(TEXT "Product Version")" \
+          --extra-button --extra-label "$(TEXT "Retry")" \
+          --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
+          2>"${TMP_PATH}/resp"
+        RET=$?
+      else
+        echo -e "${paturl}\n${patsum}" >"${TMP_PATH}/resp"
+        RET=0
+      fi
       [ ${RET} -eq 0 ] && break    # ok-button
       [ ${RET} -eq 3 ] && continue # extra-button
       return                       # 1 or 255  # cancel-button or ESC
@@ -1262,6 +1267,7 @@ function extractDsmFiles() {
 
 ###############################################################################
 # Where the magic happens!
+# 1 - silent
 function make() {
   rm -f "${LOG_FILE}"
   while true; do
@@ -1301,8 +1307,10 @@ function make() {
   done 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
     --progressbox "$(TEXT "Making ...")" 20 100
   if [ -f "${LOG_FILE}" ]; then
-    DIALOG --title "$(TEXT "Error")" \
-      --msgbox "$(cat ${LOG_FILE})" 0 0
+    if [ ! "${1}" = "-1" ]; then
+      DIALOG --title "$(TEXT "Error")" \
+        --msgbox "$(cat ${LOG_FILE})" 0 0
+    fi
     rm -f "${LOG_FILE}"
     return 1
   else
@@ -2962,6 +2970,16 @@ function updateMenu() {
   done
 }
 
+###############################################################################
+function cleanCache() {
+  (
+    rm -rfv "${PART3_PATH}/dl/"*
+    rm -rfv "${TMP_PATH}/"*
+  ) 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
+    --progressbox "$(TEXT "Cleaning cache ...")" 20 100
+}
+
+###############################################################################
 function notepadMenu() {
   [ -d "${USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
   [ -f "${USER_UP_PATH}/notepad" ] || echo "$(TEXT "This person is very lazy and hasn't written anything.")" >"${USER_UP_PATH}/notepad"
@@ -2974,178 +2992,169 @@ function notepadMenu() {
 
 ###############################################################################
 ###############################################################################
-if [ "${1}" = "update" ]; then
-  EXT=${2:-"a"}
-  updateMenu "${EXT}"
-  exit 0
-fi
-if [ "${1}" = "make" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]; then
-  make
-  exit
-fi
-if [ "${1}" = "boot" -a -n "${MODEL}" -a -n "${PRODUCTVER}" -a loaderIsConfigured ]; then
-  make
-  boot && exit 0 || sleep 5
-fi
-# Main loop
-NEXT="m"
-[ -n "$(ls ${TMP_PATH}/pats/*.pat 2>/dev/null)" ] && NEXT="u"
-[ -f "${PART1_PATH}/.build" ] && NEXT="d"
-[ -n "${MODEL}" ] && NEXT="v"
-while true; do
-  echo -n "" >"${TMP_PATH}/menu"
-  echo "m \"$(TEXT "Choose a model")\"" >>"${TMP_PATH}/menu"
-  if [ -n "${MODEL}" ]; then
-    echo "n \"$(TEXT "Choose a version")\"" >>"${TMP_PATH}/menu"
-  fi
-  echo "u \"$(TEXT "Parse pat")\"" >>"${TMP_PATH}/menu"
-  if [ -n "${PRODUCTVER}" ]; then
-    PLATFORM="$(readModelKey "${MODEL}" "platform")"
-    KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-    KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
-    if [ -f "${CKS_PATH}/bzImage-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.gz" ] &&
-      [ -f "${CKS_PATH}/modules-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.tgz" ]; then
-      echo "s \"$(TEXT "Kernel:") \Z4${KERNEL}\Zn\"" >>"${TMP_PATH}/menu"
+if [ $# -ge 1 ]; then
+  $@
+else
+  # Main loop
+  NEXT="m"
+  [ -n "$(ls ${TMP_PATH}/pats/*.pat 2>/dev/null)" ] && NEXT="u"
+  [ -f "${PART1_PATH}/.build" ] && NEXT="d"
+  [ -n "${MODEL}" ] && NEXT="v"
+  while true; do
+    echo -n "" >"${TMP_PATH}/menu"
+    echo "m \"$(TEXT "Choose a model")\"" >>"${TMP_PATH}/menu"
+    if [ -n "${MODEL}" ]; then
+      echo "n \"$(TEXT "Choose a version")\"" >>"${TMP_PATH}/menu"
     fi
-    echo "a \"$(TEXT "Addons menu")\"" >>"${TMP_PATH}/menu"
-    echo "o \"$(TEXT "Modules menu")\"" >>"${TMP_PATH}/menu"
-    echo "x \"$(TEXT "Cmdline menu")\"" >>"${TMP_PATH}/menu"
-    echo "i \"$(TEXT "Synoinfo menu")\"" >>"${TMP_PATH}/menu"
-  fi
-  echo "v \"$(TEXT "Advanced menu")\"" >>"${TMP_PATH}/menu"
-  if [ -n "${MODEL}" ]; then
+    echo "u \"$(TEXT "Parse pat")\"" >>"${TMP_PATH}/menu"
     if [ -n "${PRODUCTVER}" ]; then
-      echo "d \"$(TEXT "Build the loader")\"" >>"${TMP_PATH}/menu"
+      PLATFORM="$(readModelKey "${MODEL}" "platform")"
+      KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+      KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+      if [ -f "${CKS_PATH}/bzImage-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.gz" ] &&
+        [ -f "${CKS_PATH}/modules-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.tgz" ]; then
+        echo "s \"$(TEXT "Kernel:") \Z4${KERNEL}\Zn\"" >>"${TMP_PATH}/menu"
+      fi
+      echo "a \"$(TEXT "Addons menu")\"" >>"${TMP_PATH}/menu"
+      echo "o \"$(TEXT "Modules menu")\"" >>"${TMP_PATH}/menu"
+      echo "x \"$(TEXT "Cmdline menu")\"" >>"${TMP_PATH}/menu"
+      echo "i \"$(TEXT "Synoinfo menu")\"" >>"${TMP_PATH}/menu"
     fi
-  fi
-  if loaderIsConfigured; then
-    echo "b \"$(TEXT "Boot the loader")\"" >>"${TMP_PATH}/menu"
-  fi
-  echo "l \"$(TEXT "Choose a language")\"" >>"${TMP_PATH}/menu"
-  echo "k \"$(TEXT "Choose a keymap")\"" >>"${TMP_PATH}/menu"
-  if [ 0$(du -m ${PART3_PATH}/dl 2>/dev/null | awk '{printf $1}') -gt 1 ]; then
-    echo "c \"$(TEXT "Clean disk cache")\"" >>"${TMP_PATH}/menu"
-  fi
-  echo "p \"$(TEXT "Update menu")\"" >>"${TMP_PATH}/menu"
-  echo "t \"$(TEXT "Notepad")\"" >>"${TMP_PATH}/menu"
-  echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
+    echo "v \"$(TEXT "Advanced menu")\"" >>"${TMP_PATH}/menu"
+    if [ -n "${MODEL}" ]; then
+      if [ -n "${PRODUCTVER}" ]; then
+        echo "d \"$(TEXT "Build the loader")\"" >>"${TMP_PATH}/menu"
+      fi
+    fi
+    if loaderIsConfigured; then
+      echo "b \"$(TEXT "Boot the loader")\"" >>"${TMP_PATH}/menu"
+    fi
+    echo "l \"$(TEXT "Choose a language")\"" >>"${TMP_PATH}/menu"
+    echo "k \"$(TEXT "Choose a keymap")\"" >>"${TMP_PATH}/menu"
+    if [ 0$(du -m ${PART3_PATH}/dl 2>/dev/null | awk '{printf $1}') -gt 1 ]; then
+      echo "c \"$(TEXT "Clean disk cache")\"" >>"${TMP_PATH}/menu"
+    fi
+    echo "p \"$(TEXT "Update menu")\"" >>"${TMP_PATH}/menu"
+    echo "t \"$(TEXT "Notepad")\"" >>"${TMP_PATH}/menu"
+    echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
-  DIALOG --title "$(TEXT "Main menu")" \
-    --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
-    2>${TMP_PATH}/resp
-  [ $? -ne 0 ] && break
-  case $(<"${TMP_PATH}/resp") in
-  m)
-    modelMenu
-    NEXT="n"
-    ;;
-  n)
-    productversMenu
-    NEXT="d"
-    ;;
-  u)
-    ParsePat
-    NEXT="d"
-    ;;
-  s)
     DIALOG --title "$(TEXT "Main menu")" \
-      --infobox "$(TEXT "Change ...")" 0 0
-    [ ! "${KERNEL}" = "custom" ] && KERNEL='custom' || KERNEL='official'
-    writeConfigKey "kernel" "${KERNEL}" "${USER_CONFIG_FILE}"
-    if [ "${ODP}" = "true" ]; then
-      ODP="false"
-      writeConfigKey "odp" "${ODP}" "${USER_CONFIG_FILE}"
-    fi
-    if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
-      writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-      while read ID DESC; do
-        writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
-      done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
-    fi
-    touch ${PART1_PATH}/.build
+      --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && break
+    case $(<"${TMP_PATH}/resp") in
+    m)
+      modelMenu
+      NEXT="n"
+      ;;
+    n)
+      productversMenu
+      NEXT="d"
+      ;;
+    u)
+      ParsePat
+      NEXT="d"
+      ;;
+    s)
+      DIALOG --title "$(TEXT "Main menu")" \
+        --infobox "$(TEXT "Change ...")" 0 0
+      [ ! "${KERNEL}" = "custom" ] && KERNEL='custom' || KERNEL='official'
+      writeConfigKey "kernel" "${KERNEL}" "${USER_CONFIG_FILE}"
+      if [ "${ODP}" = "true" ]; then
+        ODP="false"
+        writeConfigKey "odp" "${ODP}" "${USER_CONFIG_FILE}"
+      fi
+      if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
+        writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+        while read ID DESC; do
+          writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
+        done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+      fi
+      touch ${PART1_PATH}/.build
 
-    NEXT="o"
-    ;;
-  a)
-    addonMenu
-    NEXT="d"
-    ;;
-  o)
-    moduleMenu
-    NEXT="d"
-    ;;
-  x)
-    cmdlineMenu
-    NEXT="d"
-    ;;
-  i)
-    synoinfoMenu
-    NEXT="d"
-    ;;
-  v)
-    advancedMenu
-    NEXT="d"
-    ;;
-  d)
-    make
-    NEXT="b"
-    ;;
-  b)
-    boot && exit 0 || sleep 5
-    ;;
-  l)
-    languageMenu
-    NEXT="m"
-    ;;
-  k)
-    keymapMenu
-    NEXT="m"
-    ;;
-  c)
-    DIALOG \
-      --prgbox "rm -rfv \"${PART3_PATH}/dl/\"*" 0 0
-    NEXT="d"
-    ;;
-  p)
-    updateMenu
-    NEXT="d"
-    ;;
-  t)
-    notepadMenu
-    NEXT="d"
-    ;;
-  e)
-    NEXT="e"
-    while true; do
+      NEXT="o"
+      ;;
+    a)
+      addonMenu
+      NEXT="d"
+      ;;
+    o)
+      moduleMenu
+      NEXT="d"
+      ;;
+    x)
+      cmdlineMenu
+      NEXT="d"
+      ;;
+    i)
+      synoinfoMenu
+      NEXT="d"
+      ;;
+    v)
+      advancedMenu
+      NEXT="d"
+      ;;
+    d)
+      make
+      NEXT="b"
+      ;;
+    b)
+      boot && exit 0 || sleep 5
+      ;;
+    l)
+      languageMenu
+      NEXT="m"
+      ;;
+    k)
+      keymapMenu
+      NEXT="m"
+      ;;
+    c)
       DIALOG \
-        --default-item ${NEXT} --menu "$(TEXT "Choose a action")" 0 0 0 \
-        p "$(TEXT "Poweroff")" \
-        r "$(TEXT "Reboot")" \
-        c "$(TEXT "Reboot to RR")" \
-        s "$(TEXT "Back to shell")" \
-        e "$(TEXT "Exit")" \
-        2>${TMP_PATH}/resp
-      [ $? -ne 0 ] && break
-      case "$(<${TMP_PATH}/resp)" in
-      p)
-        poweroff
-        ;;
-      r)
-        reboot
-        ;;
-      c)
-        rebootTo config
-        ;;
-      s)
-        break 2
-        ;;
-      e)
-        break
-        ;;
-      esac
-    done
-    ;;
-  esac
-done
-clear
-echo -e "$(TEXT "Call \033[1;32mmenu.sh\033[0m to return to menu")"
+        --prgbox "rm -rfv \"${PART3_PATH}/dl/\"*" 0 0
+      NEXT="d"
+      ;;
+    p)
+      updateMenu
+      NEXT="d"
+      ;;
+    t)
+      notepadMenu
+      NEXT="d"
+      ;;
+    e)
+      NEXT="e"
+      while true; do
+        DIALOG \
+          --default-item ${NEXT} --menu "$(TEXT "Choose a action")" 0 0 0 \
+          p "$(TEXT "Poweroff")" \
+          r "$(TEXT "Reboot")" \
+          c "$(TEXT "Reboot to RR")" \
+          s "$(TEXT "Back to shell")" \
+          e "$(TEXT "Exit")" \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && break
+        case "$(<${TMP_PATH}/resp)" in
+        p)
+          poweroff
+          ;;
+        r)
+          reboot
+          ;;
+        c)
+          rebootTo config
+          ;;
+        s)
+          break 2
+          ;;
+        e)
+          break
+          ;;
+        esac
+      done
+      ;;
+    esac
+  done
+  clear
+  echo -e "$(TEXT "Call \033[1;32mmenu.sh\033[0m to return to menu")"
+fi
