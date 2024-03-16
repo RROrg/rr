@@ -6,7 +6,7 @@
 > The ultimate solution to self-centralized Synology DSM OS on any local machine with any x86/x64 CPU architecture via a single flash of bootload pre-installation process in addition within recovery environment.
 
 ### 1: Disclaimer
-
+硬盘有价，数据无价，任何对引导的修改都是有风险的，本人/组织不承担数据丢失的责任。本工具仅用作学习交流，严禁用于商业用途。
 Hardware/hard-drives are priced whilst data are priceless, any user-specific custom modification of the tested & prebuilt bootloader images could potentially cause irreversible data destruction towards your local machine. Us, as (RROrg) are not responsibly liable for damage nor personal loss of any types. The project with its affiliation is released for educational and learning purpose only, commercial application of the software is strictly prohibited.
 
 
@@ -54,12 +54,12 @@ Please refer to [rr-modules](https://github.com/RROrg/rr-modules) and [rr-addons
 - Community maintainers of each supporting list of languages are accredited below.
 
   - `en_US`: `@rrorg`
+  - `ja_JP`: `@andatoshiki` & `@toshikidev`
   - `ko_KR`:  `@EXP` : jeong1986
   - `ru_RU`: `@Alex`: TG
   - `zh_CN`: `@rrorg`
   - `zh_HK`: `@rrorg`
   - `zh_TW`: `@March Fun`: [豪客幫](<https://cyber.suma.tw/>)
-  - `ja_JP`: `@andatoshiki` & `@toshikidev`
 
 ### 6: Acknowledgment & Credits
 
@@ -71,6 +71,7 @@ Please refer to [rr-modules](https://github.com/RROrg/rr-modules) and [rr-addons
 - Framework:
   - [Buildroot](https://github.com/buildroot/buildroot)
   - [Eudev](https://github.com/eudev-project/eudev)
+  - [Grub](https://git.savannah.gnu.org/git/grub)
 - Addons: `@xbl3` `@wirgen` `@007revad` `@PeterSuh-Q3`
   - [synocodectool-patch](https://github.com/xbl3/synocodectool-patch)
   - [Synology_HDD_db](https://github.com/007revad/Synology_HDD_db)
@@ -83,7 +84,7 @@ Please refer to [rr-modules](https://github.com/RROrg/rr-modules) and [rr-addons
 
 #### 7.1: Group
 
-- `QQ群1: 27609194` [`点击加入QQ群`](https://qm.qq.com/q/YTPvSXfeU0)
+- `QQ群1: 21609194` [`点击加入QQ群`](https://qm.qq.com/q/YTPvSXfeU0)
 - `QQ群2: 73119176` [`点击加入QQ群`](https://qm.qq.com/q/YV1B0NFvWK)
 - `QQ群3: 51929774` [`点击加入QQ群`](https://qm.qq.com/q/aVjM3Wb6KY)
 - `QQ群4: 49756829` [`点击加入QQ群`](https://qm.qq.com/q/9PHzmZDkqI)
@@ -92,7 +93,7 @@ Please refer to [rr-modules](https://github.com/RROrg/rr-modules) and [rr-addons
 
 ### 7: Sponsoring
 
-- <img src="https://raw.githubusercontent.com/rrorg/rrorg/master/my/20220908134226.jpg" width="400">
+- <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/buymeacoffee.png" width="400">
 
 ### 8: License
 
