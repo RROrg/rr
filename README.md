@@ -93,7 +93,7 @@ Please refer to [rr-modules](https://github.com/RROrg/rr-modules) and [rr-addons
 
 ### 7: Sponsoring
 
-- <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/buymeacoffee.png" width="400">
+- <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/buymeacoffee.png" width="700">
 
 ### 8: License
 
