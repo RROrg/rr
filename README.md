@@ -20,7 +20,7 @@ Hardware/hard-drives are priced whilst data are priceless, any user-specific cus
 
 Please refer to [rr-modules](https://github.com/RROrg/rr-modules) and [rr-addons](https://github.com/RROrg/rr-addons) for details and further practices if you intend to manually build rr from source.
 
-### GPU: 
+### 4: GPU: 
 
 - vGPU:
   - [蔚然小站](https://blog.kkk.rs/) 
@@ -28,25 +28,6 @@ Please refer to [rr-modules](https://github.com/RROrg/rr-modules) and [rr-addons
 - iGPU:
   - [Jim's Blog](https://jim.plus/)
 - iGPU:
-  - [intel-gpu-i915-backports](https://github.com/MoetaYuko/intel-gpu-i915-backports)
-
-
-### 4: Acknowledgment & Credits
-
-- [ARPL](https://github.com/fbelavenuto/arpl): `@fbelavenuto`
-- Redpill: `@RedPill-TTG` `@pocopico` `@jim3ma` `@fbelavenuto` `@MoetaYuko`
-  - [RedPill-TTG](https://github.com/RedPill-TTG)
-  - [redpill-lkm5](https://github.com/XPEnology-Community/redpill-lkm5)
-  - [linux_dsm_epyc7002](https://github.com/MoetaYuko/linux_dsm_epyc7002)
-- Framework:
-  - [Buildroot](https://github.com/buildroot/buildroot)
-  - [Eudev](https://github.com/eudev-project/eudev)
-- Addons: `@xbl3` `@wirgen` `@007revad` `@PeterSuh-Q3`
-  - [synocodectool-patch](https://github.com/xbl3/synocodectool-patch)
-  - [Synology_HDD_db](https://github.com/007revad/Synology_HDD_db)
-  - [Synology_enable_M2_volume](https://github.com/007revad/Synology_enable_M2_volume)
-- Modules:`@jim3ma` `@MoetaYuko`
-  - [ynology-igc](https://github.com/jim3ma/synology-igc)
   - [intel-gpu-i915-backports](https://github.com/MoetaYuko/intel-gpu-i915-backports)
 
 ## 5: Contributing
