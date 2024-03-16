@@ -2,6 +2,7 @@
 
 <h1>RR: <small>Yet a Better Redistributed Fork of ARPL for Redpill Bootload Automation</small></h1>
 
+
 > The ultimate solution to self-centralized Synology DSM OS on any local machine with any x86/x64 CPU architecture via a single flash of bootload pre-installation process in addition within recovery environment.
 
 ### 1: Disclaimer
