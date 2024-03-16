@@ -99,9 +99,9 @@ Please refer to [rr-modules](https://github.com/RROrg/rr-modules) and [rr-addons
 
 ### 7: Links & Community
 
-## Group
+#### 7.1: Group
 
-- `QQ群1: 21609194` [`点击加入QQ群`](https://qm.qq.com/q/YTPvSXfeU0)
+- `QQ群1: 27609194` [`点击加入QQ群`](https://qm.qq.com/q/YTPvSXfeU0)
 - `QQ群2: 73119176` [`点击加入QQ群`](https://qm.qq.com/q/YV1B0NFvWK)
 - `QQ群3: 51929774` [`点击加入QQ群`](https://qm.qq.com/q/aVjM3Wb6KY)
 - `QQ群4: 49756829` [`点击加入QQ群`](https://qm.qq.com/q/9PHzmZDkqI)
