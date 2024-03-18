@@ -258,6 +258,8 @@ else
   (cd "${RAMDISK_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root >"${MOD_RDGZ_FILE}") >"${LOG_FILE}" 2>&1 || exit 1
 fi
 
+sync
+
 # Clean
 rm -rf "${RAMDISK_PATH}"
 
