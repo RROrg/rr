@@ -40,7 +40,7 @@ Please refer to [rr-modules](https://github.com/RROrg/rr-modules) and [rr-addons
   sudo apt install gettext
   git clone https://github.com/rrorg/rr.git
   cd files/initrd/opt/rr
-  xgettext -L Shell --keyword=TEXT -.sh -o lang/rr.pot
+  xgettext -L Shell --keyword=TEXT *.sh -o lang/rr.pot
   sed -i 's/charset=CHARSET/charset=UTF-8/' lang/rr.pot
   # If you have to replace certain language string of the project, please suggest and modify translation changes within each correlated PO file
   mkdir -p lang/zh_CN/LC_MESSAGES

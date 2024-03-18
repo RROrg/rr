@@ -38,6 +38,8 @@ else
   ${WORK_PATH}/vmlinux-to-bzImage.sh "${TMP_PATH}/vmlinux-mod" "${MOD_ZIMAGE_FILE}" >"${LOG_FILE}" 2>&1 || exit 1
 fi
 
+sync
+
 echo -n "."
 # Update HASH of new DSM zImage
 HASH="$(sha256sum ${ORI_ZIMAGE_FILE} | awk '{print $1}')"

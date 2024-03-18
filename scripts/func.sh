@@ -272,7 +272,7 @@ function resizeImg() {
   INPUT_FILE="$(readlink -f "${INPUT_FILE}")"
   OUTPUT_FILE="$(readlink -f "${OUTPUT_FILE}")"
 
-  SIZE=$(($(du -m "${INPUT_FILE}" 2>/dev/null | awk '{print $1}')$(echo "${CHANGE_SIZE}" | sed 's/M//g; s/b//g')))
+  SIZE=$(($(du -sm "${INPUT_FILE}" 2>/dev/null | awk '{print $1}')$(echo "${CHANGE_SIZE}" | sed 's/M//g; s/b//g')))
   [ "${SIZE:-0}" -lt 0 ] && exit 1
 
   if [ ! "${INPUT_FILE}" = "${OUTPUT_FILE}" ]; then

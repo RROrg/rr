@@ -457,7 +457,7 @@ function ParsePat() {
     # Check disk space left
     SPACELEFT=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
     # Discover remote file size
-    FILESIZE=$(du -m "${PAT_PATH}" 2>/dev/null | awk '{print $1}')
+    FILESIZE=$(du -sm "${PAT_PATH}" 2>/dev/null | awk '{print $1}')
     if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
       # No disk space to copy, mv it to dl
       mv -f "${PAT_PATH}" "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat"
@@ -1177,6 +1177,8 @@ function extractDsmFiles() {
   PAT_FILE="${MODEL}-${PRODUCTVER}.pat"
   PAT_PATH="${PART3_PATH}/dl/${PAT_FILE}"
 
+  [ -f "${PAT_PATH}" -a -f "${PAT_PATH}.downloading" ] && rm -f "${PAT_PATH}" "${PAT_PATH}.downloading"
+
   if [ -f "${PAT_PATH}" ]; then
     echo "$(printf "$(TEXT "%s cached.")" "${PAT_FILE}")"
   else
@@ -1220,8 +1222,10 @@ function extractDsmFiles() {
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
     fi
+    touch "${PAT_PATH}.downloading"
     STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PATURL}" -o "${PAT_PATH}")
     RET=$?
+    rm -rf "${PAT_PATH}.downloading"
     if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
       rm -f "${PAT_PATH}"
       MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d")" "${RET}" "${STATUS}")"
@@ -1305,7 +1309,7 @@ function make() {
     sleep 3
     break
   done 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
-    --progressbox "$(TEXT "Making ...")" 20 100
+    --progressbox "$(TEXT "Making ... ('ctrl + c' to exit)")" 20 100
   if [ -f "${LOG_FILE}" ]; then
     if [ ! "${1}" = "-1" ]; then
       DIALOG --title "$(TEXT "Error")" \
@@ -2597,6 +2601,45 @@ function updateRR() {
       return 1
     fi
   fi
+
+  SIZENEW=0
+  SIZEOLD=0
+  while IFS=': ' read KEY VALUE; do
+    if [ "${KEY: -1}" = "/" ]; then
+      rm -Rf "${TMP_PATH}/update/${VALUE}"
+      mkdir -p "${TMP_PATH}/update/${VALUE}"
+      tar -zxf "${TMP_PATH}/update/$(basename "${KEY}").tgz" -C "${TMP_PATH}/update/${VALUE}" >"${LOG_FILE}" 2>&1
+      if [ $? -ne 0 ]; then
+        MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
+        if [ "${2}" = "-1" ]; then
+          echo "${T} - ${MSG}"
+        else
+          DIALOG --title "${T}" \
+            --msgbox "${MSG}" 0 0
+        fi
+        return 1
+      fi
+      rm "${TMP_PATH}/update/$(basename "${KEY}").tgz"
+    else
+      mkdir -p "${TMP_PATH}/update/$(dirname "${VALUE}")"
+      mv -f "${TMP_PATH}/update/$(basename "${KEY}")" "${TMP_PATH}/update/${VALUE}"
+    fi
+    SIZENEW=$((${SIZENEW} + $(du -sm "${TMP_PATH}/update/${VALUE}" 2>/dev/null | awk '{print $1}')))
+    SIZEOLD=$((${SIZEOLD} + $(du -sm "${VALUE}" 2>/dev/null | awk '{print $1}')))
+  done <<<$(readConfigMap "replace" "${TMP_PATH}/update/update-list.yml")
+
+  SIZESPL=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
+  if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
+    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "${PART3_PATH}" "$((${SIZENEW} - ${SIZEOLD} - ${SIZESPL}))")"
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - ${MSG}"
+    else
+      DIALOG --title "${T}" \
+        --msgbox "${MSG}" 0 0
+    fi
+    return 1
+  fi
+
   MSG="$(TEXT "Installing new files ...")"
   if [ "${2}" = "-1" ]; then
     echo "${T} - ${MSG}"
@@ -2611,9 +2654,9 @@ function updateRR() {
   done <<<$(readConfigArray "remove" "${TMP_PATH}/update/update-list.yml")
   while IFS=': ' read KEY VALUE; do
     if [ "${KEY: -1}" = "/" ]; then
-      rm -Rf "${VALUE}"
+      rm -Rf "${VALUE}"/*
       mkdir -p "${VALUE}"
-      tar -zxf "${TMP_PATH}/update/$(basename "${KEY}").tgz" -C "${VALUE}"
+      cp -Rf "${TMP_PATH}/update/${VALUE}"/* "${VALUE}"
       if [ "$(realpath "${VALUE}")" = "$(realpath "${MODULES_PATH}")" ]; then
         if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
           PLATFORM="$(readModelKey "${MODEL}" "platform")"
@@ -2629,10 +2672,12 @@ function updateRR() {
       fi
     else
       mkdir -p "$(dirname "${VALUE}")"
-      mv -f "${TMP_PATH}/update/$(basename "${KEY}")" "${VALUE}"
+      cp -f "${TMP_PATH}/update/${VALUE}" "${VALUE}"
     fi
   done <<<$(readConfigMap "replace" "${TMP_PATH}/update/update-list.yml")
+  rm -rf "${TMP_PATH}/update"
   touch ${PART1_PATH}/.build
+  sync
   MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "RR")")\n$(TEXT "Reboot?")"
   if [ "${2}" = "-1" ]; then
     echo "${T} - ${MSG}"
@@ -2667,15 +2712,34 @@ function updateAddons() {
     fi
     return 1
   fi
-  rm -Rf "${ADDONS_PATH}/"*
-  [ -f "${TMP_PATH}/update/VERSION" ] && cp -f "${TMP_PATH}/update/VERSION" "${ADDONS_PATH}/"
+
   for PKG in $(ls ${TMP_PATH}/update/*.addon 2>/dev/null); do
     ADDON=$(basename ${PKG} .addon)
-    rm -rf "${ADDONS_PATH}/${ADDON}"
-    mkdir -p "${ADDONS_PATH}/${ADDON}"
-    tar -xaf "${PKG}" -C "${ADDONS_PATH}/${ADDON}" >/dev/null 2>&1
+    rm -rf "${TMP_PATH}/update/${ADDON}"
+    mkdir -p "${TMP_PATH}/update/${ADDON}"
+    tar -xaf "${PKG}" -C "${TMP_PATH}/update/${ADDON}" >/dev/null 2>&1
+    rm -f "${PKG}"
   done
+
+  SIZENEW="$(du -sm "${TMP_PATH}/update" 2>/dev/null | awk '{print $1}')"
+  SIZEOLD="$(du -sm "${ADDONS_PATH}" 2>/dev/null | awk '{print $1}')"
+  SIZESPL=$(df -m "${ADDONS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
+  if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
+    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${ADDONS_PATH}")" "$((${SIZENEW} - ${SIZEOLD} - ${SIZESPL}))")"
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - ${MSG}"
+    else
+      DIALOG --title "${T}" \
+        --msgbox "${MSG}" 0 0
+    fi
+    return 1
+  fi
+
+  rm -Rf "${ADDONS_PATH}/"*
+  cp -Rf "${TMP_PATH}/update/"* "${ADDONS_PATH}/"
+  rm -rf "${TMP_PATH}/update"
   touch ${PART1_PATH}/.build
+  sync
   MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "Addons")")"
   if [ "${2}" = "-1" ]; then
     echo "${T} - ${MSG}"
@@ -2712,6 +2776,21 @@ function updateModules() {
     fi
     return 1
   fi
+
+  SIZENEW="$(du -sm "${TMP_PATH}/update" 2>/dev/null | awk '{print $1}')"
+  SIZEOLD="$(du -sm "${MODULES_PATH}" 2>/dev/null | awk '{print $1}')"
+  SIZESPL=$(df -m "${MODULES_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
+  if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
+    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${MODULES_PATH}")" "$((${SIZENEW} - ${SIZEOLD} - ${SIZESPL}))")"
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - ${MSG}"
+    else
+      DIALOG --title "${T}" \
+        --msgbox "${MSG}" 0 0
+    fi
+    return 1
+  fi
+
   rm -rf "${MODULES_PATH}/"*
   cp -rf "${TMP_PATH}/update/"* "${MODULES_PATH}/"
   if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
@@ -2725,7 +2804,9 @@ function updateModules() {
       done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
     fi
   fi
+  rm -rf "${TMP_PATH}/update"
   touch ${PART1_PATH}/.build
+  sync
   MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "Modules")")"
   if [ "${2}" = "-1" ]; then
     echo "${T} - ${MSG}"
@@ -2762,9 +2843,26 @@ function updateLKMs() {
     fi
     return 1
   fi
+
+  SIZENEW="$(du -sm "${TMP_PATH}/update" 2>/dev/null | awk '{print $1}')"
+  SIZEOLD="$(du -sm "${LKMS_PATH}" 2>/dev/null | awk '{print $1}')"
+  SIZESPL=$(df -m "${LKMS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
+  if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
+    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${LKMS_PATH}")" "$((${SIZENEW} - ${SIZEOLD} - ${SIZESPL}))")"
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - ${MSG}"
+    else
+      DIALOG --title "${T}" \
+        --msgbox "${MSG}" 0 0
+    fi
+    return 1
+  fi
+
   rm -rf "${LKMS_PATH}/"*
   cp -rf "${TMP_PATH}/update/"* "${LKMS_PATH}/"
+  rm -rf "${TMP_PATH}/update"
   touch ${PART1_PATH}/.build
+  sync
   MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "LKMs")")"
   if [ "${2}" = "-1" ]; then
     echo "${T} - ${MSG}"
@@ -2801,9 +2899,26 @@ function updateCKs() {
     fi
     return 1
   fi
+
+  SIZENEW="$(du -sm "${TMP_PATH}/update" 2>/dev/null | awk '{print $1}')"
+  SIZEOLD="$(du -sm "${CKS_PATH}" 2>/dev/null | awk '{print $1}')"
+  SIZESPL=$(df -m "${CKS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
+  if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
+    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${CKS_PATH}")" "$((${SIZENEW} - ${SIZEOLD} - ${SIZESPL}))")"
+    if [ "${2}" = "-1" ]; then
+      echo "${T} - ${MSG}"
+    else
+      DIALOG --title "${T}" \
+        --msgbox "${MSG}" 0 0
+    fi
+    return 1
+  fi
+
   rm -rf "${CKS_PATH}/"*
   cp -rf "${TMP_PATH}/update/"* "${CKS_PATH}/"
+  rm -rf "${TMP_PATH}/update"
   touch ${PART1_PATH}/.build
+  sync
   MSG="$(printf "$(TEXT "%s updated with success!")" "$(TEXT "CKs")")"
   if [ "${2}" = "-1" ]; then
     echo "${T} - ${MSG}"
@@ -2849,13 +2964,13 @@ function updateMenu() {
       F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -z "${F}" ] && downloadExts "$(TEXT "All")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "updateall" "${SILENT}"
       F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateRR "${F}" "${SILENT}"
+      [ -n "${F}" ] && updateRR "${F}" "${SILENT}" && rm -f ${TMP_PATH}/updateall*.zip
       ;;
     r)
       F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -z "${F}" ] && downloadExts "$(TEXT "RR")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "update" "${SILENT}"
       F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateRR "${F}" "${SILENT}"
+      [ -n "${F}" ] && updateRR "${F}" "${SILENT}" && rm -f ${TMP_PATH}/update*.zip
       ;;
     d)
       if [ -z "${DEBUG}" ]; then
@@ -2866,7 +2981,7 @@ function updateMenu() {
       F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -z "${F}" ] && downloadExts "$(TEXT "Addons")" "${CUR_ADDONS_VER:-None}" "https://github.com/RROrg/rr-addons" "addons" "${SILENT}"
       F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateAddons "${F}" "${SILENT}"
+      [ -n "${F}" ] && updateAddons "${F}" "${SILENT}" && rm -f ${TMP_PATH}/addons*.zip
       ;;
     m)
       if [ -z "${DEBUG}" ]; then
@@ -2877,7 +2992,7 @@ function updateMenu() {
       F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -z "${F}" ] && downloadExts "$(TEXT "Modules")" "${CUR_MODULES_VER:-None}" "https://github.com/RROrg/rr-modules" "modules" "${SILENT}"
       F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateModules "${F}" "${SILENT}"
+      [ -n "${F}" ] && updateModules "${F}" "${SILENT}" && rm -f ${TMP_PATH}/modules*.zip
       ;;
     l)
       if [ -z "${DEBUG}" ]; then
@@ -2888,7 +3003,7 @@ function updateMenu() {
       F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -z "${F}" ] && downloadExts "$(TEXT "LKMs")" "${CUR_LKMS_VER:-None}" "https://github.com/RROrg/rr-lkms" "rp-lkms" "${SILENT}"
       F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateLKMs "${F}" "${SILENT}"
+      [ -n "${F}" ] && updateLKMs "${F}" "${SILENT}" && rm -f ${TMP_PATH}/rp-lkms*.zip
       ;;
     c)
       if [ -z "${DEBUG}" ]; then
@@ -2899,7 +3014,7 @@ function updateMenu() {
       F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -z "${F}" ] && downloadExts "$(TEXT "CKs")" "${CUR_CKS_VER:-None}" "https://github.com/RROrg/rr-cks" "rr-cks" "${SILENT}"
       F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateCKs "${F}" "${SILENT}"
+      [ -n "${F}" ] && updateCKs "${F}" "${SILENT}" && rm -f ${TMP_PATH}/rr-cks*.zip
       ;;
     u)
       if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
@@ -3031,7 +3146,7 @@ else
     fi
     echo "l \"$(TEXT "Choose a language")\"" >>"${TMP_PATH}/menu"
     echo "k \"$(TEXT "Choose a keymap")\"" >>"${TMP_PATH}/menu"
-    if [ 0$(du -m ${PART3_PATH}/dl 2>/dev/null | awk '{printf $1}') -gt 1 ]; then
+    if [ 0$(du -sm ${PART3_PATH}/dl 2>/dev/null | awk '{printf $1}') -gt 1 ]; then
       echo "c \"$(TEXT "Clean disk cache")\"" >>"${TMP_PATH}/menu"
     fi
     echo "p \"$(TEXT "Update menu")\"" >>"${TMP_PATH}/menu"
@@ -3129,7 +3244,9 @@ else
           --default-item ${NEXT} --menu "$(TEXT "Choose a action")" 0 0 0 \
           p "$(TEXT "Poweroff")" \
           r "$(TEXT "Reboot")" \
-          c "$(TEXT "Reboot to RR")" \
+          x "$(TEXT "Reboot to RR")" \
+          y "$(TEXT "Reboot to Recovery")" \
+          z "$(TEXT "Reboot to Force_junior")" \
           s "$(TEXT "Back to shell")" \
           e "$(TEXT "Exit")" \
           2>${TMP_PATH}/resp
@@ -3137,12 +3254,23 @@ else
         case "$(<${TMP_PATH}/resp)" in
         p)
           poweroff
+          exit 0
           ;;
         r)
           reboot
+          exit 0
           ;;
-        c)
+        x)
           rebootTo config
+          exit 0
+          ;;
+        y)
+          rebootTo recovery
+          exit 0
+          ;;
+        z)
+          rebootTo force_junior
+          exit 0
           ;;
         s)
           break 2
