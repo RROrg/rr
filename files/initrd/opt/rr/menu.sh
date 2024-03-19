@@ -3246,7 +3246,7 @@ else
           r "$(TEXT "Reboot")" \
           x "$(TEXT "Reboot to RR")" \
           y "$(TEXT "Reboot to Recovery")" \
-          z "$(TEXT "Reboot to Force_junior")" \
+          z "$(TEXT "Reboot to Junior")" \
           s "$(TEXT "Back to shell")" \
           e "$(TEXT "Exit")" \
           2>${TMP_PATH}/resp
@@ -3269,7 +3269,7 @@ else
           exit 0
           ;;
         z)
-          rebootTo force_junior
+          rebootTo junior
           exit 0
           ;;
         s)

@@ -330,9 +330,9 @@ function getLogo() {
 # Rebooting
 # 1 - mode
 function rebootTo() {
-  MODES="config recovery force_junior"
+  MODES="config recovery junior"
   [ -z "${1}" ] && exit 1
-  if ! echo "${MODES}" | grep -q "${1}" ]; then exit 1; fi
+  if ! echo "${MODES}" | grep -q "${1}"; then exit 1; fi
   # echo "Rebooting to ${1} mode"
   GRUBPATH="$(dirname $(find ${PART1_PATH}/ -name grub.cfg 2>/dev/null | head -1))"
   ENVFILE="${GRUBPATH}/grubenv"
