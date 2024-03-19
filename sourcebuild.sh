@@ -70,6 +70,7 @@ sudo mount ${LOOPX}p3 "/tmp/mnt/p3"
 
 
 echo "Copying files"
+sudo cp -af "files/mnt/p1/.locale" "/tmp/mnt/p1" 2>/dev/null
 sudo cp -Rf "files/mnt/p1/"* "/tmp/mnt/p1"
 sudo cp -Rf "files/mnt/p2/"* "/tmp/mnt/p2"
 sudo cp -Rf "files/mnt/p3/"* "/tmp/mnt/p3"
