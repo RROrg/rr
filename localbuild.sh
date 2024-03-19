@@ -31,7 +31,7 @@ function init() {
   fi
 
   sudo apt update
-  sudo apt install -y locales busybox dialog
+  sudo apt install -y locales busybox dialog curl xz cpio sed 
   sudo locale-gen en_US.UTF-8 ko_KR.UTF-8 ru_RU.UTF-8 zh_CN.UTF-8 zh_HK.UTF-8 zh_TW.UTF-8
 
   YQ=$(command -v yq)
@@ -43,35 +43,35 @@ function init() {
   sudo losetup -P "${LOOPX}" "${RRIMGPATH}"
 
   echo "Mounting image file"
-  rm -rf "/tmp/p1"
-  rm -rf "/tmp/p2"
-  rm -rf "/tmp/p3"
-  mkdir -p "/tmp/p1"
-  mkdir -p "/tmp/p2"
-  mkdir -p "/tmp/p3"
-  sudo mount ${LOOPX}p1 "/tmp/p1"
-  sudo mount ${LOOPX}p2 "/tmp/p2"
-  sudo mount ${LOOPX}p3 "/tmp/p3"
+  rm -rf "/tmp/mnt/p1"
+  rm -rf "/tmp/mnt/p2"
+  rm -rf "/tmp/mnt/p3"
+  mkdir -p "/tmp/mnt/p1"
+  mkdir -p "/tmp/mnt/p2"
+  mkdir -p "/tmp/mnt/p3"
+  sudo mount ${LOOPX}p1 "/tmp/mnt/p1"
+  sudo mount ${LOOPX}p2 "/tmp/mnt/p2"
+  sudo mount ${LOOPX}p3 "/tmp/mnt/p3"
 
   echo "Create WORKSPACE"
   rm -rf "${WORKSPACE}"
   mkdir -p "${WORKSPACE}/mnt"
   mkdir -p "${WORKSPACE}/tmp"
   mkdir -p "${WORKSPACE}/initrd"
-  cp -rf "/tmp/p1" "${WORKSPACE}/mnt/p1"
-  cp -rf "/tmp/p2" "${WORKSPACE}/mnt/p2"
-  cp -rf "/tmp/p3" "${WORKSPACE}/mnt/p3"
+  cp -rf "/tmp/mnt/p1" "${WORKSPACE}/mnt/p1"
+  cp -rf "/tmp/mnt/p2" "${WORKSPACE}/mnt/p2"
+  cp -rf "/tmp/mnt/p3" "${WORKSPACE}/mnt/p3"
   (
     cd "${WORKSPACE}/initrd"
     xz -dc <"${WORKSPACE}/mnt/p3/initrd-rr" | cpio -idm
   ) 2>/dev/null
   sudo sync
-  sudo umount "/tmp/p1"
-  sudo umount "/tmp/p2"
-  sudo umount "/tmp/p3"
-  rm -rf "/tmp/p1"
-  rm -rf "/tmp/p2"
-  rm -rf "/tmp/p3"
+  sudo umount "/tmp/mnt/p1"
+  sudo umount "/tmp/mnt/p2"
+  sudo umount "/tmp/mnt/p3"
+  rm -rf "/tmp/mnt/p1"
+  rm -rf "/tmp/mnt/p2"
+  rm -rf "/tmp/mnt/p3"
   sudo losetup --detach ${LOOPX}
 
   rm -f $(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env
@@ -110,27 +110,28 @@ function pack() {
   sudo losetup -P "${LOOPX}" "${RRIMGPATH}"
 
   echo "Mounting image file"
-  rm -rf "/tmp/p1"
-  rm -rf "/tmp/p2"
-  rm -rf "/tmp/p3"
-  mkdir -p "/tmp/p1"
-  mkdir -p "/tmp/p2"
-  mkdir -p "/tmp/p3"
-  sudo mount ${LOOPX}p1 "/tmp/p1"
-  sudo mount ${LOOPX}p2 "/tmp/p2"
-  sudo mount ${LOOPX}p3 "/tmp/p3"
+  rm -rf "/tmp/mnt/p1"
+  rm -rf "/tmp/mnt/p2"
+  rm -rf "/tmp/mnt/p3"
+  mkdir -p "/tmp/mnt/p1"
+  mkdir -p "/tmp/mnt/p2"
+  mkdir -p "/tmp/mnt/p3"
+  sudo mount ${LOOPX}p1 "/tmp/mnt/p1"
+  sudo mount ${LOOPX}p2 "/tmp/mnt/p2"
+  sudo mount ${LOOPX}p3 "/tmp/mnt/p3"
 
   echo "Pack image file"
-  cp -rf "${CHROOT_PATH}/mnt/p1/"* "/tmp/p1"
-  cp -rf "${CHROOT_PATH}/mnt/p2/"* "/tmp/p2"
-  cp -rf "${CHROOT_PATH}/mnt/p3/"* "/tmp/p3"
+  cp -af "${CHROOT_PATH}/mnt/p1/.locale" "/tmp/mnt/p1" 2>/dev/null
+  cp -rf "${CHROOT_PATH}/mnt/p1/"* "/tmp/mnt/p1"
+  cp -rf "${CHROOT_PATH}/mnt/p2/"* "/tmp/mnt/p2"
+  cp -rf "${CHROOT_PATH}/mnt/p3/"* "/tmp/mnt/p3"
   sudo sync
-  sudo umount "/tmp/p1"
-  sudo umount "/tmp/p2"
-  sudo umount "/tmp/p3"
-  rm -rf "/tmp/p1"
-  rm -rf "/tmp/p2"
-  rm -rf "/tmp/p3"
+  sudo umount "/tmp/mnt/p1"
+  sudo umount "/tmp/mnt/p2"
+  sudo umount "/tmp/mnt/p3"
+  rm -rf "/tmp/mnt/p1"
+  rm -rf "/tmp/mnt/p2"
+  rm -rf "/tmp/mnt/p3"
   sudo losetup --detach ${LOOPX}
   echo "OK."
 }
