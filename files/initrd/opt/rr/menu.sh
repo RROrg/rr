@@ -986,6 +986,7 @@ function synoinfoMenu() {
       MSG+="$(TEXT " * \Z4internalportcfg=0x????\Zn\n    Internal(sata) disks mask.\n")"
       MSG+="$(TEXT " * \Z4esataportcfg=0x????\Zn\n    Esata disks mask.\n")"
       MSG+="$(TEXT " * \Z4usbportcfg=0x????\Zn\n    USB disks mask.\n")"
+      MSG+="$(TEXT " * \Z4max_sys_raid_disks=12\Zn\n    Maximum number of system partition(md0) raid disks.\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
       while true; do
