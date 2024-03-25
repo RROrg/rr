@@ -1870,9 +1870,11 @@ function tryRecoveryDSM() {
 ###############################################################################
 # Allow downgrade installation
 function allowDSMDowngrade() {
+  DIALOG --title "$(TEXT "Advanced")" \
+    --yesno "$(TEXT "Please insert all disks before continuing.\n")" 0 0
+  [ $? -ne 0 ] && return
   MSG=""
   MSG+="$(TEXT "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\n")"
-  MSG+="$(TEXT "Therefore, please insert all disks before continuing.\n")"
   MSG+="$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")"
   DIALOG --title "$(TEXT "Advanced")" \
     --yesno "${MSG}" 0 0
@@ -1899,6 +1901,9 @@ function allowDSMDowngrade() {
 ###############################################################################
 # Reset DSM system password
 function resetDSMPassword() {
+  DIALOG --title "$(TEXT "Advanced")" \
+    --yesno "$(TEXT "Please insert all disks before continuing.\n")" 0 0
+  [ $? -ne 0 ] && return
   rm -f "${TMP_PATH}/menu"
   mkdir -p "${TMP_PATH}/sdX1"
   # for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
@@ -1920,7 +1925,7 @@ function resetDSMPassword() {
   rm -rf "${TMP_PATH}/sdX1"
   if [ ! -f "${TMP_PATH}/menu" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
-      --msgbox "$(TEXT "The installed Syno system not found in the currently inserted disks!")" 0 0
+      --msgbox "$(TEXT "All existing users have been disabled. Please try adding new user.")" 0 0
     return
   fi
   DIALOG --title "$(TEXT "Advanced")" \
@@ -1963,6 +1968,48 @@ function resetDSMPassword() {
 }
 
 ###############################################################################
+# Reset DSM system password
+function addNewDSMUser() {
+  DIALOG --title "$(TEXT "Advanced")" \
+    --yesno "$(TEXT "Please insert all disks before continuing.\n")" 0 0
+  [ $? -ne 0 ] && return
+  MSG="$(TEXT "Add to administrators group by default")"
+  DIALOG --title "$(TEXT "Advanced")" \
+    --form "${MSG}" 8 60 3 "username:" 1 1 "${sn}" 1 10 50 0 "password:" 2 1 "${mac1}" 2 10 50 0 \
+    2>"${TMP_PATH}/resp"
+  [ $? -ne 0 ] && return
+  username="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
+  password="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
+  (
+    ONBOOTUP=""
+    ONBOOTUP="${ONBOOTUP}if synouser --enum local | grep -q ^${username}\$; then synouser --setpw ${username} ${password}; else synouser --add ${username} ${password} rr 0 user@rr.com 1; fi\n"
+    ONBOOTUP="${ONBOOTUP}synogroup --member administrators ${username}\n"
+    ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR_ADDUSER'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
+    mkdir -p "${TMP_PATH}/sdX1"
+    # for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
+    for I in $(blkid 2>/dev/null | grep -i linux_raid_member | grep -E "/dev/.*1: " | awk -F ":" '{print $1}'); do
+      mount "${I}" "${TMP_PATH}/sdX1"
+      if [ -f "${TMP_PATH}/sdX1/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
+        sqlite3 ${TMP_PATH}/sdX1/usr/syno/etc/esynoscheduler/esynoscheduler.db <<EOF
+DELETE FROM task WHERE task_name LIKE 'RRONBOOTUPRR_ADDUSER';
+INSERT INTO task VALUES('RRONBOOTUPRR_ADDUSER', '', 'bootup', '', 1, 0, 0, 0, '', 0, '$(echo -e ${ONBOOTUP})', 'script', '{}', '', '', '{}', '{}');
+EOF
+        sleep 1
+        sync
+        echo "true" >${TMP_PATH}/isEnable
+      fi
+      umount "${I}"
+    done
+    rm -rf "${TMP_PATH}/sdX1"
+  ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
+    --progressbox "$(TEXT "Adding ...")" 20 100
+  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "User added successfully.")" || MSG="$(TEXT "User add failed.")"
+  DIALOG --title "$(TEXT "Advanced")" \
+    --msgbox "${MSG}" 0 0
+  return
+}
+
+###############################################################################
 # Force enable Telnet&SSH of DSM system
 function forceEnableDSMTelnetSSH() {
   DIALOG --title "$(TEXT "Advanced")" \
@@ -1971,15 +2018,15 @@ function forceEnableDSMTelnetSSH() {
   (
     ONBOOTUP=""
     ONBOOTUP="${ONBOOTUP}synowebapi --exec api=SYNO.Core.Terminal method=set version=3 enable_telnet=true enable_ssh=true ssh_port=22 forbid_console=false\n"
-    ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
+    ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR_SSH'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
     mkdir -p "${TMP_PATH}/sdX1"
     # for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
     for I in $(blkid 2>/dev/null | grep -i linux_raid_member | grep -E "/dev/.*1: " | awk -F ":" '{print $1}'); do
       mount "${I}" "${TMP_PATH}/sdX1"
       if [ -f "${TMP_PATH}/sdX1/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
         sqlite3 ${TMP_PATH}/sdX1/usr/syno/etc/esynoscheduler/esynoscheduler.db <<EOF
-DELETE FROM task WHERE task_name LIKE 'RRONBOOTUPRR';
-INSERT INTO task VALUES('RRONBOOTUPRR', '', 'bootup', '', 1, 0, 0, 0, '', 0, '$(echo -e ${ONBOOTUP})', 'script', '{}', '', '', '{}', '{}');
+DELETE FROM task WHERE task_name LIKE 'RRONBOOTUPRR_SSH';
+INSERT INTO task VALUES('RRONBOOTUPRR_SSH', '', 'bootup', '', 1, 0, 0, 0, '', 0, '$(echo -e ${ONBOOTUP})', 'script', '{}', '', '', '{}', '{}');
 EOF
         sleep 1
         sync
@@ -1990,7 +2037,37 @@ EOF
     rm -rf "${TMP_PATH}/sdX1"
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Enabling ...")" 20 100
-  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "Telnet&SSH is enabled.")" || MSG="$(TEXT "Telnet&SSH is not enabled.")"
+  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "Enabled Telnet&SSH successfully.")" || MSG="$(TEXT "Enabled Telnet&SSH failed.")"
+  DIALOG --title "$(TEXT "Advanced")" \
+    --msgbox "${MSG}" 0 0
+  return
+}
+
+###############################################################################
+# Removing the blocked ip database
+function removeBlockIPDB {
+  DIALOG --title "$(TEXT "Advanced")" \
+    --yesno "$(TEXT "Please insert all disks before continuing.\n")" 0 0
+  [ $? -ne 0 ] && return
+  MSG=""
+  MSG+="$(TEXT "This feature will removing the blocked ip database from the first partition of all disks.\n")"
+  MSG+="$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")"
+  DIALOG --title "$(TEXT "Advanced")" \
+    --yesno "${MSG}" 0 0
+  [ $? -ne 0 ] && return
+  (
+    mkdir -p "${TMP_PATH}/sdX1"
+    # for I in $(ls /dev/sd*1 2>/dev/null | grep -v "${LOADER_DISK_PART1}"); do
+    for I in $(blkid 2>/dev/null | grep -i linux_raid_member | grep -E "/dev/.*1: " | awk -F ":" '{print $1}'); do
+      mount "${I}" "${TMP_PATH}/sdX1"
+      [ -f "${TMP_PATH}/sdX1/etc/synoautoblock.db" ] && rm -f "${TMP_PATH}/sdX1/etc/synoautoblock.db"
+      sync
+      umount "${I}"
+    done
+    rm -rf "${TMP_PATH}/sdX1"
+  ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
+    --progressbox "$(TEXT "Removing ...")" 20 100
+  MSG="$(TEXT "The blocked ip database has been deleted.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
   return
@@ -2139,13 +2216,15 @@ function advancedMenu() {
     echo "h \"$(TEXT "Edit grub.cfg file manually")\"" >>"${TMP_PATH}/menu"
     if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
       echo "m \"$(TEXT "Set static IP")\"" >>"${TMP_PATH}/menu"
-      echo "y \"$(TEXT "Set wireless account")\"" >>"${TMP_PATH}/menu"
+      echo "3 \"$(TEXT "Set wireless account")\"" >>"${TMP_PATH}/menu"
       echo "s \"$(TEXT "Show disks information")\"" >>"${TMP_PATH}/menu"
       echo "f \"$(TEXT "Format disk(s) # Without loader disk")\"" >>"${TMP_PATH}/menu"
       echo "t \"$(TEXT "Try to recovery a installed DSM system")\"" >>"${TMP_PATH}/menu"
       echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"
       echo "x \"$(TEXT "Reset DSM system password")\"" >>"${TMP_PATH}/menu"
+      echo "y \"$(TEXT "Add a new user to DSM system")\"" >>"${TMP_PATH}/menu"
       echo "z \"$(TEXT "Force enable Telnet&SSH of DSM system")\"" >>"${TMP_PATH}/menu"
+      echo "4 \"$(TEXT "Remove the blocked ip database of DSM")\"" >>"${TMP_PATH}/menu"
       echo "r \"$(TEXT "Clone bootloader disk to another disk")\"" >>"${TMP_PATH}/menu"
       echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
       echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
@@ -2288,7 +2367,7 @@ function advancedMenu() {
       setStaticIP
       NEXT="e"
       ;;
-    y)
+    3)
       setWirelessAccount
       NEXT="e"
       ;;
@@ -2312,8 +2391,16 @@ function advancedMenu() {
       resetDSMPassword
       NEXT="e"
       ;;
+    y)
+      addNewDSMUser
+      NEXT="e"
+      ;;
     z)
       forceEnableDSMTelnetSSH
+      NEXT="e"
+      ;;
+    4)
+      removeBlockIPDB
       NEXT="e"
       ;;
     r)
