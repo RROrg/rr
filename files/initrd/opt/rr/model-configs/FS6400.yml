@@ -9,6 +9,7 @@ synoinfo: &synoinfo
   support_led_brightness_adjustment: "no"
   support_syno_hybrid_raid:
   supportraidgroup:
+  HddEnableDynamicPower: "yes"
   supportsas: "no"
   supportsas_v2_r1: "no"
   support_multipath: "yes"
@@ -17,7 +18,7 @@ synoinfo: &synoinfo
   buzzeroffen: "0xffff"
 cmdline: &cmdline
   SASmodel: 1
-  SMBusHddDynamicPower: 1
+  HddHotplug: 1
   vender_format_version: 2
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"

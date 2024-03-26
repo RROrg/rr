@@ -10,6 +10,7 @@ synoinfo: &synoinfo
   internal_disk_without_led_mask: "no"
   support_syno_hybrid_raid:
   supportraidgroup:
+  HddEnableDynamicPower: "yes"
   supportsas: "no"
   support_multipath: "yes"
   support_install_only_dev: "no"
@@ -20,7 +21,7 @@ synoinfo: &synoinfo
   buzzeroffen: "0xffff"
 cmdline: &cmdline
   SASmodel: 1
-  SMBusHddDynamicPower: 1
+  HddHotplug: 1
   vender_format_version: 2
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"

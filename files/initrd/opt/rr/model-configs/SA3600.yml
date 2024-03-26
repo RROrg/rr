@@ -10,14 +10,15 @@ synoinfo: &synoinfo
   support_bde_internal_10g: "no"
   support_syno_hybrid_raid:
   supportraidgroup:
+  HddEnableDynamicPower: "yes"
   supportsas: "no"
   maxlanport: "8"
   netif_seq: "0 1 2 3 4 5 6 7"
 cmdline: &cmdline
-  HddHotplug: 0
+  HddHotplug: 1
+  SMBusHddDynamicPower: 1
   syno_hdd_detect: 0
   syno_hdd_powerup_seq: 0
-  SMBusHddDynamicPower: 1
   vender_format_version: 2
   elevator: elevator
 patch: &patch
