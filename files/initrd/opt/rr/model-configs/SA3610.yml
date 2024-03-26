@@ -11,6 +11,7 @@ synoinfo: &synoinfo
   support_oob_ctl: "no"
   support_syno_hybrid_raid:
   supportraidgroup:
+  HddEnableDynamicPower: "yes"
   supportsas: "no"
   supportsas_v2_r1: "no"
   support_multipath: "yes"
@@ -18,11 +19,10 @@ synoinfo: &synoinfo
   netif_seq: "0 1 2 3 4 5 6 7"
 cmdline: &cmdline
   SASmodel: 1
-  HddHotplug: 0
-  syno_hdd_detect: 0
-  syno_hdd_powerup_seq: 0
-  SMBusHddDynamicPower: 1
+  HddHotplug: 1
   vender_format_version: 2
+  syno_ttyS0: "serial,0x3f8"
+  syno_ttyS1: "serial,0x2f8"
   elevator: elevator
 patch: &patch
   - "ramdisk-etc-rc-*.patch"

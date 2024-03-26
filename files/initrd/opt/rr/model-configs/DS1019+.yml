@@ -7,11 +7,13 @@ synoinfo: &synoinfo
   support_leds_lp3943: "no"
   support_syno_hybrid_raid:
   supportraidgroup:
+  HddEnableDynamicPower: "yes"
   maxlanport: "8"
   netif_seq: "0 1 2 3 4 5 6 7"
   buzzeroffen: "0xffff"
 cmdline: &cmdline
-  HddHotplug: 0
+  HddHotplug: 1
+  SMBusHddDynamicPower: 1
   syno_hdd_detect: 0
   syno_hdd_powerup_seq: 0
   vender_format_version: 2

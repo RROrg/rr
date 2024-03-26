@@ -10,11 +10,12 @@ synoinfo: &synoinfo
   support_oob_ctl: "no"
   support_syno_hybrid_raid:
   supportraidgroup:
+  HddEnableDynamicPower: "yes"
   maxlanport: "8"
   netif_seq: "0 1 2 3 4 5 6 7"
   netif_seq_by_dts: "no"
 cmdline: &cmdline
-  SMBusHddDynamicPower: 1
+  HddHotplug: 1
   vender_format_version: 2
   syno_ttyS0: "serial,0x3f8"
   syno_ttyS1: "serial,0x2f8"
