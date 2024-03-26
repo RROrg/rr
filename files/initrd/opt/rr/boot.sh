@@ -133,8 +133,8 @@ if [ ! "${BUS}" = "usb" ]; then
 fi
 CMDLINE['panic']="${KERNELPANIC:-0}"
 CMDLINE['console']="ttyS0,115200n8"
-CMDLINE['no_console_suspend']="1"
-CMDLINE['consoleblank']="0"
+# CMDLINE['no_console_suspend']="1"
+CMDLINE['consoleblank']="600"
 CMDLINE['earlyprintk']=""
 CMDLINE['earlycon']="uart8250,io,0x3f8,115200n8"
 CMDLINE['root']="/dev/md0"
