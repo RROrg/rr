@@ -861,7 +861,7 @@ function cmdlineMenu() {
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 10))
       while true; do
         DIALOG --title "$(TEXT "Cmdline")" \
-          --form "${MSG}" ${LINENUM:-16} 70 2 "Name:" 1 1 "" 1 10 55 0 "Value:" 2 1 "" 2 10 55 0 \
+          --form "${MSG}" ${LINENUM:-16} 100 2 "Name:" 1 1 "" 1 10 85 0 "Value:" 2 1 "" 2 10 85 0 \
           2>"${TMP_PATH}/resp"
         RET=$?
         case ${RET} in
@@ -920,7 +920,7 @@ function cmdlineMenu() {
       while true; do
         DIALOG --title "$(TEXT "Cmdline")" \
           --extra-button --extra-label "$(TEXT "Random")" \
-          --form "${MSG}" 11 60 3 "sn" 1 1 "${sn}" 1 5 50 0 "mac1" 2 1 "${mac1}" 2 5 50 0 "mac2" 3 1 "${mac2}" 3 5 50 0 \
+          --form "${MSG}" 11 70 3 "sn" 1 1 "${sn}" 1 5 50 0 "mac1" 2 1 "${mac1}" 2 5 60 0 "mac2" 3 1 "${mac2}" 3 5 60 0 \
           2>"${TMP_PATH}/resp"
         RET=$?
         case ${RET} in
@@ -990,10 +990,10 @@ function synoinfoMenu() {
       MSG+="$(TEXT " * \Z4usbportcfg=0x????\Zn\n    USB disks mask.\n")"
       MSG+="$(TEXT " * \Z4max_sys_raid_disks=12\Zn\n    Maximum number of system partition(md0) raid disks.\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
-      LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
+      LINENUM=$(($(echo -e "${MSG}" | wc -l) + 10))
       while true; do
         DIALOG --title "$(TEXT "Synoinfo")" \
-          --form "${MSG}" ${LINENUM:-16} 70 2 "Name:" 1 1 "" 1 10 55 0 "Value:" 2 1 "" 2 10 55 0 \
+          --form "${MSG}" ${LINENUM:-16} 100 2 "Name:" 1 1 "" 1 10 85 0 "Value:" 2 1 "" 2 10 85 0 \
           2>"${TMP_PATH}/resp"
         RET=$?
         case ${RET} in
@@ -1480,11 +1480,11 @@ function setStaticIP() {
     IDX=$((${IDX} + 1))
     MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
     IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
-    ITEMS+="${ETH}(${MACR}) ${IDX} 1 ${IPR:-\"\"} ${IDX} 22 20 16 "
+    ITEMS+="${ETH}(${MACR}) ${IDX} 1 ${IPR:-\"\"} ${IDX} 22 36 16 "
   done
   echo ${ITEMS} >"${TMP_PATH}/opts"
   DIALOG --title "$(TEXT "Advanced")" \
-    --form "${MSG}" 10 44 ${IDX} --file "${TMP_PATH}/opts" \
+    --form "${MSG}" 10 60 ${IDX} --file "${TMP_PATH}/opts" \
     2>"${TMP_PATH}/resp"
   [ $? -ne 0 ] && return
   (
@@ -1528,7 +1528,7 @@ function setWirelessAccount() {
     SSID="${SSID//\"/}"
     PSK="${PSK//\"/}"
     DIALOG --title "$(TEXT "Advanced")" \
-      --form "${MSG}" ${LINENUM:-16} 62 2 "SSID" 1 1 "${SSID}" 1 7 50 0 " PSK" 2 1 "${PSK}" 2 7 50 0 \
+      --form "${MSG}" ${LINENUM:-16} 70 2 "SSID" 1 1 "${SSID}" 1 7 58 0 " PSK" 2 1 "${PSK}" 2 7 58 0 \
       2>"${TMP_PATH}/resp"
     RET=$?
     case ${RET} in
