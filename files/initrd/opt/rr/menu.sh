@@ -851,10 +851,12 @@ function cmdlineMenu() {
       MSG+="$(TEXT " * \Z4intel_idle.max_cstate=1\Zn\n    Set the maximum C-state depth allowed by the intel_idle driver.\n")"
       MSG+="$(TEXT " * \Z4pcie_port_pm=off\Zn\n    Turn off the power management of the PCIe port.\n")"
       MSG+="$(TEXT " * \Z4libata.force=noncq\Zn\n    Disable NCQ for all SATA ports.\n")"
-      MSG+="$(TEXT " * \Z4SataPortMap=??\Zn\n    Sata Port Map.\n")"
-      MSG+="$(TEXT " * \Z4DiskIdxMap=??\Zn\n    Disk Index Map, Modify disk name sequence.\n")"
+      MSG+="$(TEXT " * \Z4SataPortMap=??\Zn\n    Sata Port Map.(Not apply to DT models.)\n")"
+      MSG+="$(TEXT " * \Z4DiskIdxMap=??\Zn\n    Disk Index Map, Modify disk name sequence.(Not apply to DT models.)\n")"
+      MSG+="$(TEXT " * \Z4ahci_remap=4>5:5>8:12>16\Zn\n    Remap data port sequence.(Not apply to DT models.)\n")"
       MSG+="$(TEXT " * \Z4i915.enable_guc=2\Zn\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\n")"
-      MSG+="$(TEXT " * \Z4i915.max_vfs=7\Zn\n     Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\n")"
+      MSG+="$(TEXT " * \Z4i915.max_vfs=7\Zn\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\n")"
+      MSG+="$(TEXT " * \Z4consoleblank=300\Zn\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 10))
       while true; do
@@ -1074,7 +1076,7 @@ function getSynoExtractor() {
   RET=$?
   if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
     rm -f "${OLDPAT_PATH}"
-    MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d")" "${RET}" "${STATUS}")"
+    MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" "${RET}" "${STATUS}")"
     echo -e "${MSG}" >"${LOG_FILE}"
     return 1
   fi
@@ -1229,7 +1231,7 @@ function extractDsmFiles() {
     rm -rf "${PAT_PATH}.downloading"
     if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
       rm -f "${PAT_PATH}"
-      MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d")" "${RET}" "${STATUS}")"
+      MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" "${RET}" "${STATUS}")"
       echo -e "${MSG}" >"${LOG_FILE}"
       return 1
     fi
@@ -2437,14 +2439,26 @@ function advancedMenu() {
       DIALOG --title "$(TEXT "Advanced")" \
         --yesno "$(TEXT "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?")" 0 0
       [ $? -ne 0 ] && return
-      (
-        wget -O - http://bin.entware.net/x64-k3.2/installer/generic.sh | /bin/sh
-        opkg update
-        #opkg install python3 python3-pip
-      ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
+      rm -f "${LOG_FILE}"
+      while true; do
+        wget http://bin.entware.net/x64-k3.2/installer/generic.sh -O "generic.sh" >"${LOG_FILE}"
+        [ $? -ne 0 -o ! -f "generic.sh" ] && break
+        chmod +x "generic.sh"
+        ./generic.sh 2>"${LOG_FILE}"
+        [ $? -ne 0 ] && break
+        opkg update 2>"${LOG_FILE}"
+        [ $? -ne 0 ] && break
+        rm -f "generic.sh" "${LOG_FILE}" 
+        break
+      done 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "opkg installing ...")" 20 100
+      if [ -f "${LOG_FILE}" ]; then
+        MSG="$(TEXT "opkg install failed.")\n$(<"${LOG_FILE}"))"
+      else
+        MSG="$(TEXT "opkg install complete.")"
+      fi
       DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox "$(TEXT "opkg install is complete. Please reconnect to ssh/web, or execute 'source ~/.bashrc'")" 0 0
+        --msgbox "${MSG}" 0 0
       NEXT="e"
       ;;
     p)
@@ -2623,7 +2637,7 @@ function downloadExts() {
       --progressbox "$(TEXT "Downloading ...")" 20 100
   fi
   if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
-    MSG="$(printf "$(TEXT "Error downloading new version.\nError: %d:%d")" "${RET}" "${STATUS}")"
+    MSG="$(printf "$(TEXT "Error downloading new version.\nError: %d:%d\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" "${RET}" "${STATUS}")"
     if [ "${5}" = "-1" ]; then
       echo "${T} - ${MSG}"
     elif [ "${5}" = "0" ]; then
@@ -3373,4 +3387,5 @@ else
   done
   clear
   echo -e "$(TEXT "Call \033[1;32mmenu.sh\033[0m to return to menu")"
+  ${WORK_PATH}/init.sh
 fi

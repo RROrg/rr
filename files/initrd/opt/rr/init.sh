@@ -20,7 +20,7 @@ printf "\033[1;44m%*s\033[0m\n" ${COLUMNS} ""
 # Get first MAC address
 ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo) || true
 # No network devices
-[ $(echo ${ETHX} | wc -w) -le 0 ] && die "$(TEXT "Network devices not found!")"
+[ $(echo ${ETHX} | wc -w) -le 0 ] && die "$(TEXT "Network devices not found! Please re execute init.sh after connecting to the network!")"
 
 # If user config file not exists, initialize it
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
@@ -175,6 +175,7 @@ done
 
 # Inform user
 echo
+echo -e "$(TEXT "Call \033[1;32minit.sh\033[0m to re get init info")"
 echo -e "$(TEXT "Call \033[1;32mmenu.sh\033[0m to configure loader")"
 echo
 echo -e "$(TEXT "User config is on") \033[1;32m${USER_CONFIG_FILE}\033[0m"
