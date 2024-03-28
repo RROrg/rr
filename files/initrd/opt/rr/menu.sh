@@ -141,7 +141,7 @@ function modelMenu() {
         --menu "$(TEXT "Choose the model")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return
-      resp=$(<${TMP_PATH}/resp)
+      resp=$(cat ${TMP_PATH}/resp)
       [ -z "${resp}" ] && return
       if [ "${resp}" = "c" ]; then
         models=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
@@ -235,7 +235,7 @@ function productversMenu() {
       --no-items --menu "$(TEXT "Choose a product version")" 0 0 0 ${ITEMS} \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
-    resp=$(<${TMP_PATH}/resp)
+    resp=$(cat ${TMP_PATH}/resp)
     [ -z "${resp}" ] && return
 
     if [ "${PRODUCTVER}" = "${resp}" ]; then
@@ -389,7 +389,7 @@ function ParsePat() {
     --no-items --menu "$(TEXT "Choose a pat file")" 0 0 0 ${ITEMS} \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
-  PAT_PATH=$(<${TMP_PATH}/resp)
+  PAT_PATH=$(cat ${TMP_PATH}/resp)
   if [ ! -f "${PAT_PATH}" ]; then
     DIALOG --title "$(TEXT "Update")" \
       --msgbox "$(TEXT "pat Invalid, try again!")" 0 0
@@ -542,7 +542,7 @@ function addonMenu() {
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
-    case "$(<${TMP_PATH}/resp)" in
+    case "$(cat ${TMP_PATH}/resp)" in
     a)
       rm -f "${TMP_PATH}/menu"
       while read ADDON DESC; do
@@ -559,13 +559,13 @@ function addonMenu() {
         --menu "$(TEXT "Select an addon")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
-      ADDON="$(<"${TMP_PATH}/resp")"
+      ADDON="$(cat "${TMP_PATH}/resp")"
       [ -z "${ADDON}" ] && continue
       DIALOG --title "$(TEXT "Addons")" \
         --inputbox "$(TEXT "Type a optional params to addon")" 0 70 \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && continue
-      VALUE="$(<"${TMP_PATH}/resp")"
+      VALUE="$(cat "${TMP_PATH}/resp")"
       ADDONS[${ADDON}]="${VALUE}"
       writeConfigKey "addons.\"${ADDON}\"" "${VALUE}" "${USER_CONFIG_FILE}"
       touch ${PART1_PATH}/.build
@@ -584,7 +584,7 @@ function addonMenu() {
         --no-tags --checklist "$(TEXT "Select addon to remove")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
-      ADDON="$(<"${TMP_PATH}/resp")"
+      ADDON="$(cat "${TMP_PATH}/resp")"
       [ -z "${ADDON}" ] && continue
       for I in ${ADDON}; do
         unset ADDONS[${I}]
@@ -674,7 +674,7 @@ function moduleMenu() {
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
-    case "$(<${TMP_PATH}/resp)" in
+    case "$(cat ${TMP_PATH}/resp)" in
     s)
       while true; do
         DIALOG --title "$(TEXT "Modules")" \
@@ -698,7 +698,7 @@ function moduleMenu() {
         RET=$?
         case ${RET} in
         0) # ok-button
-          resp=$(<${TMP_PATH}/resp)
+          resp=$(cat ${TMP_PATH}/resp)
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
           for ID in ${resp}; do
             writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
@@ -843,7 +843,7 @@ function cmdlineMenu() {
       --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
-    case "$(<${TMP_PATH}/resp)" in
+    case "$(cat ${TMP_PATH}/resp)" in
     a)
       MSG=""
       MSG+="$(TEXT "Commonly used cmdlines:\n")"
@@ -905,7 +905,7 @@ function cmdlineMenu() {
         --checklist "$(TEXT "Select cmdline to remove")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
-      RESP=$(<"${TMP_PATH}/resp")
+      RESP=$(cat "${TMP_PATH}/resp")
       [ -z "${RESP}" ] && continue
       for I in ${RESP}; do
         unset CMDLINE[${I}]
@@ -980,7 +980,7 @@ function synoinfoMenu() {
       --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
-    case "$(<${TMP_PATH}/resp)" in
+    case "$(cat ${TMP_PATH}/resp)" in
     a)
       MSG=""
       MSG+="$(TEXT "Commonly used synoinfo:\n")"
@@ -1038,7 +1038,7 @@ function synoinfoMenu() {
         --checklist "$(TEXT "Select synoinfo entry to remove")" 0 0 0 --file "${TMP_PATH}/opts" \
         2>"${TMP_PATH}/resp"
       [ $? -ne 0 ] && continue
-      RESP=$(<"${TMP_PATH}/resp")
+      RESP=$(cat "${TMP_PATH}/resp")
       [ -z "${RESP}" ] && continue
       for I in ${RESP}; do
         unset SYNOINFO[${I}]
@@ -1295,13 +1295,13 @@ function make() {
 
     ${WORK_PATH}/zimage-patch.sh
     if [ $? -ne 0 ]; then
-      echo -e "$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" >"${LOG_FILE}"
+      echo -e "$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(cat "${LOG_FILE}")" >"${LOG_FILE}"
       break
     fi
 
     ${WORK_PATH}/ramdisk-patch.sh
     if [ $? -ne 0 ]; then
-      echo -e "$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(<"${LOG_FILE}")" >"${LOG_FILE}"
+      echo -e "$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(cat "${LOG_FILE}")" >"${LOG_FILE}"
       break
     fi
     rm -f ${PART1_PATH}/.build
@@ -1343,7 +1343,7 @@ function customDTS() {
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
-    case "$(<${TMP_PATH}/resp)" in
+    case "$(cat ${TMP_PATH}/resp)" in
     %) ;;
     u)
       if ! tty 2>/dev/null | grep -q "/dev/pts"; then #if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
@@ -1372,7 +1372,7 @@ function customDTS() {
       popd
       if [ ${RET} -ne 0 -o -z "${USER_FILE}" ]; then
         DIALOG --title "$(TEXT "Custom DTS")" \
-          --msgbox "$(TEXT "Not a valid dts file, please try again!")\n\n$(<"${DTC_ERRLOG}")" 0 0
+          --msgbox "$(TEXT "Not a valid dts file, please try again!")\n\n$(cat "${DTC_ERRLOG}")" 0 0
       else
         [ -d "{USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
         cp -f "${USER_FILE}" "${USER_UP_PATH}/${MODEL}.dts"
@@ -1408,7 +1408,7 @@ function customDTS() {
         dtc -q -I dts -O dtb "${TMP_PATH}/modelEdit.dts" >"test.dtb" 2>"${DTC_ERRLOG}"
         if [ $? -ne 0 ]; then
           DIALOG --title "$(TEXT "Custom DTS")" \
-            --msgbox "$(TEXT "Not a valid dts file, please try again!")\n\n$(<"${DTC_ERRLOG}")" 0 0
+            --msgbox "$(TEXT "Not a valid dts file, please try again!")\n\n$(cat "${DTC_ERRLOG}")" 0 0
         else
           mkdir -p "${USER_UP_PATH}"
           cp -f "${TMP_PATH}/modelEdit.dts" "${USER_UP_PATH}/${MODEL}.dts"
@@ -1676,7 +1676,7 @@ function formatDisks() {
     --checklist "$(TEXT "Advanced")" 0 0 0 --file "${TMP_PATH}/opts" \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
-  RESP=$(<"${TMP_PATH}/resp")
+  RESP=$(cat "${TMP_PATH}/resp")
   [ -z "${RESP}" ] && return
   DIALOG --title "$(TEXT "Advanced")" \
     --yesno "$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")" 0 0
@@ -1941,7 +1941,7 @@ function resetDSMPassword() {
       --inputbox "$(printf "$(TEXT "Type a new password for user '%s'")" "${USER}")" 0 70 "${CMDLINE[${NAME}]}" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break 2
-    VALUE="$(<"${TMP_PATH}/resp")"
+    VALUE="$(cat "${TMP_PATH}/resp")"
     [ -n "${VALUE}" ] && break
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "Invalid password")" 0 0
@@ -2093,7 +2093,7 @@ function cloneBootloaderDisk() {
     --radiolist "$(TEXT "Choose a disk to clone to")" 0 0 0 --file "${TMP_PATH}/opts" \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
-  RESP=$(<"${TMP_PATH}/resp")
+  RESP=$(cat "${TMP_PATH}/resp")
   if [ -z "${RESP}" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk selected!")" 0 0
@@ -2242,7 +2242,7 @@ function advancedMenu() {
       --default-item "${NEXT}" --menu "$(TEXT "Advanced option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
-    case $(<"${TMP_PATH}/resp") in
+    case $(cat "${TMP_PATH}/resp") in
     l)
       LKM=$([ "${LKM}" = "dev" ] && echo 'prod' || ([ "${LKM}" = "test" ] && echo 'dev' || echo 'test'))
       writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
@@ -2448,12 +2448,12 @@ function advancedMenu() {
         [ $? -ne 0 ] && break
         opkg update 2>"${LOG_FILE}"
         [ $? -ne 0 ] && break
-        rm -f "generic.sh" "${LOG_FILE}" 
+        rm -f "generic.sh" "${LOG_FILE}"
         break
       done 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
         --progressbox "$(TEXT "opkg installing ...")" 20 100
       if [ -f "${LOG_FILE}" ]; then
-        MSG="$(TEXT "opkg install failed.")\n$(<"${LOG_FILE}"))"
+        MSG="$(TEXT "opkg install failed.")\n$(cat "${LOG_FILE}"))"
       else
         MSG="$(TEXT "opkg install complete.")"
       fi
@@ -2550,7 +2550,7 @@ function keymapMenu() {
     --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a layout")" 0 0 0 ${OPTIONS} \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
-  LAYOUT="$(<${TMP_PATH}/resp)"
+  LAYOUT="$(cat ${TMP_PATH}/resp)"
   OPTIONS=""
   while read KM; do
     OPTIONS+="${KM::-7} "
@@ -2667,7 +2667,7 @@ function updateRR() {
   mkdir -p "${TMP_PATH}/update"
   unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
-    MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
+    MSG="$(TEXT "Error extracting update file.")\n$(cat "${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -2712,7 +2712,7 @@ function updateRR() {
       mkdir -p "${TMP_PATH}/update/${VALUE}"
       tar -zxf "${TMP_PATH}/update/$(basename "${KEY}").tgz" -C "${TMP_PATH}/update/${VALUE}" >"${LOG_FILE}" 2>&1
       if [ $? -ne 0 ]; then
-        MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
+        MSG="$(TEXT "Error extracting update file.")\n$(cat "${LOG_FILE}")"
         if [ "${2}" = "-1" ]; then
           echo "${T} - ${MSG}"
         else
@@ -2805,7 +2805,7 @@ function updateAddons() {
   mkdir -p "${TMP_PATH}/update"
   unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
-    MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
+    MSG="$(TEXT "Error extracting update file.")\n$(cat "${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -2869,7 +2869,7 @@ function updateModules() {
   mkdir -p "${TMP_PATH}/update"
   unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
-    MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
+    MSG="$(TEXT "Error extracting update file.")\n$(cat "${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -2936,7 +2936,7 @@ function updateLKMs() {
   mkdir -p "${TMP_PATH}/update"
   unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
-    MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
+    MSG="$(TEXT "Error extracting update file.")\n$(cat "${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -2992,7 +2992,7 @@ function updateCKs() {
   mkdir -p "${TMP_PATH}/update"
   unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
-    MSG="$(TEXT "Error extracting update file.")\n$(<"${LOG_FILE}")"
+    MSG="$(TEXT "Error extracting update file.")\n$(cat "${LOG_FILE}")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -3061,7 +3061,7 @@ function updateMenu() {
       SILENT="-1"
       echo "${1}" >"${TMP_PATH}/resp"
     fi
-    case "$(<${TMP_PATH}/resp)" in
+    case "$(cat ${TMP_PATH}/resp)" in
     a)
       F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -z "${F}" ] && downloadExts "$(TEXT "All")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "updateall" "${SILENT}"
@@ -3259,7 +3259,7 @@ else
       --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
-    case $(<"${TMP_PATH}/resp") in
+    case $(cat "${TMP_PATH}/resp") in
     m)
       modelMenu
       NEXT="n"
@@ -3353,7 +3353,7 @@ else
           e "$(TEXT "Exit")" \
           2>${TMP_PATH}/resp
         [ $? -ne 0 ] && break
-        case "$(<${TMP_PATH}/resp)" in
+        case "$(cat ${TMP_PATH}/resp)" in
         p)
           poweroff
           exit 0
