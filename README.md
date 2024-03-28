@@ -12,10 +12,9 @@ Hardware/hard-drives are priced whilst data are priceless, any user-specific cus
 
 ### 2: Documentation & FAQ
 
-- [Quick start guide](./guide.md)
-- [How to fetch debug logs](https://github.com/rrorg/rr/issues/173)
-- [Temporary workaround for "DSM not found" after bootloading](https://github.com/rrorg/rr/issues/175)
-- [DT(Device Tree) and -portcfg/maxdisks](https://github.com/rrorg/rr/issues/226)
+- [blog](https://rrorg.cn:521/)
+- [docs](https://rrorg.github.io/rr-docs/)
+- [📣](https://github.com/orgs/RROrg/discussions)
 
 ### 3: Components
 
