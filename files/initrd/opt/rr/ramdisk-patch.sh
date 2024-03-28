@@ -167,9 +167,9 @@ echo "export LAYOUT=${LAYOUT}" >>"${RAMDISK_PATH}/addons/addons.sh"
 echo "export KEYMAP=${KEYMAP}" >>"${RAMDISK_PATH}/addons/addons.sh"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
 
-# Required addons: "revert" "misc" "eudev" "disks" "localrss" "wol"
+# Required addons: "revert" "misc" "eudev" "disks" "localrss" "notify" "wol" "rndis"
 # This order cannot be changed.
-for ADDON in "revert" "misc" "eudev" "disks" "localrss" "wol"; do
+for ADDON in "revert" "misc" "eudev" "disks" "localrss" "notify" "wol" "rndis"; do
   PARAMS=""
   if [ "${ADDON}" = "disks" ]; then
     PARAMS=${HDDSORT}
