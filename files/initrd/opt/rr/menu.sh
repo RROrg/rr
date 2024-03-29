@@ -642,6 +642,7 @@ function addonMenu() {
           [ -f "${ADDONS_PATH}/VERSION" ] && rm -f "${ADDONS_PATH}/VERSION"
           DIALOG --title "$(TEXT "Addons")" \
             --msgbox "$(printf "$(TEXT "Addon '%s' added to loader, Please enable it in 'Add an addon' menu.")" "${ADDON}")" 0 0
+          touch ${PART1_PATH}/.build
         else
           DIALOG --title "$(TEXT "Addons")" \
             --msgbox "$(TEXT "File format not recognized!")" 0 0
@@ -776,6 +777,7 @@ function moduleMenu() {
         DIALOG --title "$(TEXT "Modules")" \
           --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${USER_FILE}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" 0 0
         rm -f "${TMP_UP_PATH}/${USER_FILE}"
+        touch ${PART1_PATH}/.build
       else
         DIALOG --title "$(TEXT "Modules")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
@@ -800,10 +802,12 @@ function moduleMenu() {
         DIALOG --title "$(TEXT "Modules")" \
           --msgbox "$(printf "$(TEXT "Module %s deselected.\n")" "${DELS[@]}")" 0 0
       fi
+      touch ${PART1_PATH}/.build
       ;;
     p)
       [ "${ODP}" = "false" ] && ODP='true' || ODP='false'
       writeConfigKey "odp" "${ODP}" "${USER_CONFIG_FILE}"
+      touch ${PART1_PATH}/.build
       ;;
     f)
       if [ -f ${USER_UP_PATH}/modulelist ]; then
@@ -820,6 +824,7 @@ function moduleMenu() {
         dos2unix "${USER_UP_PATH}/modulelist"
         break
       done
+      touch ${PART1_PATH}/.build
       ;;
     e)
       break
@@ -1764,6 +1769,7 @@ function tryRecoveryDSM() {
         DIALOG --title "$(TEXT "Try recovery DSM")" \
           --msgbox "$(TEXT "Found a backup of the user's configuration, and restored it. Please rebuild and boot.")" 0 0
         exec "$0"
+        touch ${PART1_PATH}/.build
         return
       fi
     fi
@@ -1855,11 +1861,13 @@ function tryRecoveryDSM() {
       __umountDSMRootDisk
       DIALOG --title "$(TEXT "Try recovery DSM")" \
         --msgbox "$(TEXT "Found a installed DSM system and restored it. Please rebuild and boot.")" 0 0
+      touch ${PART1_PATH}/.build
       return
     else
       __umountDSMRootDisk
       DIALOG --title "$(TEXT "Try recovery DSM")" \
         --msgbox "$(TEXT "Found a installed DSM system, but the system is damaged and will not be restored. Please reselect model and build.")" 0 0
+      touch ${PART1_PATH}/.build
       return
     fi
   fi
