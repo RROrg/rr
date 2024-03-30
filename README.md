@@ -18,7 +18,7 @@ Hardware/hard-drives are priced whilst data are priceless, any user-specific cus
 
 ### 3: Components
 
-Please refer to [rr-modules](https://github.com/RROrg/rr-modules) and [rr-addons](https://github.com/RROrg/rr-addons) for details and further practices if you intend to manually build rr from source.
+For the packag of has been initialized and build image, please go to [RR-CUSTOM](https://rrorg.github.io/rr/).
 
 ### 4: GPU: 
 
