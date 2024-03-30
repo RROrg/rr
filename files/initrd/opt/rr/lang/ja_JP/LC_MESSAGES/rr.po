@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-27 03:58+0800\n"
-"PO-Revision-Date: 2024-03-27 04:29+0800\n"
+"POT-Creation-Date: 2024-03-31 03:54+0800\n"
+"PO-Revision-Date: 2024-03-31 03:58+0800\n"
 "Last-Translator: Anda Toshiki <hello@toshiki.dev>\n"
 "Language-Team: Toshiki's Devpedia <hello@toshiki.dev>\n"
 "Language: ja_JP\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr "ローダーは初期化されていません！"
 
-#: boot.sh:10 init.sh:116
+#: boot.sh:10 init.sh:119
 msgid "Loader is not configured!"
 msgstr "ローダーは設定されていません！"
 
@@ -34,7 +34,7 @@ msgstr "%sへようこそ"
 msgid "DSM zImage changed"
 msgstr "DSM zImageが変更されました"
 
-#: boot.sh:36 menu.sh:1298
+#: boot.sh:36 menu.sh:1308
 msgid "zImage not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
 msgstr "zImageがパッチされていません、\\nブートローダーのバージョンをアップグレードして再試行してください。\\nパッチエラー：\\n"
 
@@ -42,7 +42,7 @@ msgstr "zImageがパッチされていません、\\nブートローダーのバ
 msgid "DSM Ramdisk changed"
 msgstr "DSM Ramdiskが変更されました"
 
-#: boot.sh:47 menu.sh:1304
+#: boot.sh:47 menu.sh:1314
 msgid "Ramdisk not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
 msgstr "Ramdiskがパッチされていません、\\nブートローダーのバージョンをアップグレードして再試行してください。\\nパッチエラー：\\n"
 
@@ -90,31 +90,31 @@ msgstr "コマンドライン：\\n"
 msgid "Reboot to boot directly in DSM"
 msgstr "DSMで直接ブートするために再起動します"
 
-#: boot.sh:183 init.sh:129
+#: boot.sh:183 init.sh:132
 msgid "Detected %s network cards."
 msgstr "%sのネットワークカードを検出しました。"
 
-#: boot.sh:184 init.sh:130
+#: boot.sh:184 init.sh:133
 msgid "Checking Connect."
 msgstr "接続を確認中。"
 
-#: boot.sh:196 init.sh:140
+#: boot.sh:196 init.sh:143
 msgid "connected."
 msgstr "接続済み。"
 
-#: boot.sh:203 init.sh:147
+#: boot.sh:203 init.sh:150
 msgid "Waiting IP."
 msgstr "IPを待っています。"
 
-#: boot.sh:210 init.sh:154
+#: boot.sh:210 init.sh:157
 msgid "DOWN"
 msgstr "ダウン"
 
-#: boot.sh:214 init.sh:158
+#: boot.sh:214 init.sh:161
 msgid "NOT CONNECTED"
 msgstr "接続されていません"
 
-#: boot.sh:218 init.sh:162
+#: boot.sh:218 init.sh:165
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "タイムアウト（ルーター上のIPを確認してください。）"
 
@@ -150,55 +150,55 @@ msgstr "[このインターフェースは操作できません。数分お待�
 msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
 msgstr "ネットワークデバイスが見つかりません! ネットワークに接続した後、init.sh を再実行してください。"
 
-#: init.sh:92
+#: init.sh:95
 msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM"
 msgstr "ローダーディスクはUSBでもSATA/SCSI/NVME/MMC DoMでもありません"
 
-#: init.sh:101
+#: init.sh:104
 msgid "Loader disk:"
 msgstr "ローダーディスク："
 
-#: init.sh:109
+#: init.sh:112
 msgid "Loading keymap"
 msgstr "キーマップをロード中"
 
-#: init.sh:119
+#: init.sh:122
 msgid "User requested edit settings."
 msgstr "ユーザーが設定の編集を要求しました。"
 
-#: init.sh:168
+#: init.sh:171
 msgid "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web terminal."
 msgstr "ウェブターミナルを介してローダーを設定するには、\\033[1;34mhttp://%s:7681\\033[0mにアクセスします。"
 
-#: init.sh:178
+#: init.sh:181
 msgid "Call \\033[1;32minit.sh\\033[0m to re get init info"
 msgstr "して初期情報を取得します\\033[1;32minit.sh\\033[0mを呼び出します"
 
-#: init.sh:179
+#: init.sh:182
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
 msgstr "ローダーを設定するには\\033[1;32mmenu.sh\\033[0mを呼び出します"
 
-#: init.sh:181
+#: init.sh:184
 msgid "User config is on"
 msgstr "ユーザー設定がオンになっています"
 
-#: init.sh:182
+#: init.sh:185
 msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 msgstr "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 
-#: init.sh:183
+#: init.sh:186
 msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 msgstr "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 
-#: init.sh:184
+#: init.sh:187
 msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 msgstr "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 
-#: init.sh:186
+#: init.sh:189
 msgid "Default SSH \\033[1;31mroot\\033[0m password is"
 msgstr "Default SSH \\033[1;31mroot\\033[0m password is"
 
-#: init.sh:203
+#: init.sh:206
 msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
 msgstr "RAMが4GB未満の場合、ローダーの作成中にエラーが発生する場合があります。その場合は、メモリの量を増やしてください。"
 
@@ -226,1186 +226,1190 @@ msgstr "すべてのモデルを表示"
 msgid "Choose the model"
 msgstr "モデルを選択"
 
-#: menu.sh:234 menu.sh:242 menu.sh:254 menu.sh:272 menu.sh:308 menu.sh:337 menu.sh:388
+#: menu.sh:236 menu.sh:244 menu.sh:256 menu.sh:275 menu.sh:312 menu.sh:341 menu.sh:393
 msgid "Product Version"
 msgstr "製品バージョン"
 
-#: menu.sh:235
+#: menu.sh:237
 msgid "Choose a product version"
 msgstr "製品バージョンを選択"
 
-#: menu.sh:243
+#: menu.sh:245
 msgid "The current version has been set to %s. Do you want to reset the version?"
 msgstr "現在のバージョンは%sに設定されています。バージョンをリセットしますか？"
 
-#: menu.sh:255
+#: menu.sh:257
 msgid "This version does not support UEFI startup, Please select another version or switch the startup mode."
 msgstr "このバージョンはUEFI起動をサポートしていません。別のバージョンを選択するか、起動モードを切り替えてください。"
 
-#: menu.sh:273
+#: menu.sh:276
 msgid "Get pat data ..."
 msgstr "patデータを取得しています..."
 
-#: menu.sh:297 menu.sh:1061 menu.sh:1210
+#: menu.sh:301 menu.sh:1072 menu.sh:1221
 msgid "Network error, please check the network connection and try again."
 msgstr "ネットワークエラーが発生しました。ネットワーク接続を確認して、再試行してください。"
 
-#: menu.sh:298
+#: menu.sh:302
 msgid "Or use 'Parse pat' function for installation."
 msgstr "または、'Parse pat'機能を使用してインストールします。"
 
-#: menu.sh:300
+#: menu.sh:304
 msgid "Failed to get pat data,\\nPlease manually fill in the URL and md5sum of the corresponding version of pat.\\nOr click 'Retry'."
 msgstr "patデータの取得に失敗しました。\\n対応するバージョンのpatのURLとmd5sumを手動で入力してください。\\nまたは、'Retry'をクリックしてください。"
 
-#: menu.sh:305
+#: menu.sh:309
 msgid "Successfully to get pat data, Please confirm.\\nOr modify the URL and md5sum to you need."
 msgstr "patデータの取得に成功しました。確認してください。\\nまたは、必要に応じてURLとmd5sumを変更します。"
 
-#: menu.sh:309
+#: menu.sh:313
 msgid "Retry"
 msgstr "再試行"
 
-#: menu.sh:338 menu.sh:441
+#: menu.sh:342 menu.sh:446
 msgid "Reconfiguring Synoinfo, Addons and Modules"
 msgstr "Synoinfo、Addons、Modulesを再設定中"
 
-#: menu.sh:372
+#: menu.sh:377
 msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
 msgstr "%sと%sを選択しました。\\n'Parse Pat'は以前の選択を上書きします。\\n続行しますか？"
 
-#: menu.sh:373
+#: menu.sh:378
 msgid "Parse Pat"
 msgstr "Parse Pat"
 
-#: menu.sh:382
+#: menu.sh:387
 msgid "No pat file found in /tmp/pats/ folder!\\n"
 msgstr "/tmp/pats/フォルダにpatファイルが見つかりません！\\n"
 
-#: menu.sh:383
+#: menu.sh:388
 msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
 msgstr "DUFSを通じてpatファイルを/tmp/pats/フォルダにアップロードし、このオプションを再入力してください。\\n"
 
-#: menu.sh:384 menu.sh:394 menu.sh:3045 menu.sh:3046 menu.sh:3047 menu.sh:3048 menu.sh:3049 menu.sh:3050 menu.sh:3056 menu.sh:3079 menu.sh:3090 menu.sh:3101 menu.sh:3112 menu.sh:3126 menu.sh:3137 menu.sh:3154 menu.sh:3173
+#: menu.sh:389 menu.sh:399 menu.sh:3081 menu.sh:3082 menu.sh:3083 menu.sh:3084 menu.sh:3085 menu.sh:3086 menu.sh:3092 menu.sh:3115 menu.sh:3126 menu.sh:3137 menu.sh:3148 menu.sh:3162 menu.sh:3173 menu.sh:3190 menu.sh:3209
 msgid "Update"
 msgstr "更新"
 
-#: menu.sh:389
+#: menu.sh:394
 msgid "Choose a pat file"
 msgstr "patファイルを選択"
 
-#: menu.sh:395 menu.sh:407 menu.sh:1165
+#: menu.sh:400 menu.sh:412 menu.sh:1176
 msgid "pat Invalid, try again!"
 msgstr "patが無効です。再試行してください！"
 
-#: menu.sh:400
+#: menu.sh:405
 msgid "Parse %s ..."
 msgstr "%sを解析中..."
 
-#: menu.sh:425
+#: menu.sh:430
 msgid "Currently, %s is not supported."
 msgstr "現在、%sはサポートされていません。"
 
-#: menu.sh:437
+#: menu.sh:442
 msgid "Currently, %s of %s is not supported."
 msgstr "現在、%sの%sはサポートされていません。"
 
-#: menu.sh:498 menu.sh:1314 menu.sh:3195 menu.sh:3258 menu.sh:3276
+#: menu.sh:503 menu.sh:1327 menu.sh:3232 menu.sh:3300 menu.sh:3318
 msgid "Main menu"
 msgstr "メインメニュー"
 
-#: menu.sh:499
+#: menu.sh:504
 msgid "Making ..."
 msgstr "作成中..."
 
-#: menu.sh:501 menu.sh:1318
+#: menu.sh:506 menu.sh:1334
 msgid "Error"
 msgstr "エラー"
 
-#: menu.sh:536 menu.sh:553 menu.sh:558 menu.sh:564 menu.sh:575 menu.sh:583 menu.sh:606 menu.sh:613 menu.sh:617 menu.sh:631 menu.sh:635 menu.sh:643 menu.sh:646 menu.sh:2796 menu.sh:2845 menu.sh:3047 menu.sh:3080 menu.sh:3084
+#: menu.sh:541 menu.sh:558 menu.sh:563 menu.sh:569 menu.sh:580 menu.sh:588 menu.sh:611 menu.sh:618 menu.sh:622 menu.sh:636 menu.sh:640 menu.sh:648 menu.sh:652 menu.sh:2832 menu.sh:2881 menu.sh:3083 menu.sh:3116 menu.sh:3120
 msgid "Addons"
 msgstr "アドオン"
 
-#: menu.sh:537 menu.sh:667 menu.sh:843 menu.sh:980 menu.sh:1338 menu.sh:3259
+#: menu.sh:542 menu.sh:673 menu.sh:853 menu.sh:991 menu.sh:1356 menu.sh:3301
 msgid "Choose a option"
 msgstr "オプションを選択"
 
-#: menu.sh:538
+#: menu.sh:543
 msgid "Add an addon"
 msgstr "アドオンを追加"
 
-#: menu.sh:539
+#: menu.sh:544
 msgid "Delete addons"
 msgstr "アドオンを削除"
 
-#: menu.sh:540
+#: menu.sh:545
 msgid "Show all addons"
 msgstr "すべてのアドオンを表示"
 
-#: menu.sh:541
+#: menu.sh:546
 msgid "Upload a external addon"
 msgstr "外部アドオンをアップロード"
 
-#: menu.sh:542 menu.sh:674 menu.sh:841 menu.sh:978 menu.sh:1343 menu.sh:2239 menu.sh:3053 menu.sh:3256 menu.sh:3353
+#: menu.sh:547 menu.sh:680 menu.sh:851 menu.sh:989 menu.sh:1361 menu.sh:2260 menu.sh:3089 menu.sh:3298 menu.sh:3394
 msgid "Exit"
 msgstr "終了"
 
-#: menu.sh:554
+#: menu.sh:559
 msgid "No available addons to add"
 msgstr "追加可能なアドオンはありません"
 
-#: menu.sh:559
+#: menu.sh:564
 msgid "Select an addon"
 msgstr "アドオンを選択"
 
-#: menu.sh:565
+#: menu.sh:570
 msgid "Type a optional params to addon"
 msgstr "アドオンにオプションのパラメータを入力"
 
-#: menu.sh:576
+#: menu.sh:581
 msgid "No user addons to remove"
 msgstr "削除するユーザーアドオンはありません"
 
-#: menu.sh:584
+#: menu.sh:589
 msgid "Select addon to remove"
 msgstr "削除するアドオンを選択"
 
-#: menu.sh:597
+#: menu.sh:602
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n\\n"
 msgstr "色\"\\Z4blue\\Zn\"の名前は追加され、色\"black\"の名前は追加されません。\\n\\n"
 
-#: menu.sh:612 menu.sh:746 menu.sh:1351 menu.sh:3124
+#: menu.sh:617 menu.sh:752 menu.sh:1369 menu.sh:3160
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
 msgstr "この機能は、ssh経由でアクセスした場合にのみ利用可能です（ターミナルが必要です）that supports ZModem protocol).\\n"
 
-#: menu.sh:618
+#: menu.sh:623
 msgid "Please upload the *.addons file."
 msgstr "「*.addons」ファイルをアップロードしてください。"
 
-#: menu.sh:632 menu.sh:781 menu.sh:3155 menu.sh:3174
+#: menu.sh:637 menu.sh:788 menu.sh:3191 menu.sh:3210
 msgid "Not a valid file, please try again!"
 msgstr "有効なファイルではありません、もう一度お試しください！"
 
-#: menu.sh:636
+#: menu.sh:641
 msgid "The addon already exists. Do you want to overwrite it?"
 msgstr "アドオンはすでに存在します。上書きしますか？"
 
-#: menu.sh:644
+#: menu.sh:649
 msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
 msgstr "アドオン '%s' がローダーに追加されました。'アドオンを追加' メニューで有効にしてください。"
 
-#: menu.sh:647
+#: menu.sh:653
 msgid "File format not recognized!"
 msgstr "ファイル形式が認識されません！"
 
-#: menu.sh:666 menu.sh:680 menu.sh:693 menu.sh:730 menu.sh:747 menu.sh:757 menu.sh:760 menu.sh:776 menu.sh:780 menu.sh:794 menu.sh:800 menu.sh:2860 menu.sh:2912 menu.sh:3048 menu.sh:3091 menu.sh:3095
+#: menu.sh:672 menu.sh:686 menu.sh:699 menu.sh:736 menu.sh:753 menu.sh:763 menu.sh:766 menu.sh:782 menu.sh:787 menu.sh:801 menu.sh:807 menu.sh:2896 menu.sh:2948 menu.sh:3084 menu.sh:3127 menu.sh:3131
 msgid "Modules"
 msgstr "モジュール"
 
-#: menu.sh:668
+#: menu.sh:674
 msgid "Show/Select modules"
 msgstr "モジュールの表示/選択"
 
-#: menu.sh:669
+#: menu.sh:675
 msgid "Select loaded modules"
 msgstr "ロードされたモジュールを選択"
 
-#: menu.sh:670
+#: menu.sh:676
 msgid "Upload a external module"
 msgstr "外部モジュールをアップロード"
 
-#: menu.sh:671
+#: menu.sh:677
 msgid "Deselect i915 with dependencies"
 msgstr "依存関係のあるi915を選択解除"
 
-#: menu.sh:672
+#: menu.sh:678
 msgid "Priority use of official drivers:"
 msgstr "公式ドライバーの優先使用："
 
-#: menu.sh:673
+#: menu.sh:679
 msgid "Edit modules that need to be copied to DSM"
 msgstr "DSMにコピーする必要があるモジュールを編集"
 
-#: menu.sh:681
+#: menu.sh:687
 msgid "Reading modules ..."
 msgstr "モジュールを読み込んでいます..."
 
-#: menu.sh:694
+#: menu.sh:700
 msgid "Select all"
 msgstr "すべて選択"
 
-#: menu.sh:695
+#: menu.sh:701
 msgid "Deselect all"
 msgstr "すべての選択を解除"
 
-#: menu.sh:696
+#: menu.sh:702
 msgid "Select modules to include"
 msgstr "含めるモジュールを選択"
 
-#: menu.sh:731
+#: menu.sh:737
 msgid "Selecting loaded modules"
 msgstr "ロードされたモジュールを選択中"
 
-#: menu.sh:752
+#: menu.sh:758
 msgid "This function is experimental and dangerous. If you don't know much, please exit.\\n"
 msgstr "この機能は実験的で危険です。よくわからない場合は、終了してください。\\n"
 
-#: menu.sh:753
+#: menu.sh:759
 msgid "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\\n"
 msgstr "この機能のインポートされた.koは、対応するアーキテクチャのモジュールパッケージに埋め込まれ、そのアーキテクチャのすべてのモデルに影響を与えます。\\n"
 
-#: menu.sh:754
+#: menu.sh:760
 msgid "This program will not determine the availability of imported modules or even make type judgments, as please double check if it is correct.\\n"
 msgstr "このプログラムは、インポートされたモジュールの利用可能性やタイプ判断を行わず、正しいかどうかを二重に確認してください。\\n"
 
-#: menu.sh:755
+#: menu.sh:761
 msgid "If you want to remove it, please go to the \"Update Menu\" -> \"Update modules\" to forcibly update the modules. All imports will be reset.\\n"
 msgstr "削除したい場合は、「更新メニュー」->「モジュールの更新」に移動して、モジュールを強制的に更新してください。すべてのインポートはリセットされます。\\n"
 
-#: menu.sh:756
+#: menu.sh:762
 msgid "Do you want to continue?"
 msgstr "続行しますか？"
 
-#: menu.sh:761
+#: menu.sh:767
 msgid "Please upload the *.ko file."
 msgstr "「*.ko」ファイルをアップロードしてください。"
 
-#: menu.sh:777
+#: menu.sh:783
 msgid "Module '%s' added to %s-%s"
 msgstr "モジュール '%s' が %s-%s に追加されました"
 
-#: menu.sh:795
+#: menu.sh:802
 msgid "No i915 with dependencies module to deselect."
 msgstr "選択解除する依存関係のあるi915モジュールはありません。"
 
-#: menu.sh:801
+#: menu.sh:808
 msgid "Module %s deselected.\\n"
 msgstr "モジュール %s が選択解除されました。\\n"
 
-#: menu.sh:815 menu.sh:1405 menu.sh:1432 menu.sh:1439 menu.sh:1462
+#: menu.sh:824 menu.sh:1423 menu.sh:1450 menu.sh:1457 menu.sh:1480
 msgid "Edit with caution"
 msgstr "注意して編集してください"
 
-#: menu.sh:835
+#: menu.sh:845
 msgid "Add/Edit a cmdline item"
 msgstr "コマンドライン項目の追加/編集"
 
-#: menu.sh:836
+#: menu.sh:846
 msgid "Show/Delete cmdline items"
 msgstr "コマンドライン項目の表示/削除"
 
-#: menu.sh:838
+#: menu.sh:848
 msgid "Define SN/MAC"
 msgstr "SN/MACの定義"
 
-#: menu.sh:840
+#: menu.sh:850
 msgid "Show model inherent cmdline"
 msgstr "モデル固有のコマンドラインを表示"
 
-#: menu.sh:842 menu.sh:863 menu.sh:872 menu.sh:896 menu.sh:904 menu.sh:921 menu.sh:932 menu.sh:964
+#: menu.sh:852 menu.sh:873 menu.sh:882 menu.sh:906 menu.sh:914 menu.sh:931 menu.sh:942 menu.sh:975
 msgid "Cmdline"
 msgstr "コマンドライン"
 
-#: menu.sh:849
+#: menu.sh:859
 msgid "Commonly used cmdlines:\\n"
 msgstr "よく使用されるコマンドライン:\\n"
 
-#: menu.sh:850
+#: menu.sh:860
 msgid " * \\Z4disable_mtrr_trim=\\Zn\\n    disables kernel trim any uncacheable memory out.\\n"
 msgstr " * \\Z4disable_mtrr_trim=\\Zn\\n    キャッシュ不能なメモリのトリムを無効にします。\\n"
 
-#: menu.sh:851
+#: menu.sh:861
 msgid " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Set the maximum C-state depth allowed by the intel_idle driver.\\n"
 msgstr " * \\Z4intel_idle.max_cstate=1\\Zn\\n    intel_idleドライバーが許可する最大C状態深度を設定します。\\n"
 
-#: menu.sh:852
+#: menu.sh:862
 msgid " * \\Z4pcie_port_pm=off\\Zn\\n    Turn off the power management of the PCIe port.\\n"
 msgstr " * \\Z4pcie_port_pm=off\\Zn\\n    PCIeポートの電源管理をオフにします。\\n"
 
-#: menu.sh:853
+#: menu.sh:863
 msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
 msgstr " * \\Z4libata.force=noncq\\Zn\\n    すべてのSATAポートでNCQを無効にします。\\n"
 
-#: menu.sh:854
+#: menu.sh:864
 msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.(Not apply to DT models.)\\n"
 msgstr " * \\Z4SataPortMap=??\\Zn\\n    Sataポートマップ。（DTモデルには適用されません。）\\n"
 
-#: menu.sh:855
+#: menu.sh:865
 msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence.(Not apply to DT models.)\\n"
 msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    ディスクインデックスマップ、ディスク名の順序を変更します。（DTモデルには適用されません。）\\n"
 
-#: menu.sh:856
+#: menu.sh:866
 msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence.(Not apply to DT models.)\\n"
 msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    データポートシーケンスを再マップする。（DTモデルには適用されません。）\\n"
 
-#: menu.sh:857
+#: menu.sh:867
 msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
 msgstr " * \\Z4i915.enable_guc=2\\Zn\\n    Intelグラフィックスハードウェア上のGuCファームウェアを有効にします。(値: 1,2または3)\\n"
 
-#: menu.sh:858
+#: menu.sh:868
 msgid " * \\Z4i915.max_vfs=7\\Zn\\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\\n"
 msgstr " * \\Z4i915.max_vfs=7\\Zn\\n    Intelグラフィックスハードウェアで作成できる仮想関数(VFs)の最大数を設定します。\\n"
 
-#: menu.sh:859
+#: menu.sh:869
 msgid " * \\Z4consoleblank=300\\Zn\\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\\n"
 msgstr " * \\Z4consoleblank=300\\Zn\\n    アクティビティがなくなってから 300 秒後にディスプレイが自動的にオフになるようにコンソールを設定します (秒単位で測定)。\\n"
 
-#: menu.sh:860 menu.sh:992
+#: menu.sh:870 menu.sh:1003
 msgid "\\nEnter the parameter name and value you need to add.\\n"
 msgstr "\\n追加する必要があるパラメータ名と値を入力してください。\\n"
 
-#: menu.sh:873 menu.sh:1005
+#: menu.sh:883 menu.sh:1016
 msgid "Invalid parameter name, retry?"
 msgstr "無効なパラメータ名です、再試行しますか？"
 
-#: menu.sh:897
+#: menu.sh:907
 msgid "No user cmdline to remove"
 msgstr "削除するユーザーコマンドラインはありません"
 
-#: menu.sh:905
+#: menu.sh:915
 msgid "Select cmdline to remove"
 msgstr "削除するコマンドラインを選択"
 
-#: menu.sh:916
+#: menu.sh:926
 msgid "Note: (MAC will not be set to NIC, Only for activation services.)"
 msgstr "注意: (MACはNICに設定されません、アクティベーションサービスのみです。)"
 
-#: menu.sh:922
+#: menu.sh:932
 msgid "Random"
 msgstr "ランダム"
 
-#: menu.sh:933
+#: menu.sh:943
 msgid "Invalid SN/MAC, retry?"
 msgstr "無効なSN/MAC、再試行しますか？"
 
-#: menu.sh:976
+#: menu.sh:987
 msgid "Add/edit a synoinfo item"
 msgstr "synoinfo項目の追加/編集"
 
-#: menu.sh:977
+#: menu.sh:988
 msgid "Show/Delete synoinfo items"
 msgstr "synoinfo項目の表示/削除"
 
-#: menu.sh:979 menu.sh:995 menu.sh:1004 menu.sh:1029 menu.sh:1037
+#: menu.sh:990 menu.sh:1006 menu.sh:1015 menu.sh:1040 menu.sh:1048
 msgid "Synoinfo"
 msgstr "Synoinfo"
 
-#: menu.sh:986
+#: menu.sh:997
 msgid "Commonly used synoinfo:\\n"
 msgstr "よく使用されるsynoinfo:\\n"
 
-#: menu.sh:987
+#: menu.sh:998
 msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
 msgstr " * \\Z4maxdisks=??\\Zn\\n    サポートされるディスクの最大数。\\n"
 
-#: menu.sh:988
+#: menu.sh:999
 msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask.\\n"
 msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    内部(sata)ディスクマスク。\\n"
 
-#: menu.sh:989
+#: menu.sh:1000
 msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask.\\n"
 msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Esataディスクマスク。\\n"
 
-#: menu.sh:990
+#: menu.sh:1001
 msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask.\\n"
 msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    USBディスクマスク。\\n"
 
-#: menu.sh:991
+#: menu.sh:1002
 msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
 msgstr " * \\Z4max_sys_raid_disks=12\\Zn\\n    システム パーティション(md0) RAID ディスクの最大数。\\n"
 
-#: menu.sh:1030
+#: menu.sh:1041
 msgid "No synoinfo entries to remove"
 msgstr "削除するsynoinfoエントリはありません"
 
-#: menu.sh:1038
+#: menu.sh:1049
 msgid "Select synoinfo entry to remove"
 msgstr "削除するsynoinfoエントリを選択"
 
-#: menu.sh:1073
+#: menu.sh:1084
 msgid "Downloading old pat to extract synology .pat extractor..."
 msgstr "古いpatをダウンロードして、synology .patエクストラクターを抽出しています..."
 
-#: menu.sh:1079 menu.sh:1234
+#: menu.sh:1090 menu.sh:1245
 msgid "Check internet or cache disk space.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "インターネットまたはキャッシュのディスク容量を確認してください。\\nエラー: %d:%d\\n(https://curl.se/libcurl/c/libcurl-errors.html でエラーの説明を確認してください。)"
 
-#: menu.sh:1119
+#: menu.sh:1130
 msgid "Uncompressed tar"
 msgstr "非圧縮tar"
 
-#: menu.sh:1123
+#: menu.sh:1134
 msgid "Compressed tar"
 msgstr "圧縮されたtar"
 
-#: menu.sh:1127
+#: menu.sh:1138
 msgid "Encrypted"
 msgstr "暗号化された"
 
-#: menu.sh:1131
+#: menu.sh:1142
 msgid "Could not determine if pat file is encrypted or not, maybe corrupted, try again!"
 msgstr "patファイルが暗号化されているかどうかを判断できませんでした、おそらく破損しています、もう一度試してください！"
 
-#: menu.sh:1138 menu.sh:1250
+#: menu.sh:1149 menu.sh:1261
 msgid "Disassembling %s: "
 msgstr "%sを分解中: "
 
-#: menu.sh:1145
+#: menu.sh:1156
 msgid "Extractor cached."
 msgstr "エクストラクタがキャッシュされました。"
 
-#: menu.sh:1151 menu.sh:1154
+#: menu.sh:1162 menu.sh:1165
 msgid "Extracting ..."
 msgstr "抽出中..."
 
-#: menu.sh:1186
+#: menu.sh:1197
 msgid "%s cached."
 msgstr "%sがキャッシュされました。"
 
-#: menu.sh:1189
+#: menu.sh:1200
 msgid "The cache has been cleared. Please re 'Parse pat' before build."
 msgstr "キャッシュがクリアされました。ビルド前に'Parse pat'を再実行してください。"
 
-#: menu.sh:1193
+#: menu.sh:1204
 msgid "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build."
 msgstr "キャッシュがクリアされました。ビルド前に'インストール済みのDSMシステムの復旧を試みる'を再実行してください。"
 
-#: menu.sh:1197
+#: menu.sh:1208
 msgid "The pat url is empty. Please re 'Choose a version' before build."
 msgstr "patのURLが空です。ビルド前に'バージョンを選択'を再実行してください。"
 
-#: menu.sh:1202 menu.sh:3196
+#: menu.sh:1213 menu.sh:3233
 msgid "Cleaning cache ..."
 msgstr "キャッシュをクリーニング中..."
 
-#: menu.sh:1216
+#: menu.sh:1227
 msgid "Based on the current network situation, switch to %s mirror to downloading."
 msgstr "現在のネットワーク状況に基づき、ダウンロードのために%sミラーに切り替えます。"
 
-#: menu.sh:1219
+#: menu.sh:1230
 msgid "Downloading %s ..."
 msgstr "%sをダウンロード中..."
 
-#: menu.sh:1240
+#: menu.sh:1251
 msgid "Checking hash of %s: "
 msgstr "%sのハッシュを確認中: "
 
-#: menu.sh:1243
+#: menu.sh:1254
 msgid "md5 hash of pat not match, Please reget pat data from the version menu and try again!"
 msgstr "patのmd5ハッシュが一致しません。バージョンメニューからpatデータを再取得して、再度試してください！"
 
-#: menu.sh:1246 menu.sh:1262 menu.sh:1272
+#: menu.sh:1257 menu.sh:1273 menu.sh:1283
 msgid "OK"
 msgstr "OK"
 
-#: menu.sh:1257
+#: menu.sh:1268
 msgid "Setting hash: "
 msgstr "ハッシュを設定中: "
 
-#: menu.sh:1264
+#: menu.sh:1275
 msgid "Copying files: "
 msgstr "ファイルをコピー中: "
 
-#: menu.sh:1292
+#: menu.sh:1302
 msgid "No disk space left, please clean the cache and try again!"
 msgstr "ディスクスペースがありません、キャッシュをクリーニングして再試行してください！"
 
-#: menu.sh:1308
+#: menu.sh:1318
 msgid "Cleaning ..."
 msgstr "クリーニング中..."
 
-#: menu.sh:1311
+#: menu.sh:1321
 msgid "Ready!"
 msgstr "準備完了！"
 
-#: menu.sh:1315
+#: menu.sh:1328
 msgid "Making ... ('ctrl + c' to exit)"
 msgstr "を作成します  ... (終了するには「ctrl + c」)"
 
-#: menu.sh:1337 menu.sh:1353 menu.sh:1357 menu.sh:1374 menu.sh:1379 menu.sh:1398 menu.sh:1410 menu.sh:2204
+#: menu.sh:1355 menu.sh:1371 menu.sh:1375 menu.sh:1392 menu.sh:1397 menu.sh:1416 menu.sh:1428 menu.sh:2225
 msgid "Custom DTS"
 msgstr "カスタムDTS"
 
-#: menu.sh:1339
+#: menu.sh:1357
 msgid "Custom dts: "
 msgstr "カスタムdts: "
 
-#: menu.sh:1340
+#: menu.sh:1358
 msgid "Upload dts file"
 msgstr "dtsファイルをアップロード"
 
-#: menu.sh:1341
+#: menu.sh:1359
 msgid "Delete dts file"
 msgstr "dtsファイルを削除"
 
-#: menu.sh:1342
+#: menu.sh:1360
 msgid "Edit dts file"
 msgstr "dtsファイルを編集"
 
-#: menu.sh:1352
+#: menu.sh:1370
 msgid "Or upload the dts file to %s via DUFS, Will be automatically imported when building."
 msgstr "または、DUFS経由で%sにdtsファイルをアップロードします。ビルド時に自動的にインポートされます。"
 
-#: menu.sh:1358
+#: menu.sh:1376
 msgid "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\\n(saved in /mnt/p3/users/)"
 msgstr "現在、dts形式のファイルのみがサポートされています。準備してアップロードを確認するためにクリックしてください。\\n(/mnt/p3/users/に保存されます)"
 
-#: menu.sh:1375 menu.sh:1411
+#: menu.sh:1393 menu.sh:1429
 msgid "Not a valid dts file, please try again!"
 msgstr "有効なdtsファイルではありません、もう一度お試しください！"
 
-#: menu.sh:1380
+#: menu.sh:1398
 msgid "A valid dts file, Automatically import at compile time."
 msgstr "有効なdtsファイル、コンパイル時に自動的にインポートします。"
 
-#: menu.sh:1399
+#: menu.sh:1417
 msgid "No dts file to edit. Please upload first!"
 msgstr "編集するdtsファイルがありません。まずアップロードしてください！"
 
-#: menu.sh:1474
+#: menu.sh:1492
 msgid "Temporary IP: (UI will not refresh)"
 msgstr "一時的なIP: (UIは更新されません)"
 
-#: menu.sh:1486 menu.sh:1510 menu.sh:1518 menu.sh:1530 menu.sh:1539 menu.sh:1561 menu.sh:1654 menu.sh:1671 menu.sh:1675 menu.sh:1676 menu.sh:1681 menu.sh:1685 menu.sh:1700 menu.sh:1702 menu.sh:1875 menu.sh:1881 menu.sh:1895 menu.sh:1898 menu.sh:1906
-#: menu.sh:1929 menu.sh:1933 menu.sh:1940 menu.sh:1946 menu.sh:1965 menu.sh:1967 menu.sh:1975 menu.sh:1979 menu.sh:2006 menu.sh:2009 menu.sh:2017 menu.sh:2040 menu.sh:2043 menu.sh:2051 menu.sh:2057 menu.sh:2070 menu.sh:2073 menu.sh:2088 menu.sh:2092
-#: menu.sh:2098 menu.sh:2104 menu.sh:2110 menu.sh:2141 menu.sh:2157 menu.sh:2168 menu.sh:2241 menu.sh:2262 menu.sh:2287 menu.sh:2299 menu.sh:2319 menu.sh:2356 menu.sh:2419 menu.sh:2423 menu.sh:2433 menu.sh:2439 menu.sh:2453 menu.sh:2460 menu.sh:2465
-#: menu.sh:2468 menu.sh:2484 menu.sh:2505
+#: menu.sh:1504 menu.sh:1528 menu.sh:1536 menu.sh:1548 menu.sh:1557 menu.sh:1579 menu.sh:1672 menu.sh:1689 menu.sh:1693 menu.sh:1694 menu.sh:1699 menu.sh:1703 menu.sh:1718 menu.sh:1720 menu.sh:1896 menu.sh:1902 menu.sh:1916 menu.sh:1919 menu.sh:1927
+#: menu.sh:1950 menu.sh:1954 menu.sh:1961 menu.sh:1967 menu.sh:1986 menu.sh:1988 menu.sh:1996 menu.sh:2000 menu.sh:2027 menu.sh:2030 menu.sh:2038 menu.sh:2061 menu.sh:2064 menu.sh:2072 menu.sh:2078 menu.sh:2091 menu.sh:2094 menu.sh:2109 menu.sh:2113
+#: menu.sh:2119 menu.sh:2125 menu.sh:2131 menu.sh:2162 menu.sh:2178 menu.sh:2189 menu.sh:2262 menu.sh:2283 menu.sh:2308 menu.sh:2320 menu.sh:2340 menu.sh:2377 menu.sh:2440 menu.sh:2444 menu.sh:2454 menu.sh:2460 menu.sh:2474 menu.sh:2481 menu.sh:2486
+#: menu.sh:2489 menu.sh:2505 menu.sh:2526
 msgid "Advanced"
 msgstr "高度な"
 
-#: menu.sh:1511
+#: menu.sh:1529
 msgid "Setting IP ..."
 msgstr "IPを設定しています..."
 
-#: menu.sh:1519
+#: menu.sh:1537
 msgid "Scanning ..."
 msgstr "スキャン中..."
 
-#: menu.sh:1522
+#: menu.sh:1540
 msgid "Scanned SSIDs:\\n"
 msgstr "スキャンしたSSID:\\n"
 
-#: menu.sh:1540
+#: menu.sh:1558
 msgid "Invalid SSID/PSK, retry?"
 msgstr "無効なSSID/PSK、再試行しますか？"
 
-#: menu.sh:1562
+#: menu.sh:1580
 msgid "Setting ..."
 msgstr "設定中..."
 
-#: menu.sh:1651
+#: menu.sh:1669
 msgid "\\nTotal of ports: %s\\n"
 msgstr "\\nポートの合計: %s\\n"
 
-#: menu.sh:1652
+#: menu.sh:1670
 msgid "\\nPorts with color \\Z1red\\Zn as DUMMY, color \\Z2\\Zbgreen\\Zn has drive connected."
 msgstr "\\n色\\Z1赤\\ZnのポートはDUMMY、色\\Z2\\Zbgreen\\Znはドライブが接続されています。"
 
-#: menu.sh:1653 menu.sh:1672 menu.sh:2089
+#: menu.sh:1671 menu.sh:1690 menu.sh:2110
 msgid "No disk found!"
 msgstr "ディスクが見つかりません！"
 
-#: menu.sh:1682 menu.sh:1880 menu.sh:2056
+#: menu.sh:1700 menu.sh:1901 menu.sh:2077
 msgid "Warning:\\nThis operation is irreversible. Please backup important data. Do you want to continue?"
 msgstr "警告:\\nこの操作は元に戻せません。重要なデータのバックアップを取ってください。続行しますか？"
 
-#: menu.sh:1686
+#: menu.sh:1704
 msgid "Warning:\\nThe current hds is in raid, do you still want to format them?"
 msgstr "警告:\\n現在のhdsはraidにあります、それでもフォーマットしますか？"
 
-#: menu.sh:1701
+#: menu.sh:1719
 msgid "Formatting ..."
 msgstr "フォーマット中..."
 
-#: menu.sh:1703
+#: menu.sh:1721
 msgid "Formatting is complete."
 msgstr "フォーマットが完了しました。"
 
-#: menu.sh:1710 menu.sh:1714 menu.sh:1728 menu.sh:1748 menu.sh:1764 menu.sh:1772 menu.sh:1856 menu.sh:1861 menu.sh:1867
+#: menu.sh:1728 menu.sh:1732 menu.sh:1746 menu.sh:1766 menu.sh:1782 menu.sh:1791 menu.sh:1875 menu.sh:1881 menu.sh:1888
 msgid "Try recovery DSM"
 msgstr "DSMの回復を試みる"
 
-#: menu.sh:1711
+#: menu.sh:1729
 msgid "Trying to recovery a installed DSM system ..."
 msgstr "インストールされたDSMシステムの回復を試みています..."
 
-#: menu.sh:1715
+#: menu.sh:1733
 msgid "Unfortunately I couldn't mount the DSM partition!"
 msgstr "残念ながら、DSMパーティションをマウントできませんでした！"
 
-#: menu.sh:1729
+#: menu.sh:1747
 msgid "Checking for backup of user's configuration for bootloader ..."
 msgstr "ブートローダーのユーザー設定のバックアップを確認しています..."
 
-#: menu.sh:1749
+#: menu.sh:1767
 msgid "Found a backup of the user's configuration, but the system is damaged and will not be restored. Please reselect model and build."
 msgstr "ユーザー設定のバックアップが見つかりましたが、システムが損傷していて復元されません。モデルとビルドを再選択してください。"
 
-#: menu.sh:1765
+#: menu.sh:1783
 msgid "Found a backup of the user's configuration, and restored it. Please rebuild and boot."
 msgstr "ユーザー設定のバックアップが見つかり、それを復元しました。再構築して起動してください。"
 
-#: menu.sh:1773
+#: menu.sh:1792
 msgid "Checking for installed DSM system ..."
 msgstr "インストールされたDSMシステムを確認しています..."
 
-#: menu.sh:1857
+#: menu.sh:1876
 msgid "Found a installed DSM system and restored it. Please rebuild and boot."
 msgstr "インストールされたDSMシステムが見つかり、それを復元しました。再構築して起動してください。"
 
-#: menu.sh:1862
+#: menu.sh:1882
 msgid "Found a installed DSM system, but the system is damaged and will not be restored. Please reselect model and build."
 msgstr "インストールされたDSMシステムが見つかりましたが、システムが損傷していて復元されません。モデルとビルドを再選択してください。"
 
-#: menu.sh:1868
+#: menu.sh:1889
 msgid "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build."
 msgstr "インストールされたDSMシステムが見つからないか、システムが損傷して回復できません。モデルとビルドを再選択してください。"
 
-#: menu.sh:1876 menu.sh:1907 menu.sh:1976 menu.sh:2018 menu.sh:2052
+#: menu.sh:1897 menu.sh:1928 menu.sh:1997 menu.sh:2039 menu.sh:2073
 msgid "Please insert all disks before continuing.\\n"
 msgstr "続行する前にすべてのディスクを挿入してください。\\n"
 
-#: menu.sh:1879
+#: menu.sh:1900
 msgid "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\\n"
 msgstr "この機能を使用すると、すべてのディスクの最初のパーティションからVERSIONファイルを削除することで、インストールをダウングレードできます。\\n"
 
-#: menu.sh:1896 menu.sh:2071
+#: menu.sh:1917 menu.sh:2092
 msgid "Removing ..."
 msgstr "削除中..."
 
-#: menu.sh:1897
+#: menu.sh:1918
 msgid "Remove VERSION file for all disks completed."
 msgstr "すべてのディスクのVERSIONファイルの削除が完了しました。"
 
-#: menu.sh:1930
+#: menu.sh:1951
 msgid "All existing users have been disabled. Please try adding new user."
 msgstr "既存のユーザーはすべて無効化されました。 新しいユーザーを追加してみてください。"
 
-#: menu.sh:1934
+#: menu.sh:1955
 msgid "Choose a user name"
 msgstr "ユーザー名を選択"
 
-#: menu.sh:1941
+#: menu.sh:1962
 msgid "Type a new password for user '%s'"
 msgstr "ユーザー'%s'の新しいパスワードを入力"
 
-#: menu.sh:1947
+#: menu.sh:1968
 msgid "Invalid password"
 msgstr "無効なパスワード"
 
-#: menu.sh:1966
+#: menu.sh:1987
 msgid "Resetting ..."
 msgstr "リセット中..."
 
-#: menu.sh:1968
+#: menu.sh:1989
 msgid "Password reset completed."
 msgstr "パスワードのリセットが完了しました。"
 
-#: menu.sh:1978
+#: menu.sh:1999
 msgid "Add to administrators group by default"
 msgstr "デフォルトで管理者グループに追加"
 
-#: menu.sh:2007
+#: menu.sh:2028
 msgid "Adding ..."
 msgstr "追加中..."
 
-#: menu.sh:2008
+#: menu.sh:2029
 msgid "User added successfully."
 msgstr "ユーザーが正常に追加されました。"
 
-#: menu.sh:2008
+#: menu.sh:2029
 msgid "User add failed."
 msgstr "ユーザーの追加に失敗しました。"
 
-#: menu.sh:2041
+#: menu.sh:2062
 msgid "Enabling ..."
 msgstr "有効化中..."
 
-#: menu.sh:2042
+#: menu.sh:2063
 msgid "Enabled Telnet&SSH successfully."
 msgstr "TelnetとSSHが正常に有効になりました。"
 
-#: menu.sh:2042
+#: menu.sh:2063
 msgid "Enabled Telnet&SSH failed."
 msgstr "Telnet と SSH を有効にすると失敗しました。"
 
-#: menu.sh:2055
+#: menu.sh:2076
 msgid "This feature will removing the blocked ip database from the first partition of all disks.\\n"
 msgstr "この機能は、ブロックされた IP データベースをすべてのディスクの最初のパーティションから削除します。\\n"
 
-#: menu.sh:2072
+#: menu.sh:2093
 msgid "The blocked ip database has been deleted."
 msgstr "ブロックされた IP データベースは削除されました。"
 
-#: menu.sh:2093
+#: menu.sh:2114
 msgid "Choose a disk to clone to"
 msgstr "クローンするディスクを選択"
 
-#: menu.sh:2099
+#: menu.sh:2120
 msgid "No disk selected!"
 msgstr "ディスクが選択されていません！"
 
-#: menu.sh:2105
+#: menu.sh:2126
 msgid "Disk %s size is less than 1GB and cannot be cloned!"
 msgstr "ディスク%sのサイズが1GB未満で、クローンできません！"
 
-#: menu.sh:2109
+#: menu.sh:2130
 msgid "Warning:\\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \\nDo you want to continue?"
 msgstr "警告:\\nディスク%sはフォーマットされ、ブートローダーに書き込まれます。重要なデータがバックアップされていることを確認してください。\\n続行しますか？"
 
-#: menu.sh:2142
+#: menu.sh:2163
 msgid "Cloning ..."
 msgstr "Cloning ..."
 
-#: menu.sh:2144
+#: menu.sh:2165
 msgid "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\\nReboot?"
 msgstr "ディスク！\\n再起動？"
 
-#: menu.sh:2158
+#: menu.sh:2179
 msgid "Please enter a proxy server url.(e.g., %s)"
 msgstr "プロキシサーバーのURLを入力してください。(例、%s)"
 
-#: menu.sh:2169
+#: menu.sh:2190
 msgid "Invalid proxy server url, continue?"
 msgstr "無効なプロキシサーバーのURL、続行しますか？"
 
-#: menu.sh:2198
+#: menu.sh:2219
 msgid "Switch LKM version:"
 msgstr "LKMバージョンを切り替える："
 
-#: menu.sh:2199
+#: menu.sh:2220
 msgid "HDD sort(hotplug):"
 msgstr "HDDソート（ホットプラグ）："
 
-#: menu.sh:2201
+#: menu.sh:2222
 msgid "show/modify the current pat data"
 msgstr "現在のpatデータを表示/修正する"
 
-#: menu.sh:2206
+#: menu.sh:2227
 msgid "Switch direct boot:"
 msgstr "ダイレクトブートを切り替える："
 
-#: menu.sh:2208
+#: menu.sh:2229
 msgid "Timeout of get ip in boot:"
 msgstr "ブート時のIP取得のタイムアウト："
 
-#: menu.sh:2209
+#: menu.sh:2230
 msgid "Timeout of boot wait:"
 msgstr "ブート待ちのタイムアウト："
 
-#: menu.sh:2210
+#: menu.sh:2231
 msgid "kernel switching method:"
 msgstr "カーネル切り替え方法："
 
-#: menu.sh:2212
+#: menu.sh:2233
 msgid "Reboot on kernel panic:"
 msgstr "カーネルパニック時に再起動："
 
-#: menu.sh:2214
+#: menu.sh:2235
 msgid "Use EMMC as the system disk:"
 msgstr "EMMCをシステムディスクとして使用する："
 
-#: menu.sh:2216
+#: menu.sh:2237
 msgid "Custom patch script # Developer"
 msgstr "カスタムパッチスクリプト # 開発者"
 
-#: menu.sh:2217
+#: menu.sh:2238
 msgid "Edit user config file manually"
 msgstr "ユーザー設定ファイルを手動で編集する"
 
-#: menu.sh:2218
+#: menu.sh:2239
 msgid "Edit grub.cfg file manually"
 msgstr "grub.cfgファイルを手動で編集する"
 
-#: menu.sh:2220
+#: menu.sh:2241
 msgid "Set static IP"
 msgstr "静的IPを設定する"
 
-#: menu.sh:2221
+#: menu.sh:2242
 msgid "Set wireless account"
 msgstr "ワイヤレスアカウントを設定する"
 
-#: menu.sh:2222
+#: menu.sh:2243
 msgid "Show disks information"
 msgstr "ディスク情報を表示する"
 
-#: menu.sh:2223
+#: menu.sh:2244
 msgid "Format disk(s) # Without loader disk"
 msgstr "ディスクをフォーマットする # ローダーディスクなし"
 
-#: menu.sh:2224
+#: menu.sh:2245
 msgid "Try to recovery a installed DSM system"
 msgstr "インストール済みのDSMシステムの回復を試みる"
 
-#: menu.sh:2225
+#: menu.sh:2246
 msgid "Allow downgrade installation"
 msgstr "ダウングレードインストールを許可する"
 
-#: menu.sh:2226
+#: menu.sh:2247
 msgid "Reset DSM system password"
 msgstr "DSMシステムパスワードをリセットする"
 
-#: menu.sh:2227
+#: menu.sh:2248
 msgid "Add a new user to DSM system"
 msgstr "新しいユーザーを DSM システムに追加する"
 
-#: menu.sh:2228
+#: menu.sh:2249
 msgid "Force enable Telnet&SSH of DSM system"
 msgstr "DSMシステムのTelnet＆SSHを強制的に有効にする"
 
-#: menu.sh:2229
+#: menu.sh:2250
 msgid "Remove the blocked ip database of DSM"
 msgstr "DSM のブロックされた IP データベースを削除します"
 
-#: menu.sh:2230
+#: menu.sh:2251
 msgid "Clone bootloader disk to another disk"
 msgstr "ブートローダーディスクを別のディスクにクローンする"
 
-#: menu.sh:2231
+#: menu.sh:2252
 msgid "Report bugs to the author"
 msgstr "バグを作者に報告する"
 
-#: menu.sh:2232
+#: menu.sh:2253
 msgid "Install development tools"
 msgstr "開発ツールをインストールする"
 
-#: menu.sh:2233
+#: menu.sh:2254
 msgid "Save modifications of '/opt/rr'"
 msgstr "'/opt/rr'の変更を保存する"
 
-#: menu.sh:2235
+#: menu.sh:2256
 msgid "Show QR logo:"
 msgstr "QRロゴを表示する："
 
-#: menu.sh:2236
+#: menu.sh:2257
 msgid "Set global proxy"
 msgstr "グローバルプロキシを設定する"
 
-#: menu.sh:2237
+#: menu.sh:2258
 msgid "Set github proxy"
 msgstr "githubプロキシを設定する"
 
-#: menu.sh:2238
+#: menu.sh:2259
 msgid "Vigorously miracle"
 msgstr "力強い奇跡"
 
-#: menu.sh:2242
+#: menu.sh:2263
 msgid "Advanced option"
 msgstr "詳細オプション"
 
-#: menu.sh:2261
+#: menu.sh:2282
 msgid "pat: (editable)"
 msgstr "pat: (編集可能)"
 
-#: menu.sh:2288 menu.sh:2300 menu.sh:2320
+#: menu.sh:2309 menu.sh:2321 menu.sh:2341
 msgid "Choose a time(seconds)"
 msgstr "時間を選択してください（秒）"
 
-#: menu.sh:2352
+#: menu.sh:2373
 msgid "This option is only informative.\\n\\n"
 msgstr "このオプションは情報提供のみです。\\n\\n"
 
-#: menu.sh:2353
+#: menu.sh:2374
 msgid "This program reserves an interface for ramdisk custom patch scripts.\\n"
 msgstr "このプログラムは、ramdiskカスタムパッチスクリプト用のインターフェースを予約しています。\\n"
 
-#: menu.sh:2354
+#: menu.sh:2375
 msgid "Call timing: called before ramdisk packaging.\\n"
 msgstr "呼び出しタイミング：ramdiskパッケージングの前に呼び出されます。\\n"
 
-#: menu.sh:2355
+#: menu.sh:2376
 msgid "Location: /mnt/p3/scripts/*.sh\\n"
 msgstr "場所：/mnt/p3/scripts/*.sh\\n"
 
-#: menu.sh:2420
+#: menu.sh:2441
 msgid "Please via %s to download the logs,\\nAnd go to github to create an issue and upload the logs."
 msgstr "ログをダウンロードするには%sを経由してください、\\nそしてgithubに行って問題を作成し、ログをアップロードしてください。"
 
-#: menu.sh:2424
+#: menu.sh:2445
 msgid "Please go to github to create an issue and upload the logs."
 msgstr "githubに行って問題を作成し、ログをアップロードしてください。"
 
-#: menu.sh:2428
+#: menu.sh:2449
 msgid "\\Z1No logs found!\\Zn\\n\\n"
 msgstr "\\Z1ログが見つかりません！\\Zn\\n\\n"
 
-#: menu.sh:2429
+#: menu.sh:2450
 msgid "Please do as follows:\\n"
 msgstr "以下のようにしてください：\\n"
 
-#: menu.sh:2430
+#: menu.sh:2451
 msgid " 1. Add dbgutils in addons and rebuild.\\n"
 msgstr " 1. dbgutilsをアドオンに追加し、再構築します。\\n"
 
-#: menu.sh:2431
+#: menu.sh:2452
 msgid " 2. Wait 10 minutes after booting.\\n"
 msgstr " 2. 起動後10分待ちます。\\n"
 
-#: menu.sh:2432
+#: menu.sh:2453
 msgid " 3. Reboot into RR and go to this option.\\n"
 msgstr " 3. RRに再起動し、このオプションに進みます。\\n"
 
-#: menu.sh:2440
+#: menu.sh:2461
 msgid "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?"
 msgstr "このオプションはopkgパッケージ管理のみをインストールし、使用とデバッグのためのより多くのツールをインストールできるようにします。続行しますか？"
 
-#: menu.sh:2454
+#: menu.sh:2475
 msgid "opkg installing ..."
 msgstr "opkgをインストール中..."
 
-#: menu.sh:2456
+#: menu.sh:2477
 msgid "opkg install failed."
 msgstr "opkgインストールに失敗しました。"
 
-#: menu.sh:2458
+#: menu.sh:2479
 msgid "opkg install complete."
 msgstr "opkgインストールが完了しました。"
 
-#: menu.sh:2466
+#: menu.sh:2487
 msgid "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?"
 msgstr "警告：\\n途中で終了しないでください。それによりRRにダメージを与える可能性があります。続行しますか？"
 
-#: menu.sh:2469
+#: menu.sh:2490
 msgid "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
 msgstr "保存中...\\n（通常は5-10分かかります、お待ちください。）"
 
-#: menu.sh:2485
+#: menu.sh:2506
 msgid "Save is complete."
 msgstr "保存が完了しました。"
 
-#: menu.sh:2517
+#: menu.sh:2538
 msgid "Alert"
 msgstr "警告"
 
-#: menu.sh:2518
+#: menu.sh:2539
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "設定が変更されました、ローダーを再構築しますか？"
 
-#: menu.sh:2535 menu.sh:3249
+#: menu.sh:2556 menu.sh:3291
 msgid "Choose a language"
 msgstr "言語を選択する"
 
-#: menu.sh:2550
+#: menu.sh:2571
 msgid "Choose a layout"
 msgstr "レイアウトを選択する"
 
-#: menu.sh:2562
+#: menu.sh:2583
 msgid "Choice a keymap"
 msgstr "キーマップを選択する"
 
-#: menu.sh:2581 menu.sh:2658 menu.sh:2796 menu.sh:2860 menu.sh:2927 menu.sh:2983
+#: menu.sh:2602 menu.sh:2694 menu.sh:2832 menu.sh:2896 menu.sh:2963 menu.sh:3019
 msgid "Update %s"
 msgstr "%sを更新"
 
-#: menu.sh:2582
+#: menu.sh:2603
 msgid "Checking last version ..."
 msgstr "最新バージョンを確認中..."
 
-#: menu.sh:2598
+#: menu.sh:2619
 msgid "Error checking new version.\\nError: TAG is %s"
 msgstr "新しいバージョンの確認中にエラーが発生しました。\\nエラー: TAGは%sです"
 
-#: menu.sh:2611
+#: menu.sh:2632
 msgid "No new version."
 msgstr "新しいバージョンはありません。"
 
-#: menu.sh:2615
+#: menu.sh:2636
 msgid "Actual version is %s\\nForce update?"
 msgstr "現在のバージョンは%sです\\n強制的に更新しますか？"
 
-#: menu.sh:2637
+#: menu.sh:2649
+msgid "Do you want to update?"
+msgstr "更新しますか?"
+
+#: menu.sh:2673
 msgid "Downloading ..."
 msgstr "ダウンロード中..."
 
-#: menu.sh:2640
+#: menu.sh:2676
 msgid "Error downloading new version.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "新しいバージョンのダウンロード中にエラーが発生しました。\\nエラー: %d:%d\\n(https://curl.se/libcurl/c/libcurl-errors.html でエラーの説明を確認してください。)"
 
-#: menu.sh:2658 menu.sh:2783 menu.sh:3046 menu.sh:3073
+#: menu.sh:2694 menu.sh:2819 menu.sh:3082 menu.sh:3109
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:2659 menu.sh:2797 menu.sh:2861 menu.sh:2928 menu.sh:2984
+#: menu.sh:2695 menu.sh:2833 menu.sh:2897 menu.sh:2964 menu.sh:3020
 msgid "Extracting update file ..."
 msgstr "更新ファイルを展開中..."
 
-#: menu.sh:2670 menu.sh:2715 menu.sh:2808 menu.sh:2872 menu.sh:2939 menu.sh:2995
+#: menu.sh:2706 menu.sh:2751 menu.sh:2844 menu.sh:2908 menu.sh:2975 menu.sh:3031
 msgid "Error extracting update file."
 msgstr "更新ファイルの展開中にエラーが発生しました。"
 
-#: menu.sh:2682
+#: menu.sh:2718
 msgid "Checksum do not match!"
 msgstr "チェックサムが一致しません！"
 
-#: menu.sh:2696
+#: menu.sh:2732
 msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
 msgstr "現在のバージョンは最新のupdate.zipへのアップグレードをサポートしていません。ブートローダーディスクを再作成してください！"
 
-#: menu.sh:2735 menu.sh:2830 menu.sh:2886 menu.sh:2953 menu.sh:3009
+#: menu.sh:2771 menu.sh:2866 menu.sh:2922 menu.sh:2989 menu.sh:3045
 msgid "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM."
 msgstr "ローカル ハード ドライブの残りのディスク領域が不十分なため、インストールに失敗しました。ディスク \"%s\" に少なくとも %sM を再割り当てすることを検討してください。"
 
-#: menu.sh:2745
+#: menu.sh:2781
 msgid "Installing new files ..."
 msgstr "新しいファイルをインストール中..."
 
-#: menu.sh:2783 menu.sh:2845 menu.sh:2912 menu.sh:2968 menu.sh:3024
+#: menu.sh:2819 menu.sh:2881 menu.sh:2948 menu.sh:3004 menu.sh:3060
 msgid "%s updated with success!"
 msgstr "%sの更新が成功しました！"
 
-#: menu.sh:2783
+#: menu.sh:2819
 msgid "Reboot?"
 msgstr "再起動しますか？"
 
-#: menu.sh:2927 menu.sh:2968 menu.sh:3049 menu.sh:3102 menu.sh:3106
+#: menu.sh:2963 menu.sh:3004 menu.sh:3085 menu.sh:3138 menu.sh:3142
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:2983 menu.sh:3024 menu.sh:3050 menu.sh:3113 menu.sh:3117
+#: menu.sh:3019 menu.sh:3060 menu.sh:3086 menu.sh:3149 menu.sh:3153
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:3045 menu.sh:3067
+#: menu.sh:3081 menu.sh:3103
 msgid "All"
 msgstr "すべて"
 
-#: menu.sh:3051
+#: menu.sh:3087
 msgid "Local upload"
 msgstr "ローカルアップロード"
 
-#: menu.sh:3052
+#: menu.sh:3088
 msgid "Pre Release:"
 msgstr "プレリリース："
 
-#: menu.sh:3057 menu.sh:3125
+#: menu.sh:3093 menu.sh:3161
 msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download."
 msgstr "手動でupdate*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zipを/tmp/にアップロードすると、ダウンロードがスキップされます。"
 
-#: menu.sh:3080 menu.sh:3091 menu.sh:3102 menu.sh:3113
+#: menu.sh:3116 menu.sh:3127 menu.sh:3138 menu.sh:3149
 msgid "No longer supports update %s separately. Please choose to update All/RR"
 msgstr "%sの個別の更新はもうサポートされていません。すべて/RRを更新するように選択してください"
 
-#: menu.sh:3131
+#: menu.sh:3167
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
 msgstr "添付ファイルの名前はGithubの添付ファイルの名前と一致させてください。\\n"
 
-#: menu.sh:3132
+#: menu.sh:3168
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "update*.zipをアップロードするとRRが更新されます。\\n"
 
-#: menu.sh:3133
+#: menu.sh:3169
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "addons*.zipをアップロードするとAddonsが更新されます。\\n"
 
-#: menu.sh:3134
+#: menu.sh:3170
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "modules*.zipをアップロードするとModulesが更新されます。\\n"
 
-#: menu.sh:3135
+#: menu.sh:3171
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "rp-lkms*.zipをアップロードするとLKMsが更新されます。\\n"
 
-#: menu.sh:3136
+#: menu.sh:3172
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "rr-cks*.zipをアップロードするとCKsが更新されます。\\n"
 
-#: menu.sh:3202
+#: menu.sh:3244
 msgid "This person is very lazy and hasn't written anything."
 msgstr "この人はとても怠け者で何も書いていません。"
 
-#: menu.sh:3222
+#: menu.sh:3264
 msgid "Choose a model"
 msgstr "モデルを選択"
 
-#: menu.sh:3224
+#: menu.sh:3266
 msgid "Choose a version"
 msgstr "バージョンを選択"
 
-#: menu.sh:3226
+#: menu.sh:3268
 msgid "Parse pat"
 msgstr "patを解析"
 
-#: menu.sh:3233
+#: menu.sh:3275
 msgid "Kernel:"
 msgstr "カーネル："
 
-#: menu.sh:3235
+#: menu.sh:3277
 msgid "Addons menu"
 msgstr "アドオンメニュー"
 
-#: menu.sh:3236
+#: menu.sh:3278
 msgid "Modules menu"
 msgstr "モジュールメニュー"
 
-#: menu.sh:3237
+#: menu.sh:3279
 msgid "Cmdline menu"
 msgstr "Cmdlineメニュー"
 
-#: menu.sh:3238
+#: menu.sh:3280
 msgid "Synoinfo menu"
 msgstr "Synoinfoメニュー"
 
-#: menu.sh:3240
+#: menu.sh:3282
 msgid "Advanced menu"
 msgstr "詳細メニュー"
 
-#: menu.sh:3243
+#: menu.sh:3285
 msgid "Build the loader"
 msgstr "ローダーをビルド"
 
-#: menu.sh:3247
+#: menu.sh:3289
 msgid "Boot the loader"
 msgstr "ローダーをブート"
 
-#: menu.sh:3250
+#: menu.sh:3292
 msgid "Choose a keymap"
 msgstr "キーマップを選択"
 
-#: menu.sh:3252
+#: menu.sh:3294
 msgid "Clean disk cache"
 msgstr "ディスクキャッシュをクリア"
 
-#: menu.sh:3254
+#: menu.sh:3296
 msgid "Update menu"
 msgstr "更新メニュー"
 
-#: menu.sh:3255
+#: menu.sh:3297
 msgid "Notepad"
 msgstr "ノートパッド"
 
-#: menu.sh:3277
+#: menu.sh:3319
 msgid "Change ..."
 msgstr "変更..."
 
-#: menu.sh:3346
+#: menu.sh:3387
 msgid "Choose a action"
 msgstr "アクションを選択"
 
-#: menu.sh:3347
+#: menu.sh:3388
 msgid "Poweroff"
 msgstr "電源オフ"
 
-#: menu.sh:3348
+#: menu.sh:3389
 msgid "Reboot"
 msgstr "再起動"
 
-#: menu.sh:3349
+#: menu.sh:3390
 msgid "Reboot to RR"
 msgstr "RRに再起動"
 
-#: menu.sh:3350
+#: menu.sh:3391
 msgid "Reboot to Recovery"
 msgstr "Recoveryに再起動"
 
-#: menu.sh:3351
+#: menu.sh:3392
 msgid "Reboot to Junior"
 msgstr "Juniorに再起動"
 
-#: menu.sh:3352
+#: menu.sh:3393
 msgid "Back to shell"
 msgstr "シェルに戻る"
 
-#: menu.sh:3389
+#: menu.sh:3430
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "\\033[1;32mmenu.sh\\033[0mを呼び出してメニューに戻る"
 

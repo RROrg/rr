@@ -2642,6 +2642,21 @@ function downloadExts() {
         --infobox "${MSG}" 0 0
       return 1
     fi
+  else
+    MSG=""
+    MSG+="Latest: ${TAG}\n\n"
+    MSG+="$(curl -skL --connect-timeout 10 "${PROXY}${3}/releases/tag/${TAG}" | pup 'div[data-test-selector="body-content"]' | html2text -utf8)\n\n"
+    MSG+="$(TEXT "Do you want to update?")"
+    if [ "${5}" = "-1" ]; then
+      echo "${T} - ${MSG}"
+    elif [ "${5}" = "0" ]; then
+      DIALOG --title "${T}" \
+        --yesno "$(echo -e "${MSG}")" 0 0
+      [ $? -ne 0 ] && return 1
+    else
+      DIALOG --title "${T}" \
+        --infobox "$(echo -e "${MSG}")" 0 0
+    fi
   fi
   if [ "${5}" = "-1" ]; then
     (
