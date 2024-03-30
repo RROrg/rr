@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-CN" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark"
+    data-a11y-animated-images="system">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="dns-prefetch" href="https://github.githubassets.com" />
+    <link rel="dns-prefetch" href="https://avatars.githubusercontent.com" />
+    <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com" />
+    <link rel="dns-prefetch" href="https://user-images.githubusercontent.com/" />
+    <link rel="preconnect" href="https://github.githubassets.com" crossorigin />
+    <link rel="preconnect" href="https://avatars.githubusercontent.com" />
+
+    <link crossorigin="anonymous" media="all" rel="stylesheet"
+        href="https://github.githubassets.com/assets/light-0eace2597ca3.css" />
+    <link crossorigin="anonymous" media="all" rel="stylesheet"
+        href="https://github.githubassets.com/assets/dark-a167e256da9c.css" />
+
+    <link crossorigin="anonymous" media="all" rel="stylesheet"
+        href="https://github.githubassets.com/assets/primer-711f412bb361.css" />
+    <link crossorigin="anonymous" media="all" rel="stylesheet"
+        href="https://github.githubassets.com/assets/global-78704364aaba.css" />
+    <style>
+        select,
+        input {
+            width: 400px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js"></script>
+    <!-- <script src="https://fastly.jsdelivr.net/npm/marked/marked.min.js"></script> -->
+    <script type="application/javascript">
+
+        var repo = "RROrg/rr"
+
+        window.onload = function () {
+            init();
+        }
+
+        function init() {
+            $("#model").on("change", changeModel);
+            changeModel();
+        }
+
+        function changeModel() {
+            changeproductsimage();
+        }
+
+        function changeproductsimage() {
+            //var model = $("#model").val().replace("#","").replace("+","plus");
+            //$('#products').html(`<img src="https://www.synology.cn/img/products/detail/${model}/heading.png" width="20%">`);
+            var model = $("#model").val().replace("#", "").replace("+", "%2B");
+            $('#products').html(`<img src="https://www.synology.com/api/products/getPhoto?product=${model}&type=img_s&sort=0" width="20%">`);
+        }
+
+        function createIssues() {
+            var form = document.getElementById("inputs");
+            let formData = new FormData(form);
+            var title = "custom";
+            var body = {};
+            var _parameters = ["title", "model"];
+            for (var key in _parameters) {
+                var name = _parameters[key];
+                if (name == "title") {
+                    if ($("#" + name).val()) {
+                        title += " " + $("#" + name).val();
+                    } else {
+                        title += " " + new Date().toISOString().substr(0, 10);
+                    }
+                    continue;
+                }
+                if ($("#" + name).val()) {
+                    body[name] = $("#" + name).val();
+                }
+            }
+
+            body = JSON.stringify(body).replace(/\+/g, "%2b");
+            window.location.href = `https://github.com/${repo}/issues/new?title=${title}&body=${body}`;
+
+        }
+    </script>
+
+    <title>RR-CUSTOM</title>
+</head>
+
+<body class="logged-in env-production page-responsive" style="word-wrap: break-word">
+    <div class="application-main left-0 text-left p-3 mx-auto container-xl px-3 px-md-4 px-lg-5 mt-4">
+        <pre id="logo" style="
+          display: block;
+          font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+            Liberation Mono, monospace !important;
+          font-size: 12px !important;
+          line-height: 12px !important;
+          margin: 15px 10px;
+          color: red;
+        ">
+██████╗ ██████╗        ██████╗██╗   ██╗███████╗████████╗ ██████╗ ███╗   ███╗
+██╔══██╗██╔══██╗      ██╔════╝██║   ██║██╔════╝╚══██╔══╝██╔═══██╗████╗ ████║
+██████╔╝██████╔╝█████╗██║     ██║   ██║███████╗   ██║   ██║   ██║██╔████╔██║
+██╔══██╗██╔══██╗╚════╝██║     ██║   ██║╚════██║   ██║   ██║   ██║██║╚██╔╝██║
+██║  ██║██║  ██║      ╚██████╗╚██████╔╝███████║   ██║   ╚██████╔╝██║ ╚═╝ ██║
+╚═╝  ╚═╝╚═╝  ╚═╝       ╚═════╝ ╚═════╝ ╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝
+                                                                                                                                  
+      </pre>
+        <div class="image" id="products" style="height: 50px; margin-left: 100px;">
+            <img src="https://www.synology.cn/img/products/detail/SA6400/heading.png" width="20%">
+        </div>
+        <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal">
+                <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                    data-view-component="true" class="octicon octicon-repo color-fg-muted mr-2">
+                    <path fill-rule="evenodd"
+                        d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z">
+                    </path>
+                </svg>
+                <strong itemprop="name" class="mr-2 flex-self-stretch">
+                    <a id="titleA" data-pjax="#repo-content-pjax-container" data-turbo-frame="repo-content-turbo-frame"
+                        href="#"></a>
+                </strong>
+                <span id="titleLabel" class="Label Label--secondary v-align-middle mr-1" id="titlelabel"
+                    style="color: red">Public</span>
+            </div>
+            <div class="btn-link tabnav-tab preview-tab js-preview-tab flex-1 flex-md-auto width-full">
+                <marquee id="content" direction="up" height="36" scrollamount="1" onMouseOut="this.start()"
+                    onMouseOver="this.stop()">
+                </marquee>
+            </div>
+        </div>
+        <div class="form-group mt-1 mb-2 ">
+            <div class="form-group-header">
+                <label class="color-fg-default text-mono f6" for="model">Title:</label>
+            </div>
+            <div class="form-group-body">
+                <input class="form-control input-contrast input-sm" type="text" id="title" name="inputs[title]"
+                    value="" />
+            </div>
+        </div>
+        <div class="form-group mt-1 mb-2 ">
+            <div class="form-group-header">
+                <label class="color-fg-default text-mono f6" for="model">Model:</label>
+            </div>
+            <div class="form-group-body">
+                <select class="form-select form-control select-sm input-contrast" id="model" name="inputs[model]"
+                    value="">
+                    <option value="DS1019+">DS1019+</option>
+                    <option value="DS1520+">DS1520+</option>
+                    <option value="DS1522+">DS1522+</option>
+                    <option value="DS1621+">DS1621+</option>
+                    <option value="DS1621xs+">DS1621xs+</option>
+                    <option value="DS1819+">DS1819+</option>
+                    <option value="DS1821+">DS1821+</option>
+                    <option value="DS1823xs+">DS1823xs+</option>
+                    <option value="DS220+">DS220+</option>
+                    <option value="DS224+">DS224+</option>
+                    <option value="DS2419+">DS2419+</option>
+                    <option value="DS2422+">DS2422+</option>
+                    <option value="DS3615xs">DS3615xs</option>
+                    <option value="DS3617xs">DS3617xs</option>
+                    <option value="DS3622xs+">DS3622xs+</option>
+                    <option value="DS423+">DS423+</option>
+                    <option value="DS718+">DS718+</option>
+                    <option value="DS720+">DS720+</option>
+                    <option value="DS723+">DS723+</option>
+                    <!--<option value="DS916+">DS916+</option>-->
+                    <option value="DS918+">DS918+</option>
+                    <option value="DS920+">DS920+</option>
+                    <option value="DS923+">DS923+</option>
+                    <option value="DVA1622">DVA1622</option>
+                    <option value="DVA3219">DVA3219</option>
+                    <option value="DVA3221">DVA3221</option>
+                    <option value="FS2500">FS2500</option>
+                    <!--<option value="FS3017">FS3017</option>-->
+                    <option value="FS6400">FS6400</option>
+                    <option value="HD6500">HD6500</option>
+                    <option value="RS1221+">RS1221+</option>
+                    <option value="RS1619xs+">RS1619xs+</option>
+                    <option value="RS2423+">RS2423+</option>
+                    <option value="RS2423RP+">RS2423RP+</option>
+                    <option value="RS3413xs+">RS3413xs+</option>
+                    <option value="RS3618xs">RS3618xs</option>
+                    <option value="RS3621xs+">RS3621xs+</option>
+                    <option value="RS4021xs+">RS4021xs+</option>
+                    <!--<option value="SA3200D">SA3200D</option>-->
+                    <option value="SA3400">SA3400</option>
+                    <!--<option value="SA3400D">SA3400D</option>-->
+                    <option value="SA3410">SA3410</option>
+                    <option value="SA3600">SA3600</option>
+                    <option value="SA3610">SA3610</option>
+                    <option selected="selected" value="SA6400">SA6400</option>
+                </select>
+            </div>
+        </div>
+        <div data-replace-remote-form-target="" class="workflow-dispatch">
+            <form id="inputs">
+                <button type="button" class="btn State--merged" onclick="return createIssues()" autofocus="">
+                    创建
+                </button>
+            </form>
+        </div>
+    </div>
+    <footer class="footer width-full container-xl mt-3 text-center color-fg-muted">
+        <a aria-label="Homepage" title="GitHub" class="footer-octicon mr-2" href="https://github.com/wjz304">
+            <img class="avatar rounded-2 avatar-user" src="https://avatars.githubusercontent.com/u/5615843?s=88&amp;v=4"
+                width="40" height="40" alt="@wjz304" />
+        </a>
+        <span> © 2022 Ing, RROrg Inc. </span>
+    </footer>
+</body>
+
+</html>

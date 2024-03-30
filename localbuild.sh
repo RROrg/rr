@@ -6,7 +6,8 @@
 # See /LICENSE for more information.
 #
 
-if [ "$(id -u)" -ne 0 ]; then
+PROMPT=$(sudo -nv 2>&1)
+if [ $? -ne 0 ]; then
   echo "This script must be run as root"
   exit 1
 fi
@@ -15,7 +16,7 @@ function help() {
   echo "Usage: $0 <command> [args]"
   echo "Commands:"
   echo "  init [workspace] [rr.img] - Initialize the workspace"
-  echo "  config - Configure the workspace"
+  echo "  config [model] - Configure the workspace"
   echo "  pack [rr.img] - Pack the workspace"
   echo "  help - Show this help"
   exit 1
@@ -30,8 +31,8 @@ function init() {
     exit 1
   fi
 
-  sudo apt update
-  sudo apt install -y locales busybox dialog curl xz cpio sed 
+  sudo apt-get update
+  sudo apt-get install -y locales busybox dialog curl xz-utils cpio sed
   sudo locale-gen en_US.UTF-8 ko_KR.UTF-8 ru_RU.UTF-8 zh_CN.UTF-8 zh_HK.UTF-8 zh_TW.UTF-8
 
   YQ=$(command -v yq)
@@ -86,11 +87,24 @@ function config() {
     exit 1
   fi
   . $(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env
+  RET=1
   pushd "${CHROOT_PATH}/initrd/opt/rr"
-  ./init.sh
-  ./menu.sh
+  while true; do
+    if [ -z "${1}" ]; then
+      ./init.sh || break
+      ./menu.sh || break
+    else
+      ./init.sh || break
+      ./menu.sh modelMenu "${1}" || break
+      ./menu.sh productversMenu "7.2" || break
+      ./menu.sh make -1 || break
+      ./menu.sh cleanCache || break
+      RET=0
+    fi
+  done
   popd
-  echo "OK."
+  [ ${RET} -ne 0 ] && echo "Failed." || echo "Success."
+  return ${RET}
 }
 
 function pack() {
@@ -100,7 +114,7 @@ function pack() {
   fi
   . $(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env
 
-  RRIMGPATH="$(realpath ${2:-"rr.img"})"
+  RRIMGPATH="$(realpath ${1:-"rr.img"})"
   if [ ! -f "${RRIMGPATH}" ]; then
     gzip -dc "${CHROOT_PATH}/initrd/opt/rr/grub.img.gz" >"${RRIMGPATH}"
   fi
