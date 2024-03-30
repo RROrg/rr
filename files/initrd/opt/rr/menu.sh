@@ -221,8 +221,8 @@ function modelMenu() {
     writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
     writeConfigKey "kernel" "official" "${USER_CONFIG_FILE}"
     # Remove old files
-    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1
-    rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1
+    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
+    rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
     touch ${PART1_PATH}/.build
   fi
   return 0
@@ -362,8 +362,8 @@ function productversMenu() {
     writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
   done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
   # Remove old files
-  rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1
-  rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1
+  rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
+  rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
   touch ${PART1_PATH}/.build
   return 0
 }
@@ -496,8 +496,8 @@ function ParsePat() {
     done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
 
     # Remove old files
-    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1
-    rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1
+    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
+    rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
     touch ${PART1_PATH}/.build
     break
   done 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
@@ -953,7 +953,8 @@ function cmdlineMenu() {
           ;;
         3) # extra-button
           sn=$(generateSerial "${MODEL}")
-          MACS=($(generateMacAddress "${MODEL}" 2))
+          NETIF_NUM=2
+          MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
           mac1=${MACS[0]}
           mac2=${MACS[1]}
           ;;
@@ -1159,7 +1160,7 @@ function extractPatFiles() {
     fi
     # Uses the extractor to untar pat file
     echo "$(TEXT "Extracting ...")"
-    LD_LIBRARY_PATH=${EXTRACTOR_PATH} "${EXTRACTOR_PATH}/${EXTRACTOR_BIN}" "${PAT_PATH}" "${EXT_PATH}" || true
+    LD_LIBRARY_PATH=${EXTRACTOR_PATH} "${EXTRACTOR_PATH}/${EXTRACTOR_BIN}" "${PAT_PATH}" "${EXT_PATH}" >"${LOG_FILE}" 2>&1
   else
     echo "$(TEXT "Extracting ...")"
     tar -xf "${PAT_PATH}" -C "${EXT_PATH}" >"${LOG_FILE}" 2>&1
@@ -1289,7 +1290,7 @@ function make() {
   function __make() {
     if [ ! -f "${ORI_ZIMAGE_FILE}" -o ! -f "${ORI_RDGZ_FILE}" ]; then
       extractDsmFiles
-      [ $? -ne 0 ] && break
+      [ $? -ne 0 ] && return 1
     fi
 
     while true; do
@@ -1325,11 +1326,15 @@ function make() {
   if [ ! "${1}" = "-1" ]; then
     __make 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
       --progressbox "$(TEXT "Making ... ('ctrl + c' to exit)")" 20 100
+  else
+    __make
   fi
   if [ -f "${LOG_FILE}" ]; then
     if [ ! "${1}" = "-1" ]; then
       DIALOG --title "$(TEXT "Error")" \
         --msgbox "$(cat ${LOG_FILE})" 0 0
+    else
+      cat "${LOG_FILE}"
     fi
     rm -f "${LOG_FILE}"
     return 1
@@ -3205,12 +3210,17 @@ function updateMenu() {
 
 ###############################################################################
 function cleanCache() {
-  (
+  if [ ! "${1}" = "-1" ]; then
+    (
+      rm -rfv "${PART3_PATH}/dl/"*
+      rm -rfv "${TMP_PATH}/"*
+    ) 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
+      --progressbox "$(TEXT "Cleaning cache ...")" 20 100
+  else
     rm -rfv "${PART3_PATH}/dl/"*
     rm -rfv "${TMP_PATH}/"*
-  ) 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
-    --progressbox "$(TEXT "Cleaning cache ...")" 20 100
-  return
+  fi
+  return 0
 }
 
 ###############################################################################
@@ -3344,8 +3354,7 @@ else
       NEXT="m"
       ;;
     c)
-      DIALOG \
-        --prgbox "rm -rfv \"${PART3_PATH}/dl/\"*" 0 0
+      cleanCache
       NEXT="d"
       ;;
     p)

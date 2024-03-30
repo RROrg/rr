@@ -50,9 +50,19 @@ function init() {
   mkdir -p "/tmp/mnt/p1"
   mkdir -p "/tmp/mnt/p2"
   mkdir -p "/tmp/mnt/p3"
-  sudo mount ${LOOPX}p1 "/tmp/mnt/p1"
-  sudo mount ${LOOPX}p2 "/tmp/mnt/p2"
-  sudo mount ${LOOPX}p3 "/tmp/mnt/p3"
+  sudo mount ${LOOPX}p1 "/tmp/mnt/p1" || (
+    echo -e "Can't mount ${LOOPX}p1."
+    exit 1
+  )
+
+  sudo mount ${LOOPX}p2 "/tmp/mnt/p2" || (
+    echo -e "Can't mount ${LOOPX}p2."
+    exit 1
+  )
+  sudo mount ${LOOPX}p3 "/tmp/mnt/p3" || (
+    echo -e "Can't mount ${LOOPX}p3."
+    exit 1
+  )
 
   echo "Create WORKSPACE"
   rm -rf "${WORKSPACE}"
@@ -75,6 +85,11 @@ function init() {
   rm -rf "/tmp/mnt/p3"
   sudo losetup --detach ${LOOPX}
 
+  if [ ! -f "${WORKSPACE}/initrd/opt/rr/init.sh" ] || ! [ -f "${WORKSPACE}/initrd/opt/rr/menu.sh" ]; then
+    echo "initrd decompression failed."
+    exit 1
+  fi
+
   rm -f $(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env
   echo "export LOADER_DISK=\"LOCALBUILD\"" >>$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env
   echo "export CHROOT_PATH=\"${WORKSPACE}\"" >>$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env
@@ -91,16 +106,24 @@ function config() {
   pushd "${CHROOT_PATH}/initrd/opt/rr"
   while true; do
     if [ -z "${1}" ]; then
+      echo "init"
       ./init.sh || break
+      echo "menu"
       ./menu.sh || break
     else
+      echo "init"
       ./init.sh || break
+      echo "model"
       ./menu.sh modelMenu "${1}" || break
+      echo "version"
       ./menu.sh productversMenu "7.2" || break
+      echo "build"
       ./menu.sh make -1 || break
-      ./menu.sh cleanCache || break
+      echo "clean"
+      ./menu.sh cleanCache -1 || break
       RET=0
     fi
+    break
   done
   popd
   [ ${RET} -ne 0 ] && echo "Failed." || echo "Success."
@@ -130,9 +153,18 @@ function pack() {
   mkdir -p "/tmp/mnt/p1"
   mkdir -p "/tmp/mnt/p2"
   mkdir -p "/tmp/mnt/p3"
-  sudo mount ${LOOPX}p1 "/tmp/mnt/p1"
-  sudo mount ${LOOPX}p2 "/tmp/mnt/p2"
-  sudo mount ${LOOPX}p3 "/tmp/mnt/p3"
+  sudo mount ${LOOPX}p1 "/tmp/mnt/p1" || (
+    echo -e "Can't mount ${LOOPX}p1."
+    exit 1
+  )
+  sudo mount ${LOOPX}p2 "/tmp/mnt/p2" || (
+    echo -e "Can't mount ${LOOPX}p1."
+    exit 1
+  )
+  sudo mount ${LOOPX}p3 "/tmp/mnt/p3" || (
+    echo -e "Can't mount ${LOOPX}p1."
+    exit 1
+  )
 
   echo "Pack image file"
   cp -af "${CHROOT_PATH}/mnt/p1/.locale" "/tmp/mnt/p1" 2>/dev/null

@@ -61,18 +61,20 @@ initConfigKey "addons.mountloader" "" "${USER_CONFIG_FILE}"
 initConfigKey "addons.reboottoloader" "" "${USER_CONFIG_FILE}"
 initConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
 
-# _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
+if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+  # _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
 
-for ETH in ${ETHX}; do
-  [ "${ETH::4}" = "wlan" ] && connectwlanif "${ETH}" && sleep 1
-  MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
-  IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
-  if [ -n "${IPR}" ]; then
-    ip addr add ${IPC}/24 dev ${ETH}
-    sleep 1
-  fi
-  [ "${ETH::3}" = "eth" ] && ethtool -s ${ETH} wol g 2>/dev/null
-done
+  for ETH in ${ETHX}; do
+    [ "${ETH::4}" = "wlan" ] && connectwlanif "${ETH}" && sleep 1
+    MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
+    IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
+    if [ -n "${IPR}" ]; then
+      ip addr add ${IPC}/24 dev ${ETH}
+      sleep 1
+    fi
+    [ "${ETH::3}" = "eth" ] && ethtool -s ${ETH} wol g 2>/dev/null || true
+  done
+fi
 
 # Get the VID/PID if we are in USB
 VID="0x46f4"
@@ -80,11 +82,12 @@ PID="0x0001"
 TYPE="DoM"
 BUS=$(getBus "${LOADER_DISK}")
 
+BUSLIST="usb sata scsi nvme mmc"
 if [ "${BUS}" = "usb" ]; then
   VID="0x$(udevadm info --query property --name ${LOADER_DISK} 2>/dev/null | grep ID_VENDOR_ID | cut -d= -f2)"
   PID="0x$(udevadm info --query property --name ${LOADER_DISK} 2>/dev/null | grep ID_MODEL_ID | cut -d= -f2)"
   TYPE="flashdisk"
-elif [ "${BUS}" != "sata" -a "${BUS}" != "scsi" -a "${BUS}" != "nvme" -a "${BUS}" != "mmc" ]; then
+elif ! echo "${BUSLIST}" | grep -wq "${BUS}"; then
   if [ "LOCALBUILD" = "${LOADER_DISK}" ]; then
     echo "LOCALBUILD MODE"
     TYPE="PC"
@@ -187,7 +190,7 @@ echo -e "$(TEXT "Default SSH \033[1;31mroot\033[0m password is") \033[1;31mrr\03
 echo
 
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
-if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" ]; then
+if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" -a ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   IP="$(getIP)"
   [ -n "${IP}" ] && URL="http://${IP}:7681" || URL="http://rr:7681/"
   python ${WORK_PATH}/include/functions.py makeqr -d "${URL}" -l "0" -o "${TMP_PATH}/qrcode_init.png"
@@ -207,3 +210,5 @@ mkdir -p "${CKS_PATH}"
 mkdir -p "${LKMS_PATH}"
 mkdir -p "${ADDONS_PATH}"
 mkdir -p "${MODULES_PATH}"
+
+exit 0
