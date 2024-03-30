@@ -114,10 +114,13 @@ function generateMacAddress() {
   PRE="$(readModelArray "${1}" "serial.macpre")"
   SUF="$(printf '%02x%02x%02x' $((${RANDOM} % 256)) $((${RANDOM} % 256)) $((${RANDOM} % 256)))"
   NUM=${2:-1}
+  MACS=""
   for I in $(seq 1 ${NUM}); do
-    printf '%06x%06x' $((0x${PRE:-"001132"})) $(($((0x${SUF})) + ${I}))
-    [ ${I} -lt ${NUM} ] && printf ' '
+    MACS+="$(printf '%06x%06x' $((0x${PRE:-"001132"})) $(($((0x${SUF})) + ${I})))"
+    [ ${I} -lt ${NUM} ] && MACS+=" "
   done
+  echo "${MACS}"
+  return 0
 }
 
 ###############################################################################
@@ -132,19 +135,16 @@ function validateSerial() {
   P=${2:4:3}
   L=${#2}
   if [ ${L} -ne 13 ]; then
-    echo 0
-    return
+    return 0
   fi
   echo "${PREFIX}" | grep -q "${S}"
   if [ $? -eq 1 ]; then
-    echo 0
-    return
+    return 0
   fi
   if [ "${MIDDLE}" != "${P}" ]; then
-    echo 0
-    return
+    return 0
   fi
-  echo 1
+  return 1
 }
 
 ###############################################################################
@@ -199,13 +199,21 @@ function _set_conf_kv() {
 # @ - url list
 function _get_fastest() {
   local speedlist=""
-  for I in $@; do
-    speed=$(ping -c 1 -W 5 ${I} 2>/dev/null | awk '/time=/ {print $7}' | cut -d '=' -f 2)
-    speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
-  done
+  if ! command -v ping >/dev/null 2>&1; then
+    for I in $@; do
+      speed=$(ping -c 1 -W 5 ${I} 2>/dev/null | awk -F'[= ]' '/time=/ {for(i=1;i<=NF;i++) if ($i=="time") print $(i+1)}')
+      speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
+    done
+  else
+    for I in $@; do
+      speed=$(curl -o /dev/null -s -w '%{time_total}' ${I})
+      speed=$(awk "BEGIN {print (${speed:-0.999} * 1000)}")
+      speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
+    done
+  fi
   fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1)"
   URL="$(echo "${fastest}" | awk '{print $1}')"
-  SPD="$(echo "${fastest}" | awk '{print $2}')"  # It is a float type
+  SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
   echo "${URL}"
   [ $(printf "%.0f" ${SPD:-999}) -ge 999 ] && return 1 || return 0
 }
@@ -275,6 +283,7 @@ EOF
   done
 
   rm -f ${TMP_PATH}/ethlist
+  return 0
 }
 
 ###############################################################################
@@ -289,6 +298,7 @@ function getBus() {
   # usb/scsi(sata/ide)/virtio(scsi/virtio)/mmc/nvme
   [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | awk -F':' '{print $(NF-1)}' | sed 's/_host//') #Spaces are intentional
   echo "${BUS}"
+  return 0
 }
 
 ###############################################################################
@@ -304,6 +314,7 @@ function getIP() {
     [ -z "${IP}" ] && IP=$(ip addr show scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
   fi
   echo "${IP}"
+  return 0
 }
 
 ###############################################################################
@@ -357,4 +368,5 @@ function connectwlanif() {
     rm -f /var/run/wpa_supplicant.pid.${1}
   fi
   wpa_supplicant -i ${1} -c "${CONF}" -B -P "/var/run/wpa_supplicant.pid.${1}" >/dev/null 2>&1
+  return 0
 }
