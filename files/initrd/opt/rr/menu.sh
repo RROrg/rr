@@ -140,9 +140,9 @@ function modelMenu() {
       DIALOG --title "$(TEXT "Model")" \
         --menu "$(TEXT "Choose the model")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
-      [ $? -ne 0 ] && return
+      [ $? -ne 0 ] && return 0
       resp=$(cat ${TMP_PATH}/resp)
-      [ -z "${resp}" ] && return
+      [ -z "${resp}" ] && return 1
       if [ "${resp}" = "c" ]; then
         models=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
         [ $(lspci -d ::300 2>/dev/null | grep 8086 | wc -l) -gt 0 ] && iGPU=1 || iGPU=0
@@ -195,6 +195,7 @@ function modelMenu() {
       break
     done
   else
+    [ ! -f "${WORK_PATH}/model-configs/${1}.yml" ] && return 1
     resp="${1}"
   fi
   # If user change model, clean build* and pat* and SN
@@ -224,6 +225,7 @@ function modelMenu() {
     rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1
     touch ${PART1_PATH}/.build
   fi
+  return 0
 }
 
 ###############################################################################
@@ -234,17 +236,17 @@ function productversMenu() {
     DIALOG --title "$(TEXT "Product Version")" \
       --no-items --menu "$(TEXT "Choose a product version")" 0 0 0 ${ITEMS} \
       2>${TMP_PATH}/resp
-    [ $? -ne 0 ] && return
+    [ $? -ne 0 ] && return 0
     resp=$(cat ${TMP_PATH}/resp)
-    [ -z "${resp}" ] && return
+    [ -z "${resp}" ] && return 1
 
     if [ "${PRODUCTVER}" = "${resp}" ]; then
       DIALOG --title "$(TEXT "Product Version")" \
         --yesno "$(printf "$(TEXT "The current version has been set to %s. Do you want to reset the version?")" "${PRODUCTVER}")" 0 0
-      [ $? -ne 0 ] && return
+      [ $? -ne 0 ] && return 0
     fi
   else
-    if ! arrayExistItem "${1}" ${ITEMS}; then return; fi
+    if ! arrayExistItem "${1}" ${ITEMS}; then return 1; fi
     resp="${1}"
   fi
 
@@ -254,7 +256,7 @@ function productversMenu() {
       DIALOG --title "$(TEXT "Product Version")" \
         --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
     fi
-    return
+    return 1
   fi
   # if [ ! "usb" = "$(getBus "${LOADER_DISK}")" -a "${KVER:0:1}" = "5" ]; then
   #   if [ -z "${1}" ]; then
@@ -269,8 +271,10 @@ function productversMenu() {
       idx=1
       NETERR=0
       while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
-        DIALOG --title "$(TEXT "Product Version")" \
-          --infobox "$(TEXT "Get pat data ...") (${idx}/3)" 0 0
+        if [ -z "${1}" ]; then
+          DIALOG --title "$(TEXT "Product Version")" \
+            --infobox "$(TEXT "Get pat data ...") (${idx}/3)" 0 0
+        fi
         idx=$((${idx} + 1))
         NETERR=0
         fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
@@ -316,7 +320,7 @@ function productversMenu() {
       fi
       [ ${RET} -eq 0 ] && break    # ok-button
       [ ${RET} -eq 3 ] && continue # extra-button
-      return                       # 1 or 255  # cancel-button or ESC
+      return 0                     # 1 or 255  # cancel-button or ESC
     done
     paturl="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
     patsum="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
@@ -324,7 +328,7 @@ function productversMenu() {
     paturl="${2}"
     patsum="${3}"
   fi
-  [ -z "${paturl}" -o -z "${patsum}" ] && return
+  [ -z "${paturl}" -o -z "${patsum}" ] && return 1
   writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
   writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
   PRODUCTVER=${resp}
@@ -361,6 +365,7 @@ function productversMenu() {
   rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1
   rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1
   touch ${PART1_PATH}/.build
+  return 0
 }
 
 ###############################################################################
@@ -1281,8 +1286,7 @@ function extractDsmFiles() {
 # Where the magic happens!
 # 1 - silent
 function make() {
-  rm -f "${LOG_FILE}"
-  while true; do
+  function __make() {
     if [ ! -f "${ORI_ZIMAGE_FILE}" -o ! -f "${ORI_RDGZ_FILE}" ]; then
       extractDsmFiles
       [ $? -ne 0 ] && break
@@ -1295,19 +1299,19 @@ function make() {
       [ -f ${MOD_ZIMAGE_FILE} ] && rm -f "${MOD_ZIMAGE_FILE}" && continue
       [ -f ${MOD_RDGZ_FILE} ] && rm -f "${MOD_RDGZ_FILE}" && continue
       echo -e "$(TEXT "No disk space left, please clean the cache and try again!")" >"${LOG_FILE}"
-      break 2
+      return 1
     done
 
     ${WORK_PATH}/zimage-patch.sh
     if [ $? -ne 0 ]; then
       echo -e "$(TEXT "zImage not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(cat "${LOG_FILE}")" >"${LOG_FILE}"
-      break
+      return 1
     fi
 
     ${WORK_PATH}/ramdisk-patch.sh
     if [ $? -ne 0 ]; then
       echo -e "$(TEXT "Ramdisk not patched,\nPlease upgrade the bootloader version and try again.\nPatch error:\n")$(cat "${LOG_FILE}")" >"${LOG_FILE}"
-      break
+      return 1
     fi
     rm -f ${PART1_PATH}/.build
     echo "$(TEXT "Cleaning ...")"
@@ -1315,9 +1319,13 @@ function make() {
     rm -f "${LOG_FILE}"
     echo "$(TEXT "Ready!")"
     sleep 3
-    break
-  done 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
-    --progressbox "$(TEXT "Making ... ('ctrl + c' to exit)")" 20 100
+    return 0
+  }
+  rm -f "${LOG_FILE}"
+  if [ ! "${1}" = "-1" ]; then
+    __make 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
+      --progressbox "$(TEXT "Making ... ('ctrl + c' to exit)")" 20 100
+  fi
   if [ -f "${LOG_FILE}" ]; then
     if [ ! "${1}" = "-1" ]; then
       DIALOG --title "$(TEXT "Error")" \
@@ -3202,6 +3210,7 @@ function cleanCache() {
     rm -rfv "${TMP_PATH}/"*
   ) 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
     --progressbox "$(TEXT "Cleaning cache ...")" 20 100
+  return
 }
 
 ###############################################################################
