@@ -37,11 +37,13 @@ jobs:
           iscustom = 'false'
           warinfo = 'false'
           model = ''
+          language= ''
           try:
               if issuetitle.lower().startswith('custom'):
-                  json_object = json.loads(issuebody)
+                  jsonbody = json.loads(issuebody)
                   iscustom = 'true'
-                  model = json_object.get('model', '')
+                  model = jsonbody.get('model', '')
+                  language = jsonbody.get('language', '')
           except ValueError as e:
               pass
 
@@ -52,6 +54,7 @@ jobs:
           set_output("iscustom", iscustom)
           set_output("warinfo", warinfo)  
           set_output("model", model)
+          set_output("language", language)
 
       - name: Update Comment Warinfo
         if: env.warinfo == 'true'
@@ -155,6 +158,8 @@ jobs:
           # sudo cp -rf files/initrd/opt/rr/* rr/ws/initrd/opt/rr/
           # sudo sed -i "s/set -e/set -ex/" rr/ws/initrd/opt/rr/init.sh
           # sudo sed -i '/^alias/i\set -x' rr/ws/initrd/opt/rr/menu.sh
+                    
+          [ -n "${{ env.language }}" ] && echo "${{ env.language }}.UTF-8" > rr/ws/mnt/p1/.locale
           
           sudo ./localbuild.sh config ${MODEL}
           if [ $? -ne 0 ]; then
