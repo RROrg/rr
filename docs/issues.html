@@ -58,7 +58,7 @@
             let formData = new FormData(form);
             var title = "custom";
             var body = {};
-            var _parameters = ["title", "model"];
+            var _parameters = ["title", "language", "model"];
             for (var key in _parameters) {
                 var name = _parameters[key];
                 if (name == "title") {
@@ -133,6 +133,23 @@
             <div class="form-group-body">
                 <input class="form-control input-contrast input-sm" type="text" id="title" name="inputs[title]"
                     value="" />
+            </div>
+        </div>
+        <div class="form-group mt-1 mb-2 ">
+            <div class="form-group-header">
+                <label class="color-fg-default text-mono f6" for="model">Language:</label>
+            </div>
+            <div class="form-group-body">
+                <select class="form-select form-control select-sm input-contrast" id="language" name="inputs[language]"
+                    value="">
+                    <option selected="selected" value="en_US">en_US</option>
+                    <option value="ja_JP">ja_JP</option>
+                    <option value="ko_KR">ko_KR</option>
+                    <option value="ru_RU">ru_RU</option>
+                    <option value="zh_CN">zh_CN</option>
+                    <option value="zh_HK">zh_HK</option>
+                    <option value="zh_TW">zh_TW</option>
+                </select>
             </div>
         </div>
         <div class="form-group mt-1 mb-2 ">

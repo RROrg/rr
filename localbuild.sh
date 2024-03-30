@@ -168,9 +168,18 @@ function pack() {
 
   echo "Pack image file"
   cp -af "${CHROOT_PATH}/mnt/p1/.locale" "/tmp/mnt/p1" 2>/dev/null
-  cp -rf "${CHROOT_PATH}/mnt/p1/"* "/tmp/mnt/p1"
-  cp -rf "${CHROOT_PATH}/mnt/p2/"* "/tmp/mnt/p2"
-  cp -rf "${CHROOT_PATH}/mnt/p3/"* "/tmp/mnt/p3"
+  cp -rf "${CHROOT_PATH}/mnt/p1/"* "/tmp/mnt/p1" || (
+    echo -e "Can't cp ${LOOPX}p1."
+    exit 1
+  )
+  cp -rf "${CHROOT_PATH}/mnt/p2/"* "/tmp/mnt/p2" || (
+    echo -e "Can't cp ${LOOPX}p1."
+    exit 1
+  )
+  cp -rf "${CHROOT_PATH}/mnt/p3/"* "/tmp/mnt/p3" || (
+    echo -e "Can't cp ${LOOPX}p1."
+    exit 1
+  )
   sudo sync
   sudo umount "/tmp/mnt/p1"
   sudo umount "/tmp/mnt/p2"
