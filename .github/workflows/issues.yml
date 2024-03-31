@@ -48,7 +48,7 @@ jobs:
               pass
 
           if iscustom == 'false':
-              if issuebody.find('ENV') >= 0:
+              if issuebody.find('DMI') < 0 and issuebody.find('CPU') < 0 and issuebody.find('NIC') < 0:
                   warinfo = 'true'
     
           set_output("iscustom", iscustom)
