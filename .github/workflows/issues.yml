@@ -232,6 +232,14 @@ jobs:
             ----
           emoji: hooray
 
+      - name: Close Issues
+        if: env.iscustom == 'true' && success()
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'close-issue'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+
       - name: Update Comment Fail
         if: env.iscustom == 'true' && failure()
         uses: actions-cool/issues-helper@v3
