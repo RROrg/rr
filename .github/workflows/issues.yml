@@ -189,7 +189,7 @@ jobs:
           echo "TTDLURL=${TTDLURL}" >> $GITHUB_ENV
 
       - name: Send mail
-        if: env.iscustom == 'true' && success()
+        if: env.iscustom == 'true' && success() && env.EMAIL != 'null'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp-mail.outlook.com
@@ -203,7 +203,7 @@ jobs:
             ${{ env.TTDLURL }}
 
       - name: Update Comment Success
-        if: env.iscustom == 'true' && success()
+        if: env.iscustom == 'true' && success() && env.EMAIL != 'null'
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'update-comment'
@@ -213,6 +213,21 @@ jobs:
           body: |
             Hi @${{ github.event.issue.user.login }}.  
             RR-${{ env.model }} has been sent to your email.  
+            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
+            ----
+          emoji: hooray
+
+      - name: Update Comment Success
+        if: env.iscustom == 'true' && success() && env.EMAIL == 'null'
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'update-comment'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment-id: ${{ steps.comment.outputs.comment-id }}
+          update-mode: replace
+          body: |
+            Hi @${{ github.event.issue.user.login }}.  
+            ${{ env.TTDLURL }}
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: hooray
