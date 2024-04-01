@@ -182,7 +182,7 @@ jobs:
             exit 1
           fi
 
-          EMAIL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/users/${{ github.event.issue.user.login }}" | jq -r '.email')
+          EMAIL=$(curl -s -H "Authorization: token ${{ secrets.ACTION }}" "https://api.github.com/users/${{ github.event.issue.user.login }}" | jq -r '.email')
           TTDLURL="$(echo "${UPLOAD}" | grep "Download Page" | head -1)"
           echo "TAG=${TAG}" >> $GITHUB_ENV
           echo "EMAIL=${EMAIL}" >> $GITHUB_ENV
