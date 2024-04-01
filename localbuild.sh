@@ -33,7 +33,7 @@ function init() {
 
   sudo apt-get update
   sudo apt-get install -y locales busybox dialog curl xz-utils cpio sed
-  sudo locale-gen en_US.UTF-8 ko_KR.UTF-8 ru_RU.UTF-8 zh_CN.UTF-8 zh_HK.UTF-8 zh_TW.UTF-8
+  sudo locale-gen en_US.UTF-8 ja_JP.UTF-8 ko_KR.UTF-8 ru_RU.UTF-8 zh_CN.UTF-8 zh_HK.UTF-8 zh_TW.UTF-8
 
   YQ=$(command -v yq)
   if [ -z "${YQ}" ] || ! ${YQ} --version 2>/dev/null | grep -q "v4."; then
@@ -167,16 +167,16 @@ function pack() {
   )
 
   echo "Pack image file"
-  cp -af "${CHROOT_PATH}/mnt/p1/.locale" "/tmp/mnt/p1" 2>/dev/null
-  cp -rf "${CHROOT_PATH}/mnt/p1/"* "/tmp/mnt/p1" || (
+  sudo cp -af "${CHROOT_PATH}/mnt/p1/.locale" "/tmp/mnt/p1" 2>/dev/null
+  sudo cp -rf "${CHROOT_PATH}/mnt/p1/"* "/tmp/mnt/p1" || (
     echo -e "Can't cp ${LOOPX}p1."
     exit 1
   )
-  cp -rf "${CHROOT_PATH}/mnt/p2/"* "/tmp/mnt/p2" || (
+  sudo cp -rf "${CHROOT_PATH}/mnt/p2/"* "/tmp/mnt/p2" || (
     echo -e "Can't cp ${LOOPX}p1."
     exit 1
   )
-  cp -rf "${CHROOT_PATH}/mnt/p3/"* "/tmp/mnt/p3" || (
+  sudo cp -rf "${CHROOT_PATH}/mnt/p3/"* "/tmp/mnt/p3" || (
     echo -e "Can't cp ${LOOPX}p1."
     exit 1
   )
