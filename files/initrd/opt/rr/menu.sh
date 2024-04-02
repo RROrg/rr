@@ -1082,7 +1082,7 @@ function getSynoExtractor() {
   mkdir -p "${EXTRACTOR_PATH}"
 
   echo "$(TEXT "Downloading old pat to extract synology .pat extractor...")"
-
+  rm -f "${OLDPAT_PATH}"
   STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${OLDPAT_URL}" -o "${OLDPAT_PATH}")
   RET=$?
   if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
@@ -1239,7 +1239,7 @@ function extractDsmFiles() {
     touch "${PAT_PATH}.downloading"
     STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PATURL}" -o "${PAT_PATH}")
     RET=$?
-    rm -rf "${PAT_PATH}.downloading"
+    rm -f "${PAT_PATH}.downloading"
     if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
       rm -f "${PAT_PATH}"
       MSG="$(printf "$(TEXT "Check internet or cache disk space.\nError: %d:%d\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" "${RET}" "${STATUS}")"
@@ -2662,14 +2662,18 @@ function downloadExts() {
   if [ "${5}" = "-1" ]; then
     (
       rm -f ${TMP_PATH}/${4}*.zip
+      touch "${TMP_PATH}/${4}-${TAG}.zip.downloading"
       STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}-${TAG}.zip" -o "${TMP_PATH}/${4}-${TAG}.zip")
       RET=$?
+      rm -f "${TMP_PATH}/${4}-${TAG}.zip.downloading"
     ) 2>&1
   else
     (
       rm -f ${TMP_PATH}/${4}*.zip
+      touch "${TMP_PATH}/${4}-${TAG}.zip.downloading"
       STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}-${TAG}.zip" -o "${TMP_PATH}/${4}-${TAG}.zip")
       RET=$?
+      rm -f "${TMP_PATH}/${4}-${TAG}.zip.downloading"
     ) 2>&1 | DIALOG --title "${T}" \
       --progressbox "$(TEXT "Downloading ...")" 20 100
   fi
@@ -3101,12 +3105,14 @@ function updateMenu() {
     case "$(cat ${TMP_PATH}/resp)" in
     a)
       F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "All")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "updateall" "${SILENT}"
       F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && updateRR "${F}" "${SILENT}" && rm -f ${TMP_PATH}/updateall*.zip
       ;;
     r)
       F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "RR")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "update" "${SILENT}"
       F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && updateRR "${F}" "${SILENT}" && rm -f ${TMP_PATH}/update*.zip
@@ -3118,6 +3124,7 @@ function updateMenu() {
         continue
       fi
       F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "Addons")" "${CUR_ADDONS_VER:-None}" "https://github.com/RROrg/rr-addons" "addons" "${SILENT}"
       F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && updateAddons "${F}" "${SILENT}" && rm -f ${TMP_PATH}/addons*.zip
@@ -3129,6 +3136,7 @@ function updateMenu() {
         continue
       fi
       F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "Modules")" "${CUR_MODULES_VER:-None}" "https://github.com/RROrg/rr-modules" "modules" "${SILENT}"
       F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && updateModules "${F}" "${SILENT}" && rm -f ${TMP_PATH}/modules*.zip
@@ -3140,6 +3148,7 @@ function updateMenu() {
         continue
       fi
       F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "LKMs")" "${CUR_LKMS_VER:-None}" "https://github.com/RROrg/rr-lkms" "rp-lkms" "${SILENT}"
       F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && updateLKMs "${F}" "${SILENT}" && rm -f ${TMP_PATH}/rp-lkms*.zip
@@ -3151,6 +3160,7 @@ function updateMenu() {
         continue
       fi
       F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
+      [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "CKs")" "${CUR_CKS_VER:-None}" "https://github.com/RROrg/rr-cks" "rr-cks" "${SILENT}"
       F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && updateCKs "${F}" "${SILENT}" && rm -f ${TMP_PATH}/rr-cks*.zip
