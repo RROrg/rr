@@ -114,9 +114,9 @@ function config() {
       echo "init"
       ./init.sh || break
       echo "model"
-      ./menu.sh modelMenu "${1}" || break
+      ./menu.sh modelMenu "${1:-"SA6400"}" || break
       echo "version"
-      ./menu.sh productversMenu "7.2" || break
+      ./menu.sh productversMenu "${2:-"7.2"}" || break
       echo "build"
       ./menu.sh make -1 || break
       echo "clean"

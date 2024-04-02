@@ -33,16 +33,45 @@
 
         var repo = "RROrg/rr"
 
+        function httpGetAsync(theUrl, callback) {
+            let xmlHttpReq = new XMLHttpRequest();
+            xmlHttpReq.onreadystatechange = function () {
+                if (xmlHttpReq.readyState == 4 && xmlHttpReq.status == 200)
+                    callback(xmlHttpReq.responseText);
+            };
+            xmlHttpReq.open("GET", theUrl, true); // true for asynchronous
+            xmlHttpReq.send(null);
+        }
+
         window.onload = function () {
             init();
         }
 
         function init() {
-            $("#model").on("change", changeModel);
-            changeModel();
+            httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/models.json", function (result) {
+                _modules = JSON.parse(result);
+                $("#model").on("change", changeModel);
+                setModels();
+            });
         }
 
+        function setModels() {
+            var models = Object.keys(_modules).sort();
+            $("#model")[0].options.length = 0;
+            for (var i = 0; i < models.length; i++) {
+                var model = models[i];
+                $("#model").append(`<option value="${model}">${model}</option>`);
+            }
+            changeModel();
+        }
         function changeModel() {
+            model = $("#model").val();
+            var versions = _modules[model];
+            $("#version")[0].options.length = 0;
+            for (var i = 0; i < versions.length; i++) {
+                var version = versions[i];
+                $("#version").append(`<option value="${version}">${version}</option>`);
+            }
             changeproductsimage();
         }
 
@@ -58,7 +87,7 @@
             let formData = new FormData(form);
             var title = "custom";
             var body = {};
-            var _parameters = ["title", "language", "model"];
+            var _parameters = ["title", "language", "model", "version"];
             for (var key in _parameters) {
                 var name = _parameters[key];
                 if (name == "title") {
@@ -151,51 +180,18 @@
             <div class="form-group-body">
                 <select class="form-select form-control select-sm input-contrast" id="model" name="inputs[model]"
                     value="">
-                    <option value="DS1019+">DS1019+</option>
-                    <option value="DS1520+">DS1520+</option>
-                    <option value="DS1522+">DS1522+</option>
-                    <option value="DS1621+">DS1621+</option>
-                    <option value="DS1621xs+">DS1621xs+</option>
-                    <option value="DS1819+">DS1819+</option>
-                    <option value="DS1821+">DS1821+</option>
-                    <option value="DS1823xs+">DS1823xs+</option>
-                    <option value="DS220+">DS220+</option>
-                    <option value="DS224+">DS224+</option>
-                    <option value="DS2419+">DS2419+</option>
-                    <option value="DS2422+">DS2422+</option>
-                    <option value="DS3615xs">DS3615xs</option>
-                    <option value="DS3617xs">DS3617xs</option>
-                    <option value="DS3622xs+">DS3622xs+</option>
-                    <option value="DS423+">DS423+</option>
-                    <option value="DS718+">DS718+</option>
-                    <option value="DS720+">DS720+</option>
-                    <option value="DS723+">DS723+</option>
-                    <!--<option value="DS916+">DS916+</option>-->
-                    <option value="DS918+">DS918+</option>
-                    <option value="DS920+">DS920+</option>
-                    <option value="DS923+">DS923+</option>
-                    <option value="DVA1622">DVA1622</option>
-                    <option value="DVA3219">DVA3219</option>
-                    <option value="DVA3221">DVA3221</option>
-                    <option value="FS2500">FS2500</option>
-                    <!--<option value="FS3017">FS3017</option>-->
-                    <option value="FS6400">FS6400</option>
-                    <option value="HD6500">HD6500</option>
-                    <option value="RS1221+">RS1221+</option>
-                    <option value="RS1619xs+">RS1619xs+</option>
-                    <option value="RS2423+">RS2423+</option>
-                    <option value="RS2423RP+">RS2423RP+</option>
-                    <option value="RS3413xs+">RS3413xs+</option>
-                    <option value="RS3618xs">RS3618xs</option>
-                    <option value="RS3621xs+">RS3621xs+</option>
-                    <option value="RS4021xs+">RS4021xs+</option>
-                    <!--<option value="SA3200D">SA3200D</option>-->
-                    <option value="SA3400">SA3400</option>
-                    <!--<option value="SA3400D">SA3400D</option>-->
-                    <option value="SA3410">SA3410</option>
-                    <option value="SA3600">SA3600</option>
-                    <option value="SA3610">SA3610</option>
                     <option selected="selected" value="SA6400">SA6400</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group mt-1 mb-2 ">
+            <div class="form-group-header">
+                <label class="color-fg-default text-mono f6" for="model">Version:</label>
+            </div>
+            <div class="form-group-body">
+                <select class="form-select form-control select-sm input-contrast" id="version" name="inputs[version]"
+                    value="">
+                    <option selected="selected" value="7.2">7.2</option>
                 </select>
             </div>
         </div>
