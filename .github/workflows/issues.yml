@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-name: Auto Comment
+name: Issues
 on:
   issues:
     types: [opened, reopened]
@@ -36,14 +36,17 @@ jobs:
           
           iscustom = 'false'
           warinfo = 'false'
-          model = ''
+
           language= ''
+          model = ''
+          version = ''
           try:
               if issuetitle.lower().startswith('custom'):
                   jsonbody = json.loads(issuebody)
                   iscustom = 'true'
-                  model = jsonbody.get('model', '')
                   language = jsonbody.get('language', '')
+                  model = jsonbody.get('model', '')
+                  version = jsonbody.get('version', '')
           except ValueError as e:
               pass
 
@@ -53,8 +56,10 @@ jobs:
     
           set_output("iscustom", iscustom)
           set_output("warinfo", warinfo)  
-          set_output("model", model)
+
           set_output("language", language)
+          set_output("model", model)
+          set_output("version", version)
 
       - name: Update Comment Warinfo
         if: env.warinfo == 'true'
@@ -126,8 +131,9 @@ jobs:
         run: |
           # 累了, 毁灭吧!
 
-          REPO=${{ github.server_url }}/${{ github.repository }}
-          MODEL=${{ env.model }}
+          REPO="${{ github.server_url }}/${{ github.repository }}"
+          MODEL="${{ env.model }}"
+          VERSION="${{ env.version }}"
           PRERELEASE="false"
 
           TAG=""
@@ -161,7 +167,7 @@ jobs:
                     
           [ -n "${{ env.language }}" ] && echo "${{ env.language }}.UTF-8" | sudo tee rr/ws/mnt/p1/.locale
           
-          sudo ./localbuild.sh config ${MODEL}
+          sudo ./localbuild.sh config "${MODEL}" "${VERSION}"
           if [ $? -ne 0 ]; then
             echo "config failed"
             exit 1
