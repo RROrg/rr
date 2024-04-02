@@ -2630,11 +2630,11 @@ function downloadExts() {
     return 1
   fi
   if [ "${2}" = "${TAG}" ]; then
-    MSG="$(TEXT "No new version.")"
+    MSG="$(TEXT "No new version.")\n"
     if [ "${5}" = "-1" ]; then
       echo "${T} - ${MSG}"
     elif [ "${5}" = "0" ]; then
-      MSG+="$(printf "$(TEXT "Actual version is %s\nForce update?")" "${2}")"
+      MSG+="$(printf "$(TEXT "Actual version is %s.\nForce update?")" "${2}")"
       DIALOG --title "${T}" \
         --yesno "${MSG}" 0 0
       [ $? -ne 0 ] && return 1
@@ -3080,11 +3080,11 @@ function updateMenu() {
     CUR_CKS_VER="$(cat "${CKS_PATH}/VERSION" 2>/dev/null)"
     rm -f "${TMP_PATH}/menu"
     echo "a \"$(TEXT "Update") $(TEXT "All")\"" >>"${TMP_PATH}/menu"
-    echo "r \"$(TEXT "Update") $(TEXT "RR")(${CUR_RR_VER:-None})\"" >>"${TMP_PATH}/menu"
-    echo "d \"$(TEXT "Update") $(TEXT "Addons")(${CUR_ADDONS_VER:-None})\"" >>"${TMP_PATH}/menu"
-    echo "m \"$(TEXT "Update") $(TEXT "Modules")(${CUR_MODULES_VER:-None})\"" >>"${TMP_PATH}/menu"
-    echo "l \"$(TEXT "Update") $(TEXT "LKMs")(${CUR_LKMS_VER:-None})\"" >>"${TMP_PATH}/menu"
-    echo "c \"$(TEXT "Update") $(TEXT "CKs")(${CUR_CKS_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "r \"$(TEXT "Update") $(TEXT "RR") (${CUR_RR_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "d \"$(TEXT "Update") $(TEXT "Addons") (${CUR_ADDONS_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "m \"$(TEXT "Update") $(TEXT "Modules") (${CUR_MODULES_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "l \"$(TEXT "Update") $(TEXT "LKMs") (${CUR_LKMS_VER:-None})\"" >>"${TMP_PATH}/menu"
+    echo "c \"$(TEXT "Update") $(TEXT "CKs") (${CUR_CKS_VER:-None})\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Local upload")\"" >>"${TMP_PATH}/menu"
     echo "b \"$(TEXT "Pre Release:") \Z4${PRERELEASE}\Zn\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
