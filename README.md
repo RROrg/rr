@@ -3,11 +3,10 @@
 <h1>RR: <small>redpill’s preinstallation and recovery environment</small></h1>
 
 [![Github Created At](https://img.shields.io/github/created-at/rrorg/rr?style=flat-square)](https://github.com/rrorg/rr)
+[![翻译状态](https://hosted.weblate.org/widget/RROrg/svg-badge.svg)](https://hosted.weblate.org/engage/RROrg/")
 [![GitHub Release](https://img.shields.io/github/v/release/rrorg/rr?style=flat-square)](https://github.com/rrorg/rr/releases/latest)
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/rrorg/rr/total?style=flat-square)](https://github.com/rrorg/rr/releases)
 [![GitHub Issues or Pull Requests by label](https://img.shields.io/github/issues-closed-raw/rrorg/rr/custom?style=flat-square&label=custom)](https://rrorg.github.io/rr/)
-
-
 
 
 > The ultimate solution to self-centralized Synology DSM OS on any local machine with any x86/x64 CPU architecture via a single flash of bootload pre-installation process in addition within recovery environment.
@@ -39,8 +38,13 @@ For the packag of has been initialized and build image, please go to [RR-CUSTOM]
   - [intel-gpu-i915-backports](https://github.com/MoetaYuko/intel-gpu-i915-backports)
 
 ## 5: Contributing
+- [Weblate mode](https://hosted.weblate.org/engage/RROrg/)
+<a href="https://hosted.weblate.org/engage/RROrg/">
+<img src="https://hosted.weblate.org/widget/RROrg/multi-auto.svg" alt="翻译状态" />
+</a>
 
-- The following is a roughly truncated guide to involve in project localization for internationalization.
+- Manual mode: 
+  * The following is a roughly truncated guide to involve in project localization for internationalization.
 
   ```shell
   # If deletion nor addition proces of code hunk is not required, comply with the following process
