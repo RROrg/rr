@@ -2250,6 +2250,7 @@ function advancedMenu() {
       echo "4 \"$(TEXT "Remove the blocked ip database of DSM")\"" >>"${TMP_PATH}/menu"
       echo "r \"$(TEXT "Clone bootloader disk to another disk")\"" >>"${TMP_PATH}/menu"
       echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
+      echo "5 \"$(TEXT "Download DSM config backup files")\"" >>"${TMP_PATH}/menu"
       echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
       echo "p \"$(TEXT "Save modifications of '/opt/rr'")\"" >>"${TMP_PATH}/menu"
     fi
@@ -2450,6 +2451,32 @@ function advancedMenu() {
         MSG+="$(TEXT "Please do as follows:\n")"
         MSG+="$(TEXT " 1. Add dbgutils in addons and rebuild.\n")"
         MSG+="$(TEXT " 2. Wait 10 minutes after booting.\n")"
+        MSG+="$(TEXT " 3. Reboot into RR and go to this option.\n")"
+        DIALOG --title "$(TEXT "Advanced")" \
+          --msgbox "${MSG}" 0 0
+      fi
+      NEXT="e"
+      ;;
+    5)
+      if [ -d "${PART1_PATH}/scbk" ]; then
+        rm -f "${TMP_PATH}/scbk.tar.gz"
+        tar -czf "${TMP_PATH}/scbk.tar.gz" -C "${PART1_PATH}" scbk
+        if [ -z "${SSH_TTY}" ]; then # web
+          mv -f "${TMP_PATH}/scbk.tar.gz" "/var/www/data/scbk.tar.gz"
+          URL="http://$(getIP)/scbk.tar.gz"
+          DIALOG --title "$(TEXT "Advanced")" \
+            --msgbox "$(printf "$(TEXT "Please via %s to download the scbk,\nAnd unzip it and back it up in order by file name.")" "${URL}")" 0 0
+        else
+          sz -be -B 536870912 "${TMP_PATH}/scbk.tar.gz"
+          DIALOG --title "$(TEXT "Advanced")" \
+            --msgbox "$(TEXT "Please unzip it and back it up in order by file name.")" 0 0
+        fi
+      else
+        MSG=""
+        MSG+="$(TEXT "\Z1No scbk found!\Zn\n\n")"
+        MSG+="$(TEXT "Please do as follows:\n")"
+        MSG+="$(TEXT " 1. Add dbgutils in addons and rebuild.\n")"
+        MSG+="$(TEXT " 2. Normal use.\n")"
         MSG+="$(TEXT " 3. Reboot into RR and go to this option.\n")"
         DIALOG --title "$(TEXT "Advanced")" \
           --msgbox "${MSG}" 0 0
