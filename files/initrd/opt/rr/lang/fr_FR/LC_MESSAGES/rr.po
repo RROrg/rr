@@ -8,13 +8,14 @@ msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-05 03:09+0800\n"
-"PO-Revision-Date: 2024-04-05 05:39+0800\n"
-"Last-Translator: Ing <wjz304>\n"
-"Language-Team: French (Français) <i18n-zh@RROrg>\n"
+"PO-Revision-Date: 2024-04-06 05:11+0800\n"
+"Last-Translator: Ing <wjz304@qq.com>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/rrorg/rr/fr/>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Poedit 3.4.2\n"
 
 #: boot.sh:8 init.sh:9 menu.sh:9
@@ -23,11 +24,11 @@ msgstr "Loader n'est pas init!"
 
 #: boot.sh:10 init.sh:119
 msgid "Loader is not configured!"
-msgstr "Le chargeur n'est pas configuré !"
+msgstr "Le chargeur n'est pas configuré!"
 
 #: boot.sh:20 init.sh:14
 msgid "Welcome to %s"
-msgstr "Bienvenue à des %"
+msgstr "Bienvenue à des %s"
 
 #: boot.sh:33
 msgid "DSM zImage changed"
@@ -35,7 +36,7 @@ msgstr "DSM zImage changée"
 
 #: boot.sh:36 menu.sh:1308
 msgid "zImage not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
-msgstr "z Image non corrigée,\\nVeuillez mettre à niveau la version du chargeur de démarrage et essayez à nouveau.\\nPatch erreur:\\n"
+msgstr "zImage non corrigée,\\nVeuillez mettre à niveau la version du chargeur de démarrage et essayez à nouveau.\\nPatch erreur:\\n"
 
 #: boot.sh:44
 msgid "DSM Ramdisk changed"
@@ -147,7 +148,7 @@ msgstr "[Cette interface ne sera pas opérationnelle. Veuillez patienter quelque
 
 #: init.sh:23
 msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
-msgstr "Appareils réseau non trouvés ! S'il vous plaît réexécuter init.sh après avoir connecté au réseau!"
+msgstr "Appareils réseau non trouvés! S'il vous plaît réexécuter init.sh après avoir connecté au réseau!"
 
 #: init.sh:95
 msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM"
@@ -235,7 +236,7 @@ msgstr "Choisissez une version produit"
 
 #: menu.sh:245
 msgid "The current version has been set to %s. Do you want to reset the version?"
-msgstr "La version actuelle a été définie à %. Voulez-vous réinitialiser la version?"
+msgstr "La version actuelle a été définie à %s. Voulez-vous réinitialiser la version?"
 
 #: menu.sh:257
 msgid "This version does not support UEFI startup, Please select another version or switch the startup mode."
@@ -271,7 +272,7 @@ msgstr "Reconfiguration de Synoinfo, Addons et Modules"
 
 #: menu.sh:377
 msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
-msgstr "Vous avez sélectionné les % et %.\\n'Parse Pat' va écraser la sélection précédente.\\n Tu veux continuer ?"
+msgstr "Vous avez sélectionné les % et %s.\\n'Parse Pat' va écraser la sélection précédente.\\nTu veux continuer?"
 
 #: menu.sh:378
 msgid "Parse Pat"
@@ -295,7 +296,7 @@ msgstr "Choisissez un fichier pat"
 
 #: menu.sh:400 menu.sh:412 menu.sh:1176
 msgid "pat Invalid, try again!"
-msgstr "pat Invalid, réessayez !"
+msgstr "pat Invalid, réessayez!"
 
 #: menu.sh:405
 msgid "Parse %s ..."
@@ -303,11 +304,11 @@ msgstr "Parse %s ..."
 
 #: menu.sh:430
 msgid "Currently, %s is not supported."
-msgstr "Actuellement, les % ne sont pas pris en charge."
+msgstr "Actuellement, les %s ne sont pas pris en charge."
 
 #: menu.sh:442
 msgid "Currently, %s of %s is not supported."
-msgstr "Actuellement, les pourcentages de % ne sont pas supportés."
+msgstr "Actuellement, les pourcentages %s de %s ne sont pas supportés."
 
 #: menu.sh:503 menu.sh:1327 menu.sh:3270 menu.sh:3338 menu.sh:3356
 msgid "Main menu"
@@ -371,7 +372,7 @@ msgstr "Sélectionnez addon pour supprimer"
 
 #: menu.sh:602
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n\\n"
-msgstr "Le nom avec la couleur \"\\Z4blue\\Zn\" a été ajouté, avec la couleur \"noir\" ne sont pas ajoutés. \\n"
+msgstr "Le nom avec la couleur \"\\Z4blue\\Zn\" a été ajouté, avec la couleur \"noir\" ne sont pas ajoutés. \\n\\n"
 
 #: menu.sh:617 menu.sh:752 menu.sh:1369 menu.sh:3198
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
@@ -383,11 +384,11 @@ msgstr "Veuillez télécharger le fichier *.addons."
 
 #: menu.sh:637 menu.sh:788 menu.sh:3229 menu.sh:3248
 msgid "Not a valid file, please try again!"
-msgstr "Pas un fichier valide, veuillez réessayer !"
+msgstr "Pas un fichier valide, veuillez réessayer!"
 
 #: menu.sh:641
 msgid "The addon already exists. Do you want to overwrite it?"
-msgstr "L'addon existe déjà. Tu veux l'écraser ?"
+msgstr "L'addon existe déjà. Tu veux l'écraser?"
 
 #: menu.sh:649
 msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
@@ -395,7 +396,7 @@ msgstr "Addon '%s' ajouté au chargeur, Veuillez l'activer dans le menu 'Ajouter
 
 #: menu.sh:653
 msgid "File format not recognized!"
-msgstr "Format de fichier non reconnu !"
+msgstr "Format de fichier non reconnu!"
 
 #: menu.sh:672 menu.sh:686 menu.sh:699 menu.sh:736 menu.sh:753 menu.sh:763 menu.sh:766 menu.sh:782 menu.sh:787 menu.sh:801 menu.sh:807 menu.sh:2928 menu.sh:2980 menu.sh:3116 menu.sh:3162 menu.sh:3167
 msgid "Modules"
@@ -447,7 +448,7 @@ msgstr "Sélection de modules chargés"
 
 #: menu.sh:758
 msgid "This function is experimental and dangerous. If you don't know much, please exit.\\n"
-msgstr "Cette fonction est expérimentale et dangereuse. Si vous ne savez pas grand-chose, s'il vous plaît sortir"
+msgstr "Cette fonction est expérimentale et dangereuse. Si vous ne savez pas grand-chose, s'il vous plaît sortir.\\n"
 
 #: menu.sh:759
 msgid "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\\n"
@@ -463,7 +464,7 @@ msgstr "Si vous voulez l'enlever, s'il vous plaît aller au \"Update Menu\" - Ci
 
 #: menu.sh:762
 msgid "Do you want to continue?"
-msgstr "Tu veux continuer ?"
+msgstr "Tu veux continuer?"
 
 #: menu.sh:767
 msgid "Please upload the *.ko file."
@@ -479,7 +480,7 @@ msgstr "No i915 avec module dépendances à désélectionner."
 
 #: menu.sh:808
 msgid "Module %s deselected.\\n"
-msgstr "Module % des élus.\\n"
+msgstr "Module %s des élus.\\n"
 
 #: menu.sh:824 menu.sh:1423 menu.sh:1450 menu.sh:1457 menu.sh:1480
 msgid "Edit with caution"
@@ -511,43 +512,43 @@ msgstr "Cmdlines couramment utilisées:\\n"
 
 #: menu.sh:860
 msgid " * \\Z4disable_mtrr_trim=\\Zn\\n    disables kernel trim any uncacheable memory out.\\n"
-msgstr " * \\Z4disable_mtrr_trim=\\ Zn\\n désactive la taille du noyau n'importe quelle mémoire non cacheable.\\n"
+msgstr " * \\Z4disable_mtrr_trim=\\Zn\\n    désactive la taille du noyau n'importe quelle mémoire non cacheable.\\n"
 
 #: menu.sh:861
 msgid " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Set the maximum C-state depth allowed by the intel_idle driver.\\n"
-msgstr " * \\Z4intel_idle.max_cstate=1\\ Zn Réglez la profondeur maximale de l'état C permise par le pilote intel_idle.\\n"
+msgstr " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Réglez la profondeur maximale de l'état C permise par le pilote intel_idle.\\n"
 
 #: menu.sh:862
 msgid " * \\Z4pcie_port_pm=off\\Zn\\n    Turn off the power management of the PCIe port.\\n"
-msgstr " * \\Z4pcie_port_pm=off\\ Zn Éteignez la gestion de puissance du port PCIe.\\n"
+msgstr " * \\Z4pcie_port_pm=off\\Zn\\n    Éteignez la gestion de puissance du port PCIe.\\n"
 
 #: menu.sh:863
 msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
-msgstr " * \\Z4libata.force=noncq\\Zn\\n Désactiver NCQ pour tous les ports SATA.\\n"
+msgstr " * \\Z4libata.force=noncq\\Zn\\n    Désactiver NCQ pour tous les ports SATA.\\n"
 
 #: menu.sh:864
 msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.(Not apply to DT models.)\\n"
-msgstr " * \\Z4SataPortMap=?\\ Zn\\n Sata Port Map.(Non applicable aux modèles DT.)\\n"
+msgstr " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.(Non applicable aux modèles DT.)\\n"
 
 #: menu.sh:865
 msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence.(Not apply to DT models.)\\n"
-msgstr " * \\Z4DiskIdxMap=?\\ Zn\\n Disk Index Map, Modifier la séquence de nom de disque.(Non applicable aux modèles DT.)\\n"
+msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modifier la séquence de nom de disque.(Non applicable aux modèles DT.)\\n"
 
 #: menu.sh:866
 msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence.(Not apply to DT models.)\\n"
-msgstr " * \\Z4ahci_remap=4 Virus5:5 Zn\\n Remap data port séquence. (Ne s'applique pas aux modèles DT.)\\n"
+msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port séquence. (Ne s'applique pas aux modèles DT.)\\n"
 
 #: menu.sh:867
 msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
-msgstr " * \\Z4i915.enable_guc=2\\Zn\\n Activer le micrologiciel GuC sur le matériel graphique Intel.(valeur: 1,2 ou 3)\\n"
+msgstr " * \\Z4i915.enable_guc=2\\Zn\\n    Activer le micrologiciel GuC sur le matériel graphique Intel.(valeur: 1,2 ou 3)\\n"
 
 #: menu.sh:868
 msgid " * \\Z4i915.max_vfs=7\\Zn\\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\\n"
-msgstr " * \\Z4i915.max_vfs=7\\Zn\\n Définir le nombre maximum de fonctions virtuelles (VF) qui peuvent être créées pour le matériel graphique Intel.\\n"
+msgstr " * \\Z4i915.max_vfs=7\\Zn\\n    Définir le nombre maximum de fonctions virtuelles (VF) qui peuvent être créées pour le matériel graphique Intel.\\n"
 
 #: menu.sh:869
 msgid " * \\Z4consoleblank=300\\Zn\\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\\n"
-msgstr " * \\Z4consoleblank=300\\ Zn Définir la console à l'affichage automatique de démarrage 300 secondes après aucune activité (mesurée en secondes). \\n"
+msgstr " * \\Z4consoleblank=300\\Zn\\n    Définir la console à l'affichage automatique de démarrage 300 secondes après aucune activité (mesurée en secondes). \\n"
 
 #: menu.sh:870 menu.sh:1003
 msgid "\\nEnter the parameter name and value you need to add.\\n"
@@ -555,7 +556,7 @@ msgstr "\\nEntrez le nom de paramètre et la valeur que vous devez ajouter.\\n"
 
 #: menu.sh:883 menu.sh:1016
 msgid "Invalid parameter name, retry?"
-msgstr "Nom de paramètre invalide, retry ?"
+msgstr "Nom de paramètre invalide, retry?"
 
 #: menu.sh:907
 msgid "No user cmdline to remove"
@@ -575,7 +576,7 @@ msgstr "Aléatoire"
 
 #: menu.sh:943
 msgid "Invalid SN/MAC, retry?"
-msgstr "SN/MAC invalide, rentrée ?"
+msgstr "SN/MAC invalide, rentrée?"
 
 #: menu.sh:987
 msgid "Add/edit a synoinfo item"
@@ -595,23 +596,23 @@ msgstr "Synoinfo couramment utilisé:\\n"
 
 #: menu.sh:998
 msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
-msgstr " * \\Z4maxdisks=?\\ Zn\\n Nombre maximum de disques pris en charge.\\n"
+msgstr " * \\Z4maxdisks=??\\Zn\\n    Nombre maximum de disques pris en charge.\\n"
 
 #: menu.sh:999
 msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask.\\n"
-msgstr " * \\Z4internalportcfg=0x??? Masque de disques Zn\\n internes.\\n"
+msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    Masque de disques internes.\\n"
 
 #: menu.sh:1000
 msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask.\\n"
-msgstr " * \\Z4esataportcfg=0x??? Masque de disques Zn\\n Esata.\\n"
+msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Masque de disques Esata.\\n"
 
 #: menu.sh:1001
 msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask.\\n"
-msgstr " * \\Z4usbportcfg=0x???? Masque de disques USB.\\n"
+msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    Masque de disques USB.\\n"
 
 #: menu.sh:1002
 msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
-msgstr " * \\Z4max_sys_raid_disks=12\\Zn\\n Nombre maximum de partitions système(md0) disques raid.\\n"
+msgstr " * \\Z4max_sys_raid_disks=12\\Zn\\n    Nombre maximum de partitions système(md0) disques raid.\\n"
 
 #: menu.sh:1041
 msgid "No synoinfo entries to remove"
@@ -647,7 +648,7 @@ msgstr "Impossible de déterminer si le fichier pat est crypté ou non, peut-êt
 
 #: menu.sh:1149 menu.sh:1261
 msgid "Disassembling %s: "
-msgstr "Pourcentages de démontage: "
+msgstr "Démontage de %s: "
 
 #: menu.sh:1156
 msgid "Extractor cached."
@@ -659,7 +660,7 @@ msgstr "Extraire ..."
 
 #: menu.sh:1197
 msgid "%s cached."
-msgstr "% cache."
+msgstr "%s cache."
 
 #: menu.sh:1200
 msgid "The cache has been cleared. Please re 'Parse pat' before build."
@@ -687,7 +688,7 @@ msgstr "Téléchargement de %s ..."
 
 #: menu.sh:1251
 msgid "Checking hash of %s: "
-msgstr "Vérifie le hash de %: "
+msgstr "Vérifie le hash de %s: "
 
 #: menu.sh:1254
 msgid "md5 hash of pat not match, Please reget pat data from the version menu and try again!"
@@ -743,7 +744,7 @@ msgstr "Edit dts file"
 
 #: menu.sh:1370
 msgid "Or upload the dts file to %s via DUFS, Will be automatically imported when building."
-msgstr "Ou télécharger le fichier dts à des % via DUFS, sera automatiquement importé lors du bâtiment."
+msgstr "Ou télécharger le fichier dts à des %s via DUFS, sera automatiquement importé lors du bâtiment."
 
 #: menu.sh:1376
 msgid "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\\n(saved in /mnt/p3/users/)"
@@ -751,7 +752,7 @@ msgstr "Actuellement, seuls les fichiers de format dts sont pris en charge. Veui
 
 #: menu.sh:1393 menu.sh:1429
 msgid "Not a valid dts file, please try again!"
-msgstr "Pas un fichier dts valide, veuillez réessayer !"
+msgstr "Pas un fichier dts valide, veuillez réessayer!"
 
 #: menu.sh:1398
 msgid "A valid dts file, Automatically import at compile time."
@@ -759,7 +760,7 @@ msgstr "Un fichier dts valide, Importer automatiquement à temps de compilation.
 
 #: menu.sh:1417
 msgid "No dts file to edit. Please upload first!"
-msgstr "Pas de fichier dts pour modifier. Veuillez télécharger d'abord !"
+msgstr "Pas de fichier dts pour modifier. Veuillez télécharger d'abord!"
 
 #: menu.sh:1492
 msgid "Temporary IP: (UI will not refresh)"
@@ -786,7 +787,7 @@ msgstr "SSID scannés:\\n"
 
 #: menu.sh:1558
 msgid "Invalid SSID/PSK, retry?"
-msgstr "SSID/PSK invalide, rentrée ?"
+msgstr "SSID/PSK invalide, rentrée?"
 
 #: menu.sh:1580
 msgid "Setting ..."
@@ -802,15 +803,15 @@ msgstr "\\nPorts avec couleur \\Z1red\\Zn comme DUMMY, couleur \\Z2\\Zbgreen\\ Z
 
 #: menu.sh:1671 menu.sh:1690 menu.sh:2110
 msgid "No disk found!"
-msgstr "Pas de disque trouvé !"
+msgstr "Pas de disque trouvé!"
 
 #: menu.sh:1700 menu.sh:1901 menu.sh:2077
 msgid "Warning:\\nThis operation is irreversible. Please backup important data. Do you want to continue?"
-msgstr "Attention : Cette opération est irréversible. Veuillez sauvegarder des données importantes. Tu veux continuer ?"
+msgstr "Attention:\\nCette opération est irréversible. Veuillez sauvegarder des données importantes. Tu veux continuer?"
 
 #: menu.sh:1704
 msgid "Warning:\\nThe current hds is in raid, do you still want to format them?"
-msgstr "Attention : Les hds actuels sont en descente, voulez-vous encore les formater ?"
+msgstr "Attention:\\nLes hds actuels sont en descente, voulez-vous encore les formater?"
 
 #: menu.sh:1719
 msgid "Formatting ..."
@@ -946,11 +947,11 @@ msgstr "Aucun disque sélectionné !"
 
 #: menu.sh:2126
 msgid "Disk %s size is less than 1GB and cannot be cloned!"
-msgstr "La taille de disque est inférieure à 1 Go et ne peut être clonée !"
+msgstr "La taille du disque %s est inférieure à 1 Go et ne peut pas être clonée !"
 
 #: menu.sh:2130
 msgid "Warning:\\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \\nDo you want to continue?"
-msgstr "Attention : Les pourcentages de disque seront formatés et écrits au chargeur. Veuillez confirmer que des données importantes ont été sauvegardées. \\nVous voulez continuer?"
+msgstr "Attention:\\nLe disque %s sera formaté et écrit dans le chargeur de démarrage. Veuillez confirmer que les données importantes ont été sauvegardées. \\nVoulez-vous continuer?"
 
 #: menu.sh:2163
 msgid "Cloning ..."
@@ -958,11 +959,11 @@ msgstr "Cloning..."
 
 #: menu.sh:2165
 msgid "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\\nReboot?"
-msgstr "Bootloader a été cloné sur disque %, s'il vous plaît supprimer le disque de bootloader actuel!\\nReboot?"
+msgstr "Bootloader a été cloné sur disque %s, s'il vous plaît supprimer le disque de bootloader actuel!\\nReboot?"
 
 #: menu.sh:2179
 msgid "Please enter a proxy server url.(e.g., %s)"
-msgstr "Veuillez entrer un url de serveur proxy (p. ex., %)"
+msgstr "Veuillez entrer un url de serveur proxy (p. ex., %s)"
 
 #: menu.sh:2190
 msgid "Invalid proxy server url, continue?"
@@ -1106,7 +1107,7 @@ msgstr "Choisissez un temps(secondes)"
 
 #: menu.sh:2374
 msgid "This option is only informative.\\n\\n"
-msgstr "Cette option est seulement informative. \\n"
+msgstr "Cette option est seulement informative.\\n\\n"
 
 #: menu.sh:2375
 msgid "This program reserves an interface for ramdisk custom patch scripts.\\n"
@@ -1122,7 +1123,7 @@ msgstr "Lieu: /mnt/p3/scripts/*.sh\\n"
 
 #: menu.sh:2442
 msgid "Please via %s to download the logs,\\nAnd go to github to create an issue and upload the logs."
-msgstr "S'il vous plaît via %s pour télécharger les journaux,\\nAnd allez dans github pour créer un problème et télécharger les journaux."
+msgstr "Veuillez via %s pour télécharger les journaux,\\nAnd allez dans github pour créer un problème et télécharger les journaux."
 
 #: menu.sh:2446
 msgid "Please go to github to create an issue and upload the logs."
@@ -1130,7 +1131,7 @@ msgstr "S'il vous plaît allez dans github pour créer un problème et télécha
 
 #: menu.sh:2450
 msgid "\\Z1No logs found!\\Zn\\n\\n"
-msgstr "\\Z1Pas de logs trouvés!\\ Zn\\n"
+msgstr "\\Z1Pas de logs trouvés!\\Zn\\n\\n"
 
 #: menu.sh:2451 menu.sh:2477
 msgid "Please do as follows:\\n"
@@ -1150,7 +1151,7 @@ msgstr " 3. Reboot dans RR et aller à cette option.\\n"
 
 #: menu.sh:2468
 msgid "Please via %s to download the scbk,\\nAnd unzip it and back it up in order by file name."
-msgstr "S'il vous plaît via %s pour télécharger le scbk,\\nEt décompressez-le et sauvegardez-le en ordre par nom de fichier."
+msgstr "Veuillez via %s pour télécharger le scbk,\\nEt décompressez-le et sauvegardez-le en ordre par nom de fichier."
 
 #: menu.sh:2472
 msgid "Please unzip it and back it up in order by file name."
@@ -1158,13 +1159,11 @@ msgstr "Veuillez le décompresser et le sauvegarder par nom de fichier."
 
 #: menu.sh:2476
 msgid "\\Z1No scbk found!\\Zn\\n\\n"
-msgstr "\\Z1No scbk found!\\ Zn\\n"
+msgstr "\\Z1No scbk found!\\Zn\\n\\n"
 
 #: menu.sh:2478
-#, fuzzy
-#| msgid " 1. Add dbgutils in addons and rebuild.\\n"
 msgid " 1. Add synoconfbkp in addons and rebuild.\\n"
-msgstr " 1. Ajouter dbgutils dans les addons et reconstruire.\\n"
+msgstr " 1. Ajouter synoconfbkp dans les addons et reconstruire.\\n"
 
 #: menu.sh:2479
 msgid " 2. Normal use.\\n"
@@ -1188,7 +1187,7 @@ msgstr "opkg installez complet."
 
 #: menu.sh:2514
 msgid "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?"
-msgstr "Attention : Ne pas mettre fin à mi-chemin, sinon il peut causer des dommages au RR. Tu veux continuer ?"
+msgstr "Attention:\\nNe pas mettre fin à mi-chemin, sinon il peut causer des dommages au RR. Tu veux continuer?"
 
 #: menu.sh:2517
 msgid "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
@@ -1220,7 +1219,7 @@ msgstr "Choix d'une carte-clé"
 
 #: menu.sh:2629 menu.sh:2726 menu.sh:2864 menu.sh:2928 menu.sh:2995 menu.sh:3051
 msgid "Update %s"
-msgstr "Mise à jour %"
+msgstr "Mise à jour %s"
 
 #: menu.sh:2630
 msgid "Checking last version ..."
@@ -1228,7 +1227,7 @@ msgstr "Voir la dernière version ..."
 
 #: menu.sh:2647
 msgid "Error checking new version.\\nError: TAG is %s"
-msgstr "Vérification d'erreur nouvelle version. \\nError: TAG est %"
+msgstr "Vérification d'erreur nouvelle version. \\nError: TAG est %s"
 
 #: menu.sh:2660
 msgid "No new version."
@@ -1280,7 +1279,7 @@ msgstr "Installer de nouveaux fichiers ..."
 
 #: menu.sh:2851 menu.sh:2913 menu.sh:2980 menu.sh:3036 menu.sh:3092
 msgid "%s updated with success!"
-msgstr "% mis à jour avec succès!"
+msgstr "%s mis à jour avec succès!"
 
 #: menu.sh:2851
 msgid "Reboot?"
@@ -1312,7 +1311,7 @@ msgstr "Télécharger manuellement la mise à jour*.zip,addons*.zip,modules*.zip
 
 #: menu.sh:3150 menu.sh:3162 menu.sh:3174 menu.sh:3186
 msgid "No longer supports update %s separately. Please choose to update All/RR"
-msgstr "Ne supporte plus la mise à jour % séparément. Veuillez choisir de mettre à jour All/RR"
+msgstr "Ne supporte plus la mise à jour %s séparément. Veuillez choisir de mettre à jour All/RR"
 
 #: menu.sh:3205
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
