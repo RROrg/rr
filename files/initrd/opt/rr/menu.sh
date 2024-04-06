@@ -1678,13 +1678,13 @@ function showDisksInfo() {
 # Format disk
 function formatDisks() {
   rm -f "${TMP_PATH}/opts"
-  while read KNAME ID; do
+  while read KNAME ID PKNAME; do
     [ -z "${KNAME}" ] && continue
     [[ "${KNAME}" = /dev/md* ]] && continue
-    echo "${KNAME}" | grep -q "${LOADER_DISK}" && continue
+    [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
     [ -z "${ID}" ] && ID="Unknown"
     echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
-  done <<<$(lsblk -pno KNAME,ID)
+  done <<<$(lsblk -pno KNAME,ID,PKNAME)
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
@@ -2100,11 +2100,11 @@ function removeBlockIPDB {
 # Clone bootloader disk
 function cloneBootloaderDisk() {
   rm -f "${TMP_PATH}/opts"
-  while read KNAME ID; do
+  while read KNAME ID PKNAME; do
     [ -z "${KNAME}" -o -z "${ID}" ] && continue
-    echo "${KNAME}" | grep -q "${LOADER_DISK}" && continue
+    [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
     echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
-  done <<<$(lsblk -dpno KNAME,ID)
+  done <<<$(lsblk -dpno KNAME,ID,PKNAME)
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
