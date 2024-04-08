@@ -15,14 +15,15 @@ fi
 function help() {
   echo "Usage: $0 <command> [args]"
   echo "Commands:"
-  echo "  init [workspace] [rr.img] - Initialize the workspace"
-  echo "  config [model] - Configure the workspace"
-  echo "  pack [rr.img] - Pack the workspace"
+  echo "  create [workspace] [rr.img] - Create the workspace"
+  echo "  init - Initialize the environment"
+  echo "  make [model] [version] - Make the DSM system"
+  echo "  pack [rr.img] - Pack to rr.img"
   echo "  help - Show this help"
   exit 1
 }
 
-function init() {
+function create() {
   WORKSPACE="$(realpath ${1:-"workspace"})"
   RRIMGPATH="$(realpath ${2:-"rr.img"})"
 
@@ -96,7 +97,22 @@ function init() {
   echo "OK."
 }
 
-function config() {
+function init() {
+  if [ ! -f $(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env ]; then
+    echo "Please run init first"
+    exit 1
+  fi
+  . $(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env
+  pushd "${CHROOT_PATH}/initrd/opt/rr"
+  echo "init"
+  ./init.sh
+  RET=$?
+  popd
+  [ ${RET} -ne 0 ] && echo "Failed." || echo "Success."
+  return ${RET}
+}
+
+function make() {
   if [ ! -f $(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env ]; then
     echo "Please run init first"
     exit 1
@@ -106,13 +122,10 @@ function config() {
   pushd "${CHROOT_PATH}/initrd/opt/rr"
   while true; do
     if [ -z "${1}" ]; then
-      echo "init"
-      ./init.sh || break
       echo "menu"
       ./menu.sh || break
+      RET=0
     else
-      echo "init"
-      ./init.sh || break
       echo "model"
       ./menu.sh modelMenu "${1:-"SA6400"}" || break
       echo "version"
