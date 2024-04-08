@@ -12,7 +12,9 @@
 > The ultimate solution to self-centralized Synology DSM OS on any local machine with any x86/x64 CPU architecture via a single flash of bootload pre-installation process in addition within recovery environment.
 
 ### 1: Disclaimer
+
 硬盘有价，数据无价，任何对引导的修改都是有风险的，本人/组织不承担数据丢失的责任。本工具仅用作学习交流，严禁用于商业用途。
+----
 Hardware/hard-drives are priced whilst data are priceless, any user-specific custom modification of the tested & prebuilt bootloader images could potentially cause irreversible data destruction towards your local machine. Us, as (RROrg) are not responsibly liable for damage nor personal loss of any types. The project with its affiliation is released for educational and learning purpose only, commercial application of the software is strictly prohibited.
 
 
@@ -66,7 +68,7 @@ For the packag of has been initialized and build image, please go to [RR-CUSTOM]
 
   - `en_US`: `@rrorg`
   - `ja_JP`: `@andatoshiki` & `@toshikidev`
-  - `ko_KR`:  `@EXP` : jeong1986
+  - `ko_KR`: `@EXP` : jeong1986
   - `ru_RU`: `@Alex`: TG
   - `zh_CN`: `@rrorg`
   - `zh_HK`: `@rrorg`
@@ -83,12 +85,15 @@ For the packag of has been initialized and build image, please go to [RR-CUSTOM]
   - [Buildroot](https://github.com/buildroot/buildroot)
   - [Eudev](https://github.com/eudev-project/eudev)
   - [Grub](https://git.savannah.gnu.org/git/grub)
-- Addons: `@xbl3` `@wirgen` `@007revad` `@PeterSuh-Q3`
+- Addons: `@xbl3&@wirgen` `@007revad` `@PeterSuh-Q3` `@jim3ma` `@jinlife`
   - [synocodectool-patch](https://github.com/xbl3/synocodectool-patch)
   - [Synology_HDD_db](https://github.com/007revad/Synology_HDD_db)
+  - [nvme-cache](https://github.com/PeterSuh-Q3/tcrp-addons/tree/main/nvme-cache)
   - [Synology_enable_M2_volume](https://github.com/007revad/Synology_enable_M2_volume)
+  - [synology-installation-with-nvme-disks-only](https://jim.plus/blog/post/jim/synology-installation-with-nvme-disks-only)
+  - [Synology_Photos_Face_Patch](https://github.com/jinlife/Synology_Photos_Face_Patch)
 - Modules:`@jim3ma` `@MoetaYuko`
-  - [ynology-igc](https://github.com/jim3ma/synology-igc)
+  - [synology-igc](https://github.com/jim3ma/synology-igc)
   - [intel-gpu-i915-backports](https://github.com/MoetaYuko/intel-gpu-i915-backports)
 
 ### 7: Links & Community
