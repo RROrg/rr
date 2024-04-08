@@ -27,30 +27,64 @@ jobs:
           git config --global user.name "github-actions[bot]"
           sudo timedatectl set-timezone "Asia/Shanghai"
 
-      - name: Get models
+          sudo apt update
+          sudo apt install -y build-essential libtool pkgconf libzstd-dev liblzma-dev libssl-dev  # kmodule dependencies
+
+      - name: Get Release RR
         run: |
-          models="{"
-          WORK_PATH="files/initrd/opt/rr"
-          for M in $(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml 2>/dev/null | sed 's/.*\///; s/\.yml//'); do
-            models+="\"${M}\":["
-            for V in $(yq eval '.productvers | explode(.) | to_entries | map([.key])[] | .[]' "${WORK_PATH}/model-configs/${M}.yml" 2>/dev/null | sort -r); do
-              models+="\"${V}\","
-            done
-            models="${models%,}],"
-          done
-          models="${models%,}}"
-          echo "${models}" >docs/models.json
+          REPO="${{ github.server_url }}/${{ github.repository }}"
+          PRERELEASE="false"
+
+          TAG=""
+          if [ "${PRERELEASE}" = "true" ]; then
+            TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep /refs/tags/.*\.zip | head -1 | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/')"
+          else
+            LATESTURL="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${REPO}/releases/latest")"
+            TAG="${LATESTURL##*/}"
+          fi
+          [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+          rm -f rr-${TAG}.img.zip
+          STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${REPO}/releases/download/${TAG}/rr-${TAG}.img.zip" -o "rr-${TAG}.img.zip")
+          if [ $? -ne 0 -o ${STATUS:-0} -ne 200 ]; then
+            echo "Download failed"
+            exit 1
+          fi
+          
+          unzip rr-${TAG}.img.zip -d "rr"
+
+          export TERM=xterm
+
+          sudo ./localbuild.sh create rr/ws rr/rr.img
+          if [ $? -ne 0 ]; then
+            echo "create failed"
+            exit 1
+          fi
+
+      - name: Get data
+        run: |
+          pip install -r scripts/requirements.txt
+          python scripts/func.py getmodels -w "rr/ws/initrd" -j "docs/models.json" -x "docs/models.xlsx"
+          python scripts/func.py getaddons -w "rr/ws" -j "docs/addons.json" -x "docs/addons.xlsx"
+          python scripts/func.py getmodules -w "rr/ws" -j "docs/modules.json" -x "docs/modules.xlsx"
+
+      - name: Upload to Artifacts
+        if: success() && inputs.push == false
+        uses: actions/upload-artifact@v4
+        with:
+          name: addons
+          path: |
+            docs/*.json
+            docs/*.xlsx
+          retention-days: 5
 
       - name: Check and Push
         if: success() && inputs.push == true
         run: |
             echo "Git push ..."
             git pull
-            status=$(git status -s | grep -E 'docs/models.json' | awk '{printf " %s", $2}')
+            status=$(git status -s | grep -E "docs" | awk '{printf " %s", $2}')
             if [ -n "${status}" ]; then
               git add ${status}
               git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
               git push -f
             fi
-
-  

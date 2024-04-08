@@ -155,9 +155,9 @@ jobs:
 
           export TERM=xterm
 
-          sudo ./localbuild.sh init rr/ws rr/rr.img
+          sudo ./localbuild.sh create rr/ws rr/rr.img
           if [ $? -ne 0 ]; then
-            echo "init failed"
+            echo "create failed"
             exit 1
           fi
 
@@ -166,10 +166,16 @@ jobs:
           # sudo sed -i '/^alias/i\set -x' rr/ws/initrd/opt/rr/menu.sh
                     
           [ -n "${{ env.language }}" ] && echo "${{ env.language }}.UTF-8" | sudo tee rr/ws/mnt/p1/.locale
-          
-          sudo ./localbuild.sh config "${MODEL}" "${VERSION}"
+
+          sudo ./localbuild.sh init
           if [ $? -ne 0 ]; then
-            echo "config failed"
+            echo "init failed"
+            exit 1
+          fi
+
+          sudo ./localbuild.sh make "${MODEL}" "${VERSION}"
+          if [ $? -ne 0 ]; then
+            echo "make failed"
             exit 1
           fi
 
