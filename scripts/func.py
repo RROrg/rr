@@ -61,18 +61,19 @@ def getaddons(workpath, jsonpath, xlsxpath):
     for A in AS:
         with open(A, "r") as file:
             A_data = yaml.safe_load(file)
-            A_name = A_data.get("name")
-            A_description = A_data.get("description", {"en_US": "Unknown"})
-            addons[A_name] = A_description
+            A_name = A_data.get("name", "")
+            A_system = A_data.get("system", False)
+            A_description = A_data.get("description", {"en_US": "Unknown", "zh_CN": "Unknown"})
+            addons[A_name] = {"system": A_system, "description": A_description}
     if jsonpath:
         with open(jsonpath, "w") as f:
             json.dump(addons, f, indent=4, ensure_ascii=False)
     if xlsxpath:
         wb = Workbook()
         ws = wb.active
-        ws.append(["Name", "en_US", "zh_CN"])
+        ws.append(['Name', 'system', 'en_US', 'zh_CN'])
         for k1, v1 in addons.items():
-            ws.append([k1, v1.get("en_US", ""), v1.get("zh_CN", "")])
+            ws.append([k1, v1.get("system", False), v1.get("description").get("en_US", ""), v1.get("description").get("zh_CN", "")])   
         wb.save(xlsxpath)
 
 
