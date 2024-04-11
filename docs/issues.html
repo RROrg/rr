@@ -23,7 +23,11 @@
     <style>
         select,
         input {
-            width: 400px;
+            width: 100%;
+        }
+
+        .textarea-contrast {
+            width: 100%;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -274,9 +278,10 @@
                 <label class="color-fg-default text-mono f6">Addons:</label>
             </div>
             <div class="form-group-body">
-                <textarea class="form-control input-contrast input-sm" type="text" id="addons" name="inputs[addons]" disabled></textarea>
-            </div>
-            <div class="form-group-body" id="addons_btns">
+                <textarea class="textarea-contrast input-contrast input-sm" type="text" id="addons"
+                    name="inputs[addons]" disabled></textarea>
+                <div class="form-group-body" id="addons_btns">
+                </div>
             </div>
         </div>
         <div class="form-group mt-1 mb-2 ">
@@ -284,9 +289,10 @@
                 <label class="color-fg-default text-mono f6">Modules:</label>
             </div>
             <div class="form-group-body">
-                <textarea class="form-control input-contrast input-sm" type="text" id="modules" name="inputs[modules]" disabled></textarea>
-            </div>
-            <div class="form-group-body" id="modules_btns">
+                <textarea class="textarea-contrast input-contrast input-sm" type="text" id="modules"
+                    name="inputs[modules]" disabled></textarea>
+                <div class="form-group-body" id="modules_btns">
+                </div>
             </div>
         </div>
         <div data-replace-remote-form-target="" class="workflow-dispatch">
