@@ -34,7 +34,10 @@ def getmodels(workpath, jsonpath, xlsxpath):
             M_productvers = M_data.get("productvers", [])
             productvers = {}
             for P in M_productvers:
-                productvers[P] = M_productvers[P].get("kver", "")
+                if M_productvers[P].get("kpre", "") != "":
+                    productvers[P] = M_productvers[P].get("kpre", "") + "-" + M_productvers[P].get("kver", "")
+                else:
+                    productvers[P] = M_productvers[P].get("kver", "")
             models[M_name] = {"platform": M_platform, "productvers": productvers}
 
     if jsonpath:
