@@ -49,14 +49,21 @@
 
         function init() {
             httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/models.json", function (result) {
-                _modules = JSON.parse(result);
-                $("#model").on("change", changeModel);
-                setModels();
+                _models = JSON.parse(result);
+                httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/addons.json", function (result) {
+                    _addons = JSON.parse(result);
+                    httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/modules.json", function (result) {
+                        _modules = JSON.parse(result);
+                        $("#model").on("change", changeModel);
+                        $("#version").on("change", changeVersion);
+                        setModels();
+                    });
+                });
             });
         }
 
         function setModels() {
-            var models = Object.keys(_modules).sort();
+            var models = Object.keys(_models).sort();
             $("#model")[0].options.length = 0;
             for (var i = 0; i < models.length; i++) {
                 var model = models[i];
@@ -66,13 +73,14 @@
         }
         function changeModel() {
             model = $("#model").val();
-            var versions =  Object.keys(_modules[model]["productvers"]).reverse();
+            var versions = Object.keys(_models[model]["productvers"]).reverse();
             $("#version")[0].options.length = 0;
             for (var i = 0; i < versions.length; i++) {
                 var version = versions[i];
                 $("#version").append(`<option value="${version}">${version}</option>`);
             }
             changeproductsimage();
+            changeVersion();
         }
 
         function changeproductsimage() {
@@ -82,12 +90,73 @@
             $('#products').html(`<img src="https://www.synology.com/api/products/getPhoto?product=${model}&type=img_s&sort=0" width="20%">`);
         }
 
+        function changeVersion() {
+            createAddonsBtn();
+            createModulesBtn();
+        }
+        function createAddonsBtn() {
+            var language = $("#language").val();
+
+            var idx = 1;
+            var html = `<div class="form-group-body" id="addons_btns">`;
+            for (var ext in _addons) {
+                var par = "";
+                if (_addons[ext]["system"] == true) {
+                    par = "disabled";
+                }
+                html += `<button type="button" class="btn btn-primary btn-sm mt-2" id="btn_${ext}" ${par} onclick="return onclickext('addons', '${ext}')" autofocus="" title="${_addons[ext]["description"][language]}">${ext}</button>&nbsp;`;
+                //if (idx++ % 10 == 0) html += "<br />";
+            }
+            html += `</div>`;
+            $('#addons_btns').html(html);
+        }
+
+        function createModulesBtn() {
+            var model = $("#model").val();
+            var version = $("#version").val();
+            var platform = _models[model]["platform"] + "-" + _models[model]["productvers"][version];
+            var extstr = [];
+            var idx = 1;
+            var html = `<div class="form-group-body" id="modules_btns">`;
+            for (var ext in _modules[platform]) {
+                extstr.push(ext);
+                var par = "btn-danger";
+                html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} onclick="return onclickext('modules', '${ext}')" autofocus="" title="${_modules[platform][ext]["description"]}">${ext}</button>&nbsp;`;
+                //if (idx++ % 10 == 0) html += "<br />";
+            }
+            html += `</div>`;
+            $('#modules_btns').html(html);
+            if (extstr.length > 0) {
+                $('#modules').val(extstr.join(","));
+            }
+        }
+        function onclickext(type, ext) {
+            var btnobj = $("#btn_" + ext);
+            var extstr = $('#' + type).val().split(",");
+            if (btnobj.hasClass("btn-danger")) {
+                extstr.map((val, i) => {
+                    if (val === ext) {
+                        extstr.splice(i, 1);
+                    }
+                });
+                btnobj.removeClass("btn-danger");
+            } else {
+                btnobj.addClass("btn-danger");
+                extstr.push(ext);
+            }
+            extstr.map((val, i) => {
+                if (val === "") {
+                    extstr.splice(i, 1);
+                }
+            });
+            $('#' + type).val(extstr.join(","));
+        }
         function createIssues() {
             var form = document.getElementById("inputs");
             let formData = new FormData(form);
             var title = "custom";
             var body = {};
-            var _parameters = ["title", "language", "model", "version"];
+            var _parameters = ["title", "language", "model", "version", "addons", "modules"];
             for (var key in _parameters) {
                 var name = _parameters[key];
                 if (name == "title") {
@@ -198,6 +267,26 @@
                     value="">
                     <option selected="selected" value="7.2">7.2</option>
                 </select>
+            </div>
+        </div>
+        <div class="form-group mt-1 mb-2 ">
+            <div class="form-group-header">
+                <label class="color-fg-default text-mono f6">Addons:</label>
+            </div>
+            <div class="form-group-body">
+                <textarea class="form-control input-contrast input-sm" type="text" id="addons" name="inputs[addons]" disabled></textarea>
+            </div>
+            <div class="form-group-body" id="addons_btns">
+            </div>
+        </div>
+        <div class="form-group mt-1 mb-2 ">
+            <div class="form-group-header">
+                <label class="color-fg-default text-mono f6">Modules:</label>
+            </div>
+            <div class="form-group-body">
+                <textarea class="form-control input-contrast input-sm" type="text" id="modules" name="inputs[modules]" disabled></textarea>
+            </div>
+            <div class="form-group-body" id="modules_btns">
             </div>
         </div>
         <div data-replace-remote-form-target="" class="workflow-dispatch">
