@@ -40,6 +40,8 @@ jobs:
           language= ''
           model = ''
           version = ''
+          addons = ''
+          modules = ''
           try:
               if issuetitle.lower().startswith('custom'):
                   jsonbody = json.loads(issuebody)
@@ -47,6 +49,8 @@ jobs:
                   language = jsonbody.get('language', '')
                   model = jsonbody.get('model', '')
                   version = jsonbody.get('version', '')
+                  addons = jsonbody.get('addons', '')
+                  modules = jsonbody.get('modules', '')
           except ValueError as e:
               pass
 
@@ -60,6 +64,8 @@ jobs:
           set_output("language", language)
           set_output("model", model)
           set_output("version", version)
+          set_output("addons", addons)
+          set_output("modules", modules)
 
       - name: Update Comment Warinfo
         if: env.warinfo == 'true'
@@ -131,6 +137,10 @@ jobs:
         run: |
           # 累了, 毁灭吧!
 
+          function writeConfigKey() {
+            [ "${2}" = "{}" ] && sudo yq eval '.'${1}' = {}' --inplace "${3}" 2>/dev/null || sudo yq eval '.'${1}' = "'"${2}"'"' --inplace "${3}" 2>/dev/null
+          }
+
           REPO="${{ github.server_url }}/${{ github.repository }}"
           MODEL="${{ env.model }}"
           VERSION="${{ env.version }}"
@@ -173,9 +183,40 @@ jobs:
             exit 1
           fi
 
-          sudo ./localbuild.sh make "${MODEL}" "${VERSION}"
+          sudo ./localbuild.sh config "${MODEL}" "${VERSION}"
           if [ $? -ne 0 ]; then
-            echo "make failed"
+            echo "config failed"
+            exit 1
+          fi
+
+          if [ -n "${{ env.addons }}" ]; then
+            echo -en "set addons"
+            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+            writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
+            echo -en ': '
+            for A in $(echo "${{ env.addons }}" | tr ',' ' '); do
+              echo -en "${A} "
+              VALUE=""
+              writeConfigKey "addons.\"${A}\"" "${VALUE}" "${USER_CONFIG_FILE}"
+            done
+            echo ""
+          fi
+          if [ -n "${{ env.modules }}" ]; then
+            echo -en "set modules"
+            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+            writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+            echo -en ': '
+            for M in $(echo "${{ env.modules }}" | tr ',' ' '); do
+              echo -en "${M} "
+              VALUE=""
+              writeConfigKey "modules.\"${M}\"" "${VALUE}" "${USER_CONFIG_FILE}"
+            done
+            echo ""
+          fi
+
+          sudo ./localbuild.sh build
+          if [ $? -ne 0 ]; then
+            echo "build failed"
             exit 1
           fi
 

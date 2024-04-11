@@ -17,7 +17,8 @@ function help() {
   echo "Commands:"
   echo "  create [workspace] [rr.img] - Create the workspace"
   echo "  init - Initialize the environment"
-  echo "  make [model] [version] - Make the DSM system"
+  echo "  config [model] [version] - Config the DSM system"
+  echo "  build - Build the DSM system"
   echo "  pack [rr.img] - Pack to rr.img"
   echo "  help - Show this help"
   exit 1
@@ -112,7 +113,7 @@ function init() {
   return ${RET}
 }
 
-function make() {
+function config() {
   if [ ! -f $(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env ]; then
     echo "Please run init first"
     exit 1
@@ -130,12 +131,29 @@ function make() {
       ./menu.sh modelMenu "${1:-"SA6400"}" || break
       echo "version"
       ./menu.sh productversMenu "${2:-"7.2"}" || break
-      echo "build"
-      ./menu.sh make -1 || break
-      echo "clean"
-      ./menu.sh cleanCache -1 || break
       RET=0
     fi
+    break
+  done
+  popd
+  [ ${RET} -ne 0 ] && echo "Failed." || echo "Success."
+  return ${RET}
+}
+
+function build() {
+  if [ ! -f $(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env ]; then
+    echo "Please run init first"
+    exit 1
+  fi
+  . $(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/rr.env
+  RET=1
+  pushd "${CHROOT_PATH}/initrd/opt/rr"
+  while true; do
+    echo "build"
+    ./menu.sh make -1 || break
+    echo "clean"
+    ./menu.sh cleanCache -1 || break
+    RET=0
     break
   done
   popd
