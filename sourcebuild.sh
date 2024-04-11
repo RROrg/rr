@@ -78,11 +78,11 @@ sudo mount ${LOOPX}p1 "/tmp/mnt/p1" || (
   exit 1
 )
 sudo mount ${LOOPX}p2 "/tmp/mnt/p2" || (
-  echo -e "Can't mount ${LOOPX}p1."
+  echo -e "Can't mount ${LOOPX}p2."
   exit 1
 )
 sudo mount ${LOOPX}p3 "/tmp/mnt/p3" || (
-  echo -e "Can't mount ${LOOPX}p1."
+  echo -e "Can't mount ${LOOPX}p3."
   exit 1
 )
 
@@ -92,12 +92,12 @@ sudo cp -rf "files/mnt/p1/"* "/tmp/mnt/p1" || (
   echo -e "Can't cp ${LOOPX}p1."
   exit 1
 )
-cp -rf "files/mnt/p2/"* "/tmp/mnt/p2" || (
-  echo -e "Can't cp ${LOOPX}p1."
+sudo cp -rf "files/mnt/p2/"* "/tmp/mnt/p2" || (
+  echo -e "Can't cp ${LOOPX}p2."
   exit 1
 )
-cp -rf "files/mnt/p3/"* "/tmp/mnt/p3" || (
-  echo -e "Can't cp ${LOOPX}p1."
+sudo cp -rf "files/mnt/p3/"* "/tmp/mnt/p3" || (
+  echo -e "Can't cp ${LOOPX}p2."
   exit 1
 )
 
