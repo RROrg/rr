@@ -25,6 +25,7 @@ def cli():
 def getmodels(workpath, jsonpath, xlsxpath):
     # Read the model-configs files
     MS = glob.glob("{}/opt/rr/model-configs/*.yml".format(workpath))
+    MS.sort()
     models = {}
     for M in MS:
         with open(M, "r") as f:
@@ -60,6 +61,7 @@ def getmodels(workpath, jsonpath, xlsxpath):
 def getaddons(workpath, jsonpath, xlsxpath):
     # Read the manifest.yml file
     AS = glob.glob("{}/mnt/p3/addons/*/manifest.yml".format(workpath))
+    AS.sort()
     addons = {}
     for A in AS:
         with open(A, "r") as file:
@@ -87,6 +89,7 @@ def getaddons(workpath, jsonpath, xlsxpath):
 def getmodules(workpath, jsonpath, xlsxpath):
     # Read the module files
     MS = glob.glob("{}/mnt/p3/modules/*.tgz".format(workpath))
+    MS.sort()
     modules = {}
     TMP_PATH = "/tmp/modules"
     if os.path.exists(TMP_PATH):
@@ -100,6 +103,7 @@ def getmodules(workpath, jsonpath, xlsxpath):
             tar.extractall(TMP_PATH)
         # Traverse the extracted files
         KS = glob.glob("{}/*.ko".format(TMP_PATH))
+        KS.sort()
         for K in KS:
             K_name = os.path.splitext(os.path.basename(K))[0]
             K_info = kmodule.modinfo(K)[0]
