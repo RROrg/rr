@@ -60,6 +60,7 @@
                         _modules = JSON.parse(result);
                         $("#model").on("change", changeModel);
                         $("#version").on("change", changeVersion);
+                        $("#language").on("change", changeVersion);
                         setModels();
                     });
                 });
@@ -100,15 +101,19 @@
         }
         function createAddonsBtn() {
             var language = $("#language").val();
-
+            var extstr =  $('#addons').val().split(",");
             var idx = 1;
             var html = `<div class="form-group-body" id="addons_btns">`;
             for (var ext in _addons) {
-                var par = "";
+                var dispar = "";
                 if (_addons[ext]["system"] == true) {
-                    par = "disabled";
+                    dispar = "disabled";
                 }
-                html += `<button type="button" class="btn btn-primary btn-sm mt-2" id="btn_${ext}" ${par} onclick="return onclickext('addons', '${ext}')" autofocus="" title="${_addons[ext]["description"][language]}">${ext}</button>&nbsp;`;
+                var par = "";
+                if (extstr.includes(ext)) {
+                    par = "btn-danger";
+                }   
+                html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} ${dispar} onclick="return onclickext('addons', '${ext}')" autofocus="" title="${_addons[ext]["description"][language]}">${ext}</button>&nbsp;`;
                 //if (idx++ % 10 == 0) html += "<br />";
             }
             html += `</div>`;
