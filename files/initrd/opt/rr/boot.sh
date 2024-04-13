@@ -75,15 +75,17 @@ if [ ! -f "${WORK_PATH}/model-configs/${MODEL}.yml" ] || [ -z "$(readModelKey ${
   exit 1
 fi
 
-HASATA=0
-for D in $(lsblk -dpno NAME); do
-  [ "${D}" = "${LOADER_DISK}" ] && continue
-  if [ "$(getBus "${D}")" = "sata" -o "$(getBus "${D}")" = "scsi" ]; then
-    HASATA=1
-    break
-  fi
-done
-[ ${HASATA} = "0" ] && echo -e "\033[1;33m*** $(TEXT "Please insert at least one sata/scsi disk for system installation, except for the bootloader disk.") ***\033[0m"
+if ! readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q nvmesystem; then
+  HASATA=0
+  for D in $(lsblk -dpno NAME); do
+    [ "${D}" = "${LOADER_DISK}" ] && continue
+    if [ "$(getBus "${D}")" = "sata" -o "$(getBus "${D}")" = "scsi" ]; then
+      HASATA=1
+      break
+    fi
+  done
+  [ ${HASATA} = "0" ] && echo -e "\033[1;33m*** $(TEXT "Please insert at least one sata/scsi disk for system installation, except for the bootloader disk.") ***\033[0m"
+fi
 
 VID="$(readConfigKey "vid" "${USER_CONFIG_FILE}")"
 PID="$(readConfigKey "pid" "${USER_CONFIG_FILE}")"
@@ -123,8 +125,8 @@ else
   CMDLINE['noefi']=""
 fi
 if [ ! "${BUS}" = "usb" ]; then
-  SZ=$(blockdev --getsz ${LOADER_DISK} 2>/dev/null)  # SZ=$(cat /sys/block/${LOADER_DISK/\/dev\//}/size)
-  SS=$(blockdev --getss ${LOADER_DISK} 2>/dev/null)  # SS=$(cat /sys/block/${LOADER_DISK/\/dev\//}/queue/hw_sector_size)
+  SZ=$(blockdev --getsz ${LOADER_DISK} 2>/dev/null) # SZ=$(cat /sys/block/${LOADER_DISK/\/dev\//}/size)
+  SS=$(blockdev --getss ${LOADER_DISK} 2>/dev/null) # SS=$(cat /sys/block/${LOADER_DISK/\/dev\//}/queue/hw_sector_size)
   SIZE=$((${SZ} * ${SS} / 1024 / 1024 + 10))
   # Read SATADoM type
   DOM="$(readModelKey "${MODEL}" "dom")"
