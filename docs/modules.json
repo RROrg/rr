@@ -16,6 +16,10 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
@@ -918,6 +922,10 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
@@ -929,6 +937,10 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
+        },
+        "amd_nb": {
+            "description": "",
+            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -1266,6 +1278,10 @@
             "description": "hwmon-vid driver",
             "depends": ""
         },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -1385,6 +1401,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "k10temp": {
+            "description": "AMD Family 10h+ CPU core temperature monitor",
+            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "",
@@ -1990,6 +2010,10 @@
         },
         "adm1021": {
             "description": "adm1021 driver",
+            "depends": ""
+        },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
             "depends": ""
         },
         "adm9240": {
@@ -2898,9 +2922,13 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "agpgart": {
             "description": "AGP GART driver",
@@ -3012,7 +3040,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "drm": {
             "description": "DRM shared core routines",
@@ -3102,10 +3130,6 @@
             "description": "Generic Backlight Driver",
             "depends": "backlight"
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i8042": {
             "description": "i8042 keyboard and mouse controller driver",
             "depends": ""
@@ -3156,7 +3180,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -3196,7 +3220,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -3264,7 +3288,7 @@
         },
         "nct6775": {
             "description": "NCT6775F/NCT6776F/NCT6779D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "output": {
             "description": "Display Output Switcher Lowlevel Control Abstraction",
@@ -3472,11 +3496,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         }
     },
     "braswell-3.10.108": {
@@ -3492,9 +3516,13 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "agpgart": {
             "description": "AGP GART driver",
@@ -3610,7 +3638,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "drm": {
             "description": "DRM shared core routines",
@@ -3700,10 +3728,6 @@
             "description": "Generic Backlight Driver",
             "depends": "backlight"
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i8042": {
             "description": "i8042 keyboard and mouse controller driver",
             "depends": ""
@@ -3754,7 +3778,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -3794,7 +3818,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -3862,7 +3886,7 @@
         },
         "nct6775": {
             "description": "NCT6775F/NCT6776F/NCT6779D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "output": {
             "description": "Display Output Switcher Lowlevel Control Abstraction",
@@ -4070,11 +4094,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         }
     },
     "broadwell-3.10.105": {
@@ -4090,13 +4114,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -4228,7 +4256,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "e1000": {
             "description": "Intel(R) PRO/1000 Network Driver",
@@ -4302,10 +4330,6 @@
             "description": "Generic Backlight Driver",
             "depends": "backlight"
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i8042": {
             "description": "i8042 keyboard and mouse controller driver",
             "depends": ""
@@ -4348,7 +4372,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -4388,7 +4412,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -4464,7 +4488,7 @@
         },
         "nct6775": {
             "description": "NCT6775F/NCT6776F/NCT6779D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "output": {
             "description": "Display Output Switcher Lowlevel Control Abstraction",
@@ -4668,11 +4692,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         }
     },
     "broadwell-4.4.180": {
@@ -4692,13 +4716,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -4886,7 +4914,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -4988,10 +5016,6 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -5062,7 +5086,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -5110,7 +5134,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -5218,7 +5242,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -5506,11 +5530,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -5550,13 +5574,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -5565,6 +5593,10 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
+        },
+        "amd_nb": {
+            "description": "",
+            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -5764,7 +5796,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -5870,8 +5902,8 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
             "depends": ""
         },
         "i40e": {
@@ -5948,7 +5980,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -5985,6 +6017,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "k10temp": {
+            "description": "AMD Family 10h+ CPU core temperature monitor",
+            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "",
@@ -6028,7 +6064,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -6156,7 +6192,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -6552,11 +6588,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -6580,13 +6616,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -6774,7 +6814,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -6876,10 +6916,6 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -6950,7 +6986,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -6998,7 +7034,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -7106,7 +7142,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -7394,11 +7430,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -7438,13 +7474,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -7453,6 +7493,10 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
+        },
+        "amd_nb": {
+            "description": "",
+            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -7652,7 +7696,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -7758,8 +7802,8 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
             "depends": ""
         },
         "i40e": {
@@ -7836,7 +7880,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -7873,6 +7917,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "k10temp": {
+            "description": "AMD Family 10h+ CPU core temperature monitor",
+            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "",
@@ -7916,7 +7964,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -8044,7 +8092,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -8440,11 +8488,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -8468,13 +8516,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -8682,7 +8734,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -8776,10 +8828,6 @@
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -8854,7 +8902,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -8898,7 +8946,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -9006,7 +9054,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -9294,11 +9342,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -9326,13 +9374,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -9520,7 +9572,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -9622,10 +9674,6 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -9696,7 +9744,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -9744,7 +9792,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -9852,7 +9900,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -10140,11 +10188,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -10184,13 +10232,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -10199,6 +10251,10 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
+        },
+        "amd_nb": {
+            "description": "",
+            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -10398,7 +10454,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -10504,8 +10560,8 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
             "depends": ""
         },
         "i40e": {
@@ -10582,7 +10638,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -10619,6 +10675,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "k10temp": {
+            "description": "AMD Family 10h+ CPU core temperature monitor",
+            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "",
@@ -10662,7 +10722,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -10790,7 +10850,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -11186,11 +11246,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -11214,13 +11274,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -11408,7 +11472,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -11518,10 +11582,6 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -11592,7 +11652,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -11640,7 +11700,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -11748,7 +11808,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -12036,11 +12096,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -12080,13 +12140,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -12095,6 +12159,10 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
+        },
+        "amd_nb": {
+            "description": "",
+            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -12294,7 +12362,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -12408,8 +12476,12 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-i801": {
+            "description": "I801 SMBus driver",
             "depends": ""
         },
         "i40e": {
@@ -12486,7 +12558,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -12523,6 +12595,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "k10temp": {
+            "description": "AMD Family 10h+ CPU core temperature monitor",
+            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "",
@@ -12566,7 +12642,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -12694,7 +12770,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -13090,11 +13166,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -13118,13 +13194,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -13308,7 +13388,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -13402,10 +13482,6 @@
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -13476,7 +13552,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -13520,7 +13596,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -13628,7 +13704,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -13904,11 +13980,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -13932,13 +14008,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -14070,7 +14150,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "e1000": {
             "description": "Intel(R) PRO/1000 Network Driver",
@@ -14144,10 +14224,6 @@
             "description": "Generic Backlight Driver",
             "depends": "backlight"
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i8042": {
             "description": "i8042 keyboard and mouse controller driver",
             "depends": ""
@@ -14190,7 +14266,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -14230,7 +14306,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -14306,7 +14382,7 @@
         },
         "nct6775": {
             "description": "NCT6775F/NCT6776F/NCT6779D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "output": {
             "description": "Display Output Switcher Lowlevel Control Abstraction",
@@ -14510,11 +14586,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         }
     },
     "bromolow-3.10.108": {
@@ -14530,13 +14606,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -14672,7 +14752,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "e1000": {
             "description": "Intel(R) PRO/1000 Network Driver",
@@ -14746,10 +14826,6 @@
             "description": "Generic Backlight Driver",
             "depends": "backlight"
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i8042": {
             "description": "i8042 keyboard and mouse controller driver",
             "depends": ""
@@ -14792,7 +14868,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -14832,7 +14908,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -14908,7 +14984,7 @@
         },
         "nct6775": {
             "description": "NCT6775F/NCT6776F/NCT6779D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "output": {
             "description": "Display Output Switcher Lowlevel Control Abstraction",
@@ -15112,11 +15188,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         }
     },
     "denverton-4.4.180": {
@@ -15134,6 +15210,10 @@
         },
         "adm1021": {
             "description": "adm1021 driver",
+            "depends": ""
+        },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
             "depends": ""
         },
         "adm9240": {
@@ -15994,6 +16074,10 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
@@ -16009,6 +16093,10 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
+        },
+        "amd_nb": {
+            "description": "",
+            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -16318,6 +16406,10 @@
             "description": "hwmon-vid driver",
             "depends": ""
         },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -16429,6 +16521,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "k10temp": {
+            "description": "AMD Family 10h+ CPU core temperature monitor",
+            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "",
@@ -17022,6 +17118,10 @@
         },
         "adm1021": {
             "description": "adm1021 driver",
+            "depends": ""
+        },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
             "depends": ""
         },
         "adm9240": {
@@ -17898,6 +17998,10 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid,regmap-i2c"
@@ -18032,6 +18136,10 @@
         },
         "cn": {
             "description": "Generic userspace <-> kernelspace connector.",
+            "depends": ""
+        },
+        "coretemp": {
+            "description": "Intel Core temperature monitor",
             "depends": ""
         },
         "cp210x": {
@@ -18192,6 +18300,18 @@
         },
         "hwmon-vid": {
             "description": "hwmon-vid driver",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-i801": {
+            "description": "I801 SMBus driver",
+            "depends": ""
+        },
+        "i2c-smbus": {
+            "description": "SMBus protocol extensions support",
             "depends": ""
         },
         "i40e": {
@@ -18529,6 +18649,10 @@
         "psnap": {
             "description": "",
             "depends": "llc"
+        },
+        "pwm-fan": {
+            "description": "PWM FAN driver",
+            "depends": ""
         },
         "qca_7k_common": {
             "description": "Qualcomm Atheros QCA7000 common",
@@ -19000,6 +19124,10 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid,regmap-i2c"
@@ -19138,6 +19266,10 @@
         },
         "cn": {
             "description": "Generic userspace <-> kernelspace connector.",
+            "depends": ""
+        },
+        "coretemp": {
+            "description": "Intel Core temperature monitor",
             "depends": ""
         },
         "cp210x": {
@@ -19302,6 +19434,18 @@
         },
         "hwmon-vid": {
             "description": "hwmon-vid driver",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-i801": {
+            "description": "I801 SMBus driver",
+            "depends": ""
+        },
+        "i2c-smbus": {
+            "description": "SMBus protocol extensions support",
             "depends": ""
         },
         "i40e": {
@@ -19639,6 +19783,10 @@
         "psnap": {
             "description": "",
             "depends": "llc"
+        },
+        "pwm-fan": {
+            "description": "PWM FAN driver",
+            "depends": ""
         },
         "qca_7k_common": {
             "description": "Qualcomm Atheros QCA7000 common",
@@ -20101,6 +20249,10 @@
         },
         "adm1021": {
             "description": "adm1021 driver",
+            "depends": ""
+        },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
             "depends": ""
         },
         "adm9240": {
@@ -20985,6 +21137,10 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
@@ -20996,6 +21152,10 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
+        },
+        "amd_nb": {
+            "description": "",
+            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -21321,6 +21481,10 @@
             "description": "hwmon-vid driver",
             "depends": ""
         },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -21436,6 +21600,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "k10temp": {
+            "description": "AMD Family 10h+ CPU core temperature monitor",
+            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "",
@@ -22037,6 +22205,10 @@
         },
         "adm1021": {
             "description": "adm1021 driver",
+            "depends": ""
+        },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
             "depends": ""
         },
         "adm9240": {
@@ -22929,13 +23101,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -23067,7 +23243,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "e1000": {
             "description": "Intel(R) PRO/1000 Network Driver",
@@ -23141,10 +23317,6 @@
             "description": "Generic Backlight Driver",
             "depends": "backlight"
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i8042": {
             "description": "i8042 keyboard and mouse controller driver",
             "depends": ""
@@ -23187,7 +23359,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -23227,7 +23399,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -23303,7 +23475,7 @@
         },
         "nct6775": {
             "description": "NCT6775F/NCT6776F/NCT6779D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "output": {
             "description": "Display Output Switcher Lowlevel Control Abstraction",
@@ -23507,11 +23679,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         }
     },
     "grantley-3.10.108": {
@@ -23527,13 +23699,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -23669,7 +23845,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "e1000": {
             "description": "Intel(R) PRO/1000 Network Driver",
@@ -23743,10 +23919,6 @@
             "description": "Generic Backlight Driver",
             "depends": "backlight"
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i8042": {
             "description": "i8042 keyboard and mouse controller driver",
             "depends": ""
@@ -23789,7 +23961,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -23829,7 +24001,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -23905,7 +24077,7 @@
         },
         "nct6775": {
             "description": "NCT6775F/NCT6776F/NCT6779D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "output": {
             "description": "Display Output Switcher Lowlevel Control Abstraction",
@@ -24061,7 +24233,7 @@
         },
         "video": {
             "description": "ACPI Video Driver",
-            "depends": "thermal_sys,backlight"
+            "depends": "backlight,thermal_sys"
         },
         "virtio": {
             "description": "",
@@ -24109,11 +24281,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         }
     },
     "kvmx64-4.4.180": {
@@ -24129,13 +24301,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -24323,7 +24499,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -24417,10 +24593,6 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "ib_addr": {
             "description": "IB Address Translation",
             "depends": "ipv6"
@@ -24471,7 +24643,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -24515,7 +24687,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -24623,7 +24795,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -24919,11 +25091,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -24963,13 +25135,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -24978,6 +25154,10 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
+        },
+        "amd_nb": {
+            "description": "",
+            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -25177,7 +25357,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -25275,8 +25455,12 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-i801": {
+            "description": "I801 SMBus driver",
             "depends": ""
         },
         "ib_addr": {
@@ -25329,7 +25513,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -25363,6 +25547,10 @@
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
         },
+        "k10temp": {
+            "description": "AMD Family 10h+ CPU core temperature monitor",
+            "depends": "amd_nb"
+        },
         "lib80211": {
             "description": "common routines for IEEE802.11 drivers",
             "depends": ""
@@ -25393,7 +25581,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -25521,7 +25709,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -25925,11 +26113,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -25953,13 +26141,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -26167,7 +26359,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -26253,10 +26445,6 @@
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "ib_addr": {
             "description": "IB Address Translation",
             "depends": "ipv6"
@@ -26311,7 +26499,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -26355,7 +26543,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -26463,7 +26651,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -26763,11 +26951,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -26799,13 +26987,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -26997,7 +27189,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -27099,10 +27291,6 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -27173,7 +27361,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -27221,7 +27409,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -27329,7 +27517,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -27617,11 +27805,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -27661,13 +27849,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -27676,6 +27868,10 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
+        },
+        "amd_nb": {
+            "description": "",
+            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -27879,7 +28075,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -27985,8 +28181,12 @@
             "description": "",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-asm2824": {
+            "description": "ASM2824 SMBus driver",
             "depends": ""
         },
         "i40e": {
@@ -28063,7 +28263,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -28100,6 +28300,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "k10temp": {
+            "description": "AMD Family 10h+ CPU core temperature monitor",
+            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "",
@@ -28143,7 +28347,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -28271,7 +28475,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -28667,11 +28871,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -28695,13 +28899,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -28913,7 +29121,7 @@
         },
         "dme1737": {
             "description": "DME1737 sensors",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "dvb-core": {
             "description": "DVB Core Driver",
@@ -29007,10 +29215,6 @@
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
         },
-        "hwmon-vid": {
-            "description": "hwmon-vid driver",
-            "depends": ""
-        },
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
@@ -29085,7 +29289,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -29129,7 +29333,7 @@
         },
         "lm78": {
             "description": "LM78/LM79 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "lm90": {
             "description": "LM90/ADM1032 driver",
@@ -29237,7 +29441,7 @@
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -29525,11 +29729,11 @@
         },
         "w83781d": {
             "description": "W83781D driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "w83793": {
             "description": "w83793 driver",
-            "depends": "hwmon-vid"
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -29555,6 +29759,10 @@
         },
         "adm1021": {
             "description": "adm1021 driver",
+            "depends": ""
+        },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
             "depends": ""
         },
         "adm9240": {
@@ -29675,6 +29883,10 @@
         },
         "cn": {
             "description": "Generic userspace <-> kernelspace connector.",
+            "depends": ""
+        },
+        "coretemp": {
+            "description": "Intel Core temperature monitor",
             "depends": ""
         },
         "cp210x": {
@@ -30427,6 +30639,10 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
@@ -30565,6 +30781,10 @@
         },
         "cn": {
             "description": "Generic userspace <-> kernelspace connector.",
+            "depends": ""
+        },
+        "coretemp": {
+            "description": "Intel Core temperature monitor",
             "depends": ""
         },
         "cp210x": {
@@ -30745,6 +30965,18 @@
         },
         "hwmon-vid": {
             "description": "hwmon-vid driver",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-i801": {
+            "description": "I801 SMBus driver",
+            "depends": ""
+        },
+        "i2c-smbus": {
+            "description": "SMBus protocol extensions support",
             "depends": ""
         },
         "i40e": {
@@ -31457,13 +31689,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": "hwmon-vid,coretemp"
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -31579,6 +31815,10 @@
         },
         "cn": {
             "description": "Generic userspace <-> kernelspace connector.",
+            "depends": ""
+        },
+        "coretemp": {
+            "description": "Intel Core temperature monitor",
             "depends": ""
         },
         "cp210x": {
@@ -32339,13 +32579,17 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
         },
         "adt7475": {
             "description": "adt7475 driver",
-            "depends": "hwmon-vid"
+            "depends": "hwmon-vid,coretemp"
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -32481,6 +32725,10 @@
         },
         "cn": {
             "description": "Generic userspace <-> kernelspace connector.",
+            "depends": ""
+        },
+        "coretemp": {
+            "description": "Intel Core temperature monitor",
             "depends": ""
         },
         "cp210x": {
@@ -32661,6 +32909,18 @@
         },
         "hwmon-vid": {
             "description": "hwmon-vid driver",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-i801": {
+            "description": "I801 SMBus driver",
+            "depends": ""
+        },
+        "i2c-smbus": {
+            "description": "SMBus protocol extensions support",
             "depends": ""
         },
         "i40e": {
@@ -33381,6 +33641,10 @@
             "description": "adm1021 driver",
             "depends": ""
         },
+        "adm1031": {
+            "description": "ADM1031/ADM1030 driver",
+            "depends": ""
+        },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
@@ -33503,6 +33767,10 @@
         },
         "cn": {
             "description": "Generic userspace <-> kernelspace connector.",
+            "depends": ""
+        },
+        "coretemp": {
+            "description": "Intel Core temperature monitor",
             "depends": ""
         },
         "cp210x": {
