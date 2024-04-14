@@ -113,6 +113,12 @@
     /opt/bin/opkg update
     /opt/bin/opkg install rename
     ```
+* 群晖 ipkg 包管理:
+    ```shell
+    wget http://ipkg.nslu2-linux.org/feeds/optware/syno-i686/cross/unstable/syno-i686-bootstrap_1.2-7_i686.xsh | /bin/sh
+    ipkg update
+    ipkg install lm-sensors
+    ```
 
 ## DEBUG
 * log:
@@ -181,6 +187,9 @@
   cat /var/log/messages                            # 系统消息日志
   cat /var/log/linuxrc.syno.log                    # 系统 linuxrc 日志 (junior mode)
   cat /tmp/installer_sh.log                        # 系统安装日志 (junior mode)
+  systemctl enable  syslog-ng.service              # 开机启动所有日志
+  systemctl disable syslog-ng.service              # 永久停止所有日志
+
 
   # 显卡相关
   lspci -d ::300                                   # 查看 VGA 兼容控制器
