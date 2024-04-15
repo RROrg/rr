@@ -1296,9 +1296,8 @@ function make() {
     while true; do
       SIZE=256 # initrd-dsm + zImage-dsm ≈ 210M
       SPACELEFT=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
-      [ ${SPACELEFT:-0} -ge ${SIZE} ] && break
-      [ -f ${MOD_ZIMAGE_FILE} ] && rm -f "${MOD_ZIMAGE_FILE}" && continue
-      [ -f ${MOD_RDGZ_FILE} ] && rm -f "${MOD_RDGZ_FILE}" && continue
+      SPACEALL=$((${SPACELEFT:-0} + $(du -m ${MOD_ZIMAGE_FILE} | awk '{print $1}') + $(du -m ${MOD_RDGZ_FILE} | awk '{print $1}')))
+      [ ${SPACEALL:-0} -ge ${SIZE} ] && break
       echo -e "$(TEXT "No disk space left, please clean the cache and try again!")" >"${LOG_FILE}"
       return 1
     done
