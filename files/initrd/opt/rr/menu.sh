@@ -2718,6 +2718,7 @@ function downloadExts() {
       --progressbox "$(TEXT "Downloading ...")" 20 100
   fi
   if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
+    rm -f "${TMP_PATH}/${4}-${TAG}.zip"
     MSG="$(printf "$(TEXT "Error downloading new version.\nError: %d:%d\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" "${RET}" "${STATUS}")"
     if [ "${5}" = "-1" ]; then
       echo "${T} - ${MSG}"
