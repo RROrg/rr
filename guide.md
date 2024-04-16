@@ -25,6 +25,9 @@
    * RAID计算: 
      * https://www.synology.cn/zh-cn/support/RAID_calculator
      * https://www.synology.com/en-us/support/RAID_calculator
+   * SDK:
+     * https://dataupdate7.synology.com/toolchain/v1/get_download_list?identify=toolkit&version=7.2&platform=base
+     * https://dataupdate7.synology.com/toolchain/v1/get_download_list?identify=toolkit&version=7.2&platform=purley
 
 # 安装条件
   1. 引导盘：当前支持 SATA/SCSI/NVME/MMC/IDE or USB 设备, 且要大于 2GB. (SCSI比较复杂,并不是全部可用)
@@ -130,7 +133,8 @@
   cat /proc/sys/kernel/syno_mac_address1           # 查看当前鉴权的 mac1 (/proc/sys/kernel/syno_mac_addresses)
   sysctl -n kernel.syno_internal_netif_num         # 查看当前鉴权的网卡数量
   cat /proc/sys/kernel/syno_internal_netif_num     # 查看当前鉴权的网卡数量
-  nproc                                            # 查看当前线程数
+  cat /proc/sys/kernel/syno_CPU_info_core          # 查看当前线程数 (nproc)
+  sysctl -w kernel.syno_CPU_info_core=32           # 设置线程数 (无效)
   
   # 设备相关
   lsmod                                            # 查看已加载驱动
@@ -167,6 +171,9 @@
   cat /sys/block/sata*/device/syno_block_info      # 查看识别的 sata 硬盘挂载点 (设备树(dtb)的型号)
   cat /sys/block/nvme*/device/syno_block_info      # 查看识别的 nvme 硬盘挂载点
 
+  # 判断是否支持热插拔 (返回 min_power, medium_power 则可能支持热插拔; 返回 max_performance 则可能不支持热插拔.)
+  cat /sys/class/scsi_host/host*/link_power_management_policy
+
   # 服务相关
   journalctl -xe                                   # 查看服务日志
   systemctl                                        # 查看服务
@@ -190,7 +197,6 @@
   systemctl enable  syslog-ng.service              # 开机启动所有日志
   systemctl disable syslog-ng.service              # 永久停止所有日志
 
-
   # 显卡相关
   lspci -d ::300                                   # 查看 VGA 兼容控制器
   lspci -d ::301                                   # 查看 XGA 控制器
@@ -209,11 +215,27 @@
   synopkg list                                     # 列出所有已安装软件包
   synopkg info <package_name>                      # 查看软件包信息
   synopkg install <package_path_or_url>            # 安装软件包
+  synopkg install "$(synopkg show CodecPack 2>/dev/null | jq -r '.link')"    # 安装软件包, url 方式
+  synopkg install_from_server CodecPac             # 安装软件包, 自动从服务器下载
   synopkg uninstall <package_name>                 # 卸载软件包
   synopkg start <package_name>                     # 启动软件包
   synopkg stop <package_name>                      # 停止软件包
   synopkg restart <package_name>                   # 重启软件包
+ 
+  # 初始化
+  synodsdefault --reinstall                        # 重装系统
+  synodsdefault --factory-default                  # 重置系统 （清空全部数据）
 
+  # API
+  # 获取系统信息
+  synowebapi --exec api=SYNO.Core.System method=info
+  # 获取设备信息
+  synowebapi --exec api=SYNO.Core.System.Utilization method=get version=1
+  # 关闭 自动 https 重定向
+  synowebapi --exec api=SYNO.Core.Web.DSM method=set version=2 enable_https_redirect=false
+  # 开启 telnet/ssh
+  synowebapi --exec api=SYNO.Core.Terminal method=set version=3 enable_telnet=true enable_ssh=true ssh_port=22 forbid_console=false
+  
   # Get MD5
   certutil -hashfile xxx.pat MD5                   # windows
   md5sum xxx.pat                                   # linux/mac
