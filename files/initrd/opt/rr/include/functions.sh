@@ -329,6 +329,7 @@ function getLogo() {
   fi
   STATUS=$(curl -skL --connect-timeout 10 -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
   if [ $? -ne 0 -o ${STATUS:-0} -ne 200 -o ! -f "${PART3_PATH}/logo.png" ]; then
+    rm -f "${PART3_PATH}/logo.png"
     return 1
   fi
   convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
