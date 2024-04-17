@@ -2686,7 +2686,7 @@ function downloadExts() {
   else
     MSG=""
     MSG+="Latest: ${TAG}\n\n"
-    MSG+="$(curl -skL --connect-timeout 10 "${PROXY}${3}/releases/tag/${TAG}" | pup 'div[data-test-selector="body-content"]' | html2text -utf8)\n\n"
+    MSG+="$(curl -skL --connect-timeout 10 "${PROXY}${3}/releases/tag/${TAG}" | pup 'div[data-test-selector="body-content"]' | html2text --ignore-links --ignore-images)\n\n"
     MSG+="$(TEXT "Do you want to update?")"
     if [ "${5}" = "-1" ]; then
       echo "${T} - ${MSG}"
@@ -2699,35 +2699,35 @@ function downloadExts() {
         --infobox "$(echo -e "${MSG}")" 0 0
     fi
   fi
+  function __download() {
+    rm -f ${TMP_PATH}/${4}*.zip
+    touch "${TMP_PATH}/${4}-${TAG}.zip.downloading"
+    STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}-${TAG}.zip" -o "${TMP_PATH}/${4}-${TAG}.zip")
+    RET=$?
+    rm -f "${TMP_PATH}/${4}-${TAG}.zip.downloading"
+    if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
+      rm -f "${TMP_PATH}/${4}-${TAG}.zip"
+      MSG="$(printf "$(TEXT "Error downloading new version.\nError: %d:%d\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" "${RET}" "${STATUS}")"
+      echo -e "${MSG}" > "${LOG_FILE}"
+    fi
+    return 0
+  }
+  rm -f "${LOG_FILE}"
   if [ "${5}" = "-1" ]; then
-    (
-      rm -f ${TMP_PATH}/${4}*.zip
-      touch "${TMP_PATH}/${4}-${TAG}.zip.downloading"
-      STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}-${TAG}.zip" -o "${TMP_PATH}/${4}-${TAG}.zip")
-      RET=$?
-      rm -f "${TMP_PATH}/${4}-${TAG}.zip.downloading"
-    ) 2>&1
+    __download $@ 2>&1
   else
-    (
-      rm -f ${TMP_PATH}/${4}*.zip
-      touch "${TMP_PATH}/${4}-${TAG}.zip.downloading"
-      STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PROXY}${3}/releases/download/${TAG}/${4}-${TAG}.zip" -o "${TMP_PATH}/${4}-${TAG}.zip")
-      RET=$?
-      rm -f "${TMP_PATH}/${4}-${TAG}.zip.downloading"
-    ) 2>&1 | DIALOG --title "${T}" \
+    __download $@ 2>&1 | DIALOG --title "${T}" \
       --progressbox "$(TEXT "Downloading ...")" 20 100
   fi
-  if [ ${RET} -ne 0 -o ${STATUS:-0} -ne 200 ]; then
-    rm -f "${TMP_PATH}/${4}-${TAG}.zip"
-    MSG="$(printf "$(TEXT "Error downloading new version.\nError: %d:%d\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" "${RET}" "${STATUS}")"
+  if [ -f "${LOG_FILE}" ]; then
     if [ "${5}" = "-1" ]; then
-      echo "${T} - ${MSG}"
+      echo "${T} - $(cat "${LOG_FILE}")"
     elif [ "${5}" = "0" ]; then
       DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
+        --msgbox "$(cat "${LOG_FILE}")" 0 0
     else
       DIALOG --title "${T}" \
-        --infobox "${MSG}" 0 0
+        --infobox "$(cat "${LOG_FILE}")" 0 0
     fi
     return 1
   fi
