@@ -371,3 +371,22 @@ function connectwlanif() {
   wpa_supplicant -i ${1} -c "${CONF}" -B -P "/var/run/wpa_supplicant.pid.${1}" >/dev/null 2>&1
   return 0
 }
+
+###############################################################################
+# Find and mount the DSM root filesystem
+# (based on pocopico's TCRP code)
+function findDSMRoot() {
+  local DSMROOTS=""
+  local RAIDS="$(lsblk -pno KNAME,PARTN,FSTYPE,FSVER,LABEL | grep -w " 1" | grep -w "linux_raid_member")"
+  if echo "${RAIDS}" | grep -q "1.2"; then
+    # SynologyNAS:0, DiskStation:0, SynologyNVR:0, BeeStation:0
+    local LABELS="$(echo "${RAIDS}" | grep "1.2" | awk '{print $5}' | uniq)"
+    for I in ${LABELS}; do
+       [ -L "/dev/md/${I}" ] && DSMROOTS="${DSMROOTS} /dev/md/${I}"
+    done
+  elif echo "${RAIDS}" | grep -q "0.9"; then
+     DSMROOTS="$(echo "${RAIDS}" | grep "0.9" | awk '{print $1}')"
+  fi
+  echo ${DSMROOTS}
+  return 0
+}
