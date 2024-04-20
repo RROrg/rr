@@ -104,18 +104,18 @@
     "dbgutils": {
         "system": false,
         "description": {
-            "en_US": "Debug utilities, automatically enable ttyd and dufs in junior mode, and automatically capture all stage boot logs to <loader disk>/p1/logs/.",
-            "es_ES": "Herramientas de depuración, habilitan automáticamente ttyd y dufs en modo junior, y capturan automáticamente todos los registros de arranque de las fases en <loader disk>/p1/logs/.",
-            "de_DE": "Debug-Tools, aktivieren automatisch ttyd und dufs im Junior-Modus und erfassen automatisch alle Startprotokolle der Stufen in <loader disk>/p1/logs/.",
-            "fr_FR": "Outils de débogage, activent automatiquement ttyd et dufs en mode junior, et capturent automatiquement tous les journaux de démarrage de la phase dans <loader disk>/p1/logs/.",
-            "ja_JP": "デバッグユーティリティは、ジュニアモードで自動的にttydとdufsを有効にし、すべてのステージブートログを<loader disk>/p1/logs/に自動的にキャプチャします。",
-            "ko_KR": "디버그 유틸리티, 주니어 모드에서 자동으로 ttyd와 dufs를 활성화하고 모든 단계 부팅 로그를 <loader disk>/p1/logs/에 자동으로 캡처합니다.",
-            "ru_RU": "Утилиты отладки, автоматически включают ttyd и dufs в режиме junior и автоматически захватывают все журналы загрузки этапа в <loader disk>/p1/logs/.",
-            "uk_UA": "Утиліти налагодження, автоматично увімкнути ttyd та dufs у режимі junior, та автоматично захопити всі журнали завантаження етапу в <loader disk>/p1/logs/.",
-            "vi_VN": "Công cụ debug, tự động bật ttyd và dufs trong chế độ junior và tự động ghi lại tất cả các bản ghi khởi động của các giai đoạn vào <loader disk>/p1/logs/.",
-            "zh_CN": "Debug 程序集合，在 junior 模式下自动开启 ttyd 和 dufs，并会自动抓取所有阶段的启动日志放于 <loader disk>/p1/logs/ 下。",
-            "zh_HK": "Debug 程序集合，在 junior 模式下自動開啟 ttyd 和 dufs，並會自動抓取所有階段的啟動日誌放於 <loader disk>/p1/logs/ 下。",
-            "zh_TW": "Debug 程序集合，在 junior 模式下自動開啟 ttyd 和 dufs，並會自動抓取所有階段的啟動日誌放於 <loader disk>/p1/logs/ 下。"
+            "en_US": "Debug utilities, automatically capture all stage boot logs to <loader disk>/p1/logs/.",
+            "es_ES": "Utilidades de depuración, captura automáticamente todos los registros de arranque de etapa a <disco de carga>/p1/logs/.",
+            "de_DE": "Debug-Dienstprogramme, erfassen Sie automatisch alle Stufenstartprotokolle auf <Loader-Disk>/p1/logs/.",
+            "fr_FR": "Utilitaires de débogage, capture automatiquement tous les journaux de démarrage de la scène à <disque de chargement>/p1/logs/.",
+            "ja_JP": "デバッグユーティリティ、すべてのステージブートログを <ローダーディスク>/p1/logs/ に自動的にキャプチャします。",
+            "ko_KR": "디버그 유틸리티, 모든 스테이지 부팅 로그를 <로더 디스크>/p1/logs/에 자동으로 캡처합니다.",
+            "ru_RU": "Утилиты отладки, автоматически захватывают все журналы загрузки этапа на <загрузочный диск>/p1/logs/.",
+            "uk_UA": "Утиліти відлагодження, автоматично захоплюють всі журнали завантаження етапу на <завантажувальний диск>/p1/logs/.",
+            "vi_VN": "Công cụ gỡ lỗi, tự động chụp tất cả các bản ghi khởi động giai đoạn đến <ổ đĩa tải trọng>/p1/logs/.",
+            "zh_CN": "调试工具，自动捕获所有阶段启动日志到 <加载器磁盘>/p1/logs/。",
+            "zh_HK": "調試工具，自動捕獲所有階段啟動日誌到 <加載器磁盤>/p1/logs/。",
+            "zh_TW": "調試工具，自動捕獲所有階段啟動日誌到 <加載器磁盤>/p1/logs/。"
         }
     },
     "disks": {
@@ -388,6 +388,23 @@
             "zh_CN": "在 DSM 计划任务中添加一个脚本以重新启动到 RR，这使得很容易访问 RR 而不需要屏幕和键盘。",
             "zh_HK": "在 DSM 計劃任務中添加一個腳本以重新啟動到 RR，這使得很容易訪問 RR 而不需要屏幕和鍵盤。",
             "zh_TW": "在 DSM 計劃任務中添加一個腳本以重新啟動到 RR，這使得很容易訪問 RR 而不需要屏幕和鍵盤。"
+        }
+    },
+    "remotefs": {
+        "system": false,
+        "description": {
+            "en_US": "Author: jinlife. This patch will allow remote NFS/CIFS shared folder be used in VideoStation, AudioStation and Photos etc..",
+            "es_ES": "Autor: jinlife. Este parche permitirá que la carpeta compartida remota NFS/CIFS se utilice en VideoStation, AudioStation y Photos, etc.",
+            "de_DE": "Autor: jinlife. Dieser Patch ermöglicht es, dass ein entfernter NFS/CIFS-Freigabeordner in VideoStation, AudioStation und Photos usw. verwendet wird.",
+            "fr_FR": "Auteur: jinlife. Ce correctif permettra à un dossier partagé NFS/CIFS distant d'être utilisé dans VideoStation, AudioStation et Photos, etc.",
+            "ja_JP": "作成者: jinlife。このパッチにより、リモート NFS/CIFS 共有フォルダを VideoStation、AudioStation、Photos などで使用できます。",
+            "ko_KR": "작성자: jinlife. 이 패치를 사용하면 VideoStation, AudioStation 및 사진 등에서 원격 NFS/CIFS 공유 폴더를 사용할 수 있습니다.",
+            "ru_RU": "Автор: jinlife. Этот патч позволит использовать удаленную общую папку NFS/CIFS в VideoStation, AudioStation и Photos и т. д.",
+            "uk_UA": "Автор: jinlife. Цей патч дозволить використовувати віддалену спільну папку NFS/CIFS в VideoStation, AudioStation та Photos тощо.",
+            "vi_VN": "Tác giả: jinlife. Bản vá này sẽ cho phép thư mục chia sẻ NFS/CIFS từ xa được sử dụng trong VideoStation, AudioStation và Photos v.v..",
+            "zh_CN": "作者：jinlife。此补丁将允许在 VideoStation、AudioStation 和 Photos 等中使用远程 NFS/CIFS 共享文件夹。",
+            "zh_HK": "作者：jinlife。此補丁將允許在 VideoStation、AudioStation 和 Photos 等中使用遠程 NFS/CIFS 共享文件夾。",
+            "zh_TW": "作者：jinlife。此補丁將允許在 VideoStation、AudioStation 和 Photos 等中使用遠程 NFS/CIFS 共享文件夾。"
         }
     },
     "revert": {
