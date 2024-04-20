@@ -69,6 +69,7 @@ For the packag of has been initialized and build image, please go to [RR-CUSTOM]
   - `ja_JP`: `@andatoshiki` & `@toshikidev`
   - `ko_KR`: `@EXP` : jeong1986
   - `ru_RU`: `@Alex`: TG
+  - `vi_VN`: `@Ngọc Anh Trần`: mr.ngocanhtran
   - `zh_CN`: `@rrorg`
   - `zh_HK`: `@rrorg`
   - `zh_TW`: `@March Fun`: [豪客幫](<https://cyber.suma.tw/>)
