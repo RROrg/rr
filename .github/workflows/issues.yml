@@ -230,16 +230,22 @@ jobs:
           zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img
           
           UPLOAD="$(curl -k -F "file=@rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -F "token=${{ secrets.TT_TOKEN }}" -F "model=0"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli")"
-          if ! echo "${UPLOAD}" | grep -q "Download Page"; then
-            echo "Upload failed"
-            exit 1
-          fi
+          echo "${UPLOAD}" | grep -q "Download Page" && DLURL="$(echo "${UPLOAD}" | grep "Download Page" | head -1)" || DLURL="Actions artifacts."
 
           EMAIL=$(curl -s -H "Authorization: token ${{ secrets.ACTION }}" "https://api.github.com/users/${{ github.event.issue.user.login }}" | jq -r '.email')
-          TTDLURL="$(echo "${UPLOAD}" | grep "Download Page" | head -1)"
+
           echo "TAG=${TAG}" >> $GITHUB_ENV
           echo "EMAIL=${EMAIL}" >> $GITHUB_ENV
-          echo "TTDLURL=${TTDLURL}" >> $GITHUB_ENV
+          echo "DLURL=${DLURL}" >> $GITHUB_ENV
+
+      - name: Upload to Artifacts
+        if: success() && env.DLURL == 'Actions artifacts.'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rr-${MODEL}-${TAG}
+          path: |
+            rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip
+          retention-days: 5
 
       - name: Send mail
         if: env.iscustom == 'true' && success() && env.EMAIL != 'null'
@@ -253,7 +259,7 @@ jobs:
           to: ${{ env.EMAIL }}
           from: ${{ secrets.MAIL_USERNAME }}
           body: |
-            ${{ env.TTDLURL }}
+            ${{ env.DLURL }}
 
       - name: Update Comment Success
         if: env.iscustom == 'true' && success() && env.EMAIL != 'null'
@@ -280,7 +286,7 @@ jobs:
           update-mode: replace
           body: |
             Hi @${{ github.event.issue.user.login }}.  
-            ${{ env.TTDLURL }}
+            ${{ env.DLURL }}
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: hooray
