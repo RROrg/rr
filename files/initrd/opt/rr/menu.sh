@@ -371,8 +371,6 @@ function productversMenu() {
 ###############################################################################
 # Parse Pat
 function ParsePat() {
-  rm -f "${LOG_FILE}"
-
   if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
     MSG="$(printf "$(TEXT "You have selected the %s and %s.\n'Parse Pat' will overwrite the previous selection.\nDo you want to continue?")" "${MODEL}" "${PRODUCTVER}")"
     DIALOG --title "$(TEXT "Parse Pat")" \
@@ -402,11 +400,12 @@ function ParsePat() {
   fi
 
   while true; do
+    rm -f "${LOG_FILE}"
     echo "$(printf "$(TEXT "Parse %s ...")" "$(basename "${PAT_PATH}")")"
     extractPatFiles "${PAT_PATH}" "${UNTAR_PAT_PATH}"
     if [ $? -ne 0 ]; then
       rm -rf "${UNTAR_PAT_PATH}"
-      return 1
+      break
     fi
     if [ ! -f "${UNTAR_PAT_PATH}/GRUB_VER" -o ! -f "${UNTAR_PAT_PATH}/VERSION" ]; then
       echo -e "$(TEXT "pat Invalid, try again!")" >"${LOG_FILE}"
