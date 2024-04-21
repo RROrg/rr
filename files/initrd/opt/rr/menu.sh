@@ -498,6 +498,9 @@ function ParsePat() {
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
     rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
     touch ${PART1_PATH}/.build
+    rm -f "${LOG_FILE}"
+    echo "$(TEXT "Ready!")"
+    sleep 3
     break
   done 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
     --progressbox "$(TEXT "Making ...")" 20 100
@@ -1160,6 +1163,9 @@ function extractPatFiles() {
     # Uses the extractor to untar pat file
     echo "$(TEXT "Extracting ...")"
     LD_LIBRARY_PATH=${EXTRACTOR_PATH} "${EXTRACTOR_PATH}/${EXTRACTOR_BIN}" "${PAT_PATH}" "${EXT_PATH}" >"${LOG_FILE}" 2>&1
+    if [ $? -ne 0 ]; then
+      return 1
+    fi
   else
     echo "$(TEXT "Extracting ...")"
     tar -xf "${PAT_PATH}" -C "${EXT_PATH}" >"${LOG_FILE}" 2>&1
@@ -1175,6 +1181,8 @@ function extractPatFiles() {
     echo -e "$(TEXT "pat Invalid, try again!")" >"${LOG_FILE}"
     return 1
   fi
+  rm -f "${LOG_FILE}"
+  return 0
 }
 
 ###############################################################################
