@@ -2161,37 +2161,93 @@ function cloneBootloaderDisk() {
     [ $? -ne 0 ] && return
   fi
   (
+    rm -f "${LOG_FILE}"
     rm -rf "${PART3_PATH}/dl"
     CLEARCACHE=0
 
     gzip -dc "${WORK_PATH}/grub.img.gz" | dd of="${RESP}" bs=1M conv=fsync status=progress
     hdparm -z "${RESP}" # reset disk cache
     fdisk -l "${RESP}"
-    sleep 3
+    sleep 1
 
+    NEW_BLDISK_P1="$(lsblk "${RESP}" -pno KNAME,LABEL 2>/dev/null | grep 'RR1' | awk '{print $1}')"
+    NEW_BLDISK_P2="$(lsblk "${RESP}" -pno KNAME,LABEL 2>/dev/null | grep 'RR2' | awk '{print $1}')"
+    NEW_BLDISK_P3="$(lsblk "${RESP}" -pno KNAME,LABEL 2>/dev/null | grep 'RR3' | awk '{print $1}')"
+    SIZEOFDISK=$(cat /sys/block/${RESP/\/dev\//}/size)
+    ENDSECTOR=$(($(fdisk -l ${RESP} | grep "${NEW_BLDISK_P3}" | awk '{print $3}') + 1))
+    if [ ${SIZEOFDISK}0 -ne ${ENDSECTOR}0 ]; then
+      echo -e "\033[1;36mResizing ${NEW_BLDISK_P3}\033[0m"
+      echo -e "d\n\nn\n\n\n\n\nn\nw" | fdisk "${RESP}" >/dev/null 2>&1
+      resize2fs "${NEW_BLDISK_P3}"
+      fdisk -l "${RESP}"
+      sleep 1
+    fi
+    function __umountNewBlDisk() {
+      umount "${TMP_PATH}/sdX1" 2>/dev/null
+      umount "${TMP_PATH}/sdX2" 2>/dev/null
+      umount "${TMP_PATH}/sdX3" 2>/dev/null
+    }
     mkdir -p "${TMP_PATH}/sdX1"
-    mount "$(lsblk "${RESP}" -pno KNAME,LABEL 2>/dev/null | grep RR1 | awk '{print $1}')" "${TMP_PATH}/sdX1"
-    cp -vRf "${PART1_PATH}/". "${TMP_PATH}/sdX1/"
-    sync
-    umount "${TMP_PATH}/sdX1"
-
     mkdir -p "${TMP_PATH}/sdX2"
-    mount "$(lsblk "${RESP}" -pno KNAME,LABEL 2>/dev/null | grep RR2 | awk '{print $1}')" "${TMP_PATH}/sdX2"
-    cp -vRf "${PART2_PATH}/". "${TMP_PATH}/sdX2/"
-    sync
-    umount "${TMP_PATH}/sdX2"
-
     mkdir -p "${TMP_PATH}/sdX3"
-    mount "$(lsblk "${RESP}" -pno KNAME,LABEL 2>/dev/null | grep RR3 | awk '{print $1}')" "${TMP_PATH}/sdX3"
-    cp -vRf "${PART3_PATH}/". "${TMP_PATH}/sdX3/"
+    mount "${NEW_BLDISK_P1}" "${TMP_PATH}/sdX1" || (
+      echo "$(printf "$(TEXT "Can't mount %s.")" "${NEW_BLDISK_P1}")" >"${LOG_FILE}"
+      __umountNewBlDisk
+      break
+    )
+    mount "${NEW_BLDISK_P2}" "${TMP_PATH}/sdX2" || (
+      echo "$(printf "$(TEXT "Can't mount %s.")" "${NEW_BLDISK_P2}")" >"${LOG_FILE}"
+      __umountNewBlDisk
+      break
+    )
+    mount "${NEW_BLDISK_P3}" "${TMP_PATH}/sdX3" || (
+      echo "$(printf "$(TEXT "Can't mount %s.")" "${NEW_BLDISK_P3}")" >"${LOG_FILE}"
+      __umountNewBlDisk
+      break
+    )
+
+    SIZEOLD1="$(du -sm "${PART1_PATH}" 2>/dev/null | awk '{print $1}')"
+    SIZEOLD2="$(du -sm "${PART2_PATH}" 2>/dev/null | awk '{print $1}')"
+    SIZEOLD3="$(du -sm "${PART3_PATH}" 2>/dev/null | awk '{print $1}')"
+    SIZENEW1="$(df -m "${NEW_BLDISK_P1}" 2>/dev/null | awk 'NR==2 {print $4}')"
+    SIZENEW2="$(df -m "${NEW_BLDISK_P2}" 2>/dev/null | awk 'NR==2 {print $4}')"
+    SIZENEW3="$(df -m "${NEW_BLDISK_P3}" 2>/dev/null | awk 'NR==2 {print $4}')"
+
+    if [ ${SIZEOLD1:-0} -ge ${SIZENEW1:-0} ] || [ ${SIZEOLD2:-0} -ge ${SIZENEW2:-0} ] || [ ${SIZEOLD3:-0} -ge ${SIZENEW3:-0} ]; then
+      MSG="$(TEXT "Cloning failed due to insufficient remaining disk space on the selected hard drive.")"
+      echo "${MSG}" >"${LOG_FILE}"
+      __umountNewBlDisk
+      break
+    fi
+
+    cp -vRf "${PART1_PATH}/". "${TMP_PATH}/sdX1/" || (
+      echo "$(printf "$(TEXT "Can't copy to %s.")" "${NEW_BLDISK_P1}")" >"${LOG_FILE}"
+      __umountNewBlDisk
+      break
+    )
+    cp -vRf "${PART2_PATH}/". "${TMP_PATH}/sdX2/" || (
+      echo "$(printf "$(TEXT "Can't copy to %s.")" "${NEW_BLDISK_P2}")" >"${LOG_FILE}"
+      __umountNewBlDisk
+      break
+    )
+    cp -vRf "${PART3_PATH}/". "${TMP_PATH}/sdX3/" || (
+      echo "$(printf "$(TEXT "Can't copy to %s.")" "${NEW_BLDISK_P3}")" >"${LOG_FILE}"
+      __umountNewBlDisk
+      break
+    )
     sync
-    umount "${TMP_PATH}/sdX3"
+    __umountNewBlDisk
     sleep 3
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Cloning ...")" 20 100
-  DIALOG --title "${T}" \
-    --msgbox "$(printf "$(TEXT "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\nReboot?")" "${RESP}")" 0 0
-  rebootTo config
+  if [ -f "${LOG_FILE}" ]; then
+    DIALOG --title "$(TEXT "Advanced")" \
+      --msgbox "$(cat ${LOG_FILE})" 0 0
+  else
+    DIALOG --title "$(TEXT "Advanced")" \
+      --msgbox "$(printf "$(TEXT "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\nReboot?")" "${RESP}")" 0 0
+    rebootTo config
+  fi
   return
 }
 
