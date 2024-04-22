@@ -180,6 +180,7 @@
   systemctl | grep failed                          # 查看失败的服务
   systemctl list-unit-files                        # 查看服务配置文件
   systemctl list-units                             # 查看服务状态
+  systemctl daemon-reload                          # 重新加载配置文件
   systemctl status cpufreq.service                 # 查看 CPU 频率调节器状态
   systemctl start cpufreq.service                  # 启动 CPU 频率调节器
   systemctl stop cpufreq.service                   # 停止 CPU 频率调节器
