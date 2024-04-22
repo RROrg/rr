@@ -1743,7 +1743,7 @@ function tryRecoveryDSM() {
   fi
 
   mkdir -p "${TMP_PATH}/mdX"
-  mount "$(echo "${DSMROOTS}" | head -n 1 | cut -d' ' -f1)" "${TMP_PATH}/mdX"
+  mount -t ext4 "$(echo "${DSMROOTS}" | head -n 1 | cut -d' ' -f1)" "${TMP_PATH}/mdX"
   if [ $? -ne 0 ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "mount DSM system partition(md0) failed!\nPlease insert all disks before continuing.")" 0 0
@@ -1921,7 +1921,7 @@ function allowDSMDowngrade() {
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
-      mount "${I}" "${TMP_PATH}/mdX"
+      mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       [ -f "${TMP_PATH}/mdX/etc/VERSION" ] && rm -f "${TMP_PATH}/mdX/etc/VERSION"
       [ -f "${TMP_PATH}/mdX/etc.defaults/VERSION" ] && rm -f "${TMP_PATH}/mdX/etc.defaults/VERSION"
@@ -1948,7 +1948,7 @@ function resetDSMPassword() {
   rm -f "${TMP_PATH}/menu"
   mkdir -p "${TMP_PATH}/mdX"
   for I in ${DSMROOTS}; do
-    mount ${I} "${TMP_PATH}/mdX"
+    mount -t ext4 "${I}" "${TMP_PATH}/mdX"
     [ $? -ne 0 ] && continue
     if [ -f "${TMP_PATH}/mdX/etc/shadow" ]; then
       while read L; do
@@ -1989,7 +1989,7 @@ function resetDSMPassword() {
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
-      mount "${I}" "${TMP_PATH}/mdX"
+      mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       OLDPASSWD="$(cat "${TMP_PATH}/mdX/etc/shadow" 2>/dev/null | grep "^${USER}:" | awk -F ':' '{print $2}')"
       if [ -n "${NEWPASSWD}" -a -n "${OLDPASSWD}" ]; then
@@ -2032,7 +2032,7 @@ function addNewDSMUser() {
 
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
-      mount "${I}" "${TMP_PATH}/mdX"
+      mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
         sqlite3 ${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db <<EOF
@@ -2069,7 +2069,7 @@ function forceEnableDSMTelnetSSH() {
     ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR_SSH'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
-      mount "${I}" "${TMP_PATH}/mdX"
+      mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
         sqlite3 ${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db <<EOF
@@ -2109,7 +2109,7 @@ function removeBlockIPDB {
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
-      mount "${I}" "${TMP_PATH}/mdX"
+      mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       [ -f "${TMP_PATH}/mdX/etc/synoautoblock.db" ] && rm -f "${TMP_PATH}/mdX/etc/synoautoblock.db"
       sync
