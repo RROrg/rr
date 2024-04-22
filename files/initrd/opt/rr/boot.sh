@@ -272,7 +272,7 @@ else
   kexec ${KEXECARGS} -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
   echo -e "\033[1;37m$(TEXT "Booting ...")\033[0m"
   for T in $(w 2>/dev/null | grep -v "TTY" | awk -F' ' '{print $2}'); do
-    echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
+    [ -w "/dev/${T}" ] && echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
   done
 
   # Clear logs for dbgutils addons
