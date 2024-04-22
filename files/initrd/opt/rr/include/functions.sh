@@ -376,17 +376,9 @@ function connectwlanif() {
 # Find and mount the DSM root filesystem
 # (based on pocopico's TCRP code)
 function findDSMRoot() {
-  local DSMROOTS=""
-  local RAIDS="$(lsblk -pno KNAME,PARTN,FSTYPE,FSVER,LABEL | grep -w " 1" | grep -w "linux_raid_member")"
-  if echo "${RAIDS}" | grep -q "1.2"; then
-    # SynologyNAS:0, DiskStation:0, SynologyNVR:0, BeeStation:0
-    local LABELS="$(echo "${RAIDS}" | grep "1.2" | awk '{print $5}' | uniq)"
-    for I in ${LABELS}; do
-       [ -L "/dev/md/${I}" ] && DSMROOTS="${DSMROOTS} /dev/md/${I}"
-    done
-  elif echo "${RAIDS}" | grep -q "0.9"; then
-     DSMROOTS="$(echo "${RAIDS}" | grep "0.9" | awk '{print $1}')"
-  fi
-  echo ${DSMROOTS}
+  DSMROOTS=""
+  [ -z "${DSMROOTS}" ] && DSMROOTS="$(mdadm --detail --scan 2>/dev/null | grep -E "name=SynologyNAS:0|name=DiskStation:0|name=SynologyNVR:0|name=BeeStation:0" | awk '{print $2}' | uniq)"
+  [ -z "${DSMROOTS}" ] && DSMROOTS="$(lsblk -pno KNAME,PARTN,FSTYPE,FSVER,LABEL | grep -E "sd[a-z]{1,2}1" | grep -w "linux_raid_member" | grep "0.9" | awk '{print $1}')"
+  echo "${DSMROOTS}"
   return 0
 }
