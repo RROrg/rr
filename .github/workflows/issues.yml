@@ -227,11 +227,15 @@ jobs:
           fi
 
           ls rr -al
-          zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img
+          ARTIFACTS="rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip"
+          zip -9 "${ARTIFACTS}" -j rr/rr.img
           
-          UPLOAD="$(curl -k -F "file=@rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -F "token=${{ secrets.TT_TOKEN }}" -F "model=0"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli")"
-          echo "${UPLOAD}" | grep -q "Download Page" && DLURL="$(echo "${UPLOAD}" | grep "Download Page" | head -1)" || DLURL="Actions artifacts."
-
+          # UPLOAD="$(curl -k -F "file=@${ARTIFACTS}" -F "token=${{ secrets.TT_TOKEN }}" -F "model=0"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli")"
+          if echo "${UPLOAD}" | grep -q "Download Page"; then
+            DLURL="$(echo "${UPLOAD}" | grep "Download Page" | head -1)"
+          else
+            DLURL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} - Actions artifacts."
+          fi
           EMAIL=$(curl -s -H "Authorization: token ${{ secrets.ACTION }}" "https://api.github.com/users/${{ github.event.issue.user.login }}" | jq -r '.email')
 
           echo "TAG=${TAG}" >> $GITHUB_ENV
@@ -239,12 +243,12 @@ jobs:
           echo "DLURL=${DLURL}" >> $GITHUB_ENV
 
       - name: Upload to Artifacts
-        if: success() && env.DLURL == 'Actions artifacts.'
+        if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: rr-${MODEL}-${TAG}
+          name: rr-${{ env.model }}-${{ env.TAG }}
           path: |
-            rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip
+            rr-${{ env.model }}-${{ env.TAG }}*.zip
           retention-days: 5
 
       - name: Send mail
