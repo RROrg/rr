@@ -19,6 +19,7 @@ fi
 
 # Get actual IP
 IP="$(getIP)"
+[[ "${IP}" =~ ^169\.254\..* ]] && IP=""
 
 # Debug flag
 # DEBUG=""
@@ -1533,6 +1534,7 @@ function setStaticIP() {
     done
     sleep 1
     IP="$(getIP)"
+    [[ "${IP}" =~ ^169\.254\..* ]] && IP=""
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Setting IP ...")" 20 100
   return

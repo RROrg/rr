@@ -168,7 +168,11 @@ for N in ${ETHX}; do
     COUNT=$((${COUNT} + 1))
     IP="$(getIP ${N})"
     if [ -n "${IP}" ]; then
-      echo -en "\r${N}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal.")" "${IP}")\n"
+      if [[ "${IP}" =~ ^169\.254\..* ]]; then
+        echo -en "\r${N}(${DRIVER}): $(TEXT "LINK LOCAL (No DHCP server detected.)")\n"
+      else
+        echo -en "\r${N}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal.")" "${IP}")\n"
+      fi
       break
     fi
     echo -n "."
@@ -192,6 +196,7 @@ echo
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
 if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" -a ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   IP="$(getIP)"
+  [[ "${IP}" =~ ^169\.254\..* ]] && IP=""
   [ -n "${IP}" ] && URL="http://${IP}:7681" || URL="http://rr:7681/"
   python ${WORK_PATH}/include/functions.py makeqr -d "${URL}" -l "0" -o "${TMP_PATH}/qrcode_init.png"
   [ -f "${TMP_PATH}/qrcode_init.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_init.png" >/dev/null 2>/dev/null || true
