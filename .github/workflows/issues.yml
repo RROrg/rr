@@ -243,7 +243,7 @@ jobs:
           echo "DLURL=${DLURL}" >> $GITHUB_ENV
 
       - name: Upload to Artifacts
-        if: success()
+        if: env.iscustom == 'true' && success()
         uses: actions/upload-artifact@v4
         with:
           name: rr-${{ env.model }}-${{ env.TAG }}
