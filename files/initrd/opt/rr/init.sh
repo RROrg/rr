@@ -146,6 +146,7 @@ while [ ${COUNT} -lt 30 ]; do
   COUNT=$((${COUNT} + 1))
   echo -n "."
   sleep 1
+  /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
 done
 echo "$(TEXT "Waiting IP.")"
 for N in ${ETHX}; do
