@@ -85,6 +85,7 @@ jobs:
         if: success() && (inputs.push == true || github.event.action == 'created')
         run: |
             echo "Git push ..."
+            git checkout main
             git pull
             status=$(git status -s | grep -E "docs" | awk '{printf " %s", $2}')
             if [ -n "${status}" ]; then
