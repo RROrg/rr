@@ -160,6 +160,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -282,6 +286,10 @@
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -416,6 +424,10 @@
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
         },
+        "irqbypass": {
+            "description": "IRQ bypass manager utility module",
+            "depends": ""
+        },
         "iscsi_tcp": {
             "description": "iSCSI/TCP data-path",
             "depends": "libiscsi,libiscsi_tcp"
@@ -447,6 +459,14 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "kvm-intel": {
+            "description": "",
+            "depends": "kvm"
+        },
+        "kvm": {
+            "description": "",
+            "depends": "irqbypass"
         },
         "libiscsi": {
             "description": "iSCSI library functions",
@@ -806,6 +826,10 @@
         },
         "vesafb": {
             "description": "",
+            "depends": ""
+        },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
         "vga16fb": {
@@ -1090,6 +1114,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -1212,6 +1240,10 @@
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -1914,6 +1946,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -2152,6 +2188,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -2248,12 +2288,20 @@
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -2334,7 +2382,7 @@
         },
         "ib_core": {
             "description": "core kernel InfiniBand API",
-            "depends": "ib_addr"
+            "depends": "mlx_compat,ipv6"
         },
         "ib_mad": {
             "description": "kernel IB MAD API",
@@ -2376,6 +2424,10 @@
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
         },
+        "irqbypass": {
+            "description": "IRQ bypass manager utility module",
+            "depends": ""
+        },
         "iscsi_tcp": {
             "description": "iSCSI/TCP data-path",
             "depends": "libiscsi,libiscsi_tcp"
@@ -2407,6 +2459,14 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "kvm-intel": {
+            "description": "",
+            "depends": "kvm"
+        },
+        "kvm": {
+            "description": "",
+            "depends": "irqbypass"
         },
         "libfc": {
             "description": "libfc",
@@ -2470,23 +2530,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
-            "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
+            "depends": "mlx4_core,mlx_compat,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,mlx_compat"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -2574,7 +2638,11 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "vxlan,qed"
+            "depends": "qed,vxlan"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -2758,6 +2826,10 @@
         },
         "vesafb": {
             "description": "",
+            "depends": ""
+        },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
         "vga16fb": {
@@ -3034,6 +3106,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -3130,12 +3206,20 @@
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -3224,7 +3308,7 @@
         },
         "ib_core": {
             "description": "core kernel InfiniBand API",
-            "depends": "ib_addr"
+            "depends": "mlx_compat,ipv6"
         },
         "ib_mad": {
             "description": "kernel IB MAD API",
@@ -3404,23 +3488,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
-            "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
+            "depends": "mlx4_core,mlx_compat,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,mlx_compat"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -3536,7 +3624,11 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "vxlan,qed"
+            "depends": "qed,vxlan"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -3818,6 +3910,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -4052,6 +4148,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -4148,12 +4248,20 @@
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -4234,7 +4342,7 @@
         },
         "ib_core": {
             "description": "core kernel InfiniBand API",
-            "depends": "ib_addr"
+            "depends": "mlx_compat,ipv6"
         },
         "ib_mad": {
             "description": "kernel IB MAD API",
@@ -4276,6 +4384,10 @@
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
         },
+        "irqbypass": {
+            "description": "IRQ bypass manager utility module",
+            "depends": ""
+        },
         "iscsi_tcp": {
             "description": "iSCSI/TCP data-path",
             "depends": "libiscsi,libiscsi_tcp"
@@ -4307,6 +4419,14 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "kvm-intel": {
+            "description": "",
+            "depends": "kvm"
+        },
+        "kvm": {
+            "description": "",
+            "depends": "irqbypass"
         },
         "libfc": {
             "description": "libfc",
@@ -4370,23 +4490,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
-            "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
+            "depends": "mlx4_core,mlx_compat,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,mlx_compat"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -4474,7 +4598,11 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "vxlan,qed"
+            "depends": "qed,vxlan"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -4658,6 +4786,10 @@
         },
         "vesafb": {
             "description": "",
+            "depends": ""
+        },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
         "vga16fb": {
@@ -4934,6 +5066,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -5030,12 +5166,20 @@
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -5124,7 +5268,7 @@
         },
         "ib_core": {
             "description": "core kernel InfiniBand API",
-            "depends": "ib_addr"
+            "depends": "mlx_compat,ipv6"
         },
         "ib_mad": {
             "description": "kernel IB MAD API",
@@ -5304,23 +5448,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
-            "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
+            "depends": "mlx4_core,mlx_compat,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,mlx_compat"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -5436,7 +5584,11 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "vxlan,qed"
+            "depends": "qed,vxlan"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -5718,6 +5870,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -5952,6 +6108,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -6048,12 +6208,20 @@
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -6134,7 +6302,7 @@
         },
         "ib_core": {
             "description": "core kernel InfiniBand API",
-            "depends": "ib_addr"
+            "depends": "mlx_compat,ipv6"
         },
         "ib_mad": {
             "description": "kernel IB MAD API",
@@ -6176,6 +6344,10 @@
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
         },
+        "irqbypass": {
+            "description": "IRQ bypass manager utility module",
+            "depends": ""
+        },
         "iscsi_tcp": {
             "description": "iSCSI/TCP data-path",
             "depends": "libiscsi,libiscsi_tcp"
@@ -6207,6 +6379,14 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "kvm-intel": {
+            "description": "",
+            "depends": "kvm"
+        },
+        "kvm": {
+            "description": "",
+            "depends": "irqbypass"
         },
         "libfc": {
             "description": "libfc",
@@ -6270,23 +6450,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
-            "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
+            "depends": "mlx4_core,mlx_compat,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,mlx_compat"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -6374,7 +6558,11 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "vxlan,qed"
+            "depends": "qed,vxlan"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -6558,6 +6746,10 @@
         },
         "vesafb": {
             "description": "",
+            "depends": ""
+        },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
         "vga16fb": {
@@ -6834,6 +7026,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -6930,12 +7126,20 @@
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -7024,7 +7228,7 @@
         },
         "ib_core": {
             "description": "core kernel InfiniBand API",
-            "depends": "ib_addr"
+            "depends": "mlx_compat,ipv6"
         },
         "ib_mad": {
             "description": "kernel IB MAD API",
@@ -7204,23 +7408,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
-            "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
+            "depends": "mlx4_core,mlx_compat,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,mlx_compat"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -7336,7 +7544,11 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "vxlan,qed"
+            "depends": "qed,vxlan"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -7618,6 +7830,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -7852,6 +8068,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -7956,12 +8176,20 @@
             "description": "EHCI PCI platform driver",
             "depends": "usbcore,ehci-hcd"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -8042,7 +8270,7 @@
         },
         "ib_core": {
             "description": "core kernel InfiniBand API",
-            "depends": "ib_addr"
+            "depends": "mlx_compat,ipv6"
         },
         "ib_mad": {
             "description": "kernel IB MAD API",
@@ -8084,6 +8312,10 @@
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
         },
+        "irqbypass": {
+            "description": "IRQ bypass manager utility module",
+            "depends": ""
+        },
         "iscsi_tcp": {
             "description": "iSCSI/TCP data-path",
             "depends": "libiscsi,libiscsi_tcp"
@@ -8115,6 +8347,14 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "kvm-intel": {
+            "description": "",
+            "depends": "kvm"
+        },
+        "kvm": {
+            "description": "",
+            "depends": "irqbypass"
         },
         "libfc": {
             "description": "libfc",
@@ -8178,23 +8418,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
-            "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
+            "depends": "mlx4_core,mlx_compat,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,mlx_compat"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -8282,7 +8526,11 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "vxlan,qed"
+            "depends": "qed,vxlan"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -8742,6 +8990,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -8846,12 +9098,20 @@
             "description": "EHCI PCI platform driver",
             "depends": "usbcore,ehci-hcd"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -8944,7 +9204,7 @@
         },
         "ib_core": {
             "description": "core kernel InfiniBand API",
-            "depends": "ib_addr"
+            "depends": "mlx_compat,ipv6"
         },
         "ib_mad": {
             "description": "kernel IB MAD API",
@@ -9124,23 +9384,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
-            "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
+            "depends": "mlx4_core,mlx_compat,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,mlx_compat"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -9256,7 +9520,11 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "vxlan,qed"
+            "depends": "qed,vxlan"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -9772,6 +10040,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -9874,6 +10146,10 @@
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -10000,6 +10276,10 @@
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
         },
+        "irqbypass": {
+            "description": "IRQ bypass manager utility module",
+            "depends": ""
+        },
         "iscsi_tcp": {
             "description": "iSCSI/TCP data-path",
             "depends": "libiscsi,libiscsi_tcp"
@@ -10031,6 +10311,14 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "kvm-intel": {
+            "description": "",
+            "depends": "kvm"
+        },
+        "kvm": {
+            "description": "",
+            "depends": "irqbypass"
         },
         "libiscsi": {
             "description": "iSCSI library functions",
@@ -10094,23 +10382,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
             "depends": "mlx5_core,ib_core"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -10382,6 +10674,10 @@
         },
         "vesafb": {
             "description": "",
+            "depends": ""
+        },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
         "vga16fb": {
@@ -10658,6 +10954,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -10760,6 +11060,10 @@
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -11032,23 +11336,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
             "depends": "mlx5_core,ib_core"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -11446,6 +11754,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -11696,6 +12008,10 @@
             "description": "Silicon Labs CP210x RS232 serial adaptor driver",
             "depends": "usbserial,usbcore"
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "cqhci": {
             "description": "Command Queue Host Controller Interface driver",
             "depends": "mmc_core"
@@ -11806,6 +12122,10 @@
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -12568,6 +12888,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -12826,6 +13150,10 @@
             "description": "Silicon Labs CP210x RS232 serial adaptor driver",
             "depends": "usbserial,usbcore"
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "cqhci": {
             "description": "Command Queue Host Controller Interface driver",
             "depends": "mmc_core"
@@ -12936,6 +13264,10 @@
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -13706,6 +14038,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -13941,6 +14277,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -14056,6 +14396,10 @@
         "ehci-pci": {
             "description": "EHCI PCI platform driver",
             "depends": "usbcore,ehci-hcd"
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
+            "depends": ""
         },
         "f71882fg": {
             "description": "F71882FG Hardware Monitoring Driver",
@@ -14185,6 +14529,10 @@
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
         },
+        "irqbypass": {
+            "description": "IRQ bypass manager utility module",
+            "depends": ""
+        },
         "iscsi_tcp": {
             "description": "iSCSI/TCP data-path",
             "depends": "libiscsi,libiscsi_tcp"
@@ -14216,6 +14564,14 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "kvm-intel": {
+            "description": "",
+            "depends": "kvm"
+        },
+        "kvm": {
+            "description": "",
+            "depends": "irqbypass"
         },
         "libiscsi": {
             "description": "iSCSI library functions",
@@ -14577,6 +14933,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -14851,6 +15211,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -14966,6 +15330,10 @@
         "ehci-pci": {
             "description": "EHCI PCI platform driver",
             "depends": "usbcore,ehci-hcd"
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
+            "depends": ""
         },
         "f71882fg": {
             "description": "F71882FG Hardware Monitoring Driver",
@@ -15663,6 +16031,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -15897,6 +16269,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -15992,6 +16368,10 @@
         "efifb": {
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
+            "depends": ""
         },
         "f71882fg": {
             "description": "F71882FG Hardware Monitoring Driver",
@@ -16755,6 +17135,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -16850,6 +17234,10 @@
         "efifb": {
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
+            "depends": ""
         },
         "f71882fg": {
             "description": "F71882FG Hardware Monitoring Driver",
@@ -17745,6 +18133,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -17849,6 +18241,10 @@
             "description": "Input driver event char devices",
             "depends": ""
         },
+        "exfat": {
+            "description": "exFAT filesystem support",
+            "depends": ""
+        },
         "f71882fg": {
             "description": "F71882FG Hardware Monitoring Driver",
             "depends": ""
@@ -17927,7 +18323,7 @@
         },
         "ib_core": {
             "description": "core kernel InfiniBand API",
-            "depends": "ib_addr"
+            "depends": "mlx_compat,ipv6"
         },
         "ib_mad": {
             "description": "kernel IB MAD API",
@@ -17969,6 +18365,10 @@
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
         },
+        "irqbypass": {
+            "description": "IRQ bypass manager utility module",
+            "depends": ""
+        },
         "iscsi_tcp": {
             "description": "iSCSI/TCP data-path",
             "depends": "libiscsi,libiscsi_tcp"
@@ -18000,6 +18400,14 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver",
             "depends": "mii"
+        },
+        "kvm-intel": {
+            "description": "",
+            "depends": "kvm"
+        },
+        "kvm": {
+            "description": "",
+            "depends": "irqbypass"
         },
         "libfc": {
             "description": "libfc",
@@ -18063,23 +18471,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
-            "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
+            "depends": "mlx4_core,mlx_compat,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,mlx_compat"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -18167,7 +18579,11 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "vxlan,qed"
+            "depends": "qed,vxlan"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -18351,6 +18767,10 @@
         },
         "vesafb": {
             "description": "",
+            "depends": ""
+        },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
         "vga16fb": {
@@ -18631,6 +19051,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -18735,6 +19159,10 @@
             "description": "Input driver event char devices",
             "depends": ""
         },
+        "exfat": {
+            "description": "exFAT filesystem support",
+            "depends": ""
+        },
         "f71882fg": {
             "description": "F71882FG Hardware Monitoring Driver",
             "depends": ""
@@ -18825,7 +19253,7 @@
         },
         "ib_core": {
             "description": "core kernel InfiniBand API",
-            "depends": "ib_addr"
+            "depends": "mlx_compat,ipv6"
         },
         "ib_mad": {
             "description": "kernel IB MAD API",
@@ -19005,23 +19433,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
-            "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
+            "depends": "mlx4_core,mlx_compat,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,mlx_compat"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -19137,7 +19569,11 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "vxlan,qed"
+            "depends": "qed,vxlan"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -19419,6 +19855,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -19653,6 +20093,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -19749,12 +20193,20 @@
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -19987,23 +20439,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
             "depends": "mlx5_core,ib_core"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -20281,6 +20737,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -20551,6 +21011,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -20647,12 +21111,20 @@
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -20929,23 +21401,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
             "depends": "mlx5_core,ib_core"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -21347,6 +21823,10 @@
             "description": "",
             "depends": ""
         },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
+            "depends": ""
+        },
         "vga16fb": {
             "description": "Legacy VGA framebuffer device driver",
             "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
@@ -21585,6 +22065,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -21681,12 +22165,20 @@
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": "usbcore"
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -21923,23 +22415,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
             "depends": "mlx5_core,ib_core"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -22219,6 +22715,10 @@
         },
         "vesafb": {
             "description": "",
+            "depends": ""
+        },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
         "vga16fb": {
@@ -22495,6 +22995,10 @@
             "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
+        "cpufreq_performance": {
+            "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -22591,12 +23095,20 @@
             "description": "",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "etxhci-hcd": {
+            "description": "'eXtensible' Host Controller (xHC) Driver",
+            "depends": ""
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
         },
         "evdev": {
             "description": "Input driver event char devices",
+            "depends": ""
+        },
+        "exfat": {
+            "description": "exFAT filesystem support",
             "depends": ""
         },
         "f71882fg": {
@@ -22877,23 +23389,27 @@
         },
         "mlx4_core": {
             "description": "Mellanox ConnectX HCA low-level driver",
-            "depends": ""
+            "depends": "mlx_compat"
         },
         "mlx4_en": {
             "description": "Mellanox ConnectX HCA Ethernet driver",
-            "depends": "mlx4_core"
+            "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
             "description": "Mellanox ConnectX HCA InfiniBand driver",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
-            "depends": ""
+            "description": "Mellanox Connect-IB, ConnectX-4, ConnectX-5 core driver",
+            "depends": "mlx_compat,vxlan"
         },
         "mlx5_ib": {
             "description": "Mellanox Connect-IB HCA IB driver",
             "depends": "mlx5_core,ib_core"
+        },
+        "mlx_compat": {
+            "description": "Kernel backport module",
+            "depends": ""
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
@@ -23297,6 +23813,10 @@
         },
         "vesafb": {
             "description": "",
+            "depends": ""
+        },
+        "vfio": {
+            "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
         "vga16fb": {
