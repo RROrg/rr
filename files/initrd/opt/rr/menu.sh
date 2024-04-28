@@ -1102,6 +1102,7 @@ function getSynoExtractor() {
   if [ $? -ne 0 ]; then
     rm -f "${OLDPAT_PATH}"
     rm -rf "${RAMDISK_PATH}"
+    echo -e "$(TEXT "pat Invalid, try again!")" >"${LOG_FILE}"
     return 1
   fi
   rm -f "${OLDPAT_PATH}"
@@ -1151,6 +1152,7 @@ function extractPatFiles() {
   mkdir -p "${EXT_PATH}"
   echo -n "$(printf "$(TEXT "Disassembling %s: ")" "$(basename "${PAT_PATH}")")"
 
+  RET=0
   if [ "${isencrypted}" = "yes" ]; then
     EXTRACTOR_PATH="${PART3_PATH}/extractor"
     EXTRACTOR_BIN="syno_extract_system_patch"
@@ -1164,22 +1166,19 @@ function extractPatFiles() {
     # Uses the extractor to untar pat file
     echo "$(TEXT "Extracting ...")"
     LD_LIBRARY_PATH=${EXTRACTOR_PATH} "${EXTRACTOR_PATH}/${EXTRACTOR_BIN}" "${PAT_PATH}" "${EXT_PATH}" >"${LOG_FILE}" 2>&1
-    if [ $? -ne 0 ]; then
-      return 1
-    fi
+    RET=$?
   else
     echo "$(TEXT "Extracting ...")"
     tar -xf "${PAT_PATH}" -C "${EXT_PATH}" >"${LOG_FILE}" 2>&1
-    if [ $? -ne 0 ]; then
-      return 1
-    fi
+    RET=$?
   fi
 
-  if [ ! -f ${EXT_PATH}/grub_cksum.syno ] ||
+  if [ ${RET} -ne 0 ] ||
+    [ ! -f ${EXT_PATH}/grub_cksum.syno ] ||
     [ ! -f ${EXT_PATH}/GRUB_VER ] ||
     [ ! -f ${EXT_PATH}/zImage ] ||
     [ ! -f ${EXT_PATH}/rd.gz ]; then
-    echo -e "$(TEXT "pat Invalid, try again!")" >"${LOG_FILE}"
+    echo -e "$(TEXT "pat Invalid, try again!")\nError: ${RET}" >"${LOG_FILE}"
     return 1
   fi
   rm -f "${LOG_FILE}"
