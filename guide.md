@@ -25,6 +25,9 @@
    * RAID计算: 
      * https://www.synology.cn/zh-cn/support/RAID_calculator
      * https://www.synology.com/en-us/support/RAID_calculator
+   * 恢复数据:
+     * https://kb.synology.cn/zh-cn/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC
+     * https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC
    * SDK:
      * https://dataupdate7.synology.com/toolchain/v1/get_download_list?identify=toolkit&version=7.2&platform=base
      * https://dataupdate7.synology.com/toolchain/v1/get_download_list?identify=toolkit&version=7.2&platform=purley
@@ -173,6 +176,23 @@
 
   # 判断是否支持热插拔 (返回 min_power, medium_power 则可能支持热插拔; 返回 max_performance 则可能不支持热插拔.)
   cat /sys/class/scsi_host/host*/link_power_management_policy
+
+  # Raid 相关
+  lsblk -f                                         # 查看 磁盘 信息
+  cat /proc/mdstat                                 # 查看 Raid 状态
+  mdadm --detail --scan                            # 查看 Raid 信息 (-D, --detail; -s, --scan)
+  mdadm --assemble --scan                          # 扫描所有的磁盘，尝试组装所有可以找到的 RAID 设备 (-A, --assemble; -s, --scan)
+  mdadm -AsfR                                      # 扫描所有的磁盘，尝试组装所有可以找到的 RAID 设备并强制启动 (-f, --force; -R, --run)
+  vgchange -ay                                     # 激活所有的逻辑卷组
+  
+  mdadm -D /dev/md0                                # 查看 Raid 0 的详细信息 (-D, --detail)
+  mdadm -C /dev/md0 -e 1.2 -amd -R -l1 -f -n2 /dev/sda1 /dev/sdb1    # 创建 Raid 0  (-C, --create; -R, --run; -l, --level; -n, --raid-devices)
+  mdadm -S /dev/md0                                # 停止 Raid 0 (-S, --stop)
+  mdadm --add /dev/md0 /dev/sda1                   # 添加一个磁盘到 Raid 0 中
+  mdadm --remove /dev/md0 /dev/sda1                # 移除 Raid 0 中的一个磁盘
+  mdadm --monitor /dev/md0                         # 监控 Raid 0 状态
+  mdadm --grow /dev/md0 --level=5                  # 将 Raid 0 设备的级别改变为 RAID 5
+  mdadm --zero-superblock /dev/sda1                # 清除 sda1 磁盘分区的 RAID 超级块 (使这个磁盘分区不再被识别为 RAID 设备的一部分)
 
   # 服务相关
   journalctl -xe                                   # 查看服务日志
