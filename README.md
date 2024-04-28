@@ -57,8 +57,10 @@ For the packag of has been initialized and build image, please go to [RR-CUSTOM]
   # If you have to replace certain language string of the project, please suggest and modify translation changes within each correlated PO file
   mkdir -p lang/zh_CN/LC_MESSAGES
   msginit -i lang/rr.pot -l zh_CN.UTF-8 -o lang/zh_CN/LC_MESSAGES/rr.po
+  # Update translation files
+  for I in $(find lang -path *rr.po); do msgmerge --width=256 -U ${I} lang/rr.pot; done
   # This formatting process will be automatically conducted during packaging.
-  msgfmt lang/zh_CN/LC_MESSAGES/rr.po -o lang/zh_CN/LC_MESSAGES/rr.mo
+  for I in $(find lang -path *rr.po); do msgfmt ${I} -o ${I/.po/.mo}; done
   ```
 
 - PRs of new language translations towards the project is welcomed with appreciation.
@@ -69,6 +71,7 @@ For the packag of has been initialized and build image, please go to [RR-CUSTOM]
   - `ja_JP`: `@andatoshiki` & `@toshikidev`
   - `ko_KR`: `@EXP` : jeong1986
   - `ru_RU`: `@Alex`: TG
+  - `tr_TR`: `@miraç bahadır öztürk`: miracozturk
   - `vi_VN`: `@Ngọc Anh Trần`: mr.ngocanhtran
   - `zh_CN`: `@rrorg`
   - `zh_HK`: `@rrorg`
