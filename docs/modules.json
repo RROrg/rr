@@ -5,7 +5,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -22,6 +22,14 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": "hwmon-vid"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
+        },
+        "adt7475": {
+            "description": "adt7475 driver",
             "depends": "hwmon-vid"
         },
         "aic94xx": {
@@ -137,7 +145,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -153,7 +161,7 @@
             "depends": ""
         },
         "cpufreq_governor": {
-            "description": "",
+            "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
@@ -201,7 +209,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -269,7 +277,7 @@
             "depends": ""
         },
         "efifb": {
-            "description": "",
+            "description": "EFI framebuffer driver (Compiled by RR for DSM)",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
         "ehci-hcd": {
@@ -304,12 +312,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -345,7 +357,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -513,15 +525,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -561,11 +573,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -593,8 +605,12 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
@@ -611,6 +627,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -665,7 +685,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -677,7 +697,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -685,7 +705,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -741,7 +761,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -923,11 +943,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -935,7 +955,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -952,6 +972,14 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": "hwmon-vid"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
+        },
+        "adt7475": {
+            "description": "adt7475 driver",
             "depends": "hwmon-vid"
         },
         "aic94xx": {
@@ -1083,15 +1111,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -1107,7 +1135,7 @@
             "depends": ""
         },
         "cpufreq_governor": {
-            "description": "",
+            "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
@@ -1155,7 +1183,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -1223,7 +1251,7 @@
             "depends": ""
         },
         "efifb": {
-            "description": "",
+            "description": "EFI framebuffer driver (Compiled by RR for DSM)",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
         "ehci-hcd": {
@@ -1258,13 +1286,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -1303,7 +1335,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -1439,7 +1471,7 @@
             "depends": "amd_nb"
         },
         "kvm-amd": {
-            "description": "",
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm-intel": {
@@ -1507,15 +1539,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -1555,11 +1587,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -1583,7 +1615,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -1591,7 +1623,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
         },
         "mwifiex": {
@@ -1606,6 +1638,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": "hwmon-vid"
@@ -1615,7 +1651,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -1626,6 +1662,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -1635,7 +1675,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -1643,7 +1683,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -1691,7 +1731,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -1703,7 +1743,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -1711,7 +1751,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -1807,15 +1847,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_sas": {
@@ -1847,7 +1887,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -1891,7 +1931,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -2037,7 +2077,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -2054,6 +2094,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -2169,7 +2213,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -2229,7 +2273,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -2284,10 +2328,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -2316,12 +2356,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -2357,7 +2401,7 @@
             "depends": ""
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i40e": {
@@ -2513,15 +2557,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -2565,11 +2609,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptbase": {
@@ -2597,7 +2641,11 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
             "depends": ""
         },
         "nct6775": {
@@ -2615,6 +2663,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -2673,7 +2725,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -2681,7 +2733,7 @@
             "depends": "mii"
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -2689,7 +2741,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -2741,7 +2793,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -2824,20 +2876,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -2919,11 +2959,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -2931,7 +2971,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -2948,6 +2988,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -3079,15 +3123,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -3147,7 +3191,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -3202,10 +3246,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -3234,13 +3274,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -3279,7 +3323,7 @@
             "depends": ""
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i2c-algo-bit": {
@@ -3403,7 +3447,7 @@
             "depends": "amd_nb"
         },
         "kvm-amd": {
-            "description": "",
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm-intel": {
@@ -3471,15 +3515,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -3523,11 +3567,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptbase": {
@@ -3551,7 +3595,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -3559,7 +3603,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mwifiex": {
@@ -3574,6 +3618,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": ""
@@ -3583,7 +3631,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -3594,6 +3642,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -3603,7 +3655,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -3611,7 +3663,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -3663,7 +3715,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -3671,7 +3723,7 @@
             "depends": "mii"
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -3679,7 +3731,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -3771,15 +3823,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -3811,7 +3863,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -3855,7 +3907,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -3906,20 +3958,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -3997,7 +4037,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -4014,6 +4054,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -4129,7 +4173,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -4189,7 +4233,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -4244,10 +4288,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -4276,12 +4316,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -4317,7 +4361,7 @@
             "depends": ""
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i40e": {
@@ -4473,15 +4517,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -4525,11 +4569,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptbase": {
@@ -4557,7 +4601,11 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
             "depends": ""
         },
         "nct6775": {
@@ -4575,6 +4623,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -4633,7 +4685,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -4641,7 +4693,7 @@
             "depends": "mii"
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -4649,7 +4701,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -4701,7 +4753,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -4784,20 +4836,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -4879,11 +4919,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -4891,7 +4931,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -4908,6 +4948,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -5039,15 +5083,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -5107,7 +5151,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -5162,10 +5206,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -5194,13 +5234,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -5239,7 +5283,7 @@
             "depends": ""
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i2c-algo-bit": {
@@ -5363,7 +5407,7 @@
             "depends": "amd_nb"
         },
         "kvm-amd": {
-            "description": "",
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm-intel": {
@@ -5431,15 +5475,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -5483,11 +5527,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptbase": {
@@ -5511,7 +5555,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -5519,7 +5563,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mwifiex": {
@@ -5534,6 +5578,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": ""
@@ -5543,7 +5591,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -5554,6 +5602,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -5563,7 +5615,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -5571,7 +5623,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -5623,7 +5675,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -5631,7 +5683,7 @@
             "depends": "mii"
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -5639,7 +5691,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -5731,15 +5783,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -5771,7 +5823,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -5815,7 +5867,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -5866,20 +5918,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -5957,7 +5997,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -5974,6 +6014,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -6089,7 +6133,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -6149,7 +6193,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -6204,10 +6248,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -6236,12 +6276,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -6277,7 +6321,7 @@
             "depends": ""
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i40e": {
@@ -6433,15 +6477,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -6485,11 +6529,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptbase": {
@@ -6517,7 +6561,11 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
             "depends": ""
         },
         "nct6775": {
@@ -6535,6 +6583,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -6593,7 +6645,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -6601,7 +6653,7 @@
             "depends": "mii"
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -6609,7 +6661,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -6661,7 +6713,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -6744,20 +6796,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -6839,11 +6879,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -6851,7 +6891,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -6868,6 +6908,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -6999,15 +7043,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -7067,7 +7111,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -7122,10 +7166,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -7154,13 +7194,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -7199,7 +7243,7 @@
             "depends": ""
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i2c-algo-bit": {
@@ -7323,7 +7367,7 @@
             "depends": "amd_nb"
         },
         "kvm-amd": {
-            "description": "",
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm-intel": {
@@ -7391,15 +7435,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -7443,11 +7487,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptbase": {
@@ -7471,7 +7515,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -7479,7 +7523,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mwifiex": {
@@ -7494,6 +7538,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": ""
@@ -7503,7 +7551,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -7514,6 +7562,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -7523,7 +7575,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -7531,7 +7583,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -7583,7 +7635,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -7591,7 +7643,7 @@
             "depends": "mii"
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -7599,7 +7651,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -7691,15 +7743,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -7731,7 +7783,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -7775,7 +7827,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -7826,20 +7878,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -7917,7 +7957,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -7934,6 +7974,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -8049,7 +8093,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -8109,7 +8153,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -8164,10 +8208,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "ehci-hcd": {
             "description": "USB 2.0 'Enhanced' Host Controller (EHCI) Driver",
             "depends": "usbcore"
@@ -8204,12 +8244,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -8245,7 +8289,7 @@
             "depends": ""
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i40e": {
@@ -8401,15 +8445,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -8453,11 +8497,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptbase": {
@@ -8485,7 +8529,11 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
             "depends": ""
         },
         "nct6775": {
@@ -8503,6 +8551,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -8561,7 +8613,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -8569,7 +8621,7 @@
             "depends": "mii"
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -8577,7 +8629,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -8629,7 +8681,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -8712,18 +8764,6 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
-            "depends": ""
-        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
@@ -8803,11 +8843,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -8815,7 +8855,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -8832,6 +8872,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -8963,15 +9007,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -9031,7 +9075,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -9086,10 +9130,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "ehci-hcd": {
             "description": "USB 2.0 'Enhanced' Host Controller (EHCI) Driver",
             "depends": "usbcore"
@@ -9126,13 +9166,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -9171,7 +9215,7 @@
             "depends": ""
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i2c-algo-bit": {
@@ -9299,7 +9343,7 @@
             "depends": "amd_nb"
         },
         "kvm-amd": {
-            "description": "",
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm-intel": {
@@ -9367,15 +9411,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -9419,11 +9463,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptbase": {
@@ -9447,7 +9491,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -9455,7 +9499,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mwifiex": {
@@ -9470,6 +9514,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": ""
@@ -9479,7 +9527,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -9490,6 +9538,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -9499,7 +9551,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -9507,7 +9559,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -9559,7 +9611,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -9567,7 +9619,7 @@
             "depends": "mii"
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -9575,7 +9627,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -9667,15 +9719,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -9707,7 +9759,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -9751,7 +9803,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -9801,18 +9853,6 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
-        },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
-            "depends": ""
         },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
@@ -9889,7 +9929,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -9907,6 +9947,10 @@
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
@@ -10017,7 +10061,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -10033,7 +10077,7 @@
             "depends": ""
         },
         "cpufreq_governor": {
-            "description": "",
+            "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
@@ -10081,7 +10125,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -10136,10 +10180,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
@@ -10164,12 +10204,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -10205,7 +10249,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -10365,15 +10409,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -10417,11 +10461,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -10449,8 +10493,12 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
@@ -10467,6 +10515,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -10521,7 +10573,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -10533,7 +10585,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -10541,7 +10593,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -10593,7 +10645,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -10672,20 +10724,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -10767,11 +10807,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -10779,7 +10819,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -10797,6 +10837,10 @@
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
@@ -10923,15 +10967,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -10947,7 +10991,7 @@
             "depends": ""
         },
         "cpufreq_governor": {
-            "description": "",
+            "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
@@ -10995,7 +11039,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -11050,10 +11094,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
@@ -11078,13 +11118,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -11123,7 +11167,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -11251,7 +11295,7 @@
             "depends": "amd_nb"
         },
         "kvm-amd": {
-            "description": "",
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm-intel": {
@@ -11319,15 +11363,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -11371,11 +11415,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -11399,7 +11443,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -11407,7 +11451,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
         },
         "mwifiex": {
@@ -11422,6 +11466,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": "hwmon-vid"
@@ -11431,7 +11479,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -11442,6 +11490,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -11451,7 +11503,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -11459,7 +11511,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -11507,7 +11559,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -11519,7 +11571,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -11527,7 +11579,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -11619,15 +11671,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_sas": {
@@ -11659,7 +11711,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -11703,7 +11755,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -11750,20 +11802,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -11841,7 +11881,7 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
@@ -11853,7 +11893,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "adm1021": {
@@ -11867,6 +11907,10 @@
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid,regmap-i2c"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
@@ -11925,7 +11969,7 @@
             "depends": ""
         },
         "blk-mq-virtio": {
-            "description": "",
+            "description": "Block IO: virtio driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "bnx2": {
@@ -11985,15 +12029,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -12045,7 +12089,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -12165,7 +12209,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -12293,7 +12337,7 @@
             "depends": "kvm"
         },
         "kvm-intel": {
-            "description": "",
+            "description": "KVM for Intel x86 hardware virtualization (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm": {
@@ -12305,11 +12349,11 @@
             "depends": ""
         },
         "libarc4": {
-            "description": "",
+            "description": "ARC4 Cipher Algorithm (Compiled by RR for DSM)",
             "depends": ""
         },
         "libdes": {
-            "description": "",
+            "description": "DES and Triple DES encryption algorithms (Compiled by RR for DSM)",
             "depends": ""
         },
         "libfc": {
@@ -12369,15 +12413,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -12425,7 +12469,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpi3mr": {
@@ -12433,7 +12477,7 @@
             "depends": "scsi_transport_sas"
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas"
         },
         "mptbase": {
@@ -12457,11 +12501,11 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt76": {
-            "description": "",
+            "description": "MediaTek MT76x02 common routines (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -12469,8 +12513,12 @@
             "depends": "mmc_core,cqhci"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
@@ -12485,11 +12533,11 @@
             "depends": ""
         },
         "of_mdio": {
-            "description": "",
+            "description": "OF helpers for the MDIO (Ethernet PHY) API",
             "depends": "libphy,fixed_phy"
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-intel-lgm-emmc": {
@@ -12504,6 +12552,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -12513,11 +12565,11 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "pwm-fan": {
@@ -12573,7 +12625,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -12585,7 +12637,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -12761,15 +12813,15 @@
             "depends": "mac80211,rtw_core,usbcore"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -12809,7 +12861,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -12829,7 +12881,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "syscopyarea": {
@@ -12857,7 +12909,7 @@
             "depends": "thunderbolt"
         },
         "thunderbolt": {
-            "description": "",
+            "description": "Thunderbolt driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "tps65217": {
@@ -12884,20 +12936,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -12979,7 +13019,7 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
@@ -12991,7 +13031,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "adm1021": {
@@ -13005,6 +13045,10 @@
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid,regmap-i2c"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
@@ -13067,7 +13111,7 @@
             "depends": ""
         },
         "blk-mq-virtio": {
-            "description": "",
+            "description": "Block IO: virtio driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "bnx2": {
@@ -13127,15 +13171,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -13187,7 +13231,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -13311,7 +13355,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -13439,7 +13483,7 @@
             "depends": "kvm"
         },
         "kvm-intel": {
-            "description": "",
+            "description": "KVM for Intel x86 hardware virtualization (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm": {
@@ -13451,11 +13495,11 @@
             "depends": ""
         },
         "libarc4": {
-            "description": "",
+            "description": "ARC4 Cipher Algorithm (Compiled by RR for DSM)",
             "depends": ""
         },
         "libdes": {
-            "description": "",
+            "description": "DES and Triple DES encryption algorithms (Compiled by RR for DSM)",
             "depends": ""
         },
         "libfc": {
@@ -13515,15 +13559,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -13571,7 +13615,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpi3mr": {
@@ -13579,7 +13623,7 @@
             "depends": "scsi_transport_sas"
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas"
         },
         "mptbase": {
@@ -13603,11 +13647,11 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt76": {
-            "description": "",
+            "description": "MediaTek MT76x02 common routines (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -13615,8 +13659,12 @@
             "depends": "mmc_core,cqhci"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
@@ -13631,11 +13679,11 @@
             "depends": ""
         },
         "of_mdio": {
-            "description": "",
+            "description": "OF helpers for the MDIO (Ethernet PHY) API",
             "depends": "fixed_phy,libphy"
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-intel-lgm-emmc": {
@@ -13650,6 +13698,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -13659,11 +13711,11 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "pwm-fan": {
@@ -13719,7 +13771,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -13731,7 +13783,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -13907,15 +13959,15 @@
             "depends": "mac80211,rtw_core,usbcore"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -13955,7 +14007,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -13975,7 +14027,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -14007,7 +14059,7 @@
             "depends": "thunderbolt"
         },
         "thunderbolt": {
-            "description": "",
+            "description": "Thunderbolt driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "tps65217": {
@@ -14034,20 +14086,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -14130,7 +14170,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "adm1021": {
@@ -14143,6 +14183,14 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": "hwmon-vid"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
+        },
+        "adt7475": {
+            "description": "adt7475 driver",
             "depends": "hwmon-vid"
         },
         "aic94xx": {
@@ -14254,7 +14302,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -14270,7 +14318,7 @@
             "depends": ""
         },
         "cpufreq_governor": {
-            "description": "",
+            "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
@@ -14318,7 +14366,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -14386,7 +14434,7 @@
             "depends": ""
         },
         "efifb": {
-            "description": "",
+            "description": "EFI framebuffer driver (Compiled by RR for DSM)",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
         "ehci-hcd": {
@@ -14413,12 +14461,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -14454,7 +14506,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -14618,15 +14670,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -14666,11 +14718,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -14698,8 +14750,12 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
@@ -14716,6 +14772,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -14770,7 +14830,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -14782,7 +14842,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -14790,7 +14850,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -14846,7 +14906,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -15028,11 +15088,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -15040,7 +15100,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "adm1021": {
@@ -15053,6 +15113,14 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": "hwmon-vid"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
+        },
+        "adt7475": {
+            "description": "adt7475 driver",
             "depends": "hwmon-vid"
         },
         "aic94xx": {
@@ -15180,15 +15248,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -15204,7 +15272,7 @@
             "depends": ""
         },
         "cpufreq_governor": {
-            "description": "",
+            "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
@@ -15252,7 +15320,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -15320,7 +15388,7 @@
             "depends": ""
         },
         "efifb": {
-            "description": "",
+            "description": "EFI framebuffer driver (Compiled by RR for DSM)",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
         "ehci-hcd": {
@@ -15347,13 +15415,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -15392,7 +15464,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -15524,7 +15596,7 @@
             "depends": "amd_nb"
         },
         "kvm-amd": {
-            "description": "",
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm-intel": {
@@ -15592,15 +15664,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -15640,11 +15712,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -15668,7 +15740,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -15676,7 +15748,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
         },
         "mwifiex": {
@@ -15691,6 +15763,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": "hwmon-vid"
@@ -15700,7 +15776,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -15711,6 +15787,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -15720,7 +15800,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -15728,7 +15808,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -15776,7 +15856,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -15788,7 +15868,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -15796,7 +15876,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -15892,15 +15972,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_sas": {
@@ -15932,7 +16012,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -15976,7 +16056,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -16122,7 +16202,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "adm1021": {
@@ -16135,6 +16215,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -16246,7 +16330,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -16262,7 +16346,7 @@
             "depends": ""
         },
         "cpufreq_governor": {
-            "description": "",
+            "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
@@ -16310,7 +16394,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -16365,10 +16449,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -16385,12 +16465,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -16426,7 +16510,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "ib_addr": {
@@ -16546,15 +16630,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -16594,11 +16678,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -16626,8 +16710,12 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
@@ -16644,6 +16732,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -16698,7 +16790,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -16710,7 +16802,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -16718,7 +16810,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -16774,7 +16866,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -16852,18 +16944,6 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
-        },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "fb,cfbimgblt,cfbcopyarea,cfbfillrect,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
-            "depends": ""
         },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
@@ -16952,11 +17032,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -16964,7 +17044,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "adm1021": {
@@ -16977,6 +17057,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -17104,15 +17188,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -17128,7 +17212,7 @@
             "depends": ""
         },
         "cpufreq_governor": {
-            "description": "",
+            "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
@@ -17176,7 +17260,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -17231,10 +17315,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -17251,13 +17331,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -17296,7 +17380,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i2c-algo-bit": {
@@ -17452,15 +17536,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -17500,11 +17584,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -17528,7 +17612,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -17536,7 +17620,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
         },
         "mwifiex": {
@@ -17551,6 +17635,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": ""
@@ -17560,7 +17648,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -17571,6 +17659,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -17580,7 +17672,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -17588,7 +17680,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -17636,7 +17728,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -17648,7 +17740,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -17656,7 +17748,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -17752,15 +17844,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_sas": {
@@ -17792,7 +17884,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -17836,7 +17928,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -17882,18 +17974,6 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
-        },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
-            "depends": ""
         },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
@@ -17978,7 +18058,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -17995,6 +18075,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -18110,7 +18194,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -18126,7 +18210,7 @@
             "depends": ""
         },
         "cpufreq_governor": {
-            "description": "",
+            "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
@@ -18174,7 +18258,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -18229,10 +18313,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
@@ -18257,12 +18337,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -18298,7 +18382,7 @@
             "depends": ""
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i40e": {
@@ -18454,15 +18538,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -18506,11 +18590,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptbase": {
@@ -18538,7 +18622,11 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
             "depends": ""
         },
         "nct6775": {
@@ -18556,6 +18644,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -18614,7 +18706,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -18622,7 +18714,7 @@
             "depends": "mii"
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -18630,7 +18722,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -18686,7 +18778,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -18765,20 +18857,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -18860,11 +18940,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -18872,7 +18952,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -18889,6 +18969,10 @@
         },
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
+            "depends": ""
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
             "depends": ""
         },
         "adt7475": {
@@ -19020,15 +19104,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -19044,7 +19128,7 @@
             "depends": ""
         },
         "cpufreq_governor": {
-            "description": "",
+            "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
@@ -19092,7 +19176,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -19147,10 +19231,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
@@ -19175,13 +19255,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -19220,7 +19304,7 @@
             "depends": ""
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "i2c-algo-bit": {
@@ -19348,7 +19432,7 @@
             "depends": "amd_nb"
         },
         "kvm-amd": {
-            "description": "",
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm-intel": {
@@ -19416,15 +19500,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -19468,11 +19552,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptbase": {
@@ -19496,7 +19580,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -19504,7 +19588,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mwifiex": {
@@ -19519,6 +19603,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": ""
@@ -19528,7 +19616,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -19539,6 +19627,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -19548,7 +19640,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -19556,7 +19648,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -19608,7 +19700,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -19616,7 +19708,7 @@
             "depends": "mii"
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -19624,7 +19716,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -19720,15 +19812,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -19760,7 +19852,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -19804,7 +19896,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -19851,20 +19943,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -19942,7 +20022,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -19960,6 +20040,10 @@
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -20070,7 +20154,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -20134,7 +20218,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -20189,10 +20273,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -20221,12 +20301,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -20262,7 +20346,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -20422,15 +20506,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -20474,11 +20558,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -20506,8 +20590,12 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
@@ -20524,6 +20612,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -20578,7 +20670,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -20590,7 +20682,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -20598,7 +20690,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -20654,7 +20746,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -20733,20 +20825,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -20828,11 +20908,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -20840,7 +20920,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -20858,6 +20938,10 @@
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -20980,15 +21064,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -21052,7 +21136,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -21107,10 +21191,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -21139,13 +21219,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -21184,7 +21268,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -21320,7 +21404,7 @@
             "depends": "kvm"
         },
         "kvm-intel": {
-            "description": "",
+            "description": "KVM for Intel x86 hardware virtualization (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm": {
@@ -21384,15 +21468,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -21436,11 +21520,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -21464,7 +21548,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -21472,7 +21556,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
         },
         "mwifiex": {
@@ -21487,6 +21571,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": "hwmon-vid"
@@ -21496,7 +21584,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -21507,6 +21595,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -21516,7 +21608,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -21524,7 +21616,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -21572,7 +21664,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -21584,7 +21676,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -21592,7 +21684,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -21688,15 +21780,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_sas": {
@@ -21728,7 +21820,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -21772,7 +21864,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -21819,20 +21911,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -21910,7 +21990,7 @@
             "depends": "mii"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -21928,6 +22008,10 @@
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
@@ -22042,7 +22126,7 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cn": {
@@ -22106,7 +22190,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -22161,10 +22245,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -22193,12 +22273,16 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
             "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
@@ -22234,7 +22318,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -22398,15 +22482,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -22450,11 +22534,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -22482,8 +22566,12 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
         },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
@@ -22500,6 +22588,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -22554,7 +22646,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -22566,7 +22658,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -22574,7 +22666,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -22634,7 +22726,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -22713,20 +22805,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
@@ -22808,11 +22888,11 @@
             "depends": "mii"
         },
         "9p": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": "9pnet"
         },
         "9pnet": {
-            "description": "",
+            "description": "9P2000 filesystem support (Compiled by RR for DSM)",
             "depends": ""
         },
         "9pnet_virtio": {
@@ -22820,7 +22900,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -22838,6 +22918,10 @@
         "adm9240": {
             "description": "ADM9240/DS1780/LM81 driver",
             "depends": "hwmon-vid"
+        },
+        "adt7470": {
+            "description": "ADT7470 driver",
+            "depends": ""
         },
         "adt7475": {
             "description": "adt7475 driver",
@@ -22964,15 +23048,15 @@
             "depends": ""
         },
         "ch341": {
-            "description": "",
+            "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "",
+            "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
         },
         "cls_u32": {
-            "description": "",
+            "description": "U32 classifier (Compiled by RR for DSM)",
             "depends": ""
         },
         "cn": {
@@ -23036,7 +23120,7 @@
             "depends": "dm-mod"
         },
         "dm-queue-length": {
-            "description": "(C) Copyright IBM Corp. 2004,2005   All Rights Reserved.\ndevice-mapper path selector to balance the number of in-flight I/Os",
+            "description": "device-mapper path selector to balance the number of in-flight I/Os",
             "depends": "dm-multipath"
         },
         "dm-region-hash": {
@@ -23091,10 +23175,6 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
-        "efifb": {
-            "description": "",
-            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
-        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": ""
@@ -23123,13 +23203,17 @@
             "description": "",
             "depends": ""
         },
+        "fb_defio": {
+            "description": "Deferred IO for framebuffers",
+            "depends": ""
+        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
-            "description": "",
-            "depends": "fb,bitblit,font"
+            "description": "Framebuffer Console support (Compiled by RR for DSM)",
+            "depends": "fb,font,bitblit"
         },
         "fbcon_ccw": {
             "description": "Console Rotation (270 degrees) Support",
@@ -23168,7 +23252,7 @@
             "depends": "scsi_transport_sas"
         },
         "hvc_console": {
-            "description": "",
+            "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "hwmon-vid": {
@@ -23304,7 +23388,7 @@
             "depends": "kvm"
         },
         "kvm-intel": {
-            "description": "",
+            "description": "KVM for Intel x86 hardware virtualization (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm": {
@@ -23372,15 +23456,15 @@
             "depends": ""
         },
         "megaraid_mbox": {
-            "description": "LSI Logic MegaRAID Mailbox Driver",
+            "description": "LSI Logic MegaRAID Mailbox Driver (Compiled by RR for DSM)",
             "depends": "megaraid_mm"
         },
         "megaraid_mm": {
-            "description": "LSI Logic Management Module",
+            "description": "LSI Logic Management Module (Compiled by RR for DSM)",
             "depends": ""
         },
         "megaraid_sas": {
-            "description": "Broadcom MegaRAID SAS Driver",
+            "description": "Broadcom MegaRAID SAS Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mii": {
@@ -23424,11 +23508,11 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
-            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver",
+            "description": "LSI MPT Fusion SAS 3.0 & SAS 3.5 Device Driver (Compiled by RR for DSM)",
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
@@ -23452,7 +23536,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "",
+            "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -23460,7 +23544,7 @@
             "depends": "mmc_core"
         },
         "mvsas": {
-            "description": "Marvell 88SE6440 SAS/SATA controller driver",
+            "description": "Marvell 88SE6440 SAS/SATA controller driver (Compiled by RR for DSM)",
             "depends": "libsas,scsi_transport_sas"
         },
         "mwifiex": {
@@ -23475,6 +23559,10 @@
             "description": "Marvell WiFi-Ex USB Driver version1.0",
             "depends": "mwifiex,usbcore"
         },
+        "nct6683": {
+            "description": "NCT6683D driver",
+            "depends": ""
+        },
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips",
             "depends": "hwmon-vid"
@@ -23484,7 +23572,7 @@
             "depends": ""
         },
         "p8022": {
-            "description": "",
+            "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "phy-mt65xx-usb3": {
@@ -23495,6 +23583,10 @@
             "description": "USB phy handling",
             "depends": ""
         },
+        "pl2303": {
+            "description": "Prolific PL2303 USB to serial adaptor driver",
+            "depends": "usbserial,usbcore"
+        },
         "pmbus": {
             "description": "Generic PMBus driver",
             "depends": "pmbus_core"
@@ -23504,7 +23596,7 @@
             "depends": ""
         },
         "prism2_usb": {
-            "description": "",
+            "description": "Prism2 USB driver (Compiled by RR for DSM)",
             "depends": "cfg80211,usbcore"
         },
         "processor": {
@@ -23512,7 +23604,7 @@
             "depends": ""
         },
         "psnap": {
-            "description": "",
+            "description": "SNAP datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "qcaspi": {
@@ -23560,7 +23652,7 @@
             "depends": ""
         },
         "r8169": {
-            "description": "",
+            "description": "RealTek RTL-8169 Gigabit Ethernet driver",
             "depends": ""
         },
         "r8169_lk": {
@@ -23572,7 +23664,7 @@
             "depends": ""
         },
         "rc-core": {
-            "description": "",
+            "description": "Linux Infrared Remote Control (Compiled by RR for DSM)",
             "depends": ""
         },
         "realtek": {
@@ -23580,7 +23672,7 @@
             "depends": "libphy"
         },
         "regmap-i2c": {
-            "description": "",
+            "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -23676,15 +23768,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "",
+            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_netem": {
-            "description": "",
+            "description": "Network Emulator (Compiled by RR for DSM)",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "",
+            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -23720,7 +23812,7 @@
             "depends": "mmc_core"
         },
         "sdio_uart": {
-            "description": "",
+            "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
         "sg": {
@@ -23764,7 +23856,7 @@
             "depends": ""
         },
         "stp": {
-            "description": "",
+            "description": "STP SAP demux (Compiled by RR for DSM)",
             "depends": "llc"
         },
         "synobios": {
@@ -23811,20 +23903,8 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
-        "vesafb": {
-            "description": "",
-            "depends": ""
-        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
-            "depends": ""
-        },
-        "vga16fb": {
-            "description": "Legacy VGA framebuffer device driver",
-            "depends": "cfbfillrect,cfbimgblt,cfbcopyarea,fb,vgastate"
-        },
-        "vgastate": {
-            "description": "VGA State Save/Restore",
             "depends": ""
         },
         "via-sdmmc": {
