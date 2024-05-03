@@ -238,10 +238,6 @@ if [ "${PLATFORM}" = "broadwellntbap" ]; then
   sed -i 's/IsUCOrXA="yes"/XIsUCOrXA="yes"/g; s/IsUCOrXA=yes/XIsUCOrXA=yes/g' ${RAMDISK_PATH}/usr/syno/share/environments.sh
 fi
 
-#if [ "${PLATFORM}" = "kvmx64" ]; then
-#  sed -i 's/kvmx64/RRING/g' ${RAMDISK_PATH}/etc/synoinfo.conf ${RAMDISK_PATH}/etc/VERSION
-#fi
-
 # Call user patch scripts
 echo -n "."
 for F in $(ls -1 ${SCRIPTS_PATH}/*.sh 2>/dev/null); do
