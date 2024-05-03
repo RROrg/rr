@@ -252,7 +252,7 @@ function repackInitrd() {
   [ -f "${OUTPUT_PATH}" ] && rm -rf "${OUTPUT_PATH}"
   (
     cd "${RDXZ_PATH}"
-    sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | xz --check=crc32 >"${OUTPUT_PATH}"
+    sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | xz -9 --check=crc32 >"${OUTPUT_PATH}"
   ) || true
   sudo rm -rf "${RDXZ_PATH}"
 }

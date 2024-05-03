@@ -127,7 +127,7 @@ fi
 if [ ! "${BUS}" = "usb" ]; then
   SZ=$(blockdev --getsz ${LOADER_DISK} 2>/dev/null) # SZ=$(cat /sys/block/${LOADER_DISK/\/dev\//}/size)
   SS=$(blockdev --getss ${LOADER_DISK} 2>/dev/null) # SS=$(cat /sys/block/${LOADER_DISK/\/dev\//}/queue/hw_sector_size)
-  SIZE=$((${SZ} * ${SS} / 1024 / 1024 + 10))
+  SIZE=$((${SZ:-0} * ${SS:-0} / 1024 / 1024 + 10))
   # Read SATADoM type
   DOM="$(readModelKey "${MODEL}" "dom")"
   CMDLINE['synoboot_satadom']="${DOM}"
@@ -271,7 +271,7 @@ else
   # Executes DSM kernel via KEXEC
   KEXECARGS=""
   KVER=$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")
-  if [ "${KVER:0:1}" = "3" -a ${EFI} -eq 1 ]; then
+  if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ ${EFI} -eq 1 ]; then
     echo -e "\033[1;33m$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")\033[0m"
     KEXECARGS="--noefi"
   fi

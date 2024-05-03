@@ -48,7 +48,6 @@ initConfigKey "patsum" "" "${USER_CONFIG_FILE}"
 initConfigKey "sn" "" "${USER_CONFIG_FILE}"
 initConfigKey "mac1" "" "${USER_CONFIG_FILE}"
 initConfigKey "mac2" "" "${USER_CONFIG_FILE}"
-# initConfigKey "maxdisks" "" "${USER_CONFIG_FILE}"
 initConfigKey "layout" "qwerty" "${USER_CONFIG_FILE}"
 initConfigKey "keymap" "" "${USER_CONFIG_FILE}"
 initConfigKey "zimage-hash" "" "${USER_CONFIG_FILE}"
@@ -62,7 +61,7 @@ initConfigKey "addons.reboottoloader" "" "${USER_CONFIG_FILE}"
 initConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
 
 if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
-  # _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
+  _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
 
   for ETH in ${ETHX}; do
     [ "${ETH::4}" = "wlan" ] && connectwlanif "${ETH}" && sleep 1

@@ -223,15 +223,15 @@ function _get_fastest() {
 # @1 -mac1,mac2,mac3...
 function _sort_netif() {
   ETHLIST=""
-  ETHX=$(ls /sys/class/net/ 2>/dev/null | grep eth) # real network cards list
+  ETHX="$(ls /sys/class/net/ 2>/dev/null | grep eth)" # real network cards list
   for ETH in ${ETHX}; do
     MAC="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g' | tr '[:upper:]' '[:lower:]')"
-    BUS=$(ethtool -i ${ETH} 2>/dev/null | grep bus-info | awk '{print $2}')
+    BUS="$(ethtool -i ${ETH} 2>/dev/null | grep bus-info | cut -d' ' -f2)"
     ETHLIST="${ETHLIST}${BUS} ${MAC} ${ETH}\n"
   done
 
   if [ -n "${1}" ]; then
-    MACS=$(echo "${1}" | sed 's/://g' | tr '[:upper:]' '[:lower:]' | tr ',' ' ')
+    MACS="$(echo "${1}" | sed 's/://g' | tr '[:upper:]' '[:lower:]' | tr ',' ' ')"
     ETHLISTTMPC=""
     ETHLISTTMPF=""
 
@@ -260,7 +260,7 @@ EOF
   while true; do
     # cat ${TMP_PATH}/ethlist
     [ ${IDX} -ge $(wc -l <${TMP_PATH}/ethlist) ] && break
-    ETH=$(cat ${TMP_PATH}/ethlist | sed -n "$((${IDX} + 1))p" | awk '{print $3}')
+    ETH="$(cat ${TMP_PATH}/ethlist | sed -n "$((${IDX} + 1))p" | cut -d' ' -f3)"
     # echo "ETH: ${ETH}"
     if [ -n "${ETH}" ] && [ ! "${ETH}" = "eth${IDX}" ]; then
       # echo "change ${ETH} <=> eth${IDX}"

@@ -252,14 +252,14 @@ function productversMenu() {
   fi
 
   local KVER=$(readModelKey "${MODEL}" "productvers.[${resp}].kver")
-  if [ -d "/sys/firmware/efi" -a "${KVER:0:1}" = "3" ]; then
+  if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ -d "/sys/firmware/efi" ]; then
     if [ -z "${1}" ]; then
       DIALOG --title "$(TEXT "Product Version")" \
         --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
     fi
     return 1
   fi
-  # if [ ! "usb" = "$(getBus "${LOADER_DISK}")" -a "${KVER:0:1}" = "5" ]; then
+  # if [ ! "usb" = "$(getBus "${LOADER_DISK}")" ] && [ $(echo "${KVER:-4}" | cut -d'.' -f1) -gt 4 ]; then
   #   if [ -z "${1}" ]; then
   #     DIALOG --title "$(TEXT "Product Version")" \
   #       --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
@@ -2614,7 +2614,7 @@ function advancedMenu() {
       cp -Rf "$(dirname ${WORK_PATH})" "${RDXZ_PATH}/"
       (
         cd "${RDXZ_PATH}"
-        find . 2>/dev/null | cpio -o -H newc -R root:root | xz --check=crc32 >"${RR_RAMDISK_FILE}"
+        find . 2>/dev/null | cpio -o -H newc -R root:root | xz -9 --check=crc32 >"${RR_RAMDISK_FILE}"
       ) || true
       rm -rf "${RDXZ_PATH}"
       DIALOG --title "$(TEXT "Advanced")" \
