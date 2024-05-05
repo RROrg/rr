@@ -24,13 +24,17 @@ IP="$(getIP)"
 # Debug flag
 # DEBUG=""
 
+PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
+MODELID="$(readConfigKey "modelid" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
 BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
 SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
 LAYOUT="$(readConfigKey "layout" "${USER_CONFIG_FILE}")"
 KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
 KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
+RD_COMPRESSED="$(readConfigKey "rd-compressed" "${USER_CONFIG_FILE}")"
+SATADOM="$(readConfigKey "satadom" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
 DIRECTBOOT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
@@ -59,9 +63,9 @@ function backtitle() {
   if [ "LOCALBUILD" = "${LOADER_DISK}" ]; then
     BACKTITLE="LOCAL "
   fi
-  BACKTITLE+="${RR_TITLE}"
+  BACKTITLE+="$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")"
   if [ -n "${MODEL}" ]; then
-    BACKTITLE+=" ${MODEL}"
+    BACKTITLE+=" ${MODEL}(${PLATFORM})"
   else
     BACKTITLE+=" (no model)"
   fi
@@ -102,113 +106,71 @@ function backtitle() {
 # Shows available models to user choose one
 function modelMenu() {
   if [ -z "${1}" ]; then
-    RESTRICT=1
-    FLGBETA=0
     DIALOG --title "$(TEXT "Model")" \
-      --infobox "$(TEXT "Reading models")" 0 0
-    echo -n "" >"${TMP_PATH}/modellist"
-    while read M; do
-      Y=$(echo ${M} | tr -cd "[0-9]")
-      Y=${Y:0-2}
-      echo "${M} ${Y}" >>"${TMP_PATH}/modellist"
-    done <<<$(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml 2>/dev/null | sed 's/.*\///; s/\.yml//')
+      --infobox "$(TEXT "Getting models ...")" 0 0
+  fi
+  PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
+  MJ="$(python include/functions.py getmodels -p "${PS[*]}")"
+  if [ -z "${MJ}" -o "${MJ}" = "[]" ]; then
+    DIALOG --title "$(TEXT "Model")" \
+      --msgbox "$(TEXT "Failed to get models, please try again!")" 0 0
+    return 1
+  fi
+  echo -n "" >"${TMP_PATH}/modellist"
+  echo "${MJ}" | jq -c '.[]' | while read -r item; do
+    name=$(echo "$item" | jq -r '.name')
+    arch=$(echo "$item" | jq -r '.arch')
+    echo "${name} ${arch}" >>"${TMP_PATH}/modellist"
+  done
 
+  if [ -z "${1}" ]; then
+    RESTRICT=1
     while true; do
       echo -n "" >"${TMP_PATH}/menu"
-      echo "c \"\Z1$(TEXT "Compatibility judgment")\Zn\"" >>"${TMP_PATH}/menu"
       FLGNEX=0
-      while read M; do
-        PLATFORM=$(readModelKey "${M}" "platform")
-        DT="$(readModelKey "${M}" "dt")"
-        BETA="$(readModelKey "${M}" "beta")"
-        [ "${BETA}" = "true" -a ${FLGBETA} -eq 0 ] && continue
-        # Check id model is compatible with CPU
+      while read M A; do
         COMPATIBLE=1
-        if [ ${RESTRICT} -eq 1 ]; then
-          for F in $(readModelArray "${M}" "flags"); do
-            if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
-              COMPATIBLE=0
-              FLGNEX=1
-              break
-            fi
-          done
-        fi
+        DT="$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")"
+        FLAGS="$(readConfigArray "platforms.${A}.flags" "${WORK_PATH}/platforms.yml")"
+        for F in "${FLAGS}"; do if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
+          COMPATIBLE=0
+          FLGNEX=1
+          break
+        fi; done
         [ "${DT}" = "true" ] && DT="DT" || DT=""
-        [ ${COMPATIBLE} -eq 1 ] && echo "${M} \"$(printf "\Zb%-15s %-2s\Zn" "${PLATFORM}" "${DT}")\" " >>"${TMP_PATH}/menu"
-      done <<<$(cat "${TMP_PATH}/modellist" | sort -r -n -k 2 | awk '{print $1}')
+        [ ${COMPATIBLE} -eq 1 ] && echo "${M} \"$(printf "\Zb%-15s %-2s\Zn" "${A}" "${DT}")\" " >>"${TMP_PATH}/menu"
+      done <<<$(cat "${TMP_PATH}/modellist")
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
-      [ ${FLGBETA} -eq 0 ] && echo "b \"\Z1$(TEXT "Show all models")\Zn\"" >>"${TMP_PATH}/menu"
       DIALOG --title "$(TEXT "Model")" \
         --menu "$(TEXT "Choose the model")" 0 0 0 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return 0
       resp=$(cat ${TMP_PATH}/resp)
       [ -z "${resp}" ] && return 1
-      if [ "${resp}" = "c" ]; then
-        models=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
-        [ $(lspci -d ::300 2>/dev/null | grep 8086 | wc -l) -gt 0 ] && iGPU=1 || iGPU=0
-        [ $(lspci -d ::104 2>/dev/null | wc -l) -gt 0 -o $(lspci -d ::107 2>/dev/null | wc -l) -gt 0 ] && LSI=1 || LSI=0
-        [ $(lspci -d ::108 2>/dev/null | wc -l) -gt 0 ] && NVME=1 || NVME=0
-        if [ "${NVME}" = "1" ]; then
-          for PCI in $(lspci -d ::108 2>/dev/null | awk '{print $1}'); do
-            if [ ! -d "/sys/devices/pci0000:00/0000:${PCI}/nvme" ]; then
-              NVME=2
-              break
-            fi
-          done
-        fi
-        rm -f "${TMP_PATH}/opts"
-        echo "$(printf "%-16s %8s %8s %8s" "model" "iGPU" "HBA" "M.2")" >>"${TMP_PATH}/opts"
-        while read M; do
-          PLATFORM=$(readModelKey "${M}" "platform")
-          DT="$(readModelKey "${M}" "dt")"
-          I915=" "
-          HBA=" "
-          M_2=" "
-          if [ "${iGPU}" = "1" ]; then
-            [ "${PLATFORM}" = "apollolake" -o "${PLATFORM}" = "geminilake" -o "${PLATFORM}" = "epyc7002" ] && I915="*"
-          fi
-          if [ "${LSI}" = "1" ]; then
-            [ ! "${DT}" = "true" -o "${PLATFORM}" = "epyc7002" ] && HBA="*   "
-          fi
-          if [ "${NVME}" = "1" ]; then
-            [ "${DT}" = "true" ] && M_2="*   "
-          fi
-          if [ "${NVME}" = "2" ]; then
-            if echo "${models[@]}" | grep -wq "${M}"; then
-              M_2="*   "
-            fi
-          fi
-          echo "$(printf "%-16s %8s %8s %8s" "${M}" "${I915}" "${HBA}" "${M_2}")" >>"${TMP_PATH}/opts"
-        done <<<$(cat "${TMP_PATH}/modellist" | sort -r -n -k 2 | awk '{print $1}')
-        DIALOG --title "$(TEXT "Model")" \
-          --textbox "${TMP_PATH}/opts" 0 0
-        continue
-      fi
       if [ "${resp}" = "f" ]; then
         RESTRICT=0
-        continue
-      fi
-      if [ "${resp}" = "b" ]; then
-        FLGBETA=1
         continue
       fi
       break
     done
   else
-    [ ! -f "${WORK_PATH}/model-configs/${1}.yml" ] && return 1
+    cat "${TMP_PATH}/modellist" | awk '{print $1}' | grep -qw "${1}" || return 1
     resp="${1}"
   fi
   # If user change model, clean build* and pat* and SN
   if [ "${MODEL}" != "${resp}" ]; then
+    PLATFORM="$(grep -w "${resp}" "${TMP_PATH}/modellist" | awk '{print $2}' | head -n 1)"
     MODEL=${resp}
+    writeConfigKey "platform" "${PLATFORM}" "${USER_CONFIG_FILE}"
     writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
+    MODELID=""
     PRODUCTVER=""
     BUILDNUM=""
     SMALLNUM=""
-    writeConfigKey "productver" "" "${USER_CONFIG_FILE}"
-    writeConfigKey "buildnum" "" "${USER_CONFIG_FILE}"
-    writeConfigKey "smallnum" "" "${USER_CONFIG_FILE}"
+    writeConfigKey "modelid" "${MODELID}" "${USER_CONFIG_FILE}"
+    writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
+    writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
+    writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
     writeConfigKey "paturl" "" "${USER_CONFIG_FILE}"
     writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
     SN=$(generateSerial "${MODEL}")
@@ -226,13 +188,14 @@ function modelMenu() {
     rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
     touch ${PART1_PATH}/.build
   fi
+  rm -f "${TMP_PATH}/modellist"
   return 0
 }
 
 ###############################################################################
 # Shows available buildnumbers from a model to user choose one
 function productversMenu() {
-  ITEMS="$(readConfigEntriesArray "productvers" "${WORK_PATH}/model-configs/${MODEL}.yml" | sort -r)"
+  ITEMS="$(readConfigEntriesArray "platforms.${PLATFORM}.productvers" "${WORK_PATH}/platforms.yml" | sort -r)"
   if [ -z "${1}" ]; then
     DIALOG --title "$(TEXT "Product Version")" \
       --no-items --menu "$(TEXT "Choose a product version")" 0 0 0 ${ITEMS} \
@@ -247,18 +210,19 @@ function productversMenu() {
       [ $? -ne 0 ] && return 0
     fi
   else
-    if ! arrayExistItem "${1}" ${ITEMS}; then return 1; fi
+    arrayExistItem "${1}" ${ITEMS} || return 1
     resp="${1}"
   fi
-
-  local KVER=$(readModelKey "${MODEL}" "productvers.[${resp}].kver")
-  if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ -d "/sys/firmware/efi" ]; then
-    if [ -z "${1}" ]; then
-      DIALOG --title "$(TEXT "Product Version")" \
-        --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
-    fi
-    return 1
-  fi
+  selver="${resp}"
+  urlver=""
+  # KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${resp}].kver" "${WORK_PATH}/platforms.yml")
+  # if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ -d "/sys/firmware/efi" ]; then
+  #   if [ -z "${1}" ]; then
+  #     DIALOG --title "$(TEXT "Product Version")" \
+  #       --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
+  #   fi
+  #   return 1
+  # fi
   # if [ ! "usb" = "$(getBus "${LOADER_DISK}")" ] && [ $(echo "${KVER:-4}" | cut -d'.' -f1) -gt 4 ]; then
   #   if [ -z "${1}" ]; then
   #     DIALOG --title "$(TEXT "Product Version")" \
@@ -286,9 +250,12 @@ function productversMenu() {
         [ "${fastest}" = "www.synology.cn" ] &&
           fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
           fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
-        patdata=$(curl -skL --connect-timeout 10 "${fastest}&product=${MODEL/+/%2B}&major=${resp%%.*}&minor=${resp##*.}")
+        patdata=$(curl -skL --connect-timeout 10 "${fastest}&product=${MODEL/+/%2B}&major=${selver%%.*}&minor=${selver##*.}")
         if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
           if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
+            major=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].major')
+            minor=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].minor')
+            urlver="${major}.${minor}"
             paturl=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].url')
             patsum=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].checksum')
             paturl=${paturl%%\?*}
@@ -307,7 +274,13 @@ function productversMenu() {
         paturl=""
         patsum=""
       else
-        MSG="$(TEXT "Successfully to get pat data, Please confirm.\nOr modify the URL and md5sum to you need.")"
+        MSG=""
+        MSG+="$(TEXT "Successfully to get pat data.")\n"
+        if [ ! "${selver}" = "${urlver}" ]; then
+          MSG+="$(printf "$(TEXT "Note: There is no version %s and automatically returns to version %s.")" "${selver}" "${urlver}")\n"
+          selver=${urlver}
+        fi
+        MSG+="$(TEXT "Please confirm or modify the URL and md5sum to you need.")"
       fi
       if [ -z "${1}" ]; then
         DIALOG --title "$(TEXT "Product Version")" \
@@ -332,7 +305,7 @@ function productversMenu() {
   [ -z "${paturl}" -o -z "${patsum}" ] && return 1
   writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
   writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
-  PRODUCTVER=${resp}
+  PRODUCTVER=${selver}
   writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
   BUILDNUM=""
   SMALLNUM=""
@@ -340,17 +313,16 @@ function productversMenu() {
   writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
   if [ -z "${1}" ]; then
     DIALOG --title "$(TEXT "Product Version")" \
-      --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")" 0 0
+      --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules ...")" 0 0
   fi
   # Delete synoinfo and reload model/build synoinfo
   writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
   while IFS=': ' read KEY VALUE; do
     writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
-  done <<<$(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
+  done <<<$(readConfigMap "platforms.${PLATFORM}.synoinfo" "${WORK_PATH}/platforms.yml")
   # Check addons
-  PLATFORM="$(readModelKey "${MODEL}" "platform")"
-  KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-  KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+  KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")
+  KPRE=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")
   while IFS=': ' read ADDON PARAM; do
     [ -z "${ADDON}" ] && continue
     if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
@@ -365,6 +337,81 @@ function productversMenu() {
   # Remove old files
   rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
   rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
+  touch ${PART1_PATH}/.build
+  return 0
+}
+
+function setConfigFromDSM() {
+  DSM_ROOT="${1}"
+  if [ ! -f "${DSM_ROOT}/GRUB_VER" -o ! -f "${DSM_ROOT}/VERSION" ]; then
+    echo -e "$(TEXT "DSM Invalid, try again!")" >"${LOG_FILE}"
+    return 1
+  fi
+
+  PLATFORMTMP="$(_get_conf_kv "PLATFORM" ${DSM_ROOT}/GRUB_VER)"
+  MODELTMP="$(_get_conf_kv "MODEL" ${DSM_ROOT}/GRUB_VER)"
+  majorversion="$(_get_conf_kv "majorversion" ${DSM_ROOT}/VERSION)"
+  minorversion="$(_get_conf_kv "minorversion" ${DSM_ROOT}/VERSION)"
+  buildnumber="$(_get_conf_kv "buildnumber" ${DSM_ROOT}/VERSION)"
+  smallfixnumber="$(_get_conf_kv "smallfixnumber" ${DSM_ROOT}/VERSION)"
+  if [ -z "${PLATFORMTMP}" -o -z "${MODELTMP}" -o -z "${majorversion}" -o -z "${minorversion}" ]; then
+    echo -e "$(TEXT "DSM Invalid, try again!")" >"${LOG_FILE}"
+    return 1
+  fi
+  PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
+  VS="$(readConfigEntriesArray "platforms.${PLATFORMTMP,,}.productvers" "${WORK_PATH}/platforms.yml" | sort -r)"
+  if arrayExistItem "${PLATFORMTMP,,}" ${PS} && arrayExistItem "${majorversion}.${minorversion}" ${VS}; then
+    PLATFORM=${PLATFORMTMP,,}
+    MODEL=$(echo ${MODELTMP} | sed 's/d$/D/; s/rp$/RP/; s/rp+/RP+/')
+    MODELID=${MODELTMP}
+    PRODUCTVER=${majorversion}.${minorversion}
+    BUILDNUM=${buildnumber}
+    SMALLNUM=${smallfixnumber}
+  else
+    echo "$(printf "$(TEXT "Currently, %s is not supported.")" "${MODELTMP}-${majorversion}.${minorversion}")" >"${LOG_FILE}"
+    return 1
+  fi
+
+  echo "$(TEXT "Reconfiguring Synoinfo, Addons and Modules ...")"
+
+  writeConfigKey "platform" "${PLATFORM}" "${USER_CONFIG_FILE}"
+  writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
+  writeConfigKey "modelid" "${MODELID}" "${USER_CONFIG_FILE}"
+  SN=$(generateSerial "${MODEL}")
+  writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
+  NETIF_NUM=2
+  MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
+  for I in $(seq 1 ${NETIF_NUM}); do
+    writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
+  done
+
+  writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
+  writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
+  writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
+
+  writeConfigKey "paturl" "#" "${USER_CONFIG_FILE}"
+  writeConfigKey "patsum" "#" "${USER_CONFIG_FILE}"
+
+  # Delete synoinfo and reload model/build synoinfo
+  writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
+  while IFS=': ' read KEY VALUE; do
+    writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
+  done <<<$(readConfigMap "platforms.${PLATFORM}.synoinfo" "${WORK_PATH}/platforms.yml")
+
+  # Check addons
+  KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")
+  KPRE=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")
+  while IFS=': ' read ADDON PARAM; do
+    [ -z "${ADDON}" ] && continue
+    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
+      deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
+    fi
+  done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
+  # Rebuild modules
+  writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+  while read ID DESC; do
+    writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
+  done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
   touch ${PART1_PATH}/.build
   return 0
 }
@@ -408,55 +455,6 @@ function ParsePat() {
       rm -rf "${UNTAR_PAT_PATH}"
       break
     fi
-    if [ ! -f "${UNTAR_PAT_PATH}/GRUB_VER" -o ! -f "${UNTAR_PAT_PATH}/VERSION" ]; then
-      echo -e "$(TEXT "pat Invalid, try again!")" >"${LOG_FILE}"
-      break
-    fi
-
-    MODELTMP=$(grep -E "MODEL=\".*\"" ${UNTAR_PAT_PATH}/GRUB_VER 2>/dev/null | sed 's/.*MODEL="\(.*\)".*/\1/')
-    if [ -n "${MODELTMP}" ]; then
-      if [ -f "${WORK_PATH}/model-configs/${MODELTMP}.yml" ]; then
-        MODEL=${MODELTMP}
-      else
-        IS_FIND="false"
-        for M in $(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml 2>/dev/null | sed 's/.*\///; s/\.yml//'); do
-          if [ "$(readModelKey "${M}" "id")" = "${MODELTMP}" ]; then
-            MODEL=${M}
-            IS_FIND="true"
-            break
-          fi
-        done
-        if [ "${IS_FIND}" = "false" ]; then
-          echo "$(printf "$(TEXT "Currently, %s is not supported.")" "${MODELTMP}")" >"${LOG_FILE}"
-          break
-        fi
-      fi
-    fi
-
-    . ${UNTAR_PAT_PATH}/VERSION
-    if [ -n "${majorversion}" -a -n "${minorversion}" -a -n "$(readModelKey "${MODEL}" "productvers.[${majorversion}.${minorversion}]")" ]; then
-      PRODUCTVER=${majorversion}.${minorversion}
-      BUILDNUM=${buildnumber}
-      SMALLNUM=${smallfixnumber}
-    else
-      echo "$(printf "$(TEXT "Currently, %s of %s is not supported.")" "${majorversion}.${minorversion}" "${MODEL}")" >"${LOG_FILE}"
-      break
-    fi
-
-    echo "$(TEXT "Reconfiguring Synoinfo, Addons and Modules")"
-
-    writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
-    SN=$(generateSerial "${MODEL}")
-    writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
-    NETIF_NUM=2
-    MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
-    for I in $(seq 1 ${NETIF_NUM}); do
-      writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
-    done
-
-    writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
-    writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
-    writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
 
     mkdir -p "${PART3_PATH}/dl"
     # Check disk space left
@@ -469,36 +467,18 @@ function ParsePat() {
     else
       cp -f "${PAT_PATH}" "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat"
     fi
-    MD5SUM="$(md5sum "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" | awk '{print $1}')"
+
+    setConfigFromDSM "${UNTAR_PAT_PATH}"
+    if [ $? -ne 0 ]; then
+      rm -rf "${UNTAR_PAT_PATH}"
+      break
+    fi
     writeConfigKey "paturl" "#PARSEPAT" "${USER_CONFIG_FILE}"
-    writeConfigKey "patsum" "${MD5SUM}" "${USER_CONFIG_FILE}"
+    writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
+    copyDSMFiles "${UNTAR_PAT_PATH}"
 
-    # Delete synoinfo and reload model/build synoinfo
-    writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
-    while IFS=': ' read KEY VALUE; do
-      writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
-    done <<<$(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
-
-    # Check addons
-    PLATFORM="$(readModelKey "${MODEL}" "platform")"
-    KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-    KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
-    while IFS=': ' read ADDON PARAM; do
-      [ -z "${ADDON}" ] && continue
-      if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
-        deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
-      fi
-    done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
-    # Rebuild modules
-    writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-    while read ID DESC; do
-      writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
-    done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
-
-    # Remove old files
-    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
-    rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
     touch ${PART1_PATH}/.build
+    rm -rf "${UNTAR_PAT_PATH}"
     rm -f "${LOG_FILE}"
     echo "$(TEXT "Ready!")"
     sleep 3
@@ -511,14 +491,15 @@ function ParsePat() {
     rm -f "${LOG_FILE}"
     return 1
   else
+    PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
     MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
+    MODELID="$(readConfigKey "modelid" "${USER_CONFIG_FILE}")"
     PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
     BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
     SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
     SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
     MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
     MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
-    rm -f "${LOG_FILE}"
     return 0
   fi
 }
@@ -527,9 +508,8 @@ function ParsePat() {
 # Manage addons
 function addonMenu() {
   # Read 'platform' and kernel version to check if addon exists
-  PLATFORM="$(readModelKey "${MODEL}" "platform")"
-  KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-  KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+  KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")
+  KPRE=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")
 
   NEXT="a"
   # Loop menu
@@ -666,9 +646,8 @@ function addonMenu() {
 
 ###############################################################################
 function moduleMenu() {
-  PLATFORM="$(readModelKey "${MODEL}" "platform")"
-  KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-  KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+  KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")
+  KPRE=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")
   NEXT="c"
   # loop menu
   while true; do
@@ -850,7 +829,7 @@ function cmdlineMenu() {
     if [ -n "${MODEL}" ]; then
       echo "s \"$(TEXT "Define SN/MAC")\"" >>"${TMP_PATH}/menu"
     fi
-    echo "m \"$(TEXT "Show model inherent cmdline")\"" >>"${TMP_PATH}/menu"
+    # echo "m \"$(TEXT "Show model inherent cmdline")\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
     DIALOG --title "$(TEXT "Cmdline")" \
       --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
@@ -973,14 +952,14 @@ function cmdlineMenu() {
         esac
       done
       ;;
-    m)
-      ITEMS=""
-      while IFS=': ' read KEY VALUE; do
-        ITEMS+="${KEY}: ${VALUE}\n"
-      done <<<$(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].cmdline")
-      DIALOG --title "$(TEXT "Cmdline")" \
-        --msgbox "${ITEMS}" 0 0
-      ;;
+    # m)
+    #   ITEMS=""
+    #   while IFS=': ' read KEY VALUE; do
+    #     ITEMS+="${KEY}: ${VALUE}\n"
+    #   done <<<$(readConfigMap "platforms.${PLATFORM}.cmdline" "${WORK_PATH}/platforms.yml")
+    #   DIALOG --title "$(TEXT "Cmdline")" \
+    #     --msgbox "${ITEMS}" 0 0
+    #   ;;
     e) return ;;
     esac
   done
@@ -1283,12 +1262,7 @@ function extractDsmFiles() {
   echo "$(TEXT "OK")"
 
   echo -n "$(TEXT "Copying files: ")"
-  cp -f "${UNTAR_PAT_PATH}/grub_cksum.syno" "${PART1_PATH}"
-  cp -f "${UNTAR_PAT_PATH}/GRUB_VER" "${PART1_PATH}"
-  cp -f "${UNTAR_PAT_PATH}/grub_cksum.syno" "${PART2_PATH}"
-  cp -f "${UNTAR_PAT_PATH}/GRUB_VER" "${PART2_PATH}"
-  cp -f "${UNTAR_PAT_PATH}/zImage" "${ORI_ZIMAGE_FILE}"
-  cp -f "${UNTAR_PAT_PATH}/rd.gz" "${ORI_RDGZ_FILE}"
+  copyDSMFiles "${UNTAR_PAT_PATH}"
   rm -rf "${UNTAR_PAT_PATH}"
   echo "$(TEXT "OK")"
 }
@@ -1696,7 +1670,7 @@ function formatDisks() {
     [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
     [ -z "${ID}" ] && ID="Unknown"
     echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
-  done <<<$(lsblk -pno KNAME,ID,PKNAME | sort)
+  done <<<$(lsblk -pno KNAME,ID,PKNAME)
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
@@ -1719,15 +1693,13 @@ function formatDisks() {
       mdadm -S "${I}"
     done
   fi
-  (
-    for I in ${RESP}; do
-      if [[ "${I}" = /dev/mmc* ]]; then
-        echo y | mkfs.ext4 -T largefile4 -E nodiscard "${I}"
-      else
-        echo y | mkfs.ext4 -T largefile4 "${I}"
-      fi
-    done
-  ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
+  for I in ${RESP}; do
+    if [[ "${I}" = /dev/mmc* ]]; then
+      echo y | mkfs.ext4 -T largefile4 -E nodiscard "${I}"
+    else
+      echo y | mkfs.ext4 -T largefile4 "${I}"
+    fi
+  done 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Formatting ...")" 20 100
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "$(TEXT "Formatting is complete.")" 0 0
@@ -1763,147 +1735,58 @@ function tryRecoveryDSM() {
   DIALOG --title "$(TEXT "Try recovery DSM")" \
     --infobox "$(TEXT "Checking for backup of user's configuration for bootloader ...")" 0 0
   if [ -f "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml" ]; then
+    R_PLATFORM="$(readConfigKey "platform" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
     R_MODEL="$(readConfigKey "model" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+    R_MODELID="$(readConfigKey "modelid" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
     R_PRODUCTVER="$(readConfigKey "productver" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
     R_BUILDNUM="$(readConfigKey "buildnum" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
     R_SMALLNUM="$(readConfigKey "smallnum" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
-    R_PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
-    R_PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
-    if [ -n "${R_MODEL}" ] && [ -f "${WORK_PATH}/model-configs/${R_MODEL}.yml" ] &&
-      [ -n "${R_PRODUCTVER}" ] && arrayExistItem "${R_PRODUCTVER}" "$(readConfigEntriesArray "productvers" "${WORK_PATH}/model-configs/${R_MODEL}.yml" | sort -r)" &&
+    R_PATURL="$(readConfigKey "paturl" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+    R_PATSUM="$(readConfigKey "patsum" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+
+    PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
+    VS="$(readConfigEntriesArray "platforms.${R_PLATFORM}.productvers" "${WORK_PATH}/platforms.yml" | sort -r)"
+    if [ -n "${R_PLATFORM}" ] && arrayExistItem "${R_PLATFORM}" ${PS} &&
+      [ -n "${R_PRODUCTVER}" ] && arrayExistItem "${R_PRODUCTVER}" ${VS} &&
       [ -n "${R_BUILDNUM}" ] && [ -n "${R_SMALLNUM}" ]; then
-      if [ "${R_PATURL:0:1}" = "#" ] || [ -z "${R_PATSUM}" ]; then
-        if [ -f "${TMP_PATH}/mdX/.syno/patch/VERSION" ] &&
-          [ -f "${TMP_PATH}/mdX/.syno/patch/zImage" ] &&
-          [ -f "${TMP_PATH}/mdX/.syno/patch/rd.gz" ]; then
-          cp -f "${TMP_PATH}/mdX/.syno/patch/zImage" "${ORI_ZIMAGE_FILE}"
-          cp -f "${TMP_PATH}/mdX/.syno/patch/rd.gz" "${ORI_RDGZ_FILE}"
-        else
-          __umountDSMRootDisk
-          DIALOG --title "$(TEXT "Try recovery DSM")" \
-            --msgbox "$(TEXT "Found a backup of the user's configuration, but the system is damaged and will not be restored. Please reselect model and build.")" 0 0
-          return
-        fi
-      else
-        cp -rf "${TMP_PATH}/mdX/usr/rr/backup/p1/*" "${PART1_PATH}"
-        if [ -d "${TMP_PATH}/mdX/usr/rr/backup/p3" ]; then
-          cp -rf "${TMP_PATH}/mdX/usr/rr/backup/p3/*" "${PART3_PATH}"
-        fi
-        if [ -f "${TMP_PATH}/mdX/.syno/patch/VERSION" ] &&
-          [ -f "${TMP_PATH}/mdX/.syno/patch/zImage" ] &&
-          [ -f "${TMP_PATH}/mdX/.syno/patch/rd.gz" ]; then
-          cp -f "${TMP_PATH}/mdX/.syno/patch/zImage" "${ORI_ZIMAGE_FILE}"
-          cp -f "${TMP_PATH}/mdX/.syno/patch/rd.gz" "${ORI_RDGZ_FILE}"
-        fi
-        __umountDSMRootDisk
-        DIALOG --title "$(TEXT "Try recovery DSM")" \
-          --msgbox "$(TEXT "Found a backup of the user's configuration, and restored it. Please rebuild and boot.")" 0 0
-        exec "$0"
-        touch ${PART1_PATH}/.build
-        return
+      cp -Rf "${TMP_PATH}/mdX/usr/rr/backup/p1/"* "${PART1_PATH}"
+      if [ -d "${TMP_PATH}/mdX/usr/rr/backup/p3" ]; then
+        cp -Rf "${TMP_PATH}/mdX/usr/rr/backup/p3/"* "${PART3_PATH}"
       fi
+      copyDSMFiles "${TMP_PATH}/mdX/.syno/patch"
+      __umountDSMRootDisk
+      DIALOG --title "$(TEXT "Try recovery DSM")" \
+        --msgbox "$(TEXT "Found a backup of the user's configuration, and restored it. Please rebuild and boot.")" 0 0
+      exec "$0"
+      touch ${PART1_PATH}/.build
+      return
     fi
   fi
 
   DIALOG --title "$(TEXT "Try recovery DSM")" \
     --infobox "$(TEXT "Checking for installed DSM system ...")" 0 0
-  if [ -f "${TMP_PATH}/mdX/.syno/patch/VERSION" ] &&
-    [ -f "${TMP_PATH}/mdX/.syno/patch/zImage" ] &&
-    [ -f "${TMP_PATH}/mdX/.syno/patch/rd.gz" ]; then
-    R_MODEL=""
-    R_PRODUCTVER=""
-    R_BUILDNUM=""
-    R_SMALLNUM=""
-    R_SN=""
-    R_MAC1=""
-    R_MAC2=""
-    unique="$(_get_conf_kv unique "${TMP_PATH}/mdX/.syno/patch/VERSION")"
-    majorversion="$(_get_conf_kv majorversion "${TMP_PATH}/mdX/.syno/patch/VERSION")"
-    minorversion="$(_get_conf_kv minorversion "${TMP_PATH}/mdX/.syno/patch/VERSION")"
-    buildnumber="$(_get_conf_kv buildnumber "${TMP_PATH}/mdX/.syno/patch/VERSION")"
-    smallfixnumber="$(_get_conf_kv smallfixnumber "${TMP_PATH}/mdX/.syno/patch/VERSION")"
-    while read F; do
-      M="$(basename ${F} .yml)"
-      UNIQUE=$(readModelKey "${M}" "unique")
-      [ "${unique}" = "${UNIQUE}" ] && R_MODEL="${M}" && break
-    done <<<$(find "${WORK_PATH}/model-configs" -maxdepth 1 -name \*.yml 2>/dev/null | sort)
-    if [ -n "${R_MODEL}" ]; then
-      ITEMS="$(readConfigEntriesArray "productvers" "${WORK_PATH}/model-configs/${R_MODEL}.yml" | sort -r)"
-      if arrayExistItem "${majorversion}.${minorversion}" ${ITEMS}; then
-        R_PRODUCTVER="${majorversion}.${minorversion}"
-      fi
-    fi
-    R_BUILDNUM=${buildnumber}
-    R_SMALLNUM=${smallfixnumber}
-    if [ -f "${TMP_PATH}/mdX/etc/synoinfo.conf" ]; then
-      R_SN=$(_get_conf_kv SN "${TMP_PATH}/mdX/etc/synoinfo.conf")
-    fi
 
-    if [ -n "${R_MODEL}" ] && [ -n "${R_PRODUCTVER}" ] && [ -n "${R_BUILDNUM}" ] && [ -n "${R_SMALLNUM}" ]; then
-      cp -f "${TMP_PATH}/mdX/.syno/patch/zImage" "${ORI_ZIMAGE_FILE}"
-      cp -f "${TMP_PATH}/mdX/.syno/patch/rd.gz" "${ORI_RDGZ_FILE}"
-
-      MODEL="${R_MODEL}"
-      PRODUCTVER="${R_PRODUCTVER}"
-      BUILDNUM=${R_BUILDNUM}
-      SMALLNUM=${R_SMALLNUM}
-      if [ -n "${R_SN}" ]; then
-        SN=${R_SN}
-      else
-        SN=$(generateSerial "${MODEL}")
-      fi
-
-      writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
-      writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
-      writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
-      writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
-      writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
-      NETIF_NUM=2
-      MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
-      for I in $(seq 1 ${NETIF_NUM}); do
-        writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
-      done
-      writeConfigKey "paturl" "#RECOVERY" "${USER_CONFIG_FILE}"
-      writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
-
-      # Delete synoinfo and reload model/build synoinfo
-      writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
-      while IFS=': ' read KEY VALUE; do
-        writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
-      done <<<$(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].synoinfo")
-
-      # Check addons
-      PLATFORM="$(readModelKey "${MODEL}" "platform")"
-      KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-      KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
-      while IFS=': ' read ADDON PARAM; do
-        [ -z "${ADDON}" ] && continue
-        if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
-          deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
-        fi
-      done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
-      # Rebuild modules
-      writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-      while read ID DESC; do
-        writeConfigKey "modules.\"${ID}\"" "" "${USER_CONFIG_FILE}"
-      done <<<$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
-
-      __umountDSMRootDisk
-      DIALOG --title "$(TEXT "Try recovery DSM")" \
-        --msgbox "$(TEXT "Found a installed DSM system and restored it. Please rebuild and boot.")" 0 0
-      touch ${PART1_PATH}/.build
-      return
-    else
-      __umountDSMRootDisk
-      DIALOG --title "$(TEXT "Try recovery DSM")" \
-        --msgbox "$(TEXT "Found a installed DSM system, but the system is damaged and will not be restored. Please reselect model and build.")" 0 0
-      touch ${PART1_PATH}/.build
-      return
-    fi
+  setConfigFromDSM "${TMP_PATH}/mdX/.syno/patch"
+  if [ $? -ne 0 ]; then
+    __umountDSMRootDisk
+    DIALOG --title "$(TEXT "Try recovery DSM")" \
+      --msgbox "$(TEXT "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build.")" 0 0
+    return
   fi
+
+  if [ -f "${TMP_PATH}/mdX/etc/synoinfo.conf" ]; then
+    R_SN=$(_get_conf_kv SN "${TMP_PATH}/mdX/etc/synoinfo.conf")
+    [ -n "${R_SN}" ] && SN=${R_SN} && writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
+  fi
+
+  writeConfigKey "paturl" "#RECOVERY" "${USER_CONFIG_FILE}"
+  writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
+
+  copyDSMFiles "${TMP_PATH}/mdX/.syno/patch"
   __umountDSMRootDisk
   DIALOG --title "$(TEXT "Try recovery DSM")" \
-    --msgbox "$(TEXT "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build.")" 0 0
+    --msgbox "$(TEXT "Found a installed DSM system and restored it. Please rebuild and boot.")" 0 0
+
   return
 }
 
@@ -2136,7 +2019,7 @@ function cloneBootloaderDisk() {
     [ -z "${KNAME}" -o -z "${ID}" ] && continue
     [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
     echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
-  done <<<$(lsblk -dpno KNAME,ID,PKNAME | sort)
+  done <<<$(lsblk -dpno KNAME,ID,PKNAME)
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
@@ -2304,12 +2187,14 @@ function advancedMenu() {
   NEXT="l"
   while true; do
     rm -f "${TMP_PATH}/menu"
+    echo "9 \"$(TEXT "DSM rd compression:") \Z4${RD_COMPRESSED}\Zn\"" >>"${TMP_PATH}/menu"
     echo "l \"$(TEXT "Switch LKM version:") \Z4${LKM}\Zn\"" >>"${TMP_PATH}/menu"
     echo "j \"$(TEXT "HDD sort(hotplug):") \Z4${HDDSORT}\Zn\"" >>"${TMP_PATH}/menu"
     if [ -n "${PRODUCTVER}" ]; then
       echo "c \"$(TEXT "show/modify the current pat data")\"" >>"${TMP_PATH}/menu"
+      echo "8 \"$(TEXT "Switch SATADOM mode:") \Z4${SATADOM}\Zn\"" >>"${TMP_PATH}/menu"
     fi
-    if [ "true" = "$(readModelKey "${MODEL}" "dt")" ]; then
+    if [ -n "${PLATFORM}" ] && [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
       echo "d \"$(TEXT "Custom DTS")\"" >>"${TMP_PATH}/menu"
     fi
     echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >>"${TMP_PATH}/menu"
@@ -2353,6 +2238,12 @@ function advancedMenu() {
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
     case $(cat "${TMP_PATH}/resp") in
+    9)
+      [ "${RD_COMPRESSED}" = "true" ] && RD_COMPRESSED='false' || RD_COMPRESSED='true'
+      writeConfigKey "rd-compressed" "${RD_COMPRESSED}" "${USER_CONFIG_FILE}"
+      touch ${PART1_PATH}/.build
+      NEXT="9"
+      ;;
     l)
       LKM=$([ "${LKM}" = "dev" ] && echo 'prod' || ([ "${LKM}" = "test" ] && echo 'dev' || echo 'test'))
       writeConfigKey "lkm" "${LKM}" "${USER_CONFIG_FILE}"
@@ -2382,6 +2273,20 @@ function advancedMenu() {
         touch ${PART1_PATH}/.build
       fi
       NEXT="e"
+      ;;
+    8)
+      rm -f "${TMP_PATH}/opts"
+      echo "1 \"Native SATA Disk(SYNO)\"" >>"${TMP_PATH}/opts"
+      echo "2 \"Fake SATA DOM(Redpill)\"" >>"${TMP_PATH}/opts"
+      DIALOG --title "$(TEXT "Advanced")" \
+        --default-item "${SATADOM}" --menu "$(TEXT "Choose a mode(Only supported for kernel version 4)")" 0 0 0 --file "${TMP_PATH}/opts" \
+        2>${TMP_PATH}/resp
+      [ $? -ne 0 ] && return
+      resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
+      [ -z "${resp}" ] && return
+      SATADOM=${resp}
+      writeConfigKey "satadom" "${SATADOM}" "${USER_CONFIG_FILE}"
+      NEXT="8"
       ;;
     d)
       customDTS
@@ -2927,9 +2832,8 @@ function updateRR() {
       cp -Rf "${TMP_PATH}/update/${VALUE}"/* "${VALUE}"
       if [ "$(realpath "${VALUE}")" = "$(realpath "${MODULES_PATH}")" ]; then
         if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
-          PLATFORM="$(readModelKey "${MODEL}" "platform")"
-          KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-          KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+          KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")
+          KPRE=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")
           if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
             writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
             while read ID DESC; do
@@ -3062,9 +2966,8 @@ function updateModules() {
   rm -rf "${MODULES_PATH}/"*
   cp -rf "${TMP_PATH}/update/"* "${MODULES_PATH}/"
   if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
-    PLATFORM="$(readModelKey "${MODEL}" "platform")"
-    KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-    KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+    KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")
+    KPRE=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")
     if [ -n "${PLATFORM}" -a -n "${KVER}" ]; then
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
       while read ID DESC; do
@@ -3403,9 +3306,8 @@ else
     fi
     echo "u \"$(TEXT "Parse pat")\"" >>"${TMP_PATH}/menu"
     if [ -n "${PRODUCTVER}" ]; then
-      PLATFORM="$(readModelKey "${MODEL}" "platform")"
-      KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-      KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+      KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")
+      KPRE=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")
       if [ -f "${CKS_PATH}/bzImage-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.gz" ] &&
         [ -f "${CKS_PATH}/modules-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.tgz" ]; then
         echo "s \"$(TEXT "Kernel:") \Z4${KERNEL}\Zn\"" >>"${TMP_PATH}/menu"

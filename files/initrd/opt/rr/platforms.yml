@@ -1,0 +1,162 @@
+synoinfo: &synoinfo
+  supportext4: "yes"
+  support_uasp: "yes"
+  support_printer: "yes"
+  support_usb_printer: "yes"
+  support_disk_compatibility: "no"
+  support_memory_compatibility: "no"
+  support_led_brightness_adjustment: "no"
+  support_leds_atmega1608: "no"
+  support_leds_lp3943: "no"
+  support_oob_ctl: "no"
+  support_syno_hybrid_raid: "no"
+  supportraidgroup: "no"
+  HddEnableDynamicPower: "yes"
+  maxlanport: "8"
+  netif_seq: "0 1 2 3 4 5 6 7"
+  buzzeroffen: "0xffff"
+platforms:
+  apollolake:
+    dt: false
+    flags:
+      - "movbe"
+    synoinfo:
+      <<: *synoinfo
+    productvers:
+      "7.0":
+        kver: "4.4.180"
+      "7.1":
+        kver: "4.4.180"
+      "7.2":
+        kver: "4.4.302"
+  broadwell:
+    dt: false
+    synoinfo:
+      <<: *synoinfo
+    productvers:
+      "7.0":
+        kver: "4.4.180"
+      "7.1":
+        kver: "4.4.180"
+      "7.2":
+        kver: "4.4.302"
+  broadwellnk:
+    dt: false
+    synoinfo:
+      <<: *synoinfo
+      support_bde_internal_10g: "no"
+      supportsas: "no"
+    productvers:
+      "7.0":
+        kver: "4.4.180"
+      "7.1":
+        kver: "4.4.180"
+      "7.2":
+        kver: "4.4.302"
+  broadwellnkv2:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+      support_bde_internal_10g: "no"
+      supportsas: "no"
+      supportsas_v2_r1: "no"
+      support_multipath: "yes"
+    productvers:
+      "7.0":
+        kver: "4.4.180"
+      "7.1":
+        kver: "4.4.180"
+      "7.2":
+        kver: "4.4.302"
+  broadwellntbap:
+    dt: false
+    synoinfo:
+      <<: *synoinfo
+      support_bde_internal_10g: "no"
+      supportsas: "no"
+      supportbootinst: "no"
+      no_disk_system: "no"
+      support_auto_install: "no"
+      support_install_only_dev: "no"
+      required_system_disk_number: "0"
+    productvers:
+      "7.0":
+        kver: "4.4.180"
+      "7.1":
+        kver: "4.4.180"
+      "7.2":
+        kver: "4.4.302"
+  denverton:
+    dt: false
+    flags:
+      - "movbe"
+    synoinfo:
+      <<: *synoinfo
+    productvers:
+      "7.0":
+        kver: "4.4.180"
+      "7.1":
+        kver: "4.4.180"
+      "7.2":
+        kver: "4.4.302"
+  geminilake:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+    productvers:
+      "7.0":
+        kver: "4.4.180"
+      "7.1":
+        kver: "4.4.180"
+      "7.2":
+        kver: "4.4.302"
+  purley:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+      supportsas: "no"
+      supportsas_v2_r1: "no"
+      support_multipath: "yes"
+      support_install_only_dev: "no"
+      isolated_disk_system: "no"
+      required_system_disk_number: "0"
+      internal_disk_without_led_mask: "no"
+    productvers:
+      "7.0":
+        kver: "4.4.180"
+      "7.1":
+        kver: "4.4.180"
+      "7.2":
+        kver: "4.4.302"
+  r1000:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+    productvers:
+      "7.1":
+        kver: "4.4.180"
+      "7.2":
+        kver: "4.4.302"
+  v1000:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+    productvers:
+      "7.0":
+        kver: "4.4.180"
+      "7.1":
+        kver: "4.4.180"
+      "7.2":
+        kver: "4.4.302"
+  epyc7002:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+      netif_seq_by_dts: "no"
+    productvers:
+      "7.1":
+        kpre: "7.1"
+        kver: "5.10.55"
+      "7.2":
+        kpre: "7.2"
+        kver: "5.10.55"

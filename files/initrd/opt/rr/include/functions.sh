@@ -5,33 +5,6 @@
 . ${WORK_PATH}/include/i18n.sh
 
 ###############################################################################
-# Read key value from model config file
-# 1 - Model
-# 2 - Key
-# Return Value
-function readModelKey() {
-  readConfigKey "${2}" "${WORK_PATH}/model-configs/${1}.yml" 2>/dev/null
-}
-
-###############################################################################
-# Read Entries as map(key=value) from model config
-# 1 - Model
-# 2 - Path of key
-# Returns map of values
-function readModelMap() {
-  readConfigMap "${2}" "${WORK_PATH}/model-configs/${1}.yml" 2>/dev/null
-}
-
-###############################################################################
-# Read an array from model config
-# 1 - Model
-# 2 - Path of key
-# Returns array/map of values
-function readModelArray() {
-  readConfigArray "${2}" "${WORK_PATH}/model-configs/${1}.yml" 2>/dev/null
-}
-
-###############################################################################
 # Check if loader is fully configured
 # Returns 1 if not
 function loaderIsConfigured() {
@@ -60,94 +33,6 @@ function dieLog() {
 }
 
 ###############################################################################
-# Generate a number with 6 digits from 1 to 30000
-function random() {
-  printf "%06d" $((${RANDOM} % 30000 + 1))
-}
-
-###############################################################################
-# Generate a hexa number from 0x00 to 0xFF
-function randomhex() {
-  printf "&02X" "$((${RANDOM} % 255 + 1))"
-}
-
-###############################################################################
-# Generate a random letter
-function generateRandomLetter() {
-  for i in A B C D E F G H J K L M N P Q R S T V W X Y Z; do
-    echo ${i}
-  done | sort -R | tail -1
-}
-
-###############################################################################
-# Generate a random digit (0-9A-Z)
-function generateRandomValue() {
-  for i in 0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K L M N P Q R S T V W X Y Z; do
-    echo ${i}
-  done | sort -R | tail -1
-}
-
-###############################################################################
-# Generate a random serial number for a model
-# 1 - Model
-# Returns serial number
-function generateSerial() {
-  SERIAL="$(readModelArray "${1}" "serial.prefix" | sort -R | tail -1)"
-  SERIAL+=$(readModelKey "${1}" "serial.middle")
-  case "$(readModelKey "${1}" "serial.suffix")" in
-  numeric)
-    SERIAL+=$(random)
-    ;;
-  alpha)
-    SERIAL+=$(generateRandomLetter)$(generateRandomValue)$(generateRandomValue)$(generateRandomValue)$(generateRandomValue)$(generateRandomLetter)
-    ;;
-  esac
-  echo ${SERIAL}
-}
-
-###############################################################################
-# Generate a MAC address for a model
-# 1 - Model
-# 2 - number
-# Returns serial number
-function generateMacAddress() {
-  PRE="$(readModelArray "${1}" "serial.macpre")"
-  SUF="$(printf '%02x%02x%02x' $((${RANDOM} % 256)) $((${RANDOM} % 256)) $((${RANDOM} % 256)))"
-  NUM=${2:-1}
-  MACS=""
-  for I in $(seq 1 ${NUM}); do
-    MACS+="$(printf '%06x%06x' $((0x${PRE:-"001132"})) $(($((0x${SUF})) + ${I})))"
-    [ ${I} -lt ${NUM} ] && MACS+=" "
-  done
-  echo "${MACS}"
-  return 0
-}
-
-###############################################################################
-# Validate a serial number for a model
-# 1 - Model
-# 2 - Serial number to test
-# Returns 1 if serial number is valid
-function validateSerial() {
-  PREFIX=$(readModelArray "${1}" "serial.prefix")
-  MIDDLE=$(readModelKey "${1}" "serial.middle")
-  S=${2:0:4}
-  P=${2:4:3}
-  L=${#2}
-  if [ ${L} -ne 13 ]; then
-    return 0
-  fi
-  echo "${PREFIX}" | grep -q "${S}"
-  if [ $? -eq 1 ]; then
-    return 0
-  fi
-  if [ "${MIDDLE}" != "${P}" ]; then
-    return 0
-  fi
-  return 1
-}
-
-###############################################################################
 # Check if a item exists into array
 # 1 - Item
 # 2.. - Array
@@ -162,6 +47,110 @@ function arrayExistItem() {
     break
   done
   return ${EXISTS}
+}
+
+###############################################################################
+# Generate a number with 6 digits from 1 to 30000
+function random() {
+  printf "%06d" $((${RANDOM} % 30000 + 1))
+}
+
+###############################################################################
+# Generate a hexa number from 0x00 to 0xFF
+function randomhex() {
+  printf "&02X" "$((${RANDOM} % 255 + 1))"
+}
+
+###############################################################################
+# Generate a random letter
+function genRandomLetter() {
+  for i in A B C D E F G H J K L M N P Q R S T V W X Y Z; do
+    echo ${i}
+  done | sort -R | tail -1
+}
+
+###############################################################################
+# Generate a random digit (0-9A-Z)
+function genRandomValue() {
+  for i in 0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K L M N P Q R S T V W X Y Z; do
+    echo ${i}
+  done | sort -R | tail -1
+}
+
+###############################################################################
+# Generate a random serial number for a model
+# 1 - Model
+# Returns serial number
+function generateSerial() {
+  PREFIX="$(readConfigArray "${1}.prefix" "${WORK_PATH}/serialnumber.yml" 2>/dev/null | sort -R | tail -1)"
+  MIDDLE="$(readConfigArray "${1}.middle" "${WORK_PATH}/serialnumber.yml" 2>/dev/null | sort -R | tail -1)"
+  SUFFIX="$(readConfigKey "${1}.suffix" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
+
+  SERIAL="${PREFIX:-"0000"}${MIDDLE:-"XXX"}"
+  case "${SUFFIX:-"alpha"}" in
+  numeric)
+    SERIAL+="$(random)"
+    ;;
+  alpha)
+    SERIAL+="$(genRandomLetter)$(genRandomValue)$(genRandomValue)$(genRandomValue)$(genRandomValue)$(genRandomLetter)"
+    ;;
+  esac
+  echo "${SERIAL}"
+}
+
+###############################################################################
+# Generate a MAC address for a model
+# 1 - Model
+# 2 - number
+# Returns serial number
+function generateMacAddress() {
+  MACPRE="$(readConfigArray "${1}.macpre" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
+  MACSUF="$(printf '%02x%02x%02x' $((${RANDOM} % 256)) $((${RANDOM} % 256)) $((${RANDOM} % 256)))"
+  NUM=${2:-1}
+  MACS=""
+  for I in $(seq 1 ${NUM}); do
+    MACS+="$(printf '%06x%06x' $((0x${MACPRE:-"001132"})) $(($((0x${MACSUF})) + ${I})))"
+    [ ${I} -lt ${NUM} ] && MACS+=" "
+  done
+  echo "${MACS}"
+  return 0
+}
+
+###############################################################################
+# Validate a serial number for a model
+# 1 - Model
+# 2 - Serial number to test
+# Returns 1 if serial number is invalid
+function validateSerial() {
+  PREFIX="$(readConfigArray "${1}.prefix" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
+  MIDDLE="$(readConfigArray "${1}.middle" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
+  SUFFIX="$(readConfigKey "${1}.suffix" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
+  P=${2:0:4}
+  M=${2:4:3}
+  S=${2:7}
+  L=${#2}
+  if [ ${L} -ne 13 ]; then
+    return 1
+  fi
+  if ! arrayExistItem ${P} ${PREFIX}; then
+    return 1
+  fi
+  if ! arrayExistItem ${M} ${MIDDLE}; then
+    return 1
+  fi
+  case "${SUFFIX:-"alpha"}" in
+  numeric)
+    if ! echo "${S}" | grep -q "^[0-9]\{6\}$"; then
+      return 1
+    fi
+    ;;
+  alpha)
+    if ! echo "${S}" | grep -q "^[A-Z][0-9][0-9][0-9][0-9][A-Z]$"; then
+      return 1
+    fi
+    ;;
+  esac
+  return 0
 }
 
 ###############################################################################
@@ -381,4 +370,27 @@ function findDSMRoot() {
   [ -z "${DSMROOTS}" ] && DSMROOTS="$(lsblk -pno KNAME,PARTN,FSTYPE,FSVER,LABEL | grep -E "sd[a-z]{1,2}1" | grep -w "linux_raid_member" | grep "0.9" | awk '{print $1}')"
   echo "${DSMROOTS}"
   return 0
+}
+
+###############################################################################
+# Copy DSM files to the boot partition
+# 1 - DSM root path
+function copyDSMFiles() {
+  if [ -f "${1}/VERSION" ] && [ -f "${1}/grub_cksum.syno" ] && [ -f "${1}/GRUB_VER" ] && [ -f "${1}/zImage" ] && [ -f "${1}/rd.gz" ]; then
+    # Remove old model files
+    rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/grub_cksum.syno" "${PART2_PATH}/GRUB_VER"
+    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}"
+    # Remove old build files
+    rm -f "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null
+    # Copy new model files
+    cp -f "${1}/grub_cksum.syno" "${PART1_PATH}"
+    cp -f "${1}/GRUB_VER" "${PART1_PATH}"
+    cp -f "${1}/grub_cksum.syno" "${PART2_PATH}"
+    cp -f "${1}/GRUB_VER" "${PART2_PATH}"
+    cp -f "${1}/zImage" "${ORI_ZIMAGE_FILE}"
+    cp -f "${1}/rd.gz" "${ORI_RDGZ_FILE}"
+    return 0
+  else
+    return 1
+  fi
 }

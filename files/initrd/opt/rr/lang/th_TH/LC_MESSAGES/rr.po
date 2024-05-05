@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-28 15:23+0800\n"
-"PO-Revision-Date: 2024-04-29 11:29+0800\n"
+"POT-Creation-Date: 2024-05-05 22:10+0800\n"
+"PO-Revision-Date: 2024-05-05 21:58+0800\n"
 "Last-Translator: Ing <AI>\n"
 "Language-Team: Thai <https://hosted.weblate.org/projects/rrorg/rr/th/>\n"
 "Language: th_TH\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr "ตัวโหลดไม่ได้เริ่มต้น!"
 
-#: boot.sh:10 init.sh:119
+#: boot.sh:10 init.sh:122
 msgid "Loader is not configured!"
 msgstr "ตัวโหลดไม่ได้ตั้งค่า!"
 
@@ -34,7 +34,7 @@ msgstr "ยินดีต้อนรับสู่ %s"
 msgid "DSM zImage changed"
 msgstr "zImage DSM ถูกเปลี่ยนแปลง"
 
-#: boot.sh:36 menu.sh:1319
+#: boot.sh:36 menu.sh:1293
 msgid "zImage not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
 msgstr "zImage ไม่ได้ถูกแก้ไข\\nโปรดอัพเกรดเวอร์ชั่นตัวโหลดและลองใหม่อีกครั้ง\\nError:\\n"
 
@@ -42,111 +42,107 @@ msgstr "zImage ไม่ได้ถูกแก้ไข\\nโปรดอั�
 msgid "DSM Ramdisk changed"
 msgstr "RAMdisk ของ DSM ถูกเปลี่ยนแปลง"
 
-#: boot.sh:47 menu.sh:1325
+#: boot.sh:47 menu.sh:1299
 msgid "Ramdisk not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
 msgstr "RAMdisk ไม่ถูกแก้ไข\\nโปรดอัพเกรดเวอร์ชั่นโปรแกรมบูตและลองใหม่อีกครั้ง\\nError:\\n"
 
-#: boot.sh:65
+#: boot.sh:67
 msgid "Model:   "
 msgstr "แบบอย่าง: "
 
-#: boot.sh:66
+#: boot.sh:68
 msgid "Version: "
 msgstr "เวอร์ชัน:   "
 
-#: boot.sh:67
+#: boot.sh:69
 msgid "Kernel:  "
 msgstr "เคอร์เนล:  "
 
-#: boot.sh:68
+#: boot.sh:70
 msgid "LKM:     "
 msgstr "LKM:     "
 
-#: boot.sh:69
+#: boot.sh:71
 msgid "DMI:     "
 msgstr "DMI:     "
 
-#: boot.sh:70
+#: boot.sh:72
 msgid "CPU:     "
 msgstr "CPU:     "
 
-#: boot.sh:71
+#: boot.sh:73
 msgid "MEM:     "
 msgstr "MEM:     "
 
-#: boot.sh:74
-msgid "The current version of bootloader does not support booting %s-%s, please upgrade and rebuild."
-msgstr "เวอร์ชั่นปัจจุบันของโปรแกรมบูตไม่รองรับการบูต %s-%s โปรดอัพเกรดและสร้างใหม่อีกครั้ง"
-
-#: boot.sh:87
+#: boot.sh:84
 msgid "Please insert at least one sata/scsi disk for system installation, except for the bootloader disk."
 msgstr "กรุณาใส่ดิสก์ SATA/SCSI อย่างน้อย 1 টিเพื่อติดตั้งระบบ หากไม่มีดิสก์บูตโปรดติดตั้งใหม่อีกครั้ง"
 
-#: boot.sh:173
+#: boot.sh:184
 msgid "Cmdline:\\n"
 msgstr "Cmdline:\\n"
 
-#: boot.sh:179
+#: boot.sh:190
 msgid "Reboot to boot directly in DSM"
 msgstr "รีบูตเพื่อเริ่มต้นการทำงานโดยตรงใน DSM"
 
-#: boot.sh:185 init.sh:132
+#: boot.sh:196 init.sh:135
 msgid "Detected %s network cards."
 msgstr "ตรวจพบการ์ดเครือข่าย %s"
 
-#: boot.sh:186 init.sh:133
+#: boot.sh:197 init.sh:136
 msgid "Checking Connect."
 msgstr "ตรวจสอบการเชื่อมต่อ."
 
-#: boot.sh:198 init.sh:143
+#: boot.sh:209 init.sh:146
 msgid "connected."
 msgstr "เชื่อมต่อแล้ว."
 
-#: boot.sh:205 init.sh:150
+#: boot.sh:216 init.sh:153
 msgid "Waiting IP."
 msgstr "รอ IP."
 
-#: boot.sh:213 init.sh:158
+#: boot.sh:224 init.sh:161
 msgid "DOWN"
 msgstr "ไม่เชื่อมต่อ"
 
-#: boot.sh:217 init.sh:162
+#: boot.sh:228 init.sh:165
 msgid "NOT CONNECTED"
 msgstr "ไม่เชื่อมต่อ"
 
-#: boot.sh:221 init.sh:166
+#: boot.sh:232 init.sh:169
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "หมดเวลา (โปรดตรวจสอบ IP บนเราเตอร์)"
 
-#: boot.sh:228 init.sh:173
+#: boot.sh:239 init.sh:176
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "LINK LOCAL (ไม่พบ DHCP server.)"
 
-#: boot.sh:230
+#: boot.sh:241
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr "สำหรับการเชื่อมต่อ DSM ผ่านเว็บrowser ใช้ URL \\033[1;34mhttp://%s:5000\\033[0m"
 
-#: boot.sh:243
+#: boot.sh:254
 msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
 msgstr "%2ds (การเปลี่ยนสถานะการเข้าถึง (ssh/web) จะหยุดการทำงาน)"
 
-#: boot.sh:247
+#: boot.sh:258
 msgid "access(ssh/web) status has changed and booting is interrupted."
 msgstr "สถานะการเข้าถึง (ssh/web) ได้เปลี่ยนแปลง และการทำงานถูกหยุด"
 
-#: boot.sh:257
+#: boot.sh:268
 msgid "Loading DSM kernel ..."
 msgstr "กำลังโหลด Kernel DSM ..."
 
-#: boot.sh:275
+#: boot.sh:285
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "คำเตือน, กำลังใช้ kexec ด้วย --noefi, สิ่งที่ผิดปกติจะเกิดขึ้น!!"
 
-#: boot.sh:279
+#: boot.sh:289
 msgid "Booting ..."
 msgstr "กำลังเริ่มต้น ..."
 
-#: boot.sh:281
+#: boot.sh:291
 msgid "[This interface will not be operational. Please wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]"
 msgstr "[ไม่สามารถใช้งานได้ ตรวจสอบอีกครั้งในไม่กี่นาที\\nหา DSM ผ่าน http://find.synology.com/ หรือ Synology Assistant และเชื่อมต่อ]"
 
@@ -154,1313 +150,1313 @@ msgstr "[ไม่สามารถใช้งานได้ ตรวจส�
 msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
 msgstr "ไม่พบอุปกรณ์เครือข่าย กรุณาเชื่อมต่อเครือข่าย และทำการเรียก init.sh ใหม่อีกครั้ง"
 
-#: init.sh:95
+#: init.sh:98
 msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM"
 msgstr "ตัวโหลดดิสก์ทั้ง USB หรือ SATA/SCSI/NVME/MMC DoM"
 
-#: init.sh:104
+#: init.sh:107
 msgid "Loader disk:"
 msgstr "ตัวโหลดดิสก์:"
 
-#: init.sh:112
+#: init.sh:115
 msgid "Loading keymap"
 msgstr "โหลดแผนผังการตั้งค่า"
 
-#: init.sh:122
+#: init.sh:125
 msgid "User requested edit settings."
 msgstr "ผู้ใช้ร้องขอแก้ไขการตั้งค่า"
 
-#: init.sh:175
+#: init.sh:178
 msgid "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web terminal."
 msgstr "สำหรับการตั้งค่าโหลดดิสก์ผ่าน터มินัลเว็บ \\033[1;34mhttp://%s:7681\\033[0m"
 
-#: init.sh:186
+#: init.sh:189
 msgid "Call \\033[1;32minit.sh\\033[0m to re get init info"
 msgstr "เรียก \\033[1;32minit.sh\\033[0m เพื่อเริ่มต้นใหม่"
 
-#: init.sh:187
+#: init.sh:190
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
 msgstr "เรียก \\033[1;32mmenu.sh\\033[0m เพื่อตั้งค่าโหลด"
 
-#: init.sh:189
+#: init.sh:192
 msgid "User config is on"
 msgstr "ตั้งค่าผู้ใช้งานเปิดใช้งาน"
 
-#: init.sh:190
+#: init.sh:193
 msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 msgstr "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 
-#: init.sh:191
+#: init.sh:194
 msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 msgstr "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 
-#: init.sh:192
+#: init.sh:195
 msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 msgstr "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 
-#: init.sh:194
+#: init.sh:197
 msgid "Default SSH \\033[1;31mroot\\033[0m password is"
 msgstr "ค่าเริ่มต้น SSH \\033[1;31mroot\\033[0m รหัสผ่านคือ"
 
-#: init.sh:212
+#: init.sh:215
 msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
 msgstr "คุณมี RAM น้อยกว่า 4GB, หากเกิดข้อผิดพลาดในการสร้างโหลดกรุณาเพิ่มจำนวน RA"
 
-#: menu.sh:107 menu.sh:141 menu.sh:184
+#: menu.sh:109 menu.sh:115 menu.sh:144
 msgid "Model"
 msgstr "แบบอย่าง"
 
-#: menu.sh:108
-msgid "Reading models"
-msgstr "อ่านแบบอย่าง"
+#: menu.sh:110
+msgid "Getting models ..."
+msgstr "ดึงแบบอย่าง ..."
 
-#: menu.sh:118
-msgid "Compatibility judgment"
-msgstr "การตัดสินใจความสามารถ"
+#: menu.sh:116
+msgid "Failed to get models, please try again!"
+msgstr "ไม่สามารถดึงแบบอย่างได้, กรุณาลองใหม่อีกครั้ง!"
 
-#: menu.sh:139
+#: menu.sh:143
 msgid "Disable flags restriction"
 msgstr "ปิดการจำกัดค่าของตัวแปร"
 
-#: menu.sh:140
-msgid "Show all models"
-msgstr "แสดงแบบอย่างทั้งหมด"
-
-#: menu.sh:142
+#: menu.sh:145
 msgid "Choose the model"
 msgstr "เลือกแบบอย่าง"
 
-#: menu.sh:237 menu.sh:245 menu.sh:257 menu.sh:276 menu.sh:313 menu.sh:342 menu.sh:392
+#: menu.sh:200 menu.sh:208 menu.sh:240 menu.sh:286 menu.sh:315 menu.sh:439
 msgid "Product Version"
 msgstr "รุ่นผลิตภัณฑ์"
 
-#: menu.sh:238
+#: menu.sh:201
 msgid "Choose a product version"
 msgstr "เลือกรุ่นผลิตภัณฑ์"
 
-#: menu.sh:246
+#: menu.sh:209
 msgid "The current version has been set to %s. Do you want to reset the version?"
 msgstr "รุ่นปัจจุบันถูกตั้งเป็น %s ต้องการตั้งรุ่นใหม่หรือไม่?"
 
-#: menu.sh:258
-msgid "This version does not support UEFI startup, Please select another version or switch the startup mode."
-msgstr "รุ่นนี้ไม่รองรับการเริ่มต้นแบบ UEFI, โปรดเลือกรุ่นอื่นหรือเปลี่ยนโหมดการเริ่มต้น"
-
-#: menu.sh:277
+#: menu.sh:241
 msgid "Get pat data ..."
 msgstr "รับข้อมูล PAT ..."
 
-#: menu.sh:302 menu.sh:1078 menu.sh:1231
+#: menu.sh:269 menu.sh:1057 menu.sh:1210
 msgid "Network error, please check the network connection and try again."
 msgstr "เกิดข้อผิดพลาดในเครือข่าย กรุณาตรวจสอบการเชื่อมต่อเครือข่าย และลองใหม่อีกครั้ง"
 
-#: menu.sh:303
+#: menu.sh:270
 msgid "Or use 'Parse pat' function for installation."
 msgstr "หรือใช้ฟังก์ชัน 'Parse pat' สำหรับการติดตั้ง"
 
-#: menu.sh:305
+#: menu.sh:272
 msgid "Failed to get pat data,\\nPlease manually fill in the URL and md5sum of the corresponding version of pat.\\nOr click 'Retry'."
 msgstr "ไม่สามารถดึงข้อมูล pat ได้\\nโปรดใส่ URL และ md5sum ของรุ่นที่ต้องการติดตั้งด้วย\\nหรือคลิก 'ลองใหม่'"
 
-#: menu.sh:310
-msgid "Successfully to get pat data, Please confirm.\\nOr modify the URL and md5sum to you need."
-msgstr "สำเร็จแล้วติดตั้ง pat\\nโปรดตรวจสอบ หรือแก้ไข URL และ md5sum ให้ถูกต้อง"
+#: menu.sh:278
+msgid "Successfully to get pat data."
+msgstr "ดึงข้อมูล pat เรียบร้อยแล้ว"
 
-#: menu.sh:314
+#: menu.sh:280
+msgid "Note: There is no version %s and automatically returns to version %s."
+msgstr "หมายเหตุ: ไม่มีเวอร์ชัน %s และจะกลับสู่เวอร์ชัน %s โดยอัตโนมัติ"
+
+#: menu.sh:283
+msgid "Please confirm or modify the URL and md5sum to you need."
+msgstr "โปรดยืนยันหรือแก้ไข URL และ md5sum ตามที่คุณต้องการ"
+
+#: menu.sh:287
 msgid "Retry"
 msgstr "รีเทิร์น"
 
-#: menu.sh:343 menu.sh:446
-msgid "Reconfiguring Synoinfo, Addons and Modules"
-msgstr "รีคอนฟิก Synoinfo, Addons และ Modules"
+#: menu.sh:316 menu.sh:375
+msgid "Reconfiguring Synoinfo, Addons and Modules ..."
+msgstr "รีคอนฟิก Synoinfo, Addons และ Modules ..."
 
-#: menu.sh:376
-msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
-msgstr "คุณได้เลือก %s และ %s\\n'Parse Pat' จะ overwrite เลือกของคุณก่อนหน้า\\nคุณต้องการดำเนินการต่อหรือไม่?"
+#: menu.sh:347 menu.sh:358
+msgid "DSM Invalid, try again!"
+msgstr "DSM ไม่ถูกต้อง, กรุณาลองใหม่อีกครั้ง!"
 
-#: menu.sh:377
-msgid "Parse Pat"
-msgstr "Parse Pat"
-
-#: menu.sh:386
-msgid "No pat file found in /tmp/pats/ folder!\\n"
-msgstr "ไม่พบไฟล์ pat ในโฟลเดอร์ /tmp/pats/ !\\n"
-
-#: menu.sh:387
-msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
-msgstr "โปรดอัพโหลดไฟล์ pat ไปยังโฟลเดอร์ /tmp/pats/ ผ่าน DUFS และเข้าสู่ตัวเลือกนี้อีกครั้ง.\\n"
-
-#: menu.sh:388 menu.sh:398 menu.sh:3202 menu.sh:3203 menu.sh:3204 menu.sh:3205 menu.sh:3206 menu.sh:3207 menu.sh:3213 menu.sh:3238 menu.sh:3250 menu.sh:3262 menu.sh:3274 menu.sh:3289 menu.sh:3300 menu.sh:3317 menu.sh:3336
-msgid "Update"
-msgstr "อัปเดต"
-
-#: menu.sh:393
-msgid "Choose a pat file"
-msgstr "เลือกไฟล์ pat"
-
-#: menu.sh:399 menu.sh:412 menu.sh:1108 menu.sh:1184
-msgid "pat Invalid, try again!"
-msgstr "pat ไม่ถูกต้อง, กรุณาลองใหม่!"
-
-#: menu.sh:405
-msgid "Parse %s ..."
-msgstr "แปลง %s ..."
-
-#: menu.sh:430
+#: menu.sh:371
 msgid "Currently, %s is not supported."
 msgstr "ปัจจุบัน, %s ไม่รองรับ."
 
-#: menu.sh:442
-msgid "Currently, %s of %s is not supported."
-msgstr "ปัจจุบัน, %s ของ %s ไม่รองรับ."
+#: menu.sh:423
+msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
+msgstr "คุณได้เลือก %s และ %s\\n'Parse Pat' จะ overwrite เลือกของคุณก่อนหน้า\\nคุณต้องการดำเนินการต่อหรือไม่?"
 
-#: menu.sh:503 menu.sh:1332
+#: menu.sh:424
+msgid "Parse Pat"
+msgstr "Parse Pat"
+
+#: menu.sh:433
+msgid "No pat file found in /tmp/pats/ folder!\\n"
+msgstr "ไม่พบไฟล์ pat ในโฟลเดอร์ /tmp/pats/ !\\n"
+
+#: menu.sh:434
+msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
+msgstr "โปรดอัพโหลดไฟล์ pat ไปยังโฟลเดอร์ /tmp/pats/ ผ่าน DUFS และเข้าสู่ตัวเลือกนี้อีกครั้ง.\\n"
+
+#: menu.sh:435 menu.sh:445 menu.sh:3114 menu.sh:3115 menu.sh:3116 menu.sh:3117 menu.sh:3118 menu.sh:3119 menu.sh:3125 menu.sh:3150 menu.sh:3162 menu.sh:3174 menu.sh:3186 menu.sh:3201 menu.sh:3212 menu.sh:3229 menu.sh:3248
+msgid "Update"
+msgstr "อัปเดต"
+
+#: menu.sh:440
+msgid "Choose a pat file"
+msgstr "เลือกไฟล์ pat"
+
+#: menu.sh:446 menu.sh:1087 menu.sh:1163
+msgid "pat Invalid, try again!"
+msgstr "pat ไม่ถูกต้อง, กรุณาลองใหม่!"
+
+#: menu.sh:452
+msgid "Parse %s ..."
+msgstr "แปลง %s ..."
+
+#: menu.sh:483 menu.sh:1306
 msgid "Ready!"
 msgstr "พร้อม!"
 
-#: menu.sh:506 menu.sh:1338 menu.sh:3359 menu.sh:3427 menu.sh:3445
+#: menu.sh:486 menu.sh:1312 menu.sh:3271 menu.sh:3338 menu.sh:3356
 msgid "Main menu"
 msgstr "เมนูหลัก"
 
-#: menu.sh:507
+#: menu.sh:487
 msgid "Making ..."
 msgstr "กำลังทำ..."
 
-#: menu.sh:509 menu.sh:1345
+#: menu.sh:489 menu.sh:1319
 msgid "Error"
 msgstr "ข้อผิดพลาด"
 
-#: menu.sh:544 menu.sh:561 menu.sh:566 menu.sh:572 menu.sh:583 menu.sh:591 menu.sh:614 menu.sh:621 menu.sh:625 menu.sh:639 menu.sh:643 menu.sh:651 menu.sh:655 menu.sh:2953 menu.sh:3002 menu.sh:3204 menu.sh:3239 menu.sh:3244
+#: menu.sh:524 menu.sh:541 menu.sh:546 menu.sh:552 menu.sh:563 menu.sh:571 menu.sh:594 menu.sh:601 menu.sh:605 menu.sh:619 menu.sh:623 menu.sh:631 menu.sh:635 menu.sh:2866 menu.sh:2915 menu.sh:3116 menu.sh:3151 menu.sh:3156
 msgid "Addons"
 msgstr "อะอdio"
 
-#: menu.sh:545 menu.sh:676 menu.sh:856 menu.sh:997 menu.sh:1367 menu.sh:3428
+#: menu.sh:525 menu.sh:655 menu.sh:835 menu.sh:976 menu.sh:1341 menu.sh:3339
 msgid "Choose a option"
 msgstr "เลือกตัวเลือก"
 
-#: menu.sh:546
+#: menu.sh:526
 msgid "Add an addon"
 msgstr "เพิ่มอะอdio"
 
-#: menu.sh:547
+#: menu.sh:527
 msgid "Delete addons"
 msgstr "ลบอะอdio"
 
-#: menu.sh:548
+#: menu.sh:528
 msgid "Show all addons"
 msgstr "แสดงอะอdio ทั้งหมด"
 
-#: menu.sh:549
+#: menu.sh:529
 msgid "Upload a external addon"
 msgstr "อัพโหลดอะอdio จากภายนอก"
 
-#: menu.sh:550 menu.sh:683 menu.sh:854 menu.sh:995 menu.sh:1372 menu.sh:2349 menu.sh:3210 menu.sh:3425 menu.sh:3521
+#: menu.sh:530 menu.sh:662 menu.sh:833 menu.sh:974 menu.sh:1346 menu.sh:2234 menu.sh:3122 menu.sh:3336 menu.sh:3432
 msgid "Exit"
 msgstr "ออกจากโปรแกรม"
 
-#: menu.sh:562
+#: menu.sh:542
 msgid "No available addons to add"
 msgstr "ไม่มีอะอdio ที่สามารถเพิ่มได้"
 
-#: menu.sh:567
+#: menu.sh:547
 msgid "Select an addon"
 msgstr "เลือกอะอdio"
 
-#: menu.sh:573
+#: menu.sh:553
 msgid "Type a optional params to addon"
 msgstr "กรอกพารามิเตอร์เพิ่มเติ"
 
-#: menu.sh:584
+#: menu.sh:564
 msgid "No user addons to remove"
 msgstr "ไม่มีอะอdio ที่สามารถลบได้"
 
-#: menu.sh:592
+#: menu.sh:572
 msgid "Select addon to remove"
 msgstr "เลือกอะอdio ที่ต้องการลบ"
 
-#: menu.sh:605
+#: menu.sh:585
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n\\n"
 msgstr "ชื่อที่แสดงด้วยสี \"\\Z4blue\\Zn\" ถูกเพิ่มเข้าไปแล้ว, คolo \"black\" ไม่ได้ถูกเพิ่มเข้าไป\\n\\n"
 
-#: menu.sh:620 menu.sh:755 menu.sh:1380 menu.sh:3287
+#: menu.sh:600 menu.sh:734 menu.sh:1354 menu.sh:3199
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
 msgstr "ตัวคุณสมบัตินี้ใช้ได้เฉพาะเมื่อเข้าถึงผ่าน ssh (ต้องมี terminal ที่รองรับโปรโตคอล ZModem) \\n"
 
-#: menu.sh:626
+#: menu.sh:606
 msgid "Please upload the *.addons file."
 msgstr "กรุณาอัพโหลดไฟล์ *.addons"
 
-#: menu.sh:640 menu.sh:791 menu.sh:3318 menu.sh:3337
+#: menu.sh:620 menu.sh:770 menu.sh:3230 menu.sh:3249
 msgid "Not a valid file, please try again!"
 msgstr "ไม่ใช่ไฟล์ที่ถูกต้อง กรุณาลองใหม่อีกครั้ง!"
 
-#: menu.sh:644
+#: menu.sh:624
 msgid "The addon already exists. Do you want to overwrite it?"
 msgstr "Addon มีอยู่แล้ว คุณต้องการเขียนทับหรือไม่?"
 
-#: menu.sh:652
+#: menu.sh:632
 msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
 msgstr "Addon '%s' ถูกเพิ่มเข้าไปใน Loader, กรุณาเปิดใช้งานในเมนู 'Add an addon'"
 
-#: menu.sh:656
+#: menu.sh:636
 msgid "File format not recognized!"
 msgstr "ไม่สามารถระบุรูปแบบไฟล์ได้!"
 
-#: menu.sh:675 menu.sh:689 menu.sh:702 menu.sh:739 menu.sh:756 menu.sh:766 menu.sh:769 menu.sh:785 menu.sh:790 menu.sh:804 menu.sh:810 menu.sh:3017 menu.sh:3069 menu.sh:3205 menu.sh:3251 menu.sh:3256
+#: menu.sh:654 menu.sh:668 menu.sh:681 menu.sh:718 menu.sh:735 menu.sh:745 menu.sh:748 menu.sh:764 menu.sh:769 menu.sh:783 menu.sh:789 menu.sh:2930 menu.sh:2981 menu.sh:3117 menu.sh:3163 menu.sh:3168
 msgid "Modules"
 msgstr "มอเดล"
 
-#: menu.sh:677
+#: menu.sh:656
 msgid "Show/Select modules"
 msgstr "แสดง/เลือกมอเดล"
 
-#: menu.sh:678
+#: menu.sh:657
 msgid "Select loaded modules"
 msgstr "เลือกมอเดลที่โหลดอยู่"
 
-#: menu.sh:679
+#: menu.sh:658
 msgid "Upload a external module"
 msgstr "อัพโหลดมอเดลภายนอก"
 
-#: menu.sh:680
+#: menu.sh:659
 msgid "Deselect i915 with dependencies"
 msgstr "ยกเลิกการเลือก i915 ด้วยมอเดลที่เกี่ยวข้อง"
 
-#: menu.sh:681
+#: menu.sh:660
 msgid "Priority use of official drivers:"
 msgstr "การใช้งานมอเดลที่เป็นของ DSM:"
 
-#: menu.sh:682
+#: menu.sh:661
 msgid "Edit modules that need to be copied to DSM"
 msgstr "แก้ไขมอเดลที่ต้องการคัดลอกไปยัง DSM"
 
-#: menu.sh:690
+#: menu.sh:669
 msgid "Reading modules ..."
 msgstr "อ่านมอเดล ..."
 
-#: menu.sh:703
+#: menu.sh:682
 msgid "Select all"
 msgstr "เลือกทั้งหมด"
 
-#: menu.sh:704
+#: menu.sh:683
 msgid "Deselect all"
 msgstr "ยกเลิกเลือกทั้งหมด"
 
-#: menu.sh:705
+#: menu.sh:684
 msgid "Select modules to include"
 msgstr "เลือกมอเดลที่ต้องการใช้งาน"
 
-#: menu.sh:740
+#: menu.sh:719
 msgid "Selecting loaded modules"
 msgstr "เลือกมอเดลที่ใช้งานอยู่"
 
-#: menu.sh:761
+#: menu.sh:740
 msgid "This function is experimental and dangerous. If you don't know much, please exit.\\n"
 msgstr "ฟังก์ชันนี้เป็นการทดลอง และมีความเสี่ยง ถ้าคุณไม่รู้จักมากนัก โปรดออกจากระบบ\\n"
 
-#: menu.sh:762
+#: menu.sh:741
 msgid "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\\n"
 msgstr ".ko ที่นำเข้าของฟังก์ชันนี้จะถูกฝังลงในแพ็คเกจโมดูลของ Arch ที่เกี่ยวข้อง ซึ่งจะส่งผลต่อทุกรุ่นของ Arch\\n"
 
-#: menu.sh:763
+#: menu.sh:742
 msgid "This program will not determine the availability of imported modules or even make type judgments, as please double check if it is correct.\\n"
 msgstr "โปรแกรมนี้จะไม่กำหนดความพร้อมใช้งานของโมดูลที่นำเข้า หรือแม้แต่ตัดสินประเภท เนื่องจากโปรดตรวจสอบอีกครั้งว่าถูกต้องหรือไม่\\n"
 
-#: menu.sh:764
+#: menu.sh:743
 msgid "If you want to remove it, please go to the \"Update Menu\" -> \"Update modules\" to forcibly update the modules. All imports will be reset.\\n"
 msgstr "หากคุณต้องการลบออก โปรดไปที่ \"เมนูอัปเดต\" -> \"อัปเดตโมดูล\" เพื่อบังคับอัปเดตโมดูล การนำเข้าทั้งหมดจะถูกรีเซ็ต\\n"
 
-#: menu.sh:765
+#: menu.sh:744
 msgid "Do you want to continue?"
 msgstr "คุณต้องการดำเนินการต่อหรือไม่?"
 
-#: menu.sh:770
+#: menu.sh:749
 msgid "Please upload the *.ko file."
 msgstr "กรุณาอัพโหลดไฟล์ *.ko"
 
-#: menu.sh:786
+#: menu.sh:765
 msgid "Module '%s' added to %s-%s"
 msgstr "Module '%s' added to %s-%s"
 
-#: menu.sh:805
+#: menu.sh:784
 msgid "No i915 with dependencies module to deselect."
 msgstr "ไม่มี i915 พร้อมโมดูลการพึ่งพาที่จะยกเลิกการเลือก"
 
-#: menu.sh:811
+#: menu.sh:790
 msgid "Module %s deselected.\\n"
 msgstr "ยกเลิกการเลือกโมดูล %s แล้ว\\n"
 
-#: menu.sh:827 menu.sh:1434 menu.sh:1461 menu.sh:1468 menu.sh:1491
+#: menu.sh:806 menu.sh:1408 menu.sh:1435 menu.sh:1442 menu.sh:1465
 msgid "Edit with caution"
 msgstr "แก้ไขด้วยความระมัดระวัง"
 
-#: menu.sh:848
+#: menu.sh:827
 msgid "Add/Edit a cmdline item"
 msgstr "เพิ่ม/แก้ไขรายการ cmdline"
 
-#: menu.sh:849
+#: menu.sh:828
 msgid "Show/Delete cmdline items"
 msgstr "แสดง/ลบรายการ cmdline"
 
-#: menu.sh:851
+#: menu.sh:830
 msgid "Define SN/MAC"
 msgstr "กำหนด SN/MAC"
 
-#: menu.sh:853
-msgid "Show model inherent cmdline"
-msgstr "แสดงโมเดล cmdline โดยธรรมชาติ"
-
-#: menu.sh:855 menu.sh:879 menu.sh:888 menu.sh:912 menu.sh:920 menu.sh:937 menu.sh:948 menu.sh:981
+#: menu.sh:834 menu.sh:858 menu.sh:867 menu.sh:891 menu.sh:899 menu.sh:916 menu.sh:927
 msgid "Cmdline"
 msgstr "cmdline"
 
-#: menu.sh:862
+#: menu.sh:841
 msgid "Commonly used cmdlines:\\n"
 msgstr "cmdline ที่ใช้บ่อย:\\n"
 
-#: menu.sh:863
+#: menu.sh:842
 msgid " * \\Z4disable_mtrr_trim=\\Zn\\n    disables kernel trim any uncacheable memory out.\\n"
 msgstr " * \\Z4disable_mtrr_trim=\\Zn\\n    ปิดการใช้งานการลบหน่วยความจำที่ไม่สามารถใช้งานได้\\n"
 
-#: menu.sh:864
+#: menu.sh:843
 msgid " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Set the maximum C-state depth allowed by the intel_idle driver.\\n"
 msgstr " * \\Z4intel_idle.max_cstate=1\\Zn\\n    ตั้งค่าความลึก C-state ที่อนุญาตโดยไดร์เวอร์ intel_idle\\n"
 
-#: menu.sh:865
+#: menu.sh:844
 msgid " * \\Z4pcie_port_pm=off\\Zn\\n    Turn off the power management of the PCIe port.\\n"
 msgstr " * \\Z4pcie_port_pm=off\\Zn\\n    ปิดการบริหารจัดการพอร์ต PCIe\\n"
 
-#: menu.sh:866
+#: menu.sh:845
 msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
 msgstr " * \\Z4libata.force=noncq\\Zn\\n    ปิดการใช้งาน NCQ สำหรับพอร์ต SATA ทุกตัว\\n"
 
-#: menu.sh:867
+#: menu.sh:846
 msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.(Not apply to DT models.)\\n"
 msgstr " * \\Z4SataPortMap=??\\Zn\\n    การกำหนดพอร์ต SATA (ไม่ใช้งานกับรุ่นที่ใช้ DT).\\n"
 
-#: menu.sh:868
+#: menu.sh:847
 msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence.(Not apply to DT models.)\\n"
 msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    การกำหนดลำดับชื่อดิสก์ (ไม่ใช้งานกับรุ่นที่ใช้ DT).\\n"
 
-#: menu.sh:869
+#: menu.sh:848
 msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence.(Not apply to DT models.)\\n"
 msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    การเปลี่ยนลำดับพอร์ตข้อมูล (ไม่ใช้งานกับรุ่นที่ใช้ DT).\\n"
 
-#: menu.sh:870
+#: menu.sh:849
 msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
 msgstr " * \\Z4i915.enable_guc=2\\Zn\\n    เปิดใช้งานไฟล์เฟิร์มแวร์ GuC บนอุปกรณ์กราฟิก Intel (ค่า: 1,2 หรือ 3)\\n"
 
-#: menu.sh:871
+#: menu.sh:850
 msgid " * \\Z4i915.max_vfs=7\\Zn\\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\\n"
 msgstr " * \\Z4i915.max_vfs=7\\Zn\\n    ตั้งค่าจำนวน Virtual Functions (VFs) ที่สามารถสร้างได้สำหรับอุปกรณ์กราฟิก Intel Hardware\\n"
 
-#: menu.sh:872
+#: menu.sh:851
 msgid " * \\Z4i915.modeset=0\\Zn\\n    Disable the kernel mode setting (KMS) feature of the i915 driver.\\n"
 msgstr " * \\Z4i915.modeset=0\\Zn\\n    ปิดการใช้งาน Kernel Mode Setting (KMS) ของไดเวอร์ i915\\n"
 
-#: menu.sh:873
+#: menu.sh:852
 msgid " * \\Z4apparmor.mode=complain\\Zn\\n    Set the AppArmor security module to complain mode.\\n"
 msgstr " * \\Z4apparmor.mode=complain\\Zn\\n    ตั้งค่า AppArmor ให้ทำการทำงานในโหมดการแจ้งเตือน (Complain) \\n"
 
-#: menu.sh:874
+#: menu.sh:853
 msgid " * \\Z4apparmor=0\\Zn\\n    Disable the AppArmor security module.\\n"
 msgstr " * \\Z4apparmor=0\\Zn\\n    ปิดการใช้งานโมดูลความปลอดภัย AppArmor \\n"
 
-#: menu.sh:875
+#: menu.sh:854
 msgid " * \\Z4consoleblank=300\\Zn\\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\\n"
 msgstr " * \\Z4consoleblank=300\\Zn\\n    ตั้งค่าการปิดจออินโฟร์เมชั่น 300 วินาที หลังจากไม่มีการใช้งาน (วัตถุประสงค์เป็นวินาที).\\n"
 
-#: menu.sh:876 menu.sh:1009
+#: menu.sh:855 menu.sh:988
 msgid "\\nEnter the parameter name and value you need to add.\\n"
 msgstr "\\nกรุณากรอกชื่อและค่าของพารามิเตอร์ที่ต้องการเพิ่ม\\n"
 
-#: menu.sh:889 menu.sh:1022
+#: menu.sh:868 menu.sh:1001
 msgid "Invalid parameter name, retry?"
 msgstr "ชื่อพารามิเตอร์ไม่ถูกต้อง, ต้องการลองใหม่?"
 
-#: menu.sh:913
+#: menu.sh:892
 msgid "No user cmdline to remove"
 msgstr "ไม่มีคำสั่ง user ที่ต้องการลบ"
 
-#: menu.sh:921
+#: menu.sh:900
 msgid "Select cmdline to remove"
 msgstr "เลือกคำสั่งที่ต้องการลบ"
 
-#: menu.sh:932
+#: menu.sh:911
 msgid "Note: (MAC will not be set to NIC, Only for activation services.)"
 msgstr "หมายเหตุ: (MAC จะไม่ถูกตั้งค่าให้กับ NIC, เท่านั้นสำหรับการใช้งานบริการ)"
 
-#: menu.sh:938
+#: menu.sh:917
 msgid "Random"
 msgstr "แบ่งสุ่ม"
 
-#: menu.sh:949
+#: menu.sh:928
 msgid "Invalid SN/MAC, retry?"
 msgstr "SN/MAC ไม่ถูกต้อง, ตรวจสอบอีกครั้ง?"
 
-#: menu.sh:993
+#: menu.sh:972
 msgid "Add/edit a synoinfo item"
 msgstr "เพิ่ม/แก้ไข synoinfo"
 
-#: menu.sh:994
+#: menu.sh:973
 msgid "Show/Delete synoinfo items"
 msgstr "แสดง/ลบ synoinfo"
 
-#: menu.sh:996 menu.sh:1012 menu.sh:1021 menu.sh:1046 menu.sh:1054
+#: menu.sh:975 menu.sh:991 menu.sh:1000 menu.sh:1025 menu.sh:1033
 msgid "Synoinfo"
 msgstr "synoinfo"
 
-#: menu.sh:1003
+#: menu.sh:982
 msgid "Commonly used synoinfo:\\n"
 msgstr "synoinfo ที่ใช้บ่อย:\\n"
 
-#: menu.sh:1004
+#: menu.sh:983
 msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
 msgstr " * \\Z4maxdisks=??\\Zn\\n    จำนวนแผนกที่รองรับมากที่สุด\\n"
 
-#: menu.sh:1005
+#: menu.sh:984
 msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask.\\n"
 msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    Mask ของแผนกภายใน(sata) \\n"
 
-#: menu.sh:1006
+#: menu.sh:985
 msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask.\\n"
 msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Mask ของแผนก USB\\n"
 
-#: menu.sh:1007
+#: menu.sh:986
 msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask.\\n"
 msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    Mask ของแผนก USB\\n"
 
-#: menu.sh:1008
+#: menu.sh:987
 msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
 msgstr " * \\Z4max_sys_raid_disks=12\\Zn\\n    จำนวนแผนกสูงสุดของระบบ(md0) raid disks\\n"
 
-#: menu.sh:1047
+#: menu.sh:1026
 msgid "No synoinfo entries to remove"
 msgstr "ไม่มีการกำหนดค่า synoinfo เพื่อลบ"
 
-#: menu.sh:1055
+#: menu.sh:1034
 msgid "Select synoinfo entry to remove"
 msgstr "เลือก synoinfo entry เพื่อลบ"
 
-#: menu.sh:1090
+#: menu.sh:1069
 msgid "Downloading old pat to extract synology .pat extractor..."
 msgstr "ดาวน์โหลด old pat เพื่อ Extract synology .pat extractor..."
 
-#: menu.sh:1096 menu.sh:1255
+#: menu.sh:1075 menu.sh:1234
 msgid "Check internet or cache disk space.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "ตรวจสอบการเชื่อมต่ออินเตอร์เน็ตหรือพื้นที่แคชดิสก์\\nError: %d:%d\\n(โปรดดู https://curl.se/libcurl/c/libcurl-errors.html สำหรับคำอธิบายข้อผิดพลาด.)"
 
-#: menu.sh:1137
+#: menu.sh:1116
 msgid "Uncompressed tar"
 msgstr "แพคเกจไม่มีการบีบอัด"
 
-#: menu.sh:1141
+#: menu.sh:1120
 msgid "Compressed tar"
 msgstr "แพคเกจที่ถูกบีบอัด"
 
-#: menu.sh:1145
+#: menu.sh:1124
 msgid "Encrypted"
 msgstr "เข้ารหัส"
 
-#: menu.sh:1149
+#: menu.sh:1128
 msgid "Could not determine if pat file is encrypted or not, maybe corrupted, try again!"
 msgstr "ไม่สามารถระบุว่าไฟล์ pat เป็นไฟล์เข้ารหัสหรือไม่ได้, อาจเป็นไฟล์ที่ถูกแก้ไขไปแล้ว, โปรดลองใหม่อีกครั้ง!"
 
-#: menu.sh:1156 menu.sh:1271
+#: menu.sh:1135 menu.sh:1250
 msgid "Disassembling %s: "
 msgstr "แปลง %s: "
 
-#: menu.sh:1164
+#: menu.sh:1143
 msgid "Extractor cached."
 msgstr "เก็บไว้ในแฟ้มแรนดอม"
 
-#: menu.sh:1170 menu.sh:1174
+#: menu.sh:1149 menu.sh:1153
 msgid "Extracting ..."
 msgstr "เข้าถึง ..."
 
-#: menu.sh:1207
+#: menu.sh:1186
 msgid "%s cached."
 msgstr "เก็บไว้ในแฟ้มแรนดอม %s"
 
-#: menu.sh:1210
+#: menu.sh:1189
 msgid "The cache has been cleared. Please re 'Parse pat' before build."
 msgstr "แฟ้มแรนดอมถูกลบแล้ว กรุณา 'Parse pat' ใหม่ก่อนสร้างแฟ้มแรนดอม"
 
-#: menu.sh:1214
+#: menu.sh:1193
 msgid "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build."
 msgstr "แฟ้มแรนดอมถูกลบแล้ว กรุณา 'ลองกู้คืนระบบ DSM ที่ติดตั้ง' ใหม่ก่อนสร้างแฟ้มแรนดอม"
 
-#: menu.sh:1218
+#: menu.sh:1197
 msgid "The pat url is empty. Please re 'Choose a version' before build."
 msgstr "URL ของแฟ้มแรนดอมว่างเปล่า กรุณา 'เลือกรุ่น' ก่อนสร้างแฟ้มแรนดอม"
 
-#: menu.sh:1223 menu.sh:3360
+#: menu.sh:1202 menu.sh:3272
 msgid "Cleaning cache ..."
 msgstr "เคลียร์แฟ้มแรนดอม ..."
 
-#: menu.sh:1237
+#: menu.sh:1216
 msgid "Based on the current network situation, switch to %s mirror to downloading."
 msgstr "ขึ้นอยู่กับสถานการณ์เครือข่ายในปัจจุบัน ให้สลับไปที่มิเรอร์ %s เพื่อดาวน์โหลด"
 
-#: menu.sh:1240
+#: menu.sh:1219
 msgid "Downloading %s ..."
 msgstr "ดาวน์โหลด %s ..."
 
-#: menu.sh:1261
+#: menu.sh:1240
 msgid "Checking hash of %s: "
 msgstr "ตรวจสอบรหัส %s: "
 
-#: menu.sh:1264
+#: menu.sh:1243
 msgid "md5 hash of pat not match, Please reget pat data from the version menu and try again!"
 msgstr "md5 ของ pat ไม่ตรงกัน กรุณาดาวน์โหลดใหม่จากเมนู version และลองใหม่อีกครั้ง!"
 
-#: menu.sh:1267 menu.sh:1283 menu.sh:1293
+#: menu.sh:1246 menu.sh:1262 menu.sh:1267
 msgid "OK"
 msgstr "ตกลง"
 
-#: menu.sh:1278
+#: menu.sh:1257
 msgid "Setting hash: "
 msgstr "ตั้งค่า hash: "
 
-#: menu.sh:1285
+#: menu.sh:1264
 msgid "Copying files: "
 msgstr "คัดลอกไฟล์: "
 
-#: menu.sh:1313
+#: menu.sh:1287
 msgid "No disk space left, please clean the cache and try again!"
 msgstr "ไม่มีพื้นที่ที่เหลือแล้ว โปรดล้างแคชและลองอีกครั้ง!"
 
-#: menu.sh:1329
+#: menu.sh:1303
 msgid "Cleaning ..."
 msgstr "เคลียร์ ..."
 
-#: menu.sh:1339
+#: menu.sh:1313
 msgid "Making ... ('ctrl + c' to exit)"
 msgstr "สร้าง ... ('ctrl + c' เพื่อออก)"
 
-#: menu.sh:1366 menu.sh:1382 menu.sh:1386 menu.sh:1403 menu.sh:1408 menu.sh:1427 menu.sh:1439 menu.sh:2313
+#: menu.sh:1340 menu.sh:1356 menu.sh:1360 menu.sh:1377 menu.sh:1382 menu.sh:1401 menu.sh:1413 menu.sh:2198
 msgid "Custom DTS"
 msgstr "DTS custom"
 
-#: menu.sh:1368
+#: menu.sh:1342
 msgid "Custom dts: "
 msgstr "DTS custom: "
 
-#: menu.sh:1369
+#: menu.sh:1343
 msgid "Upload dts file"
 msgstr "อัพโหลดไฟล์ dts"
 
-#: menu.sh:1370
+#: menu.sh:1344
 msgid "Delete dts file"
 msgstr "ลบไฟล์ dts"
 
-#: menu.sh:1371
+#: menu.sh:1345
 msgid "Edit dts file"
 msgstr "แก้ไขไฟล์ dts"
 
-#: menu.sh:1381
+#: menu.sh:1355
 msgid "Or upload the dts file to %s via DUFS, Will be automatically imported when building."
 msgstr "หรืออัพโหลดไฟล์ dts ไปยัง %s ผ่าน DUFS จะถูกนำเข้าอัตโนมัติเมื่อสร้างไฟล์"
 
-#: menu.sh:1387
+#: menu.sh:1361
 msgid "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\\n(saved in /mnt/p3/users/)"
 msgstr "ปัจจุบัน รูปแบบไฟล์ dts เท่านั้นที่รองรับ ไฟล์ dts ใหม่ กรุณาเตรียมไฟล์ dts และกดเพื่อยืนยันการอัพโหลด\\n(บันทึกไว้ใน /mnt/p3/users/)"
 
-#: menu.sh:1404 menu.sh:1440
+#: menu.sh:1378 menu.sh:1414
 msgid "Not a valid dts file, please try again!"
 msgstr "ไม่ใช่ไฟล์ dts ที่ถูกต้อง กรุณาลองใหม่!"
 
-#: menu.sh:1409
+#: menu.sh:1383
 msgid "A valid dts file, Automatically import at compile time."
 msgstr "ไฟล์ dts ที่ถูกต้อง จะถูกนำเข้าอัตโนมัติเมื่อคอมไพล์"
 
-#: menu.sh:1428
+#: menu.sh:1402
 msgid "No dts file to edit. Please upload first!"
 msgstr "ไม่มีไฟล์ dts สำหรับแก้ไข กรุณาอัพโหลดไฟล์ก่อน!"
 
-#: menu.sh:1503
+#: menu.sh:1477
 msgid "Temporary IP: (UI will not refresh)"
 msgstr "IP ชั่วคราว: (UI จะไม่อัพเดท)"
 
-#: menu.sh:1515 menu.sh:1540 menu.sh:1548 menu.sh:1560 menu.sh:1569 menu.sh:1591 menu.sh:1684 menu.sh:1701 menu.sh:1705 menu.sh:1706 menu.sh:1711 menu.sh:1715 menu.sh:1730 menu.sh:1732 menu.sh:1744 menu.sh:1752 menu.sh:1916 menu.sh:1921 menu.sh:1936
-#: menu.sh:1938 menu.sh:1948 menu.sh:1972 menu.sh:1976 menu.sh:1983 menu.sh:1989 menu.sh:2008 menu.sh:2010 menu.sh:2020 menu.sh:2025 menu.sh:2053 menu.sh:2056 menu.sh:2066 menu.sh:2090 menu.sh:2093 menu.sh:2104 menu.sh:2109 menu.sh:2123 menu.sh:2126
-#: menu.sh:2141 menu.sh:2145 menu.sh:2151 menu.sh:2157 menu.sh:2163 menu.sh:2245 menu.sh:2248 menu.sh:2251 menu.sh:2266 menu.sh:2277 menu.sh:2351 menu.sh:2372 menu.sh:2397 menu.sh:2409 menu.sh:2429 menu.sh:2466 menu.sh:2529 menu.sh:2533 menu.sh:2543
-#: menu.sh:2555 menu.sh:2559 menu.sh:2569 menu.sh:2575 menu.sh:2589 menu.sh:2596 menu.sh:2601 menu.sh:2604 menu.sh:2620 menu.sh:2641
+#: menu.sh:1489 menu.sh:1514 menu.sh:1522 menu.sh:1534 menu.sh:1543 menu.sh:1565 menu.sh:1658 menu.sh:1675 menu.sh:1679 menu.sh:1680 menu.sh:1685 menu.sh:1689 menu.sh:1702 menu.sh:1704 menu.sh:1716 menu.sh:1724 menu.sh:1799 menu.sh:1804 menu.sh:1819
+#: menu.sh:1821 menu.sh:1831 menu.sh:1855 menu.sh:1859 menu.sh:1866 menu.sh:1872 menu.sh:1891 menu.sh:1893 menu.sh:1903 menu.sh:1908 menu.sh:1936 menu.sh:1939 menu.sh:1949 menu.sh:1973 menu.sh:1976 menu.sh:1987 menu.sh:1992 menu.sh:2006 menu.sh:2009
+#: menu.sh:2024 menu.sh:2028 menu.sh:2034 menu.sh:2040 menu.sh:2046 menu.sh:2128 menu.sh:2131 menu.sh:2134 menu.sh:2149 menu.sh:2160 menu.sh:2236 menu.sh:2263 menu.sh:2281 menu.sh:2302 menu.sh:2314 menu.sh:2334 menu.sh:2371 menu.sh:2434 menu.sh:2438
+#: menu.sh:2448 menu.sh:2460 menu.sh:2464 menu.sh:2474 menu.sh:2480 menu.sh:2494 menu.sh:2501 menu.sh:2506 menu.sh:2509 menu.sh:2525 menu.sh:2555
 msgid "Advanced"
 msgstr "ขั้นสูง"
 
-#: menu.sh:1541
+#: menu.sh:1515
 msgid "Setting IP ..."
 msgstr "กำลังตั้งค่า IP ..."
 
-#: menu.sh:1549
+#: menu.sh:1523
 msgid "Scanning ..."
 msgstr "กำลังสแกน ..."
 
-#: menu.sh:1552
+#: menu.sh:1526
 msgid "Scanned SSIDs:\\n"
 msgstr "SSID ที่สแกน:\\n"
 
-#: menu.sh:1570
+#: menu.sh:1544
 msgid "Invalid SSID/PSK, retry?"
 msgstr "SSID/PSK ไม่ถูกต้อง, ตentaใหม่?"
 
-#: menu.sh:1592
+#: menu.sh:1566
 msgid "Setting ..."
 msgstr "กำลังตั้งค่า ..."
 
-#: menu.sh:1681
+#: menu.sh:1655
 msgid "\\nTotal of ports: %s\\n"
 msgstr "\\nจำนวนพอร์ตทั้งหมด: %s\\n"
 
-#: menu.sh:1682
+#: menu.sh:1656
 msgid "\\nPorts with color \\Z1red\\Zn as DUMMY, color \\Z2\\Zbgreen\\Zn has drive connected."
 msgstr "\\nพอร์ตที่เป็นสี \\Z1แดง\\Zn เป็น DUMMY, สี \\Z2\\Zbเขียว\\Zn มีไดรฟ์เชื่อมต่ออยู่"
 
-#: menu.sh:1683 menu.sh:1702 menu.sh:2142
+#: menu.sh:1657 menu.sh:1676 menu.sh:2025
 msgid "No disk found!"
 msgstr "ไม่พบดิสก์!"
 
-#: menu.sh:1712 menu.sh:1915 menu.sh:2103
+#: menu.sh:1686 menu.sh:1798 menu.sh:1986
 msgid "Warning:\\nThis operation is irreversible. Please backup important data. Do you want to continue?"
 msgstr "คำเตือน:\\nการดำเนินการนี้ไม่สามารถย้อนกลับได้ โปรดสำรองข้อมูลสำคัญ ก่อนดำเนินการต่อ?"
 
-#: menu.sh:1716
+#: menu.sh:1690
 msgid "Warning:\\nThe current hds is in raid, do you still want to format them?"
 msgstr "คำเตือน:\\nไฟล์ระบบปัจจุบันเป็น HDS RAID, คุณต้องการดำเนินการต่อหรือไม่?"
 
-#: menu.sh:1731
+#: menu.sh:1703
 msgid "Formatting ..."
 msgstr "ระบบกำลังถูกสร้างใหม่..."
 
-#: menu.sh:1733
+#: menu.sh:1705
 msgid "Formatting is complete."
 msgstr "ระบบถูกสร้างใหม่เสร็จสิ้น"
 
-#: menu.sh:1740 menu.sh:1763 menu.sh:1783 menu.sh:1799 menu.sh:1808 menu.sh:1892 menu.sh:1898 menu.sh:1905
+#: menu.sh:1712 menu.sh:1735 menu.sh:1758 menu.sh:1766 menu.sh:1772 menu.sh:1787
 msgid "Try recovery DSM"
 msgstr "ระบบกำลังถูกกู้คืน..."
 
-#: menu.sh:1741
+#: menu.sh:1713
 msgid "Trying to recovery a installed DSM system ..."
 msgstr "กำลังพยายามกู้คืนระบบ DSM ที่ติดตั้ง ..."
 
-#: menu.sh:1745 menu.sh:1922 menu.sh:1949 menu.sh:2021 menu.sh:2067 menu.sh:2110
+#: menu.sh:1717 menu.sh:1805 menu.sh:1832 menu.sh:1904 menu.sh:1950 menu.sh:1993
 msgid "No DSM system partition(md0) found!\\nPlease insert all disks before continuing."
 msgstr "ไม่พบพาร์ติชั่น DSM (md0)!\\nกรุณาใส่ดิสก์ก่อนดำเนินการต่อ"
 
-#: menu.sh:1753
+#: menu.sh:1725
 msgid "mount DSM system partition(md0) failed!\\nPlease insert all disks before continuing."
 msgstr "ไม่สามารถ mount พาร์ติชั่น DSM (md0) ได้!\\nกรุณาใส่ดิสก์ก่อนดำเนินการต่อ"
 
-#: menu.sh:1764
+#: menu.sh:1736
 msgid "Checking for backup of user's configuration for bootloader ..."
 msgstr "ตรวจสอบการสำรองค่าการตั้งค่าของผู้ใช้สำหรับ bootloader ..."
 
-#: menu.sh:1784
-msgid "Found a backup of the user's configuration, but the system is damaged and will not be restored. Please reselect model and build."
-msgstr "พบการสำรองข้อมูลการกำหนดค่าของผู้ใช้ แต่ระบบเสียหายและไม่สามารถกู้คืนได้ โปรดเลือกรุ่นและสร้างอีกครั้ง"
-
-#: menu.sh:1800
+#: menu.sh:1759
 msgid "Found a backup of the user's configuration, and restored it. Please rebuild and boot."
 msgstr "พบข้อมูลสำรองของการกำหนดค่าของผู้ใช้และกู้คืนแล้ว กรุณาสร้างใหม่และบูต"
 
-#: menu.sh:1809
+#: menu.sh:1767
 msgid "Checking for installed DSM system ..."
 msgstr "ตรวจสอบระบบ DSM ที่ติดตั้งอยู่ ..."
 
-#: menu.sh:1893
-msgid "Found a installed DSM system and restored it. Please rebuild and boot."
-msgstr "เจอระบบ DSM ที่ติดตั้งอยู่แล้วและได้กู้คืนมาแล้ว。โปรดสร้างใหม่และเริ่มต้นการทำงานใหม่อีกครั้ง"
-
-#: menu.sh:1899
-msgid "Found a installed DSM system, but the system is damaged and will not be restored. Please reselect model and build."
-msgstr "พบระบบ DSM ที่ติดตั้งไว้ แต่ระบบเสียหายและไม่สามารถกู้คืนได้ โปรดเลือกรุ่นและสร้างอีกครั้ง"
-
-#: menu.sh:1906
+#: menu.sh:1773
 msgid "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build."
 msgstr "ไม่พบระบบ DSM ที่ติดตั้งไว้ หรือระบบเสียหายและไม่สามารถกู้คืนได้ โปรดเลือกรุ่นและสร้างอีกครั้ง"
 
-#: menu.sh:1914
+#: menu.sh:1788
+msgid "Found a installed DSM system and restored it. Please rebuild and boot."
+msgstr "เจอระบบ DSM ที่ติดตั้งอยู่แล้วและได้กู้คืนมาแล้ว。โปรดสร้างใหม่และเริ่มต้นการทำงานใหม่อีกครั้ง"
+
+#: menu.sh:1797
 msgid "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\\n"
 msgstr "คุณลักษณะนี้จะช่วยให้คุณสามารถดาวน์เกรดการติดตั้งโดยการลบไฟล์ VERSION ออกจากพาร์ติชันแรกของดิสก์ทั้งหมด\\n"
 
-#: menu.sh:1937 menu.sh:2124
+#: menu.sh:1820 menu.sh:2007
 msgid "Removing ..."
 msgstr "กำลังลบ..."
 
-#: menu.sh:1939
+#: menu.sh:1822
 msgid "Remove VERSION file for DSM system partition(md0) completed."
 msgstr "ลบไฟล์ VERSION สำหรับพาร์ติชันระบบ DSM (md0) เสร็จสมบูรณ์"
 
-#: menu.sh:1973
+#: menu.sh:1856
 msgid "All existing users have been disabled. Please try adding new user."
 msgstr "ทุกผู้ใช้ที่มีอยู่ในปัจจุบันถูกปิดใช้งานแล้ว โปรดลองเพิ่มผู้ใช้ใหม่"
 
-#: menu.sh:1977
+#: menu.sh:1860
 msgid "Choose a user name"
 msgstr "เลือกชื่อผู้ใช้"
 
-#: menu.sh:1984
+#: menu.sh:1867
 msgid "Type a new password for user '%s'"
 msgstr "กรอกรหัสผ่านใหม่สำหรับผู้ใช้ '%s'"
 
-#: menu.sh:1990
+#: menu.sh:1873
 msgid "Invalid password"
 msgstr "รหัสผ่านไม่ถูกต้อง"
 
-#: menu.sh:2009
+#: menu.sh:1892
 msgid "Resetting ..."
 msgstr "รีเซ็ตรหัสผ่าน..."
 
-#: menu.sh:2011
+#: menu.sh:1894
 msgid "Password reset completed."
 msgstr "รีเซ็ตรหัสผ่านเสร็จสิ้น"
 
-#: menu.sh:2024
+#: menu.sh:1907
 msgid "Add to administrators group by default"
 msgstr "เพิ่มเข้ากลุ่มผู้ดูแลระบบโดยค่าเริ่มต้น"
 
-#: menu.sh:2054
+#: menu.sh:1937
 msgid "Adding ..."
 msgstr "เพิ่มเข้าไป..."
 
-#: menu.sh:2055
+#: menu.sh:1938
 msgid "User added successfully."
 msgstr "ผู้ใช้งานเพิ่มเข้าไปสำเร็จ"
 
-#: menu.sh:2055
+#: menu.sh:1938
 msgid "User add failed."
 msgstr "เพิ่มผู้ใช้งานไม่สำเร็จ"
 
-#: menu.sh:2091
+#: menu.sh:1974
 msgid "Enabling ..."
 msgstr "เปิดใช้งาน..."
 
-#: menu.sh:2092
+#: menu.sh:1975
 msgid "Enabled Telnet&SSH successfully."
 msgstr "เปิดใช้งาน Telnet&SSHสำเร็จ"
 
-#: menu.sh:2092
+#: menu.sh:1975
 msgid "Enabled Telnet&SSH failed."
 msgstr "เปิดใช้งาน Telnet&SSHไม่สำเร็จ"
 
-#: menu.sh:2102
+#: menu.sh:1985
 msgid "This feature will removing the blocked ip database from the first partition of all disks.\\n"
 msgstr "คุณสมบัตินี้จะลบฐานข้อมูล IP ที่ถูกบล็อกออกจากพาร์ติชันแรกของดิสก์ทั้งหมด\\n"
 
-#: menu.sh:2125
+#: menu.sh:2008
 msgid "The blocked ip database has been deleted."
 msgstr "ฐานข้อมูล IP ที่ถูกบล็อกถูกลบแล้ว"
 
-#: menu.sh:2146
+#: menu.sh:2029
 msgid "Choose a disk to clone to"
 msgstr "เลือกดิสก์เพื่อคัดลอกไปยัง"
 
-#: menu.sh:2152
+#: menu.sh:2035
 msgid "No disk selected!"
 msgstr "ไม่มีดิสก์ที่เลือก!"
 
-#: menu.sh:2158
+#: menu.sh:2041
 msgid "Disk %s size is less than 1GB and cannot be cloned!"
 msgstr "ขนาดดิสก์ %s น้อยกว่า 1GB และไม่สามารถคัดลอก!"
 
-#: menu.sh:2162
+#: menu.sh:2045
 msgid "Warning:\\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \\nDo you want to continue?"
 msgstr "แจ้งเตือน:\\nดิสก์ %s จะถูกสร้างรูปแบบใหม่และเขียนไปยัง부팅ตัวเครื่อง. กรุณายืนยันว่าข้อมูลสำคัญถูกสำรองไว้แล้ว. \\nคุณต้องการดำเนินการต่อหรือไม่?"
 
-#: menu.sh:2198 menu.sh:2203 menu.sh:2208
+#: menu.sh:2081 menu.sh:2086 menu.sh:2091
 msgid "Can't mount %s."
 msgstr "ไม่สามารถเมานต์ %s"
 
-#: menu.sh:2221
+#: menu.sh:2104
 msgid "Cloning failed due to insufficient remaining disk space on the selected hard drive."
 msgstr "ไม่สามารถคลอปปี้เนื่องจากพื้นที่ที่เหลือในดิสก์ไม่เพียงพอในดิสก์ที่เลือก"
 
-#: menu.sh:2228 menu.sh:2233 menu.sh:2238
+#: menu.sh:2111 menu.sh:2116 menu.sh:2121
 msgid "Can't copy to %s."
 msgstr "ไม่สามารถคัดลอกไปยัง %s"
 
-#: menu.sh:2246
+#: menu.sh:2129
 msgid "Cloning ..."
 msgstr "คลอปปี้ ..."
 
-#: menu.sh:2252
+#: menu.sh:2135
 msgid "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\\nReboot?"
 msgstr "Bootloader ได้รับการโคลนไปยังดิสก์ %s โปรดลบดิสก์ bootloader ปัจจุบันออก!\\nรีบูตหรือไม่?"
 
-#: menu.sh:2267
+#: menu.sh:2150
 msgid "Please enter a proxy server url.(e.g., %s)"
 msgstr "กรุณากรอก proxy server url (เช่น %s)"
 
-#: menu.sh:2278
+#: menu.sh:2161
 msgid "Invalid proxy server url, continue?"
 msgstr "proxy server url ไม่ถูกต้อง, ต่อ tục?"
 
-#: menu.sh:2307
+#: menu.sh:2190
+msgid "DSM rd compression:"
+msgstr "DSM rd compression:"
+
+#: menu.sh:2191
 msgid "Switch LKM version:"
 msgstr "สลับ version LKM:"
 
-#: menu.sh:2308
+#: menu.sh:2192
 msgid "HDD sort(hotplug):"
 msgstr "เรียงลำดับ HDD(hotplug):"
 
-#: menu.sh:2310
+#: menu.sh:2194
 msgid "show/modify the current pat data"
 msgstr "แสดง/แก้ไขข้อมูล pat ปัจจุบัน"
 
-#: menu.sh:2315
+#: menu.sh:2195
+msgid "Switch SATADOM mode:"
+msgstr "สลับโหมด SATADOM:"
+
+#: menu.sh:2200
 msgid "Switch direct boot:"
 msgstr "สลับการเปิดระบบโดยตรง:"
 
-#: menu.sh:2317
+#: menu.sh:2202
 msgid "Timeout of get ip in boot:"
 msgstr "ระยะเวลารอรับ IP ในการเปิดระบบ:"
 
-#: menu.sh:2318
+#: menu.sh:2203
 msgid "Timeout of boot wait:"
 msgstr "ระยะเวลารอเปิดระบบ:"
 
-#: menu.sh:2319
+#: menu.sh:2204
 msgid "kernel switching method:"
 msgstr "วิธีสลับระบบปฏิบัติการ:"
 
-#: menu.sh:2321
+#: menu.sh:2206
 msgid "Reboot on kernel panic:"
 msgstr "รีบูตเมื่อเกิดความผิดพลาดของระบบปฏิบัติการ:"
 
-#: menu.sh:2323
+#: menu.sh:2208
 msgid "Use EMMC as the system disk:"
 msgstr "ใช้ EMMC เป็นระบบจัดเก็บหลัก:"
 
-#: menu.sh:2325
+#: menu.sh:2210
 msgid "Custom patch script # Developer"
 msgstr "สคริปต์การปรับเปลี่ยน # ผู้พัฒนา"
 
-#: menu.sh:2326
+#: menu.sh:2211
 msgid "Edit user config file manually"
 msgstr "แก้ไขไฟล์การตั้งค่าผู้ใช้ด้วยตัวเอง"
 
-#: menu.sh:2327
+#: menu.sh:2212
 msgid "Edit grub.cfg file manually"
 msgstr "แก้ไขไฟล์ grub.cfg ด้วยตัวเอง"
 
-#: menu.sh:2329
+#: menu.sh:2214
 msgid "Set static IP"
 msgstr "กำหนด IP แตกต่าง"
 
-#: menu.sh:2330
+#: menu.sh:2215
 msgid "Set wireless account"
 msgstr "ตั้งค่าบัญชีไร้สาย"
 
-#: menu.sh:2331
+#: menu.sh:2216
 msgid "Show disks information"
 msgstr "แสดงข้อมูลดิสก์"
 
-#: menu.sh:2332
+#: menu.sh:2217
 msgid "Format disk(s) # Without loader disk"
 msgstr "รูปแบบดิสก์ # ไม่รวมดิสก์ Loader"
 
-#: menu.sh:2333
+#: menu.sh:2218
 msgid "Try to recovery a installed DSM system"
 msgstr "ระบบ DSM ที่ติดตั้งแล้ว"
 
-#: menu.sh:2334
+#: menu.sh:2219
 msgid "Allow downgrade installation"
 msgstr "อนุญาตการติดตั้งลดรุ่น"
 
-#: menu.sh:2335
+#: menu.sh:2220
 msgid "Reset DSM system password"
 msgstr "รีเซ็ตรหัสผ่าน DSM"
 
-#: menu.sh:2336
+#: menu.sh:2221
 msgid "Add a new user to DSM system"
 msgstr "เพิ่มผู้ใช้ใหม่ลงในระบบ DSM"
 
-#: menu.sh:2337
+#: menu.sh:2222
 msgid "Force enable Telnet&SSH of DSM system"
 msgstr "บังคับให้เปิดใช้งาน Telnet&SSH ของระบบ DSM"
 
-#: menu.sh:2338
+#: menu.sh:2223
 msgid "Remove the blocked ip database of DSM"
 msgstr "ลบฐานข้อมูลไอพีที่ถูกบล็อกของระบบ DSM"
 
-#: menu.sh:2339
+#: menu.sh:2224
 msgid "Clone bootloader disk to another disk"
 msgstr "คlon bootloader disk ไปยังดิสก์อื่น"
 
-#: menu.sh:2340
+#: menu.sh:2225
 msgid "Report bugs to the author"
 msgstr "แจ้งปัญหาไปยังผู้เขียน"
 
-#: menu.sh:2341
+#: menu.sh:2226
 msgid "Download DSM config backup files"
 msgstr "ดาวน์โหลดไฟล์การตั้งค่า DSM"
 
-#: menu.sh:2342
+#: menu.sh:2227
 msgid "Install development tools"
 msgstr "ติดตั้งเครื่องมือพัฒนา"
 
-#: menu.sh:2343
+#: menu.sh:2228
 msgid "Save modifications of '/opt/rr'"
 msgstr "บันทึกการเปลี่ยนแปลงของ '/opt/rr'"
 
-#: menu.sh:2345
+#: menu.sh:2230
 msgid "Show QR logo:"
 msgstr "แสดงรูป QR:"
 
-#: menu.sh:2346
+#: menu.sh:2231
 msgid "Set global proxy"
 msgstr "ตั้งค่า proxy ให้กับระบบ"
 
-#: menu.sh:2347
+#: menu.sh:2232
 msgid "Set github proxy"
 msgstr "ตั้งค่า proxy ให้กับ github"
 
-#: menu.sh:2348
+#: menu.sh:2233
 msgid "Vigorously miracle"
 msgstr "ใบลมแดง"
 
-#: menu.sh:2352
+#: menu.sh:2237
 msgid "Advanced option"
 msgstr "ตัวเลือกขั้นสูง"
 
-#: menu.sh:2371
+#: menu.sh:2262
 msgid "pat: (editable)"
 msgstr "pat: (แก้ไขได้)"
 
-#: menu.sh:2398 menu.sh:2410 menu.sh:2430
+#: menu.sh:2282
+msgid "Choose a mode(Only supported for kernel version 4)"
+msgstr "เลือกโหมด(เฉพาะที่รองรับ kernel version 4)"
+
+#: menu.sh:2303 menu.sh:2315 menu.sh:2335
 msgid "Choose a time(seconds)"
 msgstr "เลือกเวลา(วินาที)"
 
-#: menu.sh:2462
+#: menu.sh:2367
 msgid "This option is only informative.\\n\\n"
 msgstr "ตัวเลือกนี้เป็นตัวอย่างเท่านั้\\n\\n"
 
-#: menu.sh:2463
+#: menu.sh:2368
 msgid "This program reserves an interface for ramdisk custom patch scripts.\\n"
 msgstr "โปรแกรมนี้สงวนอินเทอร์เฟซสำหรับสคริปต์แพทช์ที่กำหนดเองของ ramdisk\\n"
 
-#: menu.sh:2464
+#: menu.sh:2369
 msgid "Call timing: called before ramdisk packaging.\\n"
 msgstr "เวลาเรียก: เรียกก่อนการแพคเกจ ramdisk\\n"
 
-#: menu.sh:2465
+#: menu.sh:2370
 msgid "Location: /mnt/p3/scripts/*.sh\\n"
 msgstr "ตำแหน่ง: /mnt/p3/scripts/*.sh\\n"
 
-#: menu.sh:2530
+#: menu.sh:2435
 msgid "Please via %s to download the logs,\\nAnd go to github to create an issue and upload the logs."
 msgstr "กรุณา via %s เพื่อดาวน์โหลด Logs,\\nแล้วไปที่ github เพื่อสร้างปัญหา และอัพโหลด Logs"
 
-#: menu.sh:2534
+#: menu.sh:2439
 msgid "Please go to github to create an issue and upload the logs."
 msgstr "กรุณาไปที่ github เพื่อสร้างปัญหา และอัพโหลด Logs"
 
-#: menu.sh:2538
+#: menu.sh:2443
 msgid "\\Z1No logs found!\\Zn\\n\\n"
 msgstr "\\Z1ไม่พบ Logs!\\Zn\\n\\n"
 
-#: menu.sh:2539 menu.sh:2565
+#: menu.sh:2444 menu.sh:2470
 msgid "Please do as follows:\\n"
 msgstr "กรุณาทำดังนี้:\\n"
 
-#: menu.sh:2540
+#: menu.sh:2445
 msgid " 1. Add dbgutils in addons and rebuild.\\n"
 msgstr "  1. เพิ่ม dbgutils ใน addons และ rebuild.\\n"
 
-#: menu.sh:2541
+#: menu.sh:2446
 msgid " 2. Wait 10 minutes after booting.\\n"
 msgstr "  2. รอ 10 นาทีหลังจากการ boot.\\n"
 
-#: menu.sh:2542 menu.sh:2568
+#: menu.sh:2447 menu.sh:2473
 msgid " 3. Reboot into RR and go to this option.\\n"
 msgstr "  3. รีบูตเข้าสู่ RR และไปที่ตัวเลือกนี้\\n"
 
-#: menu.sh:2556
+#: menu.sh:2461
 msgid "Please via %s to download the scbk,\\nAnd unzip it and back it up in order by file name."
 msgstr "กรุณา via %s เพื่อดาวน์โหลด scbk,\\nและถ้ามีให้ถอด zip และบันทึกไว้ในลำดับตามชื่อไฟล์"
 
-#: menu.sh:2560
+#: menu.sh:2465
 msgid "Please unzip it and back it up in order by file name."
 msgstr "ถ้ามีให้ถอด zip และบันทึกไว้ในลำดับตามชื่อไฟล์"
 
-#: menu.sh:2564
+#: menu.sh:2469
 msgid "\\Z1No scbk found!\\Zn\\n\\n"
 msgstr "\\Z1ไม่พบไฟล์ synoconfbk!\\Zn\\n\\n"
 
-#: menu.sh:2566
+#: menu.sh:2471
 msgid " 1. Add synoconfbkp in addons and rebuild.\\n"
 msgstr " 1. เพิ่ม synoconfbkp ใน addons และ rebuild\\n"
 
-#: menu.sh:2567
+#: menu.sh:2472
 msgid " 2. Normal use.\\n"
 msgstr " 2. ใช้งานปกติ\\n"
 
-#: menu.sh:2576
+#: menu.sh:2481
 msgid "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?"
 msgstr "ตัวเลือกนี้จะติดตั้งการจัดการแพ็คเกจ opkg เท่านั้น ซึ่งช่วยให้คุณติดตั้งเครื่องมือเพิ่มเติมสำหรับการใช้งานและการดีบักได้ คุณต้องการดำเนินการต่อหรือไม่?"
 
-#: menu.sh:2590
+#: menu.sh:2495
 msgid "opkg installing ..."
 msgstr "opkg กำลังติดตั้ง ..."
 
-#: menu.sh:2592
+#: menu.sh:2497
 msgid "opkg install failed."
 msgstr "opkg ติดตั้งไม่สำเร็จ"
 
-#: menu.sh:2594
+#: menu.sh:2499
 msgid "opkg install complete."
 msgstr "opkg ติดตั้งสำเร็จ"
 
-#: menu.sh:2602
+#: menu.sh:2507
 msgid "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?"
 msgstr "คำเตือน:\\nไม่ต้อง terminate ไปก่อน ไม่งั้นอาจจะทำให้ RR เกิดความเสียหาย"
 
-#: menu.sh:2605
+#: menu.sh:2510
 msgid "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
 msgstr "กำลังบันทึก...\\n(พบปัญหาบางครั้งอาจใช้เวลา 5-10 นาที)"
 
-#: menu.sh:2621
+#: menu.sh:2526
 msgid "Save is complete."
 msgstr "บันทึกเสร็จสิ้น"
 
-#: menu.sh:2653
+#: menu.sh:2567
 msgid "Alert"
 msgstr "แจ้งเตือน"
 
-#: menu.sh:2654
+#: menu.sh:2568
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "แก้ไขไฟล์ Config ใหม่แล้ว, ต้องการสร้างโหลดใหม่หรือไม่?"
 
-#: menu.sh:2671 menu.sh:3418
+#: menu.sh:2585 menu.sh:3329
 msgid "Choose a language"
 msgstr "เลือกภาษา"
 
-#: menu.sh:2686
+#: menu.sh:2600
 msgid "Choose a layout"
 msgstr "เลือกโครงสร้าง"
 
-#: menu.sh:2698
+#: menu.sh:2612
 msgid "Choice a keymap"
 msgstr "เลือกแผนที่คีย์"
 
-#: menu.sh:2717 menu.sh:2815 menu.sh:2953 menu.sh:3017 menu.sh:3084 menu.sh:3140
+#: menu.sh:2631 menu.sh:2729 menu.sh:2866 menu.sh:2930 menu.sh:2996 menu.sh:3052
 msgid "Update %s"
 msgstr "อัพเดท %s"
 
-#: menu.sh:2718
+#: menu.sh:2632
 msgid "Checking last version ..."
 msgstr "ตรวจสอบเวอร์ชั่นล่าสุด..."
 
-#: menu.sh:2735
+#: menu.sh:2649
 msgid "Error checking new version.\\nError: TAG is %s"
 msgstr "ไม่สามารถตรวจสอบเวอร์ชั่นล่าสุดได้\\nError: TAG is %s"
 
-#: menu.sh:2748
+#: menu.sh:2662
 msgid "No new version."
 msgstr "ไม่มีเวอร์ชั่นใหม่"
 
-#: menu.sh:2752
+#: menu.sh:2666
 msgid "Actual version is %s.\\nForce update?"
 msgstr "เวอร์ชั่นปัจจุบันคือ %s\\nต้องการอัพเดท?"
 
-#: menu.sh:2765
+#: menu.sh:2679
 msgid "Do you want to update?"
 msgstr "ต้องการอัพเดท?"
 
-#: menu.sh:2785
+#: menu.sh:2699
 msgid "Error downloading new version.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "เกิดข้อผิดพลาดในการดาวน์โหลดเวอร์ชั่นใหม่\\nError: %d:%d\\n(โปรดตรวจสอบรายละเอียดของ Error ผ่าน https://curl.se/libcurl/c/libcurl-errors.html)"
 
-#: menu.sh:2795
+#: menu.sh:2709
 msgid "Downloading ..."
 msgstr "กำลังดาวน์โหลด..."
 
-#: menu.sh:2815 menu.sh:2940 menu.sh:3203 menu.sh:3232
+#: menu.sh:2729 menu.sh:2853 menu.sh:3115 menu.sh:3144
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:2816 menu.sh:2954 menu.sh:3018 menu.sh:3085 menu.sh:3141
+#: menu.sh:2730 menu.sh:2867 menu.sh:2931 menu.sh:2997 menu.sh:3053
 msgid "Extracting update file ..."
 msgstr "กำลังแตกไฟล์อัพเดต ..."
 
-#: menu.sh:2827 menu.sh:2872 menu.sh:2965 menu.sh:3029 menu.sh:3096 menu.sh:3152
+#: menu.sh:2741 menu.sh:2786 menu.sh:2878 menu.sh:2942 menu.sh:3008 menu.sh:3064
 msgid "Error extracting update file."
 msgstr "เกิดข้อผิดพลาดในการแตกไฟล์อัพเดต"
 
-#: menu.sh:2839
+#: menu.sh:2753
 msgid "Checksum do not match!"
 msgstr "ไม่ตรงกับการตรวจสอบ!"
 
-#: menu.sh:2853
+#: menu.sh:2767
 msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
 msgstr "เวอร์ชั่นปัจจุบันไม่รองรับการอัพเดตไปยัง latest update.zip โปรดทำการสร้างไดสก์โปรแกรมบูตใหม่!"
 
-#: menu.sh:2892 menu.sh:2987 menu.sh:3043 menu.sh:3110 menu.sh:3166
+#: menu.sh:2806 menu.sh:2900 menu.sh:2956 menu.sh:3022 menu.sh:3078
 msgid "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM."
 msgstr "ไม่สามารถติดตั้งได้เนื่องจากพื้นที่ดิสก์เหลือไม่เพียงพอบนฮาร์ดไดรฟ์ในเครื่อง โปรดพิจารณาจัดสรรดิสก์ %s ของคุณใหม่ด้วยอย่างน้อย %sM"
 
-#: menu.sh:2902
+#: menu.sh:2816
 msgid "Installing new files ..."
 msgstr "กำลังติดตั้งไฟล์ใหม่ ..."
 
-#: menu.sh:2940 menu.sh:3002 menu.sh:3069 menu.sh:3125 menu.sh:3181
+#: menu.sh:2853 menu.sh:2915 menu.sh:2981 menu.sh:3037 menu.sh:3093
 msgid "%s updated with success!"
 msgstr "%s อัปเดตสำเร็จแล้ว!"
 
-#: menu.sh:2940
+#: menu.sh:2853
 msgid "Reboot?"
 msgstr "รีบูต?"
 
-#: menu.sh:3084 menu.sh:3125 menu.sh:3206 menu.sh:3263 menu.sh:3268
+#: menu.sh:2996 menu.sh:3037 menu.sh:3118 menu.sh:3175 menu.sh:3180
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:3140 menu.sh:3181 menu.sh:3207 menu.sh:3275 menu.sh:3280
+#: menu.sh:3052 menu.sh:3093 menu.sh:3119 menu.sh:3187 menu.sh:3192
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:3202 menu.sh:3225
+#: menu.sh:3114 menu.sh:3137
 msgid "All"
 msgstr "ทั้งหมด"
 
-#: menu.sh:3208
+#: menu.sh:3120
 msgid "Local upload"
 msgstr "การอัปโหลดในเครื่อง"
 
-#: menu.sh:3209
+#: menu.sh:3121
 msgid "Pre Release:"
 msgstr "ก่อนวางจำหน่าย:"
 
-#: menu.sh:3214 menu.sh:3288
+#: menu.sh:3126 menu.sh:3200
 msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download."
 msgstr "การอัปโหลด update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip ไปที่ /tmp/ จะข้ามการดาวน์โหลด"
 
-#: menu.sh:3239 menu.sh:3251 menu.sh:3263 menu.sh:3275
+#: menu.sh:3151 menu.sh:3163 menu.sh:3175 menu.sh:3187
 msgid "No longer supports update %s separately. Please choose to update All/RR"
 msgstr "ไม่สนับสนุนการอัปเดต %s แยกต่างหาก. โปรดเลือกการอัปเดตทั้งหมด/RR"
 
-#: menu.sh:3294
+#: menu.sh:3206
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
 msgstr "กรุณาคงชื่อไฟล์แนบเป็นเหมือนกับชื่อไฟล์แนบบน Github.\\n"
 
-#: menu.sh:3295
+#: menu.sh:3207
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "Upload update*.zip จะอัพเดทรีบอร์ด\\n"
 
-#: menu.sh:3296
+#: menu.sh:3208
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "Upload addons*.zip จะอัพเดทเอกสาร\\n"
 
-#: menu.sh:3297
+#: menu.sh:3209
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "Upload modules*.zip จะอัพเดทโมดูล\\n"
 
-#: menu.sh:3298
+#: menu.sh:3210
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "Upload rp-lkms*.zip จะอัพเดท LKMs.\\n"
 
-#: menu.sh:3299
+#: menu.sh:3211
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "Upload rr-cks*.zip จะอัพเดท CKs.\\n"
 
-#: menu.sh:3371
+#: menu.sh:3283
 msgid "This person is very lazy and hasn't written anything."
 msgstr "นักกีฬาคนนี้ lazy เลย ไม่มีข้อมูล"
 
-#: menu.sh:3391
+#: menu.sh:3303
 msgid "Choose a model"
 msgstr "เลือกโมเดล"
 
-#: menu.sh:3393
+#: menu.sh:3305
 msgid "Choose a version"
 msgstr "เลือกเวอร์ชั่น"
 
-#: menu.sh:3395
+#: menu.sh:3307
 msgid "Parse pat"
 msgstr "Parse pat"
 
-#: menu.sh:3402
+#: menu.sh:3313
 msgid "Kernel:"
 msgstr "Kernel:"
 
-#: menu.sh:3404
+#: menu.sh:3315
 msgid "Addons menu"
 msgstr "เมนูเสริม"
 
-#: menu.sh:3405
+#: menu.sh:3316
 msgid "Modules menu"
 msgstr "เมนูโมดูล"
 
-#: menu.sh:3406
+#: menu.sh:3317
 msgid "Cmdline menu"
 msgstr "เมนู Cmdline"
 
-#: menu.sh:3407
+#: menu.sh:3318
 msgid "Synoinfo menu"
 msgstr "เมนู synoinfo"
 
-#: menu.sh:3409
+#: menu.sh:3320
 msgid "Advanced menu"
 msgstr "เมนูขั้นสูง"
 
-#: menu.sh:3412
+#: menu.sh:3323
 msgid "Build the loader"
 msgstr "สร้างโหลด"
 
-#: menu.sh:3416
+#: menu.sh:3327
 msgid "Boot the loader"
 msgstr "เริ่มโหลด"
 
-#: menu.sh:3419
+#: menu.sh:3330
 msgid "Choose a keymap"
 msgstr "เลือกแผนที่คีย์"
 
-#: menu.sh:3421
+#: menu.sh:3332
 msgid "Clean disk cache"
 msgstr "ล้างแคชดิสก์"
 
-#: menu.sh:3423
+#: menu.sh:3334
 msgid "Update menu"
 msgstr "อัพเดทเมนู"
 
-#: menu.sh:3424
+#: menu.sh:3335
 msgid "Notepad"
 msgstr "เขียน"
 
-#: menu.sh:3446
+#: menu.sh:3357
 msgid "Change ..."
 msgstr "เปลี่ยน ..."
 
-#: menu.sh:3514
+#: menu.sh:3425
 msgid "Choose a action"
 msgstr "เลือกการกระทำ"
 
-#: menu.sh:3515
+#: menu.sh:3426
 msgid "Poweroff"
 msgstr "ออกจากระบบ"
 
-#: menu.sh:3516
+#: menu.sh:3427
 msgid "Reboot"
 msgstr "รีบูต"
 
-#: menu.sh:3517
+#: menu.sh:3428
 msgid "Reboot to RR"
 msgstr "รีบูตไปที่ RR"
 
-#: menu.sh:3518
+#: menu.sh:3429
 msgid "Reboot to Recovery"
 msgstr "รีบูตไปที่ Recovery"
 
-#: menu.sh:3519
+#: menu.sh:3430
 msgid "Reboot to Junior"
 msgstr "รีบูตไปที่ Junior"
 
-#: menu.sh:3520
+#: menu.sh:3431
 msgid "Back to shell"
 msgstr "กลับไปที่ shell"
 
-#: menu.sh:3557
+#: menu.sh:3468
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "เรียก \\033[1;32mmenu.sh\\033[0m เพื่อกลับไปที่เมนู"

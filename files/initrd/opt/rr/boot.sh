@@ -17,7 +17,7 @@ BUS=$(getBus "${LOADER_DISK}")
 # Print text centralized
 clear
 [ -z "${COLUMNS}" ] && COLUMNS=50
-TITLE="$(printf "$(TEXT "Welcome to %s")" "${RR_TITLE}")"
+TITLE="$(printf "$(TEXT "Welcome to %s")" "$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")")"
 printf "\033[1;44m%*s\n" ${COLUMNS} ""
 printf "\033[1;44m%*s\033[A\n" ${COLUMNS} ""
 printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
@@ -51,7 +51,9 @@ fi
 [ -f ${PART1_PATH}/.build ] && rm -f ${PART1_PATH}/.build
 
 # Load necessary variables
+PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
+MODELID="$(readConfigKey "modelid" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
 BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
 SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
@@ -69,11 +71,6 @@ echo -e "$(TEXT "LKM:     ") \033[1;36m${LKM}\033[0m"
 echo -e "$(TEXT "DMI:     ") \033[1;36m${DMI}\033[0m"
 echo -e "$(TEXT "CPU:     ") \033[1;36m${CPU}\033[0m"
 echo -e "$(TEXT "MEM:     ") \033[1;36m${MEM}\033[0m"
-
-if [ ! -f "${WORK_PATH}/model-configs/${MODEL}.yml" ] || [ -z "$(readModelKey ${MODEL} "productvers.[${PRODUCTVER}]")" ]; then
-  echo -e "\033[1;33m*** $(printf "$(TEXT "The current version of bootloader does not support booting %s-%s, please upgrade and rebuild.")" "${MODEL}" "${PRODUCTVER}") ***\033[0m"
-  exit 1
-fi
 
 if ! readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q nvmesystem; then
   HASATA=0
@@ -98,12 +95,9 @@ EMMCBOOT="$(readConfigKey "emmcboot" "${USER_CONFIG_FILE}")"
 declare -A CMDLINE
 
 # Automatic values
-MODELID="$(readModelKey ${MODEL} "id")"
 CMDLINE['syno_hw_version']="${MODELID:-${MODEL}}"
-[ -z "${VID}" ] && VID="0x46f4" # Sanity check
-[ -z "${PID}" ] && PID="0x0001" # Sanity check
-CMDLINE['vid']="${VID}"
-CMDLINE['pid']="${PID}"
+CMDLINE['vid']="${VID:-"0x46f4"}" # Sanity check
+CMDLINE['pid']="${PID:-"0x0001"}" # Sanity check
 CMDLINE['sn']="${SN}"
 
 CMDLINE['netif_num']="0"
@@ -124,14 +118,28 @@ if [ ${EFI} -eq 1 ]; then
 else
   CMDLINE['noefi']=""
 fi
-if [ ! "${BUS}" = "usb" ]; then
-  SZ=$(blockdev --getsz ${LOADER_DISK} 2>/dev/null) # SZ=$(cat /sys/block/${LOADER_DISK/\/dev\//}/size)
-  SS=$(blockdev --getss ${LOADER_DISK} 2>/dev/null) # SS=$(cat /sys/block/${LOADER_DISK/\/dev\//}/queue/hw_sector_size)
-  SIZE=$((${SZ:-0} * ${SS:-0} / 1024 / 1024 + 10))
-  # Read SATADoM type
-  DOM="$(readModelKey "${MODEL}" "dom")"
-  CMDLINE['synoboot_satadom']="${DOM}"
-  CMDLINE['dom_szmax']="${SIZE}"
+DT="$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")"
+KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")
+KPRE=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")
+if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 5 ]; then
+  if [ ! "${BUS}" = "usb" ]; then
+    SZ=$(blockdev --getsz ${LOADER_DISK} 2>/dev/null) # SZ=$(cat /sys/block/${LOADER_DISK/\/dev\//}/size)
+    SS=$(blockdev --getss ${LOADER_DISK} 2>/dev/null) # SS=$(cat /sys/block/${LOADER_DISK/\/dev\//}/queue/hw_sector_size)
+    SIZE=$((${SZ:-0} * ${SS:-0} / 1024 / 1024 + 10))
+    # Read SATADoM type
+    SATADOM="$(readConfigKey "satadom" "${USER_CONFIG_FILE}")"
+    CMDLINE['synoboot_satadom']="${SATADOM:-2}"
+    CMDLINE['dom_szmax']="${SIZE}"
+  fi
+  CMDLINE["elevator"]="elevator"
+fi
+if [ "${DT}" = "true" ]; then
+  CMDLINE["syno_ttyS0"]="serial,0x3f8"
+  CMDLINE["syno_ttyS1"]="serial,0x2f8"
+else
+  CMDLINE["SMBusHddDynamicPower"]="1"
+  CMDLINE["syno_hdd_detect"]="0"
+  CMDLINE["syno_hdd_powerup_seq"]="0"
 fi
 CMDLINE['panic']="${KERNELPANIC:-0}"
 CMDLINE['console']="ttyS0,115200n8"
@@ -143,21 +151,24 @@ CMDLINE['root']="/dev/md0"
 CMDLINE['skip_vender_mac_interfaces']="0,1,2,3,4,5,6,7"
 CMDLINE['loglevel']="15"
 CMDLINE['log_buf_len']="32M"
+CMDLINE["HddHotplug"]="1"
+CMDLINE["vender_format_version"]="2"
 
 if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ] && [ ! "${BUS}" = "mmc" ] && [ ! "${EMMCBOOT}" = "true" ]; then
   [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
   CMDLINE['modprobe.blacklist']+="sdhci,sdhci_pci,sdhci_acpi"
 fi
-
-if [ "$(readModelKey "${MODEL}" "dt")" = "true" ] && ! echo "epyc7002 purley broadwellnkv2" | grep -wq "$(readModelKey "${MODEL}" "platform")"; then
+if [ "${DT}" = "true" ] && ! echo "epyc7002 purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
   [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
   CMDLINE['modprobe.blacklist']+="mpt3sas"
 fi
+if echo "epyc7002 apollolake geminilake" | grep -wq "${PLATFORM}"; then
+  CMDLINE["intel_iommu"]="igfx_off"
+fi
+if echo "purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
+  CMDLINE["SASmodel"]="1"
+fi
 
-# Read cmdline
-while IFS=': ' read KEY VALUE; do
-  [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
-done <<<$(readModelMap "${MODEL}" "productvers.[${PRODUCTVER}].cmdline")
 while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
 done <<<$(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
@@ -270,7 +281,6 @@ else
 
   # Executes DSM kernel via KEXEC
   KEXECARGS=""
-  KVER=$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")
   if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ ${EFI} -eq 1 ]; then
     echo -e "\033[1;33m$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")\033[0m"
     KEXECARGS="--noefi"
