@@ -57,7 +57,7 @@
 
         function init() {
             httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/models.json", function (result) {
-                //_models = JSON.parse(result);
+                _models = JSON.parse(result);
                 httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/addons.json", function (result) {
                     _addons = JSON.parse(result);
                     httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/modules.json", function (result) {
