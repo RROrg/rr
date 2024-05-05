@@ -19,11 +19,10 @@ rm -f "${MOD_ZIMAGE_FILE}"
 KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 if [ "${KERNEL}" = "custom" ]; then
   echo -n "."
-  MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
+  PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
   PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
-  PLATFORM="$(readModelKey "${MODEL}" "platform")"
-  KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
-  KPRE="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kpre")"
+  KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")
+  KPRE=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")
   # Extract bzImage
   gzip -dc "${CKS_PATH}/bzImage-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.gz" >"${MOD_ZIMAGE_FILE}"
 else

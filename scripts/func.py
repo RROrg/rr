@@ -6,7 +6,7 @@
 # See /LICENSE for more information.
 #
 
-import os, sys, glob, json, yaml, click, shutil, tarfile, kmodule
+import os, sys, glob, json, yaml, click, shutil, tarfile, kmodule, requests
 from openpyxl import Workbook
 
 
@@ -23,23 +23,35 @@ def cli():
 @click.option("-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile.")
 @click.option("-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile.")
 def getmodels(workpath, jsonpath, xlsxpath):
-    # Read the model-configs files
-    MS = glob.glob("{}/opt/rr/model-configs/*.yml".format(workpath))
-    MS.sort()
+
     models = {}
-    for M in MS:
-        with open(M, "r") as f:
-            M_name = os.path.splitext(os.path.basename(M))[0]
-            M_data = yaml.safe_load(f)
-            M_platform = M_data.get("platform", "")
-            M_productvers = M_data.get("productvers", [])
+    with open("{}/opt/rr/platforms.yml".format(workpath), "r") as f:
+        P_data = yaml.safe_load(f)
+        P_platforms = P_data.get("platforms", [])
+        for P in P_platforms:
             productvers = {}
-            for P in M_productvers:
-                if M_productvers[P].get("kpre", "") != "":
-                    productvers[P] = M_productvers[P].get("kpre", "") + "-" + M_productvers[P].get("kver", "")
+            for V in P_platforms[P]["productvers"]:
+                if P_platforms[P]["productvers"][V].get("kpre", "") != "":
+                    productvers[V] = (P_platforms[P]["productvers"][V].get("kpre", "") + "-" + P_platforms[P]["productvers"][V].get("kver", ""))
                 else:
-                    productvers[P] = M_productvers[P].get("kver", "")
-            models[M_name] = {"platform": M_platform, "productvers": productvers}
+                    productvers[V] = P_platforms[P]["productvers"][V].get("kver", "")
+            models[P] = {"productvers": productvers, "models": []}
+
+    req = requests.get("https://autoupdate.synology.com/os/v2")
+    req.encoding = "utf-8"
+    data = json.loads(req.text)
+
+    for I in data["channel"]["item"]:
+        if not I["title"].startswith("DSM"):
+            continue
+        for J in I["model"]:
+            arch = J["mUnique"].split("_")[1].lower()
+            name = J["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
+            if arch not in models.keys():
+                continue
+            if name in (A for B in models for A in models[B]["models"]):
+                continue
+            models[arch]["models"].append(name)
 
     if jsonpath:
         with open(jsonpath, "w") as f:
@@ -47,10 +59,9 @@ def getmodels(workpath, jsonpath, xlsxpath):
     if xlsxpath:
         wb = Workbook()
         ws = wb.active
-        ws.append(["Model", "platform", "productvers", "kvernelvers"])
-        for k1, v1 in models.items():
-            for k2, v2 in v1["productvers"].items():
-                ws.append([k1, v1["platform"], k2, v2])
+        ws.append(["platform", "productvers", "Model"])
+        for k, v in models.items():
+            ws.append([k, v["productvers"], v["models"]])
         wb.save(xlsxpath)
 
 
@@ -76,9 +87,9 @@ def getaddons(workpath, jsonpath, xlsxpath):
     if xlsxpath:
         wb = Workbook()
         ws = wb.active
-        ws.append(['Name', 'system', 'en_US', 'zh_CN'])
+        ws.append(["Name", "system", "en_US", "zh_CN"])
         for k1, v1 in addons.items():
-            ws.append([k1, v1.get("system", False), v1.get("description").get("en_US", ""), v1.get("description").get("zh_CN", "")])   
+            ws.append([k1, v1.get("system", False), v1.get("description").get("en_US", ""), v1.get("description").get("zh_CN", ""),])
         wb.save(xlsxpath)
 
 

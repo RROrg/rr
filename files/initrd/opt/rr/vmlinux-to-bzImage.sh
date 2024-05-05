@@ -5,9 +5,10 @@
 
 . ${WORK_PATH}/include/functions.sh
 
-MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
+PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
-KVER="$(readModelKey "${MODEL}" "productvers.[${PRODUCTVER}].kver")"
+KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")
+KPRE=$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")
 
 # Adapted from: scripts/Makefile.lib
 # Usage: size_append FILE [FILE2] [FILEn]...
@@ -66,7 +67,7 @@ if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 5 ]; then
   file_size_le "${VMLINUX_MOD}" | dd of="${ZIMAGE_MOD}" bs=15745244 seek=1 conv=notrunc || exit 1
 
   RUN_SIZE=$(objdump -h ${VMLINUX_MOD} | sh "${WORK_PATH}/calc_run_size.sh")
-  size_le ${RUN_SIZE} | dd of=${ZIMAGE_MOD} bs=15745210 seek=1 conv=notrunc|| exit 1
+  size_le ${RUN_SIZE} | dd of=${ZIMAGE_MOD} bs=15745210 seek=1 conv=notrunc || exit 1
   size_le $(($((16#$(crc32 "${ZIMAGE_MOD}" | awk '{print $1}'))) ^ 0xFFFFFFFF)) | dd of="${ZIMAGE_MOD}" conv=notrunc oflag=append || exit 1
 else
   # Kernel version 5.x

@@ -144,7 +144,7 @@ jobs:
           REPO="${{ github.server_url }}/${{ github.repository }}"
           MODEL="${{ env.model }}"
           VERSION="${{ env.version }}"
-          PRERELEASE="false"
+          PRERELEASE="true"
 
           TAG=""
           if [ "${PRERELEASE}" = "true" ]; then

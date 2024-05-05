@@ -39,7 +39,7 @@ jobs:
       - name: Get Release RR
         run: |
           REPO="${{ github.server_url }}/${{ github.repository }}"
-          PRERELEASE="false"
+          PRERELEASE="true"
 
           TAG=""
           if [ "${PRERELEASE}" = "true" ]; then

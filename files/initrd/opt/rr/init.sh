@@ -11,7 +11,7 @@ set -e
 # Shows title
 clear
 [ -z "${COLUMNS}" ] && COLUMNS=50
-TITLE="$(printf "$(TEXT "Welcome to %s")" "${RR_TITLE}")"
+TITLE="$(printf "$(TEXT "Welcome to %s")" "$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")")"
 printf "\033[1;44m%*s\n" ${COLUMNS} ""
 printf "\033[1;44m%*s\033[A\n" ${COLUMNS} ""
 printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
@@ -28,6 +28,8 @@ if [ ! -f "${USER_CONFIG_FILE}" ]; then
 fi
 
 initConfigKey "kernel" "official" "${USER_CONFIG_FILE}"
+initConfigKey "rd-compressed" "false" "${USER_CONFIG_FILE}"
+initConfigKey "satadom" "2" "${USER_CONFIG_FILE}"
 initConfigKey "lkm" "prod" "${USER_CONFIG_FILE}"
 initConfigKey "dsmlogo" "true" "${USER_CONFIG_FILE}"
 initConfigKey "directboot" "false" "${USER_CONFIG_FILE}"
@@ -39,7 +41,9 @@ initConfigKey "kernelpanic" "5" "${USER_CONFIG_FILE}"
 initConfigKey "odp" "false" "${USER_CONFIG_FILE}"
 initConfigKey "hddsort" "false" "${USER_CONFIG_FILE}"
 initConfigKey "emmcboot" "false" "${USER_CONFIG_FILE}"
+initConfigKey "platform" "" "${USER_CONFIG_FILE}"
 initConfigKey "model" "" "${USER_CONFIG_FILE}"
+initConfigKey "modelid" "" "${USER_CONFIG_FILE}"
 initConfigKey "productver" "" "${USER_CONFIG_FILE}"
 initConfigKey "buildnum" "" "${USER_CONFIG_FILE}"
 initConfigKey "smallnum" "" "${USER_CONFIG_FILE}"

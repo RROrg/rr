@@ -37,6 +37,10 @@
 
         var repo = "RROrg/rr"
 
+        var _models = {};
+        var _addons = {};
+        var _modules = {};
+
         function httpGetAsync(theUrl, callback) {
             let xmlHttpReq = new XMLHttpRequest();
             xmlHttpReq.onreadystatechange = function () {
@@ -53,7 +57,7 @@
 
         function init() {
             httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/models.json", function (result) {
-                _models = JSON.parse(result);
+                //_models = JSON.parse(result);
                 httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/addons.json", function (result) {
                     _addons = JSON.parse(result);
                     httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/modules.json", function (result) {
@@ -69,7 +73,10 @@
         }
 
         function setModels() {
-            var models = Object.keys(_models).sort();
+            var models = [];
+            for (var P in _models) {
+                models = models.concat(_models[P]["models"]);
+            }
             $("#model")[0].options.length = 0;
             for (var i = 0; i < models.length; i++) {
                 var model = models[i];
@@ -79,7 +86,13 @@
         }
         function changeModel() {
             model = $("#model").val();
-            var versions = Object.keys(_models[model]["productvers"]).reverse();
+            var versions = [];
+            for (var P in _models) {
+                if (_models[P]["models"].includes(model)) {
+                    versions = Object.keys(_models[P]["productvers"]).reverse();
+                    break;
+                }
+            }
             $("#version")[0].options.length = 0;
             for (var i = 0; i < versions.length; i++) {
                 var version = versions[i];
@@ -102,7 +115,7 @@
         }
         function createAddonsBtn() {
             var language = $("#language").val();
-            var extstr =  $('#addons').val().split(",");
+            var extstr = $('#addons').val().split(",");
             var idx = 1;
             var html = `<div class="form-group-body" id="addons_btns">`;
             for (var ext in _addons) {
@@ -113,7 +126,7 @@
                 var par = "";
                 if (extstr.includes(ext)) {
                     par = "btn-danger";
-                }   
+                }
                 html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} ${dispar} onclick="return onclickext('addons', '${ext}')" autofocus="" title="${_addons[ext]["description"][language]}">${ext}</button>&nbsp;`;
                 //if (idx++ % 10 == 0) html += "<br />";
             }
@@ -124,7 +137,13 @@
         function createModulesBtn() {
             var model = $("#model").val();
             var version = $("#version").val();
-            var platform = _models[model]["platform"] + "-" + _models[model]["productvers"][version];
+            var platform = "";
+            for (var P in _models) {
+                if (_models[P]["models"].includes(model)) {
+                    platform = P + "-" + _models[P]["productvers"][version];
+                    break;
+                }
+            }
             var extstr = [];
             var idx = 1;
             var html = `<div class="form-group-body" id="modules_btns">`;
@@ -287,8 +306,8 @@
                 <label class="color-fg-default text-mono f6">Addons:</label>
             </div>
             <div class="form-group-body">
-                <textarea class="textarea-style input-contrast input-sm" type="text" id="addons"
-                    name="inputs[addons]" disabled></textarea>
+                <textarea class="textarea-style input-contrast input-sm" type="text" id="addons" name="inputs[addons]"
+                    disabled></textarea>
                 <div class="form-group-body" id="addons_btns">
                 </div>
             </div>
@@ -298,8 +317,8 @@
                 <label class="color-fg-default text-mono f6">Modules:</label>
             </div>
             <div class="form-group-body">
-                <textarea class="textarea-style input-contrast input-sm" type="text" id="modules"
-                    name="inputs[modules]" disabled></textarea>
+                <textarea class="textarea-style input-contrast input-sm" type="text" id="modules" name="inputs[modules]"
+                    disabled></textarea>
                 <div class="form-group-body" id="modules_btns">
                 </div>
             </div>
