@@ -61,7 +61,7 @@ def getmodels(workpath, jsonpath, xlsxpath):
         ws = wb.active
         ws.append(["platform", "productvers", "Model"])
         for k, v in models.items():
-            ws.append([k, v["productvers"], v["models"]])
+            ws.append([k, str(v["productvers"]), str(v["models"])])
         wb.save(xlsxpath)
 
 
