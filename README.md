@@ -3,9 +3,9 @@
 <h1>RR: <small>redpill’s preinstallation and recovery environment</small></h1>
 
 [![点击数](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/rrorg/rr&edge_flat=true)](https://github.com/rrorg/rr)
-[![GitHub Release](https://img.shields.io/github/v/release/rrorg/rr?style=flat-square)](https://github.com/rrorg/rr/releases/latest)
-[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/rrorg/rr/total?style=flat-square)](https://github.com/rrorg/rr/releases)
-[![GitHub Issues or Pull Requests by label](https://img.shields.io/github/issues-closed-raw/rrorg/rr/custom?style=flat-square&label=custom)](https://rrorg.github.io/rr/)
+[![GitHub Release](https://img.shields.io/github/v/release/rrorg/rr?logo=github&style=flat-square)](https://github.com/rrorg/rr/releases/latest)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/rrorg/rr/total?logo=github&style=flat-square)](https://github.com/rrorg/rr/releases)
+[![GitHub Issues or Pull Requests by label](https://img.shields.io/github/issues-closed-raw/rrorg/rr/custom?logo=github&style=flat-square&label=custom)](https://rrorg.github.io/rr/)
 
 > The ultimate solution to self-centralized Synology DSM OS on any local machine with any x86/x64 CPU architecture via a single flash of bootload pre-installation process in addition within recovery environment.
 
