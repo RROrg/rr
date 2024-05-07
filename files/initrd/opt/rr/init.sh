@@ -143,7 +143,7 @@ while [ ${COUNT} -lt 30 ]; do
     fi
   done
   if [ -n "${MSG}" ]; then
-    echo -en "\r${MSG}$(TEXT "connected.")\n"
+    echo -en "\r${MSG}$(TEXT "connected.")                  \n"
     break
   fi
   COUNT=$((${COUNT} + 1))
