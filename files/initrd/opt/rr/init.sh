@@ -64,6 +64,18 @@ initConfigKey "addons.mountloader" "" "${USER_CONFIG_FILE}"
 initConfigKey "addons.reboottoloader" "" "${USER_CONFIG_FILE}"
 initConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
 
+# for update
+if [ -f "${PART2_PATH}/GRUB_VER" ]; then
+  PLATFORMTMP="$(_get_conf_kv "PLATFORM" "${PART2_PATH}/GRUB_VER")"
+  MODELTMP="$(_get_conf_kv "MODEL" "${PART2_PATH}/GRUB_VER")"
+  [ -z "$(readConfigKey "platform" "${USER_CONFIG_FILE}")" ] &&
+    writeConfigKey "platform" "${PLATFORMTMP,,}" "${USER_CONFIG_FILE}"
+  [ -z "$(readConfigKey "model" "${USER_CONFIG_FILE}")" ] &&
+    writeConfigKey "model" "$(echo ${MODELTMP} | sed 's/d$/D/; s/rp$/RP/; s/rp+/RP+/')" "${USER_CONFIG_FILE}"
+  [ -z "$(readConfigKey "modelid" "${USER_CONFIG_FILE}")" ] &&
+    writeConfigKey "modelid" "${MODELTMP}" "${USER_CONFIG_FILE}"
+fi
+
 if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
 
