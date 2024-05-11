@@ -117,7 +117,7 @@ def getmodules(workpath, jsonpath, xlsxpath):
         KS.sort()
         for K in KS:
             K_name = os.path.splitext(os.path.basename(K))[0]
-            K_info = kmodule.modinfo(os.path.basename(K), basedir=os.path.dirname(K))[0]
+            K_info = kmodule.modinfo(K, basedir=os.path.dirname(K), kernel=None)[0]
             K_description = K_info.get("description", "")
             K_depends = K_info.get("depends", "")
             M_modules[K_name] = {"description": K_description, "depends": K_depends}
