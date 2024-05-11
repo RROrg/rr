@@ -1,4 +1,3 @@
-
 CFLAGS = -Wall -pedantic
 
 all: fbsize
