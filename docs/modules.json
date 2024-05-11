@@ -10,7 +10,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -125,7 +125,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -157,16 +157,16 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
-            "depends": ""
+            "description": " A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_governor": {
             "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
@@ -309,8 +309,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -341,7 +341,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -794,7 +794,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -845,8 +845,8 @@
             "depends": "usbcore,mmc_core"
         },
         "vesafb": {
-            "description": "",
-            "depends": ""
+            "description": "VESA VGA Framebuffer driver (Compiled by RR for DSM)",
+            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -869,43 +869,43 @@
             "depends": "backlight"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio_ring,virtio"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -960,7 +960,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -1087,7 +1087,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -1131,16 +1131,16 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_governor": {
             "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
@@ -1283,8 +1283,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -1315,7 +1315,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -1920,7 +1920,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -1983,8 +1983,8 @@
             "depends": "usbcore,mmc_core"
         },
         "vesafb": {
-            "description": "",
-            "depends": ""
+            "description": "VESA VGA Framebuffer driver (Compiled by RR for DSM)",
+            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -2007,43 +2007,43 @@
             "depends": "backlight"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -2082,7 +2082,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -2193,7 +2193,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -2225,11 +2225,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": " A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -2353,8 +2353,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -2385,7 +2385,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -2826,7 +2826,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -2885,43 +2885,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio_ring,virtio"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -2976,7 +2976,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -3099,7 +3099,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -3143,11 +3143,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -3271,8 +3271,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -3303,7 +3303,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -3896,7 +3896,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -3967,43 +3967,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -4042,7 +4042,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -4153,7 +4153,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -4185,11 +4185,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": " A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -4313,8 +4313,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -4345,7 +4345,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -4786,7 +4786,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -4845,43 +4845,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio_ring,virtio"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -4936,7 +4936,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -5059,7 +5059,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -5103,11 +5103,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -5231,8 +5231,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -5263,7 +5263,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -5856,7 +5856,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -5927,43 +5927,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -6002,7 +6002,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -6113,7 +6113,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -6145,11 +6145,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": " A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -6273,8 +6273,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -6305,7 +6305,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -6746,7 +6746,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -6805,43 +6805,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio_ring,virtio"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -6896,7 +6896,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -7019,7 +7019,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -7063,11 +7063,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -7191,8 +7191,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -7223,7 +7223,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -7816,7 +7816,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -7887,43 +7887,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -7962,7 +7962,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -8073,7 +8073,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -8105,11 +8105,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": " A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -8241,8 +8241,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -8273,7 +8273,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -8714,7 +8714,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -8769,43 +8769,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio_ring,virtio"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -8860,7 +8860,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -8983,7 +8983,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -9027,11 +9027,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -9163,8 +9163,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -9195,7 +9195,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -9792,7 +9792,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -9859,43 +9859,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -9934,7 +9934,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -10041,7 +10041,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -10073,16 +10073,16 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
-            "depends": ""
+            "description": " A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_governor": {
             "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
@@ -10201,8 +10201,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -10233,7 +10233,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -10678,7 +10678,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -10733,43 +10733,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio_ring,virtio"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -10824,7 +10824,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -10943,7 +10943,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -10987,16 +10987,16 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_governor": {
             "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
@@ -11115,8 +11115,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -11147,7 +11147,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -11744,7 +11744,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -11811,43 +11811,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -12134,7 +12134,7 @@
         },
         "drm_mipi_dsi": {
             "description": "MIPI DSI Bus",
-            "depends": ""
+            "depends": "dmabuf"
         },
         "drm_panel_orientation_quirks": {
             "description": "",
@@ -12185,20 +12185,20 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "fixed_phy": {
             "description": "Fixed MDIO bus (MDIO bus emulation with fixed PHYs)",
-            "depends": ""
+            "depends": "libphy"
         },
         "ftdi_sio": {
             "description": "USB FTDI Serial Converters Driver",
@@ -12377,7 +12377,7 @@
             "depends": "scsi_transport_sas"
         },
         "libsha256": {
-            "description": "",
+            "description": "SHA-256 Secure Hash Algorithm (Compiled by RR for DSM)",
             "depends": ""
         },
         "llc": {
@@ -12405,8 +12405,8 @@
             "depends": "cfg80211,libarc4"
         },
         "mdio_devres": {
-            "description": "",
-            "depends": ""
+            "description": "MDIO bus device resource management (Compiled by RR for DSM)",
+            "depends": "of_mdio,libphy"
         },
         "megaraid": {
             "description": "LSI Logic MegaRAID legacy driver (Compiled by RR for DSM)",
@@ -12526,7 +12526,7 @@
         },
         "net_failover": {
             "description": "Failover driver for Paravirtual drivers",
-            "depends": ""
+            "depends": "failover"
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -12945,43 +12945,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring,blk-mq-virtio"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,net_failover,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring,blk-mq-virtio"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -13276,7 +13276,7 @@
         },
         "drm_mipi_dsi": {
             "description": "MIPI DSI Bus",
-            "depends": ""
+            "depends": "dmabuf"
         },
         "drm_panel_orientation_quirks": {
             "description": "",
@@ -13327,20 +13327,20 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "fixed_phy": {
             "description": "Fixed MDIO bus (MDIO bus emulation with fixed PHYs)",
-            "depends": ""
+            "depends": "libphy"
         },
         "ftdi_sio": {
             "description": "USB FTDI Serial Converters Driver",
@@ -13523,7 +13523,7 @@
             "depends": "scsi_transport_sas"
         },
         "libsha256": {
-            "description": "",
+            "description": "SHA-256 Secure Hash Algorithm (Compiled by RR for DSM)",
             "depends": ""
         },
         "llc": {
@@ -13551,8 +13551,8 @@
             "depends": "cfg80211,libarc4"
         },
         "mdio_devres": {
-            "description": "",
-            "depends": ""
+            "description": "MDIO bus device resource management (Compiled by RR for DSM)",
+            "depends": "of_mdio,libphy"
         },
         "megaraid": {
             "description": "LSI Logic MegaRAID legacy driver (Compiled by RR for DSM)",
@@ -13672,7 +13672,7 @@
         },
         "net_failover": {
             "description": "Failover driver for Paravirtual drivers",
-            "depends": ""
+            "depends": "failover"
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
@@ -14095,43 +14095,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring,blk-mq-virtio"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring,net_failover"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring,blk-mq-virtio"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -14282,7 +14282,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -14314,16 +14314,16 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
-            "depends": ""
+            "description": " A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_governor": {
             "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
@@ -14458,8 +14458,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -14490,7 +14490,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -14939,7 +14939,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -14990,8 +14990,8 @@
             "depends": "usbcore,mmc_core"
         },
         "vesafb": {
-            "description": "",
-            "depends": ""
+            "description": "VESA VGA Framebuffer driver (Compiled by RR for DSM)",
+            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -15014,43 +15014,43 @@
             "depends": "backlight"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio_ring,virtio"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -15224,7 +15224,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -15268,16 +15268,16 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_governor": {
             "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
@@ -15412,8 +15412,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -15444,7 +15444,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -16045,7 +16045,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -16108,8 +16108,8 @@
             "depends": "usbcore,mmc_core"
         },
         "vesafb": {
-            "description": "",
-            "depends": ""
+            "description": "VESA VGA Framebuffer driver (Compiled by RR for DSM)",
+            "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -16132,43 +16132,43 @@
             "depends": "backlight"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -16207,7 +16207,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -16318,7 +16318,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -16350,16 +16350,16 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
-            "depends": ""
+            "description": " A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_governor": {
             "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
@@ -16478,8 +16478,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -16510,7 +16510,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -16955,7 +16955,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -17010,43 +17010,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio_ring,virtio"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -17101,7 +17101,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -17224,7 +17224,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -17268,16 +17268,16 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_governor": {
             "description": "CPUfreq governors common code",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
-            "depends": ""
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "depends": "cpufreq_governor"
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
@@ -17396,8 +17396,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -17428,7 +17428,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -18029,7 +18029,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -18096,43 +18096,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -18171,7 +18171,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -18278,7 +18278,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -18314,11 +18314,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": " A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -18442,8 +18442,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -18474,7 +18474,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -18923,7 +18923,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -18978,43 +18978,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio_ring,virtio"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -19069,7 +19069,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -19184,7 +19184,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -19232,11 +19232,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -19360,8 +19360,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -19392,7 +19392,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -19997,7 +19997,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -20064,43 +20064,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -20139,7 +20139,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -20250,7 +20250,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -20286,11 +20286,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": " A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -20414,8 +20414,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -20446,7 +20446,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -20903,7 +20903,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -20958,43 +20958,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio_ring,virtio"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
@@ -21049,7 +21049,7 @@
         },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
-            "depends": ""
+            "depends": "processor"
         },
         "adm1021": {
             "description": "adm1021 driver",
@@ -21168,7 +21168,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "",
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -21216,11 +21216,11 @@
             "depends": "usbserial,usbcore"
         },
         "cpufreq_conservative": {
-            "description": "'cpufreq_conservative' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
             "depends": ""
         },
         "cpufreq_ondemand": {
-            "description": "'cpufreq_ondemand' - A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
+            "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors",
             "depends": ""
         },
         "cpufreq_performance": {
@@ -21344,8 +21344,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "",
-            "depends": ""
+            "description": "Framebuffer base",
+            "depends": "fb_defio,fbdev"
         },
         "fb_defio": {
             "description": "Deferred IO for framebuffers",
@@ -21376,7 +21376,7 @@
             "depends": "fb,softcursor"
         },
         "fbdev": {
-            "description": "",
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
             "depends": ""
         },
         "font": {
@@ -21989,7 +21989,7 @@
         },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
-            "depends": ""
+            "depends": "cdrom"
         },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
@@ -22056,43 +22056,43 @@
             "depends": "mmc_core"
         },
         "virtio": {
-            "description": "",
+            "description": "Virtio bus driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_blk": {
-            "description": "Virtio block driver",
-            "depends": ""
+            "description": "Virtio block driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_console": {
-            "description": "Virtio console driver",
-            "depends": ""
+            "description": "Virtio console driver (Compiled by RR for DSM)",
+            "depends": "virtio,hvc_console,virtio_ring"
         },
         "virtio_input": {
-            "description": "Virtio input device driver",
+            "description": "Virtio input device driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring"
         },
         "virtio_mmio": {
             "description": "Platform bus driver for memory mapped virtio devices",
-            "depends": ""
+            "depends": "virtio,virtio_ring"
         },
         "virtio_net": {
-            "description": "Virtio network driver",
-            "depends": ""
+            "description": "Virtio network driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "virtio_pci": {
-            "description": "virtio-pci",
-            "depends": ""
+            "description": "virtio-pci (Compiled by RR for DSM)",
+            "depends": "virtio_ring,virtio"
         },
         "virtio_ring": {
-            "description": "",
+            "description": "Virtio ring implementation (Compiled by RR for DSM)",
             "depends": ""
         },
         "virtio_scsi": {
-            "description": "Virtio SCSI HBA driver",
-            "depends": ""
+            "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
+            "depends": "virtio,virtio_ring"
         },
         "vmw_pvscsi": {
-            "description": "VMware PVSCSI driver",
+            "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "vmw_vmci": {
