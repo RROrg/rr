@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-05 22:10+0800\n"
+"POT-Creation-Date: 2024-05-14 00:55+0800\n"
 "PO-Revision-Date: 2024-05-05 22:13+0800\n"
 "Last-Translator: Ing <AI>\n"
 "Language-Team: Arabic (Saudi Arabia) <i18n-zh@RROrg>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr "محمل ليس الحرف الأول!"
 
-#: boot.sh:10 init.sh:122
+#: boot.sh:10 init.sh:134
 msgid "Loader is not configured!"
 msgstr "لم يتم تكوين محمل!"
 
@@ -85,35 +85,35 @@ msgstr "سطر الأوامر:\\n"
 msgid "Reboot to boot directly in DSM"
 msgstr "إعادة التشغيل للدخول مباشرة في DSM"
 
-#: boot.sh:196 init.sh:135
+#: boot.sh:196 init.sh:147
 msgid "Detected %s network cards."
 msgstr "تم اكتشاف %s بطاقات الشبكة."
 
-#: boot.sh:197 init.sh:136
+#: boot.sh:197 init.sh:148
 msgid "Checking Connect."
 msgstr "التحقق من الاتصال."
 
-#: boot.sh:209 init.sh:146
+#: boot.sh:209 init.sh:158
 msgid "connected."
 msgstr "متصل."
 
-#: boot.sh:216 init.sh:153
+#: boot.sh:216 init.sh:165
 msgid "Waiting IP."
 msgstr "انتظار عنوان IP."
 
-#: boot.sh:224 init.sh:161
+#: boot.sh:224 init.sh:173
 msgid "DOWN"
 msgstr "مفلق"
 
-#: boot.sh:228 init.sh:165
+#: boot.sh:228 init.sh:177
 msgid "NOT CONNECTED"
 msgstr "غير متصل"
 
-#: boot.sh:232 init.sh:169
+#: boot.sh:232 init.sh:181
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "انتظار (يرجى التحقق من عنوان IP على الطرouter.)"
 
-#: boot.sh:239 init.sh:176
+#: boot.sh:239 init.sh:188
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "الارتباط المحلي (لم يتم اكتشاف خادم DHCP.)"
 
@@ -149,55 +149,55 @@ msgstr "[هذا الواجهة لن تكون عملية. يرجى الانتظا
 msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
 msgstr "لا يوجد أجهزة شبكة! يرجى إعادة تشغيل init.sh بعد الإتصال بالشبكة!"
 
-#: init.sh:98
+#: init.sh:110
 msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM"
 msgstr "ديس التحميل ليس USB أو SATA / SCSI / NVME / MMC DoM"
 
-#: init.sh:107
+#: init.sh:119
 msgid "Loader disk:"
 msgstr "ديس التحميل:"
 
-#: init.sh:115
+#: init.sh:127
 msgid "Loading keymap"
 msgstr "تحميل مفاتيح لوحة المفاتيح"
 
-#: init.sh:125
+#: init.sh:137
 msgid "User requested edit settings."
 msgstr "طلب المستخدم تعديل الإعدادات."
 
-#: init.sh:178
+#: init.sh:190
 msgid "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web terminal."
 msgstr "الوصول \\033[1;34mhttp://%s:7681\\033[0m لتهيئة المحل عبر شبكة الويب."
 
-#: init.sh:189
+#: init.sh:201
 msgid "Call \\033[1;32minit.sh\\033[0m to re get init info"
 msgstr "استدعاء \\033[1;32minit.sh\\033[0m للحصول على معلومات تهيئة جديدة"
 
-#: init.sh:190
+#: init.sh:202
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
 msgstr "استدعاء \\033[1;32mmenu.sh\\033[0m لتهيئة المحل"
 
-#: init.sh:192
+#: init.sh:204
 msgid "User config is on"
 msgstr "تكوين المستخدم مفعل"
 
-#: init.sh:193
+#: init.sh:205
 msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 msgstr "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 
-#: init.sh:194
+#: init.sh:206
 msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 msgstr "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 
-#: init.sh:195
+#: init.sh:207
 msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 msgstr "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 
-#: init.sh:197
+#: init.sh:209
 msgid "Default SSH \\033[1;31mroot\\033[0m password is"
 msgstr "الرجاء تغيير كلمة المرور الافتراضية لـ \\033[1;31mroot\\033[0m"
 
-#: init.sh:215
+#: init.sh:227
 msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
 msgstr "لا يوجد حاليا 4 جيجابايت من الذاكرة, في حالة حدوث خطأ في عملية بناء الملفات, يرجى زيادة حجم الذاكرة."
 
@@ -293,7 +293,7 @@ msgstr "لملفات المضمنة في /tmp/pats/ غير موجودة!\\n"
 msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
 msgstr "يرجى تحميل ملف المضمن إلى مجلد /tmp/pats/ عبر DUFS و إعادة إدخال هذا الخيار.\\n"
 
-#: menu.sh:435 menu.sh:445 menu.sh:3114 menu.sh:3115 menu.sh:3116 menu.sh:3117 menu.sh:3118 menu.sh:3119 menu.sh:3125 menu.sh:3150 menu.sh:3162 menu.sh:3174 menu.sh:3186 menu.sh:3201 menu.sh:3212 menu.sh:3229 menu.sh:3248
+#: menu.sh:435 menu.sh:445 menu.sh:3123 menu.sh:3124 menu.sh:3125 menu.sh:3126 menu.sh:3127 menu.sh:3128 menu.sh:3134 menu.sh:3159 menu.sh:3171 menu.sh:3183 menu.sh:3195 menu.sh:3210 menu.sh:3221 menu.sh:3238 menu.sh:3257
 msgid "Update"
 msgstr "تحديث"
 
@@ -313,7 +313,7 @@ msgstr "تحليل %s ..."
 msgid "Ready!"
 msgstr "جاهز!"
 
-#: menu.sh:486 menu.sh:1312 menu.sh:3271 menu.sh:3338 menu.sh:3356
+#: menu.sh:486 menu.sh:1312 menu.sh:3280 menu.sh:3347 menu.sh:3365
 msgid "Main menu"
 msgstr "القائمة الرئيسية"
 
@@ -325,11 +325,11 @@ msgstr "صنع ..."
 msgid "Error"
 msgstr "خطأ"
 
-#: menu.sh:524 menu.sh:541 menu.sh:546 menu.sh:552 menu.sh:563 menu.sh:571 menu.sh:594 menu.sh:601 menu.sh:605 menu.sh:619 menu.sh:623 menu.sh:631 menu.sh:635 menu.sh:2866 menu.sh:2915 menu.sh:3116 menu.sh:3151 menu.sh:3156
+#: menu.sh:524 menu.sh:541 menu.sh:546 menu.sh:552 menu.sh:563 menu.sh:571 menu.sh:594 menu.sh:601 menu.sh:605 menu.sh:619 menu.sh:623 menu.sh:631 menu.sh:635 menu.sh:2865 menu.sh:2914 menu.sh:3125 menu.sh:3160 menu.sh:3165
 msgid "Addons"
 msgstr "إضافات"
 
-#: menu.sh:525 menu.sh:655 menu.sh:835 menu.sh:976 menu.sh:1341 menu.sh:3339
+#: menu.sh:525 menu.sh:655 menu.sh:835 menu.sh:976 menu.sh:1341 menu.sh:3348
 msgid "Choose a option"
 msgstr "اختر خيار"
 
@@ -349,7 +349,7 @@ msgstr "عرض كل الإضافات"
 msgid "Upload a external addon"
 msgstr "رفع إضافة خارجية"
 
-#: menu.sh:530 menu.sh:662 menu.sh:833 menu.sh:974 menu.sh:1346 menu.sh:2234 menu.sh:3122 menu.sh:3336 menu.sh:3432
+#: menu.sh:530 menu.sh:662 menu.sh:833 menu.sh:974 menu.sh:1346 menu.sh:2234 menu.sh:3131 menu.sh:3345 menu.sh:3441
 msgid "Exit"
 msgstr "الخروج"
 
@@ -377,7 +377,7 @@ msgstr "إختيار إضافة للإزالة"
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n\\n"
 msgstr "\"تمت إضافة الاسم باللون '\\Z4blue\\Zn'، ولم تتم إضافة اللون 'أسود'.\\n\\n"
 
-#: menu.sh:600 menu.sh:734 menu.sh:1354 menu.sh:3199
+#: menu.sh:600 menu.sh:734 menu.sh:1354 menu.sh:3208
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
 msgstr "هذه الميزة متوفرة فقط عندما يتم الوصول إليها من خلال ssh (تحتاج إلى ترminal يدعم بروتوكول ZModem).\\n"
 
@@ -385,7 +385,7 @@ msgstr "هذه الميزة متوفرة فقط عندما يتم الوصول �
 msgid "Please upload the *.addons file."
 msgstr "يرجى تحميل ملف *.addons."
 
-#: menu.sh:620 menu.sh:770 menu.sh:3230 menu.sh:3249
+#: menu.sh:620 menu.sh:770 menu.sh:3239 menu.sh:3258
 msgid "Not a valid file, please try again!"
 msgstr "ليس ملف صالح، يرجى المحاولة مرة أخرى!"
 
@@ -401,7 +401,7 @@ msgstr "الموديول '%s' تمت إضافته إلى ال로در، يرجى 
 msgid "File format not recognized!"
 msgstr "النوع الملف غير معروف!"
 
-#: menu.sh:654 menu.sh:668 menu.sh:681 menu.sh:718 menu.sh:735 menu.sh:745 menu.sh:748 menu.sh:764 menu.sh:769 menu.sh:783 menu.sh:789 menu.sh:2930 menu.sh:2981 menu.sh:3117 menu.sh:3163 menu.sh:3168
+#: menu.sh:654 menu.sh:668 menu.sh:681 menu.sh:718 menu.sh:735 menu.sh:745 menu.sh:748 menu.sh:764 menu.sh:769 menu.sh:783 menu.sh:789 menu.sh:2929 menu.sh:2980 menu.sh:3126 menu.sh:3172 menu.sh:3177
 msgid "Modules"
 msgstr "الموديول"
 
@@ -526,16 +526,16 @@ msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
 msgstr " * \\Z4libata.force=noncq\\Zn\\n    تعطيل NCQ لجميع منافذ SATA.\\n"
 
 #: menu.sh:846
-msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.(Not apply to DT models.)\\n"
-msgstr " * \\Z4SataPortMap=??\\Zn\\n    تعيين منفذ SATA (لا ينطبق على الموديلات DT).\\n"
+msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map(Not apply to DT models).\\n"
+msgstr " * \\Z4SataPortMap=??\\Zn\\n    تعيين ترتيب منفصلات SATA (لا ينطبق على الموديلات DT).\\n"
 
 #: menu.sh:847
-msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence.(Not apply to DT models.)\\n"
-msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    تعيين فهرس القرص, لتغيير ترتيب اسم القرص (لا ينطبق على الموديلات DT).\\n"
+msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence(Not apply to DT models).\\n"
+msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    تعيين ترتيب أرقام الأقراص (لا ينطبق على الموديلات DT).\\n"
 
 #: menu.sh:848
-msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence.(Not apply to DT models.)\\n"
-msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    تعيين ترتيب منفصلات البيانات (لا ينطبق على الموديلات DT).\\n"
+msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence(Not apply to DT models).\\n"
+msgstr "* \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    تعيين ترتيب منفصلات الأقراص (لا ينطبق على الموديلات DT).\\n"
 
 #: menu.sh:849
 msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
@@ -610,16 +610,16 @@ msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
 msgstr " * \\Z4maxdisks=??\\Zn\\n    عدد الأقراص الأكبر المدعومة.\\n"
 
 #: menu.sh:984
-msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask.\\n"
-msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    تmask الأقراص الداخلية(sata).\\n"
+msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask(Not apply to DT models).\\n"
+msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    mask الأقراص الداخلية(لا ينطبق على الموديلات DT).\\n"
 
 #: menu.sh:985
-msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask.\\n"
-msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    mask الأقراص USB.\\n"
+msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask(Not apply to DT models).\\n"
+msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    mask الأقراص Esata(لا ينطبق على الموديلات DT).\\n"
 
 #: menu.sh:986
-msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask.\\n"
-msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    mask الأقراص USB.\\n"
+msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask(Not apply to DT models).\\n"
+msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    mask الأقراص USB(لا ينطبق على الموديلات DT).\\n"
 
 #: menu.sh:987
 msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
@@ -685,7 +685,7 @@ msgstr "تم مسح الملفات المؤقتة. يرجى إعادة 'إستع
 msgid "The pat url is empty. Please re 'Choose a version' before build."
 msgstr "عنوان الملفات المؤقتة فارغ. يرجى إعادة 'اختيار نسخة' قبل البناء."
 
-#: menu.sh:1202 menu.sh:3272
+#: menu.sh:1202 menu.sh:3281
 msgid "Cleaning cache ..."
 msgstr "تم مسح الملفات المؤقتة."
 
@@ -1228,7 +1228,7 @@ msgstr "تنبيه"
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "تم تغيير التكوين، هل ترغب في إعادة بناء الحماية؟"
 
-#: menu.sh:2585 menu.sh:3329
+#: menu.sh:2585 menu.sh:3338
 msgid "Choose a language"
 msgstr "اختر لغة"
 
@@ -1240,7 +1240,7 @@ msgstr "اختيار تخطيط"
 msgid "Choice a keymap"
 msgstr "اختيار خريطة المفاتيح"
 
-#: menu.sh:2631 menu.sh:2729 menu.sh:2866 menu.sh:2930 menu.sh:2996 menu.sh:3052
+#: menu.sh:2631 menu.sh:2729 menu.sh:2865 menu.sh:2929 menu.sh:2995 menu.sh:3051
 msgid "Update %s"
 msgstr "تحديث %s"
 
@@ -1272,15 +1272,15 @@ msgstr "حدث خطأ في تحميل الإصدار الجديد.\\nخطأ: %d:
 msgid "Downloading ..."
 msgstr "تحميل ..."
 
-#: menu.sh:2729 menu.sh:2853 menu.sh:3115 menu.sh:3144
+#: menu.sh:2729 menu.sh:2852 menu.sh:3124 menu.sh:3153
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:2730 menu.sh:2867 menu.sh:2931 menu.sh:2997 menu.sh:3053
+#: menu.sh:2730 menu.sh:2866 menu.sh:2930 menu.sh:2996 menu.sh:3052
 msgid "Extracting update file ..."
 msgstr "استخراج ملف التحديث ..."
 
-#: menu.sh:2741 menu.sh:2786 menu.sh:2878 menu.sh:2942 menu.sh:3008 menu.sh:3064
+#: menu.sh:2741 menu.sh:2785 menu.sh:2877 menu.sh:2941 menu.sh:3007 menu.sh:3063
 msgid "Error extracting update file."
 msgstr "خطأ في استخراج ملف التحديث."
 
@@ -1288,174 +1288,174 @@ msgstr "خطأ في استخراج ملف التحديث."
 msgid "Checksum do not match!"
 msgstr "لا يطابقها التراميخ!"
 
-#: menu.sh:2767
+#: menu.sh:2766
 msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
 msgstr "لا يدعم الإصدار الحالي تحديث آخر.zip. يرجى إعادة صنع قرص التشغيل!"
 
-#: menu.sh:2806 menu.sh:2900 menu.sh:2956 menu.sh:3022 menu.sh:3078
+#: menu.sh:2805 menu.sh:2899 menu.sh:2955 menu.sh:3021 menu.sh:3077
 msgid "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM."
 msgstr "فشل التثبيت بسبب مساحة القرص الصلب غير كافية، يرجى إعادة تخصيص القرص %s على الأقل %sM."
 
-#: menu.sh:2816
+#: menu.sh:2815
 msgid "Installing new files ..."
 msgstr "تثبيت الملفات الجديدة ..."
 
-#: menu.sh:2853 menu.sh:2915 menu.sh:2981 menu.sh:3037 menu.sh:3093
+#: menu.sh:2852 menu.sh:2914 menu.sh:2980 menu.sh:3036 menu.sh:3102
 msgid "%s updated with success!"
 msgstr "%s تم تحديثه بنجاح!"
 
-#: menu.sh:2853
+#: menu.sh:2852
 msgid "Reboot?"
 msgstr "إعادة التشغيل؟"
 
-#: menu.sh:2996 menu.sh:3037 menu.sh:3118 menu.sh:3175 menu.sh:3180
+#: menu.sh:2995 menu.sh:3036 menu.sh:3127 menu.sh:3184 menu.sh:3189
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:3052 menu.sh:3093 menu.sh:3119 menu.sh:3187 menu.sh:3192
+#: menu.sh:3051 menu.sh:3102 menu.sh:3128 menu.sh:3196 menu.sh:3201
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:3114 menu.sh:3137
+#: menu.sh:3123 menu.sh:3146
 msgid "All"
 msgstr "كل"
 
-#: menu.sh:3120
+#: menu.sh:3129
 msgid "Local upload"
 msgstr "الرفع المحلي"
 
-#: menu.sh:3121
+#: menu.sh:3130
 msgid "Pre Release:"
 msgstr "إصدار تجريبي:"
 
-#: menu.sh:3126 menu.sh:3200
+#: menu.sh:3135 menu.sh:3209
 msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download."
 msgstr "سيؤدي تحميل التحديث*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip إلى /tmp/ يدويًا إلى تخطي التنزيل."
 
-#: menu.sh:3151 menu.sh:3163 menu.sh:3175 menu.sh:3187
+#: menu.sh:3160 menu.sh:3172 menu.sh:3184 menu.sh:3196
 msgid "No longer supports update %s separately. Please choose to update All/RR"
 msgstr "لا يدعم التحديث %s بشكل منفصل. يرجى اختيار تحديث الكل/RR"
 
-#: menu.sh:3206
+#: menu.sh:3215
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
 msgstr "يرجى الاحتفاظ بالاسم الملحق متطابق مع اسم الملحق على Github.\\n"
 
-#: menu.sh:3207
+#: menu.sh:3216
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "سيؤدي تحميل update*.zip إلى تحديث RR.\\n"
 
-#: menu.sh:3208
+#: menu.sh:3217
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "سيؤدي تحميل addons*.zip إلى تحديث الموديول.\\n"
 
-#: menu.sh:3209
+#: menu.sh:3218
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "سيؤدي تحميل modules*.zip إلى تحديث الموديول.\\n"
 
-#: menu.sh:3210
+#: menu.sh:3219
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "سيؤدي تحميل rp-lkms*.zip إلى تحديث LKMs.\\n"
 
-#: menu.sh:3211
+#: menu.sh:3220
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "سيؤدي تحميل rr-cks*.zip إلى تحديث CKs.\\n"
 
-#: menu.sh:3283
+#: menu.sh:3292
 msgid "This person is very lazy and hasn't written anything."
 msgstr "هذا الشخص كسول جدًا ولم يكتب شيئًا."
 
-#: menu.sh:3303
+#: menu.sh:3312
 msgid "Choose a model"
 msgstr "اختر موديل"
 
-#: menu.sh:3305
+#: menu.sh:3314
 msgid "Choose a version"
 msgstr "اختر إصدار"
 
-#: menu.sh:3307
+#: menu.sh:3316
 msgid "Parse pat"
 msgstr "تحليل PAT"
 
-#: menu.sh:3313
+#: menu.sh:3322
 msgid "Kernel:"
 msgstr "Kernel:"
 
-#: menu.sh:3315
+#: menu.sh:3324
 msgid "Addons menu"
 msgstr "قائمة الإضافات"
 
-#: menu.sh:3316
+#: menu.sh:3325
 msgid "Modules menu"
 msgstr "قائمة الموديلات"
 
-#: menu.sh:3317
+#: menu.sh:3326
 msgid "Cmdline menu"
 msgstr "قائمة Cmdline"
 
-#: menu.sh:3318
+#: menu.sh:3327
 msgid "Synoinfo menu"
 msgstr "قائمة Synoinfo"
 
-#: menu.sh:3320
+#: menu.sh:3329
 msgid "Advanced menu"
 msgstr "قائمة متقدمة"
 
-#: menu.sh:3323
+#: menu.sh:3332
 msgid "Build the loader"
 msgstr "بناء الحماية"
 
-#: menu.sh:3327
+#: menu.sh:3336
 msgid "Boot the loader"
 msgstr "تشغيل الحماية"
 
-#: menu.sh:3330
+#: menu.sh:3339
 msgid "Choose a keymap"
 msgstr "اختيار مفاتيح"
 
-#: menu.sh:3332
+#: menu.sh:3341
 msgid "Clean disk cache"
 msgstr "تنظيف ذاكرة التخزين المؤقت"
 
-#: menu.sh:3334
+#: menu.sh:3343
 msgid "Update menu"
 msgstr "تحديث القائمة"
 
-#: menu.sh:3335
+#: menu.sh:3344
 msgid "Notepad"
 msgstr "محرر"
 
-#: menu.sh:3357
+#: menu.sh:3366
 msgid "Change ..."
 msgstr "تغيير ..."
 
-#: menu.sh:3425
+#: menu.sh:3434
 msgid "Choose a action"
 msgstr "اختيار عملية"
 
-#: menu.sh:3426
+#: menu.sh:3435
 msgid "Poweroff"
 msgstr "إيقاف"
 
-#: menu.sh:3427
+#: menu.sh:3436
 msgid "Reboot"
 msgstr "إعادة تشغيل"
 
-#: menu.sh:3428
+#: menu.sh:3437
 msgid "Reboot to RR"
 msgstr "إعادة التشغيل إلى RR"
 
-#: menu.sh:3429
+#: menu.sh:3438
 msgid "Reboot to Recovery"
 msgstr "إعادة التشغيل إلى Recovery"
 
-#: menu.sh:3430
+#: menu.sh:3439
 msgid "Reboot to Junior"
 msgstr "إعادة التشغيل إلى Junior"
 
-#: menu.sh:3431
+#: menu.sh:3440
 msgid "Back to shell"
 msgstr "العودة إلى shell"
 
-#: menu.sh:3468
+#: menu.sh:3477
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "اتصل بـ \\اتصل بالرقم \\033[1;32mmenu.sh\\033[0m للعودة إلى القائمة"

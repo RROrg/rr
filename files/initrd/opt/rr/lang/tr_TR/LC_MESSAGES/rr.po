@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-05 22:10+0800\n"
+"POT-Creation-Date: 2024-05-14 00:55+0800\n"
 "PO-Revision-Date: 2024-05-05 22:01+0800\n"
 "Last-Translator: miracozturk <info@miracozturk.com.tr>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/rrorg/rr/tr/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr "Yükleyici başlatılamıyor!"
 
-#: boot.sh:10 init.sh:122
+#: boot.sh:10 init.sh:134
 msgid "Loader is not configured!"
 msgstr "Yükleyici yapılandırılmamış!"
 
@@ -85,35 +85,35 @@ msgstr "Cmdline:\\n"
 msgid "Reboot to boot directly in DSM"
 msgstr "DSM'ye doğrudan yeniden başlatın"
 
-#: boot.sh:196 init.sh:135
+#: boot.sh:196 init.sh:147
 msgid "Detected %s network cards."
 msgstr "%s ağ kartı tespit edildi."
 
-#: boot.sh:197 init.sh:136
+#: boot.sh:197 init.sh:148
 msgid "Checking Connect."
 msgstr "Bağlantı kontrolü yapılıyor."
 
-#: boot.sh:209 init.sh:146
+#: boot.sh:209 init.sh:158
 msgid "connected."
 msgstr "bağlandı."
 
-#: boot.sh:216 init.sh:153
+#: boot.sh:216 init.sh:165
 msgid "Waiting IP."
 msgstr "IP adresi bekleniyor."
 
-#: boot.sh:224 init.sh:161
+#: boot.sh:224 init.sh:173
 msgid "DOWN"
 msgstr "DOWN"
 
-#: boot.sh:228 init.sh:165
+#: boot.sh:228 init.sh:177
 msgid "NOT CONNECTED"
 msgstr "BAĞLANAMADI"
 
-#: boot.sh:232 init.sh:169
+#: boot.sh:232 init.sh:181
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "ZAMAN AZALDI (Lütfen yönlendiricinin IP adresini kontrol edin.)"
 
-#: boot.sh:239 init.sh:176
+#: boot.sh:239 init.sh:188
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "LINK LOCAL (DHCP sunucusu tespit edilemedi.)"
 
@@ -149,55 +149,55 @@ msgstr "[Bu arayüz çalışmayacak. Birkaç dakika bekleyin.\\nSynology bulunam
 msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
 msgstr "Ağ bağlantısı yapıldıktan sonra init.sh'yi yeniden çalıştırın!"
 
-#: init.sh:98
+#: init.sh:110
 msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM"
 msgstr "Yükleyici disk USB veya SATA/SCSI/NVME/MMC DoM değil"
 
-#: init.sh:107
+#: init.sh:119
 msgid "Loader disk:"
 msgstr "Yükleyici disk:"
 
-#: init.sh:115
+#: init.sh:127
 msgid "Loading keymap"
 msgstr "Kullanıcı tuş kartı yükleniyor"
 
-#: init.sh:125
+#: init.sh:137
 msgid "User requested edit settings."
 msgstr "Kullanıcı ayarlarını düzenlemek ist."
 
-#: init.sh:178
+#: init.sh:190
 msgid "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web terminal."
 msgstr "\\033[1;34mhttp://%s:7681\\033[0m ile yükleyiciyi web terminal üzerinden yapılandırın."
 
-#: init.sh:189
+#: init.sh:201
 msgid "Call \\033[1;32minit.sh\\033[0m to re get init info"
 msgstr "\\033[1;32minit.sh\\033[0m ile yükleyici bilgilerini yeniden alın"
 
-#: init.sh:190
+#: init.sh:202
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
 msgstr "\\033[1;32mmenu.sh\\033[0m ile yükleyiciyi yapılandırın"
 
-#: init.sh:192
+#: init.sh:204
 msgid "User config is on"
 msgstr "Kullanıcı yapılandırması açı"
 
-#: init.sh:193
+#: init.sh:205
 msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 msgstr "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 
-#: init.sh:194
+#: init.sh:206
 msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 msgstr "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 
-#: init.sh:195
+#: init.sh:207
 msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 msgstr "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 
-#: init.sh:197
+#: init.sh:209
 msgid "Default SSH \\033[1;31mroot\\033[0m password is"
 msgstr "Varsayılan SSH \\033[1;31mroot\\033[0m şifresi"
 
-#: init.sh:215
+#: init.sh:227
 msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
 msgstr "4GB'dan az RAM varsa, yükleyici oluşturulurken hata oluşursa, belleği artırın."
 
@@ -293,7 +293,7 @@ msgstr "/tmp/pats/ klasöründe pat dosyası bulunamadı!\\n"
 msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
 msgstr "pat dosyasını /tmp/pats/ klasörüne DUFS ile yükleyin ve bu seçeneği yeniden girin.\\n"
 
-#: menu.sh:435 menu.sh:445 menu.sh:3114 menu.sh:3115 menu.sh:3116 menu.sh:3117 menu.sh:3118 menu.sh:3119 menu.sh:3125 menu.sh:3150 menu.sh:3162 menu.sh:3174 menu.sh:3186 menu.sh:3201 menu.sh:3212 menu.sh:3229 menu.sh:3248
+#: menu.sh:435 menu.sh:445 menu.sh:3123 menu.sh:3124 menu.sh:3125 menu.sh:3126 menu.sh:3127 menu.sh:3128 menu.sh:3134 menu.sh:3159 menu.sh:3171 menu.sh:3183 menu.sh:3195 menu.sh:3210 menu.sh:3221 menu.sh:3238 menu.sh:3257
 msgid "Update"
 msgstr "Güncelle"
 
@@ -313,7 +313,7 @@ msgstr "%s ayrıştırılıyor..."
 msgid "Ready!"
 msgstr "Hazır!"
 
-#: menu.sh:486 menu.sh:1312 menu.sh:3271 menu.sh:3338 menu.sh:3356
+#: menu.sh:486 menu.sh:1312 menu.sh:3280 menu.sh:3347 menu.sh:3365
 msgid "Main menu"
 msgstr "Ana menü"
 
@@ -325,11 +325,11 @@ msgstr "Hazırlanıyor..."
 msgid "Error"
 msgstr "Hata"
 
-#: menu.sh:524 menu.sh:541 menu.sh:546 menu.sh:552 menu.sh:563 menu.sh:571 menu.sh:594 menu.sh:601 menu.sh:605 menu.sh:619 menu.sh:623 menu.sh:631 menu.sh:635 menu.sh:2866 menu.sh:2915 menu.sh:3116 menu.sh:3151 menu.sh:3156
+#: menu.sh:524 menu.sh:541 menu.sh:546 menu.sh:552 menu.sh:563 menu.sh:571 menu.sh:594 menu.sh:601 menu.sh:605 menu.sh:619 menu.sh:623 menu.sh:631 menu.sh:635 menu.sh:2865 menu.sh:2914 menu.sh:3125 menu.sh:3160 menu.sh:3165
 msgid "Addons"
 msgstr "Eklentiler"
 
-#: menu.sh:525 menu.sh:655 menu.sh:835 menu.sh:976 menu.sh:1341 menu.sh:3339
+#: menu.sh:525 menu.sh:655 menu.sh:835 menu.sh:976 menu.sh:1341 menu.sh:3348
 msgid "Choose a option"
 msgstr "Seçenek seçin"
 
@@ -349,7 +349,7 @@ msgstr "Tüm eklentileri göster"
 msgid "Upload a external addon"
 msgstr "Harici bir eklenti yükleyin"
 
-#: menu.sh:530 menu.sh:662 menu.sh:833 menu.sh:974 menu.sh:1346 menu.sh:2234 menu.sh:3122 menu.sh:3336 menu.sh:3432
+#: menu.sh:530 menu.sh:662 menu.sh:833 menu.sh:974 menu.sh:1346 menu.sh:2234 menu.sh:3131 menu.sh:3345 menu.sh:3441
 msgid "Exit"
 msgstr "Çıkış"
 
@@ -377,7 +377,7 @@ msgstr "Eklentiyi kaldırmak için seçi"
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n\\n"
 msgstr "\\Z4mavi\\Zn adlı isimli eklentiler eklendi, \\Z0siyah\\Zn adlı isimli eklentiler eklenmedi.\\n\\n"
 
-#: menu.sh:600 menu.sh:734 menu.sh:1354 menu.sh:3199
+#: menu.sh:600 menu.sh:734 menu.sh:1354 menu.sh:3208
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
 msgstr "Bu özellik ssh üzerinden erişilirken (ZModem protokolünü destekleyen bir terminal gerektirir) yalnızca kullanılabilir.\\n\\n"
 
@@ -385,7 +385,7 @@ msgstr "Bu özellik ssh üzerinden erişilirken (ZModem protokolünü destekleye
 msgid "Please upload the *.addons file."
 msgstr "*.addons dosyasını yükleyin."
 
-#: menu.sh:620 menu.sh:770 menu.sh:3230 menu.sh:3249
+#: menu.sh:620 menu.sh:770 menu.sh:3239 menu.sh:3258
 msgid "Not a valid file, please try again!"
 msgstr "Geçersiz dosya, lütfen tekrar deneyin!"
 
@@ -401,7 +401,7 @@ msgstr "'%s' eklentisi yükleyiciye eklendi, 'Eklenti ekle' menüsünde etkinle�
 msgid "File format not recognized!"
 msgstr "Dosya biçimi tanınmıyor!"
 
-#: menu.sh:654 menu.sh:668 menu.sh:681 menu.sh:718 menu.sh:735 menu.sh:745 menu.sh:748 menu.sh:764 menu.sh:769 menu.sh:783 menu.sh:789 menu.sh:2930 menu.sh:2981 menu.sh:3117 menu.sh:3163 menu.sh:3168
+#: menu.sh:654 menu.sh:668 menu.sh:681 menu.sh:718 menu.sh:735 menu.sh:745 menu.sh:748 menu.sh:764 menu.sh:769 menu.sh:783 menu.sh:789 menu.sh:2929 menu.sh:2980 menu.sh:3126 menu.sh:3172 menu.sh:3177
 msgid "Modules"
 msgstr "Modüller"
 
@@ -526,16 +526,16 @@ msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
 msgstr " * \\Z4libata.force=noncq\\Zn\\n    Tüm SATA bağlantı noktaları için NCQ'yi devre dışı bırakır.\\n"
 
 #: menu.sh:846
-msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.(Not apply to DT models.)\\n"
-msgstr " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.(DT modeller için geçerli değil.)\\n"
+msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map(Not apply to DT models).\\n"
+msgstr " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map(DT modeller için geçerli değil).\\n"
 
 #: menu.sh:847
-msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence.(Not apply to DT models.)\\n"
-msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence.(Not apply to DT models.)\\n"
+msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence(Not apply to DT models).\\n"
+msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Disk adı dizisini değiştirin(DT modeller için geçerli değil).\\n"
 
 #: menu.sh:848
-msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence.(Not apply to DT models.)\\n"
-msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Veri bağlantı noktası sırasını değiştirin.(DT modeller için geçerli değil.)\\n"
+msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence(Not apply to DT models).\\n"
+msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Veri bağlantı noktası dizisini değiştirin(DT modeller için geçerli değil).\\n"
 
 #: menu.sh:849
 msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
@@ -610,16 +610,16 @@ msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
 msgstr " * \\Z4maxdisks=??\\Zn\\n    Desteklenen disk sayısı.\\n"
 
 #: menu.sh:984
-msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask.\\n"
-msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask.\\n"
+msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask(Not apply to DT models).\\n"
+msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask(DT modeller için geçerli değil).\\n"
 
 #: menu.sh:985
-msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask.\\n"
-msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask.\\n"
+msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask(Not apply to DT models).\\n"
+msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask(DT modeller için geçerli değil).\\n"
 
 #: menu.sh:986
-msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask.\\n"
-msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask.\\n"
+msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask(Not apply to DT models).\\n"
+msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask(DT modeller için geçerli değil).\\n"
 
 #: menu.sh:987
 msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
@@ -685,7 +685,7 @@ msgstr "Önbellek temizlendi. Lütfen 'Durumu geri yüklemeye çalış' yapmadan
 msgid "The pat url is empty. Please re 'Choose a version' before build."
 msgstr "Pat url boş. Lütfen 'Bir sürüm seç' yapmadan önce yeniden derle."
 
-#: menu.sh:1202 menu.sh:3272
+#: menu.sh:1202 menu.sh:3281
 msgid "Cleaning cache ..."
 msgstr "Önbellek temizleniyor ..."
 
@@ -1228,7 +1228,7 @@ msgstr "Uyarı"
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "Yapılandırma değiştirildi, yükleyiciyi yeniden oluşturmak ister misiniz?"
 
-#: menu.sh:2585 menu.sh:3329
+#: menu.sh:2585 menu.sh:3338
 msgid "Choose a language"
 msgstr "Dil seçin"
 
@@ -1240,7 +1240,7 @@ msgstr "Düzen seçin"
 msgid "Choice a keymap"
 msgstr "Anahtar haritası seçin"
 
-#: menu.sh:2631 menu.sh:2729 menu.sh:2866 menu.sh:2930 menu.sh:2996 menu.sh:3052
+#: menu.sh:2631 menu.sh:2729 menu.sh:2865 menu.sh:2929 menu.sh:2995 menu.sh:3051
 msgid "Update %s"
 msgstr "%s güncelle"
 
@@ -1272,15 +1272,15 @@ msgstr "Yeni versiyon indirilirken hata oluştu.\\nHata: %d:%d\\n(Lütfen https:
 msgid "Downloading ..."
 msgstr "İndiriliyor ..."
 
-#: menu.sh:2729 menu.sh:2853 menu.sh:3115 menu.sh:3144
+#: menu.sh:2729 menu.sh:2852 menu.sh:3124 menu.sh:3153
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:2730 menu.sh:2867 menu.sh:2931 menu.sh:2997 menu.sh:3053
+#: menu.sh:2730 menu.sh:2866 menu.sh:2930 menu.sh:2996 menu.sh:3052
 msgid "Extracting update file ..."
 msgstr "Güncelleme dosyası çıkarılıyor ..."
 
-#: menu.sh:2741 menu.sh:2786 menu.sh:2878 menu.sh:2942 menu.sh:3008 menu.sh:3064
+#: menu.sh:2741 menu.sh:2785 menu.sh:2877 menu.sh:2941 menu.sh:3007 menu.sh:3063
 msgid "Error extracting update file."
 msgstr "Güncelleme dosyası çıkarılırken hata oluştu."
 
@@ -1288,174 +1288,174 @@ msgstr "Güncelleme dosyası çıkarılırken hata oluştu."
 msgid "Checksum do not match!"
 msgstr "Sağlama kontrolü eşleşmiyor!"
 
-#: menu.sh:2767
+#: menu.sh:2766
 msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
 msgstr "Geçerli sürüm, en son güncelleme.zip'e yükseltilmesini desteklemiyor. Lütfen başlatıcı diskini yeniden oluşturun!"
 
-#: menu.sh:2806 menu.sh:2900 menu.sh:2956 menu.sh:3022 menu.sh:3078
+#: menu.sh:2805 menu.sh:2899 menu.sh:2955 menu.sh:3021 menu.sh:3077
 msgid "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM."
 msgstr "Yerel sabit sürücüde kalan disk alanının yetersiz olması nedeniyle yükleme başarısız oldu; %s diskinizi en az %sM ile yeniden tahsis etmeyi düşünün."
 
-#: menu.sh:2816
+#: menu.sh:2815
 msgid "Installing new files ..."
 msgstr "Yeni dosyalar yükleniyor ..."
 
-#: menu.sh:2853 menu.sh:2915 menu.sh:2981 menu.sh:3037 menu.sh:3093
+#: menu.sh:2852 menu.sh:2914 menu.sh:2980 menu.sh:3036 menu.sh:3102
 msgid "%s updated with success!"
 msgstr "%s başarıyla güncellendi!"
 
-#: menu.sh:2853
+#: menu.sh:2852
 msgid "Reboot?"
 msgstr "Yeniden başlatılsın mı?"
 
-#: menu.sh:2996 menu.sh:3037 menu.sh:3118 menu.sh:3175 menu.sh:3180
+#: menu.sh:2995 menu.sh:3036 menu.sh:3127 menu.sh:3184 menu.sh:3189
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:3052 menu.sh:3093 menu.sh:3119 menu.sh:3187 menu.sh:3192
+#: menu.sh:3051 menu.sh:3102 menu.sh:3128 menu.sh:3196 menu.sh:3201
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:3114 menu.sh:3137
+#: menu.sh:3123 menu.sh:3146
 msgid "All"
 msgstr "Tümü"
 
-#: menu.sh:3120
+#: menu.sh:3129
 msgid "Local upload"
 msgstr "Yerel yükleme"
 
-#: menu.sh:3121
+#: menu.sh:3130
 msgid "Pre Release:"
 msgstr "Ön Sürüm:"
 
-#: menu.sh:3126 menu.sh:3200
+#: menu.sh:3135 menu.sh:3209
 msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download."
 msgstr "/tmp/ dizinine update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip dosyalarını elle yüklemek, indirmeyi atlayacaktır."
 
-#: menu.sh:3151 menu.sh:3163 menu.sh:3175 menu.sh:3187
+#: menu.sh:3160 menu.sh:3172 menu.sh:3184 menu.sh:3196
 msgid "No longer supports update %s separately. Please choose to update All/RR"
 msgstr "%s güncellemesini ayrı olarak desteklemez. Lütfen tümü/RR güncellemesini seçin."
 
-#: menu.sh:3206
+#: menu.sh:3215
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
 msgstr "Github'daki ek dosyanın adı ile ek dosyanın adı tutarlı kalmalıdır.\\n"
 
-#: menu.sh:3207
+#: menu.sh:3216
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "update*.zip güncellemeyi yükleyecektir.\\n"
 
-#: menu.sh:3208
+#: menu.sh:3217
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "addons*.zip eklentileri güncellemeyi yükleyecektir.\\n"
 
-#: menu.sh:3209
+#: menu.sh:3218
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "modules*.zip modülleri güncellemeyi yükleyecektir.\\n"
 
-#: menu.sh:3210
+#: menu.sh:3219
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "rp-lkms*.zip LKMs'i güncellemeyi yükleyecektir.\\n"
 
-#: menu.sh:3211
+#: menu.sh:3220
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "rr-cks*.zip CK'leri güncellemeyi yükleyecektir.\\n"
 
-#: menu.sh:3283
+#: menu.sh:3292
 msgid "This person is very lazy and hasn't written anything."
 msgstr "Bu kişi çok hafif ve hiçbir şey yazmamış."
 
-#: menu.sh:3303
+#: menu.sh:3312
 msgid "Choose a model"
 msgstr "Bir model seçin"
 
-#: menu.sh:3305
+#: menu.sh:3314
 msgid "Choose a version"
 msgstr "Bir sürüm seçin"
 
-#: menu.sh:3307
+#: menu.sh:3316
 msgid "Parse pat"
 msgstr "Pat'i çöz"
 
-#: menu.sh:3313
+#: menu.sh:3322
 msgid "Kernel:"
 msgstr "Çekirdek:"
 
-#: menu.sh:3315
+#: menu.sh:3324
 msgid "Addons menu"
 msgstr "Eklentiler menüsü"
 
-#: menu.sh:3316
+#: menu.sh:3325
 msgid "Modules menu"
 msgstr "Modüller menüsü"
 
-#: menu.sh:3317
+#: menu.sh:3326
 msgid "Cmdline menu"
 msgstr "Cmdline menüsü"
 
-#: menu.sh:3318
+#: menu.sh:3327
 msgid "Synoinfo menu"
 msgstr "Synoinfo menüsü"
 
-#: menu.sh:3320
+#: menu.sh:3329
 msgid "Advanced menu"
 msgstr "Gelişmiş menüsü"
 
-#: menu.sh:3323
+#: menu.sh:3332
 msgid "Build the loader"
 msgstr "Loader derleniyor"
 
-#: menu.sh:3327
+#: menu.sh:3336
 msgid "Boot the loader"
 msgstr "Loader başlatılıyor"
 
-#: menu.sh:3330
+#: menu.sh:3339
 msgid "Choose a keymap"
 msgstr "Klavye haritası seçin"
 
-#: menu.sh:3332
+#: menu.sh:3341
 msgid "Clean disk cache"
 msgstr "Disk önbelleği temizleniyor"
 
-#: menu.sh:3334
+#: menu.sh:3343
 msgid "Update menu"
 msgstr "Menü güncelleniyor"
 
-#: menu.sh:3335
+#: menu.sh:3344
 msgid "Notepad"
 msgstr "Not Defteri"
 
-#: menu.sh:3357
+#: menu.sh:3366
 msgid "Change ..."
 msgstr "Değiştir ..."
 
-#: menu.sh:3425
+#: menu.sh:3434
 msgid "Choose a action"
 msgstr "Eylem seçin"
 
-#: menu.sh:3426
+#: menu.sh:3435
 msgid "Poweroff"
 msgstr "Kapat"
 
-#: menu.sh:3427
+#: menu.sh:3436
 msgid "Reboot"
 msgstr "Yeniden başlat"
 
-#: menu.sh:3428
+#: menu.sh:3437
 msgid "Reboot to RR"
 msgstr "RR'ye yeniden başlat"
 
-#: menu.sh:3429
+#: menu.sh:3438
 msgid "Reboot to Recovery"
 msgstr "Recovery'ye yeniden başlat"
 
-#: menu.sh:3430
+#: menu.sh:3439
 msgid "Reboot to Junior"
 msgstr "Junior'ya yeniden başlat"
 
-#: menu.sh:3431
+#: menu.sh:3440
 msgid "Back to shell"
 msgstr "Shell'e geri dön"
 
-#: menu.sh:3468
+#: menu.sh:3477
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "\\033[1;32mmenu.sh\\033[0m'i çağırarak menüye geri dönün"
