@@ -113,7 +113,7 @@ function modelMenu() {
   MJ="$(python include/functions.py getmodels -p "${PS[*]}")"
   if [ -z "${MJ}" -o "${MJ}" = "[]" ]; then
     DIALOG --title "$(TEXT "Model")" \
-      --msgbox "$(TEXT "Failed to get models, please try again!")" 0 0
+      --msgbox "$(TEXT "Failed to get models, Please check the network and try again, or use 'Parse Pat'!")" 0 0
     return 1
   fi
   echo -n "" >"${TMP_PATH}/modellist"
