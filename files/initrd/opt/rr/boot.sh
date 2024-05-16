@@ -64,7 +64,7 @@ DMI="$(dmesg 2>/dev/null | grep -i "DMI:" | sed 's/\[.*\] DMI: //i')"
 CPU="$(echo $(cat /proc/cpuinfo 2>/dev/null | grep 'model name' | uniq | awk -F':' '{print $2}'))"
 MEM="$(free -m 2>/dev/null | grep -i mem | awk '{print $2}') MB"
 
-echo -e "$(TEXT "Model:   ") \033[1;36m${MODEL}\033[0m"
+echo -e "$(TEXT "Model:   ") \033[1;36m${MODEL}(${PLATFORM})\033[0m"
 echo -e "$(TEXT "Version: ") \033[1;36m${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))\033[0m"
 echo -e "$(TEXT "Kernel:  ") \033[1;36m${KERNEL}\033[0m"
 echo -e "$(TEXT "LKM:     ") \033[1;36m${LKM}\033[0m"
