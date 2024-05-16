@@ -99,8 +99,14 @@ def getmodels(platforms=None):
     """
     Get Syno Models.
     """
-    import re, json
-    import requests
+    import json, requests
+    from requests.adapters import HTTPAdapter
+    from requests.packages.urllib3.util.retry import Retry # type: ignore
+
+    adapter = HTTPAdapter(max_retries=Retry(total=3, backoff_factor=0.5, status_forcelist=[500, 502, 503, 504]))
+    session = requests.Session()
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
 
     if platforms is not None and platforms != "":
         PS = platforms.lower().replace(",", " ").split()
@@ -108,23 +114,52 @@ def getmodels(platforms=None):
         PS = []
 
     models = []
-    req = requests.get("https://autoupdate.synology.com/os/v2")
-    req.encoding = "utf-8"
-    data = json.loads(req.text)
+    if len(models) == 0:
+        try:
+            req = session.get("https://autoupdate.synology.com/os/v2", timeout=10)
+            req.encoding = "utf-8"
+            data = json.loads(req.text)
 
-    for I in data["channel"]["item"]:
-        if not I["title"].startswith("DSM"):
-            continue
-        for J in I["model"]:
-            arch = J["mUnique"].split("_")[1]
-            name = J["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
-            if len(PS) > 0 and arch.lower() not in PS:
-                continue
-            if any(name == B["name"] for B in models):
-                continue
-            models.append({"name": name, "arch": arch})
+            for I in data["channel"]["item"]:
+                if not I["title"].startswith("DSM"):
+                    continue
+                for J in I["model"]:
+                    arch = J["mUnique"].split("_")[1]
+                    name = J["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
+                    if len(PS) > 0 and arch.lower() not in PS:
+                        continue
+                    if any(name == B["name"] for B in models):
+                        continue
+                    models.append({"name": name, "arch": arch})
 
-    models = sorted(models, key=lambda k: (k["arch"], k["name"]))
+            models = sorted(models, key=lambda k: (k["arch"], k["name"]))
+
+        except:
+            pass
+
+    if len(models) == 0:
+        try:
+            import re
+            from bs4 import BeautifulSoup
+
+            req = session.get("https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have", timeout=10)
+            req.encoding = "utf-8"
+            bs = BeautifulSoup(req.text, "html.parser")
+            p = re.compile(r"data: (.*?),$", re.MULTILINE | re.DOTALL)
+            data = json.loads(p.search(bs.find("script", string=p).prettify()).group(1))
+            model = "(.*?)"  # (.*?): all, FS6400: one
+            p = re.compile(r"<td>{}<\/td><td>(.*?)<\/td><td>(.*?)<\/td><td>(.*?)<\/td><td>(.*?)<\/td><td>(.*?)<\/td><td>(.*?)<\/td>".format(model), re.MULTILINE | re.DOTALL,)
+            it = p.finditer(data["preload"]["content"].replace("\n", "").replace("\t", ""))
+            for i in it:
+                d = i.groups()
+                if len(d) == 6:
+                    d = model + d
+                if len(PS) > 0 and d[5].lower() not in PS:
+                    continue
+                models.append({"name": d[0].split("<br")[0], "arch": d[5].lower()})
+        except:
+            pass
+
     print(json.dumps(models, indent=4))
 
 
