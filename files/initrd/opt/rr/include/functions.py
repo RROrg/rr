@@ -141,8 +141,9 @@ def getmodels(platforms=None):
         try:
             import re
             from bs4 import BeautifulSoup
-
-            req = session.get("https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have", timeout=10)
+            #url="https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have"
+            url="https://kb.synology.cn/zh-cn/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have"
+            req = session.get(url, timeout=10)
             req.encoding = "utf-8"
             bs = BeautifulSoup(req.text, "html.parser")
             p = re.compile(r"data: (.*?),$", re.MULTILINE | re.DOTALL)
