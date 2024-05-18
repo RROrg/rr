@@ -112,8 +112,13 @@ function modelMenu() {
   PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
   MJ="$(python include/functions.py getmodels -p "${PS[*]}")"
   if [ -z "${MJ}" -o "${MJ}" = "[]" ]; then
-    DIALOG --title "$(TEXT "Model")" \
-      --msgbox "$(TEXT "Failed to get models, Please check the network and try again, or use 'Parse Pat'!")" 0 0
+    if _get_fastest synology.com >/dev/null 2>&1; then
+      DIALOG --title "$(TEXT "Model")" \
+        --msgbox "$(TEXT "Failed to get models, Please check the network and try again, or use 'Parse Pat'!")" 0 0
+    else
+      DIALOG --title "$(TEXT "Model")" \
+        --msgbox "$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")" 0 0
+    fi
     return 1
   fi
   echo -n "" >"${TMP_PATH}/modellist"
@@ -266,8 +271,7 @@ function productversMenu() {
       if [ -z "${paturl}" -o -z "${patsum}" ]; then
         if [ ${NETERR} -ne 0 ]; then
           MSG=""
-          MSG+="$(TEXT "Network error, please check the network connection and try again.")"
-          MSG+="\n$(TEXT "Or use 'Parse pat' function for installation.")"
+          MSG+="$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")"
         else
           MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.\nOr click 'Retry'.")"
         fi
@@ -2138,6 +2142,45 @@ function cloneBootloaderDisk() {
   return
 }
 
+function reportBugs() {
+  if [ -d "${PART1_PATH}/logs" ]; then
+    DSMROOTS="$(findDSMRoot)"
+    if [ -n "${DSMROOTS}" ]; then
+      mkdir -p "${TMP_PATH}/mdX"
+      for I in ${DSMROOTS}; do
+        mount -t ext4 "${I}" "${TMP_PATH}/mdX"
+        [ $? -ne 0 ] && continue
+        mkdir -p "${PART1_PATH}/logs/md0/log"
+        cp -rf ${TMP_PATH}/mdX/.log.junior "${PART1_PATH}/logs/md0"
+        cp -rf ${TMP_PATH}/mdX/var/log/messages ${TMP_PATH}/mdX/var/log/*.log "${PART1_PATH}/logs/md0/log"
+        umount "${TMP_PATH}/mdX"
+      done
+      rm -rf "${TMP_PATH}/mdX"
+    fi
+    rm -f "${TMP_PATH}/logs.tar.gz"
+    tar -czf "${TMP_PATH}/logs.tar.gz" -C "${PART1_PATH}" logs
+    if [ -z "${SSH_TTY}" ]; then # web
+      mv -f "${TMP_PATH}/logs.tar.gz" "/var/www/data/logs.tar.gz"
+      URL="http://$(getIP)/logs.tar.gz"
+      DIALOG --title "$(TEXT "Advanced")" \
+        --msgbox "$(printf "$(TEXT "Please via %s to download the logs,\nAnd go to github to create an issue and upload the logs.")" "${URL}")" 0 0
+    else
+      sz -be -B 536870912 "${TMP_PATH}/logs.tar.gz"
+      DIALOG --title "$(TEXT "Advanced")" \
+        --msgbox "$(TEXT "Please go to github to create an issue and upload the logs.")" 0 0
+    fi
+  else
+    MSG=""
+    MSG+="$(TEXT "\Z1No logs found!\Zn\n\n")"
+    MSG+="$(TEXT "Please do as follows:\n")"
+    MSG+="$(TEXT " 1. Add dbgutils in addons and rebuild.\n")"
+    MSG+="$(TEXT " 2. Wait 10 minutes after booting.\n")"
+    MSG+="$(TEXT " 3. Reboot into RR and go to this option.\n")"
+    DIALOG --title "$(TEXT "Advanced")" \
+      --msgbox "${MSG}" 0 0
+  fi
+}
+
 ###############################################################################
 # Set proxy
 # $1 - KEY
@@ -2425,29 +2468,7 @@ function advancedMenu() {
       NEXT="e"
       ;;
     v)
-      if [ -d "${PART1_PATH}/logs" ]; then
-        rm -f "${TMP_PATH}/logs.tar.gz"
-        tar -czf "${TMP_PATH}/logs.tar.gz" -C "${PART1_PATH}" logs
-        if [ -z "${SSH_TTY}" ]; then # web
-          mv -f "${TMP_PATH}/logs.tar.gz" "/var/www/data/logs.tar.gz"
-          URL="http://$(getIP)/logs.tar.gz"
-          DIALOG --title "$(TEXT "Advanced")" \
-            --msgbox "$(printf "$(TEXT "Please via %s to download the logs,\nAnd go to github to create an issue and upload the logs.")" "${URL}")" 0 0
-        else
-          sz -be -B 536870912 "${TMP_PATH}/logs.tar.gz"
-          DIALOG --title "$(TEXT "Advanced")" \
-            --msgbox "$(TEXT "Please go to github to create an issue and upload the logs.")" 0 0
-        fi
-      else
-        MSG=""
-        MSG+="$(TEXT "\Z1No logs found!\Zn\n\n")"
-        MSG+="$(TEXT "Please do as follows:\n")"
-        MSG+="$(TEXT " 1. Add dbgutils in addons and rebuild.\n")"
-        MSG+="$(TEXT " 2. Wait 10 minutes after booting.\n")"
-        MSG+="$(TEXT " 3. Reboot into RR and go to this option.\n")"
-        DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "${MSG}" 0 0
-      fi
+      reportBugs
       NEXT="e"
       ;;
     5)
