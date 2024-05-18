@@ -161,6 +161,7 @@ def getmodels(platforms=None):
         except:
             pass
 
+    models.sort(key=lambda x: (x["arch"], x["name"]))
     print(json.dumps(models, indent=4))
 
 

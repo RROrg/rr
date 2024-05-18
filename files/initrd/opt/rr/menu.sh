@@ -135,14 +135,16 @@ function modelMenu() {
       FLGNEX=0
       while read M A; do
         COMPATIBLE=1
-        DT="$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")"
-        FLAGS="$(readConfigArray "platforms.${A}.flags" "${WORK_PATH}/platforms.yml")"
-        for F in "${FLAGS}"; do if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
-          COMPATIBLE=0
-          FLGNEX=1
-          break
-        fi; done
-        [ "${DT}" = "true" ] && DT="DT" || DT=""
+        if [ ${RESTRICT} -eq 1 ]; then
+          for F in $(readConfigArray "platforms.${A}.flags" "${WORK_PATH}/platforms.yml"); do
+            if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
+              COMPATIBLE=0
+              FLGNEX=1
+              break
+            fi
+          done
+        fi
+        [ "$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")" = "true" ] && DT="DT" || DT=""
         [ ${COMPATIBLE} -eq 1 ] && echo "${M} \"$(printf "\Zb%-15s %-2s\Zn" "${A}" "${DT}")\" " >>"${TMP_PATH}/menu"
       done <<<$(cat "${TMP_PATH}/modellist")
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
