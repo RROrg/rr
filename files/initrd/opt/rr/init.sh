@@ -77,8 +77,9 @@ if [ -f "${PART2_PATH}/GRUB_VER" ]; then
 fi
 
 if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
-  _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
-
+  if arrayExistItem "sortnetif:" $(readConfigMap "addons" "${USER_CONFIG_FILE}"); then
+    _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
+  fi
   for ETH in ${ETHX}; do
     [ "${ETH::4}" = "wlan" ] && connectwlanif "${ETH}" && sleep 1
     MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
