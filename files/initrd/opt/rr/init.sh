@@ -165,7 +165,6 @@ done
 echo "$(TEXT "Waiting IP.")"
 for N in ${ETHX}; do
   COUNT=0
-  /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
   DRIVER=$(ls -ld /sys/class/net/${N}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
   echo -en "${N}(${DRIVER}): "
   while true; do
