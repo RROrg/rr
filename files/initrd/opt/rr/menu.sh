@@ -986,6 +986,7 @@ function synoinfoMenu() {
     a)
       MSG=""
       MSG+="$(TEXT "Commonly used synoinfo:\n")"
+      MSG+="$(TEXT " * \Z4support_apparmor=no\Zn\n    Disable apparmor.\n")"
       MSG+="$(TEXT " * \Z4maxdisks=??\Zn\n    Maximum number of disks supported.\n")"
       MSG+="$(TEXT " * \Z4internalportcfg=0x????\Zn\n    Internal(sata) disks mask(Not apply to DT models).\n")"
       MSG+="$(TEXT " * \Z4esataportcfg=0x????\Zn\n    Esata disks mask(Not apply to DT models).\n")"
