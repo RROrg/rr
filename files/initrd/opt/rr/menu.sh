@@ -110,7 +110,7 @@ function modelMenu() {
       --infobox "$(TEXT "Getting models ...")" 0 0
   fi
   PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
-  MJ="$(python include/functions.py getmodels -p "${PS[*]}")"
+  MJ="$(python ${WORK_PATH}/include/functions.py getmodels -p "${PS[*]}")"
   if [ -z "${MJ}" -o "${MJ}" = "[]" ]; then
     if _get_fastest synology.com >/dev/null 2>&1; then
       DIALOG --title "$(TEXT "Model")" \
