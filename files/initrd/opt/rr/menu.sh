@@ -110,7 +110,7 @@ function modelMenu() {
       --infobox "$(TEXT "Getting models ...")" 0 0
   fi
   PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
-  MJ="$(python include/functions.py getmodels -p "${PS[*]}")"
+  MJ="$(python ${WORK_PATH}/include/functions.py getmodels -p "${PS[*]}")"
   if [ -z "${MJ}" -o "${MJ}" = "[]" ]; then
     if _get_fastest synology.com >/dev/null 2>&1; then
       DIALOG --title "$(TEXT "Model")" \
@@ -135,14 +135,16 @@ function modelMenu() {
       FLGNEX=0
       while read M A; do
         COMPATIBLE=1
-        DT="$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")"
-        FLAGS="$(readConfigArray "platforms.${A}.flags" "${WORK_PATH}/platforms.yml")"
-        for F in "${FLAGS}"; do if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
-          COMPATIBLE=0
-          FLGNEX=1
-          break
-        fi; done
-        [ "${DT}" = "true" ] && DT="DT" || DT=""
+        if [ ${RESTRICT} -eq 1 ]; then
+          for F in $(readConfigArray "platforms.${A}.flags" "${WORK_PATH}/platforms.yml"); do
+            if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
+              COMPATIBLE=0
+              FLGNEX=1
+              break
+            fi
+          done
+        fi
+        [ "$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")" = "true" ] && DT="DT" || DT=""
         [ ${COMPATIBLE} -eq 1 ] && echo "${M} \"$(printf "\Zb%-15s %-2s\Zn" "${A}" "${DT}")\" " >>"${TMP_PATH}/menu"
       done <<<$(cat "${TMP_PATH}/modellist")
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
@@ -984,6 +986,7 @@ function synoinfoMenu() {
     a)
       MSG=""
       MSG+="$(TEXT "Commonly used synoinfo:\n")"
+      MSG+="$(TEXT " * \Z4support_apparmor=no\Zn\n    Disable apparmor.\n")"
       MSG+="$(TEXT " * \Z4maxdisks=??\Zn\n    Maximum number of disks supported.\n")"
       MSG+="$(TEXT " * \Z4internalportcfg=0x????\Zn\n    Internal(sata) disks mask(Not apply to DT models).\n")"
       MSG+="$(TEXT " * \Z4esataportcfg=0x????\Zn\n    Esata disks mask(Not apply to DT models).\n")"

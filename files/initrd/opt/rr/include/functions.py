@@ -99,7 +99,7 @@ def getmodels(platforms=None):
     """
     Get Syno Models.
     """
-    import json, requests
+    import json, requests, urllib3
     from requests.adapters import HTTPAdapter
     from requests.packages.urllib3.util.retry import Retry # type: ignore
 
@@ -107,7 +107,8 @@ def getmodels(platforms=None):
     session = requests.Session()
     session.mount('http://', adapter)
     session.mount('https://', adapter)
-
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    
     if platforms is not None and platforms != "":
         PS = platforms.lower().replace(",", " ").split()
     else:
@@ -116,7 +117,7 @@ def getmodels(platforms=None):
     models = []
     if len(models) == 0:
         try:
-            req = session.get("https://autoupdate.synology.com/os/v2", timeout=10)
+            req = session.get("https://autoupdate.synology.com/os/v2", timeout=10, verify=False)
             req.encoding = "utf-8"
             data = json.loads(req.text)
 
@@ -143,7 +144,7 @@ def getmodels(platforms=None):
             from bs4 import BeautifulSoup
             #url="https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have"
             url="https://kb.synology.cn/zh-cn/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have"
-            req = session.get(url, timeout=10)
+            req = session.get(url, timeout=10, verify=False)
             req.encoding = "utf-8"
             bs = BeautifulSoup(req.text, "html.parser")
             p = re.compile(r"data: (.*?),$", re.MULTILINE | re.DOTALL)
@@ -161,6 +162,7 @@ def getmodels(platforms=None):
         except:
             pass
 
+    models.sort(key=lambda x: (x["arch"], x["name"]))
     print(json.dumps(models, indent=4))
 
 
