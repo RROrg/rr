@@ -234,7 +234,7 @@
 
   # 管理软件包
   synopkg list                                     # 列出所有已安装软件包
-  synopkg info <package_name>                      # 查看软件包信息
+  synopkg show <package_name>                      # 查看软件包信息
   synopkg install <package_path_or_url>            # 安装软件包
   synopkg install "$(synopkg show CodecPack 2>/dev/null | jq -r '.link')"    # 安装软件包, url 方式
   synopkg install_from_server CodecPac             # 安装软件包, 自动从服务器下载
