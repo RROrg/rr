@@ -115,15 +115,19 @@
     ```
 * 群晖 opkg 包管理:
     ```shell
-    wget -O - http://bin.entware.net/x64-k3.2/installer/generic.sh | /bin/sh
+    curl -#kL http://bin.entware.net/x64-k3.2/installer/generic.sh | /bin/sh
     /opt/bin/opkg update
     /opt/bin/opkg install rename
     ```
 * 群晖 ipkg 包管理:
     ```shell
-    wget http://ipkg.nslu2-linux.org/feeds/optware/syno-i686/cross/unstable/syno-i686-bootstrap_1.2-7_i686.xsh | /bin/sh
+    curl -#kL http://ipkg.nslu2-linux.org/feeds/optware/syno-i686/cross/unstable/syno-i686-bootstrap_1.2-7_i686.xsh | /bin/sh
     ipkg update
     ipkg install lm-sensors
+    ```
+* 群晖 python pip 包管理:
+    ```shell
+    curl -#kL https://bootstrap.pypa.io/get-pip.py | python3
     ```
 
 ## DEBUG
