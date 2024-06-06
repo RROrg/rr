@@ -19,8 +19,8 @@ Hardware/hard-drives are priced whilst data are priceless, any user-specific cus
 ### 2: Documentation & FAQ
 
 - [RRManager](https://github.com/T-REX-XP/RRManager)
-- [blog](https://rrorg.cn:521/)
-- [docs](https://rrorg.github.io/rr-docs/)
+- [blog](https://rrorg.cn)
+- [docs](https://rrorg.github.io/rr-docs)
 - [📣](https://github.com/orgs/RROrg/discussions)
 
 ### 3: Components
