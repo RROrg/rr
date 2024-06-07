@@ -115,15 +115,19 @@
     ```
 * 群晖 opkg 包管理:
     ```shell
-    wget -O - http://bin.entware.net/x64-k3.2/installer/generic.sh | /bin/sh
+    curl -#kL http://bin.entware.net/x64-k3.2/installer/generic.sh | /bin/sh
     /opt/bin/opkg update
     /opt/bin/opkg install rename
     ```
 * 群晖 ipkg 包管理:
     ```shell
-    wget http://ipkg.nslu2-linux.org/feeds/optware/syno-i686/cross/unstable/syno-i686-bootstrap_1.2-7_i686.xsh | /bin/sh
+    curl -#kL http://ipkg.nslu2-linux.org/feeds/optware/syno-i686/cross/unstable/syno-i686-bootstrap_1.2-7_i686.xsh | /bin/sh
     ipkg update
     ipkg install lm-sensors
+    ```
+* 群晖 python pip 包管理:
+    ```shell
+    curl -#kL https://bootstrap.pypa.io/get-pip.py | python3
     ```
 
 ## DEBUG
@@ -234,7 +238,7 @@
 
   # 管理软件包
   synopkg list                                     # 列出所有已安装软件包
-  synopkg info <package_name>                      # 查看软件包信息
+  synopkg show <package_name>                      # 查看软件包信息
   synopkg install <package_path_or_url>            # 安装软件包
   synopkg install "$(synopkg show CodecPack 2>/dev/null | jq -r '.link')"    # 安装软件包, url 方式
   synopkg install_from_server CodecPac             # 安装软件包, 自动从服务器下载

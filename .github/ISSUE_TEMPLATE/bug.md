@@ -13,7 +13,7 @@ Please fill in the following information.
 Install ENV: (You can find it in the boot interface.)  
  * DMI:  
  * CPU:  
- * NIC:  
+ * NIC:  (pid & vid)
 
 RR version: (You can find it in the update menu.)  
  * RR:  
