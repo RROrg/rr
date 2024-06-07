@@ -37,6 +37,7 @@ jobs:
           iscustom = 'false'
           warinfo = 'false'
 
+          format = ''
           language= ''
           model = ''
           version = ''
@@ -46,6 +47,7 @@ jobs:
               if issuetitle.lower().startswith('custom'):
                   jsonbody = json.loads(issuebody)
                   iscustom = 'true'
+                  format = jsonbody.get('format', '')
                   language = jsonbody.get('language', '')
                   model = jsonbody.get('model', '')
                   version = jsonbody.get('version', '')
@@ -61,6 +63,7 @@ jobs:
           set_output("iscustom", iscustom)
           set_output("warinfo", warinfo)  
 
+          set_output("format", format)
           set_output("language", language)
           set_output("model", model)
           set_output("version", version)
@@ -227,9 +230,17 @@ jobs:
           fi
 
           ls rr -al
-          ARTIFACTS="rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip"
-          zip -9 "${ARTIFACTS}" -j rr/rr.img
-          
+          if [ "${{ env.format }}" = "ova" ]; then
+            . scripts/func.sh "${{ secrets.RRORG }}"
+            convertova "rr/rr.img" "rr/rr.ova"
+            ARTIFACTS="rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip"
+            (cd rr; sha256sum rr.ova >../sha256sum)
+            zip -9 "${ARTIFACTS}" -j rr/rr.ova sha256sum
+          else
+            ARTIFACTS="rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip"
+            (cd rr; sha256sum rr.img >../sha256sum)
+            zip -9 "${ARTIFACTS}" -j rr/rr.img sha256sum
+          fi
           # UPLOAD="$(curl -k -F "file=@${ARTIFACTS}" -F "token=${{ secrets.TT_TOKEN }}" -F "model=0"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli")"
           if echo "${UPLOAD}" | grep -q "Download Page"; then
             DLURL="$(echo "${UPLOAD}" | grep "Download Page" | head -1)"

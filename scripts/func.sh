@@ -287,3 +287,101 @@ function resizeImg() {
   sudo resize2fs $(ls ${LOOPX}* 2>/dev/null | sort -n | tail -1)
   sudo losetup -d ${LOOPX}
 }
+
+# convertova
+# $1 bootloader file
+# $2 ova file
+function convertova() {
+  BLIMAGE=${1}
+  OVAPATH=${2}
+
+  BLIMAGE="$(readlink -f "${BLIMAGE}")"
+  OVAPATH="$(readlink -f "${OVAPATH}")"
+  VMNAME="$(basename "${OVAPATH}" .ova)"
+
+  # Download and install ovftool if it doesn't exist
+  if [ ! -x ovftool/ovftool ]; then
+    rm -rf ovftool ovftool.zip
+    curl -skL https://github.com/rgl/ovftool-binaries/raw/main/archive/VMware-ovftool-4.6.0-21452615-lin.x86_64.zip -o ovftool.zip
+    if [ $? -ne 0 ]; then
+      echo "Failed to download ovftool"
+      exit 1
+    fi
+    unzip ovftool.zip -d . >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      echo "Failed to extract ovftool"
+      exit 1
+    fi
+    chmod +x ovftool/ovftool
+  fi
+  if ! command -v qemu-img &>/dev/null; then
+    sudo apt install -y qemu-utils
+  fi
+
+  # Convert raw image to VMDK
+  rm -rf "OVA_${VMNAME}"
+  mkdir -p "OVA_${VMNAME}"
+  qemu-img convert -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' "${BLIMAGE}" "OVA_${VMNAME}/${VMNAME}-disk1.vmdk"
+  qemu-img create -f vmdk "OVA_${VMNAME}/${VMNAME}-disk2.vmdk" "32G"
+
+  # Create VM configuration
+  cat <<_EOF_ >"OVA_${VMNAME}/${VMNAME}.vmx"
+.encoding = "GBK"
+config.version = "8"
+virtualHW.version = "21"
+displayName = "${VMNAME}"
+annotation = "https://github.com/RROrg/rr"
+guestOS = "ubuntu-64"
+firmware = "efi"
+mks.enable3d = "TRUE"
+pciBridge0.present = "TRUE"
+pciBridge4.present = "TRUE"
+pciBridge4.virtualDev = "pcieRootPort"
+pciBridge4.functions = "8"
+pciBridge5.present = "TRUE"
+pciBridge5.virtualDev = "pcieRootPort"
+pciBridge5.functions = "8"
+pciBridge6.present = "TRUE"
+pciBridge6.virtualDev = "pcieRootPort"
+pciBridge6.functions = "8"
+pciBridge7.present = "TRUE"
+pciBridge7.virtualDev = "pcieRootPort"
+pciBridge7.functions = "8"
+vmci0.present = "TRUE"
+hpet0.present = "TRUE"
+nvram = "${VMNAME}.nvram"
+virtualHW.productCompatibility = "hosted"
+powerType.powerOff = "soft"
+powerType.powerOn = "soft"
+powerType.suspend = "soft"
+powerType.reset = "soft"
+tools.syncTime = "FALSE"
+sound.autoDetect = "TRUE"
+sound.fileName = "-1"
+sound.present = "TRUE"
+numvcpus = "2"
+cpuid.coresPerSocket = "1"
+vcpu.hotadd = "TRUE"
+memsize = "4096"
+mem.hotadd = "TRUE"
+usb.present = "TRUE"
+ehci.present = "TRUE"
+usb_xhci.present = "TRUE"
+svga.graphicsMemoryKB = "8388608"
+usb.vbluetooth.startConnected = "TRUE"
+extendedConfigFile = "${VMNAME}.vmxf"
+floppy0.present = "FALSE"
+ethernet0.addressType = "generated"
+ethernet0.virtualDev = "vmxnet3"
+ethernet0.present = "TRUE"
+sata0.present = "TRUE"
+sata0:0.fileName = "${VMNAME}-disk1.vmdk"
+sata0:0.present = "TRUE"
+sata0:1.fileName = "${VMNAME}-disk2.vmdk"
+sata0:1.present = "TRUE"
+_EOF_
+
+  rm -f "${OVAPATH}"
+  ovftool/ovftool "OVA_${VMNAME}/${VMNAME}.vmx" "${OVAPATH}"
+  rm -rf "OVA_${VMNAME}"
+}
