@@ -11,9 +11,9 @@
 
 ### 1: Disclaimer
 
-硬盘有价，数据无价，任何对引导的修改都是有风险的，本人/组织不承担数据丢失的责任。本工具仅用作学习交流，严禁用于商业用途。
+* 硬盘有价，数据无价，任何对引导的修改都是有风险的，本人/组织不承担数据丢失的责任。本工具仅用作学习交流，严禁用于商业用途。
 ----
-Hardware/hard-drives are priced whilst data are priceless, any user-specific custom modification of the tested & prebuilt bootloader images could potentially cause irreversible data destruction towards your local machine. Us, as (RROrg) are not responsibly liable for damage nor personal loss of any types. The project with its affiliation is released for educational and learning purpose only, commercial application of the software is strictly prohibited.
+* Hardware/hard-drives are priced whilst data are priceless, any user-specific custom modification of the tested & prebuilt bootloader images could potentially cause irreversible data destruction towards your local machine. Us, as (RROrg) are not responsibly liable for damage nor personal loss of any types. The project with its affiliation is released for educational and learning purpose only, commercial application of the software is strictly prohibited.
 
 
 ### 2: Documentation & FAQ
@@ -25,7 +25,8 @@ Hardware/hard-drives are priced whilst data are priceless, any user-specific cus
 
 ### 3: Components
 
-For the packag of has been initialized and build image, please go to [RR-CUSTOM](https://rrorg.github.io/rr/).
+During the compilation process, you need to connect to the Internet to obtain model and version information and download the corresponding ROM.
+If you cannot connect to the Internet, please build a pre-compiled bootloader through [RR-CUSTOM](https://rrorg.github.io/rr/).
 
 ### 4: GPU: 
 
