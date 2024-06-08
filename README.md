@@ -66,6 +66,7 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
 
 - Community maintainers of each supporting list of languages are accredited below.
 
+  - `de_DE`: `@Tim Krämer`: [Tim Krämer](https://tim-kraemer.de)
   - `en_US`: `@rrorg`
   - `ja_JP`: `@andatoshiki` & `@toshikidev`
   - `ko_KR`: `@EXP` : jeong1986
