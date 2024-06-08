@@ -107,6 +107,8 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
 - `QQ群2: 73119176` [`点击加入QQ群`](https://qm.qq.com/q/YV1B0NFvWK)
 - `QQ群3: 51929774` [`点击加入QQ群`](https://qm.qq.com/q/aVjM3Wb6KY)
 - `QQ群4: 49756829` [`点击加入QQ群`](https://qm.qq.com/q/9PHzmZDkqI)
+- `QQ群5: 30267817` [`点击加入QQ群`](https://qm.qq.com/q/6RgVDfOSXe)
+- `QQ群6: 68640297` [`点击加入QQ群`](https://qm.qq.com/q/PU71eSXAic)
 - `QQ Channel: RROrg` [`点击加入QQ频道`](https://pd.qq.com/s/aklqb0uij)
 - `Telegram Channel: RROrg` [`Click to join`](https://t.me/RR_Org)
 
