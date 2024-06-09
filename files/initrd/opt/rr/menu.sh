@@ -3298,14 +3298,10 @@ function updateMenu() {
 ###############################################################################
 function cleanCache() {
   if [ ! "${1}" = "-1" ]; then
-    (
-      rm -rfv "${PART3_PATH}/dl/"*
-      rm -rfv "${TMP_PATH}/"*
-    ) 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
+    rm -rfv "${PART3_PATH}/dl/"* 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
       --progressbox "$(TEXT "Cleaning cache ...")" 20 100
   else
     rm -rfv "${PART3_PATH}/dl/"*
-    rm -rfv "${TMP_PATH}/"*
   fi
   return 0
 }
