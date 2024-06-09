@@ -3319,7 +3319,7 @@ function notepadMenu() {
 
 ###############################################################################
 ###############################################################################
-if [ $(ps -ef | grep -v grep | grep -c "menu.sh") -gt 1 ]; then
+if false && [ $(ps -ef | grep -v grep | grep -c "menu.sh") -gt 1 ]; then
   echo "$(TEXT "Another instance of the menu.sh is running.")"
   exit 1
 fi
