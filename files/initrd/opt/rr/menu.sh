@@ -222,6 +222,8 @@ function productversMenu() {
   fi
   selver="${resp}"
   urlver=""
+  paturl=""
+  patsum=""
   # KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${resp}].kver" "${WORK_PATH}/platforms.yml")
   # if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ -d "/sys/firmware/efi" ]; then
   #   if [ -z "${1}" ]; then
