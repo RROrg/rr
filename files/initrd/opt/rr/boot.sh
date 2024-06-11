@@ -247,12 +247,12 @@ else
   done
   BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
   [ -z "${BOOTWAIT}" ] && BOOTWAIT=10
-  w 2>/dev/null | awk '{print $1" "$2" "$4" "$5" "$6}' >WB
+  w -h 2>/dev/null | awk '{print $1" "$2" "$3}' >WB
   MSG=""
   while test ${BOOTWAIT} -ge 0; do
     MSG="$(printf "\033[1;33m$(TEXT "%2ds (Changing access(ssh/web) status will interrupt boot)")\033[0m" "${BOOTWAIT}")"
     echo -en "\r${MSG}"
-    w 2>/dev/null | awk '{print $1" "$2" "$4" "$5" "$6}' >WC
+    w -h 2>/dev/null | awk '{print $1" "$2" "$3}' >WC
     if ! diff WB WC >/dev/null 2>&1; then
       echo -en "\r\033[1;33m$(TEXT "access(ssh/web) status has changed and booting is interrupted.")\033[0m\n"
       rm -f WB WC
@@ -286,7 +286,7 @@ else
   fi
   kexec ${KEXECARGS} -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
   echo -e "\033[1;37m$(TEXT "Booting ...")\033[0m"
-  for T in $(w 2>/dev/null | grep -v "TTY" | awk -F' ' '{print $2}'); do
+  for T in $(w -h 2>/dev/null | awk '{print $2}'); do
     [ -w "/dev/${T}" ] && echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
   done
 
