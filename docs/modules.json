@@ -8232,6 +8232,10 @@
             "description": "Console Rotation (180 degrees) Support",
             "depends": "fb,softcursor"
         },
+        "fbdev": {
+            "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "font": {
             "description": "Console Fonts",
             "depends": ""
@@ -21009,11 +21013,11 @@
         },
         "aqc111": {
             "description": "Aquantia AQtion USB to 5/2.5GbE Controllers",
-            "depends": "usbnet,usbcore"
+            "depends": "usbnet"
         },
         "asix": {
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
-            "depends": "mii,libphy,usbnet,usbcore"
+            "depends": "mii,libphy,usbnet"
         },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
@@ -21037,7 +21041,7 @@
         },
         "ax88179_178a": {
             "description": "ASIX AX88179/178A based USB 3.0/2.0 Gigabit Ethernet Devices",
-            "depends": "usbnet,usbcore,mii"
+            "depends": "usbnet,mii"
         },
         "b44": {
             "description": "Broadcom 44xx/47xx 10/100 PCI ethernet driver",
@@ -21085,11 +21089,11 @@
         },
         "cdc_ether": {
             "description": "USB CDC Ethernet devices",
-            "depends": "usbnet,usbcore"
+            "depends": "usbnet"
         },
         "cdc_ncm": {
             "description": "USB CDC NCM host driver",
-            "depends": "usbnet,usbcore"
+            "depends": "usbnet"
         },
         "cdrom": {
             "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
@@ -21117,7 +21121,7 @@
         },
         "ch341": {
             "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
-            "depends": "usbserial,usbcore"
+            "depends": "usbserial"
         },
         "cls_fw": {
             "description": "Classifier for fwmark (Compiled by RR for DSM)",
@@ -21137,7 +21141,7 @@
         },
         "cp210x": {
             "description": "Silicon Labs CP210x RS232 serial adaptor driver",
-            "depends": "usbserial,usbcore"
+            "depends": "usbserial"
         },
         "cpufreq_conservative": {
             "description": "A dynamic cpufreq governor for Low Latency Frequency Transition capable processors optimised for use in a battery environment",
@@ -21205,7 +21209,7 @@
         },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
-            "depends": "usbnet,usbcore,mii"
+            "depends": "usbnet,mii"
         },
         "dme1737": {
             "description": "DME1737 sensors",
@@ -21217,19 +21221,19 @@
         },
         "dvb-usb-dib0700": {
             "description": "Driver for devices based on DiBcom DiB0700 - USB bridge",
-            "depends": "dib7000m,dib9000,dibx000_common,dvb-usb,dib0090,dib0070,dib3000mc,usbcore,rc-core"
+            "depends": "dib7000m,dib9000,dibx000_common,dvb-usb,dib0090,dib0070,dib3000mc,rc-core"
         },
         "dvb-usb-dvbsky": {
             "description": "Driver for DVBSky USB",
-            "depends": "dvb_usb_v2,dvb-core,usbcore,rc-core,m88ds3103"
+            "depends": "dvb_usb_v2,dvb-core,rc-core,m88ds3103"
         },
         "dvb-usb": {
             "description": "A library module containing commonly used USB and DVB function USB DVB devices",
-            "depends": "rc-core,dvb-core,usbcore"
+            "depends": "rc-core,dvb-core"
         },
         "dvb_usb_v2": {
             "description": "DVB USB common",
-            "depends": "rc-core,dvb-core,usbcore"
+            "depends": "rc-core,dvb-core"
         },
         "e1000": {
             "description": "Intel(R) PRO/1000 Network Driver (Compiled by RR for DSM)",
@@ -21309,7 +21313,7 @@
         },
         "ftdi_sio": {
             "description": "USB FTDI Serial Converters Driver",
-            "depends": "usbserial,usbcore"
+            "depends": "usbserial"
         },
         "gasket": {
             "description": "Google Gasket driver framework",
@@ -21605,7 +21609,7 @@
         },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
-            "depends": "mac80211,cfg80211,usbcore"
+            "depends": "mac80211,cfg80211"
         },
         "mtk-sd": {
             "description": "MediaTek SD/MMC Card Driver",
@@ -21625,7 +21629,7 @@
         },
         "mwifiex_usb": {
             "description": "Marvell WiFi-Ex USB Driver version1.0",
-            "depends": "mwifiex,usbcore"
+            "depends": "mwifiex"
         },
         "nct6683": {
             "description": "NCT6683D driver (Compiled by RR for DSM)",
@@ -21653,7 +21657,7 @@
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
-            "depends": "usbserial,usbcore"
+            "depends": "usbserial"
         },
         "pmbus": {
             "description": "Generic PMBus driver",
@@ -21665,7 +21669,7 @@
         },
         "prism2_usb": {
             "description": "Prism2 USB driver (Compiled by RR for DSM)",
-            "depends": "cfg80211,usbcore"
+            "depends": "cfg80211"
         },
         "processor": {
             "description": "ACPI Processor Driver",
@@ -21713,7 +21717,7 @@
         },
         "r8152": {
             "description": "Realtek RTL8152/RTL8153 Based USB Ethernet Adapters (Compiled by RR for DSM)",
-            "depends": "usbcore"
+            "depends": ""
         },
         "r8168": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
@@ -21745,7 +21749,7 @@
         },
         "rndis_host": {
             "description": "USB Host side RNDIS driver",
-            "depends": "usbnet,usbcore,cdc_ether"
+            "depends": "usbnet,cdc_ether"
         },
         "rtc-cmos": {
             "description": "Driver for PC-style 'CMOS' RTCs",
@@ -21753,7 +21757,7 @@
         },
         "rtl8187": {
             "description": "RTL8187/RTL8187B USB wireless driver",
-            "depends": "mac80211,eeprom_93cx6,cfg80211,usbcore"
+            "depends": "mac80211,eeprom_93cx6,cfg80211"
         },
         "rtl8188ee": {
             "description": "Realtek 8188E 802.11n PCI wireless",
@@ -21773,7 +21777,7 @@
         },
         "rtl8192cu": {
             "description": "Realtek 8192C/8188C 802.11n USB wireless",
-            "depends": "mac80211,rtlwifi,rtl8192c-common,rtl_usb,usbcore"
+            "depends": "mac80211,rtlwifi,rtl8192c-common,rtl_usb"
         },
         "rtl8192de": {
             "description": "Realtek 8192DE 802.11n Dual Mac PCI wireless",
@@ -21805,7 +21809,7 @@
         },
         "rtl8xxxu": {
             "description": "RTL8XXXu USB mac80211 Wireless LAN Driver",
-            "depends": "usbcore,mac80211"
+            "depends": "mac80211"
         },
         "rtl_pci": {
             "description": "PCI basic driver for rtlwifi",
@@ -21813,7 +21817,7 @@
         },
         "rtl_usb": {
             "description": "USB basic driver for rtlwifi",
-            "depends": "mac80211,rtlwifi,usbcore"
+            "depends": "mac80211,rtlwifi"
         },
         "rtlwifi": {
             "description": "Realtek 802.11n PCI wireless core",
@@ -21829,7 +21833,7 @@
         },
         "rtsx_usb": {
             "description": "Realtek USB Card Reader Driver",
-            "depends": "usbcore"
+            "depends": ""
         },
         "rtsx_usb_sdmmc": {
             "description": "Realtek USB SD/MMC Card Host Driver",
@@ -21961,15 +21965,15 @@
         },
         "usbnet": {
             "description": "USB network driver framework",
-            "depends": "usbcore,mii"
+            "depends": "mii"
         },
         "usbserial": {
             "description": "USB Serial Driver core",
-            "depends": "usbcore"
+            "depends": ""
         },
         "ushc": {
             "description": "USB SD Host Controller driver",
-            "depends": "usbcore,mmc_core"
+            "depends": "mmc_core"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -22029,7 +22033,7 @@
         },
         "vub300": {
             "description": "VUB300 USB to SD/MMC/SDIO adapter driver",
-            "depends": "usbcore,mmc_core"
+            "depends": "mmc_core"
         },
         "w83781d": {
             "description": "W83781D driver",
