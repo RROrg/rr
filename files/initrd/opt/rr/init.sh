@@ -222,7 +222,7 @@ if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" -a ! "LOCALBUILD" = "${LOADER_DISK}"
 fi
 
 # Check memory
-RAM=$(free -m 2>/dev/null | awk '/Mem:/{print $2}')
+RAM=$(awk '/MemTotal:/ {printf "%.0f", $2 / 1024}' /proc/meminfo 2>/dev/null)
 if [ ${RAM:-0} -le 3500 ]; then
   echo -e "\033[1;33m$(TEXT "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory.")\033[0m\n"
 fi
