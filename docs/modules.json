@@ -172,6 +172,10 @@
             "description": "CPUfreq policy governor 'performance'",
             "depends": ""
         },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -461,7 +465,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-intel": {
@@ -756,6 +760,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -802,6 +810,10 @@
         },
         "sysimgblt": {
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
+            "depends": ""
+        },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "tg3": {
@@ -852,9 +864,17 @@
             "description": "VGA State Save/Restore",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "video": {
             "description": "ACPI Video Driver",
@@ -1138,6 +1158,10 @@
             "description": "CPUfreq policy governor 'performance'",
             "depends": ""
         },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -1455,7 +1479,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "k10temp": {
@@ -1882,6 +1906,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -1942,6 +1970,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -1990,9 +2022,17 @@
             "description": "VGA State Save/Restore",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "video": {
             "description": "ACPI Video Driver",
@@ -2226,6 +2266,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -2485,7 +2529,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-intel": {
@@ -2780,6 +2824,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -2828,6 +2876,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -2864,9 +2916,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -3138,6 +3198,10 @@
             "description": "CPUfreq policy governor 'performance'",
             "depends": ""
         },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -3423,7 +3487,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "k10temp": {
@@ -3850,6 +3914,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -3910,6 +3978,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -3946,9 +4018,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -4178,6 +4258,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -4437,7 +4521,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-intel": {
@@ -4732,6 +4816,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -4780,6 +4868,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -4816,9 +4908,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -5090,6 +5190,10 @@
             "description": "CPUfreq policy governor 'performance'",
             "depends": ""
         },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -5375,7 +5479,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "k10temp": {
@@ -5802,6 +5906,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -5862,6 +5970,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -5898,9 +6010,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -6130,6 +6250,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -6389,7 +6513,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-intel": {
@@ -6684,6 +6808,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -6732,6 +6860,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -6768,9 +6900,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -7042,6 +7182,10 @@
             "description": "CPUfreq policy governor 'performance'",
             "depends": ""
         },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
+            "depends": ""
+        },
         "crc-itu-t": {
             "description": "CRC ITU-T V.41 calculations",
             "depends": ""
@@ -7327,7 +7471,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "k10temp": {
@@ -7754,6 +7898,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -7814,6 +7962,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -7850,9 +8002,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -8082,6 +8242,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -8349,7 +8513,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-intel": {
@@ -8644,6 +8808,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -8692,6 +8860,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -8724,9 +8896,17 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -8996,6 +9176,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -9295,7 +9479,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "k10temp": {
@@ -9722,6 +9906,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -9782,6 +9970,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -9814,9 +10006,17 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -10046,6 +10246,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -10305,7 +10509,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-intel": {
@@ -10600,6 +10804,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -10648,6 +10856,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -10680,9 +10892,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -10952,6 +11172,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -11239,7 +11463,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "k10temp": {
@@ -11666,6 +11890,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -11726,6 +11954,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -11758,9 +11990,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -12152,6 +12392,10 @@
             "description": "Fixed MDIO bus (MDIO bus emulation with fixed PHYs)",
             "depends": "libphy"
         },
+        "forcedeth": {
+            "description": "Reverse Engineered nForce ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "ftdi_sio": {
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
@@ -12283,6 +12527,10 @@
         "jc42": {
             "description": "JC42 driver",
             "depends": ""
+        },
+        "jme": {
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
+            "depends": "mii"
         },
         "kvm-amd": {
             "description": "",
@@ -12816,6 +13064,14 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc-falcon": {
+            "description": "Solarflare Falcon network driver",
+            "depends": "i2c-algo-bit"
+        },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": ""
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -12846,6 +13102,10 @@
         },
         "sysimgblt": {
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
+            "depends": ""
+        },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "tg3": {
@@ -12892,9 +13152,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -13294,6 +13562,10 @@
             "description": "Fixed MDIO bus (MDIO bus emulation with fixed PHYs)",
             "depends": "libphy"
         },
+        "forcedeth": {
+            "description": "Reverse Engineered nForce ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "ftdi_sio": {
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
@@ -13429,6 +13701,10 @@
         "jc42": {
             "description": "JC42 driver",
             "depends": ""
+        },
+        "jme": {
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
+            "depends": "mii"
         },
         "kvm-amd": {
             "description": "",
@@ -13962,6 +14238,14 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc-falcon": {
+            "description": "Solarflare Falcon network driver",
+            "depends": "i2c-algo-bit"
+        },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": ""
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -13996,6 +14280,10 @@
         },
         "sysimgblt": {
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
+            "depends": ""
+        },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "tg3": {
@@ -14042,9 +14330,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -14279,6 +14575,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -14566,7 +14866,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-intel": {
@@ -14861,6 +15161,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -14907,6 +15211,10 @@
         },
         "sysimgblt": {
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
+            "depends": ""
+        },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "tg3": {
@@ -14957,9 +15265,17 @@
             "description": "VGA State Save/Restore",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "video": {
             "description": "ACPI Video Driver",
@@ -15233,6 +15549,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -15540,7 +15860,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "k10temp": {
@@ -15967,6 +16287,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -16027,6 +16351,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -16075,9 +16403,17 @@
             "description": "VGA State Save/Restore",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "video": {
             "description": "ACPI Video Driver",
@@ -16315,6 +16651,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -16570,7 +16910,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-intel": {
@@ -16869,6 +17209,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -16917,6 +17261,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -16949,9 +17297,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -17225,6 +17581,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -17512,7 +17872,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "k10temp": {
@@ -17943,6 +18303,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -18003,6 +18367,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -18035,9 +18403,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -18267,6 +18643,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -18530,7 +18910,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-amd": {
@@ -18829,6 +19209,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -18877,6 +19261,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -18909,9 +19297,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -19177,6 +19573,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -19476,7 +19876,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-amd": {
@@ -19903,6 +20303,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -19963,6 +20367,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -19995,9 +20403,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -20231,6 +20647,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -20494,7 +20914,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-amd": {
@@ -20801,6 +21221,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -20849,6 +21273,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -20881,9 +21309,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
@@ -21153,6 +21589,10 @@
         },
         "cpufreq_performance": {
             "description": "CPUfreq policy governor 'performance'",
+            "depends": ""
+        },
+        "crc-ccitt": {
+            "description": "CRC-CCITT calculations",
             "depends": ""
         },
         "crc-itu-t": {
@@ -21452,7 +21892,7 @@
             "depends": ""
         },
         "jme": {
-            "description": "JMicron JMC2x0 PCI Express Ethernet driver",
+            "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
         },
         "kvm-amd": {
@@ -21887,6 +22327,10 @@
             "description": "SDIO UART driver (Compiled by RR for DSM)",
             "depends": "mmc_core"
         },
+        "sfc": {
+            "description": "Solarflare network driver",
+            "depends": "mdio,i2c-algo-bit"
+        },
         "sg": {
             "description": "SCSI generic (sg) driver",
             "depends": ""
@@ -21947,6 +22391,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tehuti": {
+            "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -21979,9 +22427,17 @@
             "description": "VFIO - User Level meta-driver",
             "depends": ""
         },
+        "via-rhine": {
+            "description": "VIA Rhine PCI Fast Ethernet driver",
+            "depends": "mii"
+        },
         "via-sdmmc": {
             "description": "VIA SD/MMC Card Interface driver",
             "depends": "mmc_core"
+        },
+        "via-velocity": {
+            "description": "VIA Networking Velocity Family Gigabit Ethernet Adapter Driver",
+            "depends": "crc-ccitt"
         },
         "virtio": {
             "description": "Virtio bus driver (Compiled by RR for DSM)",
