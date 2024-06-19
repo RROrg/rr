@@ -76,7 +76,7 @@ function getBuildroot() {
   local CACHE_FILE="/tmp/buildroot.zip"
   rm -f "${CACHE_FILE}"
   if [ "${2}" = "true" ]; then
-    TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases" | jq -r ".[0].tag_name")
+    TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases" | jq -r ".[].tag_name" | sort -rV | head -1)
   else
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-buildroot/releases/latest" | jq -r ".tag_name")
   fi
@@ -108,7 +108,7 @@ function getCKs() {
   local CACHE_FILE="/tmp/rr-cks.zip"
   rm -f "${CACHE_FILE}"
   if [ "${2}" = "true" ]; then
-    TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-cks/releases" | jq -r ".[0].tag_name")
+    TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-cks/releases" | jq -r ".[].tag_name" | sort -rV | head -1)
   else
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-cks/releases/latest" | jq -r ".tag_name")
   fi
@@ -137,7 +137,7 @@ function getLKMs() {
   local CACHE_FILE="/tmp/rp-lkms.zip"
   rm -f "${CACHE_FILE}"
   if [ "${2}" = "true" ]; then
-    TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases" | jq -r ".[0].tag_name")
+    TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases" | jq -r ".[].tag_name" | sort -rV | head -1)
   else
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-lkms/releases/latest" | jq -r ".tag_name")
   fi
@@ -166,7 +166,7 @@ function getAddons() {
   local CACHE_DIR="/tmp/addons"
   local CACHE_FILE="/tmp/addons.zip"
   if [ "${2}" = "true" ]; then
-    TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases" | jq -r ".[0].tag_name")
+    TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases" | jq -r ".[].tag_name" | sort -rV | head -1)
   else
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-addons/releases/latest" | jq -r ".tag_name")
   fi
@@ -206,7 +206,7 @@ function getModules() {
   local CACHE_FILE="/tmp/modules.zip"
   rm -f "${CACHE_FILE}"
   if [ "${2}" = "true" ]; then
-    TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases" | jq -r ".[0].tag_name")
+    TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases" | jq -r ".[].tag_name" | sort -rV | head -1)
   else
     TAG=$(curl -skL -H "Authorization: token ${TOKEN}" "https://api.github.com/repos/RROrg/rr-modules/releases/latest" | jq -r ".tag_name")
   fi
