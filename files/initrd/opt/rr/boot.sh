@@ -162,7 +162,7 @@ if [ "${DT}" = "true" ] && ! echo "epyc7002 purley broadwellnkv2" | grep -wq "${
   [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
   CMDLINE['modprobe.blacklist']+="mpt3sas"
 fi
-if echo "epyc7002 apollolake geminilake" | grep -wq "${PLATFORM}"; then
+if echo "apollolake geminilake" | grep -wq "${PLATFORM}"; then
   CMDLINE["intel_iommu"]="igfx_off"
 fi
 if echo "purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
