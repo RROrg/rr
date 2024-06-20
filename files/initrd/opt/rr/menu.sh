@@ -2703,7 +2703,7 @@ function downloadExts() {
   TAG=""
   if [ "${PRERELEASE}" = "true" ]; then
     # TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | pup 'a[class="Link--muted"] attr{href}' | grep ".zip" | head -1)"
-    TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip  | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
+    TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
   else
     LATESTURL="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${PROXY}${3}/releases/latest")"
     TAG="${LATESTURL##*/}"
@@ -3494,36 +3494,58 @@ else
     e)
       NEXT="e"
       while true; do
-        DIALOG \
-          --default-item ${NEXT} --menu "$(TEXT "Choose a action")" 0 0 0 \
-          p "$(TEXT "Poweroff")" \
-          r "$(TEXT "Reboot")" \
-          x "$(TEXT "Reboot to RR")" \
-          y "$(TEXT "Reboot to Recovery")" \
-          z "$(TEXT "Reboot to Junior")" \
-          s "$(TEXT "Back to shell")" \
-          e "$(TEXT "Exit")" \
+        echo -n "" >"${TMP_PATH}/menu"
+        echo "p \"$(TEXT "Poweroff")\"" >>"${TMP_PATH}/menu"
+        echo "r \"$(TEXT "Reboot")\"" >>"${TMP_PATH}/menu"
+        echo "x \"$(TEXT "Reboot to RR")\"" >>"${TMP_PATH}/menu"
+        echo "y \"$(TEXT "Reboot to Recovery")\"" >>"${TMP_PATH}/menu"
+        echo "z \"$(TEXT "Reboot to Junior")\"" >>"${TMP_PATH}/menu"
+        if efibootmgr | grep -q "^Boot0000" ; then
+          echo "b \"$(TEXT "Reboot to BIOS")\"" >>"${TMP_PATH}/menu"
+        fi
+        echo "s \"$(TEXT "Back to shell")\"" >>"${TMP_PATH}/menu"
+        echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
+
+        DIALOG --title "$(TEXT "Main menu")" \
+          --default-item ${NEXT} --menu "$(TEXT "Choose a action")" 0 0 0 --file "${TMP_PATH}/menu" \
           2>${TMP_PATH}/resp
         [ $? -ne 0 ] && break
         case "$(cat ${TMP_PATH}/resp)" in
         p)
+          DIALOG --title "$(TEXT "Main menu")" \
+            --infobox "$(TEXT "Poweroff")" 0 0
           poweroff
           exit 0
           ;;
         r)
+          DIALOG --title "$(TEXT "Main menu")" \
+            --infobox "$(TEXT "Reboot")" 0 0
           reboot
           exit 0
           ;;
         x)
+          DIALOG --title "$(TEXT "Main menu")" \
+            --infobox "$(TEXT "Reboot to RR")" 0 0
           rebootTo config
           exit 0
           ;;
         y)
+          DIALOG --title "$(TEXT "Main menu")" \
+            --infobox "$(TEXT "Reboot to Recovery")" 0 0
           rebootTo recovery
           exit 0
           ;;
         z)
+          DIALOG --title "$(TEXT "Main menu")" \
+            --infobox "$(TEXT "Reboot to Junior")" 0 0
           rebootTo junior
+          exit 0
+          ;;
+        b)
+          DIALOG --title "$(TEXT "Main menu")" \
+            --infobox "$(TEXT "Reboot to BIOS")" 0 0
+          efibootmgr -n 0000
+          reboot
           exit 0
           ;;
         s)
