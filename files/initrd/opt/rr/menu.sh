@@ -2020,6 +2020,38 @@ function removeBlockIPDB {
     --msgbox "${MSG}" 0 0
   return
 }
+###############################################################################
+# Initialize DSM network settings
+function initDSMNetwork {
+  MSG=""
+  MSG+="$(TEXT "This option will clear all customized settings of the network card and restore them to the default state.\n")"
+  MSG+="$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")"
+  DIALOG --title "$(TEXT "Advanced")" \
+    --yesno "${MSG}" 0 0
+  [ $? -ne 0 ] && return
+  DSMROOTS="$(findDSMRoot)"
+  if [ -z "${DSMROOTS}" ]; then
+    DIALOG --title "$(TEXT "Advanced")" \
+      --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
+    return
+  fi
+  (
+    mkdir -p "${TMP_PATH}/mdX"
+    for I in ${DSMROOTS}; do
+      mount -t ext4 "${I}" "${TMP_PATH}/mdX"
+      [ $? -ne 0 ] && continue
+      rm -f "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-eth"*
+      sync
+      umount "${TMP_PATH}/mdX"
+    done
+    rm -rf "${TMP_PATH}/mdX"
+  ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
+    --progressbox "$(TEXT "Recovering ...")" 20 100
+  MSG="$(TEXT "The network settings have been initialized.")"
+  DIALOG --title "$(TEXT "Advanced")" \
+    --msgbox "${MSG}" 0 0
+  return
+}
 
 ###############################################################################
 # Clone bootloader disk
@@ -2270,6 +2302,7 @@ function advancedMenu() {
       echo "y \"$(TEXT "Add a new user to DSM system")\"" >>"${TMP_PATH}/menu"
       echo "z \"$(TEXT "Force enable Telnet&SSH of DSM system")\"" >>"${TMP_PATH}/menu"
       echo "4 \"$(TEXT "Remove the blocked ip database of DSM")\"" >>"${TMP_PATH}/menu"
+      echo "6 \"$(TEXT "Initialize DSM network settings")\"" >>"${TMP_PATH}/menu"
       echo "r \"$(TEXT "Clone bootloader disk to another disk")\"" >>"${TMP_PATH}/menu"
       echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
       echo "5 \"$(TEXT "Download DSM config backup files")\"" >>"${TMP_PATH}/menu"
@@ -2467,6 +2500,10 @@ function advancedMenu() {
       ;;
     4)
       removeBlockIPDB
+      NEXT="e"
+      ;;
+    6)
+      initDSMNetwork
       NEXT="e"
       ;;
     r)
