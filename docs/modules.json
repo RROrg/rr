@@ -1270,6 +1270,10 @@
             "description": "EFI framebuffer driver (Compiled by RR for DSM)",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "ehci-hcd": {
             "description": "USB 2.0 'Enhanced' Host Controller (EHCI) Driver",
             "depends": "usbcore"
@@ -1296,6 +1300,10 @@
         },
         "f75375s": {
             "description": "F75373/F75375/F75387 hardware monitoring driver",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -1630,6 +1638,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
@@ -1664,6 +1676,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "p8022": {
@@ -2009,6 +2025,10 @@
         "vesafb": {
             "description": "VESA VGA Framebuffer driver (Compiled by RR for DSM)",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -3294,6 +3314,10 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -3316,6 +3340,10 @@
         },
         "f75375s": {
             "description": "F75373/F75375/F75387 hardware monitoring driver",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -3642,6 +3670,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
@@ -3676,6 +3708,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "p8022": {
@@ -4013,6 +4049,10 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -5286,6 +5326,10 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -5308,6 +5352,10 @@
         },
         "f75375s": {
             "description": "F75373/F75375/F75387 hardware monitoring driver",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -5634,6 +5682,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
@@ -5668,6 +5720,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "p8022": {
@@ -6005,6 +6061,10 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -7278,6 +7338,10 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -7300,6 +7364,10 @@
         },
         "f75375s": {
             "description": "F75373/F75375/F75387 hardware monitoring driver",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -7626,6 +7694,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
@@ -7660,6 +7732,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "p8022": {
@@ -7997,6 +8073,10 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -9274,6 +9354,10 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "ehci-hcd": {
             "description": "USB 2.0 'Enhanced' Host Controller (EHCI) Driver",
             "depends": "usbcore"
@@ -9304,6 +9388,10 @@
         },
         "f75375s": {
             "description": "F75373/F75375/F75387 hardware monitoring driver",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -9634,6 +9722,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
@@ -9668,6 +9760,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "p8022": {
@@ -10005,6 +10101,10 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "via-rhine": {
             "description": "VIA Rhine PCI Fast Ethernet driver",
@@ -11270,6 +11370,10 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
@@ -11288,6 +11392,10 @@
         },
         "f75375s": {
             "description": "F75373/F75375/F75387 hardware monitoring driver",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -11618,6 +11726,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
@@ -11652,6 +11764,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "p8022": {
@@ -11985,6 +12101,10 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -12344,6 +12464,10 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "ehci-hcd": {
             "description": "USB 2.0 'Enhanced' Host Controller (EHCI) Driver",
             "depends": "usbcore"
@@ -12374,6 +12498,10 @@
         },
         "failover": {
             "description": "Generic failover infrastructure/interface",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -12700,6 +12828,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt76": {
             "description": "MediaTek MT76x02 common routines (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211"
@@ -12730,6 +12862,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "of_mdio": {
@@ -13148,6 +13284,10 @@
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
         },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
             "depends": ""
@@ -13514,6 +13654,10 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "ehci-hcd": {
             "description": "USB 2.0 'Enhanced' Host Controller (EHCI) Driver",
             "depends": "usbcore"
@@ -13544,6 +13688,10 @@
         },
         "failover": {
             "description": "Generic failover infrastructure/interface",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -13874,6 +14022,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt76": {
             "description": "MediaTek MT76x02 common routines (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211"
@@ -13904,6 +14056,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "of_mdio": {
@@ -14325,6 +14481,10 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -15663,6 +15823,10 @@
             "description": "EFI framebuffer driver (Compiled by RR for DSM)",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "ehci-hcd": {
             "description": "USB 2.0 'Enhanced' Host Controller (EHCI) Driver",
             "depends": "usbcore"
@@ -15681,6 +15845,10 @@
         },
         "f75375s": {
             "description": "F75373/F75375/F75387 hardware monitoring driver",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -16011,6 +16179,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
@@ -16045,6 +16217,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "p8022": {
@@ -16390,6 +16566,10 @@
         "vesafb": {
             "description": "VESA VGA Framebuffer driver (Compiled by RR for DSM)",
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -17679,6 +17859,10 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "evbug": {
             "description": "Input driver event debug module",
             "depends": ""
@@ -17697,6 +17881,10 @@
         },
         "f75375s": {
             "description": "F75373/F75375/F75387 hardware monitoring driver",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -18027,6 +18215,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
@@ -18061,6 +18253,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "p8022": {
@@ -18398,6 +18594,10 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -19671,6 +19871,10 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
@@ -19693,6 +19897,10 @@
         },
         "f75375s": {
             "description": "F75373/F75375/F75387 hardware monitoring driver",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -20027,6 +20235,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211,usbcore"
@@ -20061,6 +20273,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "p8022": {
@@ -20398,6 +20614,10 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "usbcore,mmc_core"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
@@ -21687,6 +21907,10 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "efivarfs": {
+            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "etxhci-hcd": {
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": ""
@@ -21709,6 +21933,10 @@
         },
         "f75375s": {
             "description": "F75373/F75375/F75387 hardware monitoring driver",
+            "depends": ""
+        },
+        "fat": {
+            "description": "",
             "depends": ""
         },
         "fb": {
@@ -22047,6 +22275,10 @@
             "description": "Fusion MPT SPI Host driver",
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
+        "msdos": {
+            "description": "MS-DOS filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
+        },
         "mt7601u": {
             "description": "Mediatek MT7601U USB driver",
             "depends": "mac80211,cfg80211"
@@ -22081,6 +22313,10 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
+            "depends": ""
+        },
+        "ntfs": {
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
             "depends": ""
         },
         "p8022": {
@@ -22422,6 +22658,10 @@
         "ushc": {
             "description": "USB SD Host Controller driver",
             "depends": "mmc_core"
+        },
+        "vfat": {
+            "description": "VFAT filesystem support (Compiled by RR for DSM)",
+            "depends": "fat"
         },
         "vfio": {
             "description": "VFIO - User Level meta-driver",
