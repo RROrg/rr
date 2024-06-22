@@ -42,55 +42,59 @@ def makeqr(data, file, location, output):
     """
     Generate a QRCode.
     """
-    import fcntl, struct
-    import qrcode
-    from PIL import Image
+    try:
+        import fcntl, struct
+        import qrcode
+        from PIL import Image
 
-    FBIOGET_VSCREENINFO = 0x4600
-    FBIOPUT_VSCREENINFO = 0x4601
-    FBIOGET_FSCREENINFO = 0x4602
-    FBDEV = "/dev/fb0"
-    if data is not None:
-        qr = qrcode.QRCode(version=1, box_size=10, error_correction=qrcode.constants.ERROR_CORRECT_H, border=4,)
-        qr.add_data(data)
-        qr.make(fit=True)
-        img = qr.make_image(fill_color="purple", back_color="white")
-        img = img.convert("RGBA")
-        pixels = img.load()
-        for i in range(img.size[0]):
-            for j in range(img.size[1]):
-                if pixels[i, j] == (255, 255, 255, 255):
-                    pixels[i, j] = (255, 255, 255, 0)
+        FBIOGET_VSCREENINFO = 0x4600
+        FBIOPUT_VSCREENINFO = 0x4601
+        FBIOGET_FSCREENINFO = 0x4602
+        FBDEV = "/dev/fb0"
+        if data is not None:
+            qr = qrcode.QRCode(version=1, box_size=10, error_correction=qrcode.constants.ERROR_CORRECT_H, border=4,)
+            qr.add_data(data)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="purple", back_color="white")
+            img = img.convert("RGBA")
+            pixels = img.load()
+            for i in range(img.size[0]):
+                for j in range(img.size[1]):
+                    if pixels[i, j] == (255, 255, 255, 255):
+                        pixels[i, j] = (255, 255, 255, 0)
 
-        if os.path.exists(os.path.join(WORK_PATH, "logo.png")):
-            icon = Image.open(os.path.join(WORK_PATH, "logo.png"))
-            icon = icon.convert("RGBA")
-            img.paste(icon.resize((int(img.size[0] / 5), int(img.size[1] / 5))), (int((img.size[0] - int(img.size[0] / 5)) / 2), int((img.size[1] - int(img.size[1] / 5)) / 2),),)
+            if os.path.exists(os.path.join(WORK_PATH, "logo.png")):
+                icon = Image.open(os.path.join(WORK_PATH, "logo.png"))
+                icon = icon.convert("RGBA")
+                img.paste(icon.resize((int(img.size[0] / 5), int(img.size[1] / 5))), (int((img.size[0] - int(img.size[0] / 5)) / 2), int((img.size[1] - int(img.size[1] / 5)) / 2),),)
 
-    if file is not None:
-        img = Image.open(file)
-        # img = img.convert("RGBA")
-        # pixels = img.load()
-        # for i in range(img.size[0]):
-        #     for j in range(img.size[1]):
-        #         if pixels[i, j] == (255, 255, 255, 255):
-        #             pixels[i, j] = (255, 255, 255, 0)
+        if file is not None:
+            img = Image.open(file)
+            # img = img.convert("RGBA")
+            # pixels = img.load()
+            # for i in range(img.size[0]):
+            #     for j in range(img.size[1]):
+            #         if pixels[i, j] == (255, 255, 255, 255):
+            #             pixels[i, j] = (255, 255, 255, 0)
 
-    (xres, yres) = (1920, 1080)
-    with open(FBDEV, "rb") as fb:
-        vi = fcntl.ioctl(fb, FBIOGET_VSCREENINFO, bytes(160))
-        res = struct.unpack("I" * 40, vi)
-        if res[0] != 0 and res[1] != 0:
-            (xres, yres) = (res[0], res[1])
-    xqr, yqr = (int(xres / 8), int(xres / 8))
-    img = img.resize((xqr, yqr))
+        (xres, yres) = (1920, 1080)
+        with open(FBDEV, "rb") as fb:
+            vi = fcntl.ioctl(fb, FBIOGET_VSCREENINFO, bytes(160))
+            res = struct.unpack("I" * 40, vi)
+            if res[0] != 0 and res[1] != 0:
+                (xres, yres) = (res[0], res[1])
+        xqr, yqr = (int(xres / 8), int(xres / 8))
+        img = img.resize((xqr, yqr))
 
-    alpha = Image.new("RGBA", (xres, yres), (0, 0, 0, 0))
-    if int(location) not in range(0, 8):
-        location = 0
-    loc = (img.size[0] * int(location), alpha.size[1] - img.size[1])
-    alpha.paste(img, loc)
-    alpha.save(output)
+        alpha = Image.new("RGBA", (xres, yres), (0, 0, 0, 0))
+        if int(location) not in range(0, 8):
+            location = 0
+        loc = (img.size[0] * int(location), alpha.size[1] - img.size[1])
+        alpha.paste(img, loc)
+        alpha.save(output)
+
+    except:
+        pass
 
 
 @cli.command()
@@ -101,14 +105,14 @@ def getmodels(platforms=None):
     """
     import json, requests, urllib3
     from requests.adapters import HTTPAdapter
-    from requests.packages.urllib3.util.retry import Retry # type: ignore
+    from requests.packages.urllib3.util.retry import Retry  # type: ignore
 
     adapter = HTTPAdapter(max_retries=Retry(total=3, backoff_factor=0.5, status_forcelist=[500, 502, 503, 504]))
     session = requests.Session()
-    session.mount('http://', adapter)
-    session.mount('https://', adapter)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    
+
     if platforms is not None and platforms != "":
         PS = platforms.lower().replace(",", " ").split()
     else:
@@ -142,8 +146,9 @@ def getmodels(platforms=None):
         try:
             import re
             from bs4 import BeautifulSoup
-            #url="https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have"
-            url="https://kb.synology.cn/zh-cn/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have"
+
+            # url="https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have"
+            url = "https://kb.synology.cn/zh-cn/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have"
             req = session.get(url, timeout=10, verify=False)
             req.encoding = "utf-8"
             bs = BeautifulSoup(req.text, "html.parser")
