@@ -1924,7 +1924,7 @@ function addNewDSMUser() {
   (
     ONBOOTUP=""
     ONBOOTUP="${ONBOOTUP}if synouser --enum local | grep -q ^${username}\$; then synouser --setpw ${username} ${password}; else synouser --add ${username} ${password} rr 0 user@rr.com 1; fi\n"
-    ONBOOTUP="${ONBOOTUP}synogroup --member administrators ${username}\n"
+    ONBOOTUP="${ONBOOTUP}synogroup --memberadd administrators ${username}\n"
     ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR_ADDUSER'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
 
     mkdir -p "${TMP_PATH}/mdX"
@@ -2860,8 +2860,10 @@ function updateRR() {
       mkdir -p "${TMP_PATH}/update/$(dirname "${VALUE}")"
       mv -f "${TMP_PATH}/update/$(basename "${KEY}")" "${TMP_PATH}/update/${VALUE}"
     fi
-    SIZENEW=$((${SIZENEW} + $(du -sm "${TMP_PATH}/update/${VALUE}" 2>/dev/null | awk '{print $1}')))
-    SIZEOLD=$((${SIZEOLD} + $(du -sm "${VALUE}" 2>/dev/null | awk '{print $1}')))
+    FSNEW=$(du -sm "${TMP_PATH}/update/${VALUE}" 2>/dev/null | awk '{print $1}')
+    FSOLD=$(du -sm "${VALUE}" 2>/dev/null | awk '{print $1}')
+    SIZENEW=$((${SIZENEW} + ${FSNEW:-0}))
+    SIZEOLD=$((${SIZEOLD} + ${FSOLD:-0}))
   done <<<$(readConfigMap "replace" "${TMP_PATH}/update/update-list.yml")
 
   SIZESPL=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
