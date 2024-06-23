@@ -170,6 +170,10 @@ if echo "purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
 fi
 
 while IFS=': ' read KEY VALUE; do
+  [ -n "${KEY}" ] && CMDLINE["network.${KEY}"]="${VALUE}"
+done <<<$(readConfigMap "network" "${USER_CONFIG_FILE}")
+
+while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
 done <<<$(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
 
