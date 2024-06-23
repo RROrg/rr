@@ -877,7 +877,7 @@ function cmdlineMenu() {
           if [ -z "${NAME//\"/}" ]; then
             DIALOG --title "$(TEXT "Cmdline")" \
               --yesno "$(TEXT "Invalid parameter name, retry?")" 0 0
-            [ $? -eq 0 ] && break
+            [ $? -eq 0 ] && continue || break
           fi
           writeConfigKey "cmdline.\"${NAME//\"/}\"" "${VALUE}" "${USER_CONFIG_FILE}"
           break
@@ -937,7 +937,7 @@ function cmdlineMenu() {
           if [ -z "${sn}" -o -z "${mac1}" ]; then
             DIALOG --title "$(TEXT "Cmdline")" \
               --yesno "$(TEXT "Invalid SN/MAC, retry?")" 0 0
-            [ $? -eq 0 ] && break
+            [ $? -eq 0 ] && continue || break
           fi
           SN="${sn}"
           writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
@@ -1013,7 +1013,7 @@ function synoinfoMenu() {
           if [ -z "${NAME//\"/}" ]; then
             DIALOG --title "$(TEXT "Synoinfo")" \
               --yesno "$(TEXT "Invalid parameter name, retry?")" 0 0
-            [ $? -eq 0 ] && break
+            [ $? -eq 0 ] && continue || break
           fi
           writeConfigKey "synoinfo.\"${NAME//\"/}\"" "${VALUE}" "${USER_CONFIG_FILE}"
           touch ${PART1_PATH}/.build
@@ -1556,7 +1556,7 @@ function setWirelessAccount() {
       if [ -z "${SSID}" -o -z "${PSK}" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
           --yesno "$(TEXT "Invalid SSID/PSK, retry?")" 0 0
-        [ $? -eq 0 ] && break
+        [ $? -eq 0 ] && continue || break
       fi
       (
         rm -f ${PART1_PATH}/wpa_supplicant.conf
