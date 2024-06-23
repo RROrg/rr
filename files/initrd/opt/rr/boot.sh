@@ -294,6 +294,6 @@ else
   rm -rf "${PART1_PATH}/logs" >/dev/null 2>&1 || true
 
   KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
-  [ "${KERNELWAY}" = "kexec" ] && kexec -i -a -e || poweroff
+  [ "${KERNELWAY}" = "kexec" ] && kexec -a -e || poweroff
   exit 0
 fi
