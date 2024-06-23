@@ -863,7 +863,9 @@ function cmdlineMenu() {
       MSG+="$(TEXT " * \Z4consoleblank=300\Zn\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 10))
+      RET=0
       while true; do
+        [ ${RET} -eq 255 ] && MSG="$(TEXT "Commonly used cmdlines:\n")"
         DIALOG --title "$(TEXT "Cmdline")" \
           --form "${MSG}" ${LINENUM:-16} 100 2 "Name:" 1 1 "" 1 10 85 0 "Value:" 2 1 "" 2 10 85 0 \
           2>"${TMP_PATH}/resp"
@@ -884,7 +886,7 @@ function cmdlineMenu() {
           break
           ;;
         255) # ESC
-          break
+          # break
           ;;
         esac
       done
@@ -997,7 +999,9 @@ function synoinfoMenu() {
       MSG+="$(TEXT " * \Z4max_sys_raid_disks=12\Zn\n    Maximum number of system partition(md0) raid disks.\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 10))
+      RET=0
       while true; do
+        [ ${RET} -eq 255 ] && MSG="$(TEXT "Commonly used synoinfo:\n")"
         DIALOG --title "$(TEXT "Synoinfo")" \
           --form "${MSG}" ${LINENUM:-16} 100 2 "Name:" 1 1 "" 1 10 85 0 "Value:" 2 1 "" 2 10 85 0 \
           2>"${TMP_PATH}/resp"
@@ -1019,7 +1023,7 @@ function synoinfoMenu() {
           break
           ;;
         255) # ESC
-          break
+          # break
           ;;
         esac
       done
