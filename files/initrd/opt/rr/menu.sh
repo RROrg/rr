@@ -1706,12 +1706,12 @@ function formatDisks() {
   DIALOG --title "$(TEXT "Advanced")" \
     --yesno "$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")" 0 0
   [ $? -ne 0 ] && return
-  if [ $(ls /dev/md* 2>/dev/null | wc -l) -gt 0 ]; then
+  if [ $(ls /dev/md[0-9]* 2>/dev/null | wc -l) -gt 0 ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --yesno "$(TEXT "Warning:\nThe current hds is in raid, do you still want to format them?")" 0 0
     [ $? -ne 0 ] && return
-    for I in $(ls /dev/md* 2>/dev/null); do
-      mdadm -S "${I}"
+    for I in $(ls /dev/md[0-9]* 2>/dev/null); do
+      mdadm -S "${I}" >/dev/null 2>&1
     done
   fi
   for I in ${RESP}; do
