@@ -79,6 +79,7 @@ fi
 if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   if arrayExistItem "sortnetif:" $(readConfigMap "addons" "${USER_CONFIG_FILE}"); then
     _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
+    /etc/init.d/S41dhcpcd restart
   fi
   for ETH in ${ETHX}; do
     [ "${ETH::4}" = "wlan" ] && connectwlanif "${ETH}" && sleep 1
