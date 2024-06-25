@@ -1494,7 +1494,7 @@ function setStaticIP() {
     IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
     IFS='/' read -r -a IPRA <<<"$IPR"
 
-    MSG="$(TEXT "Set to ${ETH}(${MACR}): (Delete if empty)")"
+    MSG="$(printf "$(TEXT "Set to %s: (Delete if empty)")" "${ETH}(${MACR})")"
     while true; do
       DIALOG --title "$(TEXT "Advanced")" \
         --form "${MSG}" 10 60 4 "address" 1 1 "${IPRA[0]}" 1 9 36 16 "netmask" 2 1 "${IPRA[1]}" 2 9 36 16 "gateway" 3 1 "${IPRA[2]}" 3 9 36 16 "dns" 4 1 "${IPRA[3]}" 4 9 36 16 \
@@ -1521,6 +1521,7 @@ function setStaticIP() {
             echo "nameserver ${dnsname:-${gateway}}" >>/etc/resolv.conf
           fi
           writeConfigKey "network.${MACR}" "${address}/${netmask}/${gateway}/${dnsname}" "${USER_CONFIG_FILE}"
+          IP="$(getIP)"
           sleep 1
         fi
         touch ${PART1_PATH}/.build
