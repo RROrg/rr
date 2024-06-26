@@ -3559,7 +3559,7 @@ else
         b)
           DIALOG --title "$(TEXT "Main menu")" \
             --infobox "$(TEXT "Reboot to BIOS")" 0 0
-          efibootmgr -n 0000
+          efibootmgr -n 0000 >/dev/null 2>&1
           reboot
           exit 0
           ;;
