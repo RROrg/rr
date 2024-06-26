@@ -79,13 +79,23 @@ fi
 if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   if arrayExistItem "sortnetif:" $(readConfigMap "addons" "${USER_CONFIG_FILE}"); then
     _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
+    /etc/init.d/S41dhcpcd restart
   fi
   for ETH in ${ETHX}; do
     [ "${ETH::4}" = "wlan" ] && connectwlanif "${ETH}" && sleep 1
     MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
     IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
     if [ -n "${IPR}" ]; then
-      ip addr add ${IPC}/24 dev ${ETH}
+      IFS='/' read -r -a IPRA <<<"$IPR"
+      ip addr flush dev $ETH
+      ip addr add ${IPRA[0]}/${IPRA[1]:-"255.255.255.0"} dev $ETH
+      if [ -n "${IPRA[2]}" ]; then
+        ip route add default via ${IPRA[2]} dev $ETH
+      fi
+      if [ -n "${IPRA[3]:-${IPRA[2]}}" ]; then
+        sed -i "/nameserver ${IPRA[3]:-${IPRA[2]}}/d" /etc/resolv.conf
+        echo "nameserver ${IPRA[3]:-${IPRA[2]}}" >>/etc/resolv.conf
+      fi
       sleep 1
     fi
     [ "${ETH::3}" = "eth" ] && ethtool -s ${ETH} wol g 2>/dev/null || true

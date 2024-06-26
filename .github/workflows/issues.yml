@@ -130,7 +130,7 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             Hi @${{ github.event.issue.user.login }}.  
-            RR-${{ env.model }} is being build and package and will be sent to your email later..  
+            RR-${{ env.model }} building ...  
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: heart
@@ -233,25 +233,14 @@ jobs:
           if [ "${{ env.format }}" = "ova" ]; then
             . scripts/func.sh "${{ secrets.RRORG }}"
             convertova "rr/rr.img" "rr/rr.ova"
-            ARTIFACTS="rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip"
             (cd rr; sha256sum rr.ova >../sha256sum)
-            zip -9 "${ARTIFACTS}" -j rr/rr.ova sha256sum
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova sha256sum
           else
-            ARTIFACTS="rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip"
             (cd rr; sha256sum rr.img >../sha256sum)
-            zip -9 "${ARTIFACTS}" -j rr/rr.img sha256sum
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img sha256sum
           fi
-          # UPLOAD="$(curl -k -F "file=@${ARTIFACTS}" -F "token=${{ secrets.TT_TOKEN }}" -F "model=0"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli")"
-          if echo "${UPLOAD}" | grep -q "Download Page"; then
-            DLURL="$(echo "${UPLOAD}" | grep "Download Page" | head -1)"
-          else
-            DLURL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} - Actions artifacts."
-          fi
-          EMAIL=$(curl -s -H "Authorization: token ${{ secrets.ACTION }}" "https://api.github.com/users/${{ github.event.issue.user.login }}" | jq -r '.email')
 
           echo "TAG=${TAG}" >> $GITHUB_ENV
-          echo "EMAIL=${EMAIL}" >> $GITHUB_ENV
-          echo "DLURL=${DLURL}" >> $GITHUB_ENV
 
       - name: Upload to Artifacts
         if: env.iscustom == 'true' && success()
@@ -262,22 +251,8 @@ jobs:
             rr-${{ env.model }}-${{ env.TAG }}*.zip
           retention-days: 5
 
-      - name: Send mail
-        if: env.iscustom == 'true' && success() && env.EMAIL != 'null'
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp-mail.outlook.com
-          server_port: 587
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: rr-${{ env.model }}-${{ env.TAG }}
-          to: ${{ env.EMAIL }}
-          from: ${{ secrets.MAIL_USERNAME }}
-          body: |
-            ${{ env.DLURL }}
-
       - name: Update Comment Success
-        if: env.iscustom == 'true' && success() && env.EMAIL != 'null'
+        if: env.iscustom == 'true' && success()
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'update-comment'
@@ -286,22 +261,7 @@ jobs:
           update-mode: replace
           body: |
             Hi @${{ github.event.issue.user.login }}.  
-            RR-${{ env.model }} has been sent to your email.  
-            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
-            ----
-          emoji: hooray
-
-      - name: Update Comment Success
-        if: env.iscustom == 'true' && success() && env.EMAIL == 'null'
-        uses: actions-cool/issues-helper@v3
-        with:
-          actions: 'update-comment'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          comment-id: ${{ steps.comment.outputs.comment-id }}
-          update-mode: replace
-          body: |
-            Hi @${{ github.event.issue.user.login }}.  
-            ${{ env.DLURL }}
+            RR-${{ env.model }} build success, please download the attachment from the below link.
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: hooray
@@ -324,7 +284,7 @@ jobs:
           update-mode: replace
           body: |
             Hi @${{ github.event.issue.user.login }}.  
-            RR-${{ env.model }} failed to build and package, please try again.  
+            RR-${{ env.model }} build failed, please try again.  
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: confused

@@ -863,7 +863,9 @@ function cmdlineMenu() {
       MSG+="$(TEXT " * \Z4consoleblank=300\Zn\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 10))
+      RET=0
       while true; do
+        [ ${RET} -eq 255 ] && MSG="$(TEXT "Commonly used cmdlines:\n")"
         DIALOG --title "$(TEXT "Cmdline")" \
           --form "${MSG}" ${LINENUM:-16} 100 2 "Name:" 1 1 "" 1 10 85 0 "Value:" 2 1 "" 2 10 85 0 \
           2>"${TMP_PATH}/resp"
@@ -875,7 +877,7 @@ function cmdlineMenu() {
           if [ -z "${NAME//\"/}" ]; then
             DIALOG --title "$(TEXT "Cmdline")" \
               --yesno "$(TEXT "Invalid parameter name, retry?")" 0 0
-            [ $? -eq 0 ] && break
+            [ $? -eq 0 ] && continue || break
           fi
           writeConfigKey "cmdline.\"${NAME//\"/}\"" "${VALUE}" "${USER_CONFIG_FILE}"
           break
@@ -884,7 +886,7 @@ function cmdlineMenu() {
           break
           ;;
         255) # ESC
-          break
+          # break
           ;;
         esac
       done
@@ -935,7 +937,7 @@ function cmdlineMenu() {
           if [ -z "${sn}" -o -z "${mac1}" ]; then
             DIALOG --title "$(TEXT "Cmdline")" \
               --yesno "$(TEXT "Invalid SN/MAC, retry?")" 0 0
-            [ $? -eq 0 ] && break
+            [ $? -eq 0 ] && continue || break
           fi
           SN="${sn}"
           writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
@@ -997,7 +999,9 @@ function synoinfoMenu() {
       MSG+="$(TEXT " * \Z4max_sys_raid_disks=12\Zn\n    Maximum number of system partition(md0) raid disks.\n")"
       MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
       LINENUM=$(($(echo -e "${MSG}" | wc -l) + 10))
+      RET=0
       while true; do
+        [ ${RET} -eq 255 ] && MSG="$(TEXT "Commonly used synoinfo:\n")"
         DIALOG --title "$(TEXT "Synoinfo")" \
           --form "${MSG}" ${LINENUM:-16} 100 2 "Name:" 1 1 "" 1 10 85 0 "Value:" 2 1 "" 2 10 85 0 \
           2>"${TMP_PATH}/resp"
@@ -1009,7 +1013,7 @@ function synoinfoMenu() {
           if [ -z "${NAME//\"/}" ]; then
             DIALOG --title "$(TEXT "Synoinfo")" \
               --yesno "$(TEXT "Invalid parameter name, retry?")" 0 0
-            [ $? -eq 0 ] && break
+            [ $? -eq 0 ] && continue || break
           fi
           writeConfigKey "synoinfo.\"${NAME//\"/}\"" "${VALUE}" "${USER_CONFIG_FILE}"
           touch ${PART1_PATH}/.build
@@ -1019,7 +1023,7 @@ function synoinfoMenu() {
           break
           ;;
         255) # ESC
-          break
+          # break
           ;;
         esac
       done
@@ -1484,46 +1488,54 @@ function editGrubCfg() {
 ###############################################################################
 # Set static IP
 function setStaticIP() {
-  MSG="$(TEXT "Temporary IP: (UI will not refresh)")"
-  ITEMS=""
-  IDX=0
   ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo)
   for ETH in ${ETHX}; do
-    [ ${IDX} -gt 7 ] && break # Currently, only up to 8 are supported.  (<==> boot.sh L96, <==> lkm: MAX_NET_IFACES)
-    IDX=$((${IDX} + 1))
     MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
     IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
-    ITEMS+="${ETH}(${MACR}) ${IDX} 1 ${IPR:-\"\"} ${IDX} 22 36 16 "
-  done
-  echo ${ITEMS} >"${TMP_PATH}/opts"
-  DIALOG --title "$(TEXT "Advanced")" \
-    --form "${MSG}" 10 60 ${IDX} --file "${TMP_PATH}/opts" \
-    2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
-  (
-    IDX=1
-    for ETH in ${ETHX}; do
-      MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
-      IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
-      IPC="$(cat "${TMP_PATH}/resp" | sed -n "${IDX}p")"
-      if [ -n "${IPC}" -a "${IPR}" != "${IPC}" ]; then
-        if ! echo "${IPC}" | grep -q "/"; then
-          IPC="${IPC}/24"
+    IFS='/' read -r -a IPRA <<<"$IPR"
+
+    MSG="$(printf "$(TEXT "Set to %s: (Delete if empty)")" "${ETH}(${MACR})")"
+    while true; do
+      DIALOG --title "$(TEXT "Advanced")" \
+        --form "${MSG}" 10 60 4 "address" 1 1 "${IPRA[0]}" 1 9 36 16 "netmask" 2 1 "${IPRA[1]}" 2 9 36 16 "gateway" 3 1 "${IPRA[2]}" 3 9 36 16 "dns" 4 1 "${IPRA[3]}" 4 9 36 16 \
+        2>"${TMP_PATH}/resp"
+      RET=$?
+      case ${RET} in
+      0) # ok-button
+        DIALOG --title "$(TEXT "Advanced")" \
+          --infobox "$(TEXT "Setting IP ...")" 0 0
+        address="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
+        netmask="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
+        gateway="$(cat "${TMP_PATH}/resp" | sed -n '3p')"
+        dnsname="$(cat "${TMP_PATH}/resp" | sed -n '4p')"
+        if [ -z "${address}" ]; then
+          deleteConfigKey "network.${MACR}" "${USER_CONFIG_FILE}"
+        else
+          ip addr flush dev $ETH
+          ip addr add ${address}/${netmask:-"255.255.255.0"} dev $ETH
+          if [ -n "${gateway}" ]; then
+            ip route add default via ${gateway} dev $ETH
+          fi
+          if [ -n "${dnsname:-${gateway}}" ]; then
+            sed -i "/nameserver ${dnsname:-${gateway}}/d" /etc/resolv.conf
+            echo "nameserver ${dnsname:-${gateway}}" >>/etc/resolv.conf
+          fi
+          writeConfigKey "network.${MACR}" "${address}/${netmask}/${gateway}/${dnsname}" "${USER_CONFIG_FILE}"
+          IP="$(getIP)"
+          sleep 1
         fi
-        ip addr add ${IPC} dev ${ETH}
-        writeConfigKey "network.${MACR}" "${IPC}" "${USER_CONFIG_FILE}"
-        sleep 1
-      elif [ -z "${IPC}" ]; then
-        deleteConfigKey "network.${MACR}" "${USER_CONFIG_FILE}"
-      fi
-      IDX=$((${IDX} + 1))
+        touch ${PART1_PATH}/.build
+        break
+        ;;
+      1) # cancel-button
+        break
+        ;;
+      255) # ESC
+        break 2
+        ;;
+      esac
     done
-    sleep 1
-    IP="$(getIP)"
-    [[ "${IP}" =~ ^169\.254\..* ]] && IP=""
-  ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
-    --progressbox "$(TEXT "Setting IP ...")" 20 100
-  return
+  done
 }
 
 ###############################################################################
@@ -1552,7 +1564,7 @@ function setWirelessAccount() {
       if [ -z "${SSID}" -o -z "${PSK}" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
           --yesno "$(TEXT "Invalid SSID/PSK, retry?")" 0 0
-        [ $? -eq 0 ] && break
+        [ $? -eq 0 ] && continue || break
       fi
       (
         rm -f ${PART1_PATH}/wpa_supplicant.conf
@@ -1695,12 +1707,12 @@ function formatDisks() {
   DIALOG --title "$(TEXT "Advanced")" \
     --yesno "$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")" 0 0
   [ $? -ne 0 ] && return
-  if [ $(ls /dev/md* 2>/dev/null | wc -l) -gt 0 ]; then
+  if [ $(ls /dev/md[0-9]* 2>/dev/null | wc -l) -gt 0 ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --yesno "$(TEXT "Warning:\nThe current hds is in raid, do you still want to format them?")" 0 0
     [ $? -ne 0 ] && return
-    for I in $(ls /dev/md* 2>/dev/null); do
-      mdadm -S "${I}"
+    for I in $(ls /dev/md[0-9]* 2>/dev/null); do
+      mdadm -S "${I}" >/dev/null 2>&1
     done
   fi
   for I in ${RESP}; do
@@ -1924,7 +1936,7 @@ function addNewDSMUser() {
   (
     ONBOOTUP=""
     ONBOOTUP="${ONBOOTUP}if synouser --enum local | grep -q ^${username}\$; then synouser --setpw ${username} ${password}; else synouser --add ${username} ${password} rr 0 user@rr.com 1; fi\n"
-    ONBOOTUP="${ONBOOTUP}synogroup --member administrators ${username}\n"
+    ONBOOTUP="${ONBOOTUP}synogroup --memberadd administrators ${username}\n"
     ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR_ADDUSER'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
 
     mkdir -p "${TMP_PATH}/mdX"
@@ -2041,6 +2053,7 @@ function initDSMNetwork {
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       rm -f "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-eth"*
+      rm -f "${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-eth"*
       sync
       umount "${TMP_PATH}/mdX"
     done
@@ -2860,8 +2873,10 @@ function updateRR() {
       mkdir -p "${TMP_PATH}/update/$(dirname "${VALUE}")"
       mv -f "${TMP_PATH}/update/$(basename "${KEY}")" "${TMP_PATH}/update/${VALUE}"
     fi
-    SIZENEW=$((${SIZENEW} + $(du -sm "${TMP_PATH}/update/${VALUE}" 2>/dev/null | awk '{print $1}')))
-    SIZEOLD=$((${SIZEOLD} + $(du -sm "${VALUE}" 2>/dev/null | awk '{print $1}')))
+    FSNEW=$(du -sm "${TMP_PATH}/update/${VALUE}" 2>/dev/null | awk '{print $1}')
+    FSOLD=$(du -sm "${VALUE}" 2>/dev/null | awk '{print $1}')
+    SIZENEW=$((${SIZENEW} + ${FSNEW:-0}))
+    SIZEOLD=$((${SIZEOLD} + ${FSOLD:-0}))
   done <<<$(readConfigMap "replace" "${TMP_PATH}/update/update-list.yml")
 
   SIZESPL=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
@@ -3500,7 +3515,7 @@ else
         echo "x \"$(TEXT "Reboot to RR")\"" >>"${TMP_PATH}/menu"
         echo "y \"$(TEXT "Reboot to Recovery")\"" >>"${TMP_PATH}/menu"
         echo "z \"$(TEXT "Reboot to Junior")\"" >>"${TMP_PATH}/menu"
-        if efibootmgr | grep -q "^Boot0000" ; then
+        if efibootmgr | grep -q "^Boot0000"; then
           echo "b \"$(TEXT "Reboot to BIOS")\"" >>"${TMP_PATH}/menu"
         fi
         echo "s \"$(TEXT "Back to shell")\"" >>"${TMP_PATH}/menu"
@@ -3544,7 +3559,7 @@ else
         b)
           DIALOG --title "$(TEXT "Main menu")" \
             --infobox "$(TEXT "Reboot to BIOS")" 0 0
-          efibootmgr -n 0000
+          efibootmgr -n 0000 >/dev/null 2>&1
           reboot
           exit 0
           ;;
