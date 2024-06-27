@@ -77,7 +77,6 @@ if [ -f "${PART2_PATH}/GRUB_VER" ]; then
 fi
 
 if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
-  [ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
   if arrayExistItem "sortnetif:" $(readConfigMap "addons" "${USER_CONFIG_FILE}"); then
     _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
   fi
@@ -173,6 +172,9 @@ while [ ${COUNT} -lt 30 ]; do
   echo -n "."
   sleep 1
 done
+
+[ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
+
 echo "$(TEXT "Waiting IP.")"
 for N in ${ETHX}; do
   COUNT=0
