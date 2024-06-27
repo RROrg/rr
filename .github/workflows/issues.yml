@@ -235,6 +235,14 @@ jobs:
             convertova "rr/rr.img" "rr/rr.ova"
             (cd rr; sha256sum rr.ova >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova sha256sum
+          elif [ "${{ env.format }}" = "vmdk" ]; then
+            qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' rr/rr.vmdk
+            (cd rr; sha256sum rr.vmdk >../sha256sum)
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk sha256sum
+          elif [ "${{ env.format }}" = "vhdx" ]; then
+            qemu-img convert rr/rr.img -O vhdx -o subformat=dynamic rr/rr.vhdx
+            (cd rr; sha256sum rr.vhdx >../sha256sum)
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx sha256sum
           else
             (cd rr; sha256sum rr.img >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img sha256sum
