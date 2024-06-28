@@ -1686,13 +1686,13 @@ function showDisksInfo() {
 # Format disk
 function formatDisks() {
   rm -f "${TMP_PATH}/opts"
-  while read KNAME ID PKNAME; do
+  while read KNAME ID SIZE TYPE PKNAME; do
     [ -z "${KNAME}" ] && continue
     [[ "${KNAME}" = /dev/md* ]] && continue
     [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
     [ -z "${ID}" ] && ID="Unknown"
-    echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
-  done <<<$(lsblk -pno KNAME,ID,PKNAME)
+    printf "\"%s\" \"%-6s %-4s %s\" \"off\"\n" "${KNAME}" "${SIZE}" "${TYPE}" "${ID}" >>"${TMP_PATH}/opts"
+  done <<<$(lsblk -pno KNAME,ID,SIZE,TYPE,PKNAME)
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
