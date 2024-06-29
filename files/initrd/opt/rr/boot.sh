@@ -217,6 +217,9 @@ else
     echo -n "."
     sleep 1
   done
+
+  [ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
+
   echo "$(TEXT "Waiting IP.")"
   for N in ${ETHX}; do
     COUNT=0

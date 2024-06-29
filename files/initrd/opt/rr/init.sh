@@ -79,7 +79,6 @@ fi
 if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   if arrayExistItem "sortnetif:" $(readConfigMap "addons" "${USER_CONFIG_FILE}"); then
     _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
-    /etc/init.d/S41dhcpcd restart
   fi
   for ETH in ${ETHX}; do
     [ "${ETH::4}" = "wlan" ] && connectwlanif "${ETH}" && sleep 1
@@ -173,6 +172,9 @@ while [ ${COUNT} -lt 30 ]; do
   echo -n "."
   sleep 1
 done
+
+[ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
+
 echo "$(TEXT "Waiting IP.")"
 for N in ${ETHX}; do
   COUNT=0
