@@ -7,8 +7,8 @@
 
 PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
-KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")"
-KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")"
+KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
+KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
 
 # Adapted from: scripts/Makefile.lib
 # Usage: size_append FILE [FILE2] [FILEn]...

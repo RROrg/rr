@@ -119,8 +119,8 @@ else
   CMDLINE['noefi']=""
 fi
 DT="$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")"
-KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kver" "${WORK_PATH}/platforms.yml")"
-KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.[${PRODUCTVER}].kpre" "${WORK_PATH}/platforms.yml")"
+KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
+KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
 if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 5 ]; then
   if [ ! "${BUS}" = "usb" ]; then
     SZ=$(blockdev --getsz ${LOADER_DISK} 2>/dev/null) # SZ=$(cat /sys/block/${LOADER_DISK/\/dev\//}/size)
@@ -162,11 +162,25 @@ if [ "${DT}" = "true" ] && ! echo "epyc7002 purley broadwellnkv2" | grep -wq "${
   [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
   CMDLINE['modprobe.blacklist']+="mpt3sas"
 fi
+if true; then
+  [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
+  CMDLINE['modprobe.blacklist']+="evbug"
+fi
 if echo "apollolake geminilake" | grep -wq "${PLATFORM}"; then
   CMDLINE["intel_iommu"]="igfx_off"
 fi
 if echo "purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
   CMDLINE["SASmodel"]="1"
+fi
+
+if echo "apollolake geminilake purley" | grep -wq "${PLATFORM}"; then
+  if grep -q "^flags.*x2apic.*" /proc/cpuinfo; then
+    eval $(grep -o "RR_CMDLINE=.*$" "${USER_GRUB_CONFIG}")
+    [ -z "${RR_CMDLINE}" ] && RR_CMDLINE="bzImage-rr"
+    echo "${RR_CMDLINE}" | grep -q 'nox2apic' || sed -i "s|${RR_CMDLINE}|${RR_CMDLINE} nox2apic|" "${USER_GRUB_CONFIG}"
+  fi
+else
+  grep -q ' nox2apic' "${USER_GRUB_CONFIG}" && sed -i "s| nox2apic||" "${USER_GRUB_CONFIG}"
 fi
 
 while IFS=': ' read KEY VALUE; do
