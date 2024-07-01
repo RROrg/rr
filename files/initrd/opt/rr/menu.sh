@@ -2879,9 +2879,9 @@ function updateRR() {
     SIZEOLD=$((${SIZEOLD} + ${FSOLD:-0}))
   done <<<$(readConfigMap "replace" "${TMP_PATH}/update/update-list.yml")
 
-  SIZESPL=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
+  SIZESPL=$(df -m "${PART3_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
   if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
-    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "${PART3_PATH}" "$((${SIZENEW} - ${SIZEOLD} - ${SIZESPL}))")"
+    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "${PART3_PATH}" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -2975,7 +2975,7 @@ function updateAddons() {
   SIZEOLD="$(du -sm "${ADDONS_PATH}" 2>/dev/null | awk '{print $1}')"
   SIZESPL=$(df -m "${ADDONS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
   if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
-    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${ADDONS_PATH}")" "$((${SIZENEW} - ${SIZEOLD} - ${SIZESPL}))")"
+    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${ADDONS_PATH}")" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -3031,7 +3031,7 @@ function updateModules() {
   SIZEOLD="$(du -sm "${MODULES_PATH}" 2>/dev/null | awk '{print $1}')"
   SIZESPL=$(df -m "${MODULES_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
   if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
-    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${MODULES_PATH}")" "$((${SIZENEW} - ${SIZEOLD} - ${SIZESPL}))")"
+    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${MODULES_PATH}")" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -3097,7 +3097,7 @@ function updateLKMs() {
   SIZEOLD="$(du -sm "${LKMS_PATH}" 2>/dev/null | awk '{print $1}')"
   SIZESPL=$(df -m "${LKMS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
   if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
-    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${LKMS_PATH}")" "$((${SIZENEW} - ${SIZEOLD} - ${SIZESPL}))")"
+    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${LKMS_PATH}")" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
@@ -3153,7 +3153,7 @@ function updateCKs() {
   SIZEOLD="$(du -sm "${CKS_PATH}" 2>/dev/null | awk '{print $1}')"
   SIZESPL=$(df -m "${CKS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
   if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
-    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${CKS_PATH}")" "$((${SIZENEW} - ${SIZEOLD} - ${SIZESPL}))")"
+    MSG="$(printf "$(TEXT "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${CKS_PATH}")" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
     if [ "${2}" = "-1" ]; then
       echo "${T} - ${MSG}"
     else
