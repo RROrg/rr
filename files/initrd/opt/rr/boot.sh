@@ -141,18 +141,20 @@ else
   CMDLINE["syno_hdd_detect"]="0"
   CMDLINE["syno_hdd_powerup_seq"]="0"
 fi
-CMDLINE['panic']="${KERNELPANIC:-0}"
-CMDLINE['console']="ttyS0,115200n8"
-# CMDLINE['no_console_suspend']="1"
-CMDLINE['consoleblank']="600"
-CMDLINE['earlyprintk']=""
-CMDLINE['earlycon']="uart8250,io,0x3f8,115200n8"
-CMDLINE['root']="/dev/md0"
-CMDLINE['skip_vender_mac_interfaces']="0,1,2,3,4,5,6,7"
-CMDLINE['loglevel']="15"
-CMDLINE['log_buf_len']="32M"
 CMDLINE["HddHotplug"]="1"
 CMDLINE["vender_format_version"]="2"
+CMDLINE['skip_vender_mac_interfaces']="0,1,2,3,4,5,6,7"
+
+CMDLINE['earlyprintk']=""
+CMDLINE['earlycon']="uart8250,io,0x3f8,115200n8"
+CMDLINE['console']="ttyS0,115200n8"
+CMDLINE['consoleblank']="600"
+# CMDLINE['no_console_suspend']="1"
+CMDLINE['root']="/dev/md0"
+CMDLINE['rootwait']=""
+CMDLINE['loglevel']="15"
+CMDLINE['log_buf_len']="32M"
+CMDLINE['panic']="${KERNELPANIC:-0}"
 
 # if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ] && [ ! "${BUS}" = "mmc" ] && [ ! "${EMMCBOOT}" = "true" ]; then
 #   [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
@@ -173,16 +175,6 @@ if echo "purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
   CMDLINE["SASmodel"]="1"
 fi
 
-if echo "apollolake geminilake purley" | grep -wq "${PLATFORM}"; then
-  if grep -q "^flags.*x2apic.*" /proc/cpuinfo; then
-    eval $(grep -o "RR_CMDLINE=.*$" "${USER_GRUB_CONFIG}")
-    [ -z "${RR_CMDLINE}" ] && RR_CMDLINE="bzImage-rr"
-    echo "${RR_CMDLINE}" | grep -q 'nox2apic' || sed -i "s|${RR_CMDLINE}|${RR_CMDLINE} nox2apic|" "${USER_GRUB_CONFIG}"
-  fi
-else
-  grep -q ' nox2apic' "${USER_GRUB_CONFIG}" && sed -i "s| nox2apic||" "${USER_GRUB_CONFIG}"
-fi
-
 while IFS=': ' read KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["network.${KEY}"]="${VALUE}"
 done <<<$(readConfigMap "network" "${USER_CONFIG_FILE}")
@@ -201,15 +193,25 @@ done
 CMDLINE_LINE=$(echo "${CMDLINE_LINE}" | sed 's/^ //') # Remove leading space
 echo -e "$(TEXT "Cmdline:\n")\033[1;36m${CMDLINE_LINE}\033[0m"
 
+# Save command line to grubenv
+if echo "apollolake geminilake purley" | grep -wq "${PLATFORM}"; then
+  if grep -q "^flags.*x2apic.*" /proc/cpuinfo; then
+    checkCmdline "rr_cmdline" "nox2apic" || addCmdline "rr_cmdline" "nox2apic"
+  fi
+else
+  checkCmdline "rr_cmdline" "nox2apic" && delCmdline "rr_cmdline" "nox2apic"
+fi
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 if [ "${DIRECT}" = "true" ]; then
   CMDLINE_DIRECT=$(echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g') # Escape special chars
   grub-editenv ${USER_GRUBENVFILE} set dsm_cmdline="${CMDLINE_DIRECT}"
-  echo -e "\033[1;33m$(TEXT "Reboot to boot directly in DSM")\033[0m"
   grub-editenv ${USER_GRUBENVFILE} set next_entry="direct"
+  echo -e "\033[1;33m$(TEXT "Reboot to boot directly in DSM")\033[0m"
   reboot
   exit 0
 else
+  grub-editenv ${USER_GRUBENVFILE} unset dsm_cmdline
+  grub-editenv ${USER_GRUBENVFILE} unset next_entry
   ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo) || true
   echo "$(printf "$(TEXT "Detected %s network cards.")" "$(echo ${ETHX} | wc -w)")"
   echo -en "$(TEXT "Checking Connect.")"

@@ -256,7 +256,7 @@ function _sort_netif() {
 function getBus() {
   BUS=""
   # xvd
-  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | grep -q "xen" && echo "xen") 
+  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | grep -q "xen" && echo "xen")
   # usb/ata(sata/ide)/scsi
   [ -z "${BUS}" ] && BUS=$(udevadm info --query property --name "${1}" 2>/dev/null | grep ID_BUS | cut -d= -f2 | sed 's/ata/sata/')
   # usb/sata(sata/ide)/nvme
@@ -302,6 +302,47 @@ function getLogo() {
   magick montage "${PART3_PATH}/logo.png" -background 'none' -tile '3x3' -geometry '350x210' "${PART3_PATH}/logo.png" 2>/dev/null
   convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
   return 0
+}
+
+###############################################################################
+# check Cmdline
+# 1 - key name
+# 2 - key string
+function checkCmdline() {
+  return $(grub-editenv ${USER_GRUBENVFILE} list 2>/dev/null | grep "^${1}=" | cut -d'=' -f2- | grep -q "${2}")
+}
+
+###############################################################################
+# get logo of model
+# 1 - key name
+# 2 - key string
+function setCmdline() {
+  [ -z "${1}" ] && return 1
+  if [ -n "${2}" ]; then
+    grub-editenv ${USER_GRUBENVFILE} set "${1}=${2}"
+  else
+    grub-editenv ${USER_GRUBENVFILE} unset "${1}"
+  fi
+}
+
+###############################################################################
+# get logo of model
+# check Cmdline
+# 1 - key name
+# 2 - key string
+function addCmdline() {
+  local CMDLINE="$(grub-editenv ${USER_GRUBENVFILE} list 2>/dev/null | grep "^${1}=" | cut -d'=' -f2-)"
+  [ -n "${CMDLINE}" ] && CMDLINE="${CMDLINE} ${2}" || CMDLINE="${2}"
+  setCmdline "${1}" "${CMDLINE}"
+}
+
+###############################################################################
+# get logo of model
+# 1 - model
+function delCmdline() {
+  local CMDLINE="$(grub-editenv ${USER_GRUBENVFILE} list 2>/dev/null | grep "^${1}=" | cut -d'=' -f2-)"
+  CMDLINE="$(echo "${CMDLINE}" | sed "s/ *${2}//; s/^[[:space:]]*//;s/[[:space:]]*$//")"
+  setCmdline "${1}" "${CMDLINE}"
 }
 
 ###############################################################################
