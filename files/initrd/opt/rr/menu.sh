@@ -2070,11 +2070,11 @@ function initDSMNetwork {
 # Clone bootloader disk
 function cloneBootloaderDisk() {
   rm -f "${TMP_PATH}/opts"
-  while read KNAME ID PKNAME; do
+  while read KNAME ID SIZE PKNAME; do
     [ -z "${KNAME}" -o -z "${ID}" ] && continue
     [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
-    echo "\"${KNAME}\" \"${ID}\" \"off\"" >>"${TMP_PATH}/opts"
-  done <<<$(lsblk -dpno KNAME,ID,PKNAME)
+    printf "\"%s\" \"%-6s %s\" \"off\"\n" "${KNAME}" "${SIZE}" "${ID}" >>"${TMP_PATH}/opts"
+  done <<<$(lsblk -dpno KNAME,ID,SIZE,PKNAME)
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
@@ -2949,7 +2949,10 @@ function updateRR() {
   else
     DIALOG --title "${T}" \
       --msgbox "${MSG}" 0 0
+    DIALOG --title "${T}" \
+      --infobox "$(TEXT "Reboot to RR")" 0 0
     rebootTo config
+    exit 0
   fi
 }
 
