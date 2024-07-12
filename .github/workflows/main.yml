@@ -1,0 +1,96 @@
+#
+# Copyright (C) 2024 Ing <https://github.com/offsoc>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+
+name: Data
+on:
+  release:
+    types:
+      - created
+
+  workflow_dispatch:
+    inputs:
+      push:
+        description: "push"
+        default: false
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+        with:
+          ref: main
+
+      - name: Init Env
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          sudo timedatectl set-timezone "Asia/Shanghai"
+
+          sudo apt update
+          sudo apt install -y build-essential libtool pkgconf libzstd-dev liblzma-dev libssl-dev  # kmodule dependencies
+
+      - name: Get Release RR
+        run: |
+          REPO="https://github.com/offsoc/rr.git"
+          PRERELEASE="true"
+
+          TAG=""
+          if [ "${PRERELEASE}" = "true" ]; then
+            TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep /refs/tags/.*\.zip  | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
+          else
+            LATESTURL="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${REPO}/releases/latest")"
+            TAG="${LATESTURL##*/}"
+          fi
+          [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+          rm -f rr-${TAG}.img.zip
+          STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${REPO}/releases/download/${TAG}/rr-${TAG}.img.zip" -o "rr-${TAG}.img.zip")
+          if [ $? -ne 0 -o ${STATUS:-0} -ne 200 ]; then
+            echo "Download failed"
+            exit 1
+          fi
+          
+          unzip rr-${TAG}.img.zip -d "rr"
+
+          export TERM=xterm
+
+          sudo ./localbuild.sh create rr/ws rr/rr.img
+          if [ $? -ne 0 ]; then
+            echo "create failed"
+            exit 1
+          fi
+
+      - name: Get data
+        run: |
+          pip install -r scripts/requirements.txt
+          python scripts/func.py getmodels -w "rr/ws/initrd" -j "docs/models.json" -x "docs/models.xlsx"
+          python scripts/func.py getaddons -w "rr/ws" -j "docs/addons.json" -x "docs/addons.xlsx"
+          python scripts/func.py getmodules -w "rr/ws" -j "docs/modules.json" -x "docs/modules.xlsx"
+
+      - name: Upload to Artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: |
+            docs/*.json
+            docs/*.xlsx
+          retention-days: 5
+
+      - name: Check and Push
+        if: success() && (inputs.push == true || github.event.action == 'created')
+        run: |
+            echo "Git push ..."
+            # git checkout main
+            git pull
+            status=$(git status -s | grep -E "docs" | awk '{printf " %s", $2}')
+            if [ -n "${status}" ]; then
+              git add ${status}
+              git commit -m "update $(date +%Y-%m-%d" "%H:%M:%S)"
+              git push -f
+            fi
