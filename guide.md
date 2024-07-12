@@ -147,11 +147,22 @@
   lsmod                                            # 查看已加载驱动
   lsusb                                            # 查看 USB 设备
   lsblk                                            # 查看磁盘设备
-  lspci -Qnn                                       # 查看 PCI 设备
+  lspci -Qnnk                                      # 查看 PCI 设备
 
   # 驱动相关
   ls -ld /sys/class/net/*/device/driver            # 查看已加载网卡和对应驱动
   cat /sys/class/net/*/address                     # 查看已加载网卡的 MAC 地址
+
+  # 串口
+  cat /proc/tty/drivers                            # 查看串口属性
+  cat /proc/tty/driver/serial                      # 查看串口属性
+  stty -F /dev/ttyS0 -a                            # 查看串口参数
+  stty -F /dev/ttyS0 ispeed 115200 ospeed 115200 cs8 -parenb -cstopb -echo  # 设置串口参数
+  stty size                                        # 打印终端的行数和列数
+  echo helloworld >/dev/ttyS0                      # 向串口发送数据
+  cat /dev/ttyS0                                   # 读取串口数据
+  getty -L /dev/ttyS0 115200                       # 启动串口终端
+  agetty -L /dev/ttyS0 115200                      # 启动串口终端
 
   # 磁盘相关
   fdisk -l                                         # 查看硬盘信息
@@ -197,6 +208,14 @@
   mdadm --monitor /dev/md0                         # 监控 Raid 0 状态
   mdadm --grow /dev/md0 --level=5                  # 将 Raid 0 设备的级别改变为 RAID 5
   mdadm --zero-superblock /dev/sda1                # 清除 sda1 磁盘分区的 RAID 超级块 (使这个磁盘分区不再被识别为 RAID 设备的一部分)
+
+  # eudev 
+  udevadm control --reload-rules                   # 重新加载 udev 规则
+  udevadm trigger                                  # 触发 udev 事件
+  udevadm info --query all --name /dev/sda1        # 查看 udev 属性
+  udevadm info --query all --path /sys/class/net/eth0          # 查看 udev 属性
+  udevadm monitor --property --udev                # 监控 udev 事件
+  udevadm test /dev/sda1                           # 测试 udev 规则
 
   # 服务相关
   journalctl -xe                                   # 查看服务日志
