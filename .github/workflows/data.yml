@@ -1,8 +1,9 @@
 #
-# Copyright (C) 2024 Ing <https://github.com/offsoc>
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
 #
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
+#
 
 name: Data
 on:
@@ -22,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@main
         with:
           ref: main
 
@@ -36,59 +37,34 @@ jobs:
           sudo apt install -y build-essential libtool pkgconf libzstd-dev liblzma-dev libssl-dev  # kmodule dependencies
 
       - name: Get Release RR
-         run: |
-          REPO="https://github.com/offsoc/rr.git"
+        run: |
+          REPO="${{ github.server_url }}/${{ github.repository }}"
           PRERELEASE="true"
 
           TAG=""
           if [ "${PRERELEASE}" = "true" ]; then
-          TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep /refs/tags/.*\.zip | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
+            TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep /refs/tags/.*\.zip  | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
           else
-          LATESTURL="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${REPO}/releases/latest")"
-          TAG="${LATESTURL##*/}"
+            LATESTURL="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${REPO}/releases/latest")"
+            TAG="${LATESTURL##*/}"
           fi
-
-          if [ -z "${TAG}" ]; then
-          echo "Failed to fetch release tag."
-           exit 1
+          [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+          rm -f rr-${TAG}.img.zip
+          STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${REPO}/releases/download/${TAG}/rr-${TAG}.img.zip" -o "rr-${TAG}.img.zip")
+          if [ $? -ne 0 -o ${STATUS:-0} -ne 200 ]; then
+            echo "Download failed"
+            exit 1
           fi
+          
+          unzip rr-${TAG}.img.zip -d "rr"
 
-           if [ "${TAG:0:1}" = "v" ]; then
-           TAG="${TAG:1}"
-           fi
+          export TERM=xterm
 
-           echo "Downloading rr-${TAG}.img.zip..."
-
-             rm -f "rr-${TAG}.img.zip"
-           STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${REPO}/releases/download/${TAG}/rr-${TAG}.img.zip" -o "rr-${TAG}.img.zip")
-
-          if [ $? -ne 0 ] || [ ${STATUS:-0} -ne 200 ]; then
-          echo "Download failed with status ${STATUS}"
-          exit 1
-          fi
-
-           echo "Successfully downloaded rr-${TAG}.img.zip"
-
-            echo "Unzipping rr-${TAG}.img.zip..."
-           unzip -q "rr-${TAG}.img.zip" -d "rr"
-
-           if [ $? -ne 0 ]; then
-          echo "Failed to unzip rr-${TAG}.img.zip"
-          exit 1
-          fi
-
-           export TERM=xterm
-
-          echo "Running localbuild.sh..."
           sudo ./localbuild.sh create rr/ws rr/rr.img
-   
-             if [ $? -ne 0 ]; then
-               echo "localbuild.sh create failed"
-             exit 1
-              fi
-
-           shell: /bin/bash
-
+          if [ $? -ne 0 ]; then
+            echo "create failed"
+            exit 1
+          fi
 
       - name: Get data
         run: |
@@ -99,7 +75,7 @@ jobs:
 
       - name: Upload to Artifacts
         if: success()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: docs
           path: |
