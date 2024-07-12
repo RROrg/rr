@@ -91,6 +91,7 @@ MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
 MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
 KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
 EMMCBOOT="$(readConfigKey "emmcboot" "${USER_CONFIG_FILE}")"
+MODBLACKLIST="$(readConfigKey "modblacklist" "${USER_CONFIG_FILE}")"
 
 declare -A CMDLINE
 
@@ -155,19 +156,21 @@ CMDLINE['rootwait']=""
 CMDLINE['loglevel']="15"
 CMDLINE['log_buf_len']="32M"
 CMDLINE['panic']="${KERNELPANIC:-0}"
+CMDLINE['modprobe.blacklist']="${MODBLACKLIST}"
 
 # if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ] && [ ! "${BUS}" = "mmc" ] && [ ! "${EMMCBOOT}" = "true" ]; then
-#   [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
-#   CMDLINE['modprobe.blacklist']+="sdhci,sdhci_pci,sdhci_acpi"
+#   if ! echo "${CMDLINE['modprobe.blacklist']}" | grep -q "sdhci"; then
+#     [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
+#     CMDLINE['modprobe.blacklist']+="sdhci,sdhci_pci,sdhci_acpi"
+#   fi
 # fi
 if [ "${DT}" = "true" ] && ! echo "epyc7002 purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
-  [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
-  CMDLINE['modprobe.blacklist']+="mpt3sas"
+  if ! echo "${CMDLINE['modprobe.blacklist']}" | grep -q "mpt3sas"; then
+    [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
+    CMDLINE['modprobe.blacklist']+="mpt3sas"
+  fi
 fi
-if true; then
-  [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
-  CMDLINE['modprobe.blacklist']+="evbug"
-fi
+
 if echo "apollolake geminilake" | grep -wq "${PLATFORM}"; then
   CMDLINE["intel_iommu"]="igfx_off"
 fi
