@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: offsoc/checkout@main
+        uses: ./.github/actions/checkout
         with:
           ref: main
 
@@ -74,7 +74,7 @@ jobs:
 
       - name: Upload to Artifacts
         if: success()
-        uses: offsoc/upload-artifact@v4
+        uses: ./.github/actions/upload-artifact
         with:
           name: docs
           path: |
