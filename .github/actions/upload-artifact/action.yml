@@ -1,0 +1,24 @@
+name: 'Upload Artifact'
+description: 'Upload artifacts to GitHub'
+inputs:
+  name:
+    description: 'Name of the artifact'
+    required: true
+  path:
+    description: 'Path of the artifact'
+    required: true
+  retention-days:
+    description: 'Number of days to retain the artifact'
+    required: false
+    default: 5
+runs:
+  using: 'composite'
+  steps:
+    - name: Upload Artifact
+      run: |
+        echo "Uploading artifact: ${{ inputs.name }}"
+        echo "Path: ${{ inputs.path }}"
+        echo "Retention days: ${{ inputs.retention-days }}"
+        # Here you would add the actual upload logic
+        # For example, using the GitHub CLI
+        gh release upload ${{ github.event.release.tag_name }} ${{ inputs.path }} --clobber
