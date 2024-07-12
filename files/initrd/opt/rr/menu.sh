@@ -667,6 +667,7 @@ function moduleMenu() {
       i "$(TEXT "Deselect i915 with dependencies")" \
       p "$(TEXT "Priority use of official drivers:") \Z4${ODP}\Zn" \
       f "$(TEXT "Edit modules that need to be copied to DSM")" \
+      b "$(TEXT "modprobe blacklist")" \
       e "$(TEXT "Exit")" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
@@ -818,6 +819,28 @@ function moduleMenu() {
         mv -f "${TMP_PATH}/modulelist.user" "${USER_UP_PATH}/modulelist"
         dos2unix "${USER_UP_PATH}/modulelist"
         touch ${PART1_PATH}/.build
+        break
+      done
+      ;;
+    b)
+      # modprobe.blacklist
+      MSG=""
+      MSG+="$(TEXT "The blacklist is used to prevent the kernel from loading specific modules.\n")"
+      MSG+="$(TEXT "The blacklist is a list of module names separated by ','.\n")"
+      MSG+="$(TEXT "For example: \Z4evbug,cdc_ether\Zn\n")"
+      while true; do
+        modblacklist="$(readConfigKey "modblacklist" "${USER_CONFIG_FILE}")"
+        DIALOG --title "$(TEXT "Modules")" \
+          --inputbox "${MSG}" 12 70 "${modblacklist}" \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && break
+        VALUE="$(cat "${TMP_PATH}/resp")"
+        if [[ ${VALUE} = *" "* ]]; then
+          DIALOG --title "$(TEXT "Cmdline")" \
+            --yesno "$(TEXT "Invalid list, No spaces should appear, retry?")" 0 0
+          [ $? -eq 0 ] && continue || break
+        fi
+        writeConfigKey "modblacklist" "${VALUE}" "${USER_CONFIG_FILE}"
         break
       done
       ;;

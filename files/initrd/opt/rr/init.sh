@@ -63,6 +63,7 @@ initConfigKey "addons.acpid" "" "${USER_CONFIG_FILE}"
 initConfigKey "addons.mountloader" "" "${USER_CONFIG_FILE}"
 initConfigKey "addons.reboottoloader" "" "${USER_CONFIG_FILE}"
 initConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+initConfigKey "modblacklist" "evbug,cdc_ether" "${USER_CONFIG_FILE}"
 
 # for update
 if [ -f "${PART2_PATH}/GRUB_VER" ]; then
