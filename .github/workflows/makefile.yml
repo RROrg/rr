@@ -1,0 +1,298 @@
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+name: Issues
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Init Env
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          sudo timedatectl set-timezone "Asia/Shanghai"
+
+      - name: Check Issues
+        shell: python
+        run: |
+          # -*- coding: utf-8 -*-
+          import json, subprocess
+          def set_output(name, value):
+            subprocess.call(["echo '{}={}' >> $GITHUB_ENV".format(name, value)], shell=True)
+
+          issuetitle = ${{ toJSON(github.event.issue.title) }};
+          issuebody = ${{ toJSON(github.event.issue.body) }};
+          
+          iscustom = 'false'
+          warinfo = 'false'
+
+          format = ''
+          language= ''
+          model = ''
+          version = ''
+          addons = ''
+          modules = ''
+          try:
+              if issuetitle.lower().startswith('custom'):
+                  jsonbody = json.loads(issuebody)
+                  iscustom = 'true'
+                  format = jsonbody.get('format', '')
+                  language = jsonbody.get('language', '')
+                  model = jsonbody.get('model', '')
+                  version = jsonbody.get('version', '')
+                  addons = jsonbody.get('addons', '')
+                  modules = jsonbody.get('modules', '')
+          except ValueError as e:
+              pass
+
+          if iscustom == 'false':
+              if issuebody.find('DMI') < 0 and issuebody.find('CPU') < 0 and issuebody.find('NIC') < 0:
+                  warinfo = 'true'
+    
+          set_output("iscustom", iscustom)
+          set_output("warinfo", warinfo)  
+
+          set_output("format", format)
+          set_output("language", language)
+          set_output("model", model)
+          set_output("version", version)
+          set_output("addons", addons)
+          set_output("modules", modules)
+
+      - name: Update Comment Warinfo
+        if: env.warinfo == 'true'
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: "create-comment"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            <img src="https://user-images.githubusercontent.com/5615843/235939097-6798da58-24fd-44cc-9970-c8d2f9609704.jpg" width="400">
+
+            请填写以下信息.  
+            Please fill in the following information.  
+
+            Install ENV: (You can find it in the boot interface.)  
+            * DMI:  
+            * CPU:  
+            * NIC:  (pid & vid)  
+
+            RR version: (You can find it in the update menu.)  
+            * RR:  
+            * addons:  
+            * modules:  
+            * lkms:  
+
+            DSM: 
+            * model:  
+            * version:  
+
+            Issue:  
+
+            logs:  
+
+            (请先看一下#173、#175、#226的内容)  
+            (Plz review the content of #173, #175, #226 first)  
+            ...
+
+            ... 如果你提供不了详细信息，那就等有缘人吧!
+            ... If you can't provide detailed information, then wait for someone who is destined! 
+
+          emoji: heart
+
+      - name: Update Comment Labels
+        if: env.iscustom == 'true'
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'add-labels'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          labels: 'custom,${{ env.model }}'
+
+      - name: Update Comment Building
+        if: env.iscustom == 'true'
+        id: comment
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'create-comment'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Hi @${{ github.event.issue.user.login }}.  
+            RR-${{ env.model }} building ...  
+            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
+            ----
+          emoji: heart
+
+      - name: Run Build
+        if: env.iscustom == 'true'
+        run: |
+          # 累了, 毁灭吧!
+
+          function writeConfigKey() {
+            [ "${2}" = "{}" ] && sudo yq eval '.'${1}' = {}' --inplace "${3}" 2>/dev/null || sudo yq eval '.'${1}' = "'"${2}"'"' --inplace "${3}" 2>/dev/null
+          }
+
+          REPO="${{ github.server_url }}/${{ github.repository }}"
+          MODEL="${{ env.model }}"
+          VERSION="${{ env.version }}"
+          PRERELEASE="true"
+
+          TAG=""
+          if [ "${PRERELEASE}" = "true" ]; then
+            TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep /refs/tags/.*\.zip  | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
+          else
+            LATESTURL="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${REPO}/releases/latest")"
+            TAG="${LATESTURL##*/}"
+          fi
+          [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+          rm -f rr-${TAG}.img.zip
+          STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${REPO}/releases/download/${TAG}/rr-${TAG}.img.zip" -o "rr-${TAG}.img.zip")
+          if [ $? -ne 0 -o ${STATUS:-0} -ne 200 ]; then
+            echo "Download failed"
+            exit 1
+          fi
+          
+          unzip rr-${TAG}.img.zip -d "rr"
+
+          export TERM=xterm
+
+          sudo ./localbuild.sh create rr/ws rr/rr.img
+          if [ $? -ne 0 ]; then
+            echo "create failed"
+            exit 1
+          fi
+
+          # sudo cp -rf files/initrd/opt/rr/* rr/ws/initrd/opt/rr/
+          # sudo sed -i "s/set -e/set -ex/" rr/ws/initrd/opt/rr/init.sh
+          # sudo sed -i '/^alias/i\set -x' rr/ws/initrd/opt/rr/menu.sh
+                    
+          [ -n "${{ env.language }}" ] && echo "${{ env.language }}.UTF-8" | sudo tee rr/ws/mnt/p1/.locale
+
+          sudo ./localbuild.sh init
+          if [ $? -ne 0 ]; then
+            echo "init failed"
+            exit 1
+          fi
+
+          sudo ./localbuild.sh config "${MODEL}" "${VERSION}"
+          if [ $? -ne 0 ]; then
+            echo "config failed"
+            exit 1
+          fi
+
+          if [ -n "${{ env.addons }}" ]; then
+            echo -en "set addons"
+            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+            writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
+            echo -en ': '
+            for A in $(echo "${{ env.addons }}" | tr ',' ' '); do
+              echo -en "${A} "
+              VALUE=""
+              writeConfigKey "addons.\"${A}\"" "${VALUE}" "${USER_CONFIG_FILE}"
+            done
+            echo ""
+          fi
+          if [ -n "${{ env.modules }}" ]; then
+            echo -en "set modules"
+            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+            writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+            echo -en ': '
+            for M in $(echo "${{ env.modules }}" | tr ',' ' '); do
+              echo -en "${M} "
+              VALUE=""
+              writeConfigKey "modules.\"${M}\"" "${VALUE}" "${USER_CONFIG_FILE}"
+            done
+            echo ""
+          fi
+
+          sudo ./localbuild.sh build
+          if [ $? -ne 0 ]; then
+            echo "build failed"
+            exit 1
+          fi
+
+          sudo ./localbuild.sh pack rr/rr.img
+          if [ $? -ne 0 ]; then
+            echo "pack failed"
+            exit 1
+          fi
+
+          ls rr -al
+          if [ "${{ env.format }}" = "ova" ]; then
+            . scripts/func.sh "${{ secrets.RRORG }}"
+            convertova "rr/rr.img" "rr/rr.ova"
+            (cd rr; sha256sum rr.ova >../sha256sum)
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova sha256sum
+          elif [ "${{ env.format }}" = "vmdk" ]; then
+            qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' rr/rr.vmdk
+            (cd rr; sha256sum rr.vmdk >../sha256sum)
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk sha256sum
+          elif [ "${{ env.format }}" = "vhdx" ]; then
+            qemu-img convert rr/rr.img -O vhdx -o subformat=dynamic rr/rr.vhdx
+            (cd rr; sha256sum rr.vhdx >../sha256sum)
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx sha256sum
+          else
+            (cd rr; sha256sum rr.img >../sha256sum)
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img sha256sum
+          fi
+
+          echo "TAG=${TAG}" >> $GITHUB_ENV
+
+      - name: Upload to Artifacts
+        if: env.iscustom == 'true' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rr-${{ env.model }}-${{ env.TAG }}
+          path: |
+            rr-${{ env.model }}-${{ env.TAG }}*.zip
+          retention-days: 5
+
+      - name: Update Comment Success
+        if: env.iscustom == 'true' && success()
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'update-comment'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment-id: ${{ steps.comment.outputs.comment-id }}
+          update-mode: replace
+          body: |
+            Hi @${{ github.event.issue.user.login }}.  
+            RR-${{ env.model }} build success, please download the attachment from the below link.
+            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
+            ----
+          emoji: hooray
+
+      - name: Close Issues
+        if: env.iscustom == 'true' && success()
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'close-issue'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+
+      - name: Update Comment Fail
+        if: env.iscustom == 'true' && failure()
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'update-comment'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment-id: ${{ steps.comment.outputs.comment-id }}
+          update-mode: replace
+          body: |
+            Hi @${{ github.event.issue.user.login }}.  
+            RR-${{ env.model }} build failed, please try again.  
+            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
+            ----
+          emoji: confused
