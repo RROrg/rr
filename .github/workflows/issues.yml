@@ -144,6 +144,11 @@ jobs:
             [ "${2}" = "{}" ] && sudo yq eval '.'${1}' = {}' --inplace "${3}" 2>/dev/null || sudo yq eval '.'${1}' = "'"${2}"'"' --inplace "${3}" 2>/dev/null
           }
 
+          function readConfigKey() {
+            RESULT=$(yq eval '.'${1}' | explode(.)' "${2}" 2>/dev/null)
+            [ "${RESULT}" == "null" ] && echo "" || echo "${RESULT}"
+          }
+
           REPO="${{ github.server_url }}/${{ github.repository }}"
           MODEL="${{ env.model }}"
           VERSION="${{ env.version }}"
@@ -230,22 +235,41 @@ jobs:
           fi
 
           ls rr -al
+
+          RR_VERSION_FILE="rr/ws/mnt/p1/RR_VERSION"
+          USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+          echo "" > README.txt
+          echo "RR: " >> README.txt
+          echo "  VERSION: $(cat ${RR_VERSION_FILE} 2>/dev/null | head -1)" >> README.txt
+          echo "  CUSTOM:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> README.txt
+
+          echo "" >> README.txt
+          echo "DSM:" >> README.txt
+          echo "  MODEL:  $(readConfigKey "model" "${USER_CONFIG_FILE}")" >> README.txt
+          echo "  PATURL: $(readConfigKey "paturl" "${USER_CONFIG_FILE}")" >> README.txt
+          echo "  PATSUM: $(readConfigKey "patsum" "${USER_CONFIG_FILE}")" >> README.txt
+
+          echo "" >> README.txt
+          echo "" >> README.txt
+          echo "After the image is written to the disk, it will boot directly into DSM without the need to compile again." >> README.txt
+          echo "Of course, you can also modify the settings yourself." >> README.txt
+
           if [ "${{ env.format }}" = "ova" ]; then
             . scripts/func.sh "${{ secrets.RRORG }}"
             convertova "rr/rr.img" "rr/rr.ova"
             (cd rr; sha256sum rr.ova >../sha256sum)
-            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova sha256sum
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vmdk" ]; then
             qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' rr/rr.vmdk
             (cd rr; sha256sum rr.vmdk >../sha256sum)
-            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk sha256sum
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vhdx" ]; then
             qemu-img convert rr/rr.img -O vhdx -o subformat=dynamic rr/rr.vhdx
             (cd rr; sha256sum rr.vhdx >../sha256sum)
-            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx sha256sum
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx ${USER_CONFIG_FILE} sha256sum README.txt
           else
             (cd rr; sha256sum rr.img >../sha256sum)
-            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img sha256sum
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img ${USER_CONFIG_FILE} sha256sum README.txt
           fi
 
           echo "TAG=${TAG}" >> $GITHUB_ENV
