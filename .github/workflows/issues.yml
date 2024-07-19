@@ -100,14 +100,19 @@ jobs:
 
             Issue:  
 
-            logs:  
+            logs: 
+
+            (## 因为 log中存在 SN/MAC 等一些敏感信息, 当提供完整文件时请自行抹除他们, 当然你也可以发送到我的邮箱. ##)  
+            (## Because the log contains some sensitive information such as SN/MAC, please delete them when providing the complete file. Of course, you can also send it to my email. ##)    
+            ...
 
             (请先看一下#173、#175、#226的内容)  
             (Plz review the content of #173, #175, #226 first)  
             ...
 
-            ... 如果你提供不了详细信息，那就等有缘人吧!
-            ... If you can't provide detailed information, then wait for someone who is destined! 
+            (如果你只是说 XXX 不能用, 什么详细信息也不提供, 我也只能说感谢你的反馈.)  
+            (If you just say XXX doesn't work without providing any details, I can only say thank you for your feedback.)  
+            ... 
 
           emoji: heart
 
@@ -142,6 +147,11 @@ jobs:
 
           function writeConfigKey() {
             [ "${2}" = "{}" ] && sudo yq eval '.'${1}' = {}' --inplace "${3}" 2>/dev/null || sudo yq eval '.'${1}' = "'"${2}"'"' --inplace "${3}" 2>/dev/null
+          }
+
+          function readConfigKey() {
+            RESULT=$(yq eval '.'${1}' | explode(.)' "${2}" 2>/dev/null)
+            [ "${RESULT}" == "null" ] && echo "" || echo "${RESULT}"
           }
 
           REPO="${{ github.server_url }}/${{ github.repository }}"
@@ -230,22 +240,41 @@ jobs:
           fi
 
           ls rr -al
+
+          RR_VERSION_FILE="rr/ws/mnt/p1/RR_VERSION"
+          USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+          echo "" > README.txt
+          echo "RR: " >> README.txt
+          echo "  VERSION: $(cat ${RR_VERSION_FILE} 2>/dev/null | head -1)" >> README.txt
+          echo "  CUSTOM:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> README.txt
+
+          echo "" >> README.txt
+          echo "DSM:" >> README.txt
+          echo "  MODEL:  $(readConfigKey "model" "${USER_CONFIG_FILE}")" >> README.txt
+          echo "  PATURL: $(readConfigKey "paturl" "${USER_CONFIG_FILE}")" >> README.txt
+          echo "  PATSUM: $(readConfigKey "patsum" "${USER_CONFIG_FILE}")" >> README.txt
+
+          echo "" >> README.txt
+          echo "" >> README.txt
+          echo "After the image is written to the disk, it will boot directly into DSM without the need to compile again." >> README.txt
+          echo "Of course, you can also modify the settings yourself." >> README.txt
+
           if [ "${{ env.format }}" = "ova" ]; then
             . scripts/func.sh "${{ secrets.RRORG }}"
             convertova "rr/rr.img" "rr/rr.ova"
             (cd rr; sha256sum rr.ova >../sha256sum)
-            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova sha256sum
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vmdk" ]; then
             qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' rr/rr.vmdk
             (cd rr; sha256sum rr.vmdk >../sha256sum)
-            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk sha256sum
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vhdx" ]; then
             qemu-img convert rr/rr.img -O vhdx -o subformat=dynamic rr/rr.vhdx
             (cd rr; sha256sum rr.vhdx >../sha256sum)
-            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx sha256sum
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx ${USER_CONFIG_FILE} sha256sum README.txt
           else
             (cd rr; sha256sum rr.img >../sha256sum)
-            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img sha256sum
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img ${USER_CONFIG_FILE} sha256sum README.txt
           fi
 
           echo "TAG=${TAG}" >> $GITHUB_ENV

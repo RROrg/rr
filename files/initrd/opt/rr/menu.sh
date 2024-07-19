@@ -2319,8 +2319,10 @@ function advancedMenu() {
       echo "i \"$(TEXT "Timeout of get ip in boot:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
       echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\"" >>"${TMP_PATH}/menu"
       echo "k \"$(TEXT "kernel switching method:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
-      checkCmdline "rr_cmdline" "nomodeset" && POWEROFFDISPLAY="false" || POWEROFFDISPLAY="true"
-      echo "7 \"$(TEXT "Power off display after boot: ") \Z4${POWEROFFDISPLAY}\Zn\"" >>"${TMP_PATH}/menu"
+      if false; then  # Some GPU have compatibility issues, so this function is temporarily disabled. RR_CMDLINE= ... nomodeset
+        checkCmdline "rr_cmdline" "nomodeset" && POWEROFFDISPLAY="false" || POWEROFFDISPLAY="true"
+        echo "7 \"$(TEXT "Power off display after boot: ") \Z4${POWEROFFDISPLAY}\Zn\"" >>"${TMP_PATH}/menu"
+      fi
     fi
     echo "n \"$(TEXT "Reboot on kernel panic:") \Z4${KERNELPANIC}\Zn\"" >>"${TMP_PATH}/menu"
     if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ]; then
