@@ -304,6 +304,14 @@ else
     [ -f "${TMP_PATH}/qrcode_qhxg.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_qhxg.png" >/dev/null 2>/dev/null || true
   fi
 
+  # Proc open nvidia driver when booting
+  NVPCI_ADDR=$(lspci -vd 10de: | grep -e 0300 -e 0302 | awk '{print $1}')
+  if [ -z "$NVPCI_ADDRESS" ]; then
+    modprobe -r nouveau
+    NVDEV_PATH=$(find /sys/devices -name *$NVPCI_ADDR)/reset
+    echo 1 > $NVDEV_PATH
+  fi
+
   # Executes DSM kernel via KEXEC
   KEXECARGS=""
   if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ ${EFI} -eq 1 ]; then
