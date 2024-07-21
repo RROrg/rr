@@ -12,6 +12,19 @@ loaderIsConfigured || die "$(TEXT "Loader is not configured!")"
 # Check if machine has EFI
 [ -d /sys/firmware/efi ] && EFI=1 || EFI=0
 
+# Proc open nvidia driver when booting
+NVPCI_ADDR=$(lspci -nd 10de: | grep -e 0300 -e 0302 | awk '{print $1}')
+if [ -n "${NVPCI_ADDR}" ]; then
+  modprobe -r nouveau || true
+  NVDEV_PATH=$(find /sys/devices -name *${NVPCI_ADDR} | grep  -v supplier)
+  for DEV_PATH in ${NVDEV_PATH}
+  do
+    if [ -e ${DEV_PATH}/reset ]; then
+          echo 1 > ${DEV_PATH}/reset || true
+    fi
+  done
+fi
+
 BUS=$(getBus "${LOADER_DISK}")
 
 # Print text centralized
@@ -304,15 +317,7 @@ else
     [ -f "${TMP_PATH}/qrcode_qhxg.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_qhxg.png" >/dev/null 2>/dev/null || true
   fi
 
-  # Proc open nvidia driver when booting
-  NVPCI_ADDR=$(lspci -vd 10de: | grep -e 0300 -e 0302 | awk '{print $1}')
-  if [ -z "$NVPCI_ADDRESS" ]; then
-    modprobe -r nouveau
-    NVDEV_PATH=$(find /sys/devices -name *$NVPCI_ADDR)/reset
-    echo 1 > $NVDEV_PATH
-  fi
-
-  # Executes DSM kernel via KEXEC
+   # Executes DSM kernel via KEXEC
   KEXECARGS=""
   if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ ${EFI} -eq 1 ]; then
     echo -e "\033[1;33m$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")\033[0m"
