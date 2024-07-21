@@ -22,7 +22,7 @@ function writeConfigKey() {
 # Return Value
 function readConfigKey() {
   RESULT=$(yq eval '.'${1}' | explode(.)' "${2}" 2>/dev/null)
-  [ "${RESULT}" == "null" ] && echo "" || echo ${RESULT}
+  [ "${RESULT}" == "null" ] && echo "" || echo "${RESULT}"
 }
 
 ###############################################################################

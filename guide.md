@@ -2,7 +2,7 @@
 # ENV:
 * ### 常用工具:
    * telnet 工具 putty (下载: https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
-   * ssh 工具 FinalShell (下载: https://www.hostbuf.com/t/988.html)  
+   * ssh 工具 WindTerm (下载: https://github.com/kingToolbox/WindTerm)  
    * sftp 工具 WinSCP (下载: https://winscp.net/eng/index.php)
    * 文本编辑工具 Notepad3 (下载: https://github.com/rizonesoft/Notepad3/releases)
    * 镜像写盘工具 Rufus (下载: https://rufus.ie/zh/)
