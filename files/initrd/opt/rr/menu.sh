@@ -189,7 +189,6 @@ function modelMenu() {
     done
     writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
     writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-    writeConfigKey "kernel" "official" "${USER_CONFIG_FILE}"
     # Remove old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
     rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
@@ -328,9 +327,17 @@ function productversMenu() {
   while IFS=': ' read KEY VALUE; do
     writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
   done <<<$(readConfigMap "platforms.${PLATFORM}.synoinfo" "${WORK_PATH}/platforms.yml")
-  # Check addons
   KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
   KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
+  # Check kernel
+  if [ -f "${CKS_PATH}/bzImage-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.gz" ] &&
+    [ -f "${CKS_PATH}/modules-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.tgz" ]; then
+    :
+  else
+    KERNEL='official'
+    writeConfigKey "kernel" "${KERNEL}" "${USER_CONFIG_FILE}"
+  fi
+  # Check addons
   while IFS=': ' read ADDON PARAM; do
     [ -z "${ADDON}" ] && continue
     if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
@@ -884,13 +891,24 @@ function cmdlineMenu() {
       MSG+="$(TEXT " * \Z4apparmor.mode=complain\Zn\n    Set the AppArmor security module to complain mode.\n")"
       MSG+="$(TEXT " * \Z4pci=nommconf\Zn\n    Disable the use of Memory-Mapped Configuration for PCI devices(use this parameter cautiously).\n")"
       MSG+="$(TEXT " * \Z4consoleblank=300\Zn\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\n")"
-      MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
-      LINENUM=$(($(echo -e "${MSG}" | wc -l) + 10))
-      RET=0
+      MSG+="$(TEXT "Please enter the parameter key and value you need to add.\n")"
+
+      LINENUM=0
+      while read -r line; do LINENUM=$((LINENUM + 1 + ${#line} / 96)); done <<<"$(printf "${MSG}")" # When the width is 100, each line displays 96 characters.
+      LINENUM=$((${LINENUM:-0} + 9))                                                                # When there are 2 parameters, 9 is the minimum value to include 1 line of MSG.
+
+      dialog --print-maxsize 2>"${TMP_PATH}/maxsize"
+      DIALOG_MAXX=$(cat "${TMP_PATH}/maxsize" 2>/dev/null | grep "MaxSize" | awk -F: '{print $2}' | cut -d, -f2 | xargs)
+      DIALOG_MAXY=$(cat "${TMP_PATH}/maxsize" 2>/dev/null | grep "MaxSize" | awk -F: '{print $2}' | cut -d, -f1 | xargs)
+
+      if [ ${LINENUM:-0} -ge ${DIALOG_MAXY:-0} ]; then
+        MSG="$(TEXT "Please enter the parameter key and value you need to add.\n")"
+        LINENUM=9
+      fi
+
       while true; do
-        [ ${RET} -eq 255 ] && MSG="$(TEXT "Commonly used cmdlines:\n")"
         DIALOG --title "$(TEXT "Cmdline")" \
-          --form "${MSG}" ${LINENUM:-16} 100 2 "Name:" 1 1 "" 1 10 85 0 "Value:" 2 1 "" 2 10 85 0 \
+          --form "${MSG}" ${LINENUM:-9} 100 2 "Name:" 1 1 "" 1 10 85 0 "Value:" 2 1 "" 2 10 85 0 \
           2>"${TMP_PATH}/resp"
         RET=$?
         case ${RET} in
@@ -909,7 +927,7 @@ function cmdlineMenu() {
           break
           ;;
         255) # ESC
-          # break
+          break
           ;;
         esac
       done
@@ -1020,13 +1038,24 @@ function synoinfoMenu() {
       MSG+="$(TEXT " * \Z4esataportcfg=0x????\Zn\n    Esata disks mask(Not apply to DT models).\n")"
       MSG+="$(TEXT " * \Z4usbportcfg=0x????\Zn\n    USB disks mask(Not apply to DT models).\n")"
       MSG+="$(TEXT " * \Z4max_sys_raid_disks=12\Zn\n    Maximum number of system partition(md0) raid disks.\n")"
-      MSG+="$(TEXT "\nEnter the parameter name and value you need to add.\n")"
-      LINENUM=$(($(echo -e "${MSG}" | wc -l) + 10))
-      RET=0
+      MSG="$(TEXT "Please enter the parameter key and value you need to add.\n")"
+
+      LINENUM=0
+      while read -r line; do LINENUM=$((LINENUM + 1 + ${#line} / 96)); done <<<"$(printf "${MSG}")" # When the width is 100, each line displays 96 characters.
+      LINENUM=$((${LINENUM:-0} + 9))                                                                # When there are 2 parameters, 9 is the minimum value to include 1 line of MSG.
+
+      dialog --print-maxsize 2>"${TMP_PATH}/maxsize"
+      DIALOG_MAXX=$(cat "${TMP_PATH}/maxsize" 2>/dev/null | grep "MaxSize" | awk -F: '{print $2}' | cut -d, -f2 | xargs)
+      DIALOG_MAXY=$(cat "${TMP_PATH}/maxsize" 2>/dev/null | grep "MaxSize" | awk -F: '{print $2}' | cut -d, -f1 | xargs)
+
+      if [ ${LINENUM:-0} -ge ${DIALOG_MAXY:-0} ]; then
+        MSG="$(TEXT "Please enter the parameter key and value you need to add.\n")"
+        LINENUM=9
+      fi
+
       while true; do
-        [ ${RET} -eq 255 ] && MSG="$(TEXT "Commonly used synoinfo:\n")"
         DIALOG --title "$(TEXT "Synoinfo")" \
-          --form "${MSG}" ${LINENUM:-16} 100 2 "Name:" 1 1 "" 1 10 85 0 "Value:" 2 1 "" 2 10 85 0 \
+          --form "${MSG}" ${LINENUM:-9} 100 2 "Name:" 1 1 "" 1 10 85 0 "Value:" 2 1 "" 2 10 85 0 \
           2>"${TMP_PATH}/resp"
         RET=$?
         case ${RET} in
@@ -1046,7 +1075,7 @@ function synoinfoMenu() {
           break
           ;;
         255) # ESC
-          # break
+          break
           ;;
         esac
       done
@@ -2319,7 +2348,7 @@ function advancedMenu() {
       echo "i \"$(TEXT "Timeout of get ip in boot:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
       echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\"" >>"${TMP_PATH}/menu"
       echo "k \"$(TEXT "kernel switching method:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
-      if false; then  # Some GPU have compatibility issues, so this function is temporarily disabled. RR_CMDLINE= ... nomodeset
+      if false; then # Some GPU have compatibility issues, so this function is temporarily disabled. RR_CMDLINE= ... nomodeset
         checkCmdline "rr_cmdline" "nomodeset" && POWEROFFDISPLAY="false" || POWEROFFDISPLAY="true"
         echo "7 \"$(TEXT "Power off display after boot: ") \Z4${POWEROFFDISPLAY}\Zn\"" >>"${TMP_PATH}/menu"
       fi

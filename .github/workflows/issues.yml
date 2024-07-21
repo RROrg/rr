@@ -41,6 +41,7 @@ jobs:
           language= ''
           model = ''
           version = ''
+          kernel = ''
           addons = ''
           modules = ''
           try:
@@ -51,6 +52,7 @@ jobs:
                   language = jsonbody.get('language', '')
                   model = jsonbody.get('model', '')
                   version = jsonbody.get('version', '')
+                  kernel = jsonbody.get('kernel', '')
                   addons = jsonbody.get('addons', '')
                   modules = jsonbody.get('modules', '')
           except ValueError as e:
@@ -67,6 +69,7 @@ jobs:
           set_output("language", language)
           set_output("model", model)
           set_output("version", version)
+          set_output("kernel", kernel)
           set_output("addons", addons)
           set_output("modules", modules)
 
@@ -196,10 +199,24 @@ jobs:
             exit 1
           fi
 
+          if [ -n "${{ env.kernel }}" ]; then
+            echo -en "set kernel"
+            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+            writeConfigKey "kernel" "${{ env.kernel }}" "${USER_CONFIG_FILE}"
+            echo ""
+          fi
+
           sudo ./localbuild.sh config "${MODEL}" "${VERSION}"
           if [ $? -ne 0 ]; then
             echo "config failed"
             exit 1
+          fi
+
+          if [ -n "${{ env.kernel }}" ]; then
+            echo -en "set kernel"
+            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+            writeConfigKey "kernel" "${{ env.kernel }}" "${USER_CONFIG_FILE}"
+            echo ""
           fi
 
           if [ -n "${{ env.addons }}" ]; then
@@ -214,7 +231,8 @@ jobs:
             done
             echo ""
           fi
-          if [ -n "${{ env.modules }}" ]; then
+
+          if [ ! "custom" = "${{ env.kernel }}" ] && [ -n "${{ env.modules }}" ]; then
             echo -en "set modules"
             USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
             writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
@@ -250,9 +268,11 @@ jobs:
 
           echo "" >> README.txt
           echo "DSM:" >> README.txt
-          echo "  MODEL:  $(readConfigKey "model" "${USER_CONFIG_FILE}")" >> README.txt
-          echo "  PATURL: $(readConfigKey "paturl" "${USER_CONFIG_FILE}")" >> README.txt
-          echo "  PATSUM: $(readConfigKey "patsum" "${USER_CONFIG_FILE}")" >> README.txt
+          echo "  MODEL:   $(readConfigKey "model" "${USER_CONFIG_FILE}")" >> README.txt
+          echo "  VERSION: $(readConfigKey "productver" "${USER_CONFIG_FILE}")" >> README.txt
+          echo "  KERNEL:  $(readConfigKey "kernel" "${USER_CONFIG_FILE}")" >> README.txt
+          echo "  PATURL:  $(readConfigKey "paturl" "${USER_CONFIG_FILE}")" >> README.txt
+          echo "  PATSUM:  $(readConfigKey "patsum" "${USER_CONFIG_FILE}")" >> README.txt
 
           echo "" >> README.txt
           echo "" >> README.txt

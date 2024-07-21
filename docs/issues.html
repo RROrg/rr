@@ -65,6 +65,7 @@
                         $("#model").on("change", changeModel);
                         $("#version").on("change", changeVersion);
                         $("#language").on("change", changeVersion);
+                        $("#kernel").on("change", chanageKernel);
                         $('#addons').val("acpid,mountloader,reboottoloader");
                         setModels();
                     });
@@ -112,6 +113,7 @@
         function changeVersion() {
             createAddonsBtn();
             createModulesBtn();
+            chanageKernel();
         }
         function createAddonsBtn() {
             var language = $("#language").val();
@@ -159,6 +161,24 @@
                 $('#modules').val(extstr.join(","));
             }
         }
+
+        function chanageKernel() {
+            var model = $("#model").val();
+            var version = $("#version").val();
+            var kernel = $("#kernel").val();
+            if (model == "SA6400" && version == "7.2") {
+                $("#kernel_item").show();
+                if (kernel == "custom") {
+                    $('#modules_item').hide();
+                } else {
+                    $('#modules_item').show();
+                }
+            } else {
+                $('#modules_item').show();
+                $("#kernel_item").hide();
+            }
+        }
+
         function onclickext(type, ext) {
             var btnobj = $("#btn_" + ext);
             var extstr = $('#' + type).val().split(",");
@@ -185,9 +205,10 @@
             let formData = new FormData(form);
             var title = "custom";
             var body = {};
-            var _parameters = ["title", "format", "language", "model", "version", "addons", "modules"];
+            var _parameters = ["title", "format", "language", "model", "version", "kernel", "addons", "modules"];
             for (var key in _parameters) {
                 var name = _parameters[key];
+                if ($("#" + name).is(":hidden")) { continue; }
                 if (name == "title") {
                     if ($("#" + name).val()) {
                         title += " " + $("#" + name).val();
@@ -248,16 +269,17 @@
                 </marquee>
             </div>
         </div>
-        <div class="form-group mt-1 mb-2 ">
+        <div class="form-group mt-1 mb-2" id="title_item">
             <div class="form-group-header">
-                <label class="color-fg-default text-mono f6">Title: (Please do not delete the "custom " in the title of the issue creation page.)</label>
+                <label class="color-fg-default text-mono f6">Title: (Please do not delete the "custom " in the title of
+                    the issue creation page.)</label>
             </div>
             <div class="form-group-body">
                 <input class="form-control input-contrast input-sm" type="text" id="title" name="inputs[title]"
                     value="" />
             </div>
         </div>
-        <div class="form-group mt-1 mb-2 ">
+        <div class="form-group mt-1 mb-2" id="format_item">
             <div class="form-group-header">
                 <label class="color-fg-default text-mono f6">Format:</label>
             </div>
@@ -271,7 +293,7 @@
                 </select>
             </div>
         </div>
-        <div class="form-group mt-1 mb-2 ">
+        <div class="form-group mt-1 mb-2" id="language_item">
             <div class="form-group-header">
                 <label class="color-fg-default text-mono f6">Language:</label>
             </div>
@@ -296,7 +318,7 @@
                 </select>
             </div>
         </div>
-        <div class="form-group mt-1 mb-2 ">
+        <div class="form-group mt-1 mb-2" id="model_item">
             <div class="form-group-header">
                 <label class="color-fg-default text-mono f6">Model:</label>
             </div>
@@ -307,7 +329,7 @@
                 </select>
             </div>
         </div>
-        <div class="form-group mt-1 mb-2 ">
+        <div class="form-group mt-1 mb-2" id="version_item">
             <div class="form-group-header">
                 <label class="color-fg-default text-mono f6">Version:</label>
             </div>
@@ -318,7 +340,19 @@
                 </select>
             </div>
         </div>
-        <div class="form-group mt-1 mb-2 ">
+        <div class="form-group mt-1 mb-2" id="kernel_item">
+            <div class="form-group-header">
+                <label class="color-fg-default text-mono f6">Kernel: (only "custom" supports Hyper-V, Xen.)</label>
+            </div>
+            <div class="form-group-body">
+                <select class="form-select form-control select-sm input-contrast" id="kernel" name="inputs[kernel]"
+                    value="">
+                    <option selected="selected" value="official">official</option>
+                    <option value="custom">custom</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group mt-1 mb-2" id="addons_item">
             <div class="form-group-header">
                 <label class="color-fg-default text-mono f6">Addons:</label>
                 <a href="https://github.com/RROrg/rr/raw/main/docs/addons.xlsx"> Details</a>
@@ -330,7 +364,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group mt-1 mb-2 ">
+        <div class="form-group mt-1 mb-2" id="modules_item">
             <div class="form-group-header">
                 <label class="color-fg-default text-mono f6">Modules:</label>
                 <a href="https://github.com/RROrg/rr/raw/main/docs/modules.xlsx"> Details</a>

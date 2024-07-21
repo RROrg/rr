@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-12 09:39+0800\n"
+"POT-Creation-Date: 2024-07-21 14:36+0800\n"
 "PO-Revision-Date: 2024-05-05 22:13+0800\n"
 "Last-Translator: Ing <AI>\n"
 "Language-Team: Arabic (Saudi Arabia) <i18n-zh@RROrg>\n"
@@ -21,127 +21,127 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr "محمل ليس الحرف الأول!"
 
-#: boot.sh:10 init.sh:145
+#: boot.sh:10 init.sh:146
 msgid "Loader is not configured!"
 msgstr "لم يتم تكوين محمل!"
 
-#: boot.sh:20 init.sh:14
+#: boot.sh:33 init.sh:14
 msgid "Welcome to %s"
 msgstr "Welcome to %s"
 
-#: boot.sh:33
+#: boot.sh:46
 msgid "DSM zImage changed"
 msgstr "تم تغيير DSM zImage"
 
-#: boot.sh:36 menu.sh:1330
+#: boot.sh:49 menu.sh:1359
 msgid "zImage not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
 msgstr "zImage غير مصححة،\\nيرجى ترقية إصدار أداة تحميل التشغيل والمحاولة مرة أخرى.\\nخطأ التصحيح:\\n"
 
-#: boot.sh:44
+#: boot.sh:57
 msgid "DSM Ramdisk changed"
 msgstr "تم تغيير DSM Ramdisk"
 
-#: boot.sh:47 menu.sh:1336
+#: boot.sh:60 menu.sh:1365
 msgid "Ramdisk not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
 msgstr "Ramdisk غير مصححة،\\nيرجى ترقية إصدار أداة تحميل التشغيل والمحاولة مرة أخرى.\\nخطأ التصحيح:\\n"
 
-#: boot.sh:67
+#: boot.sh:80
 msgid "Model:   "
 msgstr "Model:   "
 
-#: boot.sh:68
+#: boot.sh:81
 msgid "Version: "
 msgstr "Version: "
 
-#: boot.sh:69
+#: boot.sh:82
 msgid "Kernel:  "
 msgstr "Kernel:  "
 
-#: boot.sh:70
+#: boot.sh:83
 msgid "LKM:     "
 msgstr "LKM:     "
 
-#: boot.sh:71
+#: boot.sh:84
 msgid "DMI:     "
 msgstr "DMI:     "
 
-#: boot.sh:72
+#: boot.sh:85
 msgid "CPU:     "
 msgstr "CPU:     "
 
-#: boot.sh:73
+#: boot.sh:86
 msgid "MEM:     "
 msgstr "MEM:     "
 
-#: boot.sh:84
+#: boot.sh:97
 msgid "Please insert at least one sata/scsi disk for system installation, except for the bootloader disk."
 msgstr "يرجى إدخال أقل من حرف واحد من وحدة التخزين الصلبة أو SCSI، باستثناء وحدة التشغيل."
 
-#: boot.sh:193
+#: boot.sh:210
 msgid "Cmdline:\\n"
 msgstr "سطر الأوامر:\\n"
 
-#: boot.sh:208
+#: boot.sh:225
 msgid "Reboot to boot directly in DSM"
 msgstr "إعادة التشغيل للدخول مباشرة في DSM"
 
-#: boot.sh:215 init.sh:158
+#: boot.sh:232 init.sh:159
 msgid "Detected %s network cards."
 msgstr "تم اكتشاف %s بطاقات الشبكة."
 
-#: boot.sh:216 init.sh:159
+#: boot.sh:233 init.sh:160
 msgid "Checking Connect."
 msgstr "التحقق من الاتصال."
 
-#: boot.sh:228 init.sh:169
+#: boot.sh:245 init.sh:170
 msgid "connected."
 msgstr "متصل."
 
-#: boot.sh:238 init.sh:179
+#: boot.sh:255 init.sh:180
 msgid "Waiting IP."
 msgstr "انتظار عنوان IP."
 
-#: boot.sh:245 init.sh:186
+#: boot.sh:262 init.sh:187
 msgid "DOWN"
 msgstr "مفلق"
 
-#: boot.sh:249 init.sh:190
+#: boot.sh:266 init.sh:191
 msgid "NOT CONNECTED"
 msgstr "غير متصل"
 
-#: boot.sh:253 init.sh:194
+#: boot.sh:270 init.sh:195
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "انتظار (يرجى التحقق من عنوان IP على الطرouter.)"
 
-#: boot.sh:260 init.sh:201
+#: boot.sh:277 init.sh:202
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "الارتباط المحلي (لم يتم اكتشاف خادم DHCP.)"
 
-#: boot.sh:262
+#: boot.sh:279
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr "\\033[1;34mhttp://%s:5000\\033[0m للوصول إلى DSM عبر الويب."
 
-#: boot.sh:275
+#: boot.sh:292
 msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
 msgstr "%2ds (تغيير الوصول (ssh/web) سيؤدي إلى إيقاف تشغيل)"
 
-#: boot.sh:279
+#: boot.sh:296
 msgid "access(ssh/web) status has changed and booting is interrupted."
 msgstr "تم تغيير الوصول (ssh/web) وبالتالي تم إيقاف تشغيل."
 
-#: boot.sh:289
+#: boot.sh:306
 msgid "Loading DSM kernel ..."
 msgstr "تحميل ядро DSM ..."
 
-#: boot.sh:306
+#: boot.sh:323
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "تحذير: يتم تشغيل kexec مع --noefi، سيحدث شيئا غريبا!!"
 
-#: boot.sh:310
+#: boot.sh:327
 msgid "Booting ..."
 msgstr "تشغيل ..."
 
-#: boot.sh:312
+#: boot.sh:329
 msgid "[This interface will not be operational. Please wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]"
 msgstr "[هذا الواجهة لن تكون عملية. يرجى الانتظار بعض الدقائق.\\nابحث عن DSM عبر http://find.synology.com/ أو Synology Assistant واتصل به.]"
 
@@ -149,55 +149,55 @@ msgstr "[هذا الواجهة لن تكون عملية. يرجى الانتظا
 msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
 msgstr "لا يوجد أجهزة شبكة! يرجى إعادة تشغيل init.sh بعد الإتصال بالشبكة!"
 
-#: init.sh:121
+#: init.sh:122
 msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC/XEN DoM"
 msgstr "ديس التحميل ليس USB أو SATA/SCSI/NVME/MMC/XEN DoM"
 
-#: init.sh:130
+#: init.sh:131
 msgid "Loader disk:"
 msgstr "ديس التحميل:"
 
-#: init.sh:138
+#: init.sh:139
 msgid "Loading keymap"
 msgstr "تحميل مفاتيح لوحة المفاتيح"
 
-#: init.sh:148
+#: init.sh:149
 msgid "User requested edit settings."
 msgstr "طلب المستخدم تعديل الإعدادات."
 
-#: init.sh:203
+#: init.sh:204
 msgid "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web terminal."
 msgstr "الوصول \\033[1;34mhttp://%s:7681\\033[0m لتهيئة المحل عبر شبكة الويب."
 
-#: init.sh:214
+#: init.sh:215
 msgid "Call \\033[1;32minit.sh\\033[0m to re get init info"
 msgstr "استدعاء \\033[1;32minit.sh\\033[0m للحصول على معلومات تهيئة جديدة"
 
-#: init.sh:215
+#: init.sh:216
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
 msgstr "استدعاء \\033[1;32mmenu.sh\\033[0m لتهيئة المحل"
 
-#: init.sh:217
+#: init.sh:218
 msgid "User config is on"
 msgstr "تكوين المستخدم مفعل"
 
-#: init.sh:218
+#: init.sh:219
 msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 msgstr "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 
-#: init.sh:219
+#: init.sh:220
 msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 msgstr "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 
-#: init.sh:220
+#: init.sh:221
 msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 msgstr "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 
-#: init.sh:222
+#: init.sh:223
 msgid "Default SSH \\033[1;31mroot\\033[0m password is"
 msgstr "الرجاء تغيير كلمة المرور الافتراضية لـ \\033[1;31mroot\\033[0m"
 
-#: init.sh:240
+#: init.sh:241
 msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
 msgstr "لا يوجد حاليا 4 جيجابايت من الذاكرة, في حالة حدوث خطأ في عملية بناء الملفات, يرجى زيادة حجم الذاكرة."
 
@@ -213,7 +213,7 @@ msgstr "الحصول على الموديلات ..."
 msgid "Failed to get models, Please check the network and try again, or use 'Parse Pat'!"
 msgstr "فشل الحصول على الموديلات، يرجى التحقق من الشبكة و المحاولة مرة أخرى، أو استخدم 'Parse Pat'!"
 
-#: menu.sh:120 menu.sh:278
+#: menu.sh:120 menu.sh:277
 msgid "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!"
 msgstr "غير قادر على الاتصال بموقع Synology، يرجى التحقق من الشبكة و المحاولة مرة أخرى، أو استخدم 'Parse Pat'!"
 
@@ -225,1297 +225,1297 @@ msgstr "تعطيل القيود على العلامات"
 msgid "Choose the model"
 msgstr "اختيار الموديل"
 
-#: menu.sh:207 menu.sh:215 menu.sh:249 menu.sh:294 menu.sh:323 menu.sh:447
+#: menu.sh:206 menu.sh:214 menu.sh:248 menu.sh:293 menu.sh:322 menu.sh:454
 msgid "Product Version"
 msgstr "إصدار المنتج"
 
-#: menu.sh:208
+#: menu.sh:207
 msgid "Choose a product version"
 msgstr "اختيار إصدار المنتج"
 
-#: menu.sh:216
+#: menu.sh:215
 msgid "The current version has been set to %s. Do you want to reset the version?"
 msgstr "إصدار الحالي تم تعيينه إلى %s. هل تريد إعادة تعيين الإصدار؟"
 
-#: menu.sh:250
+#: menu.sh:249
 msgid "Get pat data ..."
 msgstr "الحصول على بيانات PAT ..."
 
-#: menu.sh:280
+#: menu.sh:279
 msgid "Failed to get pat data,\\nPlease manually fill in the URL and md5sum of the corresponding version of pat.\\nOr click 'Retry'."
 msgstr "فشل في الحصول على بيانات PAT,\\nيرجى تعبئة عنوان URL و معرّف MD5 من الإصدار المناسب لـ PAT بـ.\\nأو انقر فوق 'إعادة المحاولة'."
 
-#: menu.sh:286
+#: menu.sh:285
 msgid "Successfully to get pat data."
 msgstr "تم الحصول على بيانات PAT بنجاح."
 
-#: menu.sh:288
+#: menu.sh:287
 msgid "Note: There is no version %s and automatically returns to version %s."
 msgstr "ملاحظة: لا يوجد إصدار %s، سيتم إرجاعك إلى الإصدار %s تلقائيًا."
 
-#: menu.sh:291
+#: menu.sh:290
 msgid "Please confirm or modify the URL and md5sum to you need."
 msgstr "يرجى التأكد أو تعديل عنوان URL و معرّف MD5 حسب الحاجة."
 
-#: menu.sh:295
+#: menu.sh:294
 msgid "Retry"
 msgstr "إعادة المحاولة"
 
-#: menu.sh:324 menu.sh:383
+#: menu.sh:323 menu.sh:390
 msgid "Reconfiguring Synoinfo, Addons and Modules ..."
 msgstr "إعادة تكوين Synoinfo و الموديولات و الملحقات ..."
 
-#: menu.sh:355 menu.sh:366
+#: menu.sh:362 menu.sh:373
 msgid "DSM Invalid, try again!"
 msgstr "DSM غير صالح، يرجى المحاولة مرة أخرى!"
 
-#: menu.sh:379
+#: menu.sh:386
 msgid "Currently, %s is not supported."
 msgstr "حاليا، %s غير مدعومة."
 
-#: menu.sh:431
+#: menu.sh:438
 msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
 msgstr "تم اختيار %s و %s.\\n'Parse Pat' سوف يكتب على الاختيار السابق.\\nهل تريد المتابعة؟"
 
-#: menu.sh:432
+#: menu.sh:439
 msgid "Parse Pat"
 msgstr "Parse Pat"
 
-#: menu.sh:441
+#: menu.sh:448
 msgid "No pat file found in /tmp/pats/ folder!\\n"
 msgstr "لملفات المضمنة في /tmp/pats/ غير موجودة!\\n"
 
-#: menu.sh:442
+#: menu.sh:449
 msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
 msgstr "يرجى تحميل ملف المضمن إلى مجلد /tmp/pats/ عبر DUFS و إعادة إدخال هذا الخيار.\\n"
 
-#: menu.sh:443 menu.sh:453 menu.sh:3243 menu.sh:3244 menu.sh:3245 menu.sh:3246 menu.sh:3247 menu.sh:3248 menu.sh:3254 menu.sh:3279 menu.sh:3291 menu.sh:3303 menu.sh:3315 menu.sh:3330 menu.sh:3341 menu.sh:3358 menu.sh:3377
+#: menu.sh:450 menu.sh:460 menu.sh:3274 menu.sh:3275 menu.sh:3276 menu.sh:3277 menu.sh:3278 menu.sh:3279 menu.sh:3285 menu.sh:3310 menu.sh:3322 menu.sh:3334 menu.sh:3346 menu.sh:3361 menu.sh:3372 menu.sh:3389 menu.sh:3408
 msgid "Update"
 msgstr "تحديث"
 
-#: menu.sh:448
+#: menu.sh:455
 msgid "Choose a pat file"
 msgstr "اختيار ملف pat"
 
-#: menu.sh:454 menu.sh:1124 menu.sh:1200
+#: menu.sh:461 menu.sh:1153 menu.sh:1229
 msgid "pat Invalid, try again!"
 msgstr "ملف pat غير صالح، حاول مرة أخرى!"
 
-#: menu.sh:460
+#: menu.sh:467
 msgid "Parse %s ..."
 msgstr "تحليل %s ..."
 
-#: menu.sh:491 menu.sh:1343
+#: menu.sh:498 menu.sh:1372
 msgid "Ready!"
 msgstr "جاهز!"
 
-#: menu.sh:494 menu.sh:1349 menu.sh:3397 menu.sh:3467 menu.sh:3485 menu.sh:3565 menu.sh:3571 menu.sh:3577 menu.sh:3583 menu.sh:3589 menu.sh:3595 menu.sh:3601
+#: menu.sh:501 menu.sh:1378 menu.sh:3428 menu.sh:3498 menu.sh:3516 menu.sh:3596 menu.sh:3602 menu.sh:3608 menu.sh:3614 menu.sh:3620 menu.sh:3626 menu.sh:3632
 msgid "Main menu"
 msgstr "القائمة الرئيسية"
 
-#: menu.sh:495
+#: menu.sh:502
 msgid "Making ..."
 msgstr "صنع ..."
 
-#: menu.sh:497 menu.sh:1356
+#: menu.sh:504 menu.sh:1385
 msgid "Error"
 msgstr "خطأ"
 
-#: menu.sh:532 menu.sh:549 menu.sh:554 menu.sh:560 menu.sh:571 menu.sh:579 menu.sh:602 menu.sh:609 menu.sh:613 menu.sh:627 menu.sh:631 menu.sh:639 menu.sh:643 menu.sh:2985 menu.sh:3034 menu.sh:3245 menu.sh:3280 menu.sh:3285
+#: menu.sh:539 menu.sh:556 menu.sh:561 menu.sh:567 menu.sh:578 menu.sh:586 menu.sh:609 menu.sh:616 menu.sh:620 menu.sh:634 menu.sh:638 menu.sh:646 menu.sh:650 menu.sh:3016 menu.sh:3065 menu.sh:3276 menu.sh:3311 menu.sh:3316
 msgid "Addons"
 msgstr "إضافات"
 
-#: menu.sh:533 menu.sh:663 menu.sh:866 menu.sh:1010 menu.sh:1378 menu.sh:3468
+#: menu.sh:540 menu.sh:670 menu.sh:873 menu.sh:1028 menu.sh:1407 menu.sh:3499
 msgid "Choose a option"
 msgstr "اختر خيار"
 
-#: menu.sh:534
+#: menu.sh:541
 msgid "Add an addon"
 msgstr "إضافة إضافة"
 
-#: menu.sh:535
+#: menu.sh:542
 msgid "Delete addons"
 msgstr "حذف الإضافات"
 
-#: menu.sh:536
+#: menu.sh:543
 msgid "Show all addons"
 msgstr "عرض كل الإضافات"
 
-#: menu.sh:537
+#: menu.sh:544
 msgid "Upload a external addon"
 msgstr "رفع إضافة خارجية"
 
-#: menu.sh:538 menu.sh:671 menu.sh:864 menu.sh:1008 menu.sh:1383 menu.sh:2354 menu.sh:3251 menu.sh:3465 menu.sh:3563
+#: menu.sh:545 menu.sh:678 menu.sh:871 menu.sh:1026 menu.sh:1412 menu.sh:2385 menu.sh:3282 menu.sh:3496 menu.sh:3594
 msgid "Exit"
 msgstr "الخروج"
 
-#: menu.sh:550
+#: menu.sh:557
 msgid "No available addons to add"
 msgstr "لا توجد إضافات متاحة للإضافة"
 
-#: menu.sh:555
+#: menu.sh:562
 msgid "Select an addon"
 msgstr "إختيار إضافة"
 
-#: menu.sh:561
+#: menu.sh:568
 msgid "Type a optional params to addon"
 msgstr "إدخال معلومات إضافية للإضافة"
 
-#: menu.sh:572
+#: menu.sh:579
 msgid "No user addons to remove"
 msgstr "لا توجد إضافات مستخدمة للإزالة"
 
-#: menu.sh:580
+#: menu.sh:587
 msgid "Select addon to remove"
 msgstr "إختيار إضافة للإزالة"
 
-#: menu.sh:593
+#: menu.sh:600
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n\\n"
 msgstr "\"تمت إضافة الاسم باللون '\\Z4blue\\Zn'، ولم تتم إضافة اللون 'أسود'.\\n\\n"
 
-#: menu.sh:608 menu.sh:743 menu.sh:1391 menu.sh:3328
+#: menu.sh:615 menu.sh:750 menu.sh:1420 menu.sh:3359
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
 msgstr "هذه الميزة متوفرة فقط عندما يتم الوصول إليها من خلال ssh (تحتاج إلى ترminal يدعم بروتوكول ZModem).\\n"
 
-#: menu.sh:614
+#: menu.sh:621
 msgid "Please upload the *.addons file."
 msgstr "يرجى تحميل ملف *.addons."
 
-#: menu.sh:628 menu.sh:779 menu.sh:3359 menu.sh:3378
+#: menu.sh:635 menu.sh:786 menu.sh:3390 menu.sh:3409
 msgid "Not a valid file, please try again!"
 msgstr "ليس ملف صالح، يرجى المحاولة مرة أخرى!"
 
-#: menu.sh:632
+#: menu.sh:639
 msgid "The addon already exists. Do you want to overwrite it?"
 msgstr "الموديول موجود بالفعل. هل تريد الكتابة فوقه؟"
 
-#: menu.sh:640
+#: menu.sh:647
 msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
 msgstr "الموديول '%s' تمت إضافته إلى ال로در، يرجى تمكينه في القائمة 'إضافة موديول'."
 
-#: menu.sh:644
+#: menu.sh:651
 msgid "File format not recognized!"
 msgstr "النوع الملف غير معروف!"
 
-#: menu.sh:662 menu.sh:677 menu.sh:690 menu.sh:727 menu.sh:744 menu.sh:754 menu.sh:757 menu.sh:773 menu.sh:778 menu.sh:792 menu.sh:798 menu.sh:833 menu.sh:3049 menu.sh:3100 menu.sh:3246 menu.sh:3292 menu.sh:3297
+#: menu.sh:669 menu.sh:684 menu.sh:697 menu.sh:734 menu.sh:751 menu.sh:761 menu.sh:764 menu.sh:780 menu.sh:785 menu.sh:799 menu.sh:805 menu.sh:840 menu.sh:3080 menu.sh:3131 menu.sh:3277 menu.sh:3323 menu.sh:3328
 msgid "Modules"
 msgstr "الموديول"
 
-#: menu.sh:664
+#: menu.sh:671
 msgid "Show/Select modules"
 msgstr "عرض/اختيار الموديول"
 
-#: menu.sh:665
+#: menu.sh:672
 msgid "Select loaded modules"
 msgstr "اختيار الموديول المحمل"
 
-#: menu.sh:666
+#: menu.sh:673
 msgid "Upload a external module"
 msgstr "تحميل الموديول الخارجي"
 
-#: menu.sh:667
+#: menu.sh:674
 msgid "Deselect i915 with dependencies"
 msgstr "عدم اختيار i915 مع الاعتمادات"
 
-#: menu.sh:668
+#: menu.sh:675
 msgid "Priority use of official drivers:"
 msgstr "استخدام اولية للموديول الرسمي:"
 
-#: menu.sh:669
+#: menu.sh:676
 msgid "Edit modules that need to be copied to DSM"
 msgstr "تعديل الموديول الذي يجب نسخه الى DSM"
 
-#: menu.sh:670
+#: menu.sh:677
 msgid "modprobe blacklist"
 msgstr "وحدات التحقيق في القائمة السوداء"
 
-#: menu.sh:678
+#: menu.sh:685
 msgid "Reading modules ..."
 msgstr "قراءة الموديول ..."
 
-#: menu.sh:691
+#: menu.sh:698
 msgid "Select all"
 msgstr "اختيار الكل"
 
-#: menu.sh:692
+#: menu.sh:699
 msgid "Deselect all"
 msgstr "عدم اختيار الكل"
 
-#: menu.sh:693
+#: menu.sh:700
 msgid "Select modules to include"
 msgstr "اختيار الموديول التي تريد نسخها الى DSM"
 
-#: menu.sh:728
+#: menu.sh:735
 msgid "Selecting loaded modules"
 msgstr "اختيار الموديول المحملة"
 
-#: menu.sh:749
+#: menu.sh:756
 msgid "This function is experimental and dangerous. If you don't know much, please exit.\\n"
 msgstr "هذه الدالة تجريبية وخطيرة. اذا كنت لا تعرف الكثير, يرجى الخروج.\\n"
 
-#: menu.sh:750
+#: menu.sh:757
 msgid "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\\n"
 msgstr "ملف .ko المُستورد من هذه الدالة سيتم وضعه في حزمة الموديول الخاصة بالأرشيتكتور المُحدد، والتي ستؤثر على جميع الموديلات الخاصة بالأرشيتكتور.\\n"
 
-#: menu.sh:751
+#: menu.sh:758
 msgid "This program will not determine the availability of imported modules or even make type judgments, as please double check if it is correct.\\n"
 msgstr "هذا البرنامج لن يكشف متاح أو غير متاح عن الوحدات المُستوردة، كما يرجى التأكد من صحتها.\\n"
 
-#: menu.sh:752
+#: menu.sh:759
 msgid "If you want to remove it, please go to the \"Update Menu\" -> \"Update modules\" to forcibly update the modules. All imports will be reset.\\n"
 msgstr "اذا كنت تريد حذفها، يرجى الانتقال إلى القائمة \"تحديث القائمة\" -> \"تحديث الوحدات\" لتحديث الوحدات بصورة مForcible. سيتم إعادة تعيين جميع المُستوردات.\\n"
 
-#: menu.sh:753
+#: menu.sh:760
 msgid "Do you want to continue?"
 msgstr "هل تريد المتابعة؟"
 
-#: menu.sh:758
+#: menu.sh:765
 msgid "Please upload the *.ko file."
 msgstr "يرجى تحميل ملف *.ko."
 
-#: menu.sh:774
+#: menu.sh:781
 msgid "Module '%s' added to %s-%s"
 msgstr "تم إضافة الوحدة النمطية '%s' إلى %s-%s"
 
-#: menu.sh:793
+#: menu.sh:800
 msgid "No i915 with dependencies module to deselect."
 msgstr "لا توجد وحدة i915 مع وحدات مطلوبة لالغاء تحديدها."
 
-#: menu.sh:799
+#: menu.sh:806
 msgid "Module %s deselected.\\n"
 msgstr "تم الغاء تحديد الوحدة النمطية %s.\\n"
 
-#: menu.sh:815 menu.sh:1445 menu.sh:1472 menu.sh:1479 menu.sh:1502
+#: menu.sh:822 menu.sh:1474 menu.sh:1501 menu.sh:1508 menu.sh:1531
 msgid "Edit with caution"
 msgstr "تعديل بحذر"
 
-#: menu.sh:828
+#: menu.sh:835
 msgid "The blacklist is used to prevent the kernel from loading specific modules.\\n"
 msgstr "لاستخدام القائمة السوداء لتمنع ядро من تحميل وحدات معينة.\\n"
 
-#: menu.sh:829
+#: menu.sh:836
 msgid "The blacklist is a list of module names separated by ','.\\n"
 msgstr "القائمة السوداء هي قائمة منفصلة بواسطة ',' مناسبة للوحدات\\n"
 
-#: menu.sh:830
+#: menu.sh:837
 msgid "For example: \\Z4evbug,cdc_ether\\Zn\\n"
 msgstr "مثال: \\Z4evbug,cdc_ether\\Zn\\n"
 
-#: menu.sh:839 menu.sh:865 menu.sh:892 menu.sh:901 menu.sh:925 menu.sh:933 menu.sh:950 menu.sh:961
+#: menu.sh:846 menu.sh:872 menu.sh:910 menu.sh:919 menu.sh:943 menu.sh:951 menu.sh:968 menu.sh:979
 msgid "Cmdline"
 msgstr "سطر الأوامر"
 
-#: menu.sh:840
+#: menu.sh:847
 msgid "Invalid list, No spaces should appear, retry?"
 msgstr "القائمة غير صالحة، لا ينبغي وجود مسافات، هل تريد المحاولة مرة أخرى؟"
 
-#: menu.sh:858
+#: menu.sh:865
 msgid "Add/Edit a cmdline item"
 msgstr "إضافة/تعديل عنصر سطر الأوامر"
 
-#: menu.sh:859
+#: menu.sh:866
 msgid "Show/Delete cmdline items"
 msgstr "عرض/حذف عناصر سطر الأوامر"
 
-#: menu.sh:861
+#: menu.sh:868
 msgid "Define SN/MAC"
 msgstr "تعريف SN/MAC"
 
-#: menu.sh:872 menu.sh:891
+#: menu.sh:879
 msgid "Commonly used cmdlines:\\n"
 msgstr "سطر الأوامر الشائعة:\\n"
 
-#: menu.sh:873
+#: menu.sh:880
 msgid " * \\Z4SpectreAll_on=\\Zn\\n    Enable Spectre and Meltdown protection to mitigate the threat of speculative execution vulnerability.\\n"
 msgstr " * \\Z4SpectreAll_on=\\Zn\\n    قم بتمكين حماية Spectre وMeltdown للتخفيف من خطر ثغرة التنفيذ\\n"
 
-#: menu.sh:874
+#: menu.sh:881
 msgid " * \\Z4disable_mtrr_trim=\\Zn\\n    disables kernel trim any uncacheable memory out.\\n"
 msgstr " * \\Z4disable_mtrr_trim=\\Zn\\n    تعطيل محرك التفريغ من الذاكرة غير التخزينية.\\n"
 
-#: menu.sh:875
+#: menu.sh:882
 msgid " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Set the maximum C-state depth allowed by the intel_idle driver.\\n"
 msgstr " * \\Z4intel_idle.max_cstate=1\\Zn\\n    تعيين عمق الحالة C الأقصى المسموح به من قبل محرك intel_idle.\\n"
 
-#: menu.sh:876
+#: menu.sh:883
 msgid " * \\Z4pcie_port_pm=off\\Zn\\n    Turn off the power management of the PCIe port.\\n"
 msgstr " * \\Z4pcie_port_pm=off\\Zn\\n    تعطيل إدارة الطاقة من منفذ PCIe.\\n"
 
-#: menu.sh:877
+#: menu.sh:884
 msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
 msgstr " * \\Z4libata.force=noncq\\Zn\\n    تعطيل NCQ لجميع منافذ SATA.\\n"
 
-#: menu.sh:878
+#: menu.sh:885
 msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map(Not apply to DT models).\\n"
 msgstr " * \\Z4SataPortMap=??\\Zn\\n    تعيين ترتيب منفصلات SATA (لا ينطبق على الموديلات DT).\\n"
 
-#: menu.sh:879
+#: menu.sh:886
 msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence(Not apply to DT models).\\n"
 msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    تعيين ترتيب أرقام الأقراص (لا ينطبق على الموديلات DT).\\n"
 
-#: menu.sh:880
+#: menu.sh:887
 msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence(Not apply to DT models).\\n"
 msgstr "* \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    تعيين ترتيب منفصلات الأقراص (لا ينطبق على الموديلات DT).\\n"
 
-#: menu.sh:881
+#: menu.sh:888
 msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
 msgstr " * \\Z4i915.enable_guc=2\\Zn\\n    تمكين نظام تشغيل GuC في معدات الرسوم الترددية Intel (قيمة: 1، 2 أو 3)\\n"
 
-#: menu.sh:882
+#: menu.sh:889
 msgid " * \\Z4i915.max_vfs=7\\Zn\\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\\n"
 msgstr " * \\Z4i915.max_vfs=7\\Zn\\n    تعيين عدد الأداة الظاهرية (VFs) الأكبر يمكن أن يتم إنشاؤها لجهاز رسوم Intel.\\n"
 
-#: menu.sh:883
+#: menu.sh:890
 msgid " * \\Z4i915.modeset=0\\Zn\\n    Disable the kernel mode setting (KMS) feature of the i915 driver.\\n"
 msgstr " * \\Z4i915.modeset=0\\Zn\\n    تعطيل ميزة ضبط الوضع (KMS) من مُرّد Intel i915.\\n"
 
-#: menu.sh:884
+#: menu.sh:891
 msgid " * \\Z4apparmor.mode=complain\\Zn\\n    Set the AppArmor security module to complain mode.\\n"
 msgstr " * \\Z4apparmor.mode=complain\\Zn\\n    تعيين وحدة الأمان AppArmor إلى وضع التشخيص.\\n"
 
-#: menu.sh:885
+#: menu.sh:892
 msgid " * \\Z4pci=nommconf\\Zn\\n    Disable the use of Memory-Mapped Configuration for PCI devices(use this parameter cautiously).\\n"
 msgstr " * \\Z4pci=nommconf\\Zn\\n    تعطيل استخدام الذاكرة المتجهة (Memory-Mapped Configuration) لجهاز PCI (استخدم هذا المعلمة بحذر).\\n"
 
-#: menu.sh:886
+#: menu.sh:893
 msgid " * \\Z4consoleblank=300\\Zn\\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\\n"
 msgstr " * \\Z4consoleblank=300\\Zn\\n    تعيين الشاشة للغلق تلقائي 300 ثانية بعد عدم النشاط (مع أرقام ثانية).\\n"
 
-#: menu.sh:887 menu.sh:1023
-msgid "\\nEnter the parameter name and value you need to add.\\n"
-msgstr "\\nأدخل اسم و قيمة المعلمة التي تريد إضافتها.\\n"
+#: menu.sh:894 menu.sh:905 menu.sh:1041 menu.sh:1052
+msgid "Please enter the parameter key and value you need to add.\\n"
+msgstr "الرجاء إدخال مفتاح المعلمة والقيمة التي تريد إضافتها.\\n"
 
-#: menu.sh:902 menu.sh:1038
+#: menu.sh:920 menu.sh:1067
 msgid "Invalid parameter name, retry?"
 msgstr "اسم المعلمة غير صحيح، إعادة المحاولة؟"
 
-#: menu.sh:926
+#: menu.sh:944
 msgid "No user cmdline to remove"
 msgstr "لا يوجد سطر أوامر المستخدم للإزالة"
 
-#: menu.sh:934
+#: menu.sh:952
 msgid "Select cmdline to remove"
 msgstr "اختر سطر أوامر المستخدم للإزالة"
 
-#: menu.sh:945
+#: menu.sh:963
 msgid "Note: (MAC will not be set to NIC, Only for activation services.)"
 msgstr "ملاحظة: (MAC لن يتم تعيينها على NIC، فقط للخدمات النشطة.)"
 
-#: menu.sh:951
+#: menu.sh:969
 msgid "Random"
 msgstr "عشوائي"
 
-#: menu.sh:962
+#: menu.sh:980
 msgid "Invalid SN/MAC, retry?"
 msgstr "SN/MAC غير صحيح، إعادة المحاولة؟"
 
-#: menu.sh:1006
+#: menu.sh:1024
 msgid "Add/edit a synoinfo item"
 msgstr "إضافة/تعديل عنصر synoinfo"
 
-#: menu.sh:1007
+#: menu.sh:1025
 msgid "Show/Delete synoinfo items"
 msgstr "عرض/حذف عناصر synoinfo"
 
-#: menu.sh:1009 menu.sh:1028 menu.sh:1037 menu.sh:1062 menu.sh:1070
+#: menu.sh:1027 menu.sh:1057 menu.sh:1066 menu.sh:1091 menu.sh:1099
 msgid "Synoinfo"
 msgstr "synoinfo"
 
-#: menu.sh:1016 menu.sh:1027
+#: menu.sh:1034
 msgid "Commonly used synoinfo:\\n"
 msgstr "synoinfo الشائعة:\\n"
 
-#: menu.sh:1017
+#: menu.sh:1035
 msgid " * \\Z4support_apparmor=no\\Zn\\n    Disable apparmor.\\n"
 msgstr " * \\Z4support_apparmor=no\\Zn\\n    تعطيل وحدة الأمان AppArmor.\\n"
 
-#: menu.sh:1018
+#: menu.sh:1036
 msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
 msgstr " * \\Z4maxdisks=??\\Zn\\n    عدد الأقراص الأكبر المدعومة.\\n"
 
-#: menu.sh:1019
+#: menu.sh:1037
 msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    mask الأقراص الداخلية(لا ينطبق على الموديلات DT).\\n"
 
-#: menu.sh:1020
+#: menu.sh:1038
 msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    mask الأقراص Esata(لا ينطبق على الموديلات DT).\\n"
 
-#: menu.sh:1021
+#: menu.sh:1039
 msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    mask الأقراص USB(لا ينطبق على الموديلات DT).\\n"
 
-#: menu.sh:1022
+#: menu.sh:1040
 msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
 msgstr " * \\Z4max_sys_raid_disks=12\\Zn\\n    الحد الأقصى لعدد الأقراص الرمزية raid في النظام partition(md0).\\n"
 
-#: menu.sh:1063
+#: menu.sh:1092
 msgid "No synoinfo entries to remove"
 msgstr "لا توجد entrées synoinfo للحذف"
 
-#: menu.sh:1071
+#: menu.sh:1100
 msgid "Select synoinfo entry to remove"
 msgstr "اختر إدخال synoinfo للحذف"
 
-#: menu.sh:1094 menu.sh:1247
+#: menu.sh:1123 menu.sh:1276
 msgid "Network error, please check the network connection and try again."
 msgstr "خطأ في الشبكة، يرجى التحقق من اتصالك بالشبكة و المحاولة مرة أخرى."
 
-#: menu.sh:1106
+#: menu.sh:1135
 msgid "Downloading old pat to extract synology .pat extractor..."
 msgstr "تحميل pat القديم للاستخراج من synology .pat ..."
 
-#: menu.sh:1112 menu.sh:1271
+#: menu.sh:1141 menu.sh:1300
 msgid "Check internet or cache disk space.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "اختبر الإنترنت أو مساحة التخزين.\\nخطأ: %d:%d\\n(يرجى مراجعة وصف الخطأ عبر https://curl.se/libcurl/c/libcurl-errors.html.)"
 
-#: menu.sh:1153
+#: menu.sh:1182
 msgid "Uncompressed tar"
 msgstr "مضغوط"
 
-#: menu.sh:1157
+#: menu.sh:1186
 msgid "Compressed tar"
 msgstr "مضغوط"
 
-#: menu.sh:1161
+#: menu.sh:1190
 msgid "Encrypted"
 msgstr "مشفر"
 
-#: menu.sh:1165
+#: menu.sh:1194
 msgid "Could not determine if pat file is encrypted or not, maybe corrupted, try again!"
 msgstr "لا يمكن تحديد ما إذا كان ملف PAT مشفر أم لا، ربما معطّل، حاول مرة أخرى!"
 
-#: menu.sh:1172 menu.sh:1287
+#: menu.sh:1201 menu.sh:1316
 msgid "Disassembling %s: "
 msgstr "فك %s: "
 
-#: menu.sh:1180
+#: menu.sh:1209
 msgid "Extractor cached."
 msgstr "تم حفظ المُلف."
 
-#: menu.sh:1186 menu.sh:1190
+#: menu.sh:1215 menu.sh:1219
 msgid "Extracting ..."
 msgstr "تم استخراج المُلفات."
 
-#: menu.sh:1223
+#: menu.sh:1252
 msgid "%s cached."
 msgstr "%s مخبأة."
 
-#: menu.sh:1226
+#: menu.sh:1255
 msgid "The cache has been cleared. Please re 'Parse pat' before build."
 msgstr "تم مسح الملفات المؤقتة. يرجى إعادة 'تحليل الـpat' قبل البناء."
 
-#: menu.sh:1230
+#: menu.sh:1259
 msgid "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build."
 msgstr "تم مسح الملفات المؤقتة. يرجى إعادة 'إستعادة نظام DSM المحمل' قبل البناء."
 
-#: menu.sh:1234
+#: menu.sh:1263
 msgid "The pat url is empty. Please re 'Choose a version' before build."
 msgstr "عنوان الملفات المؤقتة فارغ. يرجى إعادة 'اختيار نسخة' قبل البناء."
 
-#: menu.sh:1239 menu.sh:3398
+#: menu.sh:1268 menu.sh:3429
 msgid "Cleaning cache ..."
 msgstr "تم مسح الملفات المؤقتة."
 
-#: menu.sh:1253
+#: menu.sh:1282
 msgid "Based on the current network situation, switch to %s mirror to downloading."
 msgstr "تم تحديد %s كمخزن الدائرة الدائرية للنسخة الحالية."
 
-#: menu.sh:1256
+#: menu.sh:1285
 msgid "Downloading %s ..."
 msgstr "تم تحميل %s."
 
-#: menu.sh:1277
+#: menu.sh:1306
 msgid "Checking hash of %s: "
 msgstr "تم التحقق من الهاش %s: "
 
-#: menu.sh:1280
+#: menu.sh:1309
 msgid "md5 hash of pat not match, Please reget pat data from the version menu and try again!"
 msgstr "الهاش md5 لملفات الخط غير متطابقة، يرجى إعادة تحميل ملفات الخط من قائمة الإصدار وإعادة المحاولة مرة أخرى!"
 
-#: menu.sh:1283 menu.sh:1299 menu.sh:1304
+#: menu.sh:1312 menu.sh:1328 menu.sh:1333
 msgid "OK"
 msgstr "نعم"
 
-#: menu.sh:1294
+#: menu.sh:1323
 msgid "Setting hash: "
 msgstr "تعيين الهاش: "
 
-#: menu.sh:1301
+#: menu.sh:1330
 msgid "Copying files: "
 msgstr "نسخ الملفات: "
 
-#: menu.sh:1324
+#: menu.sh:1353
 msgid "No disk space left, please clean the cache and try again!"
 msgstr "لا يوجد مساحة على القرص، يرجى تنظيف الكاش و المحاولة مرة أخرى!"
 
-#: menu.sh:1340
+#: menu.sh:1369
 msgid "Cleaning ..."
 msgstr "تنظيف ..."
 
-#: menu.sh:1350
+#: menu.sh:1379
 msgid "Making ... ('ctrl + c' to exit)"
 msgstr "صنع ... ('ctrl + c' للخروج)"
 
-#: menu.sh:1377 menu.sh:1393 menu.sh:1397 menu.sh:1414 menu.sh:1419 menu.sh:1438 menu.sh:1450 menu.sh:2315
+#: menu.sh:1406 menu.sh:1422 menu.sh:1426 menu.sh:1443 menu.sh:1448 menu.sh:1467 menu.sh:1479 menu.sh:2344
 msgid "Custom DTS"
 msgstr "DTS مخصص"
 
-#: menu.sh:1379
+#: menu.sh:1408
 msgid "Custom dts: "
 msgstr "DTS مخصص: "
 
-#: menu.sh:1380
+#: menu.sh:1409
 msgid "Upload dts file"
 msgstr "رفع ملف dts"
 
-#: menu.sh:1381
+#: menu.sh:1410
 msgid "Delete dts file"
 msgstr "حذف ملف dts"
 
-#: menu.sh:1382
+#: menu.sh:1411
 msgid "Edit dts file"
 msgstr "تعديل ملف dts"
 
-#: menu.sh:1392
+#: menu.sh:1421
 msgid "Or upload the dts file to %s via DUFS, Will be automatically imported when building."
 msgstr "أو رفع ملف dts إلى %s عبر DUFS، سيتم استيراده تلقائيًا عند البناء."
 
-#: menu.sh:1398
+#: menu.sh:1427
 msgid "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\\n(saved in /mnt/p3/users/)"
 msgstr "حاليًا، يتم دعم فقط ملفات dts. يرجى إعداد ملف dts واضغط على التأكيد للرفع.\\n(حفظ في /mnt/p3/users/)"
 
-#: menu.sh:1415 menu.sh:1451
+#: menu.sh:1444 menu.sh:1480
 msgid "Not a valid dts file, please try again!"
 msgstr "ليس ملف dts صالح، يرجى المحاولة مرة أخرى!"
 
-#: menu.sh:1420
+#: menu.sh:1449
 msgid "A valid dts file, Automatically import at compile time."
 msgstr "ملف dts صالح، يتم استيراد تلقائيًا أثناء الترجمة."
 
-#: menu.sh:1439
+#: menu.sh:1468
 msgid "No dts file to edit. Please upload first!"
 msgstr "لا توجد ملف dts للعدم تحرير. يرجى تحميل أولاً!"
 
-#: menu.sh:1520
+#: menu.sh:1549
 msgid "Set to %s: (Delete if empty)"
 msgstr "تم تعيين %s: (حذف إذا فارغ)"
 
-#: menu.sh:1522 menu.sh:1528 menu.sh:1567 menu.sh:1579 menu.sh:1588 menu.sh:1610 menu.sh:1703 menu.sh:1720 menu.sh:1724 menu.sh:1725 menu.sh:1730 menu.sh:1734 menu.sh:1747 menu.sh:1749 menu.sh:1761 menu.sh:1769 menu.sh:1844 menu.sh:1849 menu.sh:1864
-#: menu.sh:1866 menu.sh:1876 menu.sh:1900 menu.sh:1904 menu.sh:1911 menu.sh:1917 menu.sh:1936 menu.sh:1938 menu.sh:1948 menu.sh:1953 menu.sh:1981 menu.sh:1984 menu.sh:1994 menu.sh:2018 menu.sh:2021 menu.sh:2032 menu.sh:2037 menu.sh:2051 menu.sh:2054
-#: menu.sh:2064 menu.sh:2069 menu.sh:2084 menu.sh:2087 menu.sh:2102 menu.sh:2106 menu.sh:2112 menu.sh:2118 menu.sh:2124 menu.sh:2206 menu.sh:2209 menu.sh:2212 menu.sh:2239 menu.sh:2243 menu.sh:2253 menu.sh:2266 menu.sh:2277 menu.sh:2356 menu.sh:2383
-#: menu.sh:2401 menu.sh:2422 menu.sh:2434 menu.sh:2450 menu.sh:2455 menu.sh:2466 menu.sh:2503 menu.sh:2574 menu.sh:2578 menu.sh:2588 menu.sh:2594 menu.sh:2608 menu.sh:2615 menu.sh:2620 menu.sh:2623 menu.sh:2637 menu.sh:2640 menu.sh:2670
+#: menu.sh:1551 menu.sh:1557 menu.sh:1596 menu.sh:1608 menu.sh:1617 menu.sh:1639 menu.sh:1732 menu.sh:1749 menu.sh:1753 menu.sh:1754 menu.sh:1759 menu.sh:1763 menu.sh:1776 menu.sh:1778 menu.sh:1790 menu.sh:1798 menu.sh:1873 menu.sh:1878 menu.sh:1893
+#: menu.sh:1895 menu.sh:1905 menu.sh:1929 menu.sh:1933 menu.sh:1940 menu.sh:1946 menu.sh:1965 menu.sh:1967 menu.sh:1977 menu.sh:1982 menu.sh:2010 menu.sh:2013 menu.sh:2023 menu.sh:2047 menu.sh:2050 menu.sh:2061 menu.sh:2066 menu.sh:2080 menu.sh:2083
+#: menu.sh:2093 menu.sh:2098 menu.sh:2113 menu.sh:2116 menu.sh:2131 menu.sh:2135 menu.sh:2141 menu.sh:2147 menu.sh:2153 menu.sh:2235 menu.sh:2238 menu.sh:2241 menu.sh:2268 menu.sh:2272 menu.sh:2282 menu.sh:2295 menu.sh:2306 menu.sh:2387 menu.sh:2414
+#: menu.sh:2432 menu.sh:2453 menu.sh:2465 menu.sh:2481 menu.sh:2486 menu.sh:2497 menu.sh:2534 menu.sh:2605 menu.sh:2609 menu.sh:2619 menu.sh:2625 menu.sh:2639 menu.sh:2646 menu.sh:2651 menu.sh:2654 menu.sh:2668 menu.sh:2671 menu.sh:2701
 msgid "Advanced"
 msgstr "متقدم"
 
-#: menu.sh:1529
+#: menu.sh:1558
 msgid "Setting IP ..."
 msgstr "تهيئة IP ..."
 
-#: menu.sh:1568
+#: menu.sh:1597
 msgid "Scanning ..."
 msgstr "معلومات الشبكة ..."
 
-#: menu.sh:1571
+#: menu.sh:1600
 msgid "Scanned SSIDs:\\n"
 msgstr "SSIDs المعلومات:\\n"
 
-#: menu.sh:1589
+#: menu.sh:1618
 msgid "Invalid SSID/PSK, retry?"
 msgstr "SSID/PSK غير صالحة, إعادة المحاولة؟"
 
-#: menu.sh:1611
+#: menu.sh:1640
 msgid "Setting ..."
 msgstr "تهيئة ..."
 
-#: menu.sh:1700
+#: menu.sh:1729
 msgid "\\nTotal of ports: %s\\n"
 msgstr "\\nإجمالي منفذ: %s\\n"
 
-#: menu.sh:1701
+#: menu.sh:1730
 msgid "\\nPorts with color \\Z1red\\Zn as DUMMY, color \\Z2\\Zbgreen\\Zn has drive connected."
 msgstr "\\nمنفذ مع اللون \\Z1أحمر\\Zn كDUMMY، اللون \\Z2\\Zbأخضر\\Zn لديها السائق متصل."
 
-#: menu.sh:1702 menu.sh:1721 menu.sh:2103
+#: menu.sh:1731 menu.sh:1750 menu.sh:2132
 msgid "No disk found!"
 msgstr "لا يوجد قرص!"
 
-#: menu.sh:1731 menu.sh:1843 menu.sh:2031 menu.sh:2063
+#: menu.sh:1760 menu.sh:1872 menu.sh:2060 menu.sh:2092
 msgid "Warning:\\nThis operation is irreversible. Please backup important data. Do you want to continue?"
 msgstr "تحذير:\\nهذه العملية غير رجعية. يرجى النسخ الاحتياطي للبيانات المهمة. هل تريد المتابعة؟"
 
-#: menu.sh:1735
+#: menu.sh:1764
 msgid "Warning:\\nThe current hds is in raid, do you still want to format them?"
 msgstr "تحذير:\\nالحافظة الحالية في ريड، هل تريد استمرار؟"
 
-#: menu.sh:1748
+#: menu.sh:1777
 msgid "Formatting ..."
 msgstr "التنسيق ..."
 
-#: menu.sh:1750
+#: menu.sh:1779
 msgid "Formatting is complete."
 msgstr "تم التنسيق."
 
-#: menu.sh:1757 menu.sh:1780 menu.sh:1803 menu.sh:1811 menu.sh:1817 menu.sh:1832
+#: menu.sh:1786 menu.sh:1809 menu.sh:1832 menu.sh:1840 menu.sh:1846 menu.sh:1861
 msgid "Try recovery DSM"
 msgstr "محاولة استرجاع نظام DSM"
 
-#: menu.sh:1758
+#: menu.sh:1787
 msgid "Trying to recovery a installed DSM system ..."
 msgstr "محاولة استرجاع نظام DSM مثبت ..."
 
-#: menu.sh:1762 menu.sh:1850 menu.sh:1877 menu.sh:1949 menu.sh:1995 menu.sh:2038 menu.sh:2070
+#: menu.sh:1791 menu.sh:1879 menu.sh:1906 menu.sh:1978 menu.sh:2024 menu.sh:2067 menu.sh:2099
 msgid "No DSM system partition(md0) found!\\nPlease insert all disks before continuing."
 msgstr "لمجلد DSM غير موجود (md0)!\\nيرجى إدراج جميع الديسكات قبل المتابعة."
 
-#: menu.sh:1770
+#: menu.sh:1799
 msgid "mount DSM system partition(md0) failed!\\nPlease insert all disks before continuing."
 msgstr "لمجلد DSM غير موجود (md0)!\\nيرجى إدراج جميع الديسكات قبل المتابعة."
 
-#: menu.sh:1781
+#: menu.sh:1810
 msgid "Checking for backup of user's configuration for bootloader ..."
 msgstr "التحقق من نسخة احتياطية للإعدادات للمنفذ التشغيل ..."
 
-#: menu.sh:1804
+#: menu.sh:1833
 msgid "Found a backup of the user's configuration, and restored it. Please rebuild and boot."
 msgstr "تم العثور على نسخة احتياطية للإعدادات، تم استرجاعها. يرجى إعادة بناء النظام وتشغيله."
 
-#: menu.sh:1812
+#: menu.sh:1841
 msgid "Checking for installed DSM system ..."
 msgstr "التحقق من نظام DSM المحمول المحمل ..."
 
-#: menu.sh:1818
+#: menu.sh:1847
 msgid "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build."
 msgstr "تم العثور على نظام DSM المحمول المحمل، لكن النظام تالف ولا يمكن استرجاعه. يرجى إعادة تحديد النظام والمنفذ وإعادة بناء النظام."
 
-#: menu.sh:1833
+#: menu.sh:1862
 msgid "Found a installed DSM system and restored it. Please rebuild and boot."
 msgstr "تم العثور على نظام DSM المحمول المحمل، تم استرجاعه. يرجى إعادة بناء النظام وتشغيله."
 
-#: menu.sh:1842
+#: menu.sh:1871
 msgid "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\\n"
 msgstr "هذه الميزة تسمح لك بإزالة ملف الإصدار من الصلب في جميع الأقراص الأصلية.\\n"
 
-#: menu.sh:1865 menu.sh:2052
+#: menu.sh:1894 menu.sh:2081
 msgid "Removing ..."
 msgstr "إزالة ..."
 
-#: menu.sh:1867
+#: menu.sh:1896
 msgid "Remove VERSION file for DSM system partition(md0) completed."
 msgstr "تم إزالة ملف الإصدار من الصلب في الصلب الخاص بـ DSM (md0)."
 
-#: menu.sh:1901
+#: menu.sh:1930
 msgid "All existing users have been disabled. Please try adding new user."
 msgstr "تم تعطيل جميع المستخدمين الموجودين. يرجى المحاولة بإضافة مستخدم جديد."
 
-#: menu.sh:1905
+#: menu.sh:1934
 msgid "Choose a user name"
 msgstr "اختر اسم مستخدم"
 
-#: menu.sh:1912
+#: menu.sh:1941
 msgid "Type a new password for user '%s'"
 msgstr "اكتب كلمة مرور جديدة للمستخدم '%s'"
 
-#: menu.sh:1918
+#: menu.sh:1947
 msgid "Invalid password"
 msgstr "كلمة مرور غير صالحة"
 
-#: menu.sh:1937
+#: menu.sh:1966
 msgid "Resetting ..."
 msgstr "إعادة ضبط ..."
 
-#: menu.sh:1939
+#: menu.sh:1968
 msgid "Password reset completed."
 msgstr "تم إعادة ضبط كلمة المرور."
 
-#: menu.sh:1952
+#: menu.sh:1981
 msgid "Add to administrators group by default"
 msgstr "إضافة المستخدم إلى مجموعة المشرفين بصيغة افتراضية"
 
-#: menu.sh:1982
+#: menu.sh:2011
 msgid "Adding ..."
 msgstr "إضافة ..."
 
-#: menu.sh:1983
+#: menu.sh:2012
 msgid "User added successfully."
 msgstr "تم إضافة المستخدم بنجاح."
 
-#: menu.sh:1983
+#: menu.sh:2012
 msgid "User add failed."
 msgstr "فشل إضافة المستخدم."
 
-#: menu.sh:2019
+#: menu.sh:2048
 msgid "Enabling ..."
 msgstr "تمكين ..."
 
-#: menu.sh:2020
+#: menu.sh:2049
 msgid "Enabled Telnet&SSH successfully."
 msgstr "تم تمكين Telnet&SSH بنجاح."
 
-#: menu.sh:2020
+#: menu.sh:2049
 msgid "Enabled Telnet&SSH failed."
 msgstr "فشل تمكين Telnet&SSH."
 
-#: menu.sh:2030
+#: menu.sh:2059
 msgid "This feature will removing the blocked ip database from the first partition of all disks.\\n"
 msgstr "هذه الميزة سوف تقوم بحذف قاعدة بيانات عناوين الموثوقين من أول وحدة التخزين على جميع الحائطين.\\n"
 
-#: menu.sh:2053
+#: menu.sh:2082
 msgid "The blocked ip database has been deleted."
 msgstr "قاعدة بيانات عناوين الموثوقين قد تم حذفها."
 
-#: menu.sh:2062
+#: menu.sh:2091
 msgid "This option will clear all customized settings of the network card and restore them to the default state.\\n"
 msgstr "سيؤدي هذا الخيار إلى مسح كافة الإعدادات المخصصة لبطاقة الشبكة واستعادتها إلى الحالةالافتراضية.\\n"
 
-#: menu.sh:2085
+#: menu.sh:2114
 msgid "Recovering ..."
 msgstr "جارٍ الاسترداد..."
 
-#: menu.sh:2086
+#: menu.sh:2115
 msgid "The network settings have been initialized."
 msgstr "تمت تهيئة إعدادات الشبكة."
 
-#: menu.sh:2107
+#: menu.sh:2136
 msgid "Choose a disk to clone to"
 msgstr "اختر حاويه لتنسخها الى"
 
-#: menu.sh:2113
+#: menu.sh:2142
 msgid "No disk selected!"
 msgstr "لا تم اختيار حاويه!"
 
-#: menu.sh:2119
+#: menu.sh:2148
 msgid "Disk %s size is less than 1GB and cannot be cloned!"
 msgstr "حاويه %s حجمها اقل من 1GB و لا يمكن تنسخها!"
 
-#: menu.sh:2123
+#: menu.sh:2152
 msgid "Warning:\\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \\nDo you want to continue?"
 msgstr "تحذير:\\nحاويه %s سوف يتم تنسيقها و كتابتها في الملف الخاص بالبوتلوودر. يرجى تأكيد ان البيانات المهمه قد تم نسخها. \\nهل تريد الاستمرار?"
 
-#: menu.sh:2159 menu.sh:2164 menu.sh:2169
+#: menu.sh:2188 menu.sh:2193 menu.sh:2198
 msgid "Can't mount %s."
 msgstr "لا يمكن تحميل %s."
 
-#: menu.sh:2182
+#: menu.sh:2211
 msgid "Cloning failed due to insufficient remaining disk space on the selected hard drive."
 msgstr "فشل الاستنساخ بسبب عدم كفاية مساحة القرص المتبقية على محرك الأقراص الثابتة المحدد."
 
-#: menu.sh:2189 menu.sh:2194 menu.sh:2199
+#: menu.sh:2218 menu.sh:2223 menu.sh:2228
 msgid "Can't copy to %s."
 msgstr "لا يمكن النسخ إلى %s."
 
-#: menu.sh:2207
+#: menu.sh:2236
 msgid "Cloning ..."
 msgstr "نسخ ..."
 
-#: menu.sh:2213
+#: menu.sh:2242
 msgid "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\\nReboot?"
 msgstr "نسخة التشغيل تم نسخها الى القرص %s، يرجى حذف القرص الحالي!\\nاعادة تشغيل؟"
 
-#: menu.sh:2240
+#: menu.sh:2269
 msgid "Please via %s to download the logs,\\nAnd go to github to create an issue and upload the logs."
 msgstr "يرجى استخدام %s لتنزيل السجلات ،\\nواذهب إلى github لإنشاء مشكلة وتحميل السجلات."
 
-#: menu.sh:2244
+#: menu.sh:2273
 msgid "Please go to github to create an issue and upload the logs."
 msgstr "يرجى الانتقال إلى github لإنشاء مشكلة وتحميل السجلات."
 
-#: menu.sh:2248
+#: menu.sh:2277
 msgid "\\Z1No logs found!\\Zn\\n\\n"
 msgstr "\\Z1لم يتم العثور على سجلات!\\Zn\\n\\n"
 
-#: menu.sh:2249 menu.sh:2584
+#: menu.sh:2278 menu.sh:2615
 msgid "Please do as follows:\\n"
 msgstr "يرجى القيام بما يلي:\\n"
 
-#: menu.sh:2250
+#: menu.sh:2279
 msgid " 1. Add dbgutils in addons and rebuild.\\n"
 msgstr " 1. اضف dbgutils في الموديولات واعد البناء.\\n"
 
-#: menu.sh:2251
+#: menu.sh:2280
 msgid " 2. Wait 10 minutes after booting.\\n"
 msgstr " 2. انتظر 10 دقائق بعد تشغيل النظام.\\n"
 
-#: menu.sh:2252 menu.sh:2587
+#: menu.sh:2281 menu.sh:2618
 msgid " 3. Reboot into RR and go to this option.\\n"
 msgstr " 3. اعد تشغيل النظام وانتقل الى هذا الاختيار.\\n"
 
-#: menu.sh:2267
+#: menu.sh:2296
 msgid "Please enter a proxy server url.(e.g., %s)"
 msgstr "يرجى ادخال عنوان خادم الوكيل (مثال: %s)"
 
-#: menu.sh:2278
+#: menu.sh:2307
 msgid "Invalid proxy server url, continue?"
 msgstr "عنوان خادم الوكيل غير صحيح، اكمال؟"
 
-#: menu.sh:2307
+#: menu.sh:2336
 msgid "DSM rd compression:"
 msgstr "DSM rd ضغط:"
 
-#: menu.sh:2308
+#: menu.sh:2337
 msgid "Switch LKM version:"
 msgstr "تبديل نسخة LKM:"
 
-#: menu.sh:2309
+#: menu.sh:2338
 msgid "HDD sort(hotplug):"
 msgstr "ترتيب الحافظة(Hotplug):"
 
-#: menu.sh:2311
+#: menu.sh:2340
 msgid "show/modify the current pat data"
 msgstr "عرض/تعديل بيانات PAT الحالية"
 
-#: menu.sh:2312
+#: menu.sh:2341
 msgid "Switch SATADOM mode:"
 msgstr "تبديل وضع SATADOM:"
 
-#: menu.sh:2317
+#: menu.sh:2346
 msgid "Switch direct boot:"
 msgstr "تبديل التشغيل المباشر:"
 
-#: menu.sh:2319
+#: menu.sh:2348
 msgid "Timeout of get ip in boot:"
 msgstr "مهلة الحصول على IP في التمهيد:"
 
-#: menu.sh:2320
+#: menu.sh:2349
 msgid "Timeout of boot wait:"
 msgstr "مهلة انتظار التمهيد:"
 
-#: menu.sh:2321
+#: menu.sh:2350
 msgid "kernel switching method:"
 msgstr "طريقة تبديل ядро:"
 
-#: menu.sh:2323
+#: menu.sh:2353
 msgid "Power off display after boot: "
 msgstr "إيقاف الشاشة بعد التمهيد: "
 
-#: menu.sh:2325
+#: menu.sh:2356
 msgid "Reboot on kernel panic:"
 msgstr "إعادة تشغيل عند حánico ядро:"
 
-#: menu.sh:2327
+#: menu.sh:2358
 msgid "Use EMMC as the system disk:"
 msgstr "استخدام EMMC كأقرب الذاكرة:"
 
-#: menu.sh:2329
+#: menu.sh:2360
 msgid "Custom patch script # Developer"
 msgstr "نص تعديل الملفات # مطور"
 
-#: menu.sh:2330
+#: menu.sh:2361
 msgid "Edit user config file manually"
 msgstr "تعديل ملف الإعدادات اليدويا"
 
-#: menu.sh:2331
+#: menu.sh:2362
 msgid "Edit grub.cfg file manually"
 msgstr "تعديل ملف grub.cfg اليدويا"
 
-#: menu.sh:2333
+#: menu.sh:2364
 msgid "Set static IP"
 msgstr "تعيين عنوان IP ثابت"
 
-#: menu.sh:2334
+#: menu.sh:2365
 msgid "Set wireless account"
 msgstr "ضبط الحساب اللاسلكي"
 
-#: menu.sh:2335
+#: menu.sh:2366
 msgid "Show disks information"
 msgstr "عرض معلومات الổ cứد"
 
-#: menu.sh:2336
+#: menu.sh:2367
 msgid "Format disk(s) # Without loader disk"
 msgstr "تنسيق القرص(s) # بدون قرص محمل"
 
-#: menu.sh:2337
+#: menu.sh:2368
 msgid "Try to recovery a installed DSM system"
 msgstr "استرجاع نظام DSM مثبت"
 
-#: menu.sh:2338
+#: menu.sh:2369
 msgid "Allow downgrade installation"
 msgstr "السماح بتثبيت الترقية"
 
-#: menu.sh:2339
+#: menu.sh:2370
 msgid "Reset DSM system password"
 msgstr "إعادة تعيين كلمة مرور نظام DSM"
 
-#: menu.sh:2340
+#: menu.sh:2371
 msgid "Add a new user to DSM system"
 msgstr "إضافة مستخدم جديد إلى نظام DSM"
 
-#: menu.sh:2341
+#: menu.sh:2372
 msgid "Force enable Telnet&SSH of DSM system"
 msgstr "إجبار تمكين Telnet&SSH من نظام DSM"
 
-#: menu.sh:2342
+#: menu.sh:2373
 msgid "Remove the blocked ip database of DSM"
 msgstr "إزالة قاعدة بيانات عناوين الـ ip المحظورة من نظام DSM"
 
-#: menu.sh:2343
+#: menu.sh:2374
 msgid "Initialize DSM network settings"
 msgstr "تهيئة إعدادات شبكة DSM"
 
-#: menu.sh:2344
+#: menu.sh:2375
 msgid "Clone bootloader disk to another disk"
 msgstr "نسخ محرك التشغيل إلى قرص آخر"
 
-#: menu.sh:2345
+#: menu.sh:2376
 msgid "Report bugs to the author"
 msgstr "إبلاغ الأخطاء إلى المطور"
 
-#: menu.sh:2346
+#: menu.sh:2377
 msgid "Download DSM config backup files"
 msgstr "تحميل ملفات نسخة احتياطية من تهيئة نظام DSM"
 
-#: menu.sh:2347
+#: menu.sh:2378
 msgid "Install development tools"
 msgstr "تثبيت أدوات التطوير"
 
-#: menu.sh:2348
+#: menu.sh:2379
 msgid "Save modifications of '/opt/rr'"
 msgstr "حفظ التغييرات على '/opt/rr'"
 
-#: menu.sh:2350
+#: menu.sh:2381
 msgid "Show QR logo:"
 msgstr "عرض شعار QR:"
 
-#: menu.sh:2351
+#: menu.sh:2382
 msgid "Set global proxy"
 msgstr "تعيين خادم الوكيل"
 
-#: menu.sh:2352
+#: menu.sh:2383
 msgid "Set github proxy"
 msgstr "تعيين خادم الوكيل لـ github"
 
-#: menu.sh:2353
+#: menu.sh:2384
 msgid "Vigorously miracle"
 msgstr "مزاجية"
 
-#: menu.sh:2357
+#: menu.sh:2388
 msgid "Advanced option"
 msgstr "خيارات متقدمة"
 
-#: menu.sh:2382
+#: menu.sh:2413
 msgid "pat: (editable)"
 msgstr "pat: (قابل للتعديل)"
 
-#: menu.sh:2402
+#: menu.sh:2433
 msgid "Choose a mode(Only supported for kernel version 4)"
 msgstr "اختر وضعًا (مدعوم فقط لإصدار kernel 4)"
 
-#: menu.sh:2423 menu.sh:2435 menu.sh:2467
+#: menu.sh:2454 menu.sh:2466 menu.sh:2498
 msgid "Choose a time(seconds)"
 msgstr "اختر وقت(ثواني)"
 
-#: menu.sh:2451
+#: menu.sh:2482
 msgid "Modifying this item requires a reboot, continue?"
 msgstr "تغيير هذا العنصر يتطلب إعادة التشغيل، هل تريد المتابعة؟"
 
-#: menu.sh:2456 menu.sh:2976 menu.sh:3556 menu.sh:3584
+#: menu.sh:2487 menu.sh:3007 menu.sh:3587 menu.sh:3615
 msgid "Reboot to RR"
 msgstr "إعادة التشغيل إلى RR"
 
-#: menu.sh:2499
+#: menu.sh:2530
 msgid "This option is only informative.\\n\\n"
 msgstr "هذه الخيار مجرد معلوماتية.\\n\\n"
 
-#: menu.sh:2500
+#: menu.sh:2531
 msgid "This program reserves an interface for ramdisk custom patch scripts.\\n"
 msgstr "هذا البرنامج يحجز واجهة للسكربتات المخصصة للرام ديسك.\\n"
 
-#: menu.sh:2501
+#: menu.sh:2532
 msgid "Call timing: called before ramdisk packaging.\\n"
 msgstr "وقت الاتصال: تم استدعاءه قبل 打 包 رام ديسك.\\n"
 
-#: menu.sh:2502
+#: menu.sh:2533
 msgid "Location: /mnt/p3/scripts/*.sh\\n"
 msgstr "الموقع: /mnt/p3/scripts/*.sh\\n"
 
-#: menu.sh:2575
+#: menu.sh:2606
 msgid "Please via %s to download the scbk,\\nAnd unzip it and back it up in order by file name."
 msgstr "يرجى استخدام %s لتحميل ملف scbk,\\nثم فك الضغط واحفظه في ترتيب اسم الملف."
 
-#: menu.sh:2579
+#: menu.sh:2610
 msgid "Please unzip it and back it up in order by file name."
 msgstr "فك الضغط واحفظه في ترتيب اسم الملف."
 
-#: menu.sh:2583
+#: menu.sh:2614
 msgid "\\Z1No scbk found!\\Zn\\n\\n"
 msgstr "\\Z1لم يتم العثور على scbk!\\Zn\\n\\n"
 
-#: menu.sh:2585
+#: menu.sh:2616
 msgid " 1. Add synoconfbkp in addons and rebuild.\\n"
 msgstr " 1. اضف synoconfbkp في الموديولات واعد بناءها.\\n"
 
-#: menu.sh:2586
+#: menu.sh:2617
 msgid " 2. Normal use.\\n"
 msgstr " 2. استخدام عادي.\\n"
 
-#: menu.sh:2595
+#: menu.sh:2626
 msgid "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?"
 msgstr "هذا الخيار فقط يقوم بتثبيت إدارة الحزم opkg، مما يسمح لك بتثبيت أدوات إضافية للاستخدام والفحص. هل تريد المتابعة؟"
 
-#: menu.sh:2609
+#: menu.sh:2640
 msgid "opkg installing ..."
 msgstr "تثبيت opkg ..."
 
-#: menu.sh:2611
+#: menu.sh:2642
 msgid "opkg install failed."
 msgstr "تثبيت opkg فشل."
 
-#: menu.sh:2613
+#: menu.sh:2644
 msgid "opkg install complete."
 msgstr "تثبيت opkg نجح."
 
-#: menu.sh:2621
+#: menu.sh:2652
 msgid "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?"
 msgstr "تحذير:\\nلا يمكنك إلغاء العملية في أي وقت، أولئك قد يؤدي إلى ضرر على RR. هل تريد المتابعة؟"
 
-#: menu.sh:2624 menu.sh:2638
+#: menu.sh:2655 menu.sh:2669
 msgid "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
 msgstr "حفظ ...\\n(عادة ما يستغرق 5-10 دقائق، يرجى الإنتظار.)"
 
-#: menu.sh:2641
+#: menu.sh:2672
 msgid "Save is complete."
 msgstr "تم الحفظ."
 
-#: menu.sh:2682
+#: menu.sh:2713
 msgid "Alert"
 msgstr "تنبيه"
 
-#: menu.sh:2683
+#: menu.sh:2714
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "تم تغيير التكوين، هل ترغب في إعادة بناء الحماية؟"
 
-#: menu.sh:2700 menu.sh:3458
+#: menu.sh:2731 menu.sh:3489
 msgid "Choose a language"
 msgstr "اختر لغة"
 
-#: menu.sh:2715
+#: menu.sh:2746
 msgid "Choose a layout"
 msgstr "اختيار تخطيط"
 
-#: menu.sh:2727
+#: menu.sh:2758
 msgid "Choice a keymap"
 msgstr "اختيار خريطة المفاتيح"
 
-#: menu.sh:2746 menu.sh:2844 menu.sh:2985 menu.sh:3049 menu.sh:3115 menu.sh:3171
+#: menu.sh:2777 menu.sh:2875 menu.sh:3016 menu.sh:3080 menu.sh:3146 menu.sh:3202
 msgid "Update %s"
 msgstr "تحديث %s"
 
-#: menu.sh:2747
+#: menu.sh:2778
 msgid "Checking last version ..."
 msgstr "التحقق من آخر إصدار ..."
 
-#: menu.sh:2764
+#: menu.sh:2795
 msgid "Error checking new version.\\nError: TAG is %s"
 msgstr "خطأ في التحقق من الإصدار الجديد.\\nخطأ: TAG هو %s"
 
-#: menu.sh:2777
+#: menu.sh:2808
 msgid "No new version."
 msgstr "لا يوجد إصدار جديد."
 
-#: menu.sh:2781
+#: menu.sh:2812
 msgid "Actual version is %s.\\nForce update?"
 msgstr "الإصدار الحالي هو %s.\\nهل تريد تحديثه؟"
 
-#: menu.sh:2794
+#: menu.sh:2825
 msgid "Do you want to update?"
 msgstr "هل تريد تحديثه؟"
 
-#: menu.sh:2814
+#: menu.sh:2845
 msgid "Error downloading new version.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "حدث خطأ في تحميل الإصدار الجديد.\\nخطأ: %d:%d\\n(يرجى مراجعة الوصف الخاص بالخطأ على https://curl.se/libcurl/c/libcurl-errors.html.)"
 
-#: menu.sh:2824
+#: menu.sh:2855
 msgid "Downloading ..."
 msgstr "تحميل ..."
 
-#: menu.sh:2844 menu.sh:2969 menu.sh:3244 menu.sh:3273
+#: menu.sh:2875 menu.sh:3000 menu.sh:3275 menu.sh:3304
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:2845 menu.sh:2986 menu.sh:3050 menu.sh:3116 menu.sh:3172
+#: menu.sh:2876 menu.sh:3017 menu.sh:3081 menu.sh:3147 menu.sh:3203
 msgid "Extracting update file ..."
 msgstr "استخراج ملف التحديث ..."
 
-#: menu.sh:2856 menu.sh:2900 menu.sh:2997 menu.sh:3061 menu.sh:3127 menu.sh:3183
+#: menu.sh:2887 menu.sh:2931 menu.sh:3028 menu.sh:3092 menu.sh:3158 menu.sh:3214
 msgid "Error extracting update file."
 msgstr "خطأ في استخراج ملف التحديث."
 
-#: menu.sh:2868
+#: menu.sh:2899
 msgid "Checksum do not match!"
 msgstr "لا يطابقها التراميخ!"
 
-#: menu.sh:2881
+#: menu.sh:2912
 msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
 msgstr "لا يدعم الإصدار الحالي تحديث آخر.zip. يرجى إعادة صنع قرص التشغيل!"
 
-#: menu.sh:2922 menu.sh:3019 menu.sh:3075 menu.sh:3141 menu.sh:3197
+#: menu.sh:2953 menu.sh:3050 menu.sh:3106 menu.sh:3172 menu.sh:3228
 msgid "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM."
 msgstr "فشل التثبيت بسبب مساحة القرص الصلب غير كافية، يرجى إعادة تخصيص القرص %s على الأقل %sM."
 
-#: menu.sh:2932
+#: menu.sh:2963
 msgid "Installing new files ..."
 msgstr "تثبيت الملفات الجديدة ..."
 
-#: menu.sh:2969 menu.sh:3034 menu.sh:3100 menu.sh:3156 menu.sh:3222
+#: menu.sh:3000 menu.sh:3065 menu.sh:3131 menu.sh:3187 menu.sh:3253
 msgid "%s updated with success!"
 msgstr "%s تم تحديثه بنجاح!"
 
-#: menu.sh:2969
+#: menu.sh:3000
 msgid "Reboot?"
 msgstr "إعادة التشغيل؟"
 
-#: menu.sh:3115 menu.sh:3156 menu.sh:3247 menu.sh:3304 menu.sh:3309
+#: menu.sh:3146 menu.sh:3187 menu.sh:3278 menu.sh:3335 menu.sh:3340
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:3171 menu.sh:3222 menu.sh:3248 menu.sh:3316 menu.sh:3321
+#: menu.sh:3202 menu.sh:3253 menu.sh:3279 menu.sh:3347 menu.sh:3352
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:3243 menu.sh:3266
+#: menu.sh:3274 menu.sh:3297
 msgid "All"
 msgstr "كل"
 
-#: menu.sh:3249
+#: menu.sh:3280
 msgid "Local upload"
 msgstr "الرفع المحلي"
 
-#: menu.sh:3250
+#: menu.sh:3281
 msgid "Pre Release:"
 msgstr "إصدار تجريبي:"
 
-#: menu.sh:3255 menu.sh:3329
+#: menu.sh:3286 menu.sh:3360
 msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download."
 msgstr "سيؤدي تحميل التحديث*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip إلى /tmp/ يدويًا إلى تخطي التنزيل."
 
-#: menu.sh:3280 menu.sh:3292 menu.sh:3304 menu.sh:3316
+#: menu.sh:3311 menu.sh:3323 menu.sh:3335 menu.sh:3347
 msgid "No longer supports update %s separately. Please choose to update All/RR"
 msgstr "لا يدعم التحديث %s بشكل منفصل. يرجى اختيار تحديث الكل/RR"
 
-#: menu.sh:3335
+#: menu.sh:3366
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
 msgstr "يرجى الاحتفاظ بالاسم الملحق متطابق مع اسم الملحق على Github.\\n"
 
-#: menu.sh:3336
+#: menu.sh:3367
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "سيؤدي تحميل update*.zip إلى تحديث RR.\\n"
 
-#: menu.sh:3337
+#: menu.sh:3368
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "سيؤدي تحميل addons*.zip إلى تحديث الموديول.\\n"
 
-#: menu.sh:3338
+#: menu.sh:3369
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "سيؤدي تحميل modules*.zip إلى تحديث الموديول.\\n"
 
-#: menu.sh:3339
+#: menu.sh:3370
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "سيؤدي تحميل rp-lkms*.zip إلى تحديث LKMs.\\n"
 
-#: menu.sh:3340
+#: menu.sh:3371
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "سيؤدي تحميل rr-cks*.zip إلى تحديث CKs.\\n"
 
-#: menu.sh:3408
+#: menu.sh:3439
 msgid "This person is very lazy and hasn't written anything."
 msgstr "هذا الشخص كسول جدًا ولم يكتب شيئًا."
 
-#: menu.sh:3419
+#: menu.sh:3450
 msgid "Another instance of the menu.sh is running."
 msgstr "يوجد مثال آخر من menu.sh قيد التشغيل."
 
-#: menu.sh:3432
+#: menu.sh:3463
 msgid "Choose a model"
 msgstr "اختر موديل"
 
-#: menu.sh:3434
+#: menu.sh:3465
 msgid "Choose a version"
 msgstr "اختر إصدار"
 
-#: menu.sh:3436
+#: menu.sh:3467
 msgid "Parse pat"
 msgstr "تحليل PAT"
 
-#: menu.sh:3442
+#: menu.sh:3473
 msgid "Kernel:"
 msgstr "Kernel:"
 
-#: menu.sh:3444
+#: menu.sh:3475
 msgid "Addons menu"
 msgstr "قائمة الإضافات"
 
-#: menu.sh:3445
+#: menu.sh:3476
 msgid "Modules menu"
 msgstr "قائمة الموديلات"
 
-#: menu.sh:3446
+#: menu.sh:3477
 msgid "Cmdline menu"
 msgstr "قائمة Cmdline"
 
-#: menu.sh:3447
+#: menu.sh:3478
 msgid "Synoinfo menu"
 msgstr "قائمة Synoinfo"
 
-#: menu.sh:3449
+#: menu.sh:3480
 msgid "Advanced menu"
 msgstr "قائمة متقدمة"
 
-#: menu.sh:3452
+#: menu.sh:3483
 msgid "Build the loader"
 msgstr "بناء الحماية"
 
-#: menu.sh:3456
+#: menu.sh:3487
 msgid "Boot the loader"
 msgstr "تشغيل الحماية"
 
-#: menu.sh:3459
+#: menu.sh:3490
 msgid "Choose a keymap"
 msgstr "اختيار مفاتيح"
 
-#: menu.sh:3461
+#: menu.sh:3492
 msgid "Clean disk cache"
 msgstr "تنظيف ذاكرة التخزين المؤقت"
 
-#: menu.sh:3463
+#: menu.sh:3494
 msgid "Update menu"
 msgstr "تحديث القائمة"
 
-#: menu.sh:3464
+#: menu.sh:3495
 msgid "Notepad"
 msgstr "محرر"
 
-#: menu.sh:3486
+#: menu.sh:3517
 msgid "Change ..."
 msgstr "تغيير ..."
 
-#: menu.sh:3554 menu.sh:3572
+#: menu.sh:3585 menu.sh:3603
 msgid "Power off"
 msgstr "إيقاف"
 
-#: menu.sh:3555 menu.sh:3578
+#: menu.sh:3586 menu.sh:3609
 msgid "Reboot"
 msgstr "إعادة تشغيل"
 
-#: menu.sh:3557 menu.sh:3590
+#: menu.sh:3588 menu.sh:3621
 msgid "Reboot to Recovery"
 msgstr "إعادة التشغيل إلى Recovery"
 
-#: menu.sh:3558 menu.sh:3596
+#: menu.sh:3589 menu.sh:3627
 msgid "Reboot to Junior"
 msgstr "إعادة التشغيل إلى Junior"
 
-#: menu.sh:3560 menu.sh:3602
+#: menu.sh:3591 menu.sh:3633
 msgid "Reboot to BIOS"
 msgstr "إعادة التشغيل إلى BIOS"
 
-#: menu.sh:3562
+#: menu.sh:3593
 msgid "Back to shell"
 msgstr "العودة إلى shell"
 
-#: menu.sh:3566
+#: menu.sh:3597
 msgid "Choose a action"
 msgstr "اختيار عملية"
 
-#: menu.sh:3619
+#: menu.sh:3650
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "اتصل بـ \\اتصل بالرقم \\033[1;32mmenu.sh\\033[0m للعودة إلى القائمة"
