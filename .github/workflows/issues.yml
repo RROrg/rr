@@ -212,13 +212,6 @@ jobs:
             exit 1
           fi
 
-          if [ -n "${{ env.kernel }}" ]; then
-            echo -en "set kernel"
-            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
-            writeConfigKey "kernel" "${{ env.kernel }}" "${USER_CONFIG_FILE}"
-            echo ""
-          fi
-
           if [ -n "${{ env.addons }}" ]; then
             echo -en "set addons"
             USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
