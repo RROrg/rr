@@ -12612,6 +12612,70 @@
             "description": "Auxiliary Bus Standalone",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ip6_tables,ipv6"
+        },
+        "ip6table_nat": {
+            "description": "",
+            "depends": "ip6_tables,nf_nat"
+        },
+        "ip6table_raw": {
+            "description": "",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -12859,6 +12923,70 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": "nf_defrag_ipv6,nf_defrag_ipv4"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat,nf_conntrack"
+        },
+        "nf_socket_ipv4": {
+            "description": "Netfilter IPv4 socket lookup infrastructure",
+            "depends": ""
+        },
+        "nf_socket_ipv6": {
+            "description": "Netfilter IPv6 socket lookup infrastructure",
+            "depends": "ipv6"
+        },
+        "nf_tproxy_ipv4": {
+            "description": "Netfilter IPv4 transparent proxy support",
+            "depends": ""
+        },
+        "nf_tproxy_ipv6": {
+            "description": "Netfilter IPv6 transparent proxy support",
+            "depends": "ipv6"
+        },
+        "nfnetlink": {
+            "description": "Netfilter messages via netlink socket",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -13240,6 +13368,10 @@
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "textsearch": {
+            "description": "",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -13259,6 +13391,10 @@
         "tps65217": {
             "description": "TPS65217 chip family multi-function driver",
             "depends": "regmap-i2c"
+        },
+        "ts_bm": {
+            "description": "",
+            "depends": "textsearch"
         },
         "ttm": {
             "description": "TTM memory manager subsystem (for DRM device)",
@@ -13367,6 +13503,114 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat,x_tables,nf_conntrack"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat,nf_conntrack"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP MSS match",
+            "depends": "x_tables"
+        },
+        "xt_TPROXY": {
+            "description": "Netfilter transparent proxy (TPROXY) target module.",
+            "depends": "x_tables,nf_tproxy_ipv4,nf_tproxy_ipv6,nf_defrag_ipv4,nf_defrag_ipv6"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_comment": {
+            "description": "Xtables: No-op match which can be tagged with a comment",
+            "depends": "x_tables"
+        },
+        "xt_connmark": {
+            "description": "Xtables: connection mark operations",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "SNAT and DNAT targets support",
+            "depends": "x_tables,nf_conntrack,nf_nat"
+        },
+        "xt_owner": {
+            "description": "Xtables: socket owner matching",
+            "depends": "x_tables"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_socket": {
+            "description": "x_tables socket match module",
+            "depends": "x_tables,nf_socket_ipv4,nf_defrag_ipv6,nf_defrag_ipv4,nf_socket_ipv6"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_string": {
+            "description": "Xtables: string-based matching",
+            "depends": "x_tables,textsearch"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "xz_dec": {
             "description": "XZ decompressor",
@@ -13806,6 +14050,70 @@
             "description": "Auxiliary Bus Standalone",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ip6_tables,ipv6"
+        },
+        "ip6table_nat": {
+            "description": "",
+            "depends": "ip6_tables,nf_nat"
+        },
+        "ip6table_raw": {
+            "description": "",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -14053,6 +14361,70 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": "nf_defrag_ipv6,nf_defrag_ipv4"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat,nf_conntrack"
+        },
+        "nf_socket_ipv4": {
+            "description": "Netfilter IPv4 socket lookup infrastructure",
+            "depends": ""
+        },
+        "nf_socket_ipv6": {
+            "description": "Netfilter IPv6 socket lookup infrastructure",
+            "depends": "ipv6"
+        },
+        "nf_tproxy_ipv4": {
+            "description": "Netfilter IPv4 transparent proxy support",
+            "depends": ""
+        },
+        "nf_tproxy_ipv6": {
+            "description": "Netfilter IPv6 transparent proxy support",
+            "depends": "ipv6"
+        },
+        "nfnetlink": {
+            "description": "Netfilter messages via netlink socket",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -14438,6 +14810,10 @@
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "textsearch": {
+            "description": "",
+            "depends": ""
+        },
         "tg3": {
             "description": "Broadcom Tigon3 ethernet driver",
             "depends": "libphy"
@@ -14457,6 +14833,10 @@
         "tps65217": {
             "description": "TPS65217 chip family multi-function driver",
             "depends": "regmap-i2c"
+        },
+        "ts_bm": {
+            "description": "",
+            "depends": "textsearch"
         },
         "ttm": {
             "description": "TTM memory manager subsystem (for DRM device)",
@@ -14565,6 +14945,114 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat,x_tables,nf_conntrack"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat,nf_conntrack"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP MSS match",
+            "depends": "x_tables"
+        },
+        "xt_TPROXY": {
+            "description": "Netfilter transparent proxy (TPROXY) target module.",
+            "depends": "x_tables,nf_tproxy_ipv4,nf_tproxy_ipv6,nf_defrag_ipv4,nf_defrag_ipv6"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_comment": {
+            "description": "Xtables: No-op match which can be tagged with a comment",
+            "depends": "x_tables"
+        },
+        "xt_connmark": {
+            "description": "Xtables: connection mark operations",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "SNAT and DNAT targets support",
+            "depends": "x_tables,nf_conntrack,nf_nat"
+        },
+        "xt_owner": {
+            "description": "Xtables: socket owner matching",
+            "depends": "x_tables"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_socket": {
+            "description": "x_tables socket match module",
+            "depends": "x_tables,nf_socket_ipv4,nf_defrag_ipv6,nf_defrag_ipv4,nf_socket_ipv6"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_string": {
+            "description": "Xtables: string-based matching",
+            "depends": "x_tables,textsearch"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "xz_dec": {
             "description": "XZ decompressor",
@@ -17337,10 +17825,6 @@
             "description": "USB Host side RNDIS driver",
             "depends": "usbnet,usbcore,cdc_ether"
         },
-        "rtc-cmos": {
-            "description": "Driver for PC-style 'CMOS' RTCs",
-            "depends": ""
-        },
         "rtsx_pci": {
             "description": "Realtek PCI-E Card Reader Driver",
             "depends": ""
@@ -18362,10 +18846,6 @@
         "rndis_host": {
             "description": "USB Host side RNDIS driver",
             "depends": "usbnet,usbcore,cdc_ether"
-        },
-        "rtc-cmos": {
-            "description": "Driver for PC-style 'CMOS' RTCs",
-            "depends": ""
         },
         "rtl8187": {
             "description": "RTL8187/RTL8187B USB wireless driver",
