@@ -2026,6 +2026,7 @@ function forceEnableDSMTelnetSSH() {
   fi
   (
     ONBOOTUP=""
+    ONBOOTUP="${ONBOOTUP}systemctl restart inetd\n"
     ONBOOTUP="${ONBOOTUP}synowebapi --exec api=SYNO.Core.Terminal method=set version=3 enable_telnet=true enable_ssh=true ssh_port=22 forbid_console=false\n"
     ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR_SSH'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
     mkdir -p "${TMP_PATH}/mdX"
