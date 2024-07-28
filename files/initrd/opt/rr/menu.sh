@@ -897,10 +897,8 @@ function cmdlineMenu() {
       while read -r line; do LINENUM=$((LINENUM + 1 + ${#line} / 96)); done <<<"$(printf "${MSG}")" # When the width is 100, each line displays 96 characters.
       LINENUM=$((${LINENUM:-0} + 9))                                                                # When there are 2 parameters, 9 is the minimum value to include 1 line of MSG.
 
-      dialog --print-maxsize 2>"${TMP_PATH}/maxsize"
-      DIALOG_MAXX=$(cat "${TMP_PATH}/maxsize" 2>/dev/null | grep "MaxSize" | awk -F: '{print $2}' | cut -d, -f2 | xargs)
-      DIALOG_MAXY=$(cat "${TMP_PATH}/maxsize" 2>/dev/null | grep "MaxSize" | awk -F: '{print $2}' | cut -d, -f1 | xargs)
-
+      DIALOG_MAXX=$(ttysize 2>/dev/null | awk '{print $1}')
+      DIALOG_MAXY=$(ttysize 2>/dev/null | awk '{print $2}')
       if [ ${LINENUM:-0} -ge ${DIALOG_MAXY:-0} ]; then
         MSG="$(TEXT "Please enter the parameter key and value you need to add.\n")"
         LINENUM=9
@@ -1044,10 +1042,8 @@ function synoinfoMenu() {
       while read -r line; do LINENUM=$((LINENUM + 1 + ${#line} / 96)); done <<<"$(printf "${MSG}")" # When the width is 100, each line displays 96 characters.
       LINENUM=$((${LINENUM:-0} + 9))                                                                # When there are 2 parameters, 9 is the minimum value to include 1 line of MSG.
 
-      dialog --print-maxsize 2>"${TMP_PATH}/maxsize"
-      DIALOG_MAXX=$(cat "${TMP_PATH}/maxsize" 2>/dev/null | grep "MaxSize" | awk -F: '{print $2}' | cut -d, -f2 | xargs)
-      DIALOG_MAXY=$(cat "${TMP_PATH}/maxsize" 2>/dev/null | grep "MaxSize" | awk -F: '{print $2}' | cut -d, -f1 | xargs)
-
+      DIALOG_MAXX=$(ttysize 2>/dev/null | awk '{print $1}')
+      DIALOG_MAXY=$(ttysize 2>/dev/null | awk '{print $2}')
       if [ ${LINENUM:-0} -ge ${DIALOG_MAXY:-0} ]; then
         MSG="$(TEXT "Please enter the parameter key and value you need to add.\n")"
         LINENUM=9
@@ -2026,6 +2022,7 @@ function forceEnableDSMTelnetSSH() {
   fi
   (
     ONBOOTUP=""
+    ONBOOTUP="${ONBOOTUP}systemctl restart inetd\n"
     ONBOOTUP="${ONBOOTUP}synowebapi --exec api=SYNO.Core.Terminal method=set version=3 enable_telnet=true enable_ssh=true ssh_port=22 forbid_console=false\n"
     ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR_SSH'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
     mkdir -p "${TMP_PATH}/mdX"
