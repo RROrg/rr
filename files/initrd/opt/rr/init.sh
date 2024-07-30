@@ -7,6 +7,7 @@ set -e
 . ${WORK_PATH}/include/addons.sh
 
 [ -z "${LOADER_DISK}" ] && die "$(TEXT "Loader is not init!")"
+checkBootLoader || die "$(TEXT "The loader is corrupted, please rewrite it!")"
 
 # Shows title
 clear

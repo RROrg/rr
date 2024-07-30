@@ -5,6 +5,19 @@
 . ${WORK_PATH}/include/i18n.sh
 
 ###############################################################################
+# Check loader disk
+function checkBootLoader() {
+  [ ! -w "${PART1_PATH}" ] && return 1
+  [ ! -w "${PART2_PATH}" ] && return 1
+  [ ! -w "${PART3_PATH}" ] && return 1
+  command -v awk >/dev/null 2>&1 || return 1
+  command -v cut >/dev/null 2>&1 || return 1
+  command -v sed >/dev/null 2>&1 || return 1
+  command -v tar >/dev/null 2>&1 || return 1
+  return 0
+}
+
+###############################################################################
 # Check if loader is fully configured
 # Returns 1 if not
 function loaderIsConfigured() {

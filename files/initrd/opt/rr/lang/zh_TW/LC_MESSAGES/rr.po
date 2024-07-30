@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-26 15:30+0800\n"
+"POT-Creation-Date: 2024-07-30 21:25+0800\n"
 "PO-Revision-Date: 2024-05-05 22:10+0800\n"
 "Last-Translator: March Fun <https://cyber.suma.tw/>\n"
 "Language-Team: Chinese (Taiwan) <https://cyber.suma.tw/>\n"
@@ -21,11 +21,11 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr "開機程式未初始化！"
 
-#: boot.sh:10 init.sh:147
+#: boot.sh:10 init.sh:148
 msgid "Loader is not configured!"
 msgstr "開機檔未設置！"
 
-#: boot.sh:20 init.sh:14
+#: boot.sh:20 init.sh:15
 msgid "Welcome to %s"
 msgstr "歡迎使用 %s"
 
@@ -85,35 +85,35 @@ msgstr "Cmdline:\\n"
 msgid "Reboot to boot directly in DSM"
 msgstr "重新開機以直接啟動 DSM"
 
-#: boot.sh:222 init.sh:160
+#: boot.sh:222 init.sh:161
 msgid "Detected %s network cards."
 msgstr "檢測到 %s 個網路卡。"
 
-#: boot.sh:223 init.sh:161
+#: boot.sh:223 init.sh:162
 msgid "Checking Connect."
 msgstr "檢查連線。"
 
-#: boot.sh:235 init.sh:171
+#: boot.sh:235 init.sh:172
 msgid "connected."
 msgstr "已連線。"
 
-#: boot.sh:245 init.sh:181
+#: boot.sh:245 init.sh:182
 msgid "Waiting IP."
 msgstr "正在取得 IP。"
 
-#: boot.sh:252 init.sh:188
+#: boot.sh:252 init.sh:189
 msgid "DOWN"
 msgstr "關機"
 
-#: boot.sh:256 init.sh:192
+#: boot.sh:256 init.sh:193
 msgid "NOT CONNECTED"
 msgstr "未連線"
 
-#: boot.sh:260 init.sh:196
+#: boot.sh:260 init.sh:197
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "逾時 (請檢查路由器上的IP.)"
 
-#: boot.sh:267 init.sh:203
+#: boot.sh:267 init.sh:204
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "LINK LOCAL (未偵測到 DHCP 伺服器.)"
 
@@ -137,67 +137,71 @@ msgstr "載入 DSM 核心..."
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "警告，使用'--noefi'參數執行'kexec'，可能有意外事情發生！"
 
-#: boot.sh:317
+#: boot.sh:331
 msgid "Booting ..."
 msgstr "開機中..."
 
-#: boot.sh:319
+#: boot.sh:333
 msgid "[This interface will not be operational. Please wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]"
 msgstr "[該介面已無法操作。請於數分鐘後透過\\n http://find.synology.com/ 或者 Synology Assistant 搜尋 DSM 並連線。]"
 
-#: init.sh:23
+#: init.sh:10
+msgid "The loader is corrupted, please rewrite it!"
+msgstr "開機程式已損壞，請重新寫入！"
+
+#: init.sh:24
 msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
 msgstr "未找到網路裝置 ! 連接網路後請重新執行 init.sh !"
 
-#: init.sh:123
+#: init.sh:124
 msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC/XEN DoM"
 msgstr "開機碟僅支援 USB 或者 SATA/SCSI/NVME/MMC/XEN DoM"
 
-#: init.sh:132
+#: init.sh:133
 msgid "Loader disk:"
 msgstr "開機碟:"
 
-#: init.sh:140
+#: init.sh:141
 msgid "Loading keymap"
 msgstr "載入 keymap"
 
-#: init.sh:150
+#: init.sh:151
 msgid "User requested edit settings."
 msgstr "使用者要求編輯設定。"
 
-#: init.sh:205
+#: init.sh:206
 msgid "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web terminal."
 msgstr "在瀏覽器中瀏覽 \\033[1;34mhttp://%s:7681\\033[0m 進入 WEB 終端進行設置。"
 
-#: init.sh:216
+#: init.sh:217
 msgid "Call \\033[1;32minit.sh\\033[0m to re get init info"
 msgstr "執行 \\033[1;32minit.sh\\033[0m 重新取得初始資訊"
 
-#: init.sh:217
+#: init.sh:218
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
 msgstr "執行 \\033[1;32mmenu.sh\\033[0m 以設定開機檔"
 
-#: init.sh:219
+#: init.sh:220
 msgid "User config is on"
 msgstr "使用者設定已開啟"
 
-#: init.sh:220
+#: init.sh:221
 msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 msgstr "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 
-#: init.sh:221
+#: init.sh:222
 msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 msgstr "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 
-#: init.sh:222
+#: init.sh:223
 msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 msgstr "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 
-#: init.sh:224
+#: init.sh:225
 msgid "Default SSH \\033[1;31mroot\\033[0m password is"
 msgstr "預設 SSH 的 \\033[1;31mroot\\033[0m 密碼為"
 
-#: init.sh:242
+#: init.sh:243
 msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
 msgstr "您的記憶體不足 4GB，如果在建立開機檔時出現錯誤，請增加記憶體。"
 
@@ -225,7 +229,7 @@ msgstr "停用標誌限制"
 msgid "Choose the model"
 msgstr "選擇型號"
 
-#: menu.sh:206 menu.sh:214 menu.sh:248 menu.sh:293 menu.sh:322 menu.sh:454
+#: menu.sh:206 menu.sh:214 menu.sh:248 menu.sh:293 menu.sh:322
 msgid "Product Version"
 msgstr "產品版本"
 
@@ -277,7 +281,7 @@ msgstr "目前不支援 %s。"
 msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
 msgstr "您已選擇 %s 和 %s。\\n\"解析 Pat\" 將覆蓋之前的選擇。\\n是否要繼續 ?"
 
-#: menu.sh:439
+#: menu.sh:439 menu.sh:454 menu.sh:460 menu.sh:501 menu.sh:504
 msgid "Parse Pat"
 msgstr "解析 pat"
 
@@ -289,7 +293,7 @@ msgstr "在 /tmp/pats/ 資料夾中找不到 pat 檔 !\\n"
 msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
 msgstr "請透過 DUFS 將 pat 檔上傳到 /tmp/pats/ 資料夾，然後重新進入此選項。\\n"
 
-#: menu.sh:450 menu.sh:460 menu.sh:3271 menu.sh:3272 menu.sh:3273 menu.sh:3274 menu.sh:3275 menu.sh:3276 menu.sh:3282 menu.sh:3307 menu.sh:3319 menu.sh:3331 menu.sh:3343 menu.sh:3358 menu.sh:3369 menu.sh:3386 menu.sh:3405
+#: menu.sh:450 menu.sh:3271 menu.sh:3272 menu.sh:3273 menu.sh:3274 menu.sh:3275 menu.sh:3276 menu.sh:3282 menu.sh:3307 menu.sh:3319 menu.sh:3331 menu.sh:3343 menu.sh:3358 menu.sh:3369 menu.sh:3386 menu.sh:3405
 msgid "Update"
 msgstr "更新"
 
@@ -309,17 +313,9 @@ msgstr "解析 %s ..."
 msgid "Ready!"
 msgstr "已就绪！"
 
-#: menu.sh:501 menu.sh:1374 menu.sh:3425 menu.sh:3495 menu.sh:3513 menu.sh:3593 menu.sh:3599 menu.sh:3605 menu.sh:3611 menu.sh:3617 menu.sh:3623 menu.sh:3629
-msgid "Main menu"
-msgstr "主功能表"
-
 #: menu.sh:502
 msgid "Making ..."
 msgstr "製作中 ..."
-
-#: menu.sh:504 menu.sh:1381
-msgid "Error"
-msgstr "錯誤"
 
 #: menu.sh:539 menu.sh:556 menu.sh:561 menu.sh:567 menu.sh:578 menu.sh:586 menu.sh:609 menu.sh:616 menu.sh:620 menu.sh:634 menu.sh:638 menu.sh:646 menu.sh:650 menu.sh:3013 menu.sh:3062 menu.sh:3273 menu.sh:3308 menu.sh:3313
 msgid "Addons"
@@ -753,9 +749,17 @@ msgstr "磁碟空間不足，請清理快取然後再試一次 !"
 msgid "Cleaning ..."
 msgstr "清除中..."
 
+#: menu.sh:1374 menu.sh:3425 menu.sh:3495 menu.sh:3513 menu.sh:3593 menu.sh:3599 menu.sh:3605 menu.sh:3611 menu.sh:3617 menu.sh:3623 menu.sh:3629
+msgid "Main menu"
+msgstr "主功能表"
+
 #: menu.sh:1375
 msgid "Making ... ('ctrl + c' to exit)"
 msgstr "製作中...('Ctrl + C' 退出)"
+
+#: menu.sh:1381
+msgid "Error"
+msgstr "錯誤"
 
 #: menu.sh:1402 menu.sh:1418 menu.sh:1422 menu.sh:1439 menu.sh:1444 menu.sh:1463 menu.sh:1475 menu.sh:2341
 msgid "Custom DTS"

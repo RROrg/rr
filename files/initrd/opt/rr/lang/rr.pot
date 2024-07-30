@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-26 15:30+0800\n"
+"POT-Creation-Date: 2024-07-30 21:25+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,11 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr ""
 
-#: boot.sh:10 init.sh:147
+#: boot.sh:10 init.sh:148
 msgid "Loader is not configured!"
 msgstr ""
 
-#: boot.sh:20 init.sh:14
+#: boot.sh:20 init.sh:15
 msgid "Welcome to %s"
 msgstr ""
 
@@ -91,35 +91,35 @@ msgstr ""
 msgid "Reboot to boot directly in DSM"
 msgstr ""
 
-#: boot.sh:222 init.sh:160
+#: boot.sh:222 init.sh:161
 msgid "Detected %s network cards."
 msgstr ""
 
-#: boot.sh:223 init.sh:161
+#: boot.sh:223 init.sh:162
 msgid "Checking Connect."
 msgstr ""
 
-#: boot.sh:235 init.sh:171
+#: boot.sh:235 init.sh:172
 msgid "connected."
 msgstr ""
 
-#: boot.sh:245 init.sh:181
+#: boot.sh:245 init.sh:182
 msgid "Waiting IP."
 msgstr ""
 
-#: boot.sh:252 init.sh:188
+#: boot.sh:252 init.sh:189
 msgid "DOWN"
 msgstr ""
 
-#: boot.sh:256 init.sh:192
+#: boot.sh:256 init.sh:193
 msgid "NOT CONNECTED"
 msgstr ""
 
-#: boot.sh:260 init.sh:196
+#: boot.sh:260 init.sh:197
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr ""
 
-#: boot.sh:267 init.sh:203
+#: boot.sh:267 init.sh:204
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr ""
 
@@ -143,73 +143,77 @@ msgstr ""
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr ""
 
-#: boot.sh:317
+#: boot.sh:331
 msgid "Booting ..."
 msgstr ""
 
-#: boot.sh:319
+#: boot.sh:333
 msgid ""
 "[This interface will not be operational. Please wait a few minutes.\\nFind "
 "DSM via http://find.synology.com/ or Synology Assistant and connect.]"
 msgstr ""
 
-#: init.sh:23
+#: init.sh:10
+msgid "The loader is corrupted, please rewrite it!"
+msgstr ""
+
+#: init.sh:24
 msgid ""
 "Network devices not found! Please re execute init.sh after connecting to the "
 "network!"
 msgstr ""
 
-#: init.sh:123
+#: init.sh:124
 msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC/XEN DoM"
 msgstr ""
 
-#: init.sh:132
+#: init.sh:133
 msgid "Loader disk:"
 msgstr ""
 
-#: init.sh:140
+#: init.sh:141
 msgid "Loading keymap"
 msgstr ""
 
-#: init.sh:150
+#: init.sh:151
 msgid "User requested edit settings."
 msgstr ""
 
-#: init.sh:205
+#: init.sh:206
 msgid ""
 "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web "
 "terminal."
 msgstr ""
 
-#: init.sh:216
+#: init.sh:217
 msgid "Call \\033[1;32minit.sh\\033[0m to re get init info"
 msgstr ""
 
-#: init.sh:217
+#: init.sh:218
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
 msgstr ""
 
-#: init.sh:219
+#: init.sh:220
 msgid "User config is on"
 msgstr ""
 
-#: init.sh:220
+#: init.sh:221
 msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 msgstr ""
 
-#: init.sh:221
+#: init.sh:222
 msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 msgstr ""
 
-#: init.sh:222
+#: init.sh:223
 msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 msgstr ""
 
-#: init.sh:224
+#: init.sh:225
 msgid "Default SSH \\033[1;31mroot\\033[0m password is"
 msgstr ""
 
-#: init.sh:242
+#: init.sh:243
 msgid ""
 "You have less than 4GB of RAM, if errors occur in loader creation, please "
 "increase the amount of memory."
@@ -243,7 +247,7 @@ msgstr ""
 msgid "Choose the model"
 msgstr ""
 
-#: menu.sh:206 menu.sh:214 menu.sh:248 menu.sh:293 menu.sh:322 menu.sh:454
+#: menu.sh:206 menu.sh:214 menu.sh:248 menu.sh:293 menu.sh:322
 msgid "Product Version"
 msgstr ""
 
@@ -300,7 +304,7 @@ msgid ""
 "selection.\\nDo you want to continue?"
 msgstr ""
 
-#: menu.sh:439
+#: menu.sh:439 menu.sh:454 menu.sh:460 menu.sh:501 menu.sh:504
 msgid "Parse Pat"
 msgstr ""
 
@@ -314,10 +318,9 @@ msgid ""
 "option.\\n"
 msgstr ""
 
-#: menu.sh:450 menu.sh:460 menu.sh:3271 menu.sh:3272 menu.sh:3273 menu.sh:3274
-#: menu.sh:3275 menu.sh:3276 menu.sh:3282 menu.sh:3307 menu.sh:3319
-#: menu.sh:3331 menu.sh:3343 menu.sh:3358 menu.sh:3369 menu.sh:3386
-#: menu.sh:3405
+#: menu.sh:450 menu.sh:3271 menu.sh:3272 menu.sh:3273 menu.sh:3274 menu.sh:3275
+#: menu.sh:3276 menu.sh:3282 menu.sh:3307 menu.sh:3319 menu.sh:3331
+#: menu.sh:3343 menu.sh:3358 menu.sh:3369 menu.sh:3386 menu.sh:3405
 msgid "Update"
 msgstr ""
 
@@ -337,18 +340,8 @@ msgstr ""
 msgid "Ready!"
 msgstr ""
 
-#: menu.sh:501 menu.sh:1374 menu.sh:3425 menu.sh:3495 menu.sh:3513 menu.sh:3593
-#: menu.sh:3599 menu.sh:3605 menu.sh:3611 menu.sh:3617 menu.sh:3623
-#: menu.sh:3629
-msgid "Main menu"
-msgstr ""
-
 #: menu.sh:502
 msgid "Making ..."
-msgstr ""
-
-#: menu.sh:504 menu.sh:1381
-msgid "Error"
 msgstr ""
 
 #: menu.sh:539 menu.sh:556 menu.sh:561 menu.sh:567 menu.sh:578 menu.sh:586
@@ -843,8 +836,18 @@ msgstr ""
 msgid "Cleaning ..."
 msgstr ""
 
+#: menu.sh:1374 menu.sh:3425 menu.sh:3495 menu.sh:3513 menu.sh:3593
+#: menu.sh:3599 menu.sh:3605 menu.sh:3611 menu.sh:3617 menu.sh:3623
+#: menu.sh:3629
+msgid "Main menu"
+msgstr ""
+
 #: menu.sh:1375
 msgid "Making ... ('ctrl + c' to exit)"
+msgstr ""
+
+#: menu.sh:1381
+msgid "Error"
 msgstr ""
 
 #: menu.sh:1402 menu.sh:1418 menu.sh:1422 menu.sh:1439 menu.sh:1444
