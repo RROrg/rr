@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-26 15:30+0800\n"
+"POT-Creation-Date: 2024-07-30 21:25+0800\n"
 "PO-Revision-Date: 2024-05-05 22:04+0800\n"
 "Last-Translator: ngocanhtran <mr.ngocanhtran@gmail.com>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/rrorg/rr/vi/>\n"
@@ -22,11 +22,11 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr "Loader chưa được khởi tạo!"
 
-#: boot.sh:10 init.sh:147
+#: boot.sh:10 init.sh:148
 msgid "Loader is not configured!"
 msgstr "Loader chưa được cấu hình!"
 
-#: boot.sh:20 init.sh:14
+#: boot.sh:20 init.sh:15
 msgid "Welcome to %s"
 msgstr "Chúc mừng bạn dùng %s"
 
@@ -86,35 +86,35 @@ msgstr "Cmdline:\\n"
 msgid "Reboot to boot directly in DSM"
 msgstr "Khởi động lại để boot vào DSM"
 
-#: boot.sh:222 init.sh:160
+#: boot.sh:222 init.sh:161
 msgid "Detected %s network cards."
 msgstr "Đã phát hiện %s card mạng."
 
-#: boot.sh:223 init.sh:161
+#: boot.sh:223 init.sh:162
 msgid "Checking Connect."
 msgstr "Đang kiểm tra kết nối..."
 
-#: boot.sh:235 init.sh:171
+#: boot.sh:235 init.sh:172
 msgid "connected."
 msgstr "đã kết nối."
 
-#: boot.sh:245 init.sh:181
+#: boot.sh:245 init.sh:182
 msgid "Waiting IP."
 msgstr "Đợi cấp phát địa chỉ IP."
 
-#: boot.sh:252 init.sh:188
+#: boot.sh:252 init.sh:189
 msgid "DOWN"
 msgstr "DOWN (Mất kết nối)"
 
-#: boot.sh:256 init.sh:192
+#: boot.sh:256 init.sh:193
 msgid "NOT CONNECTED"
 msgstr "KHÔNG KẾT NỐI"
 
-#: boot.sh:260 init.sh:196
+#: boot.sh:260 init.sh:197
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "TIMEOUT (Hãy kiểm tra lại địa chỉ IP của NAS ở router.)"
 
-#: boot.sh:267 init.sh:203
+#: boot.sh:267 init.sh:204
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "LIÊN KẾT ĐỊA PHƯƠNG (Không phát hiện thấy máy chủ DHCP.)"
 
@@ -138,67 +138,71 @@ msgstr "Đang tải DSM kernel ..."
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "Cảnh báo, chạy câu lệnh kexec với tham số --noefi, sẽ xảy ra những điều kỳ lạ!!"
 
-#: boot.sh:317
+#: boot.sh:331
 msgid "Booting ..."
 msgstr "Đang khởi động..."
 
-#: boot.sh:319
+#: boot.sh:333
 msgid "[This interface will not be operational. Please wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]"
 msgstr "[Quá trình khởi động thành công. Hãy đợi trong vài phút. \\n Truy cập vào địa chỉ http://find.synology.com/ hoặc sử dụng Synology Assistant để tìm DSM.]"
 
-#: init.sh:23
+#: init.sh:10
+msgid "The loader is corrupted, please rewrite it!"
+msgstr "Loader bị hỏng, hãy ghi lại lại!"
+
+#: init.sh:24
 msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
 msgstr "Không tìm thấy thiết bị mạng! Hãy chạy câu lệnh init.sh để hiển thị menu sau khi kết nối mạng thành công!"
 
-#: init.sh:123
+#: init.sh:124
 msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC/XEN DoM"
 msgstr "Ổ đĩa chứa loader không phải là USB hoặc SATA/SCSI/NVME/MMC/XEN DoM"
 
-#: init.sh:132
+#: init.sh:133
 msgid "Loader disk:"
 msgstr "Ổ đĩa chứa loader:"
 
-#: init.sh:140
+#: init.sh:141
 msgid "Loading keymap"
 msgstr "Đang tải keymap"
 
-#: init.sh:150
+#: init.sh:151
 msgid "User requested edit settings."
 msgstr "Người dùng đã yêu cầu sửa thiết lập."
 
-#: init.sh:205
+#: init.sh:206
 msgid "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web terminal."
 msgstr "Truy cập vào \\033[1;34mhttp://%s:7681\\033[0m để cấu hình loader từ trang web."
 
-#: init.sh:216
+#: init.sh:217
 msgid "Call \\033[1;32minit.sh\\033[0m to re get init info"
 msgstr "Chạy câu lệnh \\033[1;32minit.sh\\033[0m để lấy thông tin ban đầu"
 
-#: init.sh:217
+#: init.sh:218
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
 msgstr "Chạy câu lệnh \\033[1;32mmenu.sh\\033[0m để cấu hình loader"
 
-#: init.sh:219
+#: init.sh:220
 msgid "User config is on"
 msgstr "Cài đặt người dùng đang được bật"
 
-#: init.sh:220
+#: init.sh:221
 msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 msgstr "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
 
-#: init.sh:221
+#: init.sh:222
 msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 msgstr "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
 
-#: init.sh:222
+#: init.sh:223
 msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 msgstr "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
 
-#: init.sh:224
+#: init.sh:225
 msgid "Default SSH \\033[1;31mroot\\033[0m password is"
 msgstr "Mật khẩu SSH \\033[1;31mroot\\033[0m mặc định là"
 
-#: init.sh:242
+#: init.sh:243
 msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
 msgstr "Bạn có ít hơn 4Gb RAM, nếu xảy ra lỗi trong quá trình tạo loader hãy nâng cấp thêm RAM."
 
@@ -226,7 +230,7 @@ msgstr "Tắt hạn chế cờ"
 msgid "Choose the model"
 msgstr "Chọn thiết bị"
 
-#: menu.sh:206 menu.sh:214 menu.sh:248 menu.sh:293 menu.sh:322 menu.sh:454
+#: menu.sh:206 menu.sh:214 menu.sh:248 menu.sh:293 menu.sh:322
 msgid "Product Version"
 msgstr "Phiên bản sản phẩm"
 
@@ -278,7 +282,7 @@ msgstr "Hiện tại, %s không được hỗ trợ."
 msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
 msgstr "Bạn đã chọn %s và %s.\\n'Parse Pat' sẽ ghi đè lên lựa chọn trước đó.\\nBạn có muốn tiếp tục?"
 
-#: menu.sh:439
+#: menu.sh:439 menu.sh:454 menu.sh:460 menu.sh:501 menu.sh:504
 msgid "Parse Pat"
 msgstr "Parse Pat"
 
@@ -290,7 +294,7 @@ msgstr "Không tìm thấy tệp pat trong thư mục /tmp/pats/!\\n"
 msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
 msgstr "Vui lòng tải tệp pat vào thư mục /tmp/pats/ qua DUFS và nhập lại tùy chọn này.\\n"
 
-#: menu.sh:450 menu.sh:460 menu.sh:3271 menu.sh:3272 menu.sh:3273 menu.sh:3274 menu.sh:3275 menu.sh:3276 menu.sh:3282 menu.sh:3307 menu.sh:3319 menu.sh:3331 menu.sh:3343 menu.sh:3358 menu.sh:3369 menu.sh:3386 menu.sh:3405
+#: menu.sh:450 menu.sh:3271 menu.sh:3272 menu.sh:3273 menu.sh:3274 menu.sh:3275 menu.sh:3276 menu.sh:3282 menu.sh:3307 menu.sh:3319 menu.sh:3331 menu.sh:3343 menu.sh:3358 menu.sh:3369 menu.sh:3386 menu.sh:3405
 msgid "Update"
 msgstr "Cập nhật"
 
@@ -310,17 +314,9 @@ msgstr "Phân tích %s ..."
 msgid "Ready!"
 msgstr "Sẵn sàng!"
 
-#: menu.sh:501 menu.sh:1374 menu.sh:3425 menu.sh:3495 menu.sh:3513 menu.sh:3593 menu.sh:3599 menu.sh:3605 menu.sh:3611 menu.sh:3617 menu.sh:3623 menu.sh:3629
-msgid "Main menu"
-msgstr "Menu chính"
-
 #: menu.sh:502
 msgid "Making ..."
 msgstr "Đang làm ..."
-
-#: menu.sh:504 menu.sh:1381
-msgid "Error"
-msgstr "Lỗ"
 
 #: menu.sh:539 menu.sh:556 menu.sh:561 menu.sh:567 menu.sh:578 menu.sh:586 menu.sh:609 menu.sh:616 menu.sh:620 menu.sh:634 menu.sh:638 menu.sh:646 menu.sh:650 menu.sh:3013 menu.sh:3062 menu.sh:3273 menu.sh:3308 menu.sh:3313
 msgid "Addons"
@@ -754,9 +750,17 @@ msgstr "Không còn không gian trên đĩa, vui lòng dọn dẹp bộ nhớ t�
 msgid "Cleaning ..."
 msgstr "Dọn dẹp ..."
 
+#: menu.sh:1374 menu.sh:3425 menu.sh:3495 menu.sh:3513 menu.sh:3593 menu.sh:3599 menu.sh:3605 menu.sh:3611 menu.sh:3617 menu.sh:3623 menu.sh:3629
+msgid "Main menu"
+msgstr "Menu chính"
+
 #: menu.sh:1375
 msgid "Making ... ('ctrl + c' to exit)"
 msgstr "Đang tạo ... ('ctrl + c' để thoát)"
+
+#: menu.sh:1381
+msgid "Error"
+msgstr "Lỗ"
 
 #: menu.sh:1402 menu.sh:1418 menu.sh:1422 menu.sh:1439 menu.sh:1444 menu.sh:1463 menu.sh:1475 menu.sh:2341
 msgid "Custom DTS"
