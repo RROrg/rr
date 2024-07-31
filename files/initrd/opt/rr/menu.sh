@@ -149,7 +149,7 @@ function modelMenu() {
       done <<<$(cat "${TMP_PATH}/modellist")
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
       DIALOG --title "$(TEXT "Model")" \
-        --menu "$(TEXT "Choose the model")" 0 0 0 --file "${TMP_PATH}/menu" \
+        --menu "$(TEXT "Choose the model")" 0 0 20 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return 0
       resp=$(cat ${TMP_PATH}/resp)
