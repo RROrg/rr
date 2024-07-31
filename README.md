@@ -112,9 +112,6 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
 - `QQ Channel: RROrg` [`点击加入QQ频道`](https://pd.qq.com/s/aklqb0uij)
 - `Telegram Channel: RROrg` [`Click to join`](https://t.me/RR_Org)
 
-### 7: Sponsoring
-
-- <img src="https://raw.githubusercontent.com/wjz304/wjz304/master/my/buymeacoffee.png" width="700">
 
 ### 8: License
 
