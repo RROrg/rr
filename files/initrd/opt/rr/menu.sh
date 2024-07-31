@@ -451,13 +451,13 @@ function ParsePat() {
       --msgbox "${MSG}" 0 0
     return
   fi
-  DIALOG --title "$(TEXT "Product Version")" \
+  DIALOG --title "$(TEXT "Parse Pat")" \
     --no-items --menu "$(TEXT "Choose a pat file")" 0 0 0 ${ITEMS} \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
   PAT_PATH=$(cat ${TMP_PATH}/resp)
   if [ ! -f "${PAT_PATH}" ]; then
-    DIALOG --title "$(TEXT "Update")" \
+    DIALOG --title "$(TEXT "Parse Pat")" \
       --msgbox "$(TEXT "pat Invalid, try again!")" 0 0
     return
   fi
@@ -498,10 +498,10 @@ function ParsePat() {
     echo "$(TEXT "Ready!")"
     sleep 3
     break
-  done 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
+  done 2>&1 | DIALOG --title "$(TEXT "Parse Pat")" \
     --progressbox "$(TEXT "Making ...")" 20 100
   if [ -f "${LOG_FILE}" ]; then
-    DIALOG --title "$(TEXT "Error")" \
+    DIALOG --title "$(TEXT "Parse Pat")" \
       --msgbox "$(cat ${LOG_FILE})" 0 0
     rm -f "${LOG_FILE}"
     return 1
