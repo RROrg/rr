@@ -2243,42 +2243,70 @@ function cloneBootloaderDisk() {
 }
 
 function reportBugs() {
-  if [ -d "${PART1_PATH}/logs" ]; then
-    DSMROOTS="$(findDSMRoot)"
-    if [ -n "${DSMROOTS}" ]; then
-      mkdir -p "${TMP_PATH}/mdX"
-      for I in ${DSMROOTS}; do
-        mount -t ext4 "${I}" "${TMP_PATH}/mdX"
-        [ $? -ne 0 ] && continue
-        mkdir -p "${PART1_PATH}/logs/md0/log"
-        cp -rf ${TMP_PATH}/mdX/.log.junior "${PART1_PATH}/logs/md0"
-        cp -rf ${TMP_PATH}/mdX/var/log/messages ${TMP_PATH}/mdX/var/log/*.log "${PART1_PATH}/logs/md0/log"
-        umount "${TMP_PATH}/mdX"
-      done
-      rm -rf "${TMP_PATH}/mdX"
-    fi
-    rm -f "${TMP_PATH}/logs.tar.gz"
-    tar -czf "${TMP_PATH}/logs.tar.gz" -C "${PART1_PATH}" logs
-    if [ -z "${SSH_TTY}" ]; then # web
-      mv -f "${TMP_PATH}/logs.tar.gz" "/var/www/data/logs.tar.gz"
-      URL="http://$(getIP)/logs.tar.gz"
-      DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox "$(printf "$(TEXT "Please via %s to download the logs,\nAnd go to github to create an issue and upload the logs.")" "${URL}")" 0 0
-    else
-      sz -be -B 536870912 "${TMP_PATH}/logs.tar.gz"
-      DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox "$(TEXT "Please go to github to create an issue and upload the logs.")" 0 0
-    fi
+  MSG=""
+  SYSLOG=0
+  DSMROOTS="$(findDSMRoot)"
+  if [ -n "${DSMROOTS}" ]; then
+    mkdir -p "${TMP_PATH}/mdX"
+    for I in ${DSMROOTS}; do
+      mount -t ext4 "${I}" "${TMP_PATH}/mdX"
+      [ $? -ne 0 ] && continue
+      mkdir -p "${TMP_PATH}/logs/md0/log"
+      cp -rf ${TMP_PATH}/mdX/.log.junior "${TMP_PATH}/logs/md0"
+      cp -rf ${TMP_PATH}/mdX/var/log/messages ${TMP_PATH}/mdX/var/log/*.log "${TMP_PATH}/logs/md0/log"
+      SYSLOG=1
+      umount "${TMP_PATH}/mdX"
+    done
+    rm -rf "${TMP_PATH}/mdX"
+  fi
+  if [ ${SYSLOG} -eq 1 ]; then
+    MSG+="$(TEXT "Find the system logs!\n")"
   else
-    MSG=""
-    MSG+="$(TEXT "\Z1No logs found!\Zn\n\n")"
+    MSG+="$(TEXT "Not Find system logs!\n")"
+  fi
+
+  PSTORE=0
+  if [ -n "$(ls /sys/fs/pstore)" ]; then
+    mkdir -p "${TMP_PATH}/logs/pstore"
+    cp -rf /sys/fs/pstore/* "${TMP_PATH}/logs/pstore"
+    zlib-flate -uncompress </sys/fs/pstore/*.z >"${TMP_PATH}/logs/pstore/ps.log" 2>/dev/null
+    PSTORE=1
+  fi
+  if [ ${PSTORE} -eq 1 ]; then
+    MSG+="$(TEXT "Find the pstore logs!\n")"
+  else
+    MSG+="$(TEXT "Not Find pstore logs!\n")"
+  fi
+
+  ADDONS=0
+  if [ -d "${PART1_PATH}/logs" ]; then
+    mkdir -p "${TMP_PATH}/logs/addons"
+    cp -rf "${PART1_PATH}/logs"/* "${TMP_PATH}/logs/addons"
+    ADDONS=1
+  fi
+  if [ ${ADDONS} -eq 1 ]; then
+    MSG+="$(TEXT "Find the addons logs!\n")"
+  else
+    MSG+="$(TEXT "Not Find addons logs!\n")"
     MSG+="$(TEXT "Please do as follows:\n")"
     MSG+="$(TEXT " 1. Add dbgutils in addons and rebuild.\n")"
     MSG+="$(TEXT " 2. Wait 10 minutes after booting.\n")"
     MSG+="$(TEXT " 3. Reboot into RR and go to this option.\n")"
-    DIALOG --title "$(TEXT "Advanced")" \
-      --msgbox "${MSG}" 0 0
   fi
+
+  rm -f "${TMP_PATH}/logs.tar.gz"
+  tar -czf "${TMP_PATH}/logs.tar.gz" -C "${TMP_PATH}" logs
+
+  if [ -z "${SSH_TTY}" ]; then # web
+    mv -f "${TMP_PATH}/logs.tar.gz" "/var/www/data/logs.tar.gz"
+    URL="http://$(getIP)/logs.tar.gz"
+    MSG+="$(printf "$(TEXT "Please via %s to download the logs,\nAnd go to github to create an issue and upload the logs.")" "${URL}")"
+  else
+    sz -be -B 536870912 "${TMP_PATH}/logs.tar.gz"
+    MSG+="$(TEXT "Please go to github to create an issue and upload the logs.")"
+  fi
+  DIALOG --title "$(TEXT "Advanced")" \
+    --msgbox "${MSG}" 0 0
 }
 
 ###############################################################################
