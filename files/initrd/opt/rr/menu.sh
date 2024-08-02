@@ -2243,6 +2243,7 @@ function cloneBootloaderDisk() {
 }
 
 function reportBugs() {
+  rm -rf "${TMP_PATH}/logs" "${TMP_PATH}/logs.tar.gz"
   MSG=""
   SYSLOG=0
   DSMROOTS="$(findDSMRoot)"
@@ -2266,7 +2267,7 @@ function reportBugs() {
   fi
 
   PSTORE=0
-  if [ -n "$(ls /sys/fs/pstore)" ]; then
+  if [ -n "$(ls /sys/fs/pstore 2>/dev/null)" ]; then
     mkdir -p "${TMP_PATH}/logs/pstore"
     cp -rf /sys/fs/pstore/* "${TMP_PATH}/logs/pstore"
     zlib-flate -uncompress </sys/fs/pstore/*.z >"${TMP_PATH}/logs/pstore/ps.log" 2>/dev/null
@@ -2294,16 +2295,16 @@ function reportBugs() {
     MSG+="$(TEXT " 3. Reboot into RR and go to this option.\n")"
   fi
 
-  rm -f "${TMP_PATH}/logs.tar.gz"
-  tar -czf "${TMP_PATH}/logs.tar.gz" -C "${TMP_PATH}" logs
-
-  if [ -z "${SSH_TTY}" ]; then # web
-    mv -f "${TMP_PATH}/logs.tar.gz" "/var/www/data/logs.tar.gz"
-    URL="http://$(getIP)/logs.tar.gz"
-    MSG+="$(printf "$(TEXT "Please via %s to download the logs,\nAnd go to github to create an issue and upload the logs.")" "${URL}")"
-  else
-    sz -be -B 536870912 "${TMP_PATH}/logs.tar.gz"
-    MSG+="$(TEXT "Please go to github to create an issue and upload the logs.")"
+  if [ -n "$(ls -A ${TMP_PATH}/logs 2>/dev/null)" ]; then
+    tar -czf "${TMP_PATH}/logs.tar.gz" -C "${TMP_PATH}" logs
+    if [ -z "${SSH_TTY}" ]; then # web
+      mv -f "${TMP_PATH}/logs.tar.gz" "/var/www/data/logs.tar.gz"
+      URL="http://$(getIP)/logs.tar.gz"
+      MSG+="$(printf "$(TEXT "Please via %s to download the logs,\nAnd go to github to create an issue and upload the logs.")" "${URL}")"
+    else
+      sz -be -B 536870912 "${TMP_PATH}/logs.tar.gz"
+      MSG+="$(TEXT "Please go to github to create an issue and upload the logs.")"
+    fi
   fi
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
