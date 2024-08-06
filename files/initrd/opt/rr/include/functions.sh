@@ -269,10 +269,10 @@ function _sort_netif() {
 function getBus() {
   local BUS=""
   # usb/ata(ide)/sata/sas/virtio/mmc/nvme
-  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,TRAN 2>/dev/null | grep "${1} " | awk '{print $2}' | sed 's/ata/ide/') #Spaces are intentional
+  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,TRAN 2>/dev/null | grep "${1} " | awk '{print $2}' | sed 's/^ata$/ide/') #Spaces are intentional
   # usb/scsi(ide/sata/sas)/virtio/mmc/nvme/vmbus/xen(xvd)
-  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | awk '{print $2}' | awk -F':' '{print $(NF-1)}' | sed 's/_host//' | sed 's/.*xen.*/xen/') # Spaces are intentional
-  [ -z "${BUS}" ] && "UNKNOWN"
+  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | awk '{print $2}' | awk -F':' '{print $(NF-1)}' | sed 's/_host//' | sed 's/^.*xen.*$/xen/') # Spaces are intentional
+  [ -z "${BUS}" ] && BUS="unknown"
   echo "${BUS}"
   return 0
 }
