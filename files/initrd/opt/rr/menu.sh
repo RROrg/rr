@@ -3613,9 +3613,9 @@ else
         echo "x \"$(TEXT "Reboot to RR")\"" >>"${TMP_PATH}/menu"
         echo "y \"$(TEXT "Reboot to Recovery")\"" >>"${TMP_PATH}/menu"
         echo "z \"$(TEXT "Reboot to Junior")\"" >>"${TMP_PATH}/menu"
-        if efibootmgr | grep -q "^Boot0000"; then
-          echo "b \"$(TEXT "Reboot to BIOS")\"" >>"${TMP_PATH}/menu"
-        fi
+        #if efibootmgr | grep -q "^Boot0000"; then
+        echo "b \"$(TEXT "Reboot to BIOS")\"" >>"${TMP_PATH}/menu"
+        #fi
         echo "s \"$(TEXT "Back to shell")\"" >>"${TMP_PATH}/menu"
         echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
@@ -3657,8 +3657,9 @@ else
         b)
           DIALOG --title "$(TEXT "Main menu")" \
             --infobox "$(TEXT "Reboot to BIOS")" 0 0
-          efibootmgr -n 0000 >/dev/null 2>&1
-          reboot
+          #efibootmgr -n 0000 >/dev/null 2>&1
+          #reboot
+          rebootTo bios
           exit 0
           ;;
         s)
