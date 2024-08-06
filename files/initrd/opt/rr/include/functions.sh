@@ -99,7 +99,7 @@ function generateSerial() {
   MIDDLE="$(readConfigArray "${1}.middle" "${WORK_PATH}/serialnumber.yml" 2>/dev/null | sort -R | tail -1)"
   SUFFIX="$(readConfigKey "${1}.suffix" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
 
-  SERIAL="${PREFIX:-"0000"}${MIDDLE:-"XXX"}"
+  local SERIAL="${PREFIX:-"0000"}${MIDDLE:-"XXX"}"
   case "${SUFFIX:-"alpha"}" in
   numeric)
     SERIAL+="$(random)"
@@ -120,7 +120,7 @@ function generateMacAddress() {
   MACPRE="$(readConfigArray "${1}.macpre" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
   MACSUF="$(printf '%02x%02x%02x' $((${RANDOM} % 256)) $((${RANDOM} % 256)) $((${RANDOM} % 256)))"
   NUM=${2:-1}
-  MACS=""
+  local MACS=""
   for I in $(seq 1 ${NUM}); do
     MACS+="$(printf '%06x%06x' $((0x${MACPRE:-"001132"})) $(($((0x${MACSUF})) + ${I})))"
     [ ${I} -lt ${NUM} ] && MACS+=" "
@@ -213,7 +213,7 @@ function _get_fastest() {
       speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
     done
   fi
-  fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1)"
+  local fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1)"
   URL="$(echo "${fastest}" | awk '{print $1}')"
   SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
   echo "${URL}"
@@ -224,25 +224,25 @@ function _get_fastest() {
 # sort netif name
 # @1 -mac1,mac2,mac3...
 function _sort_netif() {
-  ETHLIST=""
-  ETHX="$(ls /sys/class/net/ 2>/dev/null | grep eth)" # real network cards list
+  local ETHLIST=""
+  local ETHX="$(ls /sys/class/net/ 2>/dev/null | grep eth)" # real network cards list
   for ETH in ${ETHX}; do
-    MAC="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g' | tr '[:upper:]' '[:lower:]')"
-    BUS="$(ethtool -i ${ETH} 2>/dev/null | grep bus-info | cut -d' ' -f2)"
+    local MAC="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g' | tr '[:upper:]' '[:lower:]')"
+    local BUS="$(ethtool -i ${ETH} 2>/dev/null | grep bus-info | cut -d' ' -f2)"
     ETHLIST="${ETHLIST}${BUS} ${MAC} ${ETH}\n"
   done
-  ETHLISTTMPM=""
-  ETHLISTTMPB="$(echo -e "${ETHLIST}" | sort)"
+  local ETHLISTTMPM=""
+  local ETHLISTTMPB="$(echo -e "${ETHLIST}" | sort)"
   if [ -n "${1}" ]; then
-    MACS="$(echo "${1}" | sed 's/://g' | tr '[:upper:]' '[:lower:]' | tr ',' ' ')"
+    local MACS="$(echo "${1}" | sed 's/://g' | tr '[:upper:]' '[:lower:]' | tr ',' ' ')"
     for MACX in ${MACS}; do
       ETHLISTTMPM="${ETHLISTTMPM}$(echo -e "${ETHLISTTMPB}" | grep "${MACX}")\n"
       ETHLISTTMPB="$(echo -e "${ETHLISTTMPB}" | grep -v "${MACX}")\n"
     done
   fi
-  ETHLIST="$(echo -e "${ETHLISTTMPM}${ETHLISTTMPB}" | grep -v '^$')"
-  ETHSEQ="$(echo -e "${ETHLIST}" | awk '{print $3}' | sed 's/eth//g')"
-  ETHNUM="$(echo -e "${ETHLIST}" | wc -l)"
+  local ETHLIST="$(echo -e "${ETHLISTTMPM}${ETHLISTTMPB}" | grep -v '^$')"
+  local ETHSEQ="$(echo -e "${ETHLIST}" | awk '{print $3}' | sed 's/eth//g')"
+  local ETHNUM="$(echo -e "${ETHLIST}" | wc -l)"
 
   # echo "${ETHSEQ}"
   # sort
@@ -267,7 +267,7 @@ function _sort_netif() {
 # get bus of disk
 # 1 - device path
 function getBus() {
-  BUS=""
+  local BUS=""
   # xvd
   [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | grep -q "xen" && echo "xen")
   # usb/ata(sata/ide)/scsi
@@ -284,7 +284,7 @@ function getBus() {
 # get IP
 # 1 - ethN
 function getIP() {
-  IP=""
+  local IP=""
   if [ -n "${1}" -a -d "/sys/class/net/${1}" ]; then
     IP=$(ip route show dev ${1} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p')
     [ -z "${IP}" ] && IP=$(ip addr show ${1} scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
@@ -300,13 +300,13 @@ function getIP() {
 # get logo of model
 # 1 - model
 function getLogo() {
-  MODEL="${1}"
+  local MODEL="${1}"
   rm -f "${PART3_PATH}/logo.png"
-  fastest="www.synology.com" # $(_get_fastest "www.synology.com" "www.synology.cn")
+  local fastest="www.synology.com" # $(_get_fastest "www.synology.com" "www.synology.cn")
   if [ $? -ne 0 ]; then
     return 1
   fi
-  STATUS=$(curl -skL --connect-timeout 10 -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
+  local STATUS=$(curl -skL --connect-timeout 10 -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
   if [ $? -ne 0 -o ${STATUS:-0} -ne 200 -o ! -f "${PART3_PATH}/logo.png" ]; then
     rm -f "${PART3_PATH}/logo.png"
     return 1
@@ -362,7 +362,7 @@ function delCmdline() {
 # Rebooting
 # 1 - mode
 function rebootTo() {
-  MODES="config recovery junior"
+  local MODES="config recovery junior"
   if [ -z "${1}" ] || ! echo "${MODES}" | grep -qw "${1}"; then exit 1; fi
   # echo "Rebooting to ${1} mode"
   GRUBPATH="$(dirname $(find ${PART1_PATH}/ -name grub.cfg 2>/dev/null | head -1))"
@@ -379,7 +379,7 @@ function rebootTo() {
 function connectwlanif() {
   [ -z "${1}" -o ! -d "/sys/class/net/${1}" ] && return 1
 
-  CONF=""
+  local CONF=""
   [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf.${1}" ] && CONF="${PART1_PATH}/wpa_supplicant.conf.${1}"
   [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf" ] && CONF="${PART1_PATH}/wpa_supplicant.conf"
   [ -z "${CONF}" ] && return 2
@@ -396,7 +396,7 @@ function connectwlanif() {
 # Find and mount the DSM root filesystem
 # (based on pocopico's TCRP code)
 function findDSMRoot() {
-  DSMROOTS=""
+  local DSMROOTS=""
   [ -z "${DSMROOTS}" ] && DSMROOTS="$(mdadm --detail --scan 2>/dev/null | grep -E "name=SynologyNAS:0|name=DiskStation:0|name=SynologyNVR:0|name=BeeStation:0" | awk '{print $2}' | uniq)"
   [ -z "${DSMROOTS}" ] && DSMROOTS="$(lsblk -pno KNAME,PARTN,FSTYPE,FSVER,LABEL | grep -E "sd[a-z]{1,2}1" | grep -w "linux_raid_member" | grep "0.9" | awk '{print $1}')"
   echo "${DSMROOTS}"
