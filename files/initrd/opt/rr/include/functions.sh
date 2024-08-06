@@ -268,14 +268,11 @@ function _sort_netif() {
 # 1 - device path
 function getBus() {
   local BUS=""
-  # xvd
-  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | grep -q "xen" && echo "xen")
-  # usb/ata(sata/ide)/scsi
-  [ -z "${BUS}" ] && BUS=$(udevadm info --query property --name "${1}" 2>/dev/null | grep ID_BUS | cut -d= -f2 | sed 's/ata/sata/')
-  # usb/sata(sata/ide)/nvme
-  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,TRAN 2>/dev/null | grep "${1} " | awk '{print $2}') #Spaces are intentional
-  # usb/scsi(sata/ide)/virtio(scsi/virtio)/mmc/nvme
-  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | awk '{print $2}' | awk -F':' '{print $(NF-1)}' | sed 's/_host//') # Spaces are intentional
+  # usb/ata(ide)/sata/sas/virtio/mmc/nvme
+  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,TRAN 2>/dev/null | grep "${1} " | awk '{print $2}' | sed 's/ata/ide/') #Spaces are intentional
+  # usb/scsi(ide/sata/sas)/virtio/mmc/nvme/vmbus/xen(xvd)
+  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | awk '{print $2}' | awk -F':' '{print $(NF-1)}' | sed 's/_host//' | sed 's/.*xen.*/xen/') # Spaces are intentional
+  [ -z "${BUS}" ] && "UNKNOWN"
   echo "${BUS}"
   return 0
 }
