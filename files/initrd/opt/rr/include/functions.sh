@@ -362,7 +362,7 @@ function delCmdline() {
 # Rebooting
 # 1 - mode
 function rebootTo() {
-  local MODES="config recovery junior"
+  local MODES="config recovery junior bios memtest"
   if [ -z "${1}" ] || ! echo "${MODES}" | grep -qw "${1}"; then exit 1; fi
   # echo "Rebooting to ${1} mode"
   GRUBPATH="$(dirname $(find ${PART1_PATH}/ -name grub.cfg 2>/dev/null | head -1))"
