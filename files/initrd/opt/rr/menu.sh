@@ -1755,7 +1755,7 @@ function formatDisks() {
     [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
     [ -z "${ID}" ] && ID="Unknown"
     printf "\"%s\" \"%-6s %-4s %s\" \"off\"\n" "${KNAME}" "${SIZE}" "${TYPE}" "${ID}" >>"${TMP_PATH}/opts"
-  done <<<$(lsblk -pno KNAME,ID,SIZE,TYPE,PKNAME)
+  done <<<$(lsblk -Jpno KNAME,ID,SIZE,TYPE,PKNAME 2>/dev/null | sed 's|null|"N/A"|g' | jq -r '.blockdevices[] | "\(.kname) \(.id) \(.size) \(.type) \(.pkname)"' 2>/dev/null)
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
@@ -2138,7 +2138,7 @@ function cloneBootloaderDisk() {
     [ -z "${KNAME}" -o -z "${ID}" ] && continue
     [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
     printf "\"%s\" \"%-6s %s\" \"off\"\n" "${KNAME}" "${SIZE}" "${ID}" >>"${TMP_PATH}/opts"
-  done <<<$(lsblk -dpno KNAME,ID,SIZE,PKNAME)
+  done <<<$(lsblk -Jpno KNAME,ID,SIZE,PKNAME 2>/dev/null | sed 's|null|"N/A"|g' | jq -r '.blockdevices[] | "\(.kname) \(.id) \(.size) \(.pkname)"' 2>/dev/null)
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
