@@ -48,6 +48,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -360,6 +368,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
@@ -419,6 +431,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -628,6 +652,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -635,6 +667,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -1034,6 +1070,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -1378,6 +1422,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
@@ -1441,6 +1489,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -1706,6 +1766,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -1713,6 +1781,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -2196,6 +2268,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -2484,6 +2564,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
@@ -2535,6 +2619,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -2744,6 +2840,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -2751,6 +2855,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -3130,6 +3238,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -3450,6 +3566,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
@@ -3505,6 +3625,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -3770,6 +3902,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -3777,6 +3917,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -4240,6 +4384,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -4528,6 +4680,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
@@ -4579,6 +4735,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -4788,6 +4956,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -4795,6 +4971,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -5174,6 +5354,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -5494,6 +5682,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
@@ -5549,6 +5741,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -5814,6 +6018,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -5821,6 +6033,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -6284,6 +6500,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -6572,6 +6796,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
@@ -6623,6 +6851,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -6832,6 +7072,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -6839,6 +7087,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -7218,6 +7470,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -7538,6 +7798,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
@@ -7593,6 +7857,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -7858,6 +8134,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -7865,6 +8149,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -8328,6 +8616,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -8624,6 +8920,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
@@ -8675,6 +8975,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -8884,6 +9196,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -8891,6 +9211,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -9266,6 +9590,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -9594,6 +9926,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
@@ -9653,6 +9989,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -9918,6 +10266,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -9925,6 +10281,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -10384,6 +10744,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -10664,6 +11032,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
@@ -10719,6 +11091,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -10928,6 +11312,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -10935,6 +11327,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -11310,6 +11706,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -11622,6 +12026,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
@@ -11681,6 +12089,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -11946,6 +12366,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -11953,6 +12381,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -12432,6 +12864,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -12716,6 +13156,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.20-200",
             "depends": "scsi_transport_sas"
@@ -12775,6 +13219,18 @@
         "ib_uverbs": {
             "description": "InfiniBand userspace verbs access",
             "depends": "ib_core"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -13188,6 +13644,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-intel-lgm-emmc": {
             "description": "Intel eMMC PHY driver",
             "depends": ""
@@ -13199,6 +13663,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -13878,6 +14346,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -14166,6 +14642,10 @@
             "description": "Google Gasket driver framework",
             "depends": "dmabuf"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.20-200",
             "depends": "scsi_transport_sas"
@@ -14225,6 +14705,18 @@
         "ib_uverbs": {
             "description": "InfiniBand userspace verbs access",
             "depends": "ib_core"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -14638,6 +15130,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-intel-lgm-emmc": {
             "description": "Intel eMMC PHY driver",
             "depends": ""
@@ -14649,6 +15149,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -15305,6 +15809,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atl1c": {
             "description": "Qualcomm Atheros 100/1000M Ethernet Network Driver",
             "depends": ""
@@ -15613,6 +16125,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
@@ -15668,6 +16184,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -15877,6 +16405,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -15884,6 +16420,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -16279,6 +16819,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atl1c": {
             "description": "Qualcomm Atheros 100/1000M Ethernet Network Driver",
             "depends": ""
@@ -16611,6 +17159,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
@@ -16670,6 +17222,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -16935,6 +17499,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -16942,6 +17514,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -17425,6 +18001,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -17709,6 +18293,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
@@ -17760,6 +18348,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -17969,6 +18569,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -17976,6 +18584,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -18351,6 +18963,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -18667,6 +19287,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": ""
@@ -18726,6 +19350,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -18991,6 +19627,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -18998,6 +19642,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -19453,6 +20101,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -19745,6 +20401,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
@@ -19800,6 +20460,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -20009,6 +20681,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -20016,6 +20696,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -20387,6 +21071,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -20711,6 +21403,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
@@ -20778,6 +21474,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -21039,6 +21747,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -21046,6 +21762,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -21509,6 +22229,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -21801,6 +22529,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
@@ -21856,6 +22588,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -22069,6 +22813,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -22076,6 +22828,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -22455,6 +23211,14 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet"
         },
+        "ata_generic": {
+            "description": "low-level driver for generic ATA",
+            "depends": ""
+        },
+        "ata_piix": {
+            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
+            "depends": ""
+        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -22779,6 +23543,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "hpilo": {
+            "description": "hpilo (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
@@ -22846,6 +23614,18 @@
         "ice": {
             "description": "Intel(R) Ethernet Connection E800 Series Linux Driver",
             "depends": "vxlan,auxiliary"
+        },
+        "ide-core": {
+            "description": "",
+            "depends": ""
+        },
+        "ide-gd_mod": {
+            "description": "generic ATA/ATAPI disk driver",
+            "depends": "ide-core"
+        },
+        "ide-pci-generic": {
+            "description": "PCI driver module for generic PCI IDE",
+            "depends": "ide-core"
         },
         "igb": {
             "description": "Intel(R) Gigabit Ethernet Linux Driver",
@@ -23111,6 +23891,14 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "pata_acpi": {
+            "description": "SCSI low-level driver for ATA in ACPI mode",
+            "depends": ""
+        },
+        "pata_legacy": {
+            "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -23118,6 +23906,10 @@
         "phy": {
             "description": "USB phy handling",
             "depends": ""
+        },
+        "piix": {
+            "description": "PCI driver module for Intel PIIX IDE",
+            "depends": "ide-core"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
