@@ -111,7 +111,7 @@ PID="0x0001"
 TYPE="DoM"
 BUS=$(getBus "${LOADER_DISK}")
 
-BUSLIST="usb sata scsi nvme mmc xen"
+BUSLIST="usb sata scsi nvme mmc ide vmbus xen"
 if [ "${BUS}" = "usb" ]; then
   VID="0x$(udevadm info --query property --name ${LOADER_DISK} 2>/dev/null | grep ID_VENDOR_ID | cut -d= -f2)"
   PID="0x$(udevadm info --query property --name ${LOADER_DISK} 2>/dev/null | grep ID_MODEL_ID | cut -d= -f2)"
@@ -121,7 +121,7 @@ elif ! echo "${BUSLIST}" | grep -wq "${BUS}"; then
     echo "LOCALBUILD MODE"
     TYPE="PC"
   else
-    die "$(TEXT "Loader disk neither USB or SATA/SCSI/NVME/MMC/XEN DoM")"
+    die "$(TEXT "Loader disk neither USB or SATA/SCSI/NVME/MMC/IDE/VMBUS/XEN DoM")"
   fi
 fi
 
