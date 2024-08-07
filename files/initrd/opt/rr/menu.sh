@@ -1652,7 +1652,7 @@ function setWirelessAccount() {
 function showDisksInfo() {
   MSG=""
   NUMPORTS=0
-  [ $(lspci -d ::106 2>/dev/null | wc -l) -gt 0 ] && MSG+="\nATA:\n"
+  [ $(lspci -d ::106 2>/dev/null | wc -l) -gt 0 ] && MSG+="\nSATA:\n"
   for PCI in $(lspci -d ::106 2>/dev/null | awk '{print $1}'); do
     NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
     MSG+="\Zb${NAME}\Zn\nPorts: "
@@ -1696,6 +1696,14 @@ function showDisksInfo() {
     MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
     NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
   done
+  [ $(lspci -d ::101 2>/dev/null | wc -l) -gt 0 ] && MSG+="\nIDE:\n"
+  for PCI in $(lspci -d ::101 2>/dev/null | awk '{print $1}'); do
+    NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
+    PORTNUM=$(ls -l /sys/block/* 2>/dev/null | grep "${PCI}" | wc -l)
+    [ ${PORTNUM} -eq 0 ] && continue
+    MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
+    NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
+  done
   [ $(ls -l /sys/class/scsi_host 2>/dev/null | grep usb | wc -l) -gt 0 ] && MSG+="\nUSB:\n"
   for PCI in $(lspci -d ::c03 2>/dev/null | awk '{print $1}'); do
     NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
@@ -1721,6 +1729,13 @@ function showDisksInfo() {
     MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
     NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
   done
+  if [ $(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep 'vmbus:acpi' | wc -l) -gt 0 ]; then
+    MSG+="\nVMBUS:\n"
+    NAME="vmbus:acpi"
+    PORTNUM=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep 'vmbus:acpi' | wc -l)
+    MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
+    NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
+  fi
   MSG+="\n"
   MSG+="$(printf "$(TEXT "\nTotal of ports: %s\n")" "${NUMPORTS}")"
   MSG+="$(TEXT "\nPorts with color \Z1red\Zn as DUMMY, color \Z2\Zbgreen\Zn has drive connected.")"
@@ -1740,7 +1755,7 @@ function formatDisks() {
     [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
     [ -z "${ID}" ] && ID="Unknown"
     printf "\"%s\" \"%-6s %-4s %s\" \"off\"\n" "${KNAME}" "${SIZE}" "${TYPE}" "${ID}" >>"${TMP_PATH}/opts"
-  done <<<$(lsblk -pno KNAME,ID,SIZE,TYPE,PKNAME)
+  done <<<$(lsblk -Jpno KNAME,ID,SIZE,TYPE,PKNAME 2>/dev/null | sed 's|null|"N/A"|g' | jq -r '.blockdevices[] | "\(.kname) \(.id) \(.size) \(.type) \(.pkname)"' 2>/dev/null)
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
@@ -2123,7 +2138,7 @@ function cloneBootloaderDisk() {
     [ -z "${KNAME}" -o -z "${ID}" ] && continue
     [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
     printf "\"%s\" \"%-6s %s\" \"off\"\n" "${KNAME}" "${SIZE}" "${ID}" >>"${TMP_PATH}/opts"
-  done <<<$(lsblk -dpno KNAME,ID,SIZE,PKNAME)
+  done <<<$(lsblk -Jpno KNAME,ID,SIZE,PKNAME 2>/dev/null | sed 's|null|"N/A"|g' | jq -r '.blockdevices[] | "\(.kname) \(.id) \(.size) \(.pkname)"' 2>/dev/null)
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
@@ -3318,14 +3333,14 @@ function updateMenu() {
     fi
     case "$(cat ${TMP_PATH}/resp)" in
     a)
-      F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
+      F="$(ls ${PART3_PATH}/updateall*.zip ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "All")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "updateall" "${SILENT}"
       F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && updateRR "${F}" "${SILENT}" && rm -f ${TMP_PATH}/updateall*.zip
       ;;
     r)
-      F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
+      F="$(ls ${PART3_PATH}/update*.zip ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "RR")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "update" "${SILENT}"
       F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
@@ -3337,7 +3352,7 @@ function updateMenu() {
           --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "Addons")")" 0 0
         continue
       fi
-      F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
+      F="$(ls ${PART3_PATH}/addons*.zip ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "Addons")" "${CUR_ADDONS_VER:-None}" "https://github.com/RROrg/rr-addons" "addons" "${SILENT}"
       F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
@@ -3349,7 +3364,7 @@ function updateMenu() {
           --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "Modules")")" 0 0
         continue
       fi
-      F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
+      F="$(ls ${PART3_PATH}/modules*.zip ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "Modules")" "${CUR_MODULES_VER:-None}" "https://github.com/RROrg/rr-modules" "modules" "${SILENT}"
       F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
@@ -3361,7 +3376,7 @@ function updateMenu() {
           --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "LKMs")")" 0 0
         continue
       fi
-      F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
+      F="$(ls ${PART3_PATH}/rp-lkms*.zip ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "LKMs")" "${CUR_LKMS_VER:-None}" "https://github.com/RROrg/rr-lkms" "rp-lkms" "${SILENT}"
       F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
@@ -3373,7 +3388,7 @@ function updateMenu() {
           --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "CKs")")" 0 0
         continue
       fi
-      F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
+      F="$(ls ${PART3_PATH}/rr-cks*.zip ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
       [ -z "${F}" ] && downloadExts "$(TEXT "CKs")" "${CUR_CKS_VER:-None}" "https://github.com/RROrg/rr-cks" "rr-cks" "${SILENT}"
       F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
@@ -3613,9 +3628,9 @@ else
         echo "x \"$(TEXT "Reboot to RR")\"" >>"${TMP_PATH}/menu"
         echo "y \"$(TEXT "Reboot to Recovery")\"" >>"${TMP_PATH}/menu"
         echo "z \"$(TEXT "Reboot to Junior")\"" >>"${TMP_PATH}/menu"
-        if efibootmgr | grep -q "^Boot0000"; then
-          echo "b \"$(TEXT "Reboot to BIOS")\"" >>"${TMP_PATH}/menu"
-        fi
+        #if efibootmgr | grep -q "^Boot0000"; then
+        echo "b \"$(TEXT "Reboot to BIOS")\"" >>"${TMP_PATH}/menu"
+        #fi
         echo "s \"$(TEXT "Back to shell")\"" >>"${TMP_PATH}/menu"
         echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
@@ -3657,8 +3672,9 @@ else
         b)
           DIALOG --title "$(TEXT "Main menu")" \
             --infobox "$(TEXT "Reboot to BIOS")" 0 0
-          efibootmgr -n 0000 >/dev/null 2>&1
-          reboot
+          #efibootmgr -n 0000 >/dev/null 2>&1
+          #reboot
+          rebootTo bios
           exit 0
           ;;
         s)
