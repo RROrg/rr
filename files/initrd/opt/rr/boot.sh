@@ -9,6 +9,10 @@ set -e
 # Sanity check
 loaderIsConfigured || die "$(TEXT "Loader is not configured!")"
 
+# Clear logs for dbgutils addons
+rm -rf "${PART1_PATH}/logs" >/dev/null 2>&1 || true
+rm -rf /sys/fs/pstore/* >/dev/null 2>&1 || true
+
 # Check if machine has EFI
 [ -d /sys/firmware/efi ] && EFI=1 || EFI=0
 
@@ -311,10 +315,10 @@ else
   fi
 
   # Executes DSM kernel via KEXEC
-  KEXECARGS=""
+  KEXECARGS="-a"
   if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ ${EFI} -eq 1 ]; then
     echo -e "\033[1;33m$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")\033[0m"
-    KEXECARGS="--noefi"
+    KEXECARGS+=" --noefi"
   fi
   kexec ${KEXECARGS} -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
 
@@ -323,9 +327,6 @@ else
   for T in $(busybox w 2>/dev/null | grep -v 'TTY' | awk '{print $2}'); do
     [ -w "/dev/${T}" ] && echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
   done
-
-  # Clear logs for dbgutils addons
-  rm -rf "${PART1_PATH}/logs" >/dev/null 2>&1 || true
 
   # Unload all network interfaces
   for D in $(readlink /sys/class/net/*/device/driver); do rmmod -f "$(basename ${D})" 2>/dev/null || true; done
@@ -339,6 +340,6 @@ else
 
   # Reboot
   KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
-  [ "${KERNELWAY}" = "kexec" ] && kexec -a -e || poweroff
+  [ "${KERNELWAY}" = "kexec" ] && kexec -e || poweroff
   exit 0
 fi
