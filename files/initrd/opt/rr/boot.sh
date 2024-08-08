@@ -76,7 +76,7 @@ if ! readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q nvmesystem; then
   HASATA=0
   for D in $(lsblk -dpno NAME); do
     [ "${D}" = "${LOADER_DISK}" ] && continue
-    if [ "$(getBus "${D}")" = "sata" -o "$(getBus "${D}")" = "scsi" ]; then
+    if echo "sata sas scsi" | grep -qw "$(getBus "${D}")"; then
       HASATA=1
       break
     fi
