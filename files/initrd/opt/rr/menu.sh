@@ -1750,10 +1750,9 @@ function showDisksInfo() {
 function formatDisks() {
   rm -f "${TMP_PATH}/opts"
   while read KNAME ID SIZE TYPE PKNAME; do
-    [ -z "${KNAME}" ] && continue
+    [ "${KNAME}" = "N/A" ] && continue
     [[ "${KNAME}" = /dev/md* ]] && continue
     [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
-    [ -z "${ID}" ] && ID="Unknown"
     printf "\"%s\" \"%-6s %-4s %s\" \"off\"\n" "${KNAME}" "${SIZE}" "${TYPE}" "${ID}" >>"${TMP_PATH}/opts"
   done <<<$(lsblk -Jpno KNAME,ID,SIZE,TYPE,PKNAME 2>/dev/null | sed 's|null|"N/A"|g' | jq -r '.blockdevices[] | "\(.kname) \(.id) \(.size) \(.type) \(.pkname)"' 2>/dev/null)
   if [ ! -f "${TMP_PATH}/opts" ]; then
@@ -2135,7 +2134,7 @@ function initDSMNetwork {
 function cloneBootloaderDisk() {
   rm -f "${TMP_PATH}/opts"
   while read KNAME ID SIZE PKNAME; do
-    [ -z "${KNAME}" -o -z "${ID}" ] && continue
+    [ "${KNAME}" = "N/A" ] && continue
     [ "${KNAME}" = "${LOADER_DISK}" -o "${PKNAME}" = "${LOADER_DISK}" ] && continue
     printf "\"%s\" \"%-6s %s\" \"off\"\n" "${KNAME}" "${SIZE}" "${ID}" >>"${TMP_PATH}/opts"
   done <<<$(lsblk -Jpno KNAME,ID,SIZE,PKNAME 2>/dev/null | sed 's|null|"N/A"|g' | jq -r '.blockdevices[] | "\(.kname) \(.id) \(.size) \(.pkname)"' 2>/dev/null)
@@ -2285,7 +2284,7 @@ function reportBugs() {
   if [ -n "$(ls /sys/fs/pstore 2>/dev/null)" ]; then
     mkdir -p "${TMP_PATH}/logs/pstore"
     cp -rf /sys/fs/pstore/* "${TMP_PATH}/logs/pstore"
-    zlib-flate -uncompress </sys/fs/pstore/*.z >"${TMP_PATH}/logs/pstore/ps.log" 2>/dev/null
+    [ -n "$(ls /sys/fs/pstore/*.z 2>/dev/null)" ] && zlib-flate -uncompress </sys/fs/pstore/*.z >"${TMP_PATH}/logs/pstore/ps.log" 2>/dev/null
     PSTORE=1
   fi
   if [ ${PSTORE} -eq 1 ]; then
