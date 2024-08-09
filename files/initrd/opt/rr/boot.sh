@@ -161,8 +161,6 @@ CMDLINE['loglevel']="15"
 CMDLINE['log_buf_len']="32M"
 CMDLINE['panic']="${KERNELPANIC:-0}"
 CMDLINE['pcie_aspm']="off"
-CMDLINE['nox2apic']=""
-CMDLINE['nomodeset']=""
 CMDLINE['modprobe.blacklist']="${MODBLACKLIST}"
 
 # if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ] && [ ! "${BUS}" = "mmc" ] && [ ! "${EMMCBOOT}" = "true" ]; then
@@ -206,14 +204,6 @@ done
 CMDLINE_LINE=$(echo "${CMDLINE_LINE}" | sed 's/^ //') # Remove leading space
 echo -e "$(TEXT "Cmdline:\n")\033[1;36m${CMDLINE_LINE}\033[0m"
 
-# Save command line to grubenv
-if echo "apollolake geminilake purley" | grep -wq "${PLATFORM}"; then
-  if grep -q "^flags.*x2apic.*" /proc/cpuinfo; then
-    checkCmdline "rr_cmdline" "nox2apic" || addCmdline "rr_cmdline" "nox2apic"
-  fi
-else
-  checkCmdline "rr_cmdline" "nox2apic" && delCmdline "rr_cmdline" "nox2apic"
-fi
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 if [ "${DIRECT}" = "true" ]; then
   CMDLINE_DIRECT=$(echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g') # Escape special chars
@@ -328,15 +318,8 @@ else
     [ -w "/dev/${T}" ] && echo -e "\n\033[1;43m$(TEXT "[This interface will not be operational. Please wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
   done
 
-  # Unload all network interfaces
-  for D in $(readlink /sys/class/net/*/device/driver); do rmmod -f "$(basename ${D})" 2>/dev/null || true; done
-
-  # Unload all graphics drivers
-  # for D in $(readlink /sys/class/drm/*/device/driver); do rmmod -f "$(basename ${D})" 2>/dev/null || true; done
-  for D in $(lsmod | grep -E '^(nouveau|amdgpu|radeon|i915)' | awk '{print $1}'); do rmmod -f "${D}" 2>/dev/null || true; done
-  for I in $(find /sys/devices -name uevent -exec bash -c 'cat {} 2>/dev/null | grep -Eq "PCI_CLASS=0?30[0|1|2]00" && dirname {}' \;); do
-    [ -e ${I}/reset ] && cat ${I}/vendor >/dev/null | grep -iq 0x10de && echo 1 >${I}/reset || true # Proc open nvidia driver when booting
-  done
+  # # Unload all network interfaces
+  # for D in $(readlink /sys/class/net/*/device/driver); do rmmod -f "$(basename ${D})" 2>/dev/null || true; done
 
   # Reboot
   KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
