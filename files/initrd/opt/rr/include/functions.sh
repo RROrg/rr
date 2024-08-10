@@ -7,6 +7,11 @@
 ###############################################################################
 # Check loader disk
 function checkBootLoader() {
+  while read KNAME RO; do
+    [ -z "${KNAME}" ] && continue
+    [ "${RO}" = "0" ] && continue
+    hdparm -r0 "${KNAME}" >/dev/null 2>&1 || true
+  done <<<$(lsblk -pno KNAME,RO 2>/dev/null)
   [ ! -w "${PART1_PATH}" ] && return 1
   [ ! -w "${PART2_PATH}" ] && return 1
   [ ! -w "${PART3_PATH}" ] && return 1
@@ -268,8 +273,8 @@ function _sort_netif() {
 # 1 - device path
 function getBus() {
   local BUS=""
-  # usb/ata(ide)/sata/sas/virtio/mmc/nvme
-  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,TRAN 2>/dev/null | grep "${1} " | awk '{print $2}' | sed 's/^ata$/ide/') #Spaces are intentional
+  # usb/ata(ide)/sata/sas/spi(scsi)/virtio/mmc/nvme
+  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,TRAN 2>/dev/null | grep "${1} " | awk '{print $2}' | sed 's/^ata$/ide/' | sed 's/^spi$/scsi/') #Spaces are intentional
   # usb/scsi(ide/sata/sas)/virtio/mmc/nvme/vmbus/xen(xvd)
   [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | awk '{print $2}' | awk -F':' '{print $(NF-1)}' | sed 's/_host//' | sed 's/^.*xen.*$/xen/') # Spaces are intentional
   [ -z "${BUS}" ] && BUS="unknown"
