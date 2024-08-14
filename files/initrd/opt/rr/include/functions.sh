@@ -222,7 +222,7 @@ function _get_fastest() {
   URL="$(echo "${fastest}" | awk '{print $1}')"
   SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
   echo "${URL}"
-  [ $(printf "%.0f" ${SPD:-999}) -ge 999 ] && return 1 || return 0
+  [ $(echo ${SPD:-999} | cut -d. -f1) -ge 999 ] && return 1 || return 0
 }
 
 ###############################################################################
