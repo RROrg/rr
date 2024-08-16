@@ -1862,8 +1862,8 @@ function tryRecoveryDSM() {
     return
   fi
 
-  if [ -f "${TMP_PATH}/mdX/etc/synoinfo.conf" ]; then
-    R_SN="$(_get_conf_kv SN "${TMP_PATH}/mdX/etc/synoinfo.conf")"
+  if [ -f "${TMP_PATH}/mdX/etc.defaults/synoinfo.conf" ]; then
+    R_SN="$(_get_conf_kv SN "${TMP_PATH}/mdX/etc.defaults/synoinfo.conf")"
     [ -n "${R_SN}" ] && SN=${R_SN} && writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
   fi
 
