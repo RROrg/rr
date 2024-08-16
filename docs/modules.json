@@ -29,7 +29,7 @@
             "depends": ""
         },
         "adt7475": {
-            "description": "adt7475 driver (Compiled by RR for DSM)",
+            "description": "adt7475 driver",
             "depends": "hwmon-vid"
         },
         "aic94xx": {
@@ -98,7 +98,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -216,38 +216,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -312,6 +280,14 @@
             "description": "EHCI PCI platform driver",
             "depends": "usbcore,ehci-hcd"
         },
+        "evbug": {
+            "description": "Input driver event debug module",
+            "depends": ""
+        },
+        "evdev": {
+            "description": "Input driver event char devices",
+            "depends": ""
+        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -328,33 +304,13 @@
             "description": "Framebuffer base",
             "depends": "fbdev"
         },
-        "fb_defio": {
-            "description": "Deferred IO for framebuffers",
-            "depends": ""
-        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,font,bitblit"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -382,6 +338,10 @@
         },
         "hwmon-vid": {
             "description": "hwmon-vid driver",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
             "depends": ""
         },
         "i40e": {
@@ -503,6 +463,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kvm-amd": {
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
+            "depends": "kvm"
         },
         "kvm-intel": {
             "description": "",
@@ -991,10 +955,6 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
-        },
-        "xz_dec": {
-            "description": "XZ decompressor",
-            "depends": ""
         }
     },
     "apollolake-4.4.302": {
@@ -1053,10 +1013,6 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
-        },
-        "amd_nb": {
-            "description": "",
-            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -1120,7 +1076,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -1159,7 +1115,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -1187,11 +1143,11 @@
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "Classifier for fwmark (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cls_u32": {
-            "description": "U32 classifier (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cn": {
@@ -1254,38 +1210,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -1343,7 +1267,7 @@
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
         "efivarfs": {
-            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "description": "EFI Variable Filesystem",
             "depends": ""
         },
         "ehci-hcd": {
@@ -1378,33 +1302,13 @@
             "description": "Framebuffer base",
             "depends": "fbdev"
         },
-        "fb_defio": {
-            "description": "Deferred IO for framebuffers",
-            "depends": ""
-        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,bitblit,font"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -1536,7 +1440,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
-            "depends": ""
+            "depends": "hwmon-vid"
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -1573,10 +1477,6 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
-        },
-        "k10temp": {
-            "description": "AMD Family 10h+ CPU core temperature monitor",
-            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
@@ -1759,7 +1659,7 @@
             "depends": ""
         },
         "ntfs": {
-            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.",
             "depends": ""
         },
         "p8022": {
@@ -1971,15 +1871,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_netem": {
-            "description": "Network Emulator (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "scsi_transport_sas": {
@@ -2249,7 +2149,7 @@
             "depends": ""
         },
         "adt7475": {
-            "description": "adt7475 driver (Compiled by RR for DSM)",
+            "description": "adt7475 driver",
             "depends": ""
         },
         "aic94xx": {
@@ -2314,7 +2214,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -2432,38 +2332,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -2508,6 +2376,14 @@
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
         },
+        "evbug": {
+            "description": "Input driver event debug module",
+            "depends": ""
+        },
+        "evdev": {
+            "description": "Input driver event char devices",
+            "depends": ""
+        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -2521,12 +2397,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -2534,23 +2406,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,font,bitblit"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -2574,6 +2430,10 @@
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
             "depends": ""
         },
         "i40e": {
@@ -2687,6 +2547,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kvm-amd": {
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
+            "depends": "kvm"
         },
         "kvm-intel": {
             "description": "",
@@ -3159,10 +3023,6 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
-        },
-        "xz_dec": {
-            "description": "XZ decompressor",
-            "depends": ""
         }
     },
     "broadwell-4.4.302": {
@@ -3222,10 +3082,6 @@
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
         },
-        "amd_nb": {
-            "description": "",
-            "depends": ""
-        },
         "apex": {
             "description": "Google Apex driver",
             "depends": "gasket"
@@ -3284,7 +3140,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -3323,7 +3179,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -3351,11 +3207,11 @@
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "Classifier for fwmark (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cls_u32": {
-            "description": "U32 classifier (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cn": {
@@ -3418,38 +3274,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -3491,7 +3315,7 @@
             "depends": ""
         },
         "efivarfs": {
-            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "description": "EFI Variable Filesystem",
             "depends": ""
         },
         "etxhci-hcd": {
@@ -3519,12 +3343,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -3532,23 +3352,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,bitblit,font"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -3705,10 +3509,6 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
-        },
-        "k10temp": {
-            "description": "AMD Family 10h+ CPU core temperature monitor",
-            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
@@ -3895,7 +3695,7 @@
             "depends": ""
         },
         "ntfs": {
-            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.",
             "depends": ""
         },
         "p8022": {
@@ -4103,15 +3903,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_netem": {
-            "description": "Network Emulator (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -4365,7 +4165,7 @@
             "depends": ""
         },
         "adt7475": {
-            "description": "adt7475 driver (Compiled by RR for DSM)",
+            "description": "adt7475 driver",
             "depends": ""
         },
         "aic94xx": {
@@ -4430,7 +4230,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -4548,38 +4348,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -4624,6 +4392,14 @@
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
         },
+        "evbug": {
+            "description": "Input driver event debug module",
+            "depends": ""
+        },
+        "evdev": {
+            "description": "Input driver event char devices",
+            "depends": ""
+        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -4637,12 +4413,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -4650,23 +4422,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,font,bitblit"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -4690,6 +4446,10 @@
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
             "depends": ""
         },
         "i40e": {
@@ -4803,6 +4563,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kvm-amd": {
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
+            "depends": "kvm"
         },
         "kvm-intel": {
             "description": "",
@@ -5275,10 +5039,6 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
-        },
-        "xz_dec": {
-            "description": "XZ decompressor",
-            "depends": ""
         }
     },
     "broadwellnk-4.4.302": {
@@ -5338,10 +5098,6 @@
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
         },
-        "amd_nb": {
-            "description": "",
-            "depends": ""
-        },
         "apex": {
             "description": "Google Apex driver",
             "depends": "gasket"
@@ -5400,7 +5156,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -5439,7 +5195,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -5467,11 +5223,11 @@
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "Classifier for fwmark (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cls_u32": {
-            "description": "U32 classifier (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cn": {
@@ -5534,38 +5290,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -5607,7 +5331,7 @@
             "depends": ""
         },
         "efivarfs": {
-            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "description": "EFI Variable Filesystem",
             "depends": ""
         },
         "etxhci-hcd": {
@@ -5635,12 +5359,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -5648,23 +5368,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,bitblit,font"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -5821,10 +5525,6 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
-        },
-        "k10temp": {
-            "description": "AMD Family 10h+ CPU core temperature monitor",
-            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
@@ -6011,7 +5711,7 @@
             "depends": ""
         },
         "ntfs": {
-            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.",
             "depends": ""
         },
         "p8022": {
@@ -6219,15 +5919,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_netem": {
-            "description": "Network Emulator (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -6481,7 +6181,7 @@
             "depends": ""
         },
         "adt7475": {
-            "description": "adt7475 driver (Compiled by RR for DSM)",
+            "description": "adt7475 driver",
             "depends": ""
         },
         "aic94xx": {
@@ -6546,7 +6246,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -6664,38 +6364,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -6740,6 +6408,14 @@
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
         },
+        "evbug": {
+            "description": "Input driver event debug module",
+            "depends": ""
+        },
+        "evdev": {
+            "description": "Input driver event char devices",
+            "depends": ""
+        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -6753,12 +6429,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -6766,23 +6438,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,font,bitblit"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -6806,6 +6462,10 @@
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
             "depends": ""
         },
         "i40e": {
@@ -6919,6 +6579,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kvm-amd": {
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
+            "depends": "kvm"
         },
         "kvm-intel": {
             "description": "",
@@ -7391,10 +7055,6 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
-        },
-        "xz_dec": {
-            "description": "XZ decompressor",
-            "depends": ""
         }
     },
     "broadwellnkv2-4.4.302": {
@@ -7454,10 +7114,6 @@
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
         },
-        "amd_nb": {
-            "description": "",
-            "depends": ""
-        },
         "apex": {
             "description": "Google Apex driver",
             "depends": "gasket"
@@ -7516,7 +7172,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -7555,7 +7211,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -7583,11 +7239,11 @@
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "Classifier for fwmark (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cls_u32": {
-            "description": "U32 classifier (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cn": {
@@ -7650,38 +7306,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -7723,7 +7347,7 @@
             "depends": ""
         },
         "efivarfs": {
-            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "description": "EFI Variable Filesystem",
             "depends": ""
         },
         "etxhci-hcd": {
@@ -7751,12 +7375,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -7764,23 +7384,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,bitblit,font"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -7937,10 +7541,6 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
-        },
-        "k10temp": {
-            "description": "AMD Family 10h+ CPU core temperature monitor",
-            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
@@ -8127,7 +7727,7 @@
             "depends": ""
         },
         "ntfs": {
-            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.",
             "depends": ""
         },
         "p8022": {
@@ -8335,15 +7935,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_netem": {
-            "description": "Network Emulator (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -8597,7 +8197,7 @@
             "depends": ""
         },
         "adt7475": {
-            "description": "adt7475 driver (Compiled by RR for DSM)",
+            "description": "adt7475 driver",
             "depends": ""
         },
         "aic94xx": {
@@ -8662,7 +8262,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -8780,38 +8380,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -8864,6 +8432,14 @@
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
         },
+        "evbug": {
+            "description": "Input driver event debug module",
+            "depends": ""
+        },
+        "evdev": {
+            "description": "Input driver event char devices",
+            "depends": ""
+        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -8877,12 +8453,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -8890,23 +8462,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,font,bitblit"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -8930,6 +8486,14 @@
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-i801": {
+            "description": "I801 SMBus driver",
             "depends": ""
         },
         "i40e": {
@@ -9043,6 +8607,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kvm-amd": {
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
+            "depends": "kvm"
         },
         "kvm-intel": {
             "description": "",
@@ -9511,10 +9079,6 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
-        },
-        "xz_dec": {
-            "description": "XZ decompressor",
-            "depends": ""
         }
     },
     "broadwellntbap-4.4.302": {
@@ -9574,10 +9138,6 @@
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
         },
-        "amd_nb": {
-            "description": "",
-            "depends": ""
-        },
         "apex": {
             "description": "Google Apex driver",
             "depends": "gasket"
@@ -9636,7 +9196,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -9675,7 +9235,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -9703,11 +9263,11 @@
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "Classifier for fwmark (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cls_u32": {
-            "description": "U32 classifier (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cn": {
@@ -9770,38 +9330,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -9843,7 +9371,7 @@
             "depends": ""
         },
         "efivarfs": {
-            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "description": "EFI Variable Filesystem",
             "depends": ""
         },
         "ehci-hcd": {
@@ -9879,12 +9407,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -9892,23 +9416,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,bitblit,font"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -10069,10 +9577,6 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
-        },
-        "k10temp": {
-            "description": "AMD Family 10h+ CPU core temperature monitor",
-            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
@@ -10259,7 +9763,7 @@
             "depends": ""
         },
         "ntfs": {
-            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.",
             "depends": ""
         },
         "p8022": {
@@ -10467,15 +9971,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_netem": {
-            "description": "Network Emulator (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -10725,7 +10229,7 @@
             "depends": ""
         },
         "adt7475": {
-            "description": "adt7475 driver (Compiled by RR for DSM)",
+            "description": "adt7475 driver",
             "depends": "hwmon-vid"
         },
         "aic94xx": {
@@ -10786,7 +10290,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -10904,38 +10408,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -10976,6 +10448,14 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "evbug": {
+            "description": "Input driver event debug module",
+            "depends": ""
+        },
+        "evdev": {
+            "description": "Input driver event char devices",
+            "depends": ""
+        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -10989,12 +10469,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -11002,23 +10478,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,font,bitblit"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -11046,6 +10506,10 @@
         },
         "hwmon-vid": {
             "description": "hwmon-vid driver",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
             "depends": ""
         },
         "i40e": {
@@ -11159,6 +10623,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kvm-amd": {
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
+            "depends": "kvm"
         },
         "kvm-intel": {
             "description": "",
@@ -11627,10 +11095,6 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
-        },
-        "xz_dec": {
-            "description": "XZ decompressor",
-            "depends": ""
         }
     },
     "denverton-4.4.302": {
@@ -11690,10 +11154,6 @@
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
         },
-        "amd_nb": {
-            "description": "",
-            "depends": ""
-        },
         "apex": {
             "description": "Google Apex driver",
             "depends": "gasket"
@@ -11748,7 +11208,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -11787,7 +11247,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -11815,11 +11275,11 @@
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "Classifier for fwmark (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cls_u32": {
-            "description": "U32 classifier (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cn": {
@@ -11882,38 +11342,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -11955,7 +11383,7 @@
             "depends": ""
         },
         "efivarfs": {
-            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "description": "EFI Variable Filesystem",
             "depends": ""
         },
         "evbug": {
@@ -11979,12 +11407,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -11992,23 +11416,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,bitblit,font"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -12169,10 +11577,6 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
-        },
-        "k10temp": {
-            "description": "AMD Family 10h+ CPU core temperature monitor",
-            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
@@ -12359,7 +11763,7 @@
             "depends": ""
         },
         "ntfs": {
-            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.",
             "depends": ""
         },
         "p8022": {
@@ -12567,15 +11971,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_netem": {
-            "description": "Network Emulator (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "scsi_transport_sas": {
@@ -12968,6 +12372,10 @@
             "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
+        "check_signature": {
+            "description": "check_signature find BIOS signatures",
+            "depends": ""
+        },
         "cls_fw": {
             "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
@@ -13015,38 +12423,6 @@
         "crc8": {
             "description": "CRC8 (by Williams, Ross N.) function",
             "depends": ""
-        },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
         },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
@@ -13133,7 +12509,7 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
+            "description": "Deferred IO for framebuffers",
             "depends": "fbdev"
         },
         "fb_sys_fops": {
@@ -13162,7 +12538,7 @@
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.20-200",
-            "depends": "scsi_transport_sas"
+            "depends": "scsi_transport_sas,check_signature"
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -13178,7 +12554,7 @@
         },
         "i2c-i801": {
             "description": "I801 SMBus driver",
-            "depends": ""
+            "depends": "check_signature,i2c-smbus"
         },
         "i2c-smbus": {
             "description": "SMBus protocol extensions support",
@@ -13478,7 +12854,7 @@
         },
         "mlx5_core": {
             "description": "Mellanox 5th generation network adapters (ConnectX series) core driver (Compiled by RR for DSM)",
-            "depends": ""
+            "depends": "mlxfw"
         },
         "mlx5_ib": {
             "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver",
@@ -13490,7 +12866,7 @@
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
-            "depends": ""
+            "depends": "mlxfw"
         },
         "mlxsw_i2c": {
             "description": "Mellanox switch I2C interface driver",
@@ -14450,6 +13826,10 @@
             "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
+        "check_signature": {
+            "description": "check_signature find BIOS signatures",
+            "depends": ""
+        },
         "cls_fw": {
             "description": "Classifier for fwmark (Compiled by RR for DSM)",
             "depends": ""
@@ -14497,38 +13877,6 @@
         "crc8": {
             "description": "CRC8 (by Williams, Ross N.) function",
             "depends": ""
-        },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
         },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
@@ -14615,7 +13963,7 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
+            "description": "Deferred IO for framebuffers",
             "depends": "fbdev"
         },
         "fb_sys_fops": {
@@ -14648,7 +13996,7 @@
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.20-200",
-            "depends": "scsi_transport_sas"
+            "depends": "scsi_transport_sas,check_signature"
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -14664,7 +14012,7 @@
         },
         "i2c-i801": {
             "description": "I801 SMBus driver",
-            "depends": ""
+            "depends": "check_signature,i2c-smbus"
         },
         "i2c-smbus": {
             "description": "SMBus protocol extensions support",
@@ -14964,7 +14312,7 @@
         },
         "mlx5_core": {
             "description": "Mellanox 5th generation network adapters (ConnectX series) core driver (Compiled by RR for DSM)",
-            "depends": ""
+            "depends": "mlxfw"
         },
         "mlx5_ib": {
             "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver",
@@ -14976,7 +14324,7 @@
         },
         "mlxsw_core": {
             "description": "Mellanox switch device core driver",
-            "depends": ""
+            "depends": "mlxfw"
         },
         "mlxsw_i2c": {
             "description": "Mellanox switch I2C interface driver",
@@ -15773,6 +15121,10 @@
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "acpi-cpufreq": {
+            "description": "ACPI Processor P-States Driver",
+            "depends": "processor"
+        },
         "adm1021": {
             "description": "adm1021 driver",
             "depends": ""
@@ -15790,7 +15142,7 @@
             "depends": ""
         },
         "adt7475": {
-            "description": "adt7475 driver (Compiled by RR for DSM)",
+            "description": "adt7475 driver",
             "depends": "hwmon-vid"
         },
         "aic94xx": {
@@ -15855,7 +15207,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -15973,38 +15325,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -16085,33 +15405,13 @@
             "description": "Framebuffer base",
             "depends": "fbdev"
         },
-        "fb_defio": {
-            "description": "Deferred IO for framebuffers",
-            "depends": ""
-        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,font,bitblit"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -16139,6 +15439,10 @@
         },
         "hwmon-vid": {
             "description": "hwmon-vid driver",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
             "depends": ""
         },
         "i40e": {
@@ -16256,6 +15560,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kvm-amd": {
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
+            "depends": "kvm"
         },
         "kvm-intel": {
             "description": "",
@@ -16744,10 +16052,6 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
-        },
-        "xz_dec": {
-            "description": "XZ decompressor",
-            "depends": ""
         }
     },
     "geminilake-4.4.302": {
@@ -16770,6 +16074,10 @@
         "aacraid": {
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
+        },
+        "acpi-cpufreq": {
+            "description": "ACPI Processor P-States Driver",
+            "depends": "processor"
         },
         "acpi_call": {
             "description": "ACPI method caller (Compiled by RR for DSM)",
@@ -16802,10 +16110,6 @@
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
-        },
-        "amd_nb": {
-            "description": "",
-            "depends": ""
         },
         "apex": {
             "description": "Google Apex driver",
@@ -16865,7 +16169,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -16904,7 +16208,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -16932,11 +16236,11 @@
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "Classifier for fwmark (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cls_u32": {
-            "description": "U32 classifier (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cn": {
@@ -16999,38 +16303,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -17088,7 +16360,7 @@
             "depends": "cfbimgblt,cfbcopyarea,cfbfillrect,fb"
         },
         "efivarfs": {
-            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "description": "EFI Variable Filesystem",
             "depends": ""
         },
         "ehci-hcd": {
@@ -17115,33 +16387,13 @@
             "description": "Framebuffer base",
             "depends": "fbdev"
         },
-        "fb_defio": {
-            "description": "Deferred IO for framebuffers",
-            "depends": ""
-        },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
             "depends": ""
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,bitblit,font"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -17269,7 +16521,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
-            "depends": ""
+            "depends": "hwmon-vid"
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -17306,10 +16558,6 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
-        },
-        "k10temp": {
-            "description": "AMD Family 10h+ CPU core temperature monitor",
-            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
@@ -17492,7 +16740,7 @@
             "depends": ""
         },
         "ntfs": {
-            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.",
             "depends": ""
         },
         "p8022": {
@@ -17704,15 +16952,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_netem": {
-            "description": "Network Emulator (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "scsi_transport_sas": {
@@ -17982,7 +17230,7 @@
             "depends": ""
         },
         "adt7475": {
-            "description": "adt7475 driver (Compiled by RR for DSM)",
+            "description": "adt7475 driver",
             "depends": ""
         },
         "aic94xx": {
@@ -18047,7 +17295,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -18165,38 +17413,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -18237,6 +17453,14 @@
             "description": "EEPROM 93cx6 chip driver",
             "depends": ""
         },
+        "evbug": {
+            "description": "Input driver event debug module",
+            "depends": ""
+        },
+        "evdev": {
+            "description": "Input driver event char devices",
+            "depends": ""
+        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -18250,12 +17474,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -18263,23 +17483,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,font,bitblit"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -18303,6 +17507,14 @@
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-asm2824": {
+            "description": "ASM2824 SMBus driver",
             "depends": ""
         },
         "i40e": {
@@ -18416,6 +17628,10 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kvm-amd": {
+            "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
+            "depends": "kvm"
         },
         "kvm-intel": {
             "description": "",
@@ -18884,10 +18100,6 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
-        },
-        "xz_dec": {
-            "description": "XZ decompressor",
-            "depends": ""
         }
     },
     "purley-4.4.302": {
@@ -18947,10 +18159,6 @@
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
             "depends": "mdio"
         },
-        "amd_nb": {
-            "description": "",
-            "depends": ""
-        },
         "apex": {
             "description": "Google Apex driver",
             "depends": "gasket"
@@ -19009,7 +18217,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -19048,7 +18256,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -19076,11 +18284,11 @@
             "depends": "usbserial,usbcore"
         },
         "cls_fw": {
-            "description": "Classifier for fwmark (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cls_u32": {
-            "description": "U32 classifier (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cn": {
@@ -19143,38 +18351,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -19216,7 +18392,7 @@
             "depends": ""
         },
         "efivarfs": {
-            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "description": "EFI Variable Filesystem",
             "depends": ""
         },
         "evbug": {
@@ -19240,12 +18416,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -19253,23 +18425,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,bitblit,font"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -19430,10 +18586,6 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
-        },
-        "k10temp": {
-            "description": "AMD Family 10h+ CPU core temperature monitor",
-            "depends": "amd_nb"
         },
         "kvm-amd": {
             "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
@@ -19620,7 +18772,7 @@
             "depends": ""
         },
         "ntfs": {
-            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.",
             "depends": ""
         },
         "p8022": {
@@ -19828,15 +18980,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_netem": {
-            "description": "Network Emulator (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "scsi_transport_fc": {
@@ -20147,7 +19299,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -20204,6 +19356,10 @@
         "ch341": {
             "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
+        },
+        "check_signature": {
+            "description": "",
+            "depends": ""
         },
         "cn": {
             "description": "Generic userspace <-> kernelspace connector.",
@@ -20269,38 +19425,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -20345,6 +19469,14 @@
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
         },
+        "evbug": {
+            "description": "Input driver event debug module",
+            "depends": ""
+        },
+        "evdev": {
+            "description": "Input driver event char devices",
+            "depends": ""
+        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -20358,12 +19490,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -20371,23 +19499,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,font,bitblit"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -20407,7 +19519,7 @@
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
-            "depends": "scsi_transport_sas"
+            "depends": "scsi_transport_sas,check_signature"
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -20415,6 +19527,18 @@
         },
         "hwmon-vid": {
             "description": "hwmon-vid driver",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-i801": {
+            "description": "I801 SMBus driver",
+            "depends": "check_signature"
+        },
+        "i2c-smbus": {
+            "description": "SMBus protocol extensions support",
             "depends": ""
         },
         "i40e": {
@@ -20531,6 +19655,10 @@
         },
         "kvm-amd": {
             "description": "",
+            "depends": "kvm"
+        },
+        "kvm-intel": {
+            "description": "KVM for Intel x86 hardware virtualization (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm": {
@@ -21000,10 +20128,6 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
-        },
-        "xz_dec": {
-            "description": "XZ decompressor",
-            "depends": ""
         }
     },
     "r1000-4.4.302": {
@@ -21117,7 +20241,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -21156,7 +20280,7 @@
             "depends": "usbnet,usbcore"
         },
         "cdrom": {
-            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -21183,12 +20307,16 @@
             "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
         },
+        "check_signature": {
+            "description": "",
+            "depends": ""
+        },
         "cls_fw": {
-            "description": "Classifier for fwmark (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cls_u32": {
-            "description": "U32 classifier (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cn": {
@@ -21255,38 +20383,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -21328,7 +20424,7 @@
             "depends": ""
         },
         "efivarfs": {
-            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "description": "EFI Variable Filesystem",
             "depends": ""
         },
         "etxhci-hcd": {
@@ -21356,12 +20452,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -21369,23 +20461,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,bitblit,font"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -21409,7 +20485,7 @@
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
-            "depends": "scsi_transport_sas"
+            "depends": "scsi_transport_sas,check_signature"
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -21425,7 +20501,7 @@
         },
         "i2c-i801": {
             "description": "I801 SMBus driver",
-            "depends": ""
+            "depends": "check_signature"
         },
         "i2c-smbus": {
             "description": "SMBus protocol extensions support",
@@ -21517,7 +20593,7 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
-            "depends": ""
+            "depends": "hwmon-vid"
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -21740,7 +20816,7 @@
             "depends": ""
         },
         "ntfs": {
-            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.",
             "depends": ""
         },
         "p8022": {
@@ -21952,15 +21028,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_netem": {
-            "description": "Network Emulator (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "scsi_transport_sas": {
@@ -22210,8 +21286,8 @@
             "depends": ""
         },
         "adt7475": {
-            "description": "adt7475 driver (Compiled by RR for DSM)",
-            "depends": "hwmon-vid,coretemp"
+            "description": "adt7475 driver",
+            "depends": "hwmon-vid"
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -22275,7 +21351,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -22332,6 +21408,10 @@
         "ch341": {
             "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial,usbcore"
+        },
+        "check_signature": {
+            "description": "",
+            "depends": ""
         },
         "cn": {
             "description": "Generic userspace <-> kernelspace connector.",
@@ -22397,38 +21477,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,usbcore,mii"
@@ -22473,6 +21521,14 @@
             "description": "'eXtensible' Host Controller (xHC) Driver",
             "depends": "usbcore"
         },
+        "evbug": {
+            "description": "Input driver event debug module",
+            "depends": ""
+        },
+        "evdev": {
+            "description": "Input driver event char devices",
+            "depends": ""
+        },
         "exfat": {
             "description": "exFAT filesystem support",
             "depends": ""
@@ -22486,12 +21542,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -22499,23 +21551,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,font,bitblit"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -22535,7 +21571,7 @@
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
-            "depends": "scsi_transport_sas"
+            "depends": "scsi_transport_sas,check_signature"
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -22543,6 +21579,18 @@
         },
         "hwmon-vid": {
             "description": "hwmon-vid driver",
+            "depends": ""
+        },
+        "i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "i2c-i801": {
+            "description": "I801 SMBus driver",
+            "depends": "check_signature"
+        },
+        "i2c-smbus": {
+            "description": "SMBus protocol extensions support",
             "depends": ""
         },
         "i40e": {
@@ -22659,6 +21707,10 @@
         },
         "kvm-amd": {
             "description": "",
+            "depends": "kvm"
+        },
+        "kvm-intel": {
+            "description": "KVM for Intel x86 hardware virtualization (Compiled by RR for DSM)",
             "depends": "kvm"
         },
         "kvm": {
@@ -23136,10 +22188,6 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
-        },
-        "xz_dec": {
-            "description": "XZ decompressor",
-            "depends": ""
         }
     },
     "v1000-4.4.302": {
@@ -23189,7 +22237,7 @@
         },
         "adt7475": {
             "description": "adt7475 driver (Compiled by RR for DSM)",
-            "depends": "hwmon-vid,coretemp"
+            "depends": "hwmon-vid"
         },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
@@ -23257,7 +22305,7 @@
         },
         "bitblit": {
             "description": "Bit Blitting Operation",
-            "depends": "fb,softcursor,fbcon_rotate"
+            "depends": "fb,softcursor"
         },
         "bnx2": {
             "description": "QLogic BCM5706/5708/5709/5716 Driver",
@@ -23296,7 +22344,7 @@
             "depends": "usbnet"
         },
         "cdrom": {
-            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cfbcopyarea": {
@@ -23323,12 +22371,16 @@
             "description": "USB CH341 Single Port Serial Driver (Compiled by RR for DSM)",
             "depends": "usbserial"
         },
+        "check_signature": {
+            "description": "",
+            "depends": ""
+        },
         "cls_fw": {
-            "description": "Classifier for fwmark (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cls_u32": {
-            "description": "U32 classifier (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "cn": {
@@ -23395,38 +22447,6 @@
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver",
             "depends": ""
         },
-        "dm-log": {
-            "description": "device-mapper dirty region log",
-            "depends": "dm-mod"
-        },
-        "dm-mirror": {
-            "description": "device-mapper mirror target",
-            "depends": "dm-region-hash,dm-mod,dm-log"
-        },
-        "dm-mod": {
-            "description": "device-mapper driver",
-            "depends": ""
-        },
-        "dm-multipath": {
-            "description": "device-mapper multipath target",
-            "depends": "dm-mod"
-        },
-        "dm-queue-length": {
-            "description": "device-mapper path selector to balance the number of in-flight I/Os",
-            "depends": "dm-multipath"
-        },
-        "dm-region-hash": {
-            "description": "device-mapper region hash",
-            "depends": "dm-log"
-        },
-        "dm-round-robin": {
-            "description": "device-mapper round-robin multipath path selector",
-            "depends": "dm-multipath"
-        },
-        "dm-service-time": {
-            "description": "device-mapper throughput oriented path selector",
-            "depends": "dm-multipath"
-        },
         "dm9601": {
             "description": "Davicom DM96xx USB 10/100 ethernet devices",
             "depends": "usbnet,mii"
@@ -23468,7 +22488,7 @@
             "depends": ""
         },
         "efivarfs": {
-            "description": "EFI Variable Filesystem (Compiled by RR for DSM)",
+            "description": "EFI Variable Filesystem",
             "depends": ""
         },
         "etxhci-hcd": {
@@ -23496,12 +22516,8 @@
             "depends": ""
         },
         "fb": {
-            "description": "Framebuffer base",
-            "depends": "fb_defio,fbdev"
-        },
-        "fb_defio": {
             "description": "Deferred IO for framebuffers",
-            "depends": ""
+            "depends": "fbdev"
         },
         "fb_sys_fops": {
             "description": "Generic file read (fb in system RAM)",
@@ -23509,23 +22525,7 @@
         },
         "fbcon": {
             "description": "Framebuffer Console support (Compiled by RR for DSM)",
-            "depends": "fb,font,bitblit"
-        },
-        "fbcon_ccw": {
-            "description": "Console Rotation (270 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_cw": {
-            "description": "Console Rotation (90 degrees) Support",
-            "depends": "fb,softcursor"
-        },
-        "fbcon_rotate": {
-            "description": "Console Rotation Support",
-            "depends": "fbcon_ud,fbcon_ccw,fbcon_cw"
-        },
-        "fbcon_ud": {
-            "description": "Console Rotation (180 degrees) Support",
-            "depends": "fb,softcursor"
+            "depends": "fb,fbdev,bitblit,font"
         },
         "fbdev": {
             "description": "Framebuffer console primary device detection (Compiled by RR for DSM)",
@@ -23549,7 +22549,7 @@
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
-            "depends": "scsi_transport_sas"
+            "depends": "scsi_transport_sas,check_signature"
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -23565,7 +22565,7 @@
         },
         "i2c-i801": {
             "description": "I801 SMBus driver",
-            "depends": ""
+            "depends": "check_signature"
         },
         "i2c-smbus": {
             "description": "SMBus protocol extensions support",
@@ -23884,7 +22884,7 @@
             "depends": ""
         },
         "ntfs": {
-            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
+            "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc.",
             "depends": ""
         },
         "p8022": {
@@ -24096,15 +23096,15 @@
             "depends": "rtsx_usb,mmc_core"
         },
         "sch_htb": {
-            "description": "Hierarchical Token Bucket (HTB) Qdisc (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_netem": {
-            "description": "Network Emulator (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "sch_sfq": {
-            "description": "Stochastic Fairness Queueing discipline (Compiled by RR for DSM)",
+            "description": "",
             "depends": ""
         },
         "scsi_transport_fc": {
