@@ -174,8 +174,8 @@ if [ "${DT}" = "true" ] && ! echo "epyc7002 purley broadwellnkv2" | grep -wq "${
     [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
     CMDLINE['modprobe.blacklist']+="mpt3sas"
   fi
-else
-  CMDLINE['scsi_mod.scan']="sync"
+#else
+#  CMDLINE['scsi_mod.scan']="sync"  # TODO: redpill panic of vmware scsi? (add to cmdline)
 fi
 
 # CMDLINE['kvm.ignore_msrs']="1"
