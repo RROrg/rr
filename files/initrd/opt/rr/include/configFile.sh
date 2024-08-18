@@ -25,6 +25,17 @@ function readConfigKey() {
   [ "${RESULT}" == "null" ] && echo "" || echo "${RESULT}"
 }
 
+# Write to yaml config file
+# 1 - format
+# 2 - string
+# 3 - Path of yaml config file
+function mergeConfigStr() {
+  local JF=$(mktemp)
+  echo "${2}" | yq -p ${1} -o y > "${JF}"
+  yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${3}" "${JF}" 2>/dev/null
+  rm -f "${JF}"
+}
+
 ###############################################################################
 # Write to yaml config file if key not exists
 # 1 - Path of Key
