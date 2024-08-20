@@ -231,8 +231,11 @@ jobs:
             echo "set modules: ${{ env.modules }}"
             USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
             writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-            L="$(for I in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do echo "modules.${I}:"; done)"
-            mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+            # L="$(for I in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do echo "modules.${I}:"; done)"
+            # mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+            for M in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do
+              writeConfigKey "modules.\"${M}\"" "" "${USER_CONFIG_FILE}"
+            done
           fi
 
           sudo ./localbuild.sh build
