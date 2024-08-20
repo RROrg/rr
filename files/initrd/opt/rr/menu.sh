@@ -2688,7 +2688,8 @@ function advancedMenu() {
       cp -Rf "$(dirname ${WORK_PATH})" "${RDXZ_PATH}/"
       (
         cd "${RDXZ_PATH}"
-        find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s $(du -sb ${RDXZ_PATH} | awk '{print $1}') | xz -9 --check=crc32 >"${RR_RAMDISK_FILE}"
+        RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
+        find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 --check=crc32 >"${RR_RAMDISK_FILE}"
       ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
         --gauge "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 8 100
       rm -rf "${RDXZ_PATH}"
@@ -2760,6 +2761,20 @@ function languageMenu() {
   LANGUAGE=${resp}
   echo "${LANGUAGE}.UTF-8" >${PART1_PATH}/.locale
   export LC_ALL="${LANGUAGE}.UTF-8"
+}
+
+# Shows language to user choose one
+function timezoneMenu() {
+  OPTIONS="$(find /usr/share/zoneinfo/right -type f | cut -d '/' -f 6- | sort | uniq | xargs)"
+  DIALOG \
+    --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a timezone")" 0 0 0 ${OPTIONS} \
+    2>${TMP_PATH}/resp
+  [ $? -ne 0 ] && return
+  resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
+  [ -z "${resp}" ] && return
+  TIMEZONE=${resp}
+  echo "${TIMEZONE}" >${PART1_PATH}/.timezone
+  ln -sf "/usr/share/zoneinfo/right/${TIMEZONE}" /etc/localtime
 }
 
 ###############################################################################
@@ -3508,6 +3523,7 @@ else
       echo "b \"$(TEXT "Boot the loader")\"" >>"${TMP_PATH}/menu"
     fi
     echo "l \"$(TEXT "Choose a language")\"" >>"${TMP_PATH}/menu"
+    echo "z \"$(TEXT "Choose a timezone")\"" >>"${TMP_PATH}/menu"
     echo "k \"$(TEXT "Choose a keymap")\"" >>"${TMP_PATH}/menu"
     if [ 0$(du -sm ${PART3_PATH}/dl 2>/dev/null | awk '{printf $1}') -gt 1 ]; then
       echo "c \"$(TEXT "Clean disk cache")\"" >>"${TMP_PATH}/menu"
@@ -3580,6 +3596,10 @@ else
       ;;
     l)
       languageMenu
+      NEXT="m"
+      ;;
+    z)
+      timezoneMenu
       NEXT="m"
       ;;
     k)
