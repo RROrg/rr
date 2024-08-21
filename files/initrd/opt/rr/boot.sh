@@ -20,12 +20,16 @@ BUS=$(getBus "${LOADER_DISK}")
 
 # Print text centralized
 clear
-[ -z "${COLUMNS}" ] && COLUMNS=50
+COLUMNS=$(ttysize 2>/dev/null | awk '{print $1}')
+[ -z "${COLUMNS}" ] && COLUMNS=80
 TITLE="$(printf "$(TEXT "Welcome to %s")" "$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")")"
+DATE="$(date)"
 printf "\033[1;44m%*s\n" ${COLUMNS} ""
 printf "\033[1;44m%*s\033[A\n" ${COLUMNS} ""
-printf "\033[1;32m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
-printf "\033[1;44m%*s\033[0m\n" ${COLUMNS} ""
+printf "\033[1;31m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
+printf "\033[1;44m%*s\033[A\n" ${COLUMNS} ""
+printf "\033[1;32m%*s\033[0m\n" ${COLUMNS} "${DATE}"
+
 TITLE="BOOTING:"
 [ ${EFI} -eq 1 ] && TITLE+=" [UEFI]" || TITLE+=" [BIOS]"
 [ "${BUS}" = "usb" ] && TITLE+=" [${BUS^^} flashdisk]" || TITLE+=" [${BUS^^} DoM]"
@@ -208,13 +212,31 @@ echo -e "$(TEXT "Cmdline:\n")\033[1;36m${CMDLINE_LINE}\033[0m"
 
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 if [ "${DIRECT}" = "true" ]; then
+  grub-editenv ${USER_GRUBENVFILE} set rr_version="$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")"
+  grub-editenv ${USER_GRUBENVFILE} set dsm_model="${MODEL}(${PLATFORM})"
+  grub-editenv ${USER_GRUBENVFILE} set dsm_version="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
+  grub-editenv ${USER_GRUBENVFILE} set dsm_kernel="${KERNEL}"
+  grub-editenv ${USER_GRUBENVFILE} set dsm_lkm="${LKM}"
+  grub-editenv ${USER_GRUBENVFILE} set sys_dmi="${DMI}"
+  grub-editenv ${USER_GRUBENVFILE} set sys_cpu="${CPU}"
+  grub-editenv ${USER_GRUBENVFILE} set sys_mem="${MEM}"
+
   CMDLINE_DIRECT=$(echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g') # Escape special chars
   grub-editenv ${USER_GRUBENVFILE} set dsm_cmdline="${CMDLINE_DIRECT}"
   grub-editenv ${USER_GRUBENVFILE} set next_entry="direct"
+
   echo -e "\033[1;33m$(TEXT "Reboot to boot directly in DSM")\033[0m"
   reboot
   exit 0
 else
+  grub-editenv ${USER_GRUBENVFILE} unset rr_version
+  grub-editenv ${USER_GRUBENVFILE} unset dsm_model
+  grub-editenv ${USER_GRUBENVFILE} unset dsm_version
+  grub-editenv ${USER_GRUBENVFILE} unset dsm_kernel
+  grub-editenv ${USER_GRUBENVFILE} unset dsm_lkm
+  grub-editenv ${USER_GRUBENVFILE} unset sys_dmi
+  grub-editenv ${USER_GRUBENVFILE} unset sys_cpu
+  grub-editenv ${USER_GRUBENVFILE} unset sys_mem
   grub-editenv ${USER_GRUBENVFILE} unset dsm_cmdline
   grub-editenv ${USER_GRUBENVFILE} unset next_entry
   ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo) || true

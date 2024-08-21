@@ -140,9 +140,16 @@
   cat /proc/sys/kernel/syno_mac_address1           # 查看当前鉴权的 mac1 (/proc/sys/kernel/syno_mac_addresses)
   sysctl -n kernel.syno_internal_netif_num         # 查看当前鉴权的网卡数量
   cat /proc/sys/kernel/syno_internal_netif_num     # 查看当前鉴权的网卡数量
-  cat /proc/sys/kernel/syno_CPU_info_core          # 查看当前线程数 (nproc)
   sysctl -w kernel.syno_CPU_info_core=32           # 设置线程数 (无效)
   
+  ls -d /sys/devices/system/node/node* | wc -l              # 查看当前 CPU 物理路数
+  cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l  # 查看当前 CPU 物理路数
+  cat /proc/cpuinfo | grep "core id" | sort -u | wc -l      # 查看当前 CPU 核心数
+  cat /proc/cpuinfo | grep "processor" | wc -l              # 查看当前 CPU 核心数
+  cat /proc/sys/kernel/syno_CPU_info_core                   # 查看当前线程数 (only syno)
+  nproc                                                     # 查看当前 CPU 核心数
+  lscpu | grep 'NUMA node(s):'                              # 查看当前 NUMA 数量
+
   # 设备相关
   lsmod                                            # 查看已加载驱动
   lsusb                                            # 查看 USB 设备

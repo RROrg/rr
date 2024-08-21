@@ -157,6 +157,13 @@ jobs:
             [ "${RESULT}" == "null" ] && echo "" || echo "${RESULT}"
           }
 
+          function mergeConfigStr() {
+            local JF=$(mktemp)
+            echo "${2}" | yq -p ${1} -o y > "${JF}"
+            yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${3}" "${JF}" 2>/dev/null
+            rm -f "${JF}"
+          }
+
           REPO="${{ github.server_url }}/${{ github.repository }}"
           MODEL="${{ env.model }}"
           VERSION="${{ env.version }}"
@@ -200,10 +207,9 @@ jobs:
           fi
 
           if [ -n "${{ env.kernel }}" ]; then
-            echo -en "set kernel"
+            echo "set kernel"
             USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
             writeConfigKey "kernel" "${{ env.kernel }}" "${USER_CONFIG_FILE}"
-            echo ""
           fi
 
           sudo ./localbuild.sh config "${MODEL}" "${VERSION}"
@@ -213,29 +219,23 @@ jobs:
           fi
 
           if [ -n "${{ env.addons }}" ]; then
-            echo -en "set addons"
+            echo "set addons: ${{ env.addons }}"
             USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
             writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
-            echo -en ': '
-            for A in $(echo "${{ env.addons }}" | tr ',' ' '); do
-              echo -en "${A} "
-              VALUE=""
-              writeConfigKey "addons.\"${A}\"" "${VALUE}" "${USER_CONFIG_FILE}"
+            for A in $(echo "${{ env.addons }}" | sed 's/,/ /g'); do
+              writeConfigKey "addons.\"${A}\"" "" "${USER_CONFIG_FILE}"
             done
-            echo ""
           fi
 
           if [ ! "custom" = "${{ env.kernel }}" ] && [ -n "${{ env.modules }}" ]; then
-            echo -en "set modules"
+            echo "set modules: ${{ env.modules }}"
             USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
             writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-            echo -en ': '
-            for M in $(echo "${{ env.modules }}" | tr ',' ' '); do
-              echo -en "${M} "
-              VALUE=""
-              writeConfigKey "modules.\"${M}\"" "${VALUE}" "${USER_CONFIG_FILE}"
+            # L="$(for I in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do echo "modules.${I}:"; done)"
+            # mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+            for M in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do
+              writeConfigKey "modules.\"${M}\"" "" "${USER_CONFIG_FILE}"
             done
-            echo ""
           fi
 
           sudo ./localbuild.sh build
