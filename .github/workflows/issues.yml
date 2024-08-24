@@ -138,7 +138,7 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             Hi @${{ github.event.issue.user.login }}.  
-            RR-${{ env.model }} building ...  
+            RR-${{ env.model }} building (Usually about 5 minutes) ...  
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: heart
@@ -311,7 +311,7 @@ jobs:
           update-mode: replace
           body: |
             Hi @${{ github.event.issue.user.login }}.  
-            RR-${{ env.model }} build success, please download the attachment from the below link.
+            RR-${{ env.model }} build success, please download the attachment from the below link (Attachments are only kept for 5 days).
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: hooray
