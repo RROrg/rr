@@ -216,80 +216,57 @@ function productversMenu() {
       [ $? -ne 0 ] && return 0
     fi
   else
-    arrayExistItem "${1}" ${ITEMS} || return 1
-    resp="${1}"
+    arrayExistItem "$(echo "${1}" | cut -d'.' -f1,2)" ${ITEMS} || return 1
+    resp="$(echo "${1}" | cut -d'.' -f1,2)"
   fi
   selver="${resp}"
   urlver=""
   paturl=""
   patsum=""
-  # KVER=$(readConfigKey "platforms.${PLATFORM}.productvers.[${resp}].kver" "${WORK_PATH}/platforms.yml")
-  # if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ -d "/sys/firmware/efi" ]; then
-  #   if [ -z "${1}" ]; then
-  #     DIALOG --title "$(TEXT "Product Version")" \
-  #       --msgbox "$(TEXT "This version does not support UEFI startup, Please select another version or switch the startup mode.")" 0 0
-  #   fi
-  #   return 1
-  # fi
-  # if [ ! "usb" = "$(getBus "${LOADER_DISK}")" ] && [ $(echo "${KVER:-4}" | cut -d'.' -f1) -gt 4 ]; then
-  #   if [ -z "${1}" ]; then
-  #     DIALOG --title "$(TEXT "Product Version")" \
-  #       --msgbox "$(TEXT "This version only support usb startup, Please select another version or switch the startup mode.")" 0 0
-  #   fi
-  #   return
-  # fi
   if [ -z "${2}" -a -z "${3}" ]; then
     while true; do
       # get online pat data
-      idx=1
-      NETERR=0
-      while [ ${idx} -le 3 ]; do # Loop 3 times, if successful, break
+      if [ -z "${1}" ]; then
+        DIALOG --title "$(TEXT "Product Version")" \
+          --infobox "$(TEXT "Get pat data ...")" 0 0
+      fi
+      PJ="$(python ${WORK_PATH}/include/functions.py getpats4mv -m "${MODEL}" -v "${selver}")"
+      if [ -z "${PJ}" -o "${PJ}" = "{}" ]; then
+        if [ -z "${1}" ]; then
+          MSG="$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")"
+          DIALOG --title "$(TEXT "Addons")" \
+            --yes-label "$(TEXT "Retry")" \
+            --yesno "${MSG}" 0 0
+          [ $? -eq 0 ] && continue # yes-button
+        fi
+        return 1
+      else
+        PVS="$(echo "${PJ}" | jq -r 'keys | sort | reverse | join(" ")')"
         if [ -z "${1}" ]; then
           DIALOG --title "$(TEXT "Product Version")" \
-            --infobox "$(TEXT "Get pat data ...") (${idx}/3)" 0 0
-        fi
-        idx=$((${idx} + 1))
-        NETERR=0
-        fastest=$(_get_fastest "www.synology.com" "www.synology.cn")
-        if [ $? -ne 0 ]; then
-          NETERR=1
-          continue
-        fi
-        [ "${fastest}" = "www.synology.cn" ] &&
-          fastest="https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn" ||
-          fastest="https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
-        patdata=$(curl -skL --connect-timeout 10 "${fastest}&product=${MODEL/+/%2B}&major=${selver%%.*}&minor=${selver##*.}")
-        if [ "$(echo ${patdata} | jq -r '.success' 2>/dev/null)" = "true" ]; then
-          if echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].label_ext' 2>/dev/null | grep -q 'pat'; then
-            major=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].major')
-            minor=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].minor')
-            urlver="${major}.${minor}"
-            paturl=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].url')
-            patsum=$(echo ${patdata} | jq -r '.info.system.detail[0].items[0].files[0].checksum')
-            paturl=${paturl%%\?*}
-            break
-          fi
-        fi
-      done
-      if [ -z "${paturl}" -o -z "${patsum}" ]; then
-        if [ ${NETERR} -ne 0 ]; then
-          MSG=""
-          MSG+="$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")"
+            --no-items --menu "$(TEXT "Choose a pat version")" 0 0 0 ${PVS} \
+            2>${TMP_PATH}/resp
+          RET=$?
         else
-          MSG="$(TEXT "Failed to get pat data,\nPlease manually fill in the URL and md5sum of the corresponding version of pat.\nOr click 'Retry'.")"
+          PV=""
+          [ -z "${PV}" ] && PV="$(echo "${PVS}" | tr ' ' '\n' | grep -xo "${1}" | head -n 1)"
+          [ -z "${PV}" ] && PV="$(echo "${PVS}" | cut -d' ' -f1)"
+          echo "${PV}" >"${TMP_PATH}/resp"
+          RET=0
         fi
-        paturl=""
-        patsum=""
-      else
+        [ ${RET} -ne 0 ] && return
+        PV=$(cat ${TMP_PATH}/resp)
+        paturl=$(echo "${PJ}" | jq -r ".\"${PV}\".url")
+        patsum=$(echo "${PJ}" | jq -r ".\"${PV}\".sum")
+        urlver="$(echo "${PV}" | cut -d'.' -f1,2)"
+      fi
+      if [ -z "${1}" ]; then
         MSG=""
-        MSG+="$(TEXT "Successfully to get pat data.")\n"
+        MSG+="$(TEXT "Please confirm or modify the URL and md5sum to you need.")"
         if [ ! "${selver}" = "${urlver}" ]; then
           MSG+="$(printf "$(TEXT "Note: There is no version %s and automatically returns to version %s.")" "${selver}" "${urlver}")\n"
           selver=${urlver}
         fi
-        MSG+="$(TEXT "Please confirm or modify the URL and md5sum to you need.")"
-      fi
-      if [ -z "${1}" ]; then
         DIALOG --title "$(TEXT "Product Version")" \
           --extra-button --extra-label "$(TEXT "Retry")" \
           --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \

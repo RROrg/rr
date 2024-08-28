@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-18 15:44+0800\n"
+"POT-Creation-Date: 2024-08-28 19:21+0800\n"
 "PO-Revision-Date: 2024-05-05 22:04+0800\n"
 "Last-Translator: ngocanhtran <mr.ngocanhtran@gmail.com>\n"
 "Language-Team: Vietnamese <https://hosted.weblate.org/projects/rrorg/rr/vi/>\n"
@@ -34,7 +34,7 @@ msgstr "Chúc mừng bạn dùng %s"
 msgid "DSM zImage changed"
 msgstr "zImage của DSM đã được thay đổi"
 
-#: boot.sh:44 menu.sh:1355
+#: boot.sh:44 menu.sh:1332
 msgid "zImage not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
 msgstr "zImage chưa được patch, \\n Hãy nâng cấp phiên bản mới của booloader và thử lại. \\n Patch xảy ra lỗi: \\n"
 
@@ -42,7 +42,7 @@ msgstr "zImage chưa được patch, \\n Hãy nâng cấp phiên bản mới c�
 msgid "DSM Ramdisk changed"
 msgstr "DSM Ramdisk đã được thay đổi"
 
-#: boot.sh:55 menu.sh:1361
+#: boot.sh:55 menu.sh:1338
 msgid "Ramdisk not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
 msgstr "Ramdisk chưa được patch, \\n Hãy nâng cấp phiên bản mới của booloader và thử lại. \\n Patch xảy ra lỗi: \\n"
 
@@ -218,7 +218,7 @@ msgstr "Đang lấy danh sách thiết bị ..."
 msgid "Failed to get models, Please check the network and try again, or use 'Parse Pat'!"
 msgstr "Không thể lấy danh sách thiết bị, hãy kiểm tra lại kết nối mạng và thử lại, hoặc sử dụng 'Parse Pat'!"
 
-#: menu.sh:120 menu.sh:277
+#: menu.sh:120 menu.sh:236
 msgid "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!"
 msgstr "Không thể kết nối đến trang Synology, hãy kiểm tra lại kết nối mạng và thử lại, hoặc sử dụng 'Parse Pat'!"
 
@@ -230,7 +230,7 @@ msgstr "Tắt hạn chế cờ"
 msgid "Choose the model"
 msgstr "Chọn thiết bị"
 
-#: menu.sh:206 menu.sh:214 menu.sh:248 menu.sh:293 menu.sh:322
+#: menu.sh:206 menu.sh:214 menu.sh:230 menu.sh:246 menu.sh:270 menu.sh:299
 msgid "Product Version"
 msgstr "Phiên bản sản phẩm"
 
@@ -242,1311 +242,1301 @@ msgstr "Chọn phiên bản sản phẩm"
 msgid "The current version has been set to %s. Do you want to reset the version?"
 msgstr "Phiên bản hiện tại là %s. Bạn có muốn cài lại phiên bản ?"
 
-#: menu.sh:249
+#: menu.sh:231
 msgid "Get pat data ..."
 msgstr "Lấy dữ liệu pat ..."
 
-#: menu.sh:279
-msgid "Failed to get pat data,\\nPlease manually fill in the URL and md5sum of the corresponding version of pat.\\nOr click 'Retry'."
-msgstr "Không thể lấy dữ liệu pat,\\nHãy điền URL và md5sum của phiên bản tương ứng của pat.\\nHoặc nhấn 'Retry'."
-
-#: menu.sh:285
-msgid "Successfully to get pat data."
-msgstr "Lấy dữ liệu pat thành công."
-
-#: menu.sh:287
-msgid "Note: There is no version %s and automatically returns to version %s."
-msgstr "Lưu ý: Không có phiên bản %s, sẽ tự động quay trở lại phiên bản %s."
-
-#: menu.sh:290
-msgid "Please confirm or modify the URL and md5sum to you need."
-msgstr "Hãy xác nhận hoặc sửa đổi URL và md5sum theo nhu cầu của bạn."
-
-#: menu.sh:294
-msgid "Retry"
-msgstr "Thử lại"
-
-#: menu.sh:323 menu.sh:389
-msgid "Reconfiguring Synoinfo, Addons and Modules ..."
-msgstr "Đang cấu hình lại Synoinfo, Addons and Modules ..."
-
-#: menu.sh:361 menu.sh:372
-msgid "DSM Invalid, try again!"
-msgstr "DSM không hợp lệ, hãy thử lại!"
-
-#: menu.sh:385
-msgid "Currently, %s is not supported."
-msgstr "Hiện tại, %s không được hỗ trợ."
-
-#: menu.sh:436
-msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
-msgstr "Bạn đã chọn %s và %s.\\n'Parse Pat' sẽ ghi đè lên lựa chọn trước đó.\\nBạn có muốn tiếp tục?"
-
-#: menu.sh:437 menu.sh:452 menu.sh:458 menu.sh:499 menu.sh:502
-msgid "Parse Pat"
-msgstr "Parse Pat"
-
-#: menu.sh:446
-msgid "No pat file found in /tmp/pats/ folder!\\n"
-msgstr "Không tìm thấy tệp pat trong thư mục /tmp/pats/!\\n"
-
-#: menu.sh:447
-msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
-msgstr "Vui lòng tải tệp pat vào thư mục /tmp/pats/ qua DUFS và nhập lại tùy chọn này.\\n"
-
-#: menu.sh:448 menu.sh:3309 menu.sh:3310 menu.sh:3311 menu.sh:3312 menu.sh:3313 menu.sh:3314 menu.sh:3320 menu.sh:3345 menu.sh:3357 menu.sh:3369 menu.sh:3381 menu.sh:3396 menu.sh:3407 menu.sh:3424 menu.sh:3443
-msgid "Update"
-msgstr "Cập nhật"
-
-#: menu.sh:453
-msgid "Choose a pat file"
-msgstr "Chọn tệp pat"
-
-#: menu.sh:459 menu.sh:1149 menu.sh:1225
-msgid "pat Invalid, try again!"
-msgstr "pat không hợp lệ, hãy thử lại!"
-
-#: menu.sh:465
-msgid "Parse %s ..."
-msgstr "Phân tích %s ..."
-
-#: menu.sh:496 menu.sh:1368
-msgid "Ready!"
-msgstr "Sẵn sàng!"
-
-#: menu.sh:500
-msgid "Making ..."
-msgstr "Đang làm ..."
-
-#: menu.sh:537 menu.sh:554 menu.sh:559 menu.sh:565 menu.sh:576 menu.sh:584 menu.sh:607 menu.sh:614 menu.sh:618 menu.sh:632 menu.sh:636 menu.sh:644 menu.sh:648 menu.sh:3053 menu.sh:3102 menu.sh:3311 menu.sh:3346 menu.sh:3351
+#: menu.sh:237 menu.sh:514 menu.sh:531 menu.sh:536 menu.sh:542 menu.sh:553 menu.sh:561 menu.sh:584 menu.sh:591 menu.sh:595 menu.sh:609 menu.sh:613 menu.sh:621 menu.sh:625 menu.sh:3031 menu.sh:3080 menu.sh:3289 menu.sh:3324 menu.sh:3329
 msgid "Addons"
 msgstr "Addons"
 
-#: menu.sh:538 menu.sh:668 menu.sh:868 menu.sh:1024 menu.sh:1403 menu.sh:3535
+#: menu.sh:238 menu.sh:271
+msgid "Retry"
+msgstr "Thử lại"
+
+#: menu.sh:247
+msgid "Choose a pat version"
+msgstr "Chọn phiên bản pat"
+
+#: menu.sh:265
+msgid "Please confirm or modify the URL and md5sum to you need."
+msgstr "Hãy xác nhận hoặc sửa đổi URL và md5sum theo nhu cầu của bạn."
+
+#: menu.sh:267
+msgid "Note: There is no version %s and automatically returns to version %s."
+msgstr "Lưu ý: Không có phiên bản %s, sẽ tự động quay trở lại phiên bản %s."
+
+#: menu.sh:300 menu.sh:366
+msgid "Reconfiguring Synoinfo, Addons and Modules ..."
+msgstr "Đang cấu hình lại Synoinfo, Addons and Modules ..."
+
+#: menu.sh:338 menu.sh:349
+msgid "DSM Invalid, try again!"
+msgstr "DSM không hợp lệ, hãy thử lại!"
+
+#: menu.sh:362
+msgid "Currently, %s is not supported."
+msgstr "Hiện tại, %s không được hỗ trợ."
+
+#: menu.sh:413
+msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
+msgstr "Bạn đã chọn %s và %s.\\n'Parse Pat' sẽ ghi đè lên lựa chọn trước đó.\\nBạn có muốn tiếp tục?"
+
+#: menu.sh:414 menu.sh:429 menu.sh:435 menu.sh:476 menu.sh:479
+msgid "Parse Pat"
+msgstr "Parse Pat"
+
+#: menu.sh:423
+msgid "No pat file found in /tmp/pats/ folder!\\n"
+msgstr "Không tìm thấy tệp pat trong thư mục /tmp/pats/!\\n"
+
+#: menu.sh:424
+msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
+msgstr "Vui lòng tải tệp pat vào thư mục /tmp/pats/ qua DUFS và nhập lại tùy chọn này.\\n"
+
+#: menu.sh:425 menu.sh:3287 menu.sh:3288 menu.sh:3289 menu.sh:3290 menu.sh:3291 menu.sh:3292 menu.sh:3298 menu.sh:3323 menu.sh:3335 menu.sh:3347 menu.sh:3359 menu.sh:3374 menu.sh:3385 menu.sh:3402 menu.sh:3421
+msgid "Update"
+msgstr "Cập nhật"
+
+#: menu.sh:430
+msgid "Choose a pat file"
+msgstr "Chọn tệp pat"
+
+#: menu.sh:436 menu.sh:1126 menu.sh:1202
+msgid "pat Invalid, try again!"
+msgstr "pat không hợp lệ, hãy thử lại!"
+
+#: menu.sh:442
+msgid "Parse %s ..."
+msgstr "Phân tích %s ..."
+
+#: menu.sh:473 menu.sh:1345
+msgid "Ready!"
+msgstr "Sẵn sàng!"
+
+#: menu.sh:477
+msgid "Making ..."
+msgstr "Đang làm ..."
+
+#: menu.sh:515 menu.sh:645 menu.sh:845 menu.sh:1001 menu.sh:1380 menu.sh:3513
 msgid "Choose a option"
 msgstr "Chọn một tùy chọn"
 
-#: menu.sh:539
+#: menu.sh:516
 msgid "Add an addon"
 msgstr "Thêm addon"
 
-#: menu.sh:540
+#: menu.sh:517
 msgid "Delete addons"
 msgstr "Xóa addons"
 
-#: menu.sh:541
+#: menu.sh:518
 msgid "Show all addons"
 msgstr "HIện thị tất cả addons"
 
-#: menu.sh:542
+#: menu.sh:519
 msgid "Upload a external addon"
 msgstr "Tải lên addon từ ngoài"
 
-#: menu.sh:543 menu.sh:676 menu.sh:866 menu.sh:1022 menu.sh:1408 menu.sh:2421 menu.sh:3317 menu.sh:3532 menu.sh:3633
+#: menu.sh:520 menu.sh:653 menu.sh:843 menu.sh:999 menu.sh:1385 menu.sh:2398 menu.sh:3295 menu.sh:3510 menu.sh:3611
 msgid "Exit"
 msgstr "Thoát"
 
-#: menu.sh:555
+#: menu.sh:532
 msgid "No available addons to add"
 msgstr "Không có addons nào để thêm"
 
-#: menu.sh:560
+#: menu.sh:537
 msgid "Select an addon"
 msgstr "Chọn addon"
 
-#: menu.sh:566
+#: menu.sh:543
 msgid "Type a optional params to addon"
 msgstr "Nhập tham số tùy chọn cho addon"
 
-#: menu.sh:577
+#: menu.sh:554
 msgid "No user addons to remove"
 msgstr "Không có addons của người dùng để xóa"
 
-#: menu.sh:585
+#: menu.sh:562
 msgid "Select addon to remove"
 msgstr "Chọn addon để xóa"
 
-#: menu.sh:598
+#: menu.sh:575
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n\\n"
 msgstr "Tên với màu \"\\Z4blue\\Zn\" đã được thêm, với màu \"black\" không được thêm.\\n\\n"
 
-#: menu.sh:613 menu.sh:745 menu.sh:1416 menu.sh:3394
+#: menu.sh:590 menu.sh:722 menu.sh:1393 menu.sh:3372
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
 msgstr "Tính năng này chỉ có sẵn khi truy cập qua ssh (Yêu cầu terminal hỗ trợ ZModem protocol).\\n"
 
-#: menu.sh:619
+#: menu.sh:596
 msgid "Please upload the *.addons file."
 msgstr "Vui lòng tải lên tệp *.addons."
 
-#: menu.sh:633 menu.sh:781 menu.sh:3425 menu.sh:3444
+#: menu.sh:610 menu.sh:758 menu.sh:3403 menu.sh:3422
 msgid "Not a valid file, please try again!"
 msgstr "Không phải là tệp hợp lệ, vui lòng thử lại!"
 
-#: menu.sh:637
+#: menu.sh:614
 msgid "The addon already exists. Do you want to overwrite it?"
 msgstr "Addon đã tồn tại. Bạn có muốn ghi đè nó không?"
 
-#: menu.sh:645
+#: menu.sh:622
 msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
 msgstr "Addon '%s' đã được thêm vào trình tải, Vui lòng bật nó trong menu 'Thêm addon'."
 
-#: menu.sh:649
+#: menu.sh:626
 msgid "File format not recognized!"
 msgstr "Định dạng tệp không được công nhận!"
 
-#: menu.sh:667 menu.sh:682 menu.sh:695 menu.sh:729 menu.sh:746 menu.sh:756 menu.sh:759 menu.sh:775 menu.sh:780 menu.sh:794 menu.sh:800 menu.sh:835 menu.sh:3117 menu.sh:3167 menu.sh:3312 menu.sh:3358 menu.sh:3363
+#: menu.sh:644 menu.sh:659 menu.sh:672 menu.sh:706 menu.sh:723 menu.sh:733 menu.sh:736 menu.sh:752 menu.sh:757 menu.sh:771 menu.sh:777 menu.sh:812 menu.sh:3095 menu.sh:3145 menu.sh:3290 menu.sh:3336 menu.sh:3341
 msgid "Modules"
 msgstr "Mô-đun"
 
-#: menu.sh:669
+#: menu.sh:646
 msgid "Show/Select modules"
 msgstr "Hiển thị/Chọn mô-đun"
 
-#: menu.sh:670
+#: menu.sh:647
 msgid "Select loaded modules"
 msgstr "Chọn mô-đun đã tải"
 
-#: menu.sh:671
+#: menu.sh:648
 msgid "Upload a external module"
 msgstr "Tải lên mô-đun bên ngoài"
 
-#: menu.sh:672
+#: menu.sh:649
 msgid "Deselect i915 with dependencies"
 msgstr "Bỏ chọn i915 với các phụ thuộc"
 
-#: menu.sh:673
+#: menu.sh:650
 msgid "Priority use of official drivers:"
 msgstr "Sử dụng ưu tiên của các trình điều khiển chính thức:"
 
-#: menu.sh:674
+#: menu.sh:651
 msgid "Edit modules that need to be copied to DSM"
 msgstr "Chỉnh sửa các mô-đun cần phải được sao chép vào DSM"
 
-#: menu.sh:675
+#: menu.sh:652
 msgid "modprobe blacklist"
 msgstr "danh sách đen thăm dò mô-đun"
 
-#: menu.sh:683
+#: menu.sh:660
 msgid "Reading modules ..."
 msgstr "Đọc các mô-đun ..."
 
-#: menu.sh:696
+#: menu.sh:673
 msgid "Select all"
 msgstr "Chọn tất cả"
 
-#: menu.sh:697
+#: menu.sh:674
 msgid "Deselect all"
 msgstr "Hủy chọn tất cả"
 
-#: menu.sh:698
+#: menu.sh:675
 msgid "Select modules to include"
 msgstr "Chọn các mô-đun để bao gồm"
 
-#: menu.sh:730
+#: menu.sh:707
 msgid "Selecting loaded modules"
 msgstr "Chọn các mô-đun đã được tải"
 
-#: menu.sh:751
+#: menu.sh:728
 msgid "This function is experimental and dangerous. If you don't know much, please exit.\\n"
 msgstr "Hàm này là một hàm thử nghiệm và có thể nguy hiểm. Nếu bạn không biết nhiều, vui lòng thoát.\\n"
 
-#: menu.sh:752
+#: menu.sh:729
 msgid "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\\n"
 msgstr ".ko được nhập của hàm này sẽ được implanted vào gói modules của hệ thống, sẽ ảnh hưởng đến tất cả các model của hệ thống.\\n"
 
-#: menu.sh:753
+#: menu.sh:730
 msgid "This program will not determine the availability of imported modules or even make type judgments, as please double check if it is correct.\\n"
 msgstr "Program này sẽ không xác định được khả năng sử dụng của các gói modules được nhập, cũng như không thể xác định được kiểu của các modules được nhập.\\n"
 
-#: menu.sh:754
+#: menu.sh:731
 msgid "If you want to remove it, please go to the \"Update Menu\" -> \"Update modules\" to forcibly update the modules. All imports will be reset.\\n"
 msgstr "Nếu bạn muốn xóa nó, vui lòng chuyển đến \"Cập nhật Menu\" -> \"Cập nhật modules\" để cập nhật các modules một cách bắt buộc. Tất cả các modules sẽ được đặt lại.\\n"
 
-#: menu.sh:755
+#: menu.sh:732
 msgid "Do you want to continue?"
 msgstr "Bạn có muốn tiếp tục?"
 
-#: menu.sh:760
+#: menu.sh:737
 msgid "Please upload the *.ko file."
 msgstr "Vui lòng tải lên tệp *.ko."
 
-#: menu.sh:776
+#: menu.sh:753
 msgid "Module '%s' added to %s-%s"
 msgstr "Module '%s' added to %s-%s"
 
-#: menu.sh:795
+#: menu.sh:772
 msgid "No i915 with dependencies module to deselect."
 msgstr "Không có i915 với module dependencies để bỏ chọn."
 
-#: menu.sh:801
+#: menu.sh:778
 msgid "Module %s deselected.\\n"
 msgstr "Module %s deselected.\\n"
 
-#: menu.sh:817 menu.sh:1470 menu.sh:1497 menu.sh:1504 menu.sh:1527
+#: menu.sh:794 menu.sh:1447 menu.sh:1474 menu.sh:1481 menu.sh:1504
 msgid "Edit with caution"
 msgstr "Chỉnh sửa với cẩn thận"
 
-#: menu.sh:830
+#: menu.sh:807
 msgid "The blacklist is used to prevent the kernel from loading specific modules.\\n"
 msgstr "Danh sách đen thăm dò mô-đun được sử dụng để ngăn chặn kernel khi tải các module cụ thể.\\n"
 
-#: menu.sh:831
+#: menu.sh:808
 msgid "The blacklist is a list of module names separated by ','.\\n"
 msgstr "Danh sách đen thăm dò mô-đun được sử dụng để ngăn chặn kernel khi tải các module cụ thể.\\n"
 
-#: menu.sh:832
+#: menu.sh:809
 msgid "For example: \\Z4evbug,cdc_ether\\Zn\\n"
 msgstr "Ví dụ: \\Z4evbug,cdc_ether\\Zn\\n"
 
-#: menu.sh:841 menu.sh:867 menu.sh:904 menu.sh:915 menu.sh:939 menu.sh:947 menu.sh:964 menu.sh:975
+#: menu.sh:818 menu.sh:844 menu.sh:881 menu.sh:892 menu.sh:916 menu.sh:924 menu.sh:941 menu.sh:952
 msgid "Cmdline"
 msgstr "Cmdline"
 
-#: menu.sh:842
+#: menu.sh:819
 msgid "Invalid list, No spaces should appear, retry?"
 msgstr "Danh sách không hợp lệ, Không có khoảng trắng nên thử lại?"
 
-#: menu.sh:860
+#: menu.sh:837
 msgid "Add/Edit a cmdline item"
 msgstr "Thêm/Sửa một cmdline item"
 
-#: menu.sh:861
+#: menu.sh:838
 msgid "Show/Delete cmdline items"
 msgstr "Hiển thị/Xóa cmdline items"
 
-#: menu.sh:863
+#: menu.sh:840
 msgid "Define SN/MAC"
 msgstr "Định nghĩa SN/MAC"
 
-#: menu.sh:874
+#: menu.sh:851
 msgid "Commonly used cmdlines:\\n"
 msgstr "Cmdline thường được sử dụng:\\n"
 
-#: menu.sh:875
+#: menu.sh:852
 msgid " * \\Z4SpectreAll_on=\\Zn\\n    Enable Spectre and Meltdown protection to mitigate the threat of speculative execution vulnerability.\\n"
 msgstr " * \\Z4SpectreAll_on=\\Zn\\n    Bật bảo vệ Spectre và Meltdown để giảm thiểu nguy cơ lỗ hổng speculation execution.\\n"
 
-#: menu.sh:876
+#: menu.sh:853
 msgid " * \\Z4disable_mtrr_trim=\\Zn\\n    disables kernel trim any uncacheable memory out.\\n"
 msgstr " * \\Z4disable_mtrr_trim=\\Zn\\n    tắt chức năng trim memory không được cache.\\n"
 
-#: menu.sh:877
+#: menu.sh:854
 msgid " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Set the maximum C-state depth allowed by the intel_idle driver.\\n"
 msgstr " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Đặt độ sâu tối đa của C-state cho phép bởi driver intel_idle.\\n"
 
-#: menu.sh:878
+#: menu.sh:855
 msgid " * \\Z4pcie_port_pm=off\\Zn\\n    Turn off the power management of the PCIe port.\\n"
 msgstr " * \\Z4pcie_port_pm=off\\Zn\\n    Tắt quản lý điện của cổng PCIe.\\n"
 
-#: menu.sh:879
+#: menu.sh:856
 msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
 msgstr " * \\Z4libata.force=noncq\\Zn\\n    Tắt NCQ cho tất cả các cổng SATA.\\n"
 
-#: menu.sh:880
+#: menu.sh:857
 msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map(Not apply to DT models).\\n"
 msgstr " * \\Z4SataPortMap=??\\Zn\\n    Sơ đồ cổng Sata (Không áp dụng cho dòng DT).\\n"
 
-#: menu.sh:881
+#: menu.sh:858
 msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence(Not apply to DT models).\\n"
 msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    Sắp xếp lại thứ tự đĩa (không áp dụng cho các model DT).\\n"
 
-#: menu.sh:882
+#: menu.sh:859
 msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence(Not apply to DT models).\\n"
 msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Ánh xạ lại chuỗi cổng dữ liệu (Không áp dụng cho các mẫu DT).\\n"
 
-#: menu.sh:883
+#: menu.sh:860
 msgid " * \\Z4scsi_mod.scan=sync\\Zn\\n    Synchronize scanning of devices on the SCSI bus during system startup(Resolve the disorderly order of HBA disks).\\n"
 msgstr " * \\Z4scsi_mod.scan=sync\\Zn\\n    Quét thiết bị trên SCSI bus trong khi khởi động hệ thống(Giải quyết thứ tự không ổn định của đĩa HBA).\\n"
 
-#: menu.sh:884
+#: menu.sh:861
 msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
 msgstr " * \\Z4i915.enable_guc=2\\Zn\\n    Bật firmware GuC trên thiết bị đồ họa Intel.(giá trị: 1,2 hoặc 3)\\n"
 
-#: menu.sh:885
+#: menu.sh:862
 msgid " * \\Z4i915.max_vfs=7\\Zn\\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\\n"
 msgstr " * \\Z4i915.max_vfs=7\\Zn\\n    Thiết lập số lượng tối đa của các hàm ảo (VFs) có thể được tạo ra cho thiết bị đồ họa Intel.\\n"
 
-#: menu.sh:886
+#: menu.sh:863
 msgid " * \\Z4i915.modeset=0\\Zn\\n    Disable the kernel mode setting (KMS) feature of the i915 driver.\\n"
 msgstr " * \\Z4i915.modeset=0\\Zn\\n    Tắt tính năng thiết lập chế độ của trình điều khiển i915.\\n"
 
-#: menu.sh:887
+#: menu.sh:864
 msgid " * \\Z4apparmor.mode=complain\\Zn\\n    Set the AppArmor security module to complain mode.\\n"
 msgstr " * \\Z4apparmor.mode=complain\\Zn\\n    Đặt mô-đun bảo mật AppArmor thành chế độ nhắc nhở.\\n"
 
-#: menu.sh:888
+#: menu.sh:865
 msgid " * \\Z4pci=nommconf\\Zn\\n    Disable the use of Memory-Mapped Configuration for PCI devices(use this parameter cautiously).\\n"
 msgstr " * \\Z4pci=nommconf\\Zn\\n    Tắt sử dụng Memory-Mapped Configuration cho các thiết bị PCI (sử dụng tham số này với cẩn thận).\\n"
 
-#: menu.sh:889
+#: menu.sh:866
 msgid " * \\Z4consoleblank=300\\Zn\\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\\n"
 msgstr " * \\Z4consoleblank=300\\Zn\\n    Thiết lập màn hình console tự động tắt sau 300 giây không hoạt động (được đo theo giây).\\n"
 
-#: menu.sh:890 menu.sh:899 menu.sh:1037 menu.sh:1046
+#: menu.sh:867 menu.sh:876 menu.sh:1014 menu.sh:1023
 msgid "Please enter the parameter key and value you need to add.\\n"
 msgstr "Vui lòng nhập tên tham số và giá trị bạn cần thêm.\\n"
 
-#: menu.sh:916 menu.sh:1063
+#: menu.sh:893 menu.sh:1040
 msgid "Invalid parameter name, retry?"
 msgstr "Tên tham số không hợp lệ, thử lại?"
 
-#: menu.sh:940
+#: menu.sh:917
 msgid "No user cmdline to remove"
 msgstr "Không có cmdline người dùng để xóa"
 
-#: menu.sh:948
+#: menu.sh:925
 msgid "Select cmdline to remove"
 msgstr "Chọn cmdline để xóa"
 
-#: menu.sh:959
+#: menu.sh:936
 msgid "Note: (MAC will not be set to NIC, Only for activation services.)"
 msgstr "Lưu ý: (MAC sẽ không được đặt cho NIC, Chỉ cho các dịch vụ kích hoạt.)"
 
-#: menu.sh:965
+#: menu.sh:942
 msgid "Random"
 msgstr "Ngẫu nhiên"
 
-#: menu.sh:976
+#: menu.sh:953
 msgid "Invalid SN/MAC, retry?"
 msgstr "SN/MAC không hợp lệ, thử lại?"
 
-#: menu.sh:1020
+#: menu.sh:997
 msgid "Add/edit a synoinfo item"
 msgstr "Thêm/sửa một mục synoinfo"
 
-#: menu.sh:1021
+#: menu.sh:998
 msgid "Show/Delete synoinfo items"
 msgstr "Hiển thị/Xóa mục synoinfo"
 
-#: menu.sh:1023 menu.sh:1051 menu.sh:1062 menu.sh:1087 menu.sh:1095
+#: menu.sh:1000 menu.sh:1028 menu.sh:1039 menu.sh:1064 menu.sh:1072
 msgid "Synoinfo"
 msgstr "Synoinfo"
 
-#: menu.sh:1030
+#: menu.sh:1007
 msgid "Commonly used synoinfo:\\n"
 msgstr "Synoinfo thường dùng:\\n"
 
-#: menu.sh:1031
+#: menu.sh:1008
 msgid " * \\Z4support_apparmor=no\\Zn\\n    Disable apparmor.\\n"
 msgstr " * \\Z4support_apparmor=no\\Zn\\n    Tắt apparmor.\\n"
 
-#: menu.sh:1032
+#: menu.sh:1009
 msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
 msgstr " * \\Z4maxdisks=??\\Zn\\n    Số đĩa tối đa được hỗ trợ.\\n"
 
-#: menu.sh:1033
+#: menu.sh:1010
 msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    Máy mask đĩa nội bộ(không áp dụng cho các mẫu DT).\\n"
 
-#: menu.sh:1034
+#: menu.sh:1011
 msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Máy mask đĩa Esata(không áp dụng cho các mẫu DT).\\n"
 
-#: menu.sh:1035
+#: menu.sh:1012
 msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    Máy mask đĩa USB(không áp dụng cho các mẫu DT).\\n"
 
-#: menu.sh:1036
+#: menu.sh:1013
 msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
 msgstr " * \\Z4max_sys_raid_disks=12\\Zn\\n    Số lượng tối đa của hệ thống partition(md0) raid disks.\\n"
 
-#: menu.sh:1088
+#: menu.sh:1065
 msgid "No synoinfo entries to remove"
 msgstr "Không có mục synoinfo để xóa"
 
-#: menu.sh:1096
+#: menu.sh:1073
 msgid "Select synoinfo entry to remove"
 msgstr "Chọn mục synoinfo để xóa"
 
-#: menu.sh:1119 menu.sh:1272
+#: menu.sh:1096 menu.sh:1249
 msgid "Network error, please check the network connection and try again."
 msgstr "Lỗi kết nối, hãy kiểm tra lại kết nối internet và kiểm tra lại."
 
-#: menu.sh:1131
+#: menu.sh:1108
 msgid "Downloading old pat to extract synology .pat extractor..."
 msgstr "Tải về pat cũ để trích xuất .pat của Synology..."
 
-#: menu.sh:1137 menu.sh:1296
+#: menu.sh:1114 menu.sh:1273
 msgid "Check internet or cache disk space.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "Kiểm tra kết nối internet hoặc dung lượng đĩa ổ bộ nhớ.\\nLỗi: %d:%d\\n(Vui lòng truy cập https://curl.se/libcurl/c/libcurl-errors.html để kiểm tra mô tả lỗi.)"
 
-#: menu.sh:1178
+#: menu.sh:1155
 msgid "Uncompressed tar"
 msgstr "Nhựa đường không nén"
 
-#: menu.sh:1182
+#: menu.sh:1159
 msgid "Compressed tar"
 msgstr "Nhựa đường nén"
 
-#: menu.sh:1186
+#: menu.sh:1163
 msgid "Encrypted"
 msgstr "Đã mã hóa"
 
-#: menu.sh:1190
+#: menu.sh:1167
 msgid "Could not determine if pat file is encrypted or not, maybe corrupted, try again!"
 msgstr "Không thể xác định xem tệp pat có được mã hóa hay không, có thể bị hỏng, hãy thử lại!"
 
-#: menu.sh:1197 menu.sh:1312
+#: menu.sh:1174 menu.sh:1289
 msgid "Disassembling %s: "
 msgstr "Giải nén %s: "
 
-#: menu.sh:1205
+#: menu.sh:1182
 msgid "Extractor cached."
 msgstr "Đã lưu trữ trích xuất."
 
-#: menu.sh:1211 menu.sh:1215
+#: menu.sh:1188 menu.sh:1192
 msgid "Extracting ..."
 msgstr "Trích xuất ..."
 
-#: menu.sh:1248
+#: menu.sh:1225
 msgid "%s cached."
 msgstr "%s đã lưu trữ."
 
-#: menu.sh:1251
+#: menu.sh:1228
 msgid "The cache has been cleared. Please re 'Parse pat' before build."
 msgstr "Cache đã được xóa. Vui lòng 'Parse pat' trước khi xây dựng."
 
-#: menu.sh:1255
+#: menu.sh:1232
 msgid "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build."
 msgstr "Cache đã được xóa. Vui lòng 'Khôi phục hệ thống DSM đã cài đặt' trước khi xây dựng."
 
-#: menu.sh:1259
+#: menu.sh:1236
 msgid "The pat url is empty. Please re 'Choose a version' before build."
 msgstr "URL của pat trống. Vui lòng 'Chọn phiên bản' trước khi xây dựng."
 
-#: menu.sh:1264 menu.sh:3464
+#: menu.sh:1241 menu.sh:3442
 msgid "Cleaning cache ..."
 msgstr "Xóa bộ nhớ đệm ..."
 
-#: menu.sh:1278
+#: menu.sh:1255
 msgid "Based on the current network situation, switch to %s mirror to downloading."
 msgstr "Dựa trên tình hình mạng hiện tại, chuyển sang %s để tải về."
 
-#: menu.sh:1281
+#: menu.sh:1258
 msgid "Downloading %s ..."
 msgstr "Tải về %s ..."
 
-#: menu.sh:1302
+#: menu.sh:1279
 msgid "Checking hash of %s: "
 msgstr "Kiểm tra băm của %s: "
 
-#: menu.sh:1305
+#: menu.sh:1282
 msgid "md5 hash of pat not match, Please reget pat data from the version menu and try again!"
 msgstr "băm md5 của pat không khớp, vui lòng tải lại dữ liệu pat từ menu phiên bản và thử lại!"
 
-#: menu.sh:1308 menu.sh:1324 menu.sh:1329
+#: menu.sh:1285 menu.sh:1301 menu.sh:1306
 msgid "OK"
 msgstr "OK"
 
-#: menu.sh:1319
+#: menu.sh:1296
 msgid "Setting hash: "
 msgstr "Cài đặt băm: "
 
-#: menu.sh:1326
+#: menu.sh:1303
 msgid "Copying files: "
 msgstr "Sao chép tệp: "
 
-#: menu.sh:1349
+#: menu.sh:1326
 msgid "No disk space left, please clean the cache and try again!"
 msgstr "Không còn không gian trên đĩa, vui lòng dọn dẹp bộ nhớ tạm và thử lại!"
 
-#: menu.sh:1365
+#: menu.sh:1342
 msgid "Cleaning ..."
 msgstr "Dọn dẹp ..."
 
-#: menu.sh:1374 menu.sh:3463 menu.sh:3534 menu.sh:3552 menu.sh:3635 menu.sh:3641 menu.sh:3647 menu.sh:3653 menu.sh:3659 menu.sh:3665 menu.sh:3671
+#: menu.sh:1351 menu.sh:3441 menu.sh:3512 menu.sh:3530 menu.sh:3613 menu.sh:3619 menu.sh:3625 menu.sh:3631 menu.sh:3637 menu.sh:3643 menu.sh:3649
 msgid "Main menu"
 msgstr "Menu chính"
 
-#: menu.sh:1375
+#: menu.sh:1352
 msgid "Making ... ('ctrl + c' to exit)"
 msgstr "Đang tạo ... ('ctrl + c' để thoát)"
 
-#: menu.sh:1381
+#: menu.sh:1358
 msgid "Error"
 msgstr "Lỗ"
 
-#: menu.sh:1402 menu.sh:1418 menu.sh:1422 menu.sh:1439 menu.sh:1444 menu.sh:1463 menu.sh:1475 menu.sh:2384
+#: menu.sh:1379 menu.sh:1395 menu.sh:1399 menu.sh:1416 menu.sh:1421 menu.sh:1440 menu.sh:1452 menu.sh:2361
 msgid "Custom DTS"
 msgstr "DTS tùy chỉnh"
 
-#: menu.sh:1404
+#: menu.sh:1381
 msgid "Custom dts: "
 msgstr "DTS tùy chỉnh: "
 
-#: menu.sh:1405
+#: menu.sh:1382
 msgid "Upload dts file"
 msgstr "Tải lên tệp dts"
 
-#: menu.sh:1406
+#: menu.sh:1383
 msgid "Delete dts file"
 msgstr "Xóa tệp dts"
 
-#: menu.sh:1407
+#: menu.sh:1384
 msgid "Edit dts file"
 msgstr "Chỉnh sửa tệp dts"
 
-#: menu.sh:1417
+#: menu.sh:1394
 msgid "Or upload the dts file to %s via DUFS, Will be automatically imported when building."
 msgstr "Hoặc tải lên tệp dts %s qua DUFS, sẽ được nhập khi xây dựng tự động."
 
-#: menu.sh:1423
+#: menu.sh:1400
 msgid "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\\n(saved in /mnt/p3/users/)"
 msgstr "Hiện tại, chỉ hỗ trợ tệp dts định dạng. Hãy chuẩn bị và nhấp vào xác nhận tải lên.\\n(đã lưu trong /mnt/p3/users/)"
 
-#: menu.sh:1440 menu.sh:1476
+#: menu.sh:1417 menu.sh:1453
 msgid "Not a valid dts file, please try again!"
 msgstr "Không phải là tệp dts hợp lệ, hãy thử lại!"
 
-#: menu.sh:1445
+#: menu.sh:1422
 msgid "A valid dts file, Automatically import at compile time."
 msgstr "Tệp dts hợp lệ, Tự động nhập vào thời gian biên dịch."
 
-#: menu.sh:1464
+#: menu.sh:1441
 msgid "No dts file to edit. Please upload first!"
 msgstr "Không có tệp dts để sửa. Hãy tải lên trước!"
 
-#: menu.sh:1545
+#: menu.sh:1522
 msgid "Set to %s: (Delete if empty)"
 msgstr "Đặt thành %s: (Xóa nếu trống)"
 
-#: menu.sh:1547 menu.sh:1553 menu.sh:1592 menu.sh:1604 menu.sh:1613 menu.sh:1635 menu.sh:1743 menu.sh:1759 menu.sh:1763 menu.sh:1764 menu.sh:1769 menu.sh:1773 menu.sh:1786 menu.sh:1788 menu.sh:1800 menu.sh:1808 menu.sh:1883 menu.sh:1888 menu.sh:1903
-#: menu.sh:1905 menu.sh:1915 menu.sh:1939 menu.sh:1943 menu.sh:1950 menu.sh:1956 menu.sh:1975 menu.sh:1977 menu.sh:1987 menu.sh:1992 menu.sh:2020 menu.sh:2023 menu.sh:2033 menu.sh:2058 menu.sh:2061 menu.sh:2072 menu.sh:2077 menu.sh:2091 menu.sh:2094
-#: menu.sh:2104 menu.sh:2109 menu.sh:2124 menu.sh:2127 menu.sh:2142 menu.sh:2146 menu.sh:2152 menu.sh:2158 menu.sh:2164 menu.sh:2246 menu.sh:2249 menu.sh:2252 menu.sh:2323 menu.sh:2335 menu.sh:2346 menu.sh:2423 menu.sh:2450 menu.sh:2468 menu.sh:2489
-#: menu.sh:2501 menu.sh:2521 menu.sh:2558 menu.sh:2629 menu.sh:2633 menu.sh:2643 menu.sh:2649 menu.sh:2663 menu.sh:2670 menu.sh:2675 menu.sh:2678 menu.sh:2692 menu.sh:2695 menu.sh:2725
+#: menu.sh:1524 menu.sh:1530 menu.sh:1569 menu.sh:1581 menu.sh:1590 menu.sh:1612 menu.sh:1720 menu.sh:1736 menu.sh:1740 menu.sh:1741 menu.sh:1746 menu.sh:1750 menu.sh:1763 menu.sh:1765 menu.sh:1777 menu.sh:1785 menu.sh:1860 menu.sh:1865 menu.sh:1880
+#: menu.sh:1882 menu.sh:1892 menu.sh:1916 menu.sh:1920 menu.sh:1927 menu.sh:1933 menu.sh:1952 menu.sh:1954 menu.sh:1964 menu.sh:1969 menu.sh:1997 menu.sh:2000 menu.sh:2010 menu.sh:2035 menu.sh:2038 menu.sh:2049 menu.sh:2054 menu.sh:2068 menu.sh:2071
+#: menu.sh:2081 menu.sh:2086 menu.sh:2101 menu.sh:2104 menu.sh:2119 menu.sh:2123 menu.sh:2129 menu.sh:2135 menu.sh:2141 menu.sh:2223 menu.sh:2226 menu.sh:2229 menu.sh:2300 menu.sh:2312 menu.sh:2323 menu.sh:2400 menu.sh:2427 menu.sh:2445 menu.sh:2466
+#: menu.sh:2478 menu.sh:2498 menu.sh:2535 menu.sh:2606 menu.sh:2610 menu.sh:2620 menu.sh:2626 menu.sh:2640 menu.sh:2647 menu.sh:2652 menu.sh:2655 menu.sh:2670 menu.sh:2673 menu.sh:2703
 msgid "Advanced"
 msgstr "Nâng cao"
 
-#: menu.sh:1554
+#: menu.sh:1531
 msgid "Setting IP ..."
 msgstr "Đang thiết lập IP ..."
 
-#: menu.sh:1593
+#: menu.sh:1570
 msgid "Scanning ..."
 msgstr "Đang quét ..."
 
-#: menu.sh:1596
+#: menu.sh:1573
 msgid "Scanned SSIDs:\\n"
 msgstr "Đã quét SSID:\\n"
 
-#: menu.sh:1614
+#: menu.sh:1591
 msgid "Invalid SSID/PSK, retry?"
 msgstr "SSID/Mật khẩu không hợp lệ, thử lại?"
 
-#: menu.sh:1636
+#: menu.sh:1613
 msgid "Setting ..."
 msgstr "Đang thiết lập ..."
 
-#: menu.sh:1740
+#: menu.sh:1717
 msgid "\\nTotal of ports: %s\\n"
 msgstr "\\nTổng số cổng: %s\\n"
 
-#: menu.sh:1741
+#: menu.sh:1718
 msgid "\\nPorts with color \\Z1red\\Zn as DUMMY, color \\Z2\\Zbgreen\\Zn has drive connected."
 msgstr "\\nCổng có màu \\Z1red\\Zn là DUMMY, màu \\Z2\\Zbgreen\\Zn có ổ đĩa được kết nối."
 
-#: menu.sh:1742 menu.sh:1760 menu.sh:2143
+#: menu.sh:1719 menu.sh:1737 menu.sh:2120
 msgid "No disk found!"
 msgstr "Không tìm thấy ổ đĩa!"
 
-#: menu.sh:1770 menu.sh:1882 menu.sh:2071 menu.sh:2103
+#: menu.sh:1747 menu.sh:1859 menu.sh:2048 menu.sh:2080
 msgid "Warning:\\nThis operation is irreversible. Please backup important data. Do you want to continue?"
 msgstr "Cảnh báo:\\nThao tác này không thể khôi phục. Vui lòng backup dữ liệu quan trọng. Bạn có muốn tiếp tục?"
 
-#: menu.sh:1774
+#: menu.sh:1751
 msgid "Warning:\\nThe current hds is in raid, do you still want to format them?"
 msgstr "Cảnh báo:\\nHDS hiện tại đang ở raid, bạn có muốn format chúng không?"
 
-#: menu.sh:1787
+#: menu.sh:1764
 msgid "Formatting ..."
 msgstr "Đang format ..."
 
-#: menu.sh:1789
+#: menu.sh:1766
 msgid "Formatting is complete."
 msgstr "Format hoàn tất."
 
-#: menu.sh:1796 menu.sh:1819 menu.sh:1842 menu.sh:1850 menu.sh:1856 menu.sh:1871
+#: menu.sh:1773 menu.sh:1796 menu.sh:1819 menu.sh:1827 menu.sh:1833 menu.sh:1848
 msgid "Try recovery DSM"
 msgstr "Thử khôi phục DSM"
 
-#: menu.sh:1797
+#: menu.sh:1774
 msgid "Trying to recovery a installed DSM system ..."
 msgstr "Thử khôi phục hệ thống DSM đã cài đặt ..."
 
-#: menu.sh:1801 menu.sh:1889 menu.sh:1916 menu.sh:1988 menu.sh:2034 menu.sh:2078 menu.sh:2110
+#: menu.sh:1778 menu.sh:1866 menu.sh:1893 menu.sh:1965 menu.sh:2011 menu.sh:2055 menu.sh:2087
 msgid "No DSM system partition(md0) found!\\nPlease insert all disks before continuing."
 msgstr "Không tìm thấy phân vùng DSM (md0)!\\nVui lòng chèn tất cả các ổ đĩa trước khi tiếp tục."
 
-#: menu.sh:1809
+#: menu.sh:1786
 msgid "mount DSM system partition(md0) failed!\\nPlease insert all disks before continuing."
 msgstr "mount phân vùng DSM (md0) thất bại!\\nVui lòng chèn tất cả các ổ đĩa trước khi tiếp tục."
 
-#: menu.sh:1820
+#: menu.sh:1797
 msgid "Checking for backup of user's configuration for bootloader ..."
 msgstr "Kiểm tra bản sao lưu cấu hình người dùng cho bootloader ..."
 
-#: menu.sh:1843
+#: menu.sh:1820
 msgid "Found a backup of the user's configuration, and restored it. Please rebuild and boot."
 msgstr "Tìm thấy bản sao lưu cấu hình người dùng, và đã khôi phục. Vui lòng xây dựng lại và khởi động lại."
 
-#: menu.sh:1851
+#: menu.sh:1828
 msgid "Checking for installed DSM system ..."
 msgstr "Kiểm tra hệ thống DSM đã cài đặt ..."
 
-#: menu.sh:1857
+#: menu.sh:1834
 msgid "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build."
 msgstr "Hệ thống DSM đã cài đặt không tìm thấy, hoặc hệ thống bị hỏng và không thể khôi phục. Vui lòng chọn lại model và xây dựng lại."
 
-#: menu.sh:1872
+#: menu.sh:1849
 msgid "Found a installed DSM system and restored it. Please rebuild and boot."
 msgstr "Tìm thấy hệ thống DSM đã cài đặt và đã khôi phục. Vui lòng xây dựng lại và khởi động lại."
 
-#: menu.sh:1881
+#: menu.sh:1858
 msgid "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\\n"
 msgstr "Tính năng này cho phép bạn quay trở lại phiên bản cũ bằng cách xóa tệp VERSION từ phân vùng đầu tiên của tất cả các đĩa.\\n"
 
-#: menu.sh:1904 menu.sh:2092
+#: menu.sh:1881 menu.sh:2069
 msgid "Removing ..."
 msgstr "Xóa ..."
 
-#: menu.sh:1906
+#: menu.sh:1883
 msgid "Remove VERSION file for DSM system partition(md0) completed."
 msgstr "Xóa tệp VERSION từ phân vùng đầu tiên của DSM đã hoàn tất."
 
-#: menu.sh:1940
+#: menu.sh:1917
 msgid "All existing users have been disabled. Please try adding new user."
 msgstr "Tất cả người dùng hiện có đã bị tắt. Vui lòng thử thêm người dùng mới."
 
-#: menu.sh:1944
+#: menu.sh:1921
 msgid "Choose a user name"
 msgstr "Chọn tên người dùng"
 
-#: menu.sh:1951
+#: menu.sh:1928
 msgid "Type a new password for user '%s'"
 msgstr "Nhập mật khẩu mới cho người dùng '%s'"
 
-#: menu.sh:1957
+#: menu.sh:1934
 msgid "Invalid password"
 msgstr "Sai mật khẩu"
 
-#: menu.sh:1976
+#: menu.sh:1953
 msgid "Resetting ..."
 msgstr "Đang đặt lại ..."
 
-#: menu.sh:1978
+#: menu.sh:1955
 msgid "Password reset completed."
 msgstr "Đã hoàn tất đặt lại mật khẩu."
 
-#: menu.sh:1991
+#: menu.sh:1968
 msgid "Add to administrators group by default"
 msgstr "Thêm vào nhóm quản trị viên mặc định"
 
-#: menu.sh:2021
+#: menu.sh:1998
 msgid "Adding ..."
 msgstr "Đang thêm ..."
 
-#: menu.sh:2022
+#: menu.sh:1999
 msgid "User added successfully."
 msgstr "Đã thêm người dùng thành công."
 
-#: menu.sh:2022
+#: menu.sh:1999
 msgid "User add failed."
 msgstr "Không thể thêm người dùng."
 
-#: menu.sh:2059
+#: menu.sh:2036
 msgid "Enabling ..."
 msgstr "Đang bật ..."
 
-#: menu.sh:2060
+#: menu.sh:2037
 msgid "Enabled Telnet&SSH successfully."
 msgstr "Đã bật Telnet&SSH thành công."
 
-#: menu.sh:2060
+#: menu.sh:2037
 msgid "Enabled Telnet&SSH failed."
 msgstr "Không thể bật Telnet&SSH."
 
-#: menu.sh:2070
+#: menu.sh:2047
 msgid "This feature will removing the blocked ip database from the first partition of all disks.\\n"
 msgstr "Tính năng này sẽ xóa cơ sở dữ liệu chặn IP từ đĩa đầu tiên của tất cả các đĩa.\\n"
 
-#: menu.sh:2093
+#: menu.sh:2070
 msgid "The blocked ip database has been deleted."
 msgstr "Cơ sở dữ liệu chặn IP đã bị xóa."
 
-#: menu.sh:2102
+#: menu.sh:2079
 msgid "This option will clear all customized settings of the network card and restore them to the default state.\\n"
 msgstr "Tùy chọn này sẽ xóa tất cả cài đặt tùy chỉnh của card mạng và khôi phục chúng về trạng thái mặc định.\\n"
 
-#: menu.sh:2125
+#: menu.sh:2102
 msgid "Recovering ..."
 msgstr "Đang phục hồi ..."
 
-#: menu.sh:2126
+#: menu.sh:2103
 msgid "The network settings have been initialized."
 msgstr "Cài đặt mạng đã được khởi tạo."
 
-#: menu.sh:2147
+#: menu.sh:2124
 msgid "Choose a disk to clone to"
 msgstr "Chọn đĩa để sao chép sang"
 
-#: menu.sh:2153
+#: menu.sh:2130
 msgid "No disk selected!"
 msgstr "Không có đĩa nào được chọn!"
 
-#: menu.sh:2159
+#: menu.sh:2136
 msgid "Disk %s size is less than 1GB and cannot be cloned!"
 msgstr "Kích thước đĩa %s nhỏ hơn 1GB và không thể được sao chép!"
 
-#: menu.sh:2163
+#: menu.sh:2140
 msgid "Warning:\\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \\nDo you want to continue?"
 msgstr "Cảnh báo:\\nĐĩa %s sẽ được định dạng và ghi vào bootloader. Vui lòng xác nhận rằng dữ liệu quan trọng đã được sao lưu. \\nBạn có muốn tiếp tục?"
 
-#: menu.sh:2199 menu.sh:2204 menu.sh:2209
+#: menu.sh:2176 menu.sh:2181 menu.sh:2186
 msgid "Can't mount %s."
 msgstr "Không thể gắn kết %s."
 
-#: menu.sh:2222
+#: menu.sh:2199
 msgid "Cloning failed due to insufficient remaining disk space on the selected hard drive."
 msgstr "Sao chép không thành công do không đủ dung lượng đĩa còn lại trên ổ cứng đã chọn."
 
-#: menu.sh:2229 menu.sh:2234 menu.sh:2239
+#: menu.sh:2206 menu.sh:2211 menu.sh:2216
 msgid "Can't copy to %s."
 msgstr "Không thể sao chép vào %s."
 
-#: menu.sh:2247
+#: menu.sh:2224
 msgid "Cloning ..."
 msgstr "Sao chép ..."
 
-#: menu.sh:2253
+#: menu.sh:2230
 msgid "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\\nReboot?"
 msgstr "Bootloader đã được sao chép vào đĩa %s, vui lòng xóa đĩa bootloader hiện tại!\\nKhởi động lại?"
 
-#: menu.sh:2278
+#: menu.sh:2255
 msgid "Find the system logs!\\n"
 msgstr "Tìm thấy nhật ký hệ thống!\\n"
 
-#: menu.sh:2280
+#: menu.sh:2257
 msgid "Not Find system logs!\\n"
 msgstr "Không tìm thấy nhật ký hệ thống!\\n"
 
-#: menu.sh:2291
+#: menu.sh:2268
 msgid "Find the pstore logs!\\n"
 msgstr "Tìm thấy nhật ký pstore!\\n"
 
-#: menu.sh:2293
+#: menu.sh:2270
 msgid "Not Find pstore logs!\\n"
 msgstr "Không tìm thấy nhật ký pstore!\\n"
 
-#: menu.sh:2303
+#: menu.sh:2280
 msgid "Find the addons logs!\\n"
 msgstr "Tìm thấy nhật ký addons!\\n"
 
-#: menu.sh:2305
+#: menu.sh:2282
 msgid "Not Find addons logs!\\n"
 msgstr "Không tìm thấy nhật ký addons!\\n"
 
-#: menu.sh:2306 menu.sh:2639
+#: menu.sh:2283 menu.sh:2616
 msgid "Please do as follows:\\n"
 msgstr "Vui lòng làm theo các bước sau:\\n"
 
-#: menu.sh:2307
+#: menu.sh:2284
 msgid " 1. Add dbgutils in addons and rebuild.\\n"
 msgstr " 1. Thêm dbgutils vào addons và xây dựng lại.\\n"
 
-#: menu.sh:2308
+#: menu.sh:2285
 msgid " 2. Wait 10 minutes after booting.\\n"
 msgstr " 2. Đợi 10 phút sau khi khởi động.\\n"
 
-#: menu.sh:2309 menu.sh:2642
+#: menu.sh:2286 menu.sh:2619
 msgid " 3. Reboot into RR and go to this option.\\n"
 msgstr " 3. Khởi động lại vào RR và quay trở lại tùy chọn này.\\n"
 
-#: menu.sh:2317
+#: menu.sh:2294
 msgid "Please via %s to download the logs,\\nAnd go to github to create an issue and upload the logs."
 msgstr "Vui lòng qua %s để tải xuống nhật ký,\\n và quay lại github để tạo một vấn đề và tải lên nhật ký."
 
-#: menu.sh:2320
+#: menu.sh:2297
 msgid "Please go to github to create an issue and upload the logs."
 msgstr "Vui lòng quay lại github để tạo một vấn đề và tải lên nhật ký."
 
-#: menu.sh:2336
+#: menu.sh:2313
 msgid "Please enter a proxy server url.(e.g., %s)"
 msgstr "Vui lòng nhập proxy server url.(ví dụ, %s)"
 
-#: menu.sh:2347
+#: menu.sh:2324
 msgid "Invalid proxy server url, continue?"
 msgstr "URL proxy server không hợp lệ, tiếp tục?"
 
-#: menu.sh:2376
+#: menu.sh:2353
 msgid "DSM rd compression:"
 msgstr "Dịch thuật DSM rd:"
 
-#: menu.sh:2377
+#: menu.sh:2354
 msgid "Switch LKM version:"
 msgstr "Chuyển đổi phiên bản LKM:"
 
-#: menu.sh:2378
+#: menu.sh:2355
 msgid "HDD sort(hotplug):"
 msgstr "Sắp xếp HDD(hotplug):"
 
-#: menu.sh:2380
+#: menu.sh:2357
 msgid "show/modify the current pat data"
 msgstr "hiển thị/sửa đổi dữ liệu pat hiện tại"
 
-#: menu.sh:2381
+#: menu.sh:2358
 msgid "Switch SATADOM mode:"
 msgstr "Chuyển đổi chế độ SATADOM:"
 
-#: menu.sh:2386
+#: menu.sh:2363
 msgid "Switch direct boot:"
 msgstr "Chuyển đổi khởi động trực tiếp:"
 
-#: menu.sh:2388
+#: menu.sh:2365
 msgid "Timeout of get ip in boot:"
 msgstr "Thời gian chờ lấy địa chỉ IP trong khởi động:"
 
-#: menu.sh:2389
+#: menu.sh:2366
 msgid "Timeout of boot wait:"
 msgstr "Thời gian chờ khởi động:"
 
-#: menu.sh:2390
+#: menu.sh:2367
 msgid "kernel switching method:"
 msgstr "phương pháp chuyển đổi kernel:"
 
-#: menu.sh:2392
+#: menu.sh:2369
 msgid "Reboot on kernel panic:"
 msgstr "Khởi động lại khi kernel panic:"
 
-#: menu.sh:2394
+#: menu.sh:2371
 msgid "Use EMMC as the system disk:"
 msgstr "Sử dụng EMMC làm đĩa hệ thống:"
 
-#: menu.sh:2396
+#: menu.sh:2373
 msgid "Custom patch script # Developer"
 msgstr "Script sửa lỗi tùy chỉnh # Người phát triển"
 
-#: menu.sh:2397
+#: menu.sh:2374
 msgid "Edit user config file manually"
 msgstr "Chỉnh sửa tệp cấu hình người dùng theo cách thủ công"
 
-#: menu.sh:2398
+#: menu.sh:2375
 msgid "Edit grub.cfg file manually"
 msgstr "Chỉnh sửa tệp grub.cfg theo cách thủ công"
 
-#: menu.sh:2400
+#: menu.sh:2377
 msgid "Set static IP"
 msgstr "Đặt IP tĩnh"
 
-#: menu.sh:2401
+#: menu.sh:2378
 msgid "Set wireless account"
 msgstr "Đặt tài khoản không dây"
 
-#: menu.sh:2402
+#: menu.sh:2379
 msgid "Show disks information"
 msgstr "Hiển thị thông tin đĩa"
 
-#: menu.sh:2403
+#: menu.sh:2380
 msgid "Format disk(s) # Without loader disk"
 msgstr "Định dạng đĩa(s) # Không có đĩa loader"
 
-#: menu.sh:2404
+#: menu.sh:2381
 msgid "Try to recovery a installed DSM system"
 msgstr "Thử khôi phục hệ thống DSM đã cài đặt"
 
-#: menu.sh:2405
+#: menu.sh:2382
 msgid "Allow downgrade installation"
 msgstr "Cho phép cài đặt phiên bản cũ hơn"
 
-#: menu.sh:2406
+#: menu.sh:2383
 msgid "Reset DSM system password"
 msgstr "Đặt lại mật khẩu hệ thống DSM"
 
-#: menu.sh:2407
+#: menu.sh:2384
 msgid "Add a new user to DSM system"
 msgstr "Thêm người dùng mới vào hệ thống DSM"
 
-#: menu.sh:2408
+#: menu.sh:2385
 msgid "Force enable Telnet&SSH of DSM system"
 msgstr "Bắt buộc kích hoạt Telnet&SSH của hệ thống DSM"
 
-#: menu.sh:2409
+#: menu.sh:2386
 msgid "Remove the blocked ip database of DSM"
 msgstr "Xóa cơ sở dữ liệu ip bị chặn của DSM"
 
-#: menu.sh:2410
+#: menu.sh:2387
 msgid "Initialize DSM network settings"
 msgstr "Khởi tạo cài đặt mạng DSM"
 
-#: menu.sh:2411
+#: menu.sh:2388
 msgid "Clone bootloader disk to another disk"
 msgstr "Sao chép bootloader đĩa sang đĩa khác"
 
-#: menu.sh:2412
+#: menu.sh:2389
 msgid "Report bugs to the author"
 msgstr "Báo cáo lỗi cho tác giả"
 
-#: menu.sh:2413
+#: menu.sh:2390
 msgid "Download DSM config backup files"
 msgstr "Tải về tệp sao lưu cấu hình DSM"
 
-#: menu.sh:2414
+#: menu.sh:2391
 msgid "Install development tools"
 msgstr "Cài đặt công cụ phát triển"
 
-#: menu.sh:2415
+#: menu.sh:2392
 msgid "Save modifications of '/opt/rr'"
 msgstr "Lưu các thay đổi của '/opt/rr'"
 
-#: menu.sh:2417
+#: menu.sh:2394
 msgid "Show QR logo:"
 msgstr "Hiển thị logo QR:"
 
-#: menu.sh:2418
+#: menu.sh:2395
 msgid "Set global proxy"
 msgstr "Thiết lập proxy chung"
 
-#: menu.sh:2419
+#: menu.sh:2396
 msgid "Set github proxy"
 msgstr "Thiết lập proxy github"
 
-#: menu.sh:2420
+#: menu.sh:2397
 msgid "Vigorously miracle"
 msgstr "Thiết lập proxy"
 
-#: menu.sh:2424
+#: menu.sh:2401
 msgid "Advanced option"
 msgstr "Tùy chọn nâng cao"
 
-#: menu.sh:2449
+#: menu.sh:2426
 msgid "pat: (editable)"
 msgstr "pat: (có thể chỉnh sửa)"
 
-#: menu.sh:2469
+#: menu.sh:2446
 msgid "Choose a mode(Only supported for kernel version 4)"
 msgstr "Chọn một chế độ(Chỉ được hỗ trợ cho kernel phiên bản 4)"
 
-#: menu.sh:2490 menu.sh:2502 menu.sh:2522
+#: menu.sh:2467 menu.sh:2479 menu.sh:2499
 msgid "Choose a time(seconds)"
 msgstr "Chọn một thời gian(giây)"
 
-#: menu.sh:2554
+#: menu.sh:2531
 msgid "This option is only informative.\\n\\n"
 msgstr "Tùy chọn này chỉ thông tin.\\n\\n"
 
-#: menu.sh:2555
+#: menu.sh:2532
 msgid "This program reserves an interface for ramdisk custom patch scripts.\\n"
 msgstr "Chương trình này dành cho ramdisk custom patch scripts.\\n"
 
-#: menu.sh:2556
+#: menu.sh:2533
 msgid "Call timing: called before ramdisk packaging.\\n"
 msgstr "Thời gian gọi: gọi trước khi ramdisk được đóng gói.\\n"
 
-#: menu.sh:2557
+#: menu.sh:2534
 msgid "Location: /mnt/p3/scripts/*.sh\\n"
 msgstr "Địa chỉ: /mnt/p3/scripts/*.sh\\n"
 
-#: menu.sh:2630
+#: menu.sh:2607
 msgid "Please via %s to download the scbk,\\nAnd unzip it and back it up in order by file name."
 msgstr "Vui lòng qua %s để tải về scbk,\\nSau đó giải nén và sao lưu theo thứ tự theo tên tệp."
 
-#: menu.sh:2634
+#: menu.sh:2611
 msgid "Please unzip it and back it up in order by file name."
 msgstr "Giải nén và sao lưu theo thứ tự theo tên tệp."
 
-#: menu.sh:2638
+#: menu.sh:2615
 msgid "\\Z1No scbk found!\\Zn\\n\\n"
 msgstr "\\Z1Không tìm thấy scbk!\\Zn\\n\\n"
 
-#: menu.sh:2640
+#: menu.sh:2617
 msgid " 1. Add synoconfbkp in addons and rebuild.\\n"
 msgstr " 1. Thêm synoconfbkp vào addons và xây dựng lại.\\n"
 
-#: menu.sh:2641
+#: menu.sh:2618
 msgid " 2. Normal use.\\n"
 msgstr " 2. Sử dụng thông thường.\\n"
 
-#: menu.sh:2650
+#: menu.sh:2627
 msgid "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?"
 msgstr "Tùy chọn này chỉ cài đặt quản lý gói opkg, cho phép bạn cài đặt thêm các công cụ để sử dụng và gỡ lỗi. Bạn có muốn tiếp tục?"
 
-#: menu.sh:2664
+#: menu.sh:2641
 msgid "opkg installing ..."
 msgstr "cài đặt opkg ..."
 
-#: menu.sh:2666
+#: menu.sh:2643
 msgid "opkg install failed."
 msgstr "cài đặt opkg thất bại."
 
-#: menu.sh:2668
+#: menu.sh:2645
 msgid "opkg install complete."
 msgstr "cài đặt opkg hoàn tất."
 
-#: menu.sh:2676
+#: menu.sh:2653
 msgid "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?"
 msgstr "Cảnh báo:\\nKhông hủy trong quá trình, nếu hủy sẽ ảnh hưởng đến RR. Bạn có muốn tiếp tục?"
 
-#: menu.sh:2679 menu.sh:2693
+#: menu.sh:2656 menu.sh:2671
 msgid "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
 msgstr "Lưu ...\\n(Thường thường mất 5-10 phút, vui lòng chờ đợi.)"
 
-#: menu.sh:2696
+#: menu.sh:2674
 msgid "Save is complete."
 msgstr "Lưu hoàn tất."
 
-#: menu.sh:2737
+#: menu.sh:2715
 msgid "Alert"
 msgstr "Cảnh báo"
 
-#: menu.sh:2738
+#: menu.sh:2716
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "Cấu hình đã thay đổi, bạn có muốn xây dựng lại loader không?"
 
-#: menu.sh:2755 menu.sh:3524
+#: menu.sh:2733 menu.sh:3502
 msgid "Choose a language"
 msgstr ""
 
-#: menu.sh:2769 menu.sh:3525
+#: menu.sh:2747 menu.sh:3503
 msgid "Choose a timezone"
 msgstr "Chọn múi giờ"
 
-#: menu.sh:2784
+#: menu.sh:2762
 msgid "Choose a layout"
 msgstr "Chọn bố cục"
 
-#: menu.sh:2796
+#: menu.sh:2774
 msgid "Choice a keymap"
 msgstr "Chọn bản đồ phím"
 
-#: menu.sh:2815 menu.sh:2913 menu.sh:3053 menu.sh:3117 menu.sh:3182 menu.sh:3238
+#: menu.sh:2793 menu.sh:2891 menu.sh:3031 menu.sh:3095 menu.sh:3160 menu.sh:3216
 msgid "Update %s"
 msgstr "Cập nhật %s"
 
-#: menu.sh:2816
+#: menu.sh:2794
 msgid "Checking last version ..."
 msgstr "Kiểm tra phiên bản mới ..."
 
-#: menu.sh:2833
+#: menu.sh:2811
 msgid "Error checking new version.\\nError: TAG is %s"
 msgstr "Lỗi kiểm tra phiên bản mới.\\nLỗi: TAG là %s"
 
-#: menu.sh:2846
+#: menu.sh:2824
 msgid "No new version."
 msgstr "Không có phiên bản mới."
 
-#: menu.sh:2850
+#: menu.sh:2828
 msgid "Actual version is %s.\\nForce update?"
 msgstr "Phiên bản hiện tại là %s.\\nCập nhật?"
 
-#: menu.sh:2863
+#: menu.sh:2841
 msgid "Do you want to update?"
 msgstr "Bạn có muốn cập nhật?"
 
-#: menu.sh:2883
+#: menu.sh:2861
 msgid "Error downloading new version.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "Lỗi khi tải phiên bản mới.\\nLỗi: %d:%d\\n(Vui lòng truy cập https://curl.se/libcurl/c/libcurl-errors.html để kiểm tra mô tả lỗi.)"
 
-#: menu.sh:2893
+#: menu.sh:2871
 msgid "Downloading ..."
 msgstr "Đang tải..."
 
-#: menu.sh:2913 menu.sh:3037 menu.sh:3310 menu.sh:3339
+#: menu.sh:2891 menu.sh:3015 menu.sh:3288 menu.sh:3317
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:2914 menu.sh:3054 menu.sh:3118 menu.sh:3183 menu.sh:3239
+#: menu.sh:2892 menu.sh:3032 menu.sh:3096 menu.sh:3161 menu.sh:3217
 msgid "Extracting update file ..."
 msgstr "Đang giải nén tệp cập nhật..."
 
-#: menu.sh:2925 menu.sh:2969 menu.sh:3065 menu.sh:3129 menu.sh:3194 menu.sh:3250
+#: menu.sh:2903 menu.sh:2947 menu.sh:3043 menu.sh:3107 menu.sh:3172 menu.sh:3228
 msgid "Error extracting update file."
 msgstr "Lỗi giải nén tệp cập nhật."
 
-#: menu.sh:2937
+#: menu.sh:2915
 msgid "Checksum do not match!"
 msgstr "Không khớp!"
 
-#: menu.sh:2950
+#: menu.sh:2928
 msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
 msgstr "Phiên bản hiện tại không hỗ trợ cập nhật. Vui lòng tạo lại đĩa bootloader!"
 
-#: menu.sh:2991 menu.sh:3087 menu.sh:3143 menu.sh:3208 menu.sh:3264
+#: menu.sh:2969 menu.sh:3065 menu.sh:3121 menu.sh:3186 menu.sh:3242
 msgid "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM."
 msgstr "Cài đặt thất bại do không đủ không gian trống trên đĩa cứng cục bộ, hãy xem lại disk %s với ít nhất %sM."
 
-#: menu.sh:3001
+#: menu.sh:2979
 msgid "Installing new files ..."
 msgstr "Cài đặt các tập tin mới ..."
 
-#: menu.sh:3037 menu.sh:3102 menu.sh:3167 menu.sh:3223 menu.sh:3288
+#: menu.sh:3015 menu.sh:3080 menu.sh:3145 menu.sh:3201 menu.sh:3266
 msgid "%s updated with success!"
 msgstr "%s cập nhật thành công!"
 
-#: menu.sh:3037
+#: menu.sh:3015
 msgid "Reboot?"
 msgstr "Khởi động lại?"
 
-#: menu.sh:3044 menu.sh:3626 menu.sh:3654
+#: menu.sh:3022 menu.sh:3604 menu.sh:3632
 msgid "Reboot to RR"
 msgstr "Khởi động lại vào RR"
 
-#: menu.sh:3182 menu.sh:3223 menu.sh:3313 menu.sh:3370 menu.sh:3375
+#: menu.sh:3160 menu.sh:3201 menu.sh:3291 menu.sh:3348 menu.sh:3353
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:3238 menu.sh:3288 menu.sh:3314 menu.sh:3382 menu.sh:3387
+#: menu.sh:3216 menu.sh:3266 menu.sh:3292 menu.sh:3360 menu.sh:3365
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:3309 menu.sh:3332
+#: menu.sh:3287 menu.sh:3310
 msgid "All"
 msgstr "Tất cả"
 
-#: menu.sh:3315
+#: menu.sh:3293
 msgid "Local upload"
 msgstr "Tải lên từ máy tính"
 
-#: menu.sh:3316
+#: menu.sh:3294
 msgid "Pre Release:"
 msgstr "Phiên bản trước:"
 
-#: menu.sh:3321 menu.sh:3395
+#: menu.sh:3299 menu.sh:3373
 msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download."
 msgstr "Tải lên tay cầm update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip vào thư mục /tmp/ sẽ bỏ qua việc tải."
 
-#: menu.sh:3346 menu.sh:3358 menu.sh:3370 menu.sh:3382
+#: menu.sh:3324 menu.sh:3336 menu.sh:3348 menu.sh:3360
 msgid "No longer supports update %s separately. Please choose to update All/RR"
 msgstr "Không còn hỗ trợ cập nhật %s riêng lẻ. Vui lòng chọn cập nhật All/RR"
 
-#: menu.sh:3401
+#: menu.sh:3379
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
 msgstr "Vui lòng giữ tên tệp đính kèm trùng khớp với tên tệp đính kèm trên Github.\\n"
 
-#: menu.sh:3402
+#: menu.sh:3380
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "Upload update*.zip sẽ cập nhật RR.\\n"
 
-#: menu.sh:3403
+#: menu.sh:3381
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "Upload addons*.zip sẽ cập nhật Addons.\\n"
 
-#: menu.sh:3404
+#: menu.sh:3382
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "Upload modules*.zip sẽ cập nhật Modules.\\n"
 
-#: menu.sh:3405
+#: menu.sh:3383
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "Upload rp-lkms*.zip sẽ cập nhật LKMs.\\n"
 
-#: menu.sh:3406
+#: menu.sh:3384
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "Upload rr-cks*.zip sẽ cập nhật CKs.\\n"
 
-#: menu.sh:3474
+#: menu.sh:3452
 msgid "This person is very lazy and hasn't written anything."
 msgstr "Người này rất nhàm chán và chưa viết gì cả."
 
-#: menu.sh:3485
+#: menu.sh:3463
 msgid "Another instance of the menu.sh is running."
 msgstr "Một phiên bản menu.sh khác đang chạy."
 
-#: menu.sh:3498
+#: menu.sh:3476
 msgid "Choose a model"
 msgstr "Chọn một model"
 
-#: menu.sh:3500
+#: menu.sh:3478
 msgid "Choose a version"
 msgstr "Chọn một phiên bản"
 
-#: menu.sh:3502
+#: menu.sh:3480
 msgid "Parse pat"
 msgstr "Parse pat"
 
-#: menu.sh:3508
+#: menu.sh:3486
 msgid "Kernel:"
 msgstr "Kernel:"
 
-#: menu.sh:3510
+#: menu.sh:3488
 msgid "Addons menu"
 msgstr "Trình đơn Tiện ích bổ sung"
 
-#: menu.sh:3511
+#: menu.sh:3489
 msgid "Modules menu"
 msgstr "Trình đơn mô-đun"
 
-#: menu.sh:3512
+#: menu.sh:3490
 msgid "Cmdline menu"
 msgstr "Trình đơn Cmdline"
 
-#: menu.sh:3513
+#: menu.sh:3491
 msgid "Synoinfo menu"
 msgstr "Trình đơn synoinfo"
 
-#: menu.sh:3515
+#: menu.sh:3493
 msgid "Advanced menu"
 msgstr "Trình đơn Nâng cao"
 
-#: menu.sh:3518
+#: menu.sh:3496
 msgid "Build the loader"
 msgstr "Tạo trình tải"
 
-#: menu.sh:3522
+#: menu.sh:3500
 msgid "Boot the loader"
 msgstr "Bắt đầu trình tải"
 
-#: menu.sh:3526
+#: menu.sh:3504
 msgid "Choose a keymap"
 msgstr "Chọn bản đồ phím"
 
-#: menu.sh:3528
+#: menu.sh:3506
 msgid "Clean disk cache"
 msgstr "Xóa bộ nhớ đệm đĩa"
 
-#: menu.sh:3530
+#: menu.sh:3508
 msgid "Update menu"
 msgstr "Cập nhật trình đơn"
 
-#: menu.sh:3531
+#: menu.sh:3509
 msgid "Notepad"
 msgstr "Bảng ghi"
 
-#: menu.sh:3553
+#: menu.sh:3531
 msgid "Change ..."
 msgstr "Đổi..."
 
-#: menu.sh:3624 menu.sh:3642
+#: menu.sh:3602 menu.sh:3620
 msgid "Power off"
 msgstr "Tắt nguồn"
 
-#: menu.sh:3625 menu.sh:3648
+#: menu.sh:3603 menu.sh:3626
 msgid "Reboot"
 msgstr "Khởi động lại"
 
-#: menu.sh:3627 menu.sh:3660
+#: menu.sh:3605 menu.sh:3638
 msgid "Reboot to Recovery"
 msgstr "Khởi động lại vào Recovery"
 
-#: menu.sh:3628 menu.sh:3666
+#: menu.sh:3606 menu.sh:3644
 msgid "Reboot to Junior"
 msgstr "Khởi động lại vào Junior"
 
-#: menu.sh:3630 menu.sh:3672
+#: menu.sh:3608 menu.sh:3650
 msgid "Reboot to BIOS"
 msgstr "Khởi động lại vào BIOS"
 
-#: menu.sh:3632
+#: menu.sh:3610
 msgid "Back to shell"
 msgstr "Quay trở lại shell"
 
-#: menu.sh:3636
+#: menu.sh:3614
 msgid "Choose a action"
 msgstr "Chọn một hành động"
 
-#: menu.sh:3690
+#: menu.sh:3668
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "Gọi \\033[1;32mmenu.sh\\033[0m để quay trở lại menu"
-
-#~ msgid "Power off display after boot: "
-#~ msgstr "Tắt màn hình sau khi khởi động: "
-
-#~ msgid "Modifying this item requires a reboot, continue?"
-#~ msgstr "Sửa đổi tùy chọn này yêu cầu khởi động lại, tiếp tục?"
