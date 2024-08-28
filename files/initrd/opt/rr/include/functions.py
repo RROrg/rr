@@ -210,8 +210,7 @@ def getmodelsbykb(platforms=None):
 @click.option("-m", "--model", type=str, required=True, help="The model of Syno.")
 @click.option("-v", "--version", type=str, required=True, help="The version of Syno.")
 def getpats4mv(model, version):
-    import json, requests, urllib3, re
-    from bs4 import BeautifulSoup
+    import json, requests, urllib3
     from requests.adapters import HTTPAdapter
     from requests.packages.urllib3.util.retry import Retry  # type: ignore
 

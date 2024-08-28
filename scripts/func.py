@@ -64,6 +64,117 @@ def getmodels(workpath, jsonpath, xlsxpath):
             ws.append([k, str(v["productvers"]), str(v["models"])])
         wb.save(xlsxpath)
 
+@cli.command()
+@click.option("-w", "--workpath", type=str, required=True, help="The workpath of RR.")
+@click.option("-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile.")
+@click.option("-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile.")
+def getpats(workpath, jsonpath, xlsxpath):
+    def __fullversion(ver):
+        out = ver
+        arr = ver.split('-')
+        if len(arr) > 0:
+            a = arr[0].split('.')[0] if len(arr[0].split('.')) > 0 else '0'
+            b = arr[0].split('.')[1] if len(arr[0].split('.')) > 1 else '0'
+            c = arr[0].split('.')[2] if len(arr[0].split('.')) > 2 else '0'
+            d = arr[1] if len(arr) > 1 else '00000'
+            e = arr[2] if len(arr) > 2 else '0'
+            out = '{}.{}.{}-{}-{}'.format(a,b,c,d,e)
+        return out
+
+    platforms = []
+    models = []
+    with open("{}/opt/rr/platforms.yml".format(workpath), "r") as f:
+        data = yaml.safe_load(f)
+        platforms = data.get("platforms", [])
+
+    req = requests.get("https://autoupdate.synology.com/os/v2")
+    req.encoding = "utf-8"
+    data = json.loads(req.text)
+
+    for I in data["channel"]["item"]:
+        if not I["title"].startswith("DSM"):
+            continue
+        for J in I["model"]:
+            arch = J["mUnique"].split("_")[1].lower()
+            name = J["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
+            if arch not in platforms:
+                continue
+            if name in models:
+                continue
+            models.append(name)
+    
+    pats = {}
+    for M in models:
+        pats[M] = {}
+        version = '7'
+        urlInfo = "https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
+        urlSteps = "https://www.synology.com/api/support/findUpgradeSteps?"
+        #urlInfo = "https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn"
+        #urlSteps = "https://www.synology.cn/api/support/findUpgradeSteps?"
+
+        major = "&major={}".format(version.split('.')[0]) if len(version.split('.')) > 0 else ""
+        minor = "&minor={}".format(version.split('.')[1]) if len(version.split('.')) > 1 else ""
+        req = requests.get("{}&product={}{}{}".format(urlInfo, M.replace("+", "%2B"), major, minor))
+        req.encoding = "utf-8"
+        data = json.loads(req.text)
+
+        build_ver = data['info']['system']['detail'][0]['items'][0]['build_ver']
+        build_num = data['info']['system']['detail'][0]['items'][0]['build_num']
+        buildnano = data['info']['system']['detail'][0]['items'][0]['nano']
+        V=__fullversion("{}-{}-{}".format(build_ver, build_num, buildnano))
+        if not V in pats[M]:
+            pats[M][V]={}
+            pats[M][V]['url'] = data['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0]
+            pats[M][V]['sum'] = data['info']['system']['detail'][0]['items'][0]['files'][0]['checksum']
+
+        from_ver=0
+        for I in data['info']['pubVers']:
+            if from_ver == 0 or I['build'] < from_ver: from_ver = I['build']
+
+        for I in data['info']['productVers']:
+            if not I['version'].startswith(version): continue
+            if major == "" or minor == "":
+                majorTmp = "&major={}".format(I['version'].split('.')[0]) if len(I['version'].split('.')) > 0 else ""
+                minorTmp = "&minor={}".format(I['version'].split('.')[1]) if len(I['version'].split('.')) > 1 else ""
+                reqTmp = requests.get("{}&product={}{}{}".format(urlInfo, M.replace("+", "%2B"), majorTmp, minorTmp))
+                reqTmp.encoding = "utf-8"
+                dataTmp = json.loads(reqTmp.text)
+
+                build_ver = dataTmp['info']['system']['detail'][0]['items'][0]['build_ver']
+                build_num = dataTmp['info']['system']['detail'][0]['items'][0]['build_num']
+                buildnano = dataTmp['info']['system']['detail'][0]['items'][0]['nano']
+                V=__fullversion("{}-{}-{}".format(build_ver, build_num, buildnano))
+                if not V in pats[M]:
+                    pats[M][V]={}
+                    pats[M][V]['url'] = dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0]
+                    pats[M][V]['sum'] = dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['checksum']
+
+            for J in I['versions']:
+                to_ver=J['build']
+                reqSteps = requests.get("{}&product={}&from_ver={}&to_ver={}".format(urlSteps, M.replace("+", "%2B"), from_ver, to_ver))
+                if reqSteps.status_code != 200: continue
+                reqSteps.encoding = "utf-8"
+                dataSteps = json.loads(reqSteps.text)
+                for S in dataSteps['upgrade_steps']:
+                    if not 'full_patch' in S or S['full_patch'] is False: continue
+                    if not 'build_ver' in S or not S['build_ver'].startswith(version): continue
+                    V=__fullversion("{}-{}-{}".format(S['build_ver'], S['build_num'], S['nano']))
+                    if not V in pats[M]:
+                        pats[M][V] = {}
+                        pats[M][V]['url'] = S['files'][0]['url'].split('?')[0]
+                        pats[M][V]['sum'] = S['files'][0]['checksum']
+
+    if jsonpath:
+        with open(jsonpath, "w") as f:
+            json.dump(pats, f, indent=4, ensure_ascii=False)
+    if xlsxpath:
+        wb = Workbook()
+        ws = wb.active
+        ws.append(["Model", "version", "url", "sum"])
+        for k1, v1 in pats.items():
+            for k2, v2 in v1.items():
+                ws.append([k1, k2, v2["url"], v2["sum"]])
+        wb.save(xlsxpath)
 
 @cli.command()
 @click.option("-w", "--workpath", type=str, required=True, help="The workpath of RR.")
