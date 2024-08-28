@@ -38,6 +38,7 @@
         var repo = "RROrg/rr"
 
         var _models = {};
+        var _pats = {};
         var _addons = {};
         var _modules = {};
 
@@ -58,16 +59,19 @@
         function init() {
             httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/models.json", function (result) {
                 _models = JSON.parse(result);
-                httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/addons.json", function (result) {
-                    _addons = JSON.parse(result);
-                    httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/modules.json", function (result) {
-                        _modules = JSON.parse(result);
-                        $("#model").on("change", changeModel);
-                        $("#version").on("change", changeVersion);
-                        $("#language").on("change", changeVersion);
-                        $("#kernel").on("change", chanageKernel);
-                        $('#addons').val("acpid,mountloader,powersched,reboottoloader");
-                        setModels();
+                httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/pats.json", function (result) {
+                    _pats = JSON.parse(result);
+                    httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/addons.json", function (result) {
+                        _addons = JSON.parse(result);
+                        httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/modules.json", function (result) {
+                            _modules = JSON.parse(result);
+                            $("#model").on("change", changeModel);
+                            $("#version").on("change", changeVersion);
+                            $("#language").on("change", changeVersion);
+                            $("#kernel").on("change", chanageKernel);
+                            $('#addons').val("acpid,mountloader,powersched,reboottoloader");
+                            setModels();
+                        });
                     });
                 });
             });
@@ -88,11 +92,9 @@
         function changeModel() {
             model = $("#model").val();
             var versions = [];
-            for (var P in _models) {
-                if (_models[P]["models"].includes(model)) {
-                    versions = Object.keys(_models[P]["productvers"]).reverse();
-                    break;
-                }
+            if (model in _pats) {
+                versions = Object.keys(_pats[model]);
+                versions.sort((a, b) => b.localeCompare(a));
             }
             $("#version")[0].options.length = 0;
             for (var i = 0; i < versions.length; i++) {
@@ -138,7 +140,7 @@
 
         function createModulesBtn() {
             var model = $("#model").val();
-            var version = $("#version").val();
+            var version = $("#version").val().split(".").slice(0, 2).join(".");
             var platform = "";
             for (var P in _models) {
                 if (_models[P]["models"].includes(model)) {
@@ -164,7 +166,7 @@
 
         function chanageKernel() {
             var model = $("#model").val();
-            var version = $("#version").val();
+            var version = $("#version").val().split(".").slice(0, 2).join(".");
             var kernel = $("#kernel").val();
             if (model == "SA6400" && version == "7.2") {
                 $("#kernel_item").show();
