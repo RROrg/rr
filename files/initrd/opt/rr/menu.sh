@@ -946,9 +946,9 @@ function cmdlineMenu() {
         RET=$?
         case ${RET} in
         0) # ok-button
-          sn="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
-          mac1="$(cat "${TMP_PATH}/resp" | sed -n '2p' | sed 's/[:-]//g')"
-          mac2="$(cat "${TMP_PATH}/resp" | sed -n '3p' | sed 's/[:-]//g')"
+          sn="$(cat "${TMP_PATH}/resp" | sed -n '1p' | sed 's/.*/\U&/')"
+          mac1="$(cat "${TMP_PATH}/resp" | sed -n '2p' | sed 's/[:-]//g' | sed 's/.*/\U&/')"
+          mac2="$(cat "${TMP_PATH}/resp" | sed -n '3p' | sed 's/[:-]//g' | sed 's/.*/\U&/')"
           if [ -z "${sn}" -o -z "${mac1}" ]; then
             DIALOG --title "$(TEXT "Cmdline")" \
               --yesno "$(TEXT "Invalid SN/MAC, retry?")" 0 0
