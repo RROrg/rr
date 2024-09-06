@@ -947,8 +947,8 @@ function cmdlineMenu() {
         case ${RET} in
         0) # ok-button
           sn="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
-          mac1="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
-          mac2="$(cat "${TMP_PATH}/resp" | sed -n '3p')"
+          mac1="$(cat "${TMP_PATH}/resp" | sed -n '2p' | sed 's/[:-]//g')"
+          mac2="$(cat "${TMP_PATH}/resp" | sed -n '3p' | sed 's/[:-]//g')"
           if [ -z "${sn}" -o -z "${mac1}" ]; then
             DIALOG --title "$(TEXT "Cmdline")" \
               --yesno "$(TEXT "Invalid SN/MAC, retry?")" 0 0
@@ -2361,7 +2361,6 @@ function advancedMenu() {
     if [ -n "${PLATFORM}" ] && [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
       echo "d \"$(TEXT "Custom DTS")\"" >>"${TMP_PATH}/menu"
     fi
-    echo "q \"$(TEXT "Switch direct boot:") \Z4${DIRECTBOOT}\Zn\"" >>"${TMP_PATH}/menu"
     if [ "${DIRECTBOOT}" = "false" ]; then
       echo "i \"$(TEXT "Timeout of get ip in boot:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
       echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\"" >>"${TMP_PATH}/menu"
@@ -2456,11 +2455,6 @@ function advancedMenu() {
     d)
       customDTS
       NEXT="e"
-      ;;
-    q)
-      [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
-      writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
-      NEXT="q"
       ;;
     i)
       ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
@@ -3498,6 +3492,7 @@ else
       fi
     fi
     if loaderIsConfigured; then
+      echo "q \"$(TEXT "Direct boot:") \Z4${DIRECTBOOT}\Zn\"" >>"${TMP_PATH}/menu"
       echo "b \"$(TEXT "Boot the loader")\"" >>"${TMP_PATH}/menu"
     fi
     echo "l \"$(TEXT "Choose a language")\"" >>"${TMP_PATH}/menu"
@@ -3568,6 +3563,11 @@ else
     d)
       make
       NEXT="b"
+      ;;
+    q)
+      [ "${DIRECTBOOT}" = "false" ] && DIRECTBOOT='true' || DIRECTBOOT='false'
+      writeConfigKey "directboot" "${DIRECTBOOT}" "${USER_CONFIG_FILE}"
+      NEXT="q"
       ;;
     b)
       boot && exit 0 || sleep 5
