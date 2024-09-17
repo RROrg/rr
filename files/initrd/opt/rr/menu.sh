@@ -123,8 +123,8 @@ function modelMenu() {
   fi
   echo -n "" >"${TMP_PATH}/modellist"
   echo "${MJ}" | jq -c '.[]' | while read -r item; do
-    name=$(echo "$item" | jq -r '.name')
-    arch=$(echo "$item" | jq -r '.arch')
+    name=$(echo "${item}" | jq -r '.name')
+    arch=$(echo "${item}" | jq -r '.arch')
     echo "${name} ${arch}" >>"${TMP_PATH}/modellist"
   done
 
@@ -1378,8 +1378,7 @@ function customDTS() {
   while true; do
     [ -f "${USER_UP_PATH}/${MODEL}.dts" ] && CUSTOMDTS="Yes" || CUSTOMDTS="No"
     DIALOG --title "$(TEXT "Custom DTS")" \
-      --default-item ${NEXT} --menu "$(TEXT "Choose a option")" 0 0 0 \
-      % "$(TEXT "Custom dts: ") ${CUSTOMDTS}" \
+      --default-item ${NEXT} --menu "$(TEXT "Custom dts: ") ${CUSTOMDTS}" 0 0 0 \
       u "$(TEXT "Upload dts file")" \
       d "$(TEXT "Delete dts file")" \
       i "$(TEXT "Edit dts file")" \
@@ -1387,7 +1386,6 @@ function customDTS() {
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "$(cat ${TMP_PATH}/resp)" in
-    %) ;;
     u)
       if ! tty 2>/dev/null | grep -q "/dev/pts"; then #if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         MSG=""
@@ -1518,7 +1516,7 @@ function setStaticIP() {
   for ETH in ${ETHX}; do
     MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
     IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
-    IFS='/' read -r -a IPRA <<<"$IPR"
+    IFS='/' read -r -a IPRA <<<"${IPR}"
 
     MSG="$(printf "$(TEXT "Set to %s: (Delete if empty)")" "${ETH}(${MACR})")"
     while true; do
@@ -1537,10 +1535,10 @@ function setStaticIP() {
         if [ -z "${address}" ]; then
           deleteConfigKey "network.${MACR}" "${USER_CONFIG_FILE}"
         else
-          ip addr flush dev $ETH
-          ip addr add ${address}/${netmask:-"255.255.255.0"} dev $ETH
+          ip addr flush dev ${ETH}
+          ip addr add ${address}/${netmask:-"255.255.255.0"} dev ${ETH}
           if [ -n "${gateway}" ]; then
-            ip route add default via ${gateway} dev $ETH
+            ip route add default via ${gateway} dev ${ETH}
           fi
           if [ -n "${dnsname:-${gateway}}" ]; then
             sed -i "/nameserver ${dnsname:-${gateway}}/d" /etc/resolv.conf
