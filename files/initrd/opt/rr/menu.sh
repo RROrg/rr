@@ -2104,7 +2104,31 @@ function initDSMNetwork {
     --msgbox "${MSG}" 0 0
   return
 }
+###############################################################################
+# Mounting DSM storage pool
+function MountDSMVolume {
 
+  vgscan >/dev/null 2>&1
+  vgchange -ay >/dev/null 2>&1
+  VOLS="$(lvdisplay 2>/dev/null | grep 'LV Path' | grep -v 'syno_vg_reserved_area' | awk '{print $3}')"
+  if [ -z "${VOLS}" ]; then
+    DIALOG --title "$(TEXT "Advanced")" \
+      --msgbox "$(TEXT "No storage pool found!")" 0 0
+    return
+  fi
+  for I in ${VOLS}; do
+    NAME="$(echo "${I}" | awk -F'/' '{print $3"_"$4}')"
+    mkdir -p "/mnt/DSM/${NAME}"
+    umount "${I}" 2>/dev/null
+    mount ${I} "/mnt/DSM/${NAME}" -o ro
+  done
+
+  MSG="$(TEXT "All storage pools are mounted under /mnt/DSM. Please check them yourself via shell/DUFS.")"
+  DIALOG --title "$(TEXT "Advanced")" \
+    --msgbox "${MSG}" 0 0
+
+  return
+}
 ###############################################################################
 # Clone bootloader disk
 function cloneBootloaderDisk() {
@@ -2346,7 +2370,7 @@ function setProxy() {
 ###############################################################################
 # Advanced menu
 function advancedMenu() {
-  NEXT="q"
+  NEXT="9"
   while true; do
     rm -f "${TMP_PATH}/menu"
     echo "9 \"$(TEXT "DSM rd compression:") \Z4${RD_COMPRESSED}\Zn\"" >>"${TMP_PATH}/menu"
@@ -2368,6 +2392,7 @@ function advancedMenu() {
     if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ]; then
       echo "b \"$(TEXT "Use EMMC as the system disk:") \Z4${EMMCBOOT}\Zn\"" >>"${TMP_PATH}/menu"
     fi
+    #echo "q" \"$(TEXT "no has")\"">>"${TMP_PATH}/menu"
     echo "0 \"$(TEXT "Custom patch script # Developer")\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
     echo "h \"$(TEXT "Edit grub.cfg file manually")\"" >>"${TMP_PATH}/menu"
@@ -2383,6 +2408,7 @@ function advancedMenu() {
       echo "z \"$(TEXT "Force enable Telnet&SSH of DSM system")\"" >>"${TMP_PATH}/menu"
       echo "4 \"$(TEXT "Remove the blocked ip database of DSM")\"" >>"${TMP_PATH}/menu"
       echo "6 \"$(TEXT "Initialize DSM network settings")\"" >>"${TMP_PATH}/menu"
+      echo "7 \"$(TEXT "Mounting DSM storage pool")\"" >>"${TMP_PATH}/menu"
       echo "r \"$(TEXT "Clone bootloader disk to another disk")\"" >>"${TMP_PATH}/menu"
       echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
       echo "5 \"$(TEXT "Download DSM config backup files")\"" >>"${TMP_PATH}/menu"
@@ -2579,6 +2605,10 @@ function advancedMenu() {
       ;;
     6)
       initDSMNetwork
+      NEXT="e"
+      ;;
+    7)
+      MountDSMVolume
       NEXT="e"
       ;;
     r)
