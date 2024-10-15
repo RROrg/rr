@@ -185,6 +185,7 @@ function modelMenu() {
     NETIF_NUM=2
     MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
     for I in $(seq 1 ${NETIF_NUM}); do
+      eval MAC${I}="${MACS[$((${I} - 1))]}"
       writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
     done
     writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
@@ -374,6 +375,7 @@ function setConfigFromDSM() {
   NETIF_NUM=2
   MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
   for I in $(seq 1 ${NETIF_NUM}); do
+    eval MAC${I}="${MACS[$((${I} - 1))]}"
     writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
   done
 
@@ -1966,7 +1968,7 @@ function addNewDSMUser() {
   fi
   MSG="$(TEXT "Add to administrators group by default")"
   DIALOG --title "$(TEXT "Advanced")" \
-    --form "${MSG}" 8 60 3 "username:" 1 1 "${sn}" 1 10 50 0 "password:" 2 1 "${mac1}" 2 10 50 0 \
+    --form "${MSG}" 8 60 3 "username:" 1 1 "" 1 10 50 0 "password:" 2 1 "" 2 10 50 0 \
     2>"${TMP_PATH}/resp"
   [ $? -ne 0 ] && return
   username="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
