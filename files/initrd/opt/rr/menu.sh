@@ -2123,7 +2123,9 @@ function MountDSMVolume {
     mount ${I} "/mnt/DSM/${NAME}" -o ro
   done
 
-  MSG="$(TEXT "All storage pools are mounted under /mnt/DSM. Please check them yourself via shell/DUFS.")"
+  MSG=""
+  MSG+="$(TEXT "All storage pools are mounted under /mnt/DSM. Please check them yourself via shell/DUFS.")"
+  MSG+="$(TEXT "For encrypted volume / encrypted shared folder, please refer to https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
 
