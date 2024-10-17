@@ -232,6 +232,10 @@
             "description": "DRM KMS helper",
             "depends": "drm,fb,fb_sys_fops,cfbfillrect,syscopyarea,cfbimgblt,sysfillrect,sysimgblt,cfbcopyarea"
         },
+        "drm_panel_orientation_quirks": {
+            "description": "",
+            "depends": ""
+        },
         "dvb-core": {
             "description": "DVB Core Driver",
             "depends": ""
@@ -631,6 +635,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -1222,6 +1230,10 @@
             "description": "DRM KMS helper",
             "depends": "drm,fb,fb_sys_fops,cfbfillrect,syscopyarea,cfbimgblt,sysfillrect,sysimgblt,cfbcopyarea"
         },
+        "drm_panel_orientation_quirks": {
+            "description": "",
+            "depends": ""
+        },
         "dvb-core": {
             "description": "DVB Core Driver",
             "depends": ""
@@ -1677,6 +1689,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -2724,6 +2740,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -3721,6 +3741,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -4748,6 +4772,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -5745,6 +5773,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -6772,6 +6804,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -7769,6 +7805,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -8808,6 +8848,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -9813,6 +9857,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -10832,6 +10880,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -11822,6 +11874,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -12388,6 +12444,10 @@
             "description": "USB CDC NCM host driver",
             "depends": "usbnet,cdc_ether,usbcore"
         },
+        "cdrom": {
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "cfbcopyarea": {
             "description": "Generic software accelerated copyarea",
             "depends": ""
@@ -12571,6 +12631,18 @@
         "ftdi_sio": {
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
+        },
+        "fusb302": {
+            "description": "Fairchild FUSB302 Type-C Chip Driver",
+            "depends": "tcpm,usb-common"
+        },
+        "gpio-charger": {
+            "description": "Driver for chargers only communicating via GPIO(s)",
+            "depends": "power_supply"
+        },
+        "hd3ss3220": {
+            "description": "TI HD3SS3220 DRP Port Controller Driver",
+            "depends": "regmap-i2c,typec"
         },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
@@ -13084,6 +13156,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -13094,6 +13170,10 @@
         },
         "pmbus_core": {
             "description": "PMBus core driver",
+            "depends": ""
+        },
+        "power_supply": {
+            "description": "Universal power supply monitor class",
             "depends": ""
         },
         "prism2_usb": {
@@ -13444,6 +13524,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcpm": {
+            "description": "USB Type-C Port Manager",
+            "depends": "typec,usb-common,power_supply"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -13479,6 +13563,10 @@
         "ttm": {
             "description": "TTM memory manager subsystem (for DRM device)",
             "depends": "dmabuf,drm"
+        },
+        "typec": {
+            "description": "USB Type-C Connector Class",
+            "depends": ""
         },
         "uhci-hcd": {
             "description": "USB Universal Host Controller Interface driver",
@@ -13850,6 +13938,10 @@
             "description": "USB CDC NCM host driver",
             "depends": "usbnet,cdc_ether,usbcore"
         },
+        "cdrom": {
+            "description": "Uniform CD-ROM driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "cfbcopyarea": {
             "description": "Generic software accelerated copyarea",
             "depends": ""
@@ -14034,9 +14126,21 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "fusb302": {
+            "description": "Fairchild FUSB302 Type-C Chip Driver",
+            "depends": "tcpm,usb-common"
+        },
         "gasket": {
             "description": "Google Gasket driver framework",
             "depends": "dmabuf"
+        },
+        "gpio-charger": {
+            "description": "Driver for chargers only communicating via GPIO(s)",
+            "depends": "power_supply"
+        },
+        "hd3ss3220": {
+            "description": "TI HD3SS3220 DRP Port Controller Driver",
+            "depends": "regmap-i2c,typec"
         },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
@@ -14550,6 +14654,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -14560,6 +14668,10 @@
         },
         "pmbus_core": {
             "description": "PMBus core driver",
+            "depends": ""
+        },
+        "power_supply": {
+            "description": "Universal power supply monitor class",
             "depends": ""
         },
         "prism2_usb": {
@@ -14914,6 +15026,10 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcpm": {
+            "description": "USB Type-C Port Manager",
+            "depends": "typec,power_supply,usb-common"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -14949,6 +15065,10 @@
         "ttm": {
             "description": "TTM memory manager subsystem (for DRM device)",
             "depends": "dmabuf,drm"
+        },
+        "typec": {
+            "description": "USB Type-C Connector Class",
+            "depends": ""
         },
         "uhci-hcd": {
             "description": "USB Universal Host Controller Interface driver",
@@ -15397,6 +15517,10 @@
             "description": "DRM KMS helper",
             "depends": "drm,fb,fb_sys_fops,cfbfillrect,syscopyarea,cfbimgblt,sysfillrect,sysimgblt,cfbcopyarea"
         },
+        "drm_panel_orientation_quirks": {
+            "description": "",
+            "depends": ""
+        },
         "dvb-core": {
             "description": "DVB Core Driver",
             "depends": ""
@@ -15784,6 +15908,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -16371,6 +16499,10 @@
             "description": "DRM KMS helper",
             "depends": "drm,fb,fb_sys_fops,cfbfillrect,syscopyarea,cfbimgblt,sysfillrect,sysimgblt,cfbcopyarea"
         },
+        "drm_panel_orientation_quirks": {
+            "description": "",
+            "depends": ""
+        },
         "dvb-core": {
             "description": "DVB Core Driver",
             "depends": ""
@@ -16814,6 +16946,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -17861,6 +17997,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -18854,6 +18994,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -19893,6 +20037,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -20906,6 +21054,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
@@ -21957,6 +22109,10 @@
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
         },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
+        },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
             "depends": "usbserial,usbcore"
@@ -22982,6 +23138,10 @@
         "piix": {
             "description": "PCI driver module for Intel PIIX IDE",
             "depends": "ide-core"
+        },
+        "pktcdvd": {
+            "description": "Packet writing layer for CD/DVD drives",
+            "depends": "cdrom"
         },
         "pl2303": {
             "description": "Prolific PL2303 USB to serial adaptor driver",
