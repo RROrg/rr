@@ -2260,6 +2260,27 @@ function cloneBootloaderDisk() {
   return
 }
 
+function systemReport() {
+  data="$(inxi -FzjJxy)"
+  
+  DIALOG --title "$(TEXT "Advanced")" \
+    --yes-label "$(TEXT "Download")" --no-label "$(TEXT "Cancel")" \
+    --yesno "${data}" 0 0
+  [ $? -ne 0 ] && return
+  
+  inxi -FzjJxy >"${TMP_PATH}/system.txt" 2>/dev/null
+  if [ -z "${SSH_TTY}" ]; then # web
+    mv -f "${TMP_PATH}/system.txt" "/var/www/data/system.txt"
+    URL="http://$(getIP)/system.txt"
+    MSG="$(printf "$(TEXT "Please via %s to download the system.txt.")" "${URL}")"
+    DIALOG --title "$(TEXT "Advanced")" \
+      --msgbox "${MSG}" 0 0
+  else
+    sz -be -B 536870912 "${TMP_PATH}/system.txt"
+  fi
+  return
+}
+
 function reportBugs() {
   rm -rf "${TMP_PATH}/logs" "${TMP_PATH}/logs.tar.gz"
   MSG=""
@@ -2314,6 +2335,7 @@ function reportBugs() {
   fi
 
   if [ -n "$(ls -A ${TMP_PATH}/logs 2>/dev/null)" ]; then
+    inxi -FzjJxy >${TMP_PATH}/logs/system.txt 2>/dev/null
     tar -czf "${TMP_PATH}/logs.tar.gz" -C "${TMP_PATH}" logs
     if [ -z "${SSH_TTY}" ]; then # web
       mv -f "${TMP_PATH}/logs.tar.gz" "/var/www/data/logs.tar.gz"
@@ -2396,7 +2418,6 @@ function advancedMenu() {
     if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ]; then
       echo "b \"$(TEXT "Use EMMC as the system disk:") \Z4${EMMCBOOT}\Zn\"" >>"${TMP_PATH}/menu"
     fi
-    #echo "q" \"$(TEXT "no has")\"">>"${TMP_PATH}/menu"
     echo "0 \"$(TEXT "Custom patch script # Developer")\"" >>"${TMP_PATH}/menu"
     echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
     echo "h \"$(TEXT "Edit grub.cfg file manually")\"" >>"${TMP_PATH}/menu"
@@ -2414,6 +2435,7 @@ function advancedMenu() {
       echo "6 \"$(TEXT "Initialize DSM network settings")\"" >>"${TMP_PATH}/menu"
       echo "7 \"$(TEXT "Mounting DSM storage pool")\"" >>"${TMP_PATH}/menu"
       echo "r \"$(TEXT "Clone bootloader disk to another disk")\"" >>"${TMP_PATH}/menu"
+      echo "q \"$(TEXT "System Environment Report")\"" >>"${TMP_PATH}/menu"
       echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
       echo "5 \"$(TEXT "Download DSM config backup files")\"" >>"${TMP_PATH}/menu"
       echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
@@ -2617,6 +2639,10 @@ function advancedMenu() {
       ;;
     r)
       cloneBootloaderDisk
+      NEXT="e"
+      ;;
+    q)
+      systemReport
       NEXT="e"
       ;;
     v)
