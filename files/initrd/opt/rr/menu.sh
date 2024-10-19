@@ -166,7 +166,7 @@ function modelMenu() {
   fi
   # If user change model, clean build* and pat* and SN
   if [ "${MODEL}" != "${resp}" ]; then
-    PLATFORM="$(grep -w "${resp}" "${TMP_PATH}/modellist" | awk '{print $2}' | head -n 1)"
+    PLATFORM="$(grep -w "${resp}" "${TMP_PATH}/modellist" | awk '{print $2}' | head -1)"
     MODEL="${resp}"
     writeConfigKey "platform" "${PLATFORM}" "${USER_CONFIG_FILE}"
     writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
