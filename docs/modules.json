@@ -48,14 +48,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -324,6 +316,26 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -418,6 +430,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "iosf_mbi": {
@@ -614,14 +630,6 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
-            "depends": ""
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -1030,14 +1038,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -1330,6 +1330,26 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -1424,6 +1444,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "iosf_mbi": {
@@ -1669,14 +1693,6 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
-            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -2184,14 +2200,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -2524,6 +2532,10 @@
             "description": "Auxiliary Bus Standalone",
             "depends": ""
         },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
+            "depends": ""
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -2718,14 +2730,6 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
-            "depends": ""
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -3114,14 +3118,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -3478,6 +3474,10 @@
             "description": "Auxiliary Bus Standalone",
             "depends": ""
         },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
+            "depends": ""
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -3721,14 +3721,6 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
-            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -4216,14 +4208,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -4556,6 +4540,10 @@
             "description": "Auxiliary Bus Standalone",
             "depends": ""
         },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
+            "depends": ""
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -4750,14 +4738,6 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
-            "depends": ""
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -5146,14 +5126,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -5510,6 +5482,10 @@
             "description": "Auxiliary Bus Standalone",
             "depends": ""
         },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
+            "depends": ""
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -5753,14 +5729,6 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
-            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -6248,14 +6216,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -6588,6 +6548,10 @@
             "description": "Auxiliary Bus Standalone",
             "depends": ""
         },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
+            "depends": ""
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -6782,14 +6746,6 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
-            "depends": ""
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -7178,14 +7134,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -7542,6 +7490,10 @@
             "description": "Auxiliary Bus Standalone",
             "depends": ""
         },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
+            "depends": ""
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -7785,14 +7737,6 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
-            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -8280,14 +8224,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -8632,6 +8568,10 @@
             "description": "Auxiliary Bus Standalone",
             "depends": ""
         },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
+            "depends": ""
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -8826,14 +8766,6 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
-            "depends": ""
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -9218,14 +9150,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -9594,6 +9518,10 @@
             "description": "Auxiliary Bus Standalone",
             "depends": ""
         },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
+            "depends": ""
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -9837,14 +9765,6 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
-            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -10328,14 +10248,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -10572,6 +10484,26 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -10662,6 +10594,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "ipv6": {
@@ -10858,14 +10794,6 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
-            "depends": ""
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -11250,14 +11178,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -11518,6 +11438,26 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -11608,6 +11548,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "ipv6": {
@@ -11853,14 +11797,6 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
-            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -12640,6 +12576,26 @@
             "description": "Driver for chargers only communicating via GPIO(s)",
             "depends": "power_supply"
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG, F71889A, F71889F and F81866 (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hd3ss3220": {
             "description": "TI HD3SS3220 DRP Port Controller Driver",
             "depends": "regmap-i2c,typec"
@@ -12742,6 +12698,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.5.1",
             "depends": ""
         },
         "ip6_tables": {
@@ -13504,6 +13464,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "sr_mod": {
+            "description": "SCSI cdrom (sr) driver",
+            "depends": "cdrom"
+        },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
             "depends": ""
@@ -14138,6 +14102,26 @@
             "description": "Driver for chargers only communicating via GPIO(s)",
             "depends": "power_supply"
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG, F71889A, F71889F and F81866 (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hd3ss3220": {
             "description": "TI HD3SS3220 DRP Port Controller Driver",
             "depends": "regmap-i2c,typec"
@@ -14240,6 +14224,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.5.1",
             "depends": ""
         },
         "ip6_tables": {
@@ -15002,6 +14990,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "sr_mod": {
+            "description": "SCSI cdrom (sr) driver",
+            "depends": "cdrom"
+        },
         "ssb": {
             "description": "Sonics Silicon Backplane driver",
             "depends": ""
@@ -15337,14 +15329,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atl1c": {
             "description": "Qualcomm Atheros 100/1000M Ethernet Network Driver",
             "depends": ""
@@ -15601,6 +15585,26 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -15691,6 +15695,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "iosf_mbi": {
@@ -15887,14 +15895,6 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
-            "depends": ""
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -16303,14 +16303,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atl1c": {
             "description": "Qualcomm Atheros 100/1000M Ethernet Network Driver",
             "depends": ""
@@ -16591,6 +16583,26 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -16681,6 +16693,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "iosf_mbi": {
@@ -16926,14 +16942,6 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
-            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -17441,14 +17449,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -17689,6 +17689,26 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -17779,6 +17799,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "ipv6": {
@@ -17975,14 +17999,6 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
-            "depends": ""
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -18367,14 +18383,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -18639,6 +18647,26 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -18729,6 +18757,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "ipv6": {
@@ -18974,14 +19006,6 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
-            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -19461,14 +19485,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -19721,6 +19737,26 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -19819,6 +19855,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "ipv6": {
@@ -20015,14 +20055,6 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
-            "depends": ""
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -20407,14 +20439,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -20691,6 +20715,26 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -20789,6 +20833,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "ipv6": {
@@ -21034,14 +21082,6 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
-            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -21529,14 +21569,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet,usbcore"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -21789,6 +21821,26 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -21887,6 +21939,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "ipv6": {
@@ -22087,14 +22143,6 @@
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
-            "depends": ""
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -22487,14 +22535,6 @@
             "description": "ASIX AX8817X based USB 2.0 Ethernet Devices",
             "depends": "mii,libphy,usbnet"
         },
-        "ata_generic": {
-            "description": "low-level driver for generic ATA",
-            "depends": ""
-        },
-        "ata_piix": {
-            "description": "SCSI low-level driver for Intel PIIX/ICH ATA controllers",
-            "depends": ""
-        },
         "atkbd": {
             "description": "AT and PS/2 keyboard driver",
             "depends": ""
@@ -22771,6 +22811,26 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-f7188x": {
+            "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-it87": {
+            "description": "GPIO interface for IT87xx Super I/O chips (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch": {
+            "description": "GPIO interface for Intel Poulsbo SCH (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-sch311x": {
+            "description": "SMSC SCH311x GPIO Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "gpio-vx855": {
+            "description": "GPIO driver for the VIA VX855 chipset (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -22869,6 +22929,10 @@
         },
         "intel_auxiliary": {
             "description": "Auxiliary Bus Standalone",
+            "depends": ""
+        },
+        "intel_idle": {
+            "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
         "ipv6": {
@@ -23118,14 +23182,6 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
-        },
-        "pata_acpi": {
-            "description": "SCSI low-level driver for ATA in ACPI mode",
-            "depends": ""
-        },
-        "pata_legacy": {
-            "description": "low-level driver for legacy ATA",
-            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
