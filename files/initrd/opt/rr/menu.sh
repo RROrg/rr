@@ -10,6 +10,16 @@
 
 alias DIALOG='dialog --backtitle "$(backtitle)" --colors --aspect 50'
 
+# lock
+exec 304>"${WORK_PATH}/menu.lock"
+flock -n 304 || {
+  DIALOG --title "$(TEXT "Error")" \
+    --msgbox "$(TEXT "The menu.sh instance is already running in another terminal. To avoid conflicts, please operate in one instance only.")" 0 0
+  exit 1
+}
+trap 'rm -f $LOCKFILE' EXIT
+trap 'rm -f $LOCKFILE; exit' INT TERM HUP
+
 # Check partition 3 space, if < 2GiB is necessary clean cache folder
 SPACELEFT=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
 CLEARCACHE=0
@@ -2262,12 +2272,12 @@ function cloneBootloaderDisk() {
 
 function systemReport() {
   data="$(inxi -FzjJxy)"
-  
+
   DIALOG --title "$(TEXT "Advanced")" \
     --yes-label "$(TEXT "Download")" --no-label "$(TEXT "Cancel")" \
     --yesno "${data}" 0 0
   [ $? -ne 0 ] && return
-  
+
   inxi -FzjJxy >"${TMP_PATH}/system.txt" 2>/dev/null
   if [ -z "${SSH_TTY}" ]; then # web
     mv -f "${TMP_PATH}/system.txt" "/var/www/data/system.txt"
