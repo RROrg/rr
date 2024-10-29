@@ -141,6 +141,8 @@ if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 5 ]; then
     CMDLINE['dom_szmax']="${SIZE}"
   fi
   CMDLINE["elevator"]="elevator"
+else
+  CMDLINE["split_lock_detect"]="off"
 fi
 if [ "${DT}" = "true" ]; then
   CMDLINE["syno_ttyS0"]="serial,0x3f8"
