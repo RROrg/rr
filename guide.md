@@ -33,7 +33,7 @@
      * https://dataupdate7.synology.com/toolchain/v1/get_download_list?identify=toolkit&version=7.2&platform=purley
 
 # 安装条件
-  1. 引导盘：当前支持 SATA/SCSI/NVME/MMC/IDE or USB 设备, 且要大于 2GB. (SCSI比较复杂,并不是全部可用)
+  1. 引导盘：当前支持 SATA/SCSI/NVME/MMC/IDE or USB 设备, 且要大于 2GB. (SCSI比较复杂, 并不是全部可用)
   2. 安装盘: 至少需要1个SATA接口硬盘 或者 1个 MMC 作为存储设备. 且要大于 32GB 才可创建存储池.
   3. 内存: 需要大于 4GB.
   4. DT的型号目前不支持HBA扩展卡(较新版本的RR引导 SA6400 支持).
@@ -101,7 +101,7 @@
 * dsm下重启到RR(免键盘) (Any version):
     ```shell
     sudo -i  # 输入密码
-    /usr/bin/rr-reboot.sh "config"
+    /usr/bin/loader-reboot.sh "config"
     ```
 * dsm下修改sn (Any version):
     ```shell
@@ -188,7 +188,7 @@
   ls -l /sys/class/nvme                            # 查看 NVME 硬盘 host 信息
   ls /sys/block/                                   # 查看块设备
   ls /sys/block/sd*                                # 查看识别的 sata 硬盘 (非设备树(dtb)的型号)
-  ls /sys/block/sata*                              # 查看识别的 sata 硬盘  (设备树(dtb)的型号)
+  ls /sys/block/sata*                              # 查看识别的 sata 硬盘 (设备树(dtb)的型号)
   ls /sys/block/nvme*                              # 查看识别的 nvme 硬盘
   ls /sys/block/mmc*                               # 查看识别的 mmc 硬盘
   ls /sys/block/usb*                               # 查看识别的 usb 硬盘
@@ -262,7 +262,7 @@
   # 显卡相关
   lspci -d ::300                                   # 查看 VGA 兼容控制器
   lspci -d ::301                                   # 查看 XGA 控制器
-  lspci -d ::302                                   # 查看 3D 控制器（不是 VGA 兼容）
+  lspci -d ::302                                   # 查看 3D 控制器 (不是 VGA 兼容)
 
   # Intel GPU
   lspci -nd ::300 | cut -d " " -f 3                # PIDVID 
@@ -286,7 +286,7 @@
  
   # 初始化
   synodsdefault --reinstall                        # 重装系统
-  synodsdefault --factory-default                  # 重置系统 （清空全部数据）
+  synodsdefault --factory-default                  # 重置系统 (清空全部数据)
 
   # API
   # 获取系统信息
