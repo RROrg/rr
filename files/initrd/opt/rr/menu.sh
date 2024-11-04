@@ -2345,7 +2345,11 @@ function reportBugs() {
   fi
 
   if [ -n "$(ls -A ${TMP_PATH}/logs 2>/dev/null)" ]; then
-    inxi -c 0 -F >${TMP_PATH}/logs/system.txt 2>/dev/null
+    cp -f "${USER_CONFIG_FILE}" "${TMP_PATH}/logs/user-config.yml"
+    sed -i "s/^sn:.*/sn: \"\*\*\*\*\*\*\*\*\*\*\*\*\*\"/g" "${TMP_PATH}/logs/user-config.yml"
+    sed -i "s/^mac1:.*/mac1: \"\*\*\*\*\*\*\*\*\*\*\*\*\"/g" "${TMP_PATH}/logs/user-config.yml"
+    sed -i "s/^mac2:.*/mac2: \"\*\*\*\*\*\*\*\*\*\*\*\*\"/g" "${TMP_PATH}/logs/user-config.yml"
+    inxi -c 0 -F >"${TMP_PATH}/logs/system.txt" 2>/dev/null
     tar -czf "${TMP_PATH}/logs.tar.gz" -C "${TMP_PATH}" logs
     if [ -z "${SSH_TTY}" ]; then # web
       mv -f "${TMP_PATH}/logs.tar.gz" "/var/www/data/logs.tar.gz"
