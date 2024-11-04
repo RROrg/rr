@@ -2271,14 +2271,14 @@ function cloneBootloaderDisk() {
 }
 
 function systemReport() {
-  data="$(inxi -FzjJxy)"
+  data="$(inxi -c 0 -F 2>/dev/null)"
 
   DIALOG --title "$(TEXT "Advanced")" \
     --yes-label "$(TEXT "Download")" --no-label "$(TEXT "Cancel")" \
     --yesno "${data}" 0 0
   [ $? -ne 0 ] && return
 
-  inxi -FzjJxy >"${TMP_PATH}/system.txt" 2>/dev/null
+  inxi -c 0 -F >"${TMP_PATH}/system.txt" 2>/dev/null
   if [ -z "${SSH_TTY}" ]; then # web
     mv -f "${TMP_PATH}/system.txt" "/var/www/data/system.txt"
     URL="http://$(getIP)/system.txt"
@@ -2345,7 +2345,7 @@ function reportBugs() {
   fi
 
   if [ -n "$(ls -A ${TMP_PATH}/logs 2>/dev/null)" ]; then
-    inxi -FzjJxy >${TMP_PATH}/logs/system.txt 2>/dev/null
+    inxi -c 0 -F >${TMP_PATH}/logs/system.txt 2>/dev/null
     tar -czf "${TMP_PATH}/logs.tar.gz" -C "${TMP_PATH}" logs
     if [ -z "${SSH_TTY}" ]; then # web
       mv -f "${TMP_PATH}/logs.tar.gz" "/var/www/data/logs.tar.gz"
