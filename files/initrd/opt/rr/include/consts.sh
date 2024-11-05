@@ -23,6 +23,7 @@ ORI_RDGZ_FILE="${PART2_PATH}/rd.gz"
 
 RR_BZIMAGE_FILE="${PART3_PATH}/bzImage-rr"
 RR_RAMDISK_FILE="${PART3_PATH}/initrd-rr"
+RR_RAMUSER_FILE="${PART3_PATH}/initrd-rru"
 MOD_ZIMAGE_FILE="${PART3_PATH}/zImage-dsm"
 MOD_RDGZ_FILE="${PART3_PATH}/initrd-dsm"
 

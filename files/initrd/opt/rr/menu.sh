@@ -141,7 +141,7 @@ function modelMenu() {
   if [ -z "${1}" ]; then
     RESTRICT=1
     while true; do
-      echo -n "" >"${TMP_PATH}/menu"
+      rm -f "${TMP_PATH}/menu"
       FLGNEX=0
       while read M A; do
         COMPATIBLE=1
@@ -344,6 +344,7 @@ function productversMenu() {
   return 0
 }
 
+###############################################################################
 function setConfigFromDSM() {
   DSM_ROOT="${1}"
   if [ ! -f "${DSM_ROOT}/GRUB_VER" -o ! -f "${DSM_ROOT}/VERSION" ]; then
@@ -847,7 +848,8 @@ function moduleMenu() {
 function cmdlineMenu() {
   # Loop menu
   while true; do
-    echo "a \"$(TEXT "Add/Edit a cmdline item")\"" >"${TMP_PATH}/menu"
+    rm -f "${TMP_PATH}/menu"
+    echo "a \"$(TEXT "Add/Edit a cmdline item")\"" >>"${TMP_PATH}/menu"
     echo "d \"$(TEXT "Show/Delete cmdline items")\"" >>"${TMP_PATH}/menu"
     if [ -n "${MODEL}" ]; then
       echo "s \"$(TEXT "Define SN/MAC")\"" >>"${TMP_PATH}/menu"
@@ -953,7 +955,7 @@ function cmdlineMenu() {
       while true; do
         DIALOG --title "$(TEXT "Cmdline")" \
           --extra-button --extra-label "$(TEXT "Random")" \
-          --form "${MSG}" 11 70 3 "sn" 1 1 "${sn}" 1 5 50 0 "mac1" 2 1 "${mac1}" 2 5 60 0 "mac2" 3 1 "${mac2}" 3 5 60 0 \
+          --form "${MSG}" 11 70 3 "sn" 1 1 "${sn}" 1 5 60 0 "mac1" 2 1 "${mac1}" 2 5 60 0 "mac2" 3 1 "${mac2}" 3 5 60 0 \
           2>"${TMP_PATH}/resp"
         RET=$?
         case ${RET} in
@@ -1007,7 +1009,8 @@ function cmdlineMenu() {
 function synoinfoMenu() {
   # Loop menu
   while true; do
-    echo "a \"$(TEXT "Add/edit a synoinfo item")\"" >"${TMP_PATH}/menu"
+    rm -f "${TMP_PATH}/menu"
+    echo "a \"$(TEXT "Add/edit a synoinfo item")\"" >>"${TMP_PATH}/menu"
     echo "d \"$(TEXT "Show/Delete synoinfo items")\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
     DIALOG --title "$(TEXT "Synoinfo")" \
@@ -1384,6 +1387,17 @@ function make() {
 }
 
 ###############################################################################
+# Calls boot.sh to boot into DSM kernel/ramdisk
+function boot() {
+  [ -f ${PART1_PATH}/.build ] && DIALOG --title "$(TEXT "Alert")" \
+    --yesno "$(TEXT "Config changed, would you like to rebuild the loader?")" 0 0
+  if [ $? -eq 0 ]; then
+    make || return
+  fi
+  ${WORK_PATH}/boot.sh
+}
+
+###############################################################################
 # Where the magic happens!
 function customDTS() {
   # Loop menu
@@ -1476,163 +1490,6 @@ function customDTS() {
       ;;
     esac
   done
-}
-
-###############################################################################
-# Permits user edit the user config
-function editUserConfig() {
-  while true; do
-    DIALOG --title "$(TEXT "Edit with caution")" \
-      --editbox "${USER_CONFIG_FILE}" 0 0 2>"${TMP_PATH}/userconfig"
-    [ $? -ne 0 ] && return
-    mv -f "${TMP_PATH}/userconfig" "${USER_CONFIG_FILE}"
-    dos2unix "${USER_CONFIG_FILE}"
-    ERRORS=$(checkConfigFile "${USER_CONFIG_FILE}")
-    [ $? -eq 0 ] && break
-    DIALOG --title "$(TEXT "Edit with caution")" \
-      --msgbox "${ERRORS}" 0 0
-  done
-  OLDMODEL=${MODEL}
-  OLDPRODUCTVER=${PRODUCTVER}
-  OLDBUILDNUM=${BUILDNUM}
-  MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
-  PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
-  BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
-  SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
-
-  if [ "${MODEL}" != "${OLDMODEL}" -o "${PRODUCTVER}" != "${OLDPRODUCTVER}" -o "${BUILDNUM}" != "${OLDBUILDNUM}" ]; then
-    # Remove old files
-    rm -f "${MOD_ZIMAGE_FILE}"
-    rm -f "${MOD_RDGZ_FILE}"
-  fi
-  touch ${PART1_PATH}/.build
-}
-
-###############################################################################
-# Permits user edit the grub.cfg
-function editGrubCfg() {
-  while true; do
-    DIALOG --title "$(TEXT "Edit with caution")" \
-      --editbox "${USER_GRUB_CONFIG}" 0 0 2>"${TMP_PATH}/usergrub.cfg"
-    [ $? -ne 0 ] && return
-    mv -f "${TMP_PATH}/usergrub.cfg" "${USER_GRUB_CONFIG}"
-    dos2unix "${USER_GRUB_CONFIG}"
-    break
-  done
-}
-
-###############################################################################
-# Set static IP
-function setStaticIP() {
-  ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo)
-  for ETH in ${ETHX}; do
-    MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
-    IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
-    IFS='/' read -r -a IPRA <<<"${IPR}"
-
-    MSG="$(printf "$(TEXT "Set to %s: (Delete if empty)")" "${ETH}(${MACR})")"
-    while true; do
-      DIALOG --title "$(TEXT "Advanced")" \
-        --form "${MSG}" 10 60 4 "address" 1 1 "${IPRA[0]}" 1 9 36 16 "netmask" 2 1 "${IPRA[1]}" 2 9 36 16 "gateway" 3 1 "${IPRA[2]}" 3 9 36 16 "dns" 4 1 "${IPRA[3]}" 4 9 36 16 \
-        2>"${TMP_PATH}/resp"
-      RET=$?
-      case ${RET} in
-      0) # ok-button
-        DIALOG --title "$(TEXT "Advanced")" \
-          --infobox "$(TEXT "Setting IP ...")" 0 0
-        address="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
-        netmask="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
-        gateway="$(cat "${TMP_PATH}/resp" | sed -n '3p')"
-        dnsname="$(cat "${TMP_PATH}/resp" | sed -n '4p')"
-        if [ -z "${address}" ]; then
-          deleteConfigKey "network.${MACR}" "${USER_CONFIG_FILE}"
-        else
-          ip addr flush dev ${ETH}
-          ip addr add ${address}/${netmask:-"255.255.255.0"} dev ${ETH}
-          if [ -n "${gateway}" ]; then
-            ip route add default via ${gateway} dev ${ETH}
-          fi
-          if [ -n "${dnsname:-${gateway}}" ]; then
-            sed -i "/nameserver ${dnsname:-${gateway}}/d" /etc/resolv.conf
-            echo "nameserver ${dnsname:-${gateway}}" >>/etc/resolv.conf
-          fi
-          writeConfigKey "network.${MACR}" "${address}/${netmask}/${gateway}/${dnsname}" "${USER_CONFIG_FILE}"
-          IP="$(getIP)"
-          sleep 1
-        fi
-        touch ${PART1_PATH}/.build
-        break
-        ;;
-      1) # cancel-button
-        break
-        ;;
-      255) # ESC
-        break 2
-        ;;
-      esac
-    done
-  done
-}
-
-###############################################################################
-# Set wireless account
-function setWirelessAccount() {
-  DIALOG --title "$(TEXT "Advanced")" \
-    --infobox "$(TEXT "Scanning ...")" 0 0
-  ITEM=$(iw wlan0 scan 2>/dev/null | grep SSID: | awk '{print $2}')
-  MSG=""
-  MSG+="$(TEXT "Scanned SSIDs:\n")"
-  for I in $(iw wlan0 scan 2>/dev/null | grep SSID: | awk '{print $2}'); do MSG+="${I}\n"; done
-  LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
-  while true; do
-    SSID=$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep -i SSID | cut -d'=' -f2)
-    PSK=$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep -i PSK | cut -d'=' -f2)
-    SSID="${SSID//\"/}"
-    PSK="${PSK//\"/}"
-    DIALOG --title "$(TEXT "Advanced")" \
-      --form "${MSG}" ${LINENUM:-16} 70 2 "SSID" 1 1 "${SSID}" 1 7 58 0 " PSK" 2 1 "${PSK}" 2 7 58 0 \
-      2>"${TMP_PATH}/resp"
-    RET=$?
-    case ${RET} in
-    0) # ok-button
-      SSID="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
-      PSK="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
-      if [ -z "${SSID}" -o -z "${PSK}" ]; then
-        DIALOG --title "$(TEXT "Advanced")" \
-          --yesno "$(TEXT "Invalid SSID/PSK, retry?")" 0 0
-        [ $? -eq 0 ] && continue || break
-      fi
-      (
-        rm -f ${PART1_PATH}/wpa_supplicant.conf
-        echo "ctrl_interface=/var/run/wpa_supplicant" >>${PART1_PATH}/wpa_supplicant.conf
-        echo "update_config=1" >>${PART1_PATH}/wpa_supplicant.conf
-        echo "network={" >>${PART1_PATH}/wpa_supplicant.conf
-        echo "        ssid=\"${SSID}\"" >>${PART1_PATH}/wpa_supplicant.conf
-        echo "        psk=\"${PSK}\"" >>${PART1_PATH}/wpa_supplicant.conf
-        echo "}" >>${PART1_PATH}/wpa_supplicant.conf
-
-        for ETH in $(ls /sys/class/net/ 2>/dev/null | grep wlan); do
-          connectwlanif "${ETH}" && sleep 1
-          MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
-          IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
-          if [ -n "${IPR}" ]; then
-            ip addr add ${IPC}/24 dev ${ETH}
-            sleep 1
-          fi
-        done
-      ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
-        --progressbox "$(TEXT "Setting ...")" 20 100
-      break
-      ;;
-    1) # cancel-button
-      break
-      ;;
-    255) # ESC
-      break
-      ;;
-    esac
-  done
-  return
 }
 
 ###############################################################################
@@ -1734,6 +1591,32 @@ function showDisksInfo() {
 }
 
 ###############################################################################
+# Mounting DSM storage pool
+function MountDSMVolume {
+  vgscan >/dev/null 2>&1
+  vgchange -ay >/dev/null 2>&1
+  VOLS="$(lvdisplay 2>/dev/null | grep 'LV Path' | grep -v 'syno_vg_reserved_area' | awk '{print $3}')"
+  if [ -z "${VOLS}" ]; then
+    DIALOG --title "$(TEXT "Advanced")" \
+      --msgbox "$(TEXT "No storage pool found!")" 0 0
+    return
+  fi
+  for I in ${VOLS}; do
+    NAME="$(echo "${I}" | awk -F'/' '{print $3"_"$4}')"
+    mkdir -p "/mnt/DSM/${NAME}"
+    umount "${I}" 2>/dev/null
+    mount ${I} "/mnt/DSM/${NAME}" -o ro
+  done
+
+  MSG=""
+  MSG+="$(TEXT "All storage pools are mounted under /mnt/DSM. Please check them yourself via shell/DUFS.")"
+  MSG+="$(TEXT "For encrypted volume / encrypted shared folder, please refer to https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC")"
+  DIALOG --title "$(TEXT "Advanced")" \
+    --msgbox "${MSG}" 0 0
+  return
+}
+
+###############################################################################
 # Format disk
 function formatDisks() {
   rm -f "${TMP_PATH}/opts"
@@ -1779,86 +1662,31 @@ function formatDisks() {
 }
 
 ###############################################################################
-# Try to recovery a DSM already installed
-function tryRecoveryDSM() {
-  DIALOG --title "$(TEXT "Try recovery DSM")" \
-    --infobox "$(TEXT "Trying to recovery a installed DSM system ...")" 0 0
-  DSMROOTS="$(findDSMRoot)"
-  if [ -z "${DSMROOTS}" ]; then
-    DIALOG --title "$(TEXT "Advanced")" \
-      --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
-    return
-  fi
-
-  mkdir -p "${TMP_PATH}/mdX"
-  mount -t ext4 "$(echo "${DSMROOTS}" | head -n 1 | cut -d' ' -f1)" "${TMP_PATH}/mdX"
-  if [ $? -ne 0 ]; then
-    DIALOG --title "$(TEXT "Advanced")" \
-      --msgbox "$(TEXT "mount DSM system partition(md0) failed!\nPlease insert all disks before continuing.")" 0 0
-    rm -rf "${TMP_PATH}/mdX"
-    return
-  fi
-
-  function __umountDSMRootDisk() {
-    umount "${TMP_PATH}/mdX"
-    rm -rf "${TMP_PATH}/mdX"
-  }
-
-  DIALOG --title "$(TEXT "Try recovery DSM")" \
-    --infobox "$(TEXT "Checking for backup of user's configuration for bootloader ...")" 0 0
-  if [ -f "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml" ]; then
-    R_PLATFORM="$(readConfigKey "platform" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
-    R_MODEL="$(readConfigKey "model" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
-    R_MODELID="$(readConfigKey "modelid" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
-    R_PRODUCTVER="$(readConfigKey "productver" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
-    R_BUILDNUM="$(readConfigKey "buildnum" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
-    R_SMALLNUM="$(readConfigKey "smallnum" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
-    R_PATURL="$(readConfigKey "paturl" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
-    R_PATSUM="$(readConfigKey "patsum" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
-
-    PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
-    VS="$(readConfigEntriesArray "platforms.${R_PLATFORM}.productvers" "${WORK_PATH}/platforms.yml" | sort -r)"
-    if [ -n "${R_PLATFORM}" ] && arrayExistItem "${R_PLATFORM}" ${PS} &&
-      [ -n "${R_PRODUCTVER}" ] && arrayExistItem "${R_PRODUCTVER}" ${VS} &&
-      [ -n "${R_BUILDNUM}" ] && [ -n "${R_SMALLNUM}" ]; then
-      cp -Rf "${TMP_PATH}/mdX/usr/rr/backup/p1/"* "${PART1_PATH}"
-      if [ -d "${TMP_PATH}/mdX/usr/rr/backup/p3" ]; then
-        cp -Rf "${TMP_PATH}/mdX/usr/rr/backup/p3/"* "${PART3_PATH}"
-      fi
-      copyDSMFiles "${TMP_PATH}/mdX/.syno/patch"
-      __umountDSMRootDisk
-      DIALOG --title "$(TEXT "Try recovery DSM")" \
-        --msgbox "$(TEXT "Found a backup of the user's configuration, and restored it. Please rebuild and boot.")" 0 0
-      exec "$0"
-      touch ${PART1_PATH}/.build
-      return
+# Download DSM config backup files
+function downloadBackupFiles() {
+  if [ -d "${PART1_PATH}/scbk" ]; then
+    rm -f "${TMP_PATH}/scbk.tar.gz"
+    tar -czf "${TMP_PATH}/scbk.tar.gz" -C "${PART1_PATH}" scbk
+    if [ -z "${SSH_TTY}" ]; then # web
+      mv -f "${TMP_PATH}/scbk.tar.gz" "/var/www/data/scbk.tar.gz"
+      URL="http://$(getIP)/scbk.tar.gz"
+      DIALOG --title "$(TEXT "Advanced")" \
+        --msgbox "$(printf "$(TEXT "Please via %s to download the scbk,\nAnd unzip it and back it up in order by file name.")" "${URL}")" 0 0
+    else
+      sz -be -B 536870912 "${TMP_PATH}/scbk.tar.gz"
+      DIALOG --title "$(TEXT "Advanced")" \
+        --msgbox "$(TEXT "Please unzip it and back it up in order by file name.")" 0 0
     fi
+  else
+    MSG=""
+    MSG+="$(TEXT "\Z1No scbk found!\Zn\n\n")"
+    MSG+="$(TEXT "Please do as follows:\n")"
+    MSG+="$(TEXT " 1. Add synoconfbkp in addons and rebuild.\n")"
+    MSG+="$(TEXT " 2. Normal use.\n")"
+    MSG+="$(TEXT " 3. Reboot into RR and go to this option.\n")"
+    DIALOG --title "$(TEXT "Advanced")" \
+      --msgbox "${MSG}" 0 0
   fi
-
-  DIALOG --title "$(TEXT "Try recovery DSM")" \
-    --infobox "$(TEXT "Checking for installed DSM system ...")" 0 0
-
-  setConfigFromDSM "${TMP_PATH}/mdX/.syno/patch"
-  if [ $? -ne 0 ]; then
-    __umountDSMRootDisk
-    DIALOG --title "$(TEXT "Try recovery DSM")" \
-      --msgbox "$(TEXT "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build.")" 0 0
-    return
-  fi
-
-  if [ -f "${TMP_PATH}/mdX/etc.defaults/synoinfo.conf" ]; then
-    R_SN="$(_get_conf_kv SN "${TMP_PATH}/mdX/etc.defaults/synoinfo.conf")"
-    [ -n "${R_SN}" ] && SN=${R_SN} && writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
-  fi
-
-  writeConfigKey "paturl" "#RECOVERY" "${USER_CONFIG_FILE}"
-  writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
-
-  copyDSMFiles "${TMP_PATH}/mdX/.syno/patch"
-  __umountDSMRootDisk
-  DIALOG --title "$(TEXT "Try recovery DSM")" \
-    --msgbox "$(TEXT "Found a installed DSM system and restored it. Please rebuild and boot.")" 0 0
-
   return
 }
 
@@ -2073,16 +1901,48 @@ function removeBlockIPDB {
       [ $? -ne 0 ] && continue
       [ -f "${TMP_PATH}/mdX/etc/synoautoblock.db" ] && rm -f "${TMP_PATH}/mdX/etc/synoautoblock.db"
       sync
+      echo "true" >${TMP_PATH}/isEnable
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Removing ...")" 20 100
-  MSG="$(TEXT "The blocked ip database has been deleted.")"
+  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "Removing The blocked ip database successfully.")" || MSG="$(TEXT "Removing The blocked ip database failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
   return
 }
+
+###############################################################################
+# Disable all scheduled tasks of DSM
+function disablescheduledTasks {
+  DSMROOTS="$(findDSMRoot)"
+  if [ -z "${DSMROOTS}" ]; then
+    DIALOG --title "$(TEXT "Advanced")" \
+      --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
+    return
+  fi
+  (
+    mkdir -p "${TMP_PATH}/mdX"
+    for I in ${DSMROOTS}; do
+      mount -t ext4 "${I}" "${TMP_PATH}/mdX"
+      [ $? -ne 0 ] && continue
+      if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
+        echo "UPDATE task SET enable = 0;" | sqlite3 ${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db
+        sync
+        echo "true" >${TMP_PATH}/isEnable
+      fi
+      umount "${TMP_PATH}/mdX"
+    done
+    rm -rf "${TMP_PATH}/mdX"
+  ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
+    --progressbox "$(TEXT "Enabling ...")" 20 100
+  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "Disable all scheduled tasks successfully.")" || MSG="$(TEXT "Disable all scheduled tasks failed.")"
+  DIALOG --title "$(TEXT "Advanced")" \
+    --msgbox "${MSG}" 0 0
+  return
+}
+
 ###############################################################################
 # Initialize DSM network settings
 function initDSMNetwork {
@@ -2106,43 +1966,208 @@ function initDSMNetwork {
       rm -f "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-eth"*
       rm -f "${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-eth"*
       sync
+      echo "true" >${TMP_PATH}/isEnable
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Recovering ...")" 20 100
-  MSG="$(TEXT "The network settings have been initialized.")"
+  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "The network settings initialization successfully.")" || MSG="$(TEXT "The network settings initialization failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
   return
 }
-###############################################################################
-# Mounting DSM storage pool
-function MountDSMVolume {
 
-  vgscan >/dev/null 2>&1
-  vgchange -ay >/dev/null 2>&1
-  VOLS="$(lvdisplay 2>/dev/null | grep 'LV Path' | grep -v 'syno_vg_reserved_area' | awk '{print $3}')"
-  if [ -z "${VOLS}" ]; then
-    DIALOG --title "$(TEXT "Advanced")" \
-      --msgbox "$(TEXT "No storage pool found!")" 0 0
+###############################################################################
+# Choose a language
+function languageMenu() {
+  rm -f "${TMP_PATH}/menu"
+  while read L; do
+    A="$(echo "$(strings "${WORK_PATH}/lang/${L}/LC_MESSAGES/rr.mo" 2>/dev/null | grep "Last-Translator" | sed "s/Last-Translator://")")"
+    echo "${L} \"${A:-"anonymous"}\"" >>"${TMP_PATH}/menu"
+  done <<<$(ls ${WORK_PATH}/lang/*/LC_MESSAGES/rr.mo 2>/dev/null | sort | sed -r 's/.*\/lang\/(.*)\/LC_MESSAGES\/rr\.mo$/\1/')
+
+  DIALOG --title "$(TEXT "Settings")" \
+    --default-item "${LAYOUT}" --menu "$(TEXT "Choose a language")" 0 0 0 --file "${TMP_PATH}/menu" \
+    2>${TMP_PATH}/resp
+  [ $? -ne 0 ] && return
+  resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
+  [ -z "${resp}" ] && return
+  LANGUAGE=${resp}
+  echo "${LANGUAGE}.UTF-8" >${PART1_PATH}/.locale
+  export LC_ALL="${LANGUAGE}.UTF-8"
+}
+
+###############################################################################
+# Choose a timezone
+function timezoneMenu() {
+  OPTIONS="$(find /usr/share/zoneinfo/right -type f | cut -d '/' -f 6- | sort | uniq | xargs)"
+  DIALOG --title "$(TEXT "Settings")" \
+    --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a timezone")" 0 0 0 ${OPTIONS} \
+    2>${TMP_PATH}/resp
+  [ $? -ne 0 ] && return
+  resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
+  [ -z "${resp}" ] && return
+  TIMEZONE=${resp}
+  echo "${TIMEZONE}" >${PART1_PATH}/.timezone
+  ln -sf "/usr/share/zoneinfo/right/${TIMEZONE}" /etc/localtime
+}
+
+###############################################################################
+# Choose a keymap
+function keymapMenu() {
+  OPTIONS="$(ls /usr/share/keymaps/i386 2>/dev/null | grep -v include)"
+  DIALOG --title "$(TEXT "Settings")" \
+    --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a layout")" 0 0 0 ${OPTIONS} \
+    2>${TMP_PATH}/resp
+  [ $? -ne 0 ] && return
+  LAYOUT="$(cat ${TMP_PATH}/resp)"
+  OPTIONS=""
+  while read KM; do
+    OPTIONS+="${KM::-7} "
+  done <<<$(
+    cd /usr/share/keymaps/i386/${LAYOUT}
+    ls *.map.gz 2>/dev/null
+  )
+  DIALOG --title "$(TEXT "Settings")" \
+    --default-item "${KEYMAP}" --no-items --menu "$(TEXT "Choice a keymap")" 0 0 0 ${OPTIONS} \
+    2>${TMP_PATH}/resp
+  [ $? -ne 0 ] && return
+  resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
+  [ -z "${resp}" ] && return
+  KEYMAP=${resp}
+  writeConfigKey "layout" "${LAYOUT}" "${USER_CONFIG_FILE}"
+  writeConfigKey "keymap" "${KEYMAP}" "${USER_CONFIG_FILE}"
+  loadkeys /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz
+}
+
+###############################################################################
+# Permits user edit the user config
+function editUserConfig() {
+  while true; do
+    DIALOG --title "$(TEXT "Edit with caution")" \
+      --editbox "${USER_CONFIG_FILE}" 0 0 2>"${TMP_PATH}/userconfig"
+    [ $? -ne 0 ] && return
+    mv -f "${TMP_PATH}/userconfig" "${USER_CONFIG_FILE}"
+    dos2unix "${USER_CONFIG_FILE}"
+    ERRORS=$(checkConfigFile "${USER_CONFIG_FILE}")
+    [ $? -eq 0 ] && break
+    DIALOG --title "$(TEXT "Settings")" \
+      --msgbox "${ERRORS}" 0 0
+  done
+  OLDMODEL=${MODEL}
+  OLDPRODUCTVER=${PRODUCTVER}
+  OLDBUILDNUM=${BUILDNUM}
+  MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
+  PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+  BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
+  SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
+
+  if [ "${MODEL}" != "${OLDMODEL}" -o "${PRODUCTVER}" != "${OLDPRODUCTVER}" -o "${BUILDNUM}" != "${OLDBUILDNUM}" ]; then
+    # Remove old files
+    rm -f "${MOD_ZIMAGE_FILE}"
+    rm -f "${MOD_RDGZ_FILE}"
+  fi
+  touch ${PART1_PATH}/.build
+}
+
+###############################################################################
+# Permits user edit the grub.cfg
+function editGrubCfg() {
+  while true; do
+    DIALOG --title "$(TEXT "Edit with caution")" \
+      --editbox "${USER_GRUB_CONFIG}" 0 0 2>"${TMP_PATH}/usergrub.cfg"
+    [ $? -ne 0 ] && return
+    mv -f "${TMP_PATH}/usergrub.cfg" "${USER_GRUB_CONFIG}"
+    dos2unix "${USER_GRUB_CONFIG}"
+    break
+  done
+}
+
+###############################################################################
+# Try to recovery a DSM already installed
+function tryRecoveryDSM() {
+  DIALOG --title "$(TEXT "Settings")" \
+    --infobox "$(TEXT "Trying to recovery a installed DSM system ...")" 0 0
+  DSMROOTS="$(findDSMRoot)"
+  if [ -z "${DSMROOTS}" ]; then
+    DIALOG --title "$(TEXT "Settings")" \
+      --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
     return
   fi
-  for I in ${VOLS}; do
-    NAME="$(echo "${I}" | awk -F'/' '{print $3"_"$4}')"
-    mkdir -p "/mnt/DSM/${NAME}"
-    umount "${I}" 2>/dev/null
-    mount ${I} "/mnt/DSM/${NAME}" -o ro
-  done
 
-  MSG=""
-  MSG+="$(TEXT "All storage pools are mounted under /mnt/DSM. Please check them yourself via shell/DUFS.")"
-  MSG+="$(TEXT "For encrypted volume / encrypted shared folder, please refer to https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC")"
-  DIALOG --title "$(TEXT "Advanced")" \
-    --msgbox "${MSG}" 0 0
+  mkdir -p "${TMP_PATH}/mdX"
+  mount -t ext4 "$(echo "${DSMROOTS}" | head -n 1 | cut -d' ' -f1)" "${TMP_PATH}/mdX"
+  if [ $? -ne 0 ]; then
+    DIALOG --title "$(TEXT "Settings")" \
+      --msgbox "$(TEXT "mount DSM system partition(md0) failed!\nPlease insert all disks before continuing.")" 0 0
+    rm -rf "${TMP_PATH}/mdX"
+    return
+  fi
+
+  function __umountDSMRootDisk() {
+    umount "${TMP_PATH}/mdX"
+    rm -rf "${TMP_PATH}/mdX"
+  }
+
+  DIALOG --title "$(TEXT "Settings")" \
+    --infobox "$(TEXT "Checking for backup of user's configuration for bootloader ...")" 0 0
+  if [ -f "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml" ]; then
+    R_PLATFORM="$(readConfigKey "platform" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+    R_MODEL="$(readConfigKey "model" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+    R_MODELID="$(readConfigKey "modelid" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+    R_PRODUCTVER="$(readConfigKey "productver" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+    R_BUILDNUM="$(readConfigKey "buildnum" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+    R_SMALLNUM="$(readConfigKey "smallnum" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+    R_PATURL="$(readConfigKey "paturl" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+    R_PATSUM="$(readConfigKey "patsum" "${TMP_PATH}/mdX/usr/rr/backup/p1/user-config.yml")"
+
+    PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
+    VS="$(readConfigEntriesArray "platforms.${R_PLATFORM}.productvers" "${WORK_PATH}/platforms.yml" | sort -r)"
+    if [ -n "${R_PLATFORM}" ] && arrayExistItem "${R_PLATFORM}" ${PS} &&
+      [ -n "${R_PRODUCTVER}" ] && arrayExistItem "${R_PRODUCTVER}" ${VS} &&
+      [ -n "${R_BUILDNUM}" ] && [ -n "${R_SMALLNUM}" ]; then
+      cp -Rf "${TMP_PATH}/mdX/usr/rr/backup/p1/"* "${PART1_PATH}"
+      if [ -d "${TMP_PATH}/mdX/usr/rr/backup/p3" ]; then
+        cp -Rf "${TMP_PATH}/mdX/usr/rr/backup/p3/"* "${PART3_PATH}"
+      fi
+      copyDSMFiles "${TMP_PATH}/mdX/.syno/patch"
+      __umountDSMRootDisk
+      DIALOG --title "$(TEXT "Settings")" \
+        --msgbox "$(TEXT "Found a backup of the user's configuration, and restored it. Please rebuild and boot.")" 0 0
+      exec "$0"
+      touch ${PART1_PATH}/.build
+      return
+    fi
+  fi
+
+  DIALOG --title "$(TEXT "Settings")" \
+    --infobox "$(TEXT "Checking for installed DSM system ...")" 0 0
+
+  setConfigFromDSM "${TMP_PATH}/mdX/.syno/patch"
+  if [ $? -ne 0 ]; then
+    __umountDSMRootDisk
+    DIALOG --title "$(TEXT "Settings")" \
+      --msgbox "$(TEXT "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build.")" 0 0
+    return
+  fi
+
+  if [ -f "${TMP_PATH}/mdX/etc.defaults/synoinfo.conf" ]; then
+    R_SN="$(_get_conf_kv SN "${TMP_PATH}/mdX/etc.defaults/synoinfo.conf")"
+    [ -n "${R_SN}" ] && SN=${R_SN} && writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
+  fi
+
+  writeConfigKey "paturl" "#RECOVERY" "${USER_CONFIG_FILE}"
+  writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
+
+  copyDSMFiles "${TMP_PATH}/mdX/.syno/patch"
+  __umountDSMRootDisk
+  DIALOG --title "$(TEXT "Settings")" \
+    --msgbox "$(TEXT "Found a installed DSM system and restored it. Please rebuild and boot.")" 0 0
 
   return
 }
+
 ###############################################################################
 # Clone bootloader disk
 function cloneBootloaderDisk() {
@@ -2153,29 +2178,29 @@ function cloneBootloaderDisk() {
     printf "\"%s\" \"%-6s %s\" \"off\"\n" "${KNAME}" "${SIZE}" "${ID}" >>"${TMP_PATH}/opts"
   done <<<$(lsblk -Jpno KNAME,ID,SIZE,PKNAME 2>/dev/null | sed 's|null|"N/A"|g' | jq -r '.blockdevices[] | "\(.kname) \(.id) \(.size) \(.pkname)"' 2>/dev/null)
   if [ ! -f "${TMP_PATH}/opts" ]; then
-    DIALOG --title "$(TEXT "Advanced")" \
+    DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
     return
   fi
-  DIALOG --title "$(TEXT "Advanced")" \
+  DIALOG --title "$(TEXT "Settings")" \
     --radiolist "$(TEXT "Choose a disk to clone to")" 0 0 0 --file "${TMP_PATH}/opts" \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
   RESP=$(cat "${TMP_PATH}/resp")
   if [ -z "${RESP}" ]; then
-    DIALOG --title "$(TEXT "Advanced")" \
+    DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "No disk selected!")" 0 0
     return
   else
     SIZE=$(df -m ${RESP} 2>/dev/null | awk 'NR==2 {print $2}')
     if [ ${SIZE:-0} -lt 1024 ]; then
-      DIALOG --title "$(TEXT "Advanced")" \
+      DIALOG --title "$(TEXT "Settings")" \
         --msgbox "$(printf "$(TEXT "Disk %s size is less than 1GB and cannot be cloned!")" "${RESP}")" 0 0
       return
     fi
     MSG=""
     MSG+="$(printf "$(TEXT "Warning:\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \nDo you want to continue?")" "${RESP}")"
-    DIALOG --title "$(TEXT "Advanced")" \
+    DIALOG --title "$(TEXT "Settings")" \
       --yesno "${MSG}" 0 0
     [ $? -ne 0 ] && return
   fi
@@ -2257,23 +2282,25 @@ function cloneBootloaderDisk() {
     sync
     __umountNewBlDisk
     sleep 3
-  ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
+  ) 2>&1 | DIALOG --title "$(TEXT "Settings")" \
     --progressbox "$(TEXT "Cloning ...")" 20 100
   if [ -f "${LOG_FILE}" ]; then
-    DIALOG --title "$(TEXT "Advanced")" \
+    DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(cat ${LOG_FILE})" 0 0
   else
-    DIALOG --title "$(TEXT "Advanced")" \
+    DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(printf "$(TEXT "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\nReboot?")" "${RESP}")" 0 0
     rebootTo config
   fi
   return
 }
 
+###############################################################################
+# System Environment Report
 function systemReport() {
   data="$(inxi -c 0 -F 2>/dev/null)"
 
-  DIALOG --title "$(TEXT "Advanced")" \
+  DIALOG --title "$(TEXT "Settings")" \
     --yes-label "$(TEXT "Download")" --no-label "$(TEXT "Cancel")" \
     --yesno "${data}" 0 0
   [ $? -ne 0 ] && return
@@ -2283,7 +2310,7 @@ function systemReport() {
     mv -f "${TMP_PATH}/system.txt" "/var/www/data/system.txt"
     URL="http://$(getIP)/system.txt"
     MSG="$(printf "$(TEXT "Please via %s to download the system.txt.")" "${URL}")"
-    DIALOG --title "$(TEXT "Advanced")" \
+    DIALOG --title "$(TEXT "Settings")" \
       --msgbox "${MSG}" 0 0
   else
     sz -be -B 536870912 "${TMP_PATH}/system.txt"
@@ -2291,6 +2318,8 @@ function systemReport() {
   return
 }
 
+###############################################################################
+# Report bugs to the author
 function reportBugs() {
   rm -rf "${TMP_PATH}/logs" "${TMP_PATH}/logs.tar.gz"
   MSG=""
@@ -2302,8 +2331,8 @@ function reportBugs() {
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       mkdir -p "${TMP_PATH}/logs/md0/log"
-      cp -rf ${TMP_PATH}/mdX/.log.junior "${TMP_PATH}/logs/md0"
-      cp -rf ${TMP_PATH}/mdX/var/log/messages ${TMP_PATH}/mdX/var/log/*.log "${TMP_PATH}/logs/md0/log"
+      cp -rf ${TMP_PATH}/mdX/.log.junior "${TMP_PATH}/logs/md0" 2>/dev/null
+      cp -rf ${TMP_PATH}/mdX/var/log/messages ${TMP_PATH}/mdX/var/log/*.log "${TMP_PATH}/logs/md0/log" 2>/dev/null
       SYSLOG=1
       umount "${TMP_PATH}/mdX"
     done
@@ -2318,7 +2347,7 @@ function reportBugs() {
   PSTORE=0
   if [ -n "$(ls /sys/fs/pstore 2>/dev/null)" ]; then
     mkdir -p "${TMP_PATH}/logs/pstore"
-    cp -rf /sys/fs/pstore/* "${TMP_PATH}/logs/pstore"
+    cp -rf /sys/fs/pstore/* "${TMP_PATH}/logs/pstore" 2>/dev/null
     [ -n "$(ls /sys/fs/pstore/*.z 2>/dev/null)" ] && zlib-flate -uncompress </sys/fs/pstore/*.z >"${TMP_PATH}/logs/pstore/ps.log" 2>/dev/null
     PSTORE=1
   fi
@@ -2331,7 +2360,7 @@ function reportBugs() {
   ADDONS=0
   if [ -d "${PART1_PATH}/logs" ]; then
     mkdir -p "${TMP_PATH}/logs/addons"
-    cp -rf "${PART1_PATH}/logs"/* "${TMP_PATH}/logs/addons"
+    cp -rf "${PART1_PATH}/logs"/* "${TMP_PATH}/logs/addons" 2>/dev/null
     ADDONS=1
   fi
   if [ ${ADDONS} -eq 1 ]; then
@@ -2345,7 +2374,7 @@ function reportBugs() {
   fi
 
   if [ -n "$(ls -A ${TMP_PATH}/logs 2>/dev/null)" ]; then
-    cp -f "${USER_CONFIG_FILE}" "${TMP_PATH}/logs/user-config.yml"
+    cp -f "${USER_CONFIG_FILE}" "${TMP_PATH}/logs/user-config.yml" 2>/dev/null
     sed -i "s/^sn:.*/sn: \"\*\*\*\*\*\*\*\*\*\*\*\*\*\"/g" "${TMP_PATH}/logs/user-config.yml"
     sed -i "s/^mac1:.*/mac1: \"\*\*\*\*\*\*\*\*\*\*\*\*\"/g" "${TMP_PATH}/logs/user-config.yml"
     sed -i "s/^mac2:.*/mac2: \"\*\*\*\*\*\*\*\*\*\*\*\*\"/g" "${TMP_PATH}/logs/user-config.yml"
@@ -2360,8 +2389,180 @@ function reportBugs() {
       MSG+="$(TEXT "Please go to github to create an issue and upload the logs.")"
     fi
   fi
-  DIALOG --title "$(TEXT "Advanced")" \
+  DIALOG --title "$(TEXT "Settings")" \
     --msgbox "${MSG}" 0 0
+}
+
+###############################################################################
+# Install development tools
+function InstallDevTools() {
+  DIALOG --title "$(TEXT "Settings")" \
+    --yesno "$(TEXT "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?")" 0 0
+  [ $? -ne 0 ] && return
+  rm -f "${LOG_FILE}"
+  while true; do
+    wget http://bin.entware.net/x64-k3.2/installer/generic.sh -O "generic.sh" >"${LOG_FILE}"
+    [ $? -ne 0 -o ! -f "generic.sh" ] && break
+    chmod +x "generic.sh"
+    ./generic.sh 2>"${LOG_FILE}"
+    [ $? -ne 0 ] && break
+    opkg update 2>"${LOG_FILE}"
+    [ $? -ne 0 ] && break
+    rm -f "generic.sh" "${LOG_FILE}"
+    break
+  done 2>&1 | DIALOG --title "$(TEXT "Settings")" \
+    --progressbox "$(TEXT "opkg installing ...")" 20 100
+  if [ -f "${LOG_FILE}" ]; then
+    MSG="$(TEXT "opkg install failed.")\n$(cat "${LOG_FILE}"))"
+  else
+    MSG="$(TEXT "opkg install complete.")"
+  fi
+  DIALOG --title "$(TEXT "Settings")" \
+    --msgbox "${MSG}" 0 0
+  return
+}
+
+###############################################################################
+# Save modifications of '/opt/rr'
+function savemodrr() {
+  DIALOG --title "$(TEXT "Settings")" \
+    --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?")" 0 0
+  [ $? -ne 0 ] && return
+  DIALOG --title "$(TEXT "Settings")" \
+    --infobox "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 0 0
+  RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
+  rm -rf "${RDXZ_PATH}"
+  mkdir -p "${RDXZ_PATH}"
+  (
+    cd "${RDXZ_PATH}"
+    xz -dc <"${RR_RAMDISK_FILE}" | cpio -idm
+  ) >/dev/null 2>&1 || true
+  rm -rf "${RDXZ_PATH}/opt/rr"
+  cp -Rf "$(dirname ${WORK_PATH})" "${RDXZ_PATH}/"
+  (
+    cd "${RDXZ_PATH}"
+    RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
+    find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 --check=crc32 >"${RR_RAMDISK_FILE}"
+  ) 2>&1 | DIALOG --title "$(TEXT "Settings")" \
+    --gauge "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 8 100
+  rm -rf "${RDXZ_PATH}"
+  DIALOG --title "$(TEXT "Settings")" \
+    --msgbox ""$(TEXT "Save is complete.")"" 0 0
+  return
+}
+
+###############################################################################
+# Set static IP
+function setStaticIP() {
+  ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo)
+  for ETH in ${ETHX}; do
+    MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
+    IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
+    IFS='/' read -r -a IPRA <<<"${IPR}"
+
+    MSG="$(printf "$(TEXT "Set to %s: (Delete if empty)")" "${ETH}(${MACR})")"
+    while true; do
+      DIALOG --title "$(TEXT "Settings")" \
+        --form "${MSG}" 10 60 4 "address" 1 1 "${IPRA[0]}" 1 9 36 16 "netmask" 2 1 "${IPRA[1]}" 2 9 36 16 "gateway" 3 1 "${IPRA[2]}" 3 9 36 16 "dns" 4 1 "${IPRA[3]}" 4 9 36 16 \
+        2>"${TMP_PATH}/resp"
+      RET=$?
+      case ${RET} in
+      0) # ok-button
+        DIALOG --title "$(TEXT "Settings")" \
+          --infobox "$(TEXT "Setting IP ...")" 0 0
+        address="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
+        netmask="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
+        gateway="$(cat "${TMP_PATH}/resp" | sed -n '3p')"
+        dnsname="$(cat "${TMP_PATH}/resp" | sed -n '4p')"
+        if [ -z "${address}" ]; then
+          deleteConfigKey "network.${MACR}" "${USER_CONFIG_FILE}"
+        else
+          ip addr flush dev ${ETH}
+          ip addr add ${address}/${netmask:-"255.255.255.0"} dev ${ETH}
+          if [ -n "${gateway}" ]; then
+            ip route add default via ${gateway} dev ${ETH}
+          fi
+          if [ -n "${dnsname:-${gateway}}" ]; then
+            sed -i "/nameserver ${dnsname:-${gateway}}/d" /etc/resolv.conf
+            echo "nameserver ${dnsname:-${gateway}}" >>/etc/resolv.conf
+          fi
+          writeConfigKey "network.${MACR}" "${address}/${netmask}/${gateway}/${dnsname}" "${USER_CONFIG_FILE}"
+          IP="$(getIP)"
+          sleep 1
+        fi
+        touch ${PART1_PATH}/.build
+        break
+        ;;
+      1) # cancel-button
+        break
+        ;;
+      255) # ESC
+        break 2
+        ;;
+      esac
+    done
+  done
+}
+
+###############################################################################
+# Set wireless account
+function setWirelessAccount() {
+  DIALOG --title "$(TEXT "Settings")" \
+    --infobox "$(TEXT "Scanning ...")" 0 0
+  ITEM=$(iw wlan0 scan 2>/dev/null | grep SSID: | awk '{print $2}')
+  MSG=""
+  MSG+="$(TEXT "Scanned SSIDs:\n")"
+  for I in $(iw wlan0 scan 2>/dev/null | grep SSID: | awk '{print $2}'); do MSG+="${I}\n"; done
+  LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
+  while true; do
+    SSID=$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep -i SSID | cut -d'=' -f2)
+    PSK=$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep -i PSK | cut -d'=' -f2)
+    SSID="${SSID//\"/}"
+    PSK="${PSK//\"/}"
+    DIALOG --title "$(TEXT "Settings")" \
+      --form "${MSG}" ${LINENUM:-16} 70 2 "SSID" 1 1 "${SSID}" 1 7 58 0 " PSK" 2 1 "${PSK}" 2 7 58 0 \
+      2>"${TMP_PATH}/resp"
+    RET=$?
+    case ${RET} in
+    0) # ok-button
+      SSID="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
+      PSK="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
+      if [ -z "${SSID}" -o -z "${PSK}" ]; then
+        DIALOG --title "$(TEXT "Settings")" \
+          --yesno "$(TEXT "Invalid SSID/PSK, retry?")" 0 0
+        [ $? -eq 0 ] && continue || break
+      fi
+      (
+        rm -f ${PART1_PATH}/wpa_supplicant.conf
+        echo "ctrl_interface=/var/run/wpa_supplicant" >>${PART1_PATH}/wpa_supplicant.conf
+        echo "update_config=1" >>${PART1_PATH}/wpa_supplicant.conf
+        echo "network={" >>${PART1_PATH}/wpa_supplicant.conf
+        echo "        ssid=\"${SSID}\"" >>${PART1_PATH}/wpa_supplicant.conf
+        echo "        psk=\"${PSK}\"" >>${PART1_PATH}/wpa_supplicant.conf
+        echo "}" >>${PART1_PATH}/wpa_supplicant.conf
+
+        for ETH in $(ls /sys/class/net/ 2>/dev/null | grep wlan); do
+          connectwlanif "${ETH}" && sleep 1
+          MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
+          IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
+          if [ -n "${IPR}" ]; then
+            ip addr add ${IPC}/24 dev ${ETH}
+            sleep 1
+          fi
+        done
+      ) 2>&1 | DIALOG --title "$(TEXT "Settings")" \
+        --progressbox "$(TEXT "Setting ...")" 20 100
+      break
+      ;;
+    1) # cancel-button
+      break
+      ;;
+    255) # ESC
+      break
+      ;;
+    esac
+  done
+  return
 }
 
 ###############################################################################
@@ -2372,7 +2573,7 @@ function setProxy() {
   PROXY=$(readConfigKey "${1}" "${USER_CONFIG_FILE}")
   while true; do
     [ "${1}" = "global_proxy" ] && EG="http://192.168.1.1:7981/" || EG="https://mirror.ghproxy.com/"
-    DIALOG --title "$(TEXT "Advanced")" \
+    DIALOG --title "$(TEXT "Settings")" \
       --inputbox "$(printf "$(TEXT "Please enter a proxy server url.(e.g., %s)")" "${EG}")" 0 70 "${PROXY}" \
       2>${TMP_PATH}/resp
     RET=$?
@@ -2383,7 +2584,7 @@ function setProxy() {
     elif echo "${PROXY}" | grep -Eq "^(https?|socks5)://[^\s/$.?#].[^\s]*$"; then
       break
     else
-      DIALOG --title "$(TEXT "Advanced")" \
+      DIALOG --title "$(TEXT "Settings")" \
         --yesno "$(TEXT "Invalid proxy server url, continue?")" 0 0
       RET=$?
       [ ${RET} -eq 0 ] && break
@@ -2408,17 +2609,139 @@ function setProxy() {
 }
 
 ###############################################################################
+# Change root password
+# $1 - KEY
+function changePassword() {
+  DIALOG --title "$(TEXT "Settings")" \
+    --inputbox "$(TEXT "New password: (Empty for default value 'rr')")" 0 70 \
+    2>${TMP_PATH}/resp
+  [ $? -ne 0 ] && continue
+  STRPASSWD="$(cat "${TMP_PATH}/resp")"
+  # set password
+  NEWPASSWD="$(python -c "from passlib.hash import sha512_crypt;pw=\"${STRPASSWD:-rr}\";print(sha512_crypt.using(rounds=5000).hash(pw))")"
+  cp -p /etc/shadow /etc/shadow-
+  sed -i "s|^root:[^:]*|root:${NEWPASSWD}|" /etc/shadow
+  # save to rru
+  RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
+  rm -rf "${RDXZ_PATH}"
+  mkdir -p "${RDXZ_PATH}"
+  [ -f "${RR_RAMUSER_FILE}" ] && (
+    cd "${RDXZ_PATH}"
+    xz -dc <"${RR_RAMUSER_FILE}" | cpio -idm
+  ) >/dev/null 2>&1 || true
+  if [ "${STRPASSWD:-rr}" = "rr" ]; then
+    rm -f ${RDXZ_PATH}/etc/shadow* 2>/dev/null
+  else
+    mkdir -p "${RDXZ_PATH}/etc"
+    cp -p /etc/shadow* ${RDXZ_PATH}/etc && chown root:root ${RDXZ_PATH}/etc/shadow* && chmod 600 ${RDXZ_PATH}/etc/shadow*
+  fi
+  if [ -n "$(ls -A "${RDXZ_PATH}" 2>/dev/null)" ] && [ -n "$(ls -A "${RDXZ_PATH}/etc" 2>/dev/null)" ]; then
+    (
+      cd "${RDXZ_PATH}"
+      RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
+      find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 --check=crc32 >"${RR_RAMUSER_FILE}"
+    ) 2>&1 | DIALOG --title "$(TEXT "Settings")"
+  else
+    rm -f "${RR_RAMUSER_FILE}"
+  fi
+  rm -rf "${RDXZ_PATH}"
+  [ "${STRPASSWD:-rr}" = "rr" ] && MSG="$(TEXT "password for root restored.")" || MSG="$(TEXT "password for root changed.")"
+  DIALOG --title "$(TEXT "Settings")" \
+    --msgbox "${MSG}" 0 0
+  return
+}
+
+###############################################################################
+# Change ports of TTYD/DUFS/HTTP
+# $1 - KEY
+function changePorts() {
+  MSG="$(TEXT "Please fill in a number between 0-65535: (Empty for default value.)")"
+  HTTP=$(grep -i '^HTTP_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
+  DUFS=$(grep -i '^DUFS_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
+  TTYD=$(grep -i '^TTYD_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
+  DIALOG --title "$(TEXT "Settings")" \
+    --form "${MSG}" 11 70 3 "HTTP" 1 1 "${HTTP:-7080}" 1 10 55 0 "DUFS" 2 1 "${DUFS:-7304}" 2 10 55 0 "TTYD" 3 1 "${TTYD:-7681}" 3 10 55 0 \
+    2>"${TMP_PATH}/resp"
+  RET=$?
+  case ${RET} in
+  0) # ok-button
+    function check_port() {
+      if [ -z "${1}" ]; then
+        return 0
+      else
+        if [[ "${1}" =~ ^[0-9]+$ ]] && [ "${1}" -ge 0 ] && [ "${1}" -le 65535 ]; then
+          return 0
+        else
+          return 1
+        fi
+      fi
+    }
+    HTTP=$(sed -n '1p' "${TMP_PATH}/resp")
+    DUFS=$(sed -n '2p' "${TMP_PATH}/resp")
+    TTYD=$(sed -n '3p' "${TMP_PATH}/resp")
+    EP=""
+    for P in "${HTTP}" "${DUFS}" "${TTYD}"; do check_port "${P}" || EP="${EP} ${P}"; done
+    if [ -n "${EP}" ]; then
+      DIALOG --title "$(TEXT "Settings")" \
+        --yesno "$(printf "$(TEXT "Invalid %s port number, retry?")" "${EP}")" 0 0
+      [ $? -eq 0 ] && continue || break
+    fi
+    # save to rrorg.conf
+    rm -f "/etc/rrorg.conf"
+    [ ! "${HTTP:-7080}" = "7080" ] && echo "HTTP_PORT=${HTTP}" >>"/etc/rrorg.conf" && /etc/init.d/S90thttpd restart >/dev/null 2>&1
+    [ ! "${DUFS:-7304}" = "7304" ] && echo "DUFS_PORT=${DUFS}" >>"/etc/rrorg.conf" && /etc/init.d/S99dufs restart >/dev/null 2>&1
+    [ ! "${TTYD:-7681}" = "7681" ] && echo "TTYD_PORT=${TTYD}" >>"/etc/rrorg.conf" && /etc/init.d/S99ttyd restart >/dev/null 2>&1
+    # save to rru
+    RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
+    rm -rf "${RDXZ_PATH}"
+    mkdir -p "${RDXZ_PATH}"
+    [ -f "${RR_RAMUSER_FILE}" ] && (
+      cd "${RDXZ_PATH}"
+      xz -dc <"${RR_RAMUSER_FILE}" | cpio -idm
+    ) >/dev/null 2>&1 || true
+    if [ ! -f "/etc/rrorg.conf" ]; then
+      rm -f "${RDXZ_PATH}/etc/rrorg.conf" 2>/dev/null
+    else
+      mkdir -p "${RDXZ_PATH}/etc"
+      cp -p /etc/rrorg.conf ${RDXZ_PATH}/etc
+    fi
+    if [ -n "$(ls -A "${RDXZ_PATH}" 2>/dev/null)" ] && [ -n "$(ls -A "${RDXZ_PATH}/etc" 2>/dev/null)" ]; then
+      (
+        cd "${RDXZ_PATH}"
+        RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
+        find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 --check=crc32 >"${RR_RAMUSER_FILE}"
+      ) 2>&1 | DIALOG --title "$(TEXT "Settings")"
+    else
+      rm -f "${RR_RAMUSER_FILE}"
+    fi
+    rm -rf "${RDXZ_PATH}"
+    [ ! -f "/etc/rrorg.conf" ] && MSG="$(TEXT "Ports for TTYD/DUFS/HTTP restored.")" || MSG="$(TEXT "Ports for TTYD/DUFS/HTTP changed.")"
+    DIALOG --title "$(TEXT "Settings")" \
+      --msgbox "${MSG}" 0 0
+    break
+    ;;
+  1) # cancel-button
+    break
+    ;;
+  255) # ESC
+    break
+    ;;
+  esac
+  return
+}
+
+###############################################################################
 # Advanced menu
 function advancedMenu() {
-  NEXT="9"
+  NEXT="l"
   while true; do
     rm -f "${TMP_PATH}/menu"
-    echo "9 \"$(TEXT "DSM rd compression:") \Z4${RD_COMPRESSED}\Zn\"" >>"${TMP_PATH}/menu"
+    echo "c \"$(TEXT "DSM rd compression:") \Z4${RD_COMPRESSED}\Zn\"" >>"${TMP_PATH}/menu"
     echo "l \"$(TEXT "Switch LKM version:") \Z4${LKM}\Zn\"" >>"${TMP_PATH}/menu"
-    echo "j \"$(TEXT "HDD sort(hotplug):") \Z4${HDDSORT}\Zn\"" >>"${TMP_PATH}/menu"
+    echo "h \"$(TEXT "HDD sort(hotplug):") \Z4${HDDSORT}\Zn\"" >>"${TMP_PATH}/menu"
     if [ -n "${PRODUCTVER}" ]; then
-      echo "c \"$(TEXT "show/modify the current pat data")\"" >>"${TMP_PATH}/menu"
-      echo "8 \"$(TEXT "Switch SATADOM mode:") \Z4${SATADOM}\Zn\"" >>"${TMP_PATH}/menu"
+      echo "p \"$(TEXT "show/modify the current pat data")\"" >>"${TMP_PATH}/menu"
+      echo "m \"$(TEXT "Switch SATADOM mode:") \Z4${SATADOM}\Zn\"" >>"${TMP_PATH}/menu"
     fi
     if [ -n "${PLATFORM}" ] && [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
       echo "d \"$(TEXT "Custom DTS")\"" >>"${TMP_PATH}/menu"
@@ -2432,33 +2755,19 @@ function advancedMenu() {
     if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ]; then
       echo "b \"$(TEXT "Use EMMC as the system disk:") \Z4${EMMCBOOT}\Zn\"" >>"${TMP_PATH}/menu"
     fi
-    echo "0 \"$(TEXT "Custom patch script # Developer")\"" >>"${TMP_PATH}/menu"
-    echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
-    echo "h \"$(TEXT "Edit grub.cfg file manually")\"" >>"${TMP_PATH}/menu"
     if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
-      echo "m \"$(TEXT "Set static IP")\"" >>"${TMP_PATH}/menu"
-      echo "3 \"$(TEXT "Set wireless account")\"" >>"${TMP_PATH}/menu"
       echo "s \"$(TEXT "Show disks information")\"" >>"${TMP_PATH}/menu"
+      echo "t \"$(TEXT "Mounting DSM storage pool")\"" >>"${TMP_PATH}/menu"
       echo "f \"$(TEXT "Format disk(s) # Without loader disk")\"" >>"${TMP_PATH}/menu"
-      echo "t \"$(TEXT "Try to recovery a installed DSM system")\"" >>"${TMP_PATH}/menu"
+      echo "g \"$(TEXT "Download DSM config backup files")\"" >>"${TMP_PATH}/menu"
       echo "a \"$(TEXT "Allow downgrade installation")\"" >>"${TMP_PATH}/menu"
       echo "x \"$(TEXT "Reset DSM system password")\"" >>"${TMP_PATH}/menu"
       echo "y \"$(TEXT "Add a new user to DSM system")\"" >>"${TMP_PATH}/menu"
       echo "z \"$(TEXT "Force enable Telnet&SSH of DSM system")\"" >>"${TMP_PATH}/menu"
-      echo "4 \"$(TEXT "Remove the blocked ip database of DSM")\"" >>"${TMP_PATH}/menu"
-      echo "6 \"$(TEXT "Initialize DSM network settings")\"" >>"${TMP_PATH}/menu"
-      echo "7 \"$(TEXT "Mounting DSM storage pool")\"" >>"${TMP_PATH}/menu"
-      echo "r \"$(TEXT "Clone bootloader disk to another disk")\"" >>"${TMP_PATH}/menu"
-      echo "q \"$(TEXT "System Environment Report")\"" >>"${TMP_PATH}/menu"
-      echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
-      echo "5 \"$(TEXT "Download DSM config backup files")\"" >>"${TMP_PATH}/menu"
-      echo "o \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
-      echo "p \"$(TEXT "Save modifications of '/opt/rr'")\"" >>"${TMP_PATH}/menu"
+      echo "o \"$(TEXT "Remove the blocked ip database of DSM")\"" >>"${TMP_PATH}/menu"
+      echo "q \"$(TEXT "Disable all scheduled tasks of DSM")\"" >>"${TMP_PATH}/menu"
+      echo "r \"$(TEXT "Initialize DSM network settings")\"" >>"${TMP_PATH}/menu"
     fi
-    echo "g \"$(TEXT "Show QR logo:") \Z4${DSMLOGO}\Zn\"" >>"${TMP_PATH}/menu"
-    echo "1 \"$(TEXT "Set global proxy")\"" >>"${TMP_PATH}/menu"
-    echo "2 \"$(TEXT "Set github proxy")\"" >>"${TMP_PATH}/menu"
-    echo "! \"$(TEXT "Vigorously miracle")\"" >>"${TMP_PATH}/menu"
     echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
 
     DIALOG --title "$(TEXT "Advanced")" \
@@ -2466,11 +2775,11 @@ function advancedMenu() {
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && break
     case $(cat "${TMP_PATH}/resp") in
-    9)
+    c)
       [ "${RD_COMPRESSED}" = "true" ] && RD_COMPRESSED='false' || RD_COMPRESSED='true'
       writeConfigKey "rd-compressed" "${RD_COMPRESSED}" "${USER_CONFIG_FILE}"
       touch ${PART1_PATH}/.build
-      NEXT="9"
+      NEXT="c"
       ;;
     l)
       LKM=$([ "${LKM}" = "dev" ] && echo 'prod' || ([ "${LKM}" = "test" ] && echo 'dev' || echo 'test'))
@@ -2478,13 +2787,13 @@ function advancedMenu() {
       touch ${PART1_PATH}/.build
       NEXT="l"
       ;;
-    j)
+    h)
       [ "${HDDSORT}" = "true" ] && HDDSORT='false' || HDDSORT='true'
       writeConfigKey "hddsort" "${HDDSORT}" "${USER_CONFIG_FILE}"
       touch ${PART1_PATH}/.build
-      NEXT="j"
+      NEXT="h"
       ;;
-    c)
+    p)
       PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
       PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
       MSG="$(TEXT "pat: (editable)")"
@@ -2502,7 +2811,7 @@ function advancedMenu() {
       fi
       NEXT="e"
       ;;
-    8)
+    m)
       rm -f "${TMP_PATH}/opts"
       echo "1 \"Native SATA Disk(SYNO)\"" >>"${TMP_PATH}/opts"
       echo "2 \"Fake SATA DOM(Redpill)\"" >>"${TMP_PATH}/opts"
@@ -2514,7 +2823,7 @@ function advancedMenu() {
       [ -z "${resp}" ] && continue
       SATADOM=${resp}
       writeConfigKey "satadom" "${SATADOM}" "${USER_CONFIG_FILE}"
-      NEXT="8"
+      NEXT="m"
       ;;
     d)
       customDTS
@@ -2585,42 +2894,20 @@ function advancedMenu() {
       touch ${PART1_PATH}/.build
       NEXT="b"
       ;;
-    0)
-      MSG=""
-      MSG+="$(TEXT "This option is only informative.\n\n")"
-      MSG+="$(TEXT "This program reserves an interface for ramdisk custom patch scripts.\n")"
-      MSG+="$(TEXT "Call timing: called before ramdisk packaging.\n")"
-      MSG+="$(TEXT "Location: /mnt/p3/scripts/*.sh\n")"
-      DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox "${MSG}" 0 0
-      NEXT="e"
-      ;;
-    u)
-      editUserConfig
-      NEXT="e"
-      ;;
-    h)
-      editGrubCfg
-      NEXT="e"
-      ;;
-    m)
-      setStaticIP
-      NEXT="e"
-      ;;
-    3)
-      setWirelessAccount
-      NEXT="e"
-      ;;
     s)
       showDisksInfo
+      NEXT="e"
+      ;;
+    t)
+      MountDSMVolume
       NEXT="e"
       ;;
     f)
       formatDisks
       NEXT="e"
       ;;
-    t)
-      tryRecoveryDSM
+    g)
+      downloadBackupFiles
       NEXT="e"
       ;;
     a)
@@ -2639,19 +2926,98 @@ function advancedMenu() {
       forceEnableDSMTelnetSSH
       NEXT="e"
       ;;
-    4)
+    o)
       removeBlockIPDB
       NEXT="e"
       ;;
-    6)
-      initDSMNetwork
-      NEXT="e"
-      ;;
-    7)
-      MountDSMVolume
+    q)
+      disablescheduledTasks
       NEXT="e"
       ;;
     r)
+      initDSMNetwork
+      NEXT="e"
+      ;;
+    e) break ;;
+    esac
+  done
+}
+
+###############################################################################
+# Settings menu
+function settingsMenu() {
+  NEXT="l"
+  while true; do
+    rm -f "${TMP_PATH}/menu"
+    echo "l \"$(TEXT "Choose a language")\"" >>"${TMP_PATH}/menu"
+    echo "t \"$(TEXT "Choose a timezone")\"" >>"${TMP_PATH}/menu"
+    echo "k \"$(TEXT "Choose a keymap")\"" >>"${TMP_PATH}/menu"
+    echo "o \"$(TEXT "Show QR logo:") \Z4${DSMLOGO}\Zn\"" >>"${TMP_PATH}/menu"
+    echo "p \"$(TEXT "Custom patch script # Developer")\"" >>"${TMP_PATH}/menu"
+    echo "u \"$(TEXT "Edit user config file manually")\"" >>"${TMP_PATH}/menu"
+    echo "g \"$(TEXT "Edit grub.cfg file manually")\"" >>"${TMP_PATH}/menu"
+    if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+      echo "r \"$(TEXT "Try to recovery a installed DSM system")\"" >>"${TMP_PATH}/menu"
+      echo "c \"$(TEXT "Clone bootloader disk to another disk")\"" >>"${TMP_PATH}/menu"
+      echo "q \"$(TEXT "System Environment Report")\"" >>"${TMP_PATH}/menu"
+      echo "v \"$(TEXT "Report bugs to the author")\"" >>"${TMP_PATH}/menu"
+      echo "d \"$(TEXT "Install development tools")\"" >>"${TMP_PATH}/menu"
+      echo "s \"$(TEXT "Save modifications of '/opt/rr'")\"" >>"${TMP_PATH}/menu"
+      echo "i \"$(TEXT "Set static IP")\"" >>"${TMP_PATH}/menu"
+      echo "w \"$(TEXT "Set wireless account")\"" >>"${TMP_PATH}/menu"
+    fi
+    echo "1 \"$(TEXT "Set global proxy")\"" >>"${TMP_PATH}/menu"
+    echo "2 \"$(TEXT "Set github proxy")\"" >>"${TMP_PATH}/menu"
+    echo "3 \"$(TEXT "Change root password # Only RR")\"" >>"${TMP_PATH}/menu"
+    echo "4 \"$(TEXT "Change ports of TTYD/DUFS/HTTP")\"" >>"${TMP_PATH}/menu"
+    echo "! \"$(TEXT "Vigorously miracle")\"" >>"${TMP_PATH}/menu"
+    echo "e \"$(TEXT "Exit")\"" >>"${TMP_PATH}/menu"
+
+    DIALOG --title "$(TEXT "Settings")" \
+      --default-item "${NEXT}" --menu "$(TEXT "Settings option")" 0 0 0 --file "${TMP_PATH}/menu" \
+      2>${TMP_PATH}/resp
+    [ $? -ne 0 ] && break
+    case $(cat "${TMP_PATH}/resp") in
+    l)
+      languageMenu
+      NEXT="l"
+      ;;
+    t)
+      timezoneMenu
+      NEXT="t"
+      ;;
+    k)
+      keymapMenu
+      NEXT="k"
+      ;;
+    o)
+      [ "${DSMLOGO}" = "true" ] && DSMLOGO='false' || DSMLOGO='true'
+      writeConfigKey "dsmlogo" "${DSMLOGO}" "${USER_CONFIG_FILE}"
+      NEXT="o"
+      ;;
+    p)
+      MSG=""
+      MSG+="$(TEXT "This option is only informative.\n\n")"
+      MSG+="$(TEXT "This program reserves an interface for ramdisk custom patch scripts.\n")"
+      MSG+="$(TEXT "Call timing: called before ramdisk packaging.\n")"
+      MSG+="$(TEXT "Location: /mnt/p3/scripts/*.sh\n")"
+      DIALOG --title "$(TEXT "Settings")" \
+        --msgbox "${MSG}" 0 0
+      NEXT="e"
+      ;;
+    u)
+      editUserConfig
+      NEXT="e"
+      ;;
+    g)
+      editGrubCfg
+      NEXT="e"
+      ;;
+    r)
+      tryRecoveryDSM
+      NEXT="e"
+      ;;
+    c)
       cloneBootloaderDisk
       NEXT="e"
       ;;
@@ -2663,88 +3029,21 @@ function advancedMenu() {
       reportBugs
       NEXT="e"
       ;;
-    5)
-      if [ -d "${PART1_PATH}/scbk" ]; then
-        rm -f "${TMP_PATH}/scbk.tar.gz"
-        tar -czf "${TMP_PATH}/scbk.tar.gz" -C "${PART1_PATH}" scbk
-        if [ -z "${SSH_TTY}" ]; then # web
-          mv -f "${TMP_PATH}/scbk.tar.gz" "/var/www/data/scbk.tar.gz"
-          URL="http://$(getIP)/scbk.tar.gz"
-          DIALOG --title "$(TEXT "Advanced")" \
-            --msgbox "$(printf "$(TEXT "Please via %s to download the scbk,\nAnd unzip it and back it up in order by file name.")" "${URL}")" 0 0
-        else
-          sz -be -B 536870912 "${TMP_PATH}/scbk.tar.gz"
-          DIALOG --title "$(TEXT "Advanced")" \
-            --msgbox "$(TEXT "Please unzip it and back it up in order by file name.")" 0 0
-        fi
-      else
-        MSG=""
-        MSG+="$(TEXT "\Z1No scbk found!\Zn\n\n")"
-        MSG+="$(TEXT "Please do as follows:\n")"
-        MSG+="$(TEXT " 1. Add synoconfbkp in addons and rebuild.\n")"
-        MSG+="$(TEXT " 2. Normal use.\n")"
-        MSG+="$(TEXT " 3. Reboot into RR and go to this option.\n")"
-        DIALOG --title "$(TEXT "Advanced")" \
-          --msgbox "${MSG}" 0 0
-      fi
+    d)
+      InstallDevTools
       NEXT="e"
       ;;
-    o)
-      DIALOG --title "$(TEXT "Advanced")" \
-        --yesno "$(TEXT "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?")" 0 0
-      [ $? -ne 0 ] && continue
-      rm -f "${LOG_FILE}"
-      while true; do
-        wget http://bin.entware.net/x64-k3.2/installer/generic.sh -O "generic.sh" >"${LOG_FILE}"
-        [ $? -ne 0 -o ! -f "generic.sh" ] && break
-        chmod +x "generic.sh"
-        ./generic.sh 2>"${LOG_FILE}"
-        [ $? -ne 0 ] && break
-        opkg update 2>"${LOG_FILE}"
-        [ $? -ne 0 ] && break
-        rm -f "generic.sh" "${LOG_FILE}"
-        break
-      done 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
-        --progressbox "$(TEXT "opkg installing ...")" 20 100
-      if [ -f "${LOG_FILE}" ]; then
-        MSG="$(TEXT "opkg install failed.")\n$(cat "${LOG_FILE}"))"
-      else
-        MSG="$(TEXT "opkg install complete.")"
-      fi
-      DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox "${MSG}" 0 0
+    s)
+      savemodrr
       NEXT="e"
       ;;
-    p)
-      DIALOG --title "$(TEXT "Advanced")" \
-        --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?")" 0 0
-      [ $? -ne 0 ] && continue
-      DIALOG --title "$(TEXT "Advanced")" \
-        --infobox "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 0 0
-      RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
-      rm -rf "${RDXZ_PATH}"
-      mkdir -p "${RDXZ_PATH}"
-      (
-        cd "${RDXZ_PATH}"
-        xz -dc <"${RR_RAMDISK_FILE}" | cpio -idm
-      ) >/dev/null 2>&1 || true
-      rm -rf "${RDXZ_PATH}/opt/rr"
-      cp -Rf "$(dirname ${WORK_PATH})" "${RDXZ_PATH}/"
-      (
-        cd "${RDXZ_PATH}"
-        RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
-        find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 --check=crc32 >"${RR_RAMDISK_FILE}"
-      ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
-        --gauge "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 8 100
-      rm -rf "${RDXZ_PATH}"
-      DIALOG --title "$(TEXT "Advanced")" \
-        --msgbox ""$(TEXT "Save is complete.")"" 0 0
+    i)
+      setStaticIP
       NEXT="e"
       ;;
-    g)
-      [ "${DSMLOGO}" = "true" ] && DSMLOGO='false' || DSMLOGO='true'
-      writeConfigKey "dsmlogo" "${DSMLOGO}" "${USER_CONFIG_FILE}"
-      NEXT="g"
+    w)
+      setWirelessAccount
+      NEXT="e"
       ;;
     1)
       setProxy "global_proxy"
@@ -2752,6 +3051,14 @@ function advancedMenu() {
       ;;
     2)
       setProxy "github_proxy"
+      NEXT="e"
+      ;;
+    3)
+      changePassword
+      NEXT="e"
+      ;;
+    4)
+      changePorts
       NEXT="e"
       ;;
     !)
@@ -2767,7 +3074,7 @@ function advancedMenu() {
       MSG+="  ░░   ░   ░░   ░ ░ ░ ░ ▒    ░░   ░ ░ ░   ░ \n"
       MSG+="   ░        ░         ░ ░     ░           ░ \n"
       MSG+="                                            \n"
-      DIALOG --title "$(TEXT "Advanced")" \
+      DIALOG --title "$(TEXT "Settings")" \
         --msgbox "${MSG}" 0 0
       NEXT="e"
       ;;
@@ -2777,78 +3084,6 @@ function advancedMenu() {
 }
 
 ###############################################################################
-# Calls boot.sh to boot into DSM kernel/ramdisk
-function boot() {
-  [ -f ${PART1_PATH}/.build ] && DIALOG --title "$(TEXT "Alert")" \
-    --yesno "$(TEXT "Config changed, would you like to rebuild the loader?")" 0 0
-  if [ $? -eq 0 ]; then
-    make || return
-  fi
-  ${WORK_PATH}/boot.sh
-}
-
-###############################################################################
-# Shows language to user choose one
-function languageMenu() {
-  rm -f "${TMP_PATH}/menu"
-  while read L; do
-    A="$(echo "$(strings "${WORK_PATH}/lang/${L}/LC_MESSAGES/rr.mo" 2>/dev/null | grep "Last-Translator" | sed "s/Last-Translator://")")"
-    echo "${L} \"${A:-"anonymous"}\"" >>"${TMP_PATH}/menu"
-  done <<<$(ls ${WORK_PATH}/lang/*/LC_MESSAGES/rr.mo 2>/dev/null | sort | sed -r 's/.*\/lang\/(.*)\/LC_MESSAGES\/rr\.mo$/\1/')
-
-  DIALOG \
-    --default-item "${LAYOUT}" --menu "$(TEXT "Choose a language")" 0 0 0 --file "${TMP_PATH}/menu" \
-    2>${TMP_PATH}/resp
-  [ $? -ne 0 ] && return
-  resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
-  [ -z "${resp}" ] && return
-  LANGUAGE=${resp}
-  echo "${LANGUAGE}.UTF-8" >${PART1_PATH}/.locale
-  export LC_ALL="${LANGUAGE}.UTF-8"
-}
-
-# Shows language to user choose one
-function timezoneMenu() {
-  OPTIONS="$(find /usr/share/zoneinfo/right -type f | cut -d '/' -f 6- | sort | uniq | xargs)"
-  DIALOG \
-    --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a timezone")" 0 0 0 ${OPTIONS} \
-    2>${TMP_PATH}/resp
-  [ $? -ne 0 ] && return
-  resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
-  [ -z "${resp}" ] && return
-  TIMEZONE=${resp}
-  echo "${TIMEZONE}" >${PART1_PATH}/.timezone
-  ln -sf "/usr/share/zoneinfo/right/${TIMEZONE}" /etc/localtime
-}
-
-###############################################################################
-# Shows available keymaps to user choose one
-function keymapMenu() {
-  OPTIONS="$(ls /usr/share/keymaps/i386 2>/dev/null | grep -v include)"
-  DIALOG \
-    --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a layout")" 0 0 0 ${OPTIONS} \
-    2>${TMP_PATH}/resp
-  [ $? -ne 0 ] && return
-  LAYOUT="$(cat ${TMP_PATH}/resp)"
-  OPTIONS=""
-  while read KM; do
-    OPTIONS+="${KM::-7} "
-  done <<<$(
-    cd /usr/share/keymaps/i386/${LAYOUT}
-    ls *.map.gz 2>/dev/null
-  )
-  DIALOG \
-    --default-item "${KEYMAP}" --no-items --menu "$(TEXT "Choice a keymap")" 0 0 0 ${OPTIONS} \
-    2>${TMP_PATH}/resp
-  [ $? -ne 0 ] && return
-  resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
-  [ -z "${resp}" ] && return
-  KEYMAP=${resp}
-  writeConfigKey "layout" "${LAYOUT}" "${USER_CONFIG_FILE}"
-  writeConfigKey "keymap" "${KEYMAP}" "${USER_CONFIG_FILE}"
-  loadkeys /usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz
-}
-
 # 1 - ext name
 # 2 - current version
 # 3 - repo url
@@ -2952,6 +3187,7 @@ function downloadExts() {
   return 0
 }
 
+###############################################################################
 # 1 - update file
 # 2 - silent
 function updateRR() {
@@ -3092,6 +3328,7 @@ function updateRR() {
   fi
 }
 
+###############################################################################
 # 1 - update file
 # 2 - silent
 function updateAddons() {
@@ -3156,6 +3393,7 @@ function updateAddons() {
   fi
 }
 
+###############################################################################
 # 1 - update file
 # 2 - silent
 function updateModules() {
@@ -3221,6 +3459,7 @@ function updateModules() {
   fi
 }
 
+###############################################################################
 # 1 - update file
 # 2 - silent
 function updateLKMs() {
@@ -3277,6 +3516,7 @@ function updateLKMs() {
   fi
 }
 
+###############################################################################
 # 1 - update file
 # 2 - silent
 function updateCKs() {
@@ -3517,7 +3757,7 @@ function cleanCache() {
 function notepadMenu() {
   [ -d "${USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
   [ -f "${USER_UP_PATH}/notepad" ] || echo "$(TEXT "This person is very lazy and hasn't written anything.")" >"${USER_UP_PATH}/notepad"
-  DIALOG \
+  DIALOG --title "$(TEXT "Edit with caution")" \
     --editbox "${USER_UP_PATH}/notepad" 0 0 2>"${TMP_PATH}/notepad"
   [ $? -ne 0 ] && return
   mv -f "${TMP_PATH}/notepad" "${USER_UP_PATH}/notepad"
@@ -3539,7 +3779,7 @@ else
   [ -f "${PART1_PATH}/.build" ] && NEXT="d"
   [ -n "${MODEL}" ] && NEXT="v"
   while true; do
-    echo -n "" >"${TMP_PATH}/menu"
+    rm -f "${TMP_PATH}/menu"
     echo "m \"$(TEXT "Choose a model")\"" >>"${TMP_PATH}/menu"
     if [ -n "${MODEL}" ]; then
       echo "n \"$(TEXT "Choose a version")\"" >>"${TMP_PATH}/menu"
@@ -3567,9 +3807,7 @@ else
       echo "q \"$(TEXT "Direct boot:") \Z4${DIRECTBOOT}\Zn\"" >>"${TMP_PATH}/menu"
       echo "b \"$(TEXT "Boot the loader")\"" >>"${TMP_PATH}/menu"
     fi
-    echo "l \"$(TEXT "Choose a language")\"" >>"${TMP_PATH}/menu"
-    echo "z \"$(TEXT "Choose a timezone")\"" >>"${TMP_PATH}/menu"
-    echo "k \"$(TEXT "Choose a keymap")\"" >>"${TMP_PATH}/menu"
+    echo "h \"$(TEXT "Settings menu")\"" >>"${TMP_PATH}/menu"
     if [ 0$(du -sm ${PART3_PATH}/dl 2>/dev/null | awk '{printf $1}') -gt 1 ]; then
       echo "c \"$(TEXT "Clean disk cache")\"" >>"${TMP_PATH}/menu"
     fi
@@ -3644,18 +3882,11 @@ else
     b)
       boot && exit 0 || sleep 5
       ;;
-    l)
-      languageMenu
+    h)
+      settingsMenu
       NEXT="m"
       ;;
-    z)
-      timezoneMenu
-      NEXT="m"
-      ;;
-    k)
-      keymapMenu
-      NEXT="m"
-      ;;
+
     c)
       cleanCache
       NEXT="d"
@@ -3671,7 +3902,7 @@ else
     e)
       NEXT="e"
       while true; do
-        echo -n "" >"${TMP_PATH}/menu"
+        rm -f "${TMP_PATH}/menu"
         echo "p \"$(TEXT "Power off")\"" >>"${TMP_PATH}/menu"
         echo "r \"$(TEXT "Reboot")\"" >>"${TMP_PATH}/menu"
         echo "x \"$(TEXT "Reboot to RR")\"" >>"${TMP_PATH}/menu"

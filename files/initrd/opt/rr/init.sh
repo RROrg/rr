@@ -160,6 +160,10 @@ if [ ${BOOT} -eq 1 ]; then
   ${WORK_PATH}/boot.sh && exit 0
 fi
 
+HTTP=$(grep -i '^HTTP_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
+DUFS=$(grep -i '^DUFS_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
+TTYD=$(grep -i '^TTYD_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
+
 # Wait for an IP
 echo "$(printf "$(TEXT "Detected %s network cards.")" "$(echo ${ETHX} | wc -w)")"
 echo -en "$(TEXT "Checking Connect.")"
@@ -206,7 +210,7 @@ for N in ${ETHX}; do
       if [[ "${IP}" =~ ^169\.254\..* ]]; then
         echo -en "\r${N}(${DRIVER}): $(TEXT "LINK LOCAL (No DHCP server detected.)")\n"
       else
-        echo -en "\r${N}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:7681\033[0m to configure the loader via web terminal.")" "${IP}")\n"
+        echo -en "\r${N}(${DRIVER}): $(printf "$(TEXT "Access \033[1;34mhttp://%s:%d\033[0m to configure the loader via web terminal.")" "${IP}" "${TTYD:-7681}")\n"
       fi
       break
     fi
@@ -220,19 +224,23 @@ echo
 echo -e "$(TEXT "Call \033[1;32minit.sh\033[0m to re get init info")"
 echo -e "$(TEXT "Call \033[1;32mmenu.sh\033[0m to configure loader")"
 echo
-echo -e "$(TEXT "User config is on") \033[1;32m${USER_CONFIG_FILE}\033[0m"
-echo -e "$(TEXT "TTYD: \033[1;34mhttp://rr:7681/\033[0m")"
-echo -e "$(TEXT "DUFS: \033[1;34mhttp://rr:7304/\033[0m")"
-echo -e "$(TEXT "TTYD&DUFS: \033[1;34mhttp://rr:7080/\033[0m")"
+echo -e "$(printf "$(TEXT "User config is on \033[1;32m%s\033[0m")" "${USER_CONFIG_FILE}")"
+echo -e "$(printf "$(TEXT "HTTP: \033[1;34mhttp://%s:%d\033[0m")" "rr" "${HTTP:-7080}")"
+echo -e "$(printf "$(TEXT "DUFS: \033[1;34mhttp://%s:%d\033[0m")" "rr" "${DUFS:-7304}")"
+echo -e "$(printf "$(TEXT "TTYD: \033[1;34mhttp://%s:%d\033[0m")" "rr" "${TTYD:-7681}")"
 echo
-echo -e "$(TEXT "Default SSH \033[1;31mroot\033[0m password is") \033[1;31mrr\033[0m"
+if [ -f "/etc/shadow-" ]; then
+  echo -e "$(printf "$(TEXT "SSH port is \033[1;31m%d\033[0m, The \033[1;31mroot\033[0m password has been changed")" "22")"
+else
+  echo -e "$(printf "$(TEXT "SSH port is \033[1;31m%d\033[0m, The \033[1;31mroot\033[0m password is \033[1;31m%s\033[0m")" "22" "rr")"
+fi
 echo
 
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
 if [ "${DSMLOGO}" = "true" -a -c "/dev/fb0" -a ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   IP="$(getIP)"
   [[ "${IP}" =~ ^169\.254\..* ]] && IP=""
-  [ -n "${IP}" ] && URL="http://${IP}:7681" || URL="http://rr:7681/"
+  [ -n "${IP}" ] && URL="http://${IP}:${TTYD:-7681}" || URL="http://rr:${TTYD:-7681}"
   python ${WORK_PATH}/include/functions.py makeqr -d "${URL}" -l "0" -o "${TMP_PATH}/qrcode_init.png"
   [ -f "${TMP_PATH}/qrcode_init.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_init.png" >/dev/null 2>/dev/null || true
 
