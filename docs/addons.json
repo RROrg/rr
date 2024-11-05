@@ -662,21 +662,21 @@
     "ups": {
         "system": false,
         "description": {
-            "en_US": "Author: GXNAS. Force the standby mode to shutdown when the UPS is powered.",
-            "ar_SA": "المؤلف: GXNAS. قم بتغيير وضع الاستعداد بالقوة إلى إيقاف التشغيل عند تشغيل UPS.",
-            "de_DE": "Autor: GXNAS. Ändern Sie den Standby-Modus zwangsweise in „Herunterfahren“, wenn die USV mit Strom versorgt wird.",
-            "es_ES": "Autor: GXNAS. Cambie a la fuerza el modo de espera para apagar cuando el UPS esté encendido.",
-            "fr_FR": "Auteur: GXNAS. Modifiez le mode d'attente en puissance en mode éteint lorsque l'UPS est en cours d'alimentation.",
-            "ja_JP": "作者: GXNAS。 UPS の電源が入っているときに、スタンバイ モードを強制的にシャットダウンに変更します。",
-            "ko_KR": "작성자: GXNAS. UPS에 전원이 공급되면 강제로 대기 모드를 종료로 변경합니다.",
-            "ru_RU": "Автор: GXNAS. Принудительно измените режим ожидания на выключение при включении ИБП.",
-            "th_TH": "ผู้เขียน: GXNAS. บังคับให้เปลี่ยนโหมดสแตนด์บายเป็นปิดเครื่องเมื่อเปิดเครื่อง UPS.",
-            "tr_TR": "Yazar: GXNAS. UPS'e güç verildiğinde bekleme modunu zorla kapanmaya değiştirin.",
-            "uk_UA": "Автор: GXNAS. Примусово змінити режим очікування на вимкнення, коли ДБЖ подається живлення.",
-            "vi_VN": "tác giả: GXNAS. Chuyển đổi chế độ chờ khi UPS được bật thành tắt",
-            "zh_CN": "作者：GXNAS。强制将 UPS 供电时的待机模式修改为关机。",
-            "zh_HK": "作者：GXNAS。強制將 UPS 供電時的待機模式修改為關機。",
-            "zh_TW": "作者：GXNAS。強制將 UPS 供電時的待機模式修改為關機。"
+            "en_US": "Author: GXNAS. Force the standby mode to shutdown when UPS power supply. Parameters: -f - Trigger shutdown task before shutdown; -e - Trigger shutdown task before standby mode (not change to shutdown).",
+            "ar_SA": "لمؤلف: GXNAS. فرض إيقاف تشغيل وضع الاستعداد عند انقطاع مصدر طاقة UPS. المعلمات: -f - تشغيل مهمة إيقاف التشغيل قبل إيقاف التشغيل؛ -e - تشغيل مهمة إيقاف التشغيل قبل وضع-e - تشغيل مهمة إيقاف التشغيل قبل وضع الاستعداد (لا يتم التغيير إلى إيقاف التشغيل).",
+            "de_DE": "Autor: GXNAS. Erzwingt das Herunterfahren in den Standby-Modus, wenn die USV-Stromversorgung eingeschaltet ist. Parameter: -f – Herunterfahraufgabe vor dem Herunterfahren auslösen; -e – Herunterfahraufgabe vor dem Standby-Modus auslösen (nicht zum Herunterfahren wechseln).",
+            "es_ES": "Autor: GXNAS. Fuerza el modo de espera para apagar cuando la fuente de alimentación de la UPS. Parámetros: -f - Activar tarea de apagado antes de apagar; -e - Activar tarea de apagado antes del modo de espera (no cambiar a apagado).",
+            "fr_FR": "Auteur: GXNAS. Force le mode veille à s'éteindre lorsque l'alimentation de secours UPS. Paramètres : -f - Déclencher la tâche d'arrêt avant l'arrêt ; -e - Déclencher la tâche d'arrêt avant le mode veille (ne pas passer en mode arrêt).",
+            "ja_JP": "作者: GXNAS。UPS 電源供給時にスタンバイモードをシャットダウンするように強制します。パラメータ: -f - シャットダウン前にシャットダウンタスクをトリガーする; -e - スタンバイモード前にシャットダウンタスクをトリガーする (シャットダウンに変更しない)。",
+            "ko_KR": "작성자: GXNAS. UPS 전원 공급 시 대기 모드를 종료하도록 강제합니다. 매개 변수: -f - 종료 전 종료 작업 트리거; -e - 대기 모드 전 종료 작업 트리거 (종료로 변경하지 않음).",
+            "ru_RU": "Автор: GXNAS. Принудительно измените режим ожидания на выключение при включении ИБП. Параметры: -f — запускать задачу завершения работы перед выключением; -e — запускать задачу завершения работы перед переходом в режим ожидания (не изменено на завершение работы).",
+            "th_TH": "ผู้เขียน: GXNAS บังคับให้โหมดสแตนดบายปิดเมื่อมีการจ่ายไฟจาก UPS พารามิเตอร์: -f - เรียกใช้งานงานปิดก่อนปิด; -e - เรียกใช้งานงานปิดก่อนโหมดสแตนดบาย (ไม่เปลี่ยนเป็นปิด)",
+            "tr_TR": "Yazar: GXNAS. UPS'e güç verildiğinde bekleme modunu zorla kapanmaya değiştirin. Parametreler: -f - Kapatmadan önce kapatma görevini tetikle; -e - Bekleme modundan önce kapatma görevini tetikle (kapatma olarak değiştirilmemiştir).",
+            "uk_UA": "Автор: GXNAS. Примусово змінити режим очікування на вимкнення, коли ДБЖ подається живлення. Параметри: -f - запускати завдання завершення роботи перед завершенням роботи;",
+            "vi_VN": "Tác giả: GXNAS. Buộc chế độ chờ tắt khi cấp nguồn UPS. Tham số: -f - Kích hoạt tác vụ tắt máy trước khi tắt máy; -e - Kích hoạt tác vụ tắt máy trước khi chế độ chờ (không chuyển sang tắt máy).",
+            "zh_CN": "作者：GXNAS。强制将 UPS 供电时的待机模式修改为关机。參數：-f - 关机前触发关机任务；-e - 待机模式前发关机任务(不修改为关机)。",
+            "zh_HK": "作者：GXNAS。強制將 UPS 供電時的待機模式修改為關機。參數：-f - 關機前觸發關機任務；-e - 待機模式前發關機任務(不修改為關機)。",
+            "zh_TW": "作者：GXNAS。強制將 UPS 供電時的待機模式修改為關機。參數：-f - 關機前觸發關機任務；-e - 待機模式前發關機任務(不修改為關機)。"
         }
     },
     "wireless": {
