@@ -1772,7 +1772,8 @@ function resetDSMPassword() {
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "Invalid password")" 0 0
   done
-  NEWPASSWD="$(python -c "from passlib.hash import sha512_crypt;pw=\"${VALUE}\";print(sha512_crypt.using(rounds=5000).hash(pw))")"
+  #NEWPASSWD="$(python -c "from passlib.hash import sha512_crypt;pw=\"${VALUE}\";print(sha512_crypt.using(rounds=5000).hash(pw))")"
+  NEWPASSWD="$(openssl passwd -6 -salt $(openssl rand -hex 8) "${VALUE}")"
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
@@ -2618,7 +2619,8 @@ function changePassword() {
   [ $? -ne 0 ] && continue
   STRPASSWD="$(cat "${TMP_PATH}/resp")"
   # set password
-  NEWPASSWD="$(python -c "from passlib.hash import sha512_crypt;pw=\"${STRPASSWD:-rr}\";print(sha512_crypt.using(rounds=5000).hash(pw))")"
+  #NEWPASSWD="$(python -c "from passlib.hash import sha512_crypt;pw=\"${STRPASSWD:-rr}\";print(sha512_crypt.using(rounds=5000).hash(pw))")"
+  NEWPASSWD="$(openssl passwd -6 -salt $(openssl rand -hex 8) "${STRPASSWD:-rr}")"
   cp -p /etc/shadow /etc/shadow-
   sed -i "s|^root:[^:]*|root:${NEWPASSWD}|" /etc/shadow
   # save to rru
