@@ -212,6 +212,28 @@ done
 CMDLINE_LINE=$(echo "${CMDLINE_LINE}" | sed 's/^ //') # Remove leading space
 echo -e "$(TEXT "Cmdline:\n")\033[1;36m${CMDLINE_LINE}\033[0m"
 
+function _bootwait() {
+  BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
+  [ -z "${BOOTWAIT}" ] && BOOTWAIT=10
+  busybox w 2>/dev/null | awk '{print $1" "$2" "$4" "$5" "$6}' >WB
+  MSG=""
+  while test ${BOOTWAIT} -ge 0; do
+    MSG="$(printf "\033[1;33m$(TEXT "%2ds (Changing access(ssh/web) status will interrupt boot)")\033[0m" "${BOOTWAIT}")"
+    echo -en "\r${MSG}"
+    busybox w 2>/dev/null | awk '{print $1" "$2" "$4" "$5" "$6}' >WC
+    if ! diff WB WC >/dev/null 2>&1; then
+      echo -en "\r\033[1;33m$(TEXT "access(ssh/web) status has changed and booting is interrupted.")\033[0m\n"
+      rm -f WB WC
+      return 1
+    fi
+    sleep 1
+    BOOTWAIT=$((BOOTWAIT - 1))
+  done
+  rm -f WB WC
+  echo -en "\r$(printf "%$((${#MSG} * 2))s" " ")\n"
+  return 0
+}
+
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 if [ "${DIRECT}" = "true" ]; then
   grub-editenv ${USER_GRUBENVFILE} set rr_version="$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")"
@@ -227,6 +249,7 @@ if [ "${DIRECT}" = "true" ]; then
   grub-editenv ${USER_GRUBENVFILE} set dsm_cmdline="${CMDLINE_DIRECT}"
   grub-editenv ${USER_GRUBENVFILE} set next_entry="direct"
 
+  _bootwait || exit 0
   echo -e "\033[1;33m$(TEXT "Reboot to boot directly in DSM")\033[0m"
   reboot
   exit 0
@@ -297,25 +320,9 @@ else
       sleep 1
     done
   done
-  BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
-  [ -z "${BOOTWAIT}" ] && BOOTWAIT=10
-  busybox w 2>/dev/null | awk '{print $1" "$2" "$4" "$5" "$6}' >WB
-  MSG=""
-  while test ${BOOTWAIT} -ge 0; do
-    MSG="$(printf "\033[1;33m$(TEXT "%2ds (Changing access(ssh/web) status will interrupt boot)")\033[0m" "${BOOTWAIT}")"
-    echo -en "\r${MSG}"
-    busybox w 2>/dev/null | awk '{print $1" "$2" "$4" "$5" "$6}' >WC
-    if ! diff WB WC >/dev/null 2>&1; then
-      echo -en "\r\033[1;33m$(TEXT "access(ssh/web) status has changed and booting is interrupted.")\033[0m\n"
-      rm -f WB WC
-      exit 0
-    fi
-    sleep 1
-    BOOTWAIT=$((BOOTWAIT - 1))
-  done
-  rm -f WB WC
-  echo -en "\r$(printf "%$((${#MSG} * 2))s" " ")\n"
 
+  _bootwait || exit 0
+  
   echo -e "\033[1;37m$(TEXT "Loading DSM kernel ...")\033[0m"
 
   DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"

@@ -2748,9 +2748,9 @@ function advancedMenu() {
     if [ -n "${PLATFORM}" ] && [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
       echo "d \"$(TEXT "Custom DTS")\"" >>"${TMP_PATH}/menu"
     fi
+    echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\"" >>"${TMP_PATH}/menu"
     if [ "${DIRECTBOOT}" = "false" ]; then
       echo "i \"$(TEXT "Timeout of get ip in boot:") \Z4${BOOTIPWAIT}\Zn\"" >>"${TMP_PATH}/menu"
-      echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\"" >>"${TMP_PATH}/menu"
       echo "k \"$(TEXT "kernel switching method:") \Z4${KERNELWAY}\Zn\"" >>"${TMP_PATH}/menu"
     fi
     echo "n \"$(TEXT "Reboot on kernel panic:") \Z4${KERNELPANIC}\Zn\"" >>"${TMP_PATH}/menu"
@@ -2831,18 +2831,6 @@ function advancedMenu() {
       customDTS
       NEXT="e"
       ;;
-    i)
-      ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
-      DIALOG --title "$(TEXT "Advanced")" \
-        --default-item "${BOOTIPWAIT}" --no-items --menu "$(TEXT "Choose a time(seconds)")" 0 0 0 ${ITEMS} \
-        2>${TMP_PATH}/resp
-      [ $? -ne 0 ] && continue
-      resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
-      [ -z "${resp}" ] && continue
-      BOOTIPWAIT=${resp}
-      writeConfigKey "bootipwait" "${BOOTIPWAIT}" "${USER_CONFIG_FILE}"
-      NEXT="i"
-      ;;
     w)
       ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
       DIALOG --title "$(TEXT "Advanced")" \
@@ -2854,6 +2842,18 @@ function advancedMenu() {
       BOOTWAIT=${resp}
       writeConfigKey "bootwait" "${BOOTWAIT}" "${USER_CONFIG_FILE}"
       NEXT="w"
+      ;;
+    i)
+      ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
+      DIALOG --title "$(TEXT "Advanced")" \
+        --default-item "${BOOTIPWAIT}" --no-items --menu "$(TEXT "Choose a time(seconds)")" 0 0 0 ${ITEMS} \
+        2>${TMP_PATH}/resp
+      [ $? -ne 0 ] && continue
+      resp=$(cat ${TMP_PATH}/resp 2>/dev/null)
+      [ -z "${resp}" ] && continue
+      BOOTIPWAIT=${resp}
+      writeConfigKey "bootipwait" "${BOOTIPWAIT}" "${USER_CONFIG_FILE}"
+      NEXT="i"
       ;;
     k)
       [ "${KERNELWAY}" = "kexec" ] && KERNELWAY='power' || KERNELWAY='kexec'
