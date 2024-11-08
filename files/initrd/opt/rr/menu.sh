@@ -2661,74 +2661,76 @@ function changePorts() {
   HTTP=$(grep -i '^HTTP_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
   DUFS=$(grep -i '^DUFS_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
   TTYD=$(grep -i '^TTYD_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
-  DIALOG --title "$(TEXT "Settings")" \
-    --form "${MSG}" 11 70 3 "HTTP" 1 1 "${HTTP:-7080}" 1 10 55 0 "DUFS" 2 1 "${DUFS:-7304}" 2 10 55 0 "TTYD" 3 1 "${TTYD:-7681}" 3 10 55 0 \
-    2>"${TMP_PATH}/resp"
-  RET=$?
-  case ${RET} in
-  0) # ok-button
-    function check_port() {
-      if [ -z "${1}" ]; then
-        return 0
-      else
-        if [[ "${1}" =~ ^[0-9]+$ ]] && [ "${1}" -ge 0 ] && [ "${1}" -le 65535 ]; then
+  while true; do
+    DIALOG --title "$(TEXT "Settings")" \
+      --form "${MSG}" 11 70 3 "HTTP" 1 1 "${HTTP:-7080}" 1 10 55 0 "DUFS" 2 1 "${DUFS:-7304}" 2 10 55 0 "TTYD" 3 1 "${TTYD:-7681}" 3 10 55 0 \
+      2>"${TMP_PATH}/resp"
+    RET=$?
+    case ${RET} in
+    0) # ok-button
+      function check_port() {
+        if [ -z "${1}" ]; then
           return 0
         else
-          return 1
+          if [[ "${1}" =~ ^[0-9]+$ ]] && [ "${1}" -ge 0 ] && [ "${1}" -le 65535 ]; then
+            return 0
+          else
+            return 1
+          fi
         fi
+      }
+      HTTP=$(sed -n '1p' "${TMP_PATH}/resp")
+      DUFS=$(sed -n '2p' "${TMP_PATH}/resp")
+      TTYD=$(sed -n '3p' "${TMP_PATH}/resp")
+      EP=""
+      for P in "${HTTP}" "${DUFS}" "${TTYD}"; do check_port "${P}" || EP="${EP} ${P}"; done
+      if [ -n "${EP}" ]; then
+        DIALOG --title "$(TEXT "Settings")" \
+          --yesno "$(printf "$(TEXT "Invalid %s port number, retry?")" "${EP}")" 0 0
+        [ $? -eq 0 ] && continue || break
       fi
-    }
-    HTTP=$(sed -n '1p' "${TMP_PATH}/resp")
-    DUFS=$(sed -n '2p' "${TMP_PATH}/resp")
-    TTYD=$(sed -n '3p' "${TMP_PATH}/resp")
-    EP=""
-    for P in "${HTTP}" "${DUFS}" "${TTYD}"; do check_port "${P}" || EP="${EP} ${P}"; done
-    if [ -n "${EP}" ]; then
-      DIALOG --title "$(TEXT "Settings")" \
-        --yesno "$(printf "$(TEXT "Invalid %s port number, retry?")" "${EP}")" 0 0
-      [ $? -eq 0 ] && continue || break
-    fi
-    # save to rrorg.conf
-    rm -f "/etc/rrorg.conf"
-    [ ! "${HTTP:-7080}" = "7080" ] && echo "HTTP_PORT=${HTTP}" >>"/etc/rrorg.conf" && /etc/init.d/S90thttpd restart >/dev/null 2>&1
-    [ ! "${DUFS:-7304}" = "7304" ] && echo "DUFS_PORT=${DUFS}" >>"/etc/rrorg.conf" && /etc/init.d/S99dufs restart >/dev/null 2>&1
-    [ ! "${TTYD:-7681}" = "7681" ] && echo "TTYD_PORT=${TTYD}" >>"/etc/rrorg.conf" && /etc/init.d/S99ttyd restart >/dev/null 2>&1
-    # save to rru
-    RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
-    rm -rf "${RDXZ_PATH}"
-    mkdir -p "${RDXZ_PATH}"
-    [ -f "${RR_RAMUSER_FILE}" ] && (
-      cd "${RDXZ_PATH}"
-      xz -dc <"${RR_RAMUSER_FILE}" | cpio -idm
-    ) >/dev/null 2>&1 || true
-    if [ ! -f "/etc/rrorg.conf" ]; then
-      rm -f "${RDXZ_PATH}/etc/rrorg.conf" 2>/dev/null
-    else
-      mkdir -p "${RDXZ_PATH}/etc"
-      cp -p /etc/rrorg.conf ${RDXZ_PATH}/etc
-    fi
-    if [ -n "$(ls -A "${RDXZ_PATH}" 2>/dev/null)" ] && [ -n "$(ls -A "${RDXZ_PATH}/etc" 2>/dev/null)" ]; then
-      (
+      # save to rrorg.conf
+      rm -f "/etc/rrorg.conf"
+      [ ! "${HTTP:-7080}" = "7080" ] && echo "HTTP_PORT=${HTTP}" >>"/etc/rrorg.conf" && /etc/init.d/S90thttpd restart >/dev/null 2>&1
+      [ ! "${DUFS:-7304}" = "7304" ] && echo "DUFS_PORT=${DUFS}" >>"/etc/rrorg.conf" && /etc/init.d/S99dufs restart >/dev/null 2>&1
+      [ ! "${TTYD:-7681}" = "7681" ] && echo "TTYD_PORT=${TTYD}" >>"/etc/rrorg.conf" && /etc/init.d/S99ttyd restart >/dev/null 2>&1
+      # save to rru
+      RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
+      rm -rf "${RDXZ_PATH}"
+      mkdir -p "${RDXZ_PATH}"
+      [ -f "${RR_RAMUSER_FILE}" ] && (
         cd "${RDXZ_PATH}"
-        RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
-        find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 --check=crc32 >"${RR_RAMUSER_FILE}"
-      ) 2>&1 | DIALOG --title "$(TEXT "Settings")"
-    else
-      rm -f "${RR_RAMUSER_FILE}"
-    fi
-    rm -rf "${RDXZ_PATH}"
-    [ ! -f "/etc/rrorg.conf" ] && MSG="$(TEXT "Ports for TTYD/DUFS/HTTP restored.")" || MSG="$(TEXT "Ports for TTYD/DUFS/HTTP changed.")"
-    DIALOG --title "$(TEXT "Settings")" \
-      --msgbox "${MSG}" 0 0
-    break
-    ;;
-  1) # cancel-button
-    break
-    ;;
-  255) # ESC
-    break
-    ;;
-  esac
+        xz -dc <"${RR_RAMUSER_FILE}" | cpio -idm
+      ) >/dev/null 2>&1 || true
+      if [ ! -f "/etc/rrorg.conf" ]; then
+        rm -f "${RDXZ_PATH}/etc/rrorg.conf" 2>/dev/null
+      else
+        mkdir -p "${RDXZ_PATH}/etc"
+        cp -p /etc/rrorg.conf ${RDXZ_PATH}/etc
+      fi
+      if [ -n "$(ls -A "${RDXZ_PATH}" 2>/dev/null)" ] && [ -n "$(ls -A "${RDXZ_PATH}/etc" 2>/dev/null)" ]; then
+        (
+          cd "${RDXZ_PATH}"
+          RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
+          find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 --check=crc32 >"${RR_RAMUSER_FILE}"
+        ) 2>&1 | DIALOG --title "$(TEXT "Settings")"
+      else
+        rm -f "${RR_RAMUSER_FILE}"
+      fi
+      rm -rf "${RDXZ_PATH}"
+      [ ! -f "/etc/rrorg.conf" ] && MSG="$(TEXT "Ports for TTYD/DUFS/HTTP restored.")" || MSG="$(TEXT "Ports for TTYD/DUFS/HTTP changed.")"
+      DIALOG --title "$(TEXT "Settings")" \
+        --msgbox "${MSG}" 0 0
+      break
+      ;;
+    1) # cancel-button
+      break
+      ;;
+    255) # ESC
+      break
+      ;;
+    esac
+  done
   return
 }
 
