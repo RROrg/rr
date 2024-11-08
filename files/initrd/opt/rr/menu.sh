@@ -2128,9 +2128,9 @@ function tryRecoveryDSM() {
     if [ -n "${R_PLATFORM}" ] && arrayExistItem "${R_PLATFORM}" ${PS} &&
       [ -n "${R_PRODUCTVER}" ] && arrayExistItem "${R_PRODUCTVER}" ${VS} &&
       [ -n "${R_BUILDNUM}" ] && [ -n "${R_SMALLNUM}" ]; then
-      cp -Rf "${TMP_PATH}/mdX/usr/rr/backup/p1/"* "${PART1_PATH}"
+      cp -rf "${TMP_PATH}/mdX/usr/rr/backup/p1/"* "${PART1_PATH}"
       if [ -d "${TMP_PATH}/mdX/usr/rr/backup/p3" ]; then
-        cp -Rf "${TMP_PATH}/mdX/usr/rr/backup/p3/"* "${PART3_PATH}"
+        cp -rf "${TMP_PATH}/mdX/usr/rr/backup/p3/"* "${PART3_PATH}"
       fi
       copyDSMFiles "${TMP_PATH}/mdX/.syno/patch"
       __umountDSMRootDisk
@@ -2439,7 +2439,7 @@ function savemodrr() {
     xz -dc <"${RR_RAMDISK_FILE}" | cpio -idm
   ) >/dev/null 2>&1 || true
   rm -rf "${RDXZ_PATH}/opt/rr"
-  cp -Rf "$(dirname ${WORK_PATH})" "${RDXZ_PATH}/"
+  cp -rf "$(dirname ${WORK_PATH})" "${RDXZ_PATH}/"
   (
     cd "${RDXZ_PATH}"
     RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
@@ -3297,7 +3297,7 @@ function updateRR() {
     if [ "${KEY: -1}" = "/" ]; then
       rm -Rf "${VALUE}"/*
       mkdir -p "${VALUE}"
-      cp -Rf "${TMP_PATH}/update/${VALUE}"/* "${VALUE}"
+      cp -rf "${TMP_PATH}/update/${VALUE}"/* "${VALUE}"
       if [ "$(realpath "${VALUE}")" = "$(realpath "${MODULES_PATH}")" ]; then
         if [ -n "${MODEL}" -a -n "${PRODUCTVER}" ]; then
           KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
@@ -3379,7 +3379,7 @@ function updateAddons() {
   fi
 
   rm -Rf "${ADDONS_PATH}/"*
-  cp -Rf "${TMP_PATH}/update/"* "${ADDONS_PATH}/"
+  cp -rf "${TMP_PATH}/update/"* "${ADDONS_PATH}/"
   rm -rf "${TMP_PATH}/update"
   touch ${PART1_PATH}/.build
   sync

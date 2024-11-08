@@ -248,7 +248,7 @@ function repackInitrd() {
     cd "${RDXZ_PATH}"
     sudo xz -dc <"${INITRD_FILE}" | sudo cpio -idm
   ) || true
-  sudo cp -Rf "${PLUGIN_PATH}/"* "${RDXZ_PATH}/"
+  sudo cp -rf "${PLUGIN_PATH}/"* "${RDXZ_PATH}/"
   [ -f "${OUTPUT_PATH}" ] && rm -rf "${OUTPUT_PATH}"
   (
     cd "${RDXZ_PATH}"
