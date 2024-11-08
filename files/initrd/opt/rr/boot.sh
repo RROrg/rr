@@ -250,6 +250,7 @@ if [ "${DIRECT}" = "true" ]; then
   grub-editenv ${USER_GRUBENVFILE} set next_entry="direct"
 
   _bootwait || exit 0
+
   echo -e "\033[1;33m$(TEXT "Reboot to boot directly in DSM")\033[0m"
   reboot
   exit 0
@@ -322,7 +323,7 @@ else
   done
 
   _bootwait || exit 0
-  
+
   echo -e "\033[1;37m$(TEXT "Loading DSM kernel ...")\033[0m"
 
   DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
@@ -343,7 +344,7 @@ else
     echo -e "\033[1;33m$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")\033[0m"
     KEXECARGS+=" --noefi"
   fi
-  kexec ${KEXECARGS} -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE}" >"${LOG_FILE}" 2>&1 || dieLog
+  kexec ${KEXECARGS} -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE} kexecboot" >"${LOG_FILE}" 2>&1 || dieLog
 
   echo -e "\033[1;37m$(TEXT "Booting ...")\033[0m"
   # show warning message
