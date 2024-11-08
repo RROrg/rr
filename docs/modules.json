@@ -316,6 +316,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -343,6 +347,10 @@
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
+            "depends": ""
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -455,6 +463,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -632,6 +648,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -701,6 +725,10 @@
             "depends": "usbcore"
         },
         "r8168": {
+            "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "r8168_tx": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
             "depends": ""
         },
@@ -811,6 +839,10 @@
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -963,6 +995,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -1330,6 +1366,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -1357,6 +1397,10 @@
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
+            "depends": ""
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -1469,6 +1513,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -1693,6 +1745,14 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -1974,6 +2034,10 @@
             "description": "Generic software cursor",
             "depends": "fb"
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
             "depends": "dvb-core"
@@ -2137,6 +2201,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wch": {
             "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
@@ -2444,12 +2512,20 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
+            "depends": ""
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
             "depends": ""
         },
         "hvc_console": {
@@ -2550,6 +2626,14 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
             "depends": ""
         },
         "iw_cm": {
@@ -2732,6 +2816,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -2805,6 +2897,10 @@
             "depends": "usbcore"
         },
         "r8168": {
+            "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "r8168_tx": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
             "depends": ""
         },
@@ -2907,6 +3003,10 @@
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -3042,6 +3142,10 @@
         },
         "w83793": {
             "description": "w83793 driver",
+            "depends": ""
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
             "depends": ""
         },
         "wireguard": {
@@ -3386,12 +3490,20 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
+            "depends": ""
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
             "depends": ""
         },
         "hvc_console": {
@@ -3492,6 +3604,14 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
             "depends": ""
         },
         "iw_cm": {
@@ -3721,6 +3841,14 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -3998,6 +4126,10 @@
             "description": "Generic software cursor",
             "depends": "fb"
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
             "depends": "dvb-core"
@@ -4144,6 +4276,10 @@
         },
         "w83793": {
             "description": "w83793 driver",
+            "depends": ""
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
             "depends": ""
         },
         "wch": {
@@ -4452,12 +4588,20 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
+            "depends": ""
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
             "depends": ""
         },
         "hvc_console": {
@@ -4558,6 +4702,14 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
             "depends": ""
         },
         "iw_cm": {
@@ -4740,6 +4892,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -4813,6 +4973,10 @@
             "depends": "usbcore"
         },
         "r8168": {
+            "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "r8168_tx": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
             "depends": ""
         },
@@ -4915,6 +5079,10 @@
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -5050,6 +5218,10 @@
         },
         "w83793": {
             "description": "w83793 driver",
+            "depends": ""
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
             "depends": ""
         },
         "wireguard": {
@@ -5394,12 +5566,20 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
+            "depends": ""
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
             "depends": ""
         },
         "hvc_console": {
@@ -5500,6 +5680,14 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
             "depends": ""
         },
         "iw_cm": {
@@ -5729,6 +5917,14 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -6006,6 +6202,10 @@
             "description": "Generic software cursor",
             "depends": "fb"
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
             "depends": "dvb-core"
@@ -6152,6 +6352,10 @@
         },
         "w83793": {
             "description": "w83793 driver",
+            "depends": ""
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
             "depends": ""
         },
         "wch": {
@@ -6460,12 +6664,20 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
+            "depends": ""
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
             "depends": ""
         },
         "hvc_console": {
@@ -6566,6 +6778,14 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
             "depends": ""
         },
         "iw_cm": {
@@ -6748,6 +6968,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -6821,6 +7049,10 @@
             "depends": "usbcore"
         },
         "r8168": {
+            "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "r8168_tx": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
             "depends": ""
         },
@@ -6923,6 +7155,10 @@
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -7058,6 +7294,10 @@
         },
         "w83793": {
             "description": "w83793 driver",
+            "depends": ""
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
             "depends": ""
         },
         "wireguard": {
@@ -7402,12 +7642,20 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
+            "depends": ""
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
             "depends": ""
         },
         "hvc_console": {
@@ -7508,6 +7756,14 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
             "depends": ""
         },
         "iw_cm": {
@@ -7737,6 +7993,14 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -8014,6 +8278,10 @@
             "description": "Generic software cursor",
             "depends": "fb"
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
             "depends": "dvb-core"
@@ -8160,6 +8428,10 @@
         },
         "w83793": {
             "description": "w83793 driver",
+            "depends": ""
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
             "depends": ""
         },
         "wch": {
@@ -8476,12 +8748,20 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
+            "depends": ""
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
             "depends": ""
         },
         "hvc_console": {
@@ -8586,6 +8866,14 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
             "depends": ""
         },
         "iw_cm": {
@@ -8768,6 +9056,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -8841,6 +9137,10 @@
             "depends": "usbcore"
         },
         "r8168": {
+            "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "r8168_tx": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
             "depends": ""
         },
@@ -8943,6 +9243,10 @@
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -9074,6 +9378,10 @@
         },
         "w83793": {
             "description": "w83793 driver",
+            "depends": ""
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
             "depends": ""
         },
         "wireguard": {
@@ -9426,12 +9734,20 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
+            "depends": ""
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
             "depends": ""
         },
         "hvc_console": {
@@ -9536,6 +9852,14 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
             "depends": ""
         },
         "iw_cm": {
@@ -9765,6 +10089,14 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -10042,6 +10374,10 @@
             "description": "Generic software cursor",
             "depends": "fb"
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
             "depends": "dvb-core"
@@ -10184,6 +10520,10 @@
         },
         "w83793": {
             "description": "w83793 driver",
+            "depends": ""
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
             "depends": ""
         },
         "wch": {
@@ -10484,6 +10824,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -10511,6 +10855,10 @@
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
+            "depends": ""
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -10615,6 +10963,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -10796,6 +11152,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -10865,6 +11229,10 @@
             "depends": "usbcore"
         },
         "r8168": {
+            "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "r8168_tx": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
             "depends": ""
         },
@@ -10971,6 +11339,10 @@
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -11103,6 +11475,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -11438,6 +11814,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -11465,6 +11845,10 @@
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
+            "depends": ""
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -11569,6 +11953,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -11797,6 +12189,14 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -12074,6 +12474,10 @@
             "description": "Generic software cursor",
             "depends": "fb"
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
             "depends": "dvb-core"
@@ -12217,6 +12621,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wch": {
             "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
@@ -12572,6 +12980,10 @@
             "description": "Fairchild FUSB302 Type-C Chip Driver",
             "depends": "tcpm,usb-common"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-charger": {
             "description": "Driver for chargers only communicating via GPIO(s)",
             "depends": "power_supply"
@@ -12607,6 +13019,10 @@
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.20-200",
             "depends": "scsi_transport_sas,check_signature"
+        },
+        "hpwdt": {
+            "description": "hpe watchdog driver",
+            "depends": "watchdog"
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -12783,6 +13199,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": "watchdog"
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -13098,6 +13522,14 @@
         },
         "pata_legacy": {
             "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
             "depends": ""
         },
         "phy-intel-lgm-emmc": {
@@ -13464,6 +13896,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
             "depends": "cdrom"
@@ -13623,6 +14059,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wch": {
             "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
@@ -14098,6 +14538,10 @@
             "description": "Google Gasket driver framework",
             "depends": "dmabuf"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-charger": {
             "description": "Driver for chargers only communicating via GPIO(s)",
             "depends": "power_supply"
@@ -14133,6 +14577,10 @@
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.20-200",
             "depends": "scsi_transport_sas,check_signature"
+        },
+        "hpwdt": {
+            "description": "hpe watchdog driver",
+            "depends": "watchdog"
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -14309,6 +14757,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": "watchdog"
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -14624,6 +15080,14 @@
         },
         "pata_legacy": {
             "description": "low-level driver for legacy ATA",
+            "depends": ""
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
             "depends": ""
         },
         "phy-intel-lgm-emmc": {
@@ -14990,6 +15454,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
             "depends": "cdrom"
@@ -15153,6 +15621,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wch": {
             "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
@@ -15585,6 +16057,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -15613,6 +16089,10 @@
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
         },
+        "hpwdt": {
+            "description": "hp watchdog driver",
+            "depends": ""
+        },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -15628,6 +16108,10 @@
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
+        },
+        "i8042": {
+            "description": "i8042 keyboard and mouse controller driver",
+            "depends": ""
         },
         "i915": {
             "description": "Intel Graphics",
@@ -15720,6 +16204,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -15897,6 +16389,10 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -15966,6 +16462,10 @@
             "depends": "usbcore"
         },
         "r8168": {
+            "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "r8168_tx": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
             "depends": ""
         },
@@ -16076,6 +16576,10 @@
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -16228,6 +16732,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -16583,6 +17091,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -16611,6 +17123,10 @@
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas"
         },
+        "hpwdt": {
+            "description": "hp watchdog driver",
+            "depends": ""
+        },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -16626,6 +17142,10 @@
         "i40e": {
             "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
             "depends": "vxlan,intel_auxiliary"
+        },
+        "i8042": {
+            "description": "i8042 keyboard and mouse controller driver",
+            "depends": ""
         },
         "i915": {
             "description": "Intel Graphics",
@@ -16718,6 +17238,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -16942,6 +17470,10 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -17223,6 +17755,10 @@
             "description": "Generic software cursor",
             "depends": "fb"
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
             "depends": "dvb-core"
@@ -17386,6 +17922,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wch": {
             "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
@@ -17689,6 +18229,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -17715,6 +18259,10 @@
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
+            "depends": ""
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
             "depends": ""
         },
         "hvc_console": {
@@ -17819,6 +18367,14 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
             "depends": ""
         },
         "iw_cm": {
@@ -18001,6 +18557,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -18074,6 +18638,10 @@
             "depends": "usbcore"
         },
         "r8168": {
+            "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "r8168_tx": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
             "depends": ""
         },
@@ -18176,6 +18744,10 @@
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -18307,6 +18879,10 @@
         },
         "w83793": {
             "description": "w83793 driver",
+            "depends": ""
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
             "depends": ""
         },
         "wireguard": {
@@ -18647,6 +19223,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -18673,6 +19253,10 @@
         },
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
+            "depends": ""
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
             "depends": ""
         },
         "hvc_console": {
@@ -18777,6 +19361,14 @@
         },
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
             "depends": ""
         },
         "iw_cm": {
@@ -19006,6 +19598,14 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -19283,6 +19883,10 @@
             "description": "Generic software cursor",
             "depends": "fb"
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
             "depends": "dvb-core"
@@ -19425,6 +20029,10 @@
         },
         "w83793": {
             "description": "w83793 driver",
+            "depends": ""
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
             "depends": ""
         },
         "wch": {
@@ -19737,6 +20345,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -19764,6 +20376,10 @@
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas,check_signature"
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
+            "depends": ""
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -19876,6 +20492,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -20057,6 +20681,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -20126,6 +20758,10 @@
             "depends": "usbcore"
         },
         "r8168": {
+            "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "r8168_tx": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
             "depends": ""
         },
@@ -20236,6 +20872,10 @@
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -20368,6 +21008,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -20715,6 +21359,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -20742,6 +21390,10 @@
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas,check_signature"
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
+            "depends": ""
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -20854,6 +21506,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -21082,6 +21742,14 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -21363,6 +22031,10 @@
             "description": "Generic software cursor",
             "depends": "fb"
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
             "depends": "dvb-core"
@@ -21506,6 +22178,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wch": {
             "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
@@ -21821,6 +22497,10 @@
             "description": "USB FTDI Serial Converters Driver",
             "depends": "usbserial,usbcore"
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -21848,6 +22528,10 @@
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas,check_signature"
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
+            "depends": ""
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -21960,6 +22644,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -22145,6 +22837,14 @@
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
         },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
+        },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
             "depends": ""
@@ -22214,6 +22914,10 @@
             "depends": "usbcore"
         },
         "r8168": {
+            "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "r8168_tx": {
             "description": "RealTek RTL-8168 Gigabit Ethernet driver (Compiled by RR for DSM)",
             "depends": ""
         },
@@ -22328,6 +23032,10 @@
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -22460,6 +23168,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wireguard": {
             "description": "WireGuard secure network tunnel",
@@ -22811,6 +23523,10 @@
             "description": "Google Gasket driver framework",
             "depends": ""
         },
+        "gpio-beeper": {
+            "description": "Generic GPIO beeper driver",
+            "depends": ""
+        },
         "gpio-f7188x": {
             "description": "GPIO driver for Super-I/O chips F71869, F71869A, F71882FG and F71889F (Compiled by RR for DSM)",
             "depends": ""
@@ -22838,6 +23554,10 @@
         "hpsa": {
             "description": "Driver for HP Smart Array Controller version 3.4.14-0",
             "depends": "scsi_transport_sas,check_signature"
+        },
+        "hpwdt": {
+            "description": "hp watchdog driver",
+            "depends": ""
         },
         "hvc_console": {
             "description": "Hypervisor Virtual Console Driver (Compiled by RR for DSM)",
@@ -22950,6 +23670,14 @@
         "it87": {
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "it8712f_wdt": {
+            "description": "IT8712F Watchdog Driver",
+            "depends": ""
+        },
+        "it87_wdt": {
+            "description": "Hardware Watchdog Device Driver for IT87xx EC-LPC I/O",
+            "depends": ""
         },
         "iw_cm": {
             "description": "iWARP CM",
@@ -23182,6 +23910,14 @@
         "p8022": {
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
+        },
+        "pcspeaker": {
+            "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "pcspkr": {
+            "description": "PC Speaker beeper driver",
+            "depends": ""
         },
         "phy-mt65xx-usb3": {
             "description": "mt65xx USB PHY driver",
@@ -23467,6 +24203,10 @@
             "description": "Generic software cursor",
             "depends": "fb"
         },
+        "softdog": {
+            "description": "Software Watchdog Device Driver",
+            "depends": "watchdog"
+        },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
             "depends": "dvb-core"
@@ -23610,6 +24350,10 @@
         "w83793": {
             "description": "w83793 driver",
             "depends": "hwmon-vid"
+        },
+        "watchdog": {
+            "description": "WatchDog Timer Driver Core",
+            "depends": ""
         },
         "wch": {
             "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
