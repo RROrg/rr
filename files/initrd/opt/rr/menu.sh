@@ -2431,21 +2431,45 @@ function savemodrr() {
   RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
   rm -rf "${RDXZ_PATH}"
   mkdir -p "${RDXZ_PATH}"
+  INITRD_FORMAT=$(file -b --mime-type "${RR_RAMDISK_FILE}")
   (
     cd "${RDXZ_PATH}"
-    xz -dc <"${RR_RAMDISK_FILE}" | cpio -idm
+    case "${INITRD_FORMAT}" in
+    *'x-cpio'*) cpio -idm <"${RR_RAMDISK_FILE}" ;;
+    *'x-xz'*) xz -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
+    *'x-lz4'*) lz4 -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
+    *'x-lzma'*) lzma -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
+    *'x-bzip2'*) bzip2 -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
+    *'gzip'*) gzip -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
+    *'zstd'*) zstd -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
+    *) ;;
+    esac
   ) >/dev/null 2>&1 || true
+  if [ -z "$(ls -A "$RDXZ_PATH")" ]; then
+    DIALOG --title "$(TEXT "Settings")" \
+      --msgbox "$(TEXT "initrd-rr file format error!")" 0 0
+    return
+  fi
   rm -rf "${RDXZ_PATH}/opt/rr"
   cp -rf "$(dirname ${WORK_PATH})" "${RDXZ_PATH}/"
   (
     cd "${RDXZ_PATH}"
     RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
-    find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 --check=crc32 >"${RR_RAMDISK_FILE}"
+    case "${INITRD_FORMAT}" in
+    *'x-cpio'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} >"${RR_RAMDISK_FILE}" ;;
+    *'x-xz'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 -C crc32 -c - >"${RR_RAMDISK_FILE}" ;;
+    *'x-lz4'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lz4 -9 -l -c - >"${RR_RAMDISK_FILE}" ;;
+    *'x-lzma'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lzma -9 -c - >"${RR_RAMDISK_FILE}" ;;
+    *'x-bzip2'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | bzip2 -9 -c - >"${RR_RAMDISK_FILE}" ;;
+    *'gzip'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | gzip -9 -c - >"${RR_RAMDISK_FILE}" ;;
+    *'zstd'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | zstd -19 -T0 -f -c - >"${RR_RAMDISK_FILE}" ;;
+    *) ;;
+    esac
   ) 2>&1 | DIALOG --title "$(TEXT "Settings")" \
     --gauge "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 8 100
   rm -rf "${RDXZ_PATH}"
   DIALOG --title "$(TEXT "Settings")" \
-    --msgbox ""$(TEXT "Save is complete.")"" 0 0
+    --msgbox "$(TEXT "Save is complete.")" 0 0
   return
 }
 
@@ -2624,10 +2648,24 @@ function changePassword() {
   RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
   rm -rf "${RDXZ_PATH}"
   mkdir -p "${RDXZ_PATH}"
-  [ -f "${RR_RAMUSER_FILE}" ] && (
-    cd "${RDXZ_PATH}"
-    xz -dc <"${RR_RAMUSER_FILE}" | cpio -idm
-  ) >/dev/null 2>&1 || true
+  if [ -f "${RR_RAMUSER_FILE}" ]; then
+    INITRD_FORMAT=$(file -b --mime-type "${RR_RAMUSER_FILE}")
+    (
+      cd "${RDXZ_PATH}"
+      case "${INITRD_FORMAT}" in
+      *'x-cpio'*) cpio -idm <"${RR_RAMUSER_FILE}" ;;
+      *'x-xz'*) xz -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+      *'x-lz4'*) lz4 -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+      *'x-lzma'*) lzma -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+      *'x-bzip2'*) bzip2 -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+      *'gzip'*) gzip -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+      *'zstd'*) zstd -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+      *) ;;
+      esac
+    ) >/dev/null 2>&1 || true
+  else
+    INITRD_FORMAT="application/zstd"
+  fi
   if [ "${STRPASSWD:-rr}" = "rr" ]; then
     rm -f ${RDXZ_PATH}/etc/shadow* 2>/dev/null
   else
@@ -2638,7 +2676,16 @@ function changePassword() {
     (
       cd "${RDXZ_PATH}"
       RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
-      find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 --check=crc32 >"${RR_RAMUSER_FILE}"
+      case "${INITRD_FORMAT}" in
+      *'x-cpio'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} >"${RR_RAMUSER_FILE}" ;;
+      *'x-xz'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 -C crc32 -c - >"${RR_RAMUSER_FILE}" ;;
+      *'x-lz4'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lz4 -9 -l -c - >"${RR_RAMUSER_FILE}" ;;
+      *'x-lzma'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lzma -9 -c - >"${RR_RAMUSER_FILE}" ;;
+      *'x-bzip2'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | bzip2 -9 -c - >"${RR_RAMUSER_FILE}" ;;
+      *'gzip'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | gzip -9 -c - >"${RR_RAMUSER_FILE}" ;;
+      *'zstd'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | zstd -19 -T0 -f -c - >"${RR_RAMUSER_FILE}" ;;
+      *) ;;
+      esac
     ) 2>&1 | DIALOG --title "$(TEXT "Settings")"
   else
     rm -f "${RR_RAMUSER_FILE}"
@@ -2695,10 +2742,24 @@ function changePorts() {
       RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
       rm -rf "${RDXZ_PATH}"
       mkdir -p "${RDXZ_PATH}"
-      [ -f "${RR_RAMUSER_FILE}" ] && (
-        cd "${RDXZ_PATH}"
-        xz -dc <"${RR_RAMUSER_FILE}" | cpio -idm
-      ) >/dev/null 2>&1 || true
+      if [ -f "${RR_RAMUSER_FILE}" ]; then
+        INITRD_FORMAT=$(file -b --mime-type "${RR_RAMUSER_FILE}")
+        (
+          cd "${RDXZ_PATH}"
+          case "${INITRD_FORMAT}" in
+          *'x-cpio'*) cpio -idm <"${RR_RAMUSER_FILE}" ;;
+          *'x-xz'*) xz -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+          *'x-lz4'*) lz4 -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+          *'x-lzma'*) lzma -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+          *'x-bzip2'*) bzip2 -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+          *'gzip'*) gzip -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+          *'zstd'*) zstd -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
+          *) ;;
+          esac
+        ) >/dev/null 2>&1 || true
+      else
+        INITRD_FORMAT="application/zstd"
+      fi
       if [ ! -f "/etc/rrorg.conf" ]; then
         rm -f "${RDXZ_PATH}/etc/rrorg.conf" 2>/dev/null
       else
@@ -2709,7 +2770,16 @@ function changePorts() {
         (
           cd "${RDXZ_PATH}"
           RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
-          find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 --check=crc32 >"${RR_RAMUSER_FILE}"
+          case "${INITRD_FORMAT}" in
+          *'x-cpio'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} >"${RR_RAMUSER_FILE}" ;;
+          *'x-xz'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 -C crc32 -c - >"${RR_RAMUSER_FILE}" ;;
+          *'x-lz4'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lz4 -9 -l -c - >"${RR_RAMUSER_FILE}" ;;
+          *'x-lzma'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lzma -9 -c - >"${RR_RAMUSER_FILE}" ;;
+          *'x-bzip2'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | bzip2 -9 -c - >"${RR_RAMUSER_FILE}" ;;
+          *'gzip'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | gzip -9 -c - >"${RR_RAMUSER_FILE}" ;;
+          *'zstd'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | zstd -19 -T0 -f -c - >"${RR_RAMUSER_FILE}" ;;
+          *) ;;
+          esac
         ) 2>&1 | DIALOG --title "$(TEXT "Settings")"
       else
         rm -f "${RR_RAMUSER_FILE}"

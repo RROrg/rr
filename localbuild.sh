@@ -75,9 +75,21 @@ function create() {
   cp -rf "/tmp/mnt/p1" "${WORKSPACE}/mnt/p1"
   cp -rf "/tmp/mnt/p2" "${WORKSPACE}/mnt/p2"
   cp -rf "/tmp/mnt/p3" "${WORKSPACE}/mnt/p3"
+
+  INITRD_FILE="${WORKSPACE}/mnt/p3/initrd-rr"
+  INITRD_FORMAT=$(file -b --mime-type "${INITRD_FILE}")
   (
     cd "${WORKSPACE}/initrd"
-    xz -dc <"${WORKSPACE}/mnt/p3/initrd-rr" | cpio -idm
+    case "${INITRD_FORMAT}" in
+    *'x-cpio'*) sudo cpio -idm <"${INITRD_FILE}" ;;
+    *'x-xz'*) xz -dc "${INITRD_FILE}" | sudo cpio -idm ;;
+    *'x-lz4'*) lz4 -dc "${INITRD_FILE}" | sudo cpio -idm ;;
+    *'x-lzma'*) lzma -dc "${INITRD_FILE}" | sudo cpio -idm ;;
+    *'x-bzip2'*) bzip2 -dc "${INITRD_FILE}" | sudo cpio -idm ;;
+    *'gzip'*) gzip -dc "${INITRD_FILE}" | sudo cpio -idm ;;
+    *'zstd'*) zstd -dc "${INITRD_FILE}" | sudo cpio -idm ;;
+    *) ;;
+    esac
   ) 2>/dev/null
   sudo sync
   sudo umount "/tmp/mnt/p1"
