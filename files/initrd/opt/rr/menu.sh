@@ -13,7 +13,7 @@ alias DIALOG='dialog --backtitle "$(backtitle)" --colors --aspect 50'
 # lock
 exec 304>"${WORK_PATH}/menu.lock"
 flock -n 304 || {
-  DIALOG --title "$(TEXT "Error")" \
+  dialog --colors --aspect 50 --title "$(TEXT "Error")" \
     --msgbox "$(TEXT "The menu.sh instance is already running in another terminal. To avoid conflicts, please operate in one instance only.")" 0 0
   exit 1
 }
@@ -2735,9 +2735,9 @@ function changePorts() {
       fi
       # save to rrorg.conf
       rm -f "/etc/rrorg.conf"
-      [ ! "${HTTP:-7080}" = "7080" ] && echo "HTTP_PORT=${HTTP}" >>"/etc/rrorg.conf" && /etc/init.d/S90thttpd restart >/dev/null 2>&1
-      [ ! "${DUFS:-7304}" = "7304" ] && echo "DUFS_PORT=${DUFS}" >>"/etc/rrorg.conf" && /etc/init.d/S99dufs restart >/dev/null 2>&1
-      [ ! "${TTYD:-7681}" = "7681" ] && echo "TTYD_PORT=${TTYD}" >>"/etc/rrorg.conf" && /etc/init.d/S99ttyd restart >/dev/null 2>&1
+      [ ! "${HTTP:-7080}" = "7080" ] && (echo "HTTP_PORT=${HTTP}" >>"/etc/rrorg.conf" && /etc/init.d/S90thttpd restart >/dev/null 2>&1)
+      [ ! "${DUFS:-7304}" = "7304" ] && (echo "DUFS_PORT=${DUFS}" >>"/etc/rrorg.conf" && /etc/init.d/S99dufs restart >/dev/null 2>&1)
+      [ ! "${TTYD:-7681}" = "7681" ] && (echo "TTYD_PORT=${TTYD}" >>"/etc/rrorg.conf" && /etc/init.d/S99ttyd restart >/dev/null 2>&1)
       # save to rru
       RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
       rm -rf "${RDXZ_PATH}"
