@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-05 16:28+0800\n"
+"POT-Creation-Date: 2024-11-15 23:16+0800\n"
 "PO-Revision-Date: 2024-05-05 22:03+0800\n"
 "Last-Translator: Ing <AI>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/rrorg/rr/uk/>\n"
@@ -82,67 +82,67 @@ msgstr "Будь ласка, вставте принаймні один сата
 msgid "Cmdline:\\n"
 msgstr "Cmdline:\\n"
 
-#: boot.sh:230
-msgid "Reboot to boot directly in DSM"
-msgstr "Перезавантаження на завантаження безпосередньо в DSM"
-
-#: boot.sh:245 init.sh:168
-msgid "Detected %s network cards."
-msgstr "Визначені %s мережевих карток."
-
-#: boot.sh:246 init.sh:169
-msgid "Checking Connect."
-msgstr "Перевірити підключення."
-
-#: boot.sh:258 init.sh:179
-msgid "connected."
-msgstr "підключений."
-
-#: boot.sh:268 init.sh:189
-msgid "Waiting IP."
-msgstr "Очікується IP."
-
-#: boot.sh:275 init.sh:196
-msgid "DOWN"
-msgstr "Завантаження"
-
-#: boot.sh:279 init.sh:200
-msgid "NOT CONNECTED"
-msgstr "НЕ ВАЖЛИВО"
-
-#: boot.sh:283 init.sh:204
-msgid "TIMEOUT (Please check the IP on the router.)"
-msgstr "Про нас (Ознайомтеся з перевіркою IP на маршрутизаторі.)"
-
-#: boot.sh:290 init.sh:211
-msgid "LINK LOCAL (No DHCP server detected.)"
-msgstr "LINK LOCAL (DHCP-сервер не виявлено.)"
-
-#: boot.sh:292
-msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
-msgstr "Доступ \\033[1;34mhttp://%s:5000\\033[0m для підключення DSM через веб-сайт."
-
-#: boot.sh:305
+#: boot.sh:221
 msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
 msgstr "%2d (Змінний доступ(ssh/web) статус переривається завантаження)"
 
-#: boot.sh:309
+#: boot.sh:225
 msgid "access(ssh/web) status has changed and booting is interrupted."
 msgstr "доступ(ssh/web) статус змінив і завантажує переривається."
 
-#: boot.sh:319
+#: boot.sh:254
+msgid "Reboot to boot directly in DSM"
+msgstr "Перезавантаження на завантаження безпосередньо в DSM"
+
+#: boot.sh:269 init.sh:168
+msgid "Detected %s network cards."
+msgstr "Визначені %s мережевих карток."
+
+#: boot.sh:270 init.sh:169
+msgid "Checking Connect."
+msgstr "Перевірити підключення."
+
+#: boot.sh:282 init.sh:179
+msgid "connected."
+msgstr "підключений."
+
+#: boot.sh:292 init.sh:189
+msgid "Waiting IP."
+msgstr "Очікується IP."
+
+#: boot.sh:299 init.sh:196
+msgid "DOWN"
+msgstr "Завантаження"
+
+#: boot.sh:303 init.sh:200
+msgid "NOT CONNECTED"
+msgstr "НЕ ВАЖЛИВО"
+
+#: boot.sh:307 init.sh:204
+msgid "TIMEOUT (Please check the IP on the router.)"
+msgstr "Про нас (Ознайомтеся з перевіркою IP на маршрутизаторі.)"
+
+#: boot.sh:314 init.sh:211
+msgid "LINK LOCAL (No DHCP server detected.)"
+msgstr "LINK LOCAL (DHCP-сервер не виявлено.)"
+
+#: boot.sh:316
+msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
+msgstr "Доступ \\033[1;34mhttp://%s:5000\\033[0m для підключення DSM через веб-сайт."
+
+#: boot.sh:327
 msgid "Loading DSM kernel ..."
 msgstr "Завантаження DSM ядро ..."
 
-#: boot.sh:336
+#: boot.sh:344
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "Попередження, що працює kexec з --noefi param, дивні речі будуть!"
 
-#: boot.sh:341
+#: boot.sh:349
 msgid "Booting ..."
 msgstr "Черевики ..."
 
-#: boot.sh:344
+#: boot.sh:352
 msgid "[This interface will not be operational. Please wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]"
 msgstr "[Цей інтерфейс не буде працювати. Будь ласка, почекайте кілька хвилин.\\nЗберігайте DSM за допомогою http://find.synology.com/ або Synology Assistant і з'єднайте.]"
 
@@ -258,7 +258,7 @@ msgstr "Поточна версія була встановлена до %s. В�
 msgid "Get pat data ..."
 msgstr "Отримати дані pat ..."
 
-#: menu.sh:248 menu.sh:528 menu.sh:545 menu.sh:550 menu.sh:556 menu.sh:567 menu.sh:575 menu.sh:598 menu.sh:605 menu.sh:609 menu.sh:623 menu.sh:627 menu.sh:635 menu.sh:639 menu.sh:3335 menu.sh:3384 menu.sh:3596 menu.sh:3631 menu.sh:3636
+#: menu.sh:248 menu.sh:528 menu.sh:545 menu.sh:550 menu.sh:556 menu.sh:567 menu.sh:575 menu.sh:598 menu.sh:605 menu.sh:609 menu.sh:623 menu.sh:627 menu.sh:635 menu.sh:639 menu.sh:3407 menu.sh:3456 menu.sh:3668 menu.sh:3703 menu.sh:3708
 msgid "Addons"
 msgstr "Доповнення"
 
@@ -306,7 +306,7 @@ msgstr "Не знайдено файл pat, який міститься в /tmp/
 msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
 msgstr "Будь ласка, завантажте файл pat до /tmp/pats/ папку через DUFS і перейменуйте цей параметр.\\n"
 
-#: menu.sh:439 menu.sh:3594 menu.sh:3595 menu.sh:3596 menu.sh:3597 menu.sh:3598 menu.sh:3599 menu.sh:3605 menu.sh:3630 menu.sh:3642 menu.sh:3654 menu.sh:3666 menu.sh:3681 menu.sh:3692 menu.sh:3709 menu.sh:3728
+#: menu.sh:439 menu.sh:3666 menu.sh:3667 menu.sh:3668 menu.sh:3669 menu.sh:3670 menu.sh:3671 menu.sh:3677 menu.sh:3702 menu.sh:3714 menu.sh:3726 menu.sh:3738 menu.sh:3753 menu.sh:3764 menu.sh:3781 menu.sh:3800
 msgid "Update"
 msgstr "Оновити"
 
@@ -330,7 +330,7 @@ msgstr "Привіт!"
 msgid "Making ..."
 msgstr "Виготовлення ..."
 
-#: menu.sh:529 menu.sh:659 menu.sh:860 menu.sh:1017 menu.sh:3819
+#: menu.sh:529 menu.sh:659 menu.sh:860 menu.sh:1017 menu.sh:3891
 msgid "Choose a option"
 msgstr "Оберіть варіант"
 
@@ -350,7 +350,7 @@ msgstr "Показати всі додатки"
 msgid "Upload a external addon"
 msgstr "Завантажити зовнішній додаток"
 
-#: menu.sh:534 menu.sh:667 menu.sh:858 menu.sh:1015 menu.sh:1411 menu.sh:2771 menu.sh:2974 menu.sh:3602 menu.sh:3816 menu.sh:3915
+#: menu.sh:534 menu.sh:667 menu.sh:858 menu.sh:1015 menu.sh:1411 menu.sh:2843 menu.sh:3046 menu.sh:3674 menu.sh:3888 menu.sh:3987
 msgid "Exit"
 msgstr "Вийти"
 
@@ -378,7 +378,7 @@ msgstr "Виберіть додаток для видалення"
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n\\n"
 msgstr "Ім'я з кольором \"\\Z4blue\\Zn\" додано, з кольором \"чорний\" не додано. \\n\\n"
 
-#: menu.sh:604 menu.sh:736 menu.sh:1418 menu.sh:3679
+#: menu.sh:604 menu.sh:736 menu.sh:1418 menu.sh:3751
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
 msgstr "Ця функція доступна тільки при доступі через Ssh (потребує термінал, який підтримує протокол ZModem).\\n"
 
@@ -386,7 +386,7 @@ msgstr "Ця функція доступна тільки при доступі 
 msgid "Please upload the *.addons file."
 msgstr "Будь ласка, завантажте файл *.addons."
 
-#: menu.sh:624 menu.sh:772 menu.sh:3710 menu.sh:3729
+#: menu.sh:624 menu.sh:772 menu.sh:3782 menu.sh:3801
 msgid "Not a valid file, please try again!"
 msgstr "Будь ласка, спробуйте знову!"
 
@@ -402,7 +402,7 @@ msgstr "Addon '%s' додано до навантажувача, Будь лас
 msgid "File format not recognized!"
 msgstr "Формат файлу не визнаний!"
 
-#: menu.sh:658 menu.sh:673 menu.sh:686 menu.sh:720 menu.sh:737 menu.sh:747 menu.sh:750 menu.sh:766 menu.sh:771 menu.sh:785 menu.sh:791 menu.sh:826 menu.sh:3400 menu.sh:3450 menu.sh:3597 menu.sh:3643 menu.sh:3648
+#: menu.sh:658 menu.sh:673 menu.sh:686 menu.sh:720 menu.sh:737 menu.sh:747 menu.sh:750 menu.sh:766 menu.sh:771 menu.sh:785 menu.sh:791 menu.sh:826 menu.sh:3472 menu.sh:3522 menu.sh:3669 menu.sh:3715 menu.sh:3720
 msgid "Modules"
 msgstr "Модулі"
 
@@ -490,7 +490,7 @@ msgstr "No i915 з модулем залежностей для видаленн
 msgid "Module %s deselected.\\n"
 msgstr "Модуль %s deselected.\\n"
 
-#: menu.sh:808 menu.sh:1472 menu.sh:2048 menu.sh:2078 menu.sh:3760
+#: menu.sh:808 menu.sh:1472 menu.sh:2046 menu.sh:2076 menu.sh:3832
 msgid "Edit with caution"
 msgstr "Редагування з обережністю"
 
@@ -722,7 +722,7 @@ msgstr "Очищено кеш. Будь ласка, перейдемо на ві
 msgid "The pat url is empty. Please re 'Choose a version' before build."
 msgstr "Пат виворіт порожній. Будь ласка, перейдемо до збірки."
 
-#: menu.sh:1257 menu.sh:3749
+#: menu.sh:1257 menu.sh:3821
 msgid "Cleaning cache ..."
 msgstr "Прибирання кешу ..."
 
@@ -762,7 +762,7 @@ msgstr "Ні дисковий простір зліва, будь ласка, о
 msgid "Cleaning ..."
 msgstr "Прибирання ..."
 
-#: menu.sh:1367 menu.sh:3748 menu.sh:3818 menu.sh:3836 menu.sh:3917 menu.sh:3923 menu.sh:3929 menu.sh:3935 menu.sh:3941 menu.sh:3947 menu.sh:3953
+#: menu.sh:1367 menu.sh:3820 menu.sh:3890 menu.sh:3908 menu.sh:3989 menu.sh:3995 menu.sh:4001 menu.sh:4007 menu.sh:4013 menu.sh:4019 menu.sh:4025
 msgid "Main menu"
 msgstr "Головне меню"
 
@@ -778,7 +778,7 @@ msgstr "Оповіщення"
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "Настроювання змінено, ви хотіли б перебудувати навантажувач?"
 
-#: menu.sh:1406 menu.sh:1420 menu.sh:1424 menu.sh:1441 menu.sh:1446 menu.sh:1465 menu.sh:1477 menu.sh:2747
+#: menu.sh:1406 menu.sh:1420 menu.sh:1424 menu.sh:1441 menu.sh:1446 menu.sh:1465 menu.sh:1477 menu.sh:2819
 msgid "Custom DTS"
 msgstr "Користувальницькі DTS"
 
@@ -826,13 +826,13 @@ msgstr "\\nВсього портів: %s\\n"
 msgid "\\nPorts with color \\Z1red\\Zn as DUMMY, color \\Z2\\Zbgreen\\Zn has drive connected."
 msgstr "\\nПорти з кольором \\Z1red\\Zn як DUMMY, колір \\Z2 \\ Zbgreen \\ Зн підключений привід."
 
-#: menu.sh:1587 menu.sh:1631 menu.sh:2182
+#: menu.sh:1587 menu.sh:1631 menu.sh:2180
 msgid "No disk found!"
 msgstr "Не знайдено диска!"
 
 #: menu.sh:1588 menu.sh:1600 menu.sh:1614 menu.sh:1630 menu.sh:1634 menu.sh:1635 menu.sh:1640 menu.sh:1644 menu.sh:1657 menu.sh:1659 menu.sh:1673 menu.sh:1677 menu.sh:1687 menu.sh:1699 menu.sh:1704 menu.sh:1719 menu.sh:1721 menu.sh:1731 menu.sh:1755
-#: menu.sh:1759 menu.sh:1766 menu.sh:1772 menu.sh:1791 menu.sh:1793 menu.sh:1803 menu.sh:1808 menu.sh:1836 menu.sh:1839 menu.sh:1849 menu.sh:1874 menu.sh:1877 menu.sh:1888 menu.sh:1893 menu.sh:1908 menu.sh:1911 menu.sh:1921 menu.sh:1938 menu.sh:1941
-#: menu.sh:1952 menu.sh:1957 menu.sh:1973 menu.sh:1976 menu.sh:2773 menu.sh:2800 menu.sh:2818 menu.sh:2834 menu.sh:2846 menu.sh:2866
+#: menu.sh:1759 menu.sh:1766 menu.sh:1772 menu.sh:1789 menu.sh:1791 menu.sh:1801 menu.sh:1806 menu.sh:1834 menu.sh:1837 menu.sh:1847 menu.sh:1872 menu.sh:1875 menu.sh:1886 menu.sh:1891 menu.sh:1906 menu.sh:1909 menu.sh:1919 menu.sh:1936 menu.sh:1939
+#: menu.sh:1950 menu.sh:1955 menu.sh:1971 menu.sh:1974 menu.sh:2845 menu.sh:2872 menu.sh:2890 menu.sh:2906 menu.sh:2918 menu.sh:2938
 msgid "Advanced"
 msgstr "Додатково"
 
@@ -848,7 +848,7 @@ msgstr "Усі пули зберігання змонтовано в /mnt/DSM. �
 msgid "For encrypted volume / encrypted shared folder, please refer to https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC"
 msgstr "Для зашифрованих дисків / зашифрованих спільних текорепосів, посилання на https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC"
 
-#: menu.sh:1641 menu.sh:1698 menu.sh:1887 menu.sh:1951
+#: menu.sh:1641 menu.sh:1698 menu.sh:1885 menu.sh:1949
 msgid "Warning:\\nThis operation is irreversible. Please backup important data. Do you want to continue?"
 msgstr "Попередження:\\nЦя операція незворотна. Будь ласка, заповніть важливі дані. Ви хочете продовжити?"
 
@@ -876,7 +876,7 @@ msgstr "Будь ласка, зв'яжіться з нами і зателефо
 msgid "\\Z1No scbk found!\\Zn\\n\\n"
 msgstr "\\Z1Не знайдено scbk!\\Zn\\n\\n"
 
-#: menu.sh:1683 menu.sh:2370
+#: menu.sh:1683 menu.sh:2368
 msgid "Please do as follows:\\n"
 msgstr "Будь ласка, введіть наступне:\\n"
 
@@ -888,7 +888,7 @@ msgstr " 1. Додати synoconfbkp в плагіни і rebuild.\\n"
 msgid " 2. Normal use.\\n"
 msgstr " 2. Нормальне використання.\\n"
 
-#: menu.sh:1686 menu.sh:2373
+#: menu.sh:1686 menu.sh:2371
 msgid " 3. Reboot into RR and go to this option.\\n"
 msgstr " 3. Перезавантажити в RR і перейти до цього параметра.\\n"
 
@@ -896,11 +896,11 @@ msgstr " 3. Перезавантажити в RR і перейти до цьог
 msgid "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\\n"
 msgstr "Ця функція дозволить вам знизити монтаж, видаливши файл VERSION з першого розділу всіх дисків.\\n"
 
-#: menu.sh:1705 menu.sh:1732 menu.sh:1804 menu.sh:1850 menu.sh:1894 menu.sh:1922 menu.sh:1958 menu.sh:2095
+#: menu.sh:1705 menu.sh:1732 menu.sh:1802 menu.sh:1848 menu.sh:1892 menu.sh:1920 menu.sh:1956 menu.sh:2093
 msgid "No DSM system partition(md0) found!\\nPlease insert all disks before continuing."
 msgstr "Системний розділ DSM (md0) не знайдено!\\nБудь ласка, вставте всі диски, перш ніж продовжити."
 
-#: menu.sh:1720 menu.sh:1909
+#: menu.sh:1720 menu.sh:1907
 msgid "Removing ..."
 msgstr "Видалення ..."
 
@@ -924,725 +924,729 @@ msgstr "Введіть новий пароль для користувача '%s
 msgid "Invalid password"
 msgstr "Неправильний пароль"
 
-#: menu.sh:1792
+#: menu.sh:1790
 msgid "Resetting ..."
 msgstr "Редагування ..."
 
-#: menu.sh:1794
+#: menu.sh:1792
 msgid "Password reset completed."
 msgstr "Скинути пароль завершено."
 
-#: menu.sh:1807
+#: menu.sh:1805
 msgid "Add to administrators group by default"
 msgstr "Додати до групи адміністраторів за замовчуванням"
 
-#: menu.sh:1837
+#: menu.sh:1835
 msgid "Adding ..."
 msgstr "Додавання..."
 
-#: menu.sh:1838
+#: menu.sh:1836
 msgid "User added successfully."
 msgstr "Користувальницька додана успішно."
 
-#: menu.sh:1838
+#: menu.sh:1836
 msgid "User add failed."
 msgstr "Користувач додає не вдалося."
 
-#: menu.sh:1875 menu.sh:1939
+#: menu.sh:1873 menu.sh:1937
 msgid "Enabling ..."
 msgstr "Зловживання ..."
 
-#: menu.sh:1876
+#: menu.sh:1874
 msgid "Enabled Telnet&SSH successfully."
 msgstr "Увімкнути Telnet&SSH успішно."
 
-#: menu.sh:1876
+#: menu.sh:1874
 msgid "Enabled Telnet&SSH failed."
 msgstr "Увімкнути Telnet&SSH не вдалося."
 
-#: menu.sh:1886
+#: menu.sh:1884
 msgid "This feature will removing the blocked ip database from the first partition of all disks.\\n"
 msgstr "Ця функція виведе заблоковану ip бази даних з першого розділу всіх дисків.\\n"
 
-#: menu.sh:1910
+#: menu.sh:1908
 msgid "Removing The blocked ip database successfully."
 msgstr "Видалення заблокованої ip бази даних успішно."
 
-#: menu.sh:1910
+#: menu.sh:1908
 msgid "Removing The blocked ip database failed."
 msgstr "Видалення заблокованої ip бази даних не вдалося."
 
-#: menu.sh:1940
+#: menu.sh:1938
 msgid "Disable all scheduled tasks successfully."
 msgstr "Видалення всіх запланованих задач успішно."
 
-#: menu.sh:1940
+#: menu.sh:1938
 msgid "Disable all scheduled tasks failed."
 msgstr "Видалення всіх запланованих задач не вдалося."
 
-#: menu.sh:1950
+#: menu.sh:1948
 msgid "This option will clear all customized settings of the network card and restore them to the default state.\\n"
 msgstr "Ця опція очистить усі налаштування мережевої карти та відновить їх до стандартного стану.\\n"
 
-#: menu.sh:1974
+#: menu.sh:1972
 msgid "Recovering ..."
 msgstr "Відновлення ..."
 
-#: menu.sh:1975
+#: menu.sh:1973
 msgid "The network settings initialization successfully."
 msgstr "Налаштування мережі ініціалізовано."
 
-#: menu.sh:1975
+#: menu.sh:1973
 msgid "The network settings initialization failed."
 msgstr "Налаштування мережі не вдалося."
 
-#: menu.sh:1990 menu.sh:2005 menu.sh:2020 menu.sh:2032 menu.sh:2055 menu.sh:2090 menu.sh:2094 menu.sh:2102 menu.sh:2113 menu.sh:2136 menu.sh:2144 menu.sh:2150 menu.sh:2165 menu.sh:2181 menu.sh:2185 menu.sh:2191 menu.sh:2197 menu.sh:2203 menu.sh:2285
-#: menu.sh:2288 menu.sh:2291 menu.sh:2303 menu.sh:2313 menu.sh:2392 menu.sh:2399 menu.sh:2413 menu.sh:2420 menu.sh:2428 menu.sh:2431 menu.sh:2446 menu.sh:2449 menu.sh:2465 menu.sh:2471 menu.sh:2510 menu.sh:2522 menu.sh:2531 menu.sh:2553 menu.sh:2576
-#: menu.sh:2587 menu.sh:2615 menu.sh:2643 menu.sh:2649 menu.sh:2662 menu.sh:2685 menu.sh:2713 menu.sh:2719 menu.sh:2976 menu.sh:3004 menu.sh:3077
+#: menu.sh:1988 menu.sh:2003 menu.sh:2018 menu.sh:2030 menu.sh:2053 menu.sh:2088 menu.sh:2092 menu.sh:2100 menu.sh:2111 menu.sh:2134 menu.sh:2142 menu.sh:2148 menu.sh:2163 menu.sh:2179 menu.sh:2183 menu.sh:2189 menu.sh:2195 menu.sh:2201 menu.sh:2283
+#: menu.sh:2286 menu.sh:2289 menu.sh:2301 menu.sh:2311 menu.sh:2390 menu.sh:2397 menu.sh:2411 menu.sh:2418 menu.sh:2426 menu.sh:2429 menu.sh:2449 menu.sh:2468 menu.sh:2471 menu.sh:2487 menu.sh:2493 menu.sh:2532 menu.sh:2544 menu.sh:2554 menu.sh:2576
+#: menu.sh:2599 menu.sh:2610 menu.sh:2638 menu.sh:2690 menu.sh:2696 menu.sh:2710 menu.sh:2733 menu.sh:2784 menu.sh:2790 menu.sh:3048 menu.sh:3076 menu.sh:3149
 msgid "Settings"
 msgstr "Налаштування"
 
-#: menu.sh:1991 menu.sh:2952
+#: menu.sh:1989 menu.sh:3024
 msgid "Choose a language"
 msgstr "Choose a language"
 
-#: menu.sh:2006 menu.sh:2953
+#: menu.sh:2004 menu.sh:3025
 msgid "Choose a timezone"
 msgstr "Виберіть часовий пояс"
 
-#: menu.sh:2021
+#: menu.sh:2019
 msgid "Choose a layout"
 msgstr "Виберіть макет"
 
-#: menu.sh:2033
+#: menu.sh:2031
 msgid "Choice a keymap"
 msgstr "Вибір клавіатури"
 
-#: menu.sh:2091
+#: menu.sh:2089
 msgid "Trying to recovery a installed DSM system ..."
 msgstr "Спробуйте відновити встановлену систему DSM ..."
 
-#: menu.sh:2103
+#: menu.sh:2101
 msgid "mount DSM system partition(md0) failed!\\nPlease insert all disks before continuing."
 msgstr "монтувати системний розділ DSM (md0) не вдалося!\\nБудь ласка, вставте всі диски, перш ніж продовжити."
 
-#: menu.sh:2114
+#: menu.sh:2112
 msgid "Checking for backup of user's configuration for bootloader ..."
 msgstr "Перевірка для резервної копії конфігурації користувача для завантаження..."
 
-#: menu.sh:2137
+#: menu.sh:2135
 msgid "Found a backup of the user's configuration, and restored it. Please rebuild and boot."
 msgstr "Знайдено резервну копію конфігурації користувача та відновлено її. Будь ласка, перебудувати і завантажити."
 
-#: menu.sh:2145
+#: menu.sh:2143
 msgid "Checking for installed DSM system ..."
 msgstr "Перевірка встановленої системи DSM ..."
 
-#: menu.sh:2151
+#: menu.sh:2149
 msgid "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build."
 msgstr "Система DSM не знайдено, або система пошкоджена і не може бути відновлена. Будь ласка, переоберіть модель і побудувати."
 
-#: menu.sh:2166
+#: menu.sh:2164
 msgid "Found a installed DSM system and restored it. Please rebuild and boot."
 msgstr "Знайдено встановлену систему ДСМ і відновлено її. Будь ласка, перебудувати і завантажити."
 
-#: menu.sh:2186
+#: menu.sh:2184
 msgid "Choose a disk to clone to"
 msgstr "Виберіть диск для клона"
 
-#: menu.sh:2192
+#: menu.sh:2190
 msgid "No disk selected!"
 msgstr "Немає вибраного диска!"
 
-#: menu.sh:2198
+#: menu.sh:2196
 msgid "Disk %s size is less than 1GB and cannot be cloned!"
 msgstr "Розмір диска %s менше 1 Гб і не можна клонувати!"
 
-#: menu.sh:2202
+#: menu.sh:2200
 msgid "Warning:\\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \\nDo you want to continue?"
 msgstr "Попередження:\\nДискусія %s буде відформатовано і письмово написано навантажувач. Будь ласка, підтвердіть, що важливі дані були повернені. \\nВи хочете продовжити?"
 
-#: menu.sh:2238 menu.sh:2243 menu.sh:2248
+#: menu.sh:2236 menu.sh:2241 menu.sh:2246
 msgid "Can't mount %s."
 msgstr "Не вдається підключити %s."
 
-#: menu.sh:2261
+#: menu.sh:2259
 msgid "Cloning failed due to insufficient remaining disk space on the selected hard drive."
 msgstr "Клонування не вдалося через недостатньо вільного місця на вибраному жорсткому диску."
 
-#: menu.sh:2268 menu.sh:2273 menu.sh:2278
+#: menu.sh:2266 menu.sh:2271 menu.sh:2276
 msgid "Can't copy to %s."
 msgstr "Неможливо скопіювати в %s."
 
-#: menu.sh:2286
+#: menu.sh:2284
 msgid "Cloning ..."
 msgstr "Клонування ..."
 
-#: menu.sh:2292
+#: menu.sh:2290
 msgid "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\\nReboot?"
 msgstr "Bootloader було підключено до диска %s, будь ласка, видаліть поточний завантажувальний диск!\\nЗавантажити?"
 
-#: menu.sh:2304
+#: menu.sh:2302
 msgid "Download"
 msgstr "Завантажити"
 
-#: menu.sh:2304
+#: menu.sh:2302
 msgid "Cancel"
 msgstr "скасувати"
 
-#: menu.sh:2312
+#: menu.sh:2310
 msgid "Please via %s to download the system.txt."
 msgstr "Будь ласка, скористайтеся %s для завантаження system.txt."
 
-#: menu.sh:2342
+#: menu.sh:2340
 msgid "Find the system logs!\\n"
 msgstr "Знайдено системні журнали!\\n"
 
-#: menu.sh:2344
+#: menu.sh:2342
 msgid "Not Find system logs!\\n"
 msgstr "Не знайдено системні журнали!\\n"
 
-#: menu.sh:2355
+#: menu.sh:2353
 msgid "Find the pstore logs!\\n"
 msgstr "Знайдено pstore журнали!\\n"
 
-#: menu.sh:2357
+#: menu.sh:2355
 msgid "Not Find pstore logs!\\n"
 msgstr "Не знайдено pstore журнали!\\n"
 
-#: menu.sh:2367
+#: menu.sh:2365
 msgid "Find the addons logs!\\n"
 msgstr "Знайдено addons журнали!\\n"
 
-#: menu.sh:2369
+#: menu.sh:2367
 msgid "Not Find addons logs!\\n"
 msgstr "Не знайдено addons журнали!\\n"
 
-#: menu.sh:2371
+#: menu.sh:2369
 msgid " 1. Add dbgutils in addons and rebuild.\\n"
 msgstr " 1. Додати dbgutils в addons і rebuild.\\n"
 
-#: menu.sh:2372
+#: menu.sh:2370
 msgid " 2. Wait 10 minutes after booting.\\n"
 msgstr " 2. Зачекайте 10 хвилин після завантаження.\\n"
 
-#: menu.sh:2386
+#: menu.sh:2384
 msgid "Please via %s to download the logs,\\nAnd go to github to create an issue and upload the logs."
 msgstr "Будь ласка, через %s, щоб завантажити журнали,\\nІ перейти до github, щоб створити проблему і завантажити журнали."
 
-#: menu.sh:2389
+#: menu.sh:2387
 msgid "Please go to github to create an issue and upload the logs."
 msgstr "Будь ласка, перейдіть до github, щоб створити проблему і завантажити журнали."
 
-#: menu.sh:2400
+#: menu.sh:2398
 msgid "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?"
 msgstr "Ця опція тільки встановлює управління пакетом opkg, що дозволяє вам встановити більше інструментів для використання та видалення. Ви хочете продовжити?"
 
-#: menu.sh:2414
+#: menu.sh:2412
 msgid "opkg installing ..."
 msgstr "opkg установка ..."
 
-#: menu.sh:2416
+#: menu.sh:2414
 msgid "opkg install failed."
 msgstr "opkg встановити не вдалося."
 
-#: menu.sh:2418
+#: menu.sh:2416
 msgid "opkg install complete."
 msgstr "opkg встановити завершено."
 
-#: menu.sh:2429
+#: menu.sh:2427
 msgid "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?"
 msgstr "Попередження:\\nНе припиняйте посередині, інакше це може призвести до пошкодження РРР. Ви хочете продовжити?"
 
-#: menu.sh:2432 menu.sh:2447
+#: menu.sh:2430 menu.sh:2469
 msgid "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
 msgstr "Збереження ...\\n(Це зазвичай займає 5-10 хвилин, будь ласка, пацієнт і очікування.)"
 
 #: menu.sh:2450
+msgid "initrd-rr file format error!"
+msgstr "Помилка формату файлу initrd-rr!"
+
+#: menu.sh:2472
 msgid "Save is complete."
 msgstr "Заощаджувати повністю."
 
-#: menu.sh:2463
+#: menu.sh:2485
 msgid "Set to %s: (Delete if empty)"
 msgstr "Встановити %s: (Видаліть, якщо порожній)"
 
-#: menu.sh:2472
+#: menu.sh:2494
 msgid "Setting IP ..."
 msgstr "Налаштування IP ..."
 
-#: menu.sh:2511
+#: menu.sh:2533
 msgid "Scanning ..."
 msgstr "Сканування..."
 
-#: menu.sh:2514
+#: menu.sh:2536
 msgid "Scanned SSIDs:\\n"
 msgstr "Скасовані SSIDs:\\n"
 
-#: menu.sh:2532
+#: menu.sh:2555
 msgid "Invalid SSID/PSK, retry?"
 msgstr "Invalid SSID/PSK, птиця?"
 
-#: menu.sh:2554
+#: menu.sh:2577
 msgid "Setting ..."
 msgstr "Налаштування ..."
 
-#: menu.sh:2577
+#: menu.sh:2600
 msgid "Please enter a proxy server url.(e.g., %s)"
 msgstr "Будь ласка, введіть проксі сервер URL.(наприклад, %s)"
 
-#: menu.sh:2588
+#: menu.sh:2611
 msgid "Invalid proxy server url, continue?"
 msgstr "Недійсний проксі-сервер url, продовжується?"
 
-#: menu.sh:2616
+#: menu.sh:2639
 msgid "New password: (Empty for default value 'rr')"
 msgstr "Новий пароль: (Порожній за замовчуванням 'rr')"
 
-#: menu.sh:2648
+#: menu.sh:2695
 msgid "password for root restored."
 msgstr "пароль для root відновлено."
 
-#: menu.sh:2648
+#: menu.sh:2695
 msgid "password for root changed."
 msgstr "пароль для root змінено."
 
-#: menu.sh:2658
+#: menu.sh:2705
 msgid "Please fill in a number between 0-65535: (Empty for default value.)"
 msgstr "Будь ласка, заповніть число між 0-65535: (Порожній за замовчуванням.)"
 
-#: menu.sh:2686
+#: menu.sh:2734
 msgid "Invalid %s port number, retry?"
 msgstr "Недійсний номер %s порту, повторити?"
 
-#: menu.sh:2718
+#: menu.sh:2789
 msgid "Ports for TTYD/DUFS/HTTP restored."
 msgstr "Поorts для TTYD/DUFS/HTTP відновлено."
 
-#: menu.sh:2718
+#: menu.sh:2789
 msgid "Ports for TTYD/DUFS/HTTP changed."
 msgstr "Поorts для TTYD/DUFS/HTTP змінено."
 
-#: menu.sh:2739
+#: menu.sh:2811
 msgid "DSM rd compression:"
 msgstr "DSM rd компресія:"
 
-#: menu.sh:2740
+#: menu.sh:2812
 msgid "Switch LKM version:"
 msgstr "Перемикач LKM версія:"
 
-#: menu.sh:2741
+#: menu.sh:2813
 msgid "HDD sort(hotplug):"
 msgstr "HDD сорт(гаряча):"
 
-#: menu.sh:2743
+#: menu.sh:2815
 msgid "show/modify the current pat data"
 msgstr "показати / модифікувати поточні дані pat"
 
-#: menu.sh:2744
+#: menu.sh:2816
 msgid "Switch SATADOM mode:"
 msgstr "Перемикач SATADOM режим:"
 
-#: menu.sh:2750
-msgid "Timeout of get ip in boot:"
-msgstr "Час виходу ip в завантаження:"
-
-#: menu.sh:2751
+#: menu.sh:2821
 msgid "Timeout of boot wait:"
 msgstr "Час очікування завантаження:"
 
-#: menu.sh:2752
+#: menu.sh:2823
+msgid "Timeout of get ip in boot:"
+msgstr "Час виходу ip в завантаження:"
+
+#: menu.sh:2824
 msgid "kernel switching method:"
 msgstr "метод перемикання ядер:"
 
-#: menu.sh:2754
+#: menu.sh:2826
 msgid "Reboot on kernel panic:"
 msgstr "Перезавантаження на ядру паніку:"
 
-#: menu.sh:2756
+#: menu.sh:2828
 msgid "Use EMMC as the system disk:"
 msgstr "Використовуйте EMMC як системний диск:"
 
-#: menu.sh:2759
+#: menu.sh:2831
 msgid "Show disks information"
 msgstr "Показати інформацію дисків"
 
-#: menu.sh:2760
+#: menu.sh:2832
 msgid "Mounting DSM storage pool"
 msgstr "Встановлення пулу зберігання DSM"
 
-#: menu.sh:2761
+#: menu.sh:2833
 msgid "Format disk(s) # Without loader disk"
 msgstr "Формат диска(и) # Без навантажувача"
 
-#: menu.sh:2762
+#: menu.sh:2834
 msgid "Download DSM config backup files"
 msgstr "Завантажити файли резервного копіювання DSM"
 
-#: menu.sh:2763
+#: menu.sh:2835
 msgid "Allow downgrade installation"
 msgstr "Дозволити монтаж"
 
-#: menu.sh:2764
+#: menu.sh:2836
 msgid "Reset DSM system password"
 msgstr "Заміна пароля системи DSM"
 
-#: menu.sh:2765
+#: menu.sh:2837
 msgid "Add a new user to DSM system"
 msgstr "Додати новий користувач до системи DSM"
 
-#: menu.sh:2766
+#: menu.sh:2838
 msgid "Force enable Telnet&SSH of DSM system"
 msgstr "Увімкніть функцію Telnet&SSH DSM"
 
-#: menu.sh:2767
+#: menu.sh:2839
 msgid "Remove the blocked ip database of DSM"
 msgstr "Видалення заблокованої ip бази даних DSM"
 
-#: menu.sh:2768
+#: menu.sh:2840
 msgid "Disable all scheduled tasks of DSM"
 msgstr "Вимкнення всіх запланованих завдань DSM"
 
-#: menu.sh:2769
+#: menu.sh:2841
 msgid "Initialize DSM network settings"
 msgstr "Ініціалізація параметрів мережі DSM"
 
-#: menu.sh:2774
+#: menu.sh:2846
 msgid "Advanced option"
 msgstr "Розширений варіант"
 
-#: menu.sh:2799
+#: menu.sh:2871
 msgid "pat: (editable)"
 msgstr "пат: (вимкнено)"
 
-#: menu.sh:2819
+#: menu.sh:2891
 msgid "Choose a mode(Only supported for kernel version 4)"
 msgstr "Виберіть режим(тільки підтримується для версії ядра 4)"
 
-#: menu.sh:2835 menu.sh:2847 menu.sh:2867
+#: menu.sh:2907 menu.sh:2919 menu.sh:2939
 msgid "Choose a time(seconds)"
 msgstr "Виберіть час(секунди)"
 
-#: menu.sh:2954
+#: menu.sh:3026
 msgid "Choose a keymap"
 msgstr "Виберіть мапу"
 
-#: menu.sh:2955
+#: menu.sh:3027
 msgid "Show QR logo:"
 msgstr "Показати QR логотип:"
 
-#: menu.sh:2956
+#: menu.sh:3028
 msgid "Custom patch script # Developer"
 msgstr "Спеціальна патч сцена # Розробник"
 
-#: menu.sh:2957
+#: menu.sh:3029
 msgid "Edit user config file manually"
 msgstr "Редагувати файл налаштування користувача вручну"
 
-#: menu.sh:2958
+#: menu.sh:3030
 msgid "Edit grub.cfg file manually"
 msgstr "Редагувати файл grub.cfg вручну"
 
-#: menu.sh:2960
+#: menu.sh:3032
 msgid "Try to recovery a installed DSM system"
 msgstr "Спробуйте відновити встановлену систему DSM"
 
-#: menu.sh:2961
+#: menu.sh:3033
 msgid "Clone bootloader disk to another disk"
 msgstr "Клон завантажувач диск на інший диск"
 
-#: menu.sh:2962
+#: menu.sh:3034
 msgid "System Environment Report"
 msgstr "Звіт про системне середовище"
 
-#: menu.sh:2963
+#: menu.sh:3035
 msgid "Report bugs to the author"
 msgstr "Повідомити про помилки автора"
 
-#: menu.sh:2964
+#: menu.sh:3036
 msgid "Install development tools"
 msgstr "Встановлення інструментів розробки"
 
-#: menu.sh:2965
+#: menu.sh:3037
 msgid "Save modifications of '/opt/rr'"
 msgstr "Економія модифікацій '/opt/rr Р"
 
-#: menu.sh:2966
+#: menu.sh:3038
 msgid "Set static IP"
 msgstr "Комплект статичний IP"
 
-#: menu.sh:2967
+#: menu.sh:3039
 msgid "Set wireless account"
 msgstr "Налаштування бездротового облікового запису"
 
-#: menu.sh:2969
+#: menu.sh:3041
 msgid "Set global proxy"
 msgstr "Налаштування глобальної проксі"
 
-#: menu.sh:2970
+#: menu.sh:3042
 msgid "Set github proxy"
 msgstr "Набір github проксі"
 
-#: menu.sh:2971
+#: menu.sh:3043
 msgid "Change root password # Only RR"
 msgstr "Зміна паролю root # лише RR"
 
-#: menu.sh:2972
+#: menu.sh:3044
 msgid "Change ports of TTYD/DUFS/HTTP"
 msgstr "Зміна портів TTYD/DUFS/HTTP"
 
-#: menu.sh:2973
+#: menu.sh:3045
 msgid "Vigorously miracle"
 msgstr "Вигорно диво"
 
-#: menu.sh:2977
+#: menu.sh:3049
 msgid "Settings option"
 msgstr "Параметри налаштування"
 
-#: menu.sh:3000
+#: menu.sh:3072
 msgid "This option is only informative.\\n\\n"
 msgstr "Цей варіант є тільки інформативним. \\n\\n"
 
-#: menu.sh:3001
+#: menu.sh:3073
 msgid "This program reserves an interface for ramdisk custom patch scripts.\\n"
 msgstr "Ця програма зберігає інтерфейс для ramdisk користувацьких сценаріїв патчів.\\n"
 
-#: menu.sh:3002
+#: menu.sh:3074
 msgid "Call timing: called before ramdisk packaging.\\n"
 msgstr "Терміни дзвінків: називається до упаковки ramdisk.\\n"
 
-#: menu.sh:3003
+#: menu.sh:3075
 msgid "Location: /mnt/p3/scripts/*.sh\\n"
 msgstr "Місцезнаходження: /mnt/p3/scripts/*.sh\\n"
 
-#: menu.sh:3095 menu.sh:3194 menu.sh:3335 menu.sh:3400 menu.sh:3466 menu.sh:3523
+#: menu.sh:3167 menu.sh:3266 menu.sh:3407 menu.sh:3472 menu.sh:3538 menu.sh:3595
 msgid "Update %s"
 msgstr "Оновлення %s"
 
-#: menu.sh:3096
+#: menu.sh:3168
 msgid "Checking last version ..."
 msgstr "Перевірка останньої версії ..."
 
-#: menu.sh:3113
+#: menu.sh:3185
 msgid "Error checking new version.\\nError: TAG is %s"
 msgstr "Перевірка помилок нової версії. \\nError: TAG %s"
 
-#: menu.sh:3126
+#: menu.sh:3198
 msgid "No new version."
 msgstr "Немає нової версії."
 
-#: menu.sh:3130
+#: menu.sh:3202
 msgid "Actual version is %s.\\nForce update?"
 msgstr "Актуальна версія - %s.\\nПри оновленні?"
 
-#: menu.sh:3143
+#: menu.sh:3215
 msgid "Do you want to update?"
 msgstr "Ви хочете оновити?"
 
-#: menu.sh:3163
+#: menu.sh:3235
 msgid "Error downloading new version.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "Завантажити нову версію. \\nError: %d:%d\\n( Про нас https://curl.se/libcurl/c/libcurl-errors.html опис помилки.)"
 
-#: menu.sh:3173
+#: menu.sh:3245
 msgid "Downloading ..."
 msgstr "Завантаження..."
 
-#: menu.sh:3194 menu.sh:3318 menu.sh:3595 menu.sh:3624
+#: menu.sh:3266 menu.sh:3390 menu.sh:3667 menu.sh:3696
 msgid "RR"
 msgstr "РРР"
 
-#: menu.sh:3195 menu.sh:3336 menu.sh:3401 menu.sh:3467 menu.sh:3524
+#: menu.sh:3267 menu.sh:3408 menu.sh:3473 menu.sh:3539 menu.sh:3596
 msgid "Extracting update file ..."
 msgstr "Вилучення файлу оновлення ..."
 
-#: menu.sh:3206 menu.sh:3250 menu.sh:3347 menu.sh:3412 menu.sh:3478 menu.sh:3535
+#: menu.sh:3278 menu.sh:3322 menu.sh:3419 menu.sh:3484 menu.sh:3550 menu.sh:3607
 msgid "Error extracting update file."
 msgstr "Помилка вилучення файлу оновлення."
 
-#: menu.sh:3218
+#: menu.sh:3290
 msgid "Checksum do not match!"
 msgstr "Перевірити не відповідає!"
 
-#: menu.sh:3231
+#: menu.sh:3303
 msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
 msgstr "Поточна версія не підтримує оновлення до останнього оновлення.zip. Будь ласка, зробіть завантажувальний диск!"
 
-#: menu.sh:3272 menu.sh:3369 menu.sh:3426 menu.sh:3492 menu.sh:3549
+#: menu.sh:3344 menu.sh:3441 menu.sh:3498 menu.sh:3564 menu.sh:3621
 msgid "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM."
 msgstr "Заборонено встановити через недостатнє переадресацію дискового простору на місцевому жорсткому диску, розгляньте реальне розташування диска %s з принаймні %sM."
 
-#: menu.sh:3282
+#: menu.sh:3354
 msgid "Installing new files ..."
 msgstr "Встановлення нових файлів ..."
 
-#: menu.sh:3318 menu.sh:3384 menu.sh:3450 menu.sh:3507 menu.sh:3573
+#: menu.sh:3390 menu.sh:3456 menu.sh:3522 menu.sh:3579 menu.sh:3645
 msgid "%s updated with success!"
 msgstr "%s оновлено з успіхом!"
 
-#: menu.sh:3318
+#: menu.sh:3390
 msgid "Reboot?"
 msgstr "Перезавантаження?"
 
-#: menu.sh:3325 menu.sh:3908 menu.sh:3936
+#: menu.sh:3397 menu.sh:3980 menu.sh:4008
 msgid "Reboot to RR"
 msgstr "Перезавантаження на RR"
 
-#: menu.sh:3466 menu.sh:3507 menu.sh:3598 menu.sh:3655 menu.sh:3660
+#: menu.sh:3538 menu.sh:3579 menu.sh:3670 menu.sh:3727 menu.sh:3732
 msgid "LKMs"
 msgstr "ЛКМс"
 
-#: menu.sh:3523 menu.sh:3573 menu.sh:3599 menu.sh:3667 menu.sh:3672
+#: menu.sh:3595 menu.sh:3645 menu.sh:3671 menu.sh:3739 menu.sh:3744
 msgid "CKs"
 msgstr "ККС"
 
-#: menu.sh:3594 menu.sh:3617
+#: menu.sh:3666 menu.sh:3689
 msgid "All"
 msgstr "Все"
 
-#: menu.sh:3600
+#: menu.sh:3672
 msgid "Local upload"
 msgstr "Місцеве завантаження"
 
-#: menu.sh:3601
+#: menu.sh:3673
 msgid "Pre Release:"
 msgstr "Попередній реліз:"
 
-#: menu.sh:3606 menu.sh:3680
+#: menu.sh:3678 menu.sh:3752
 msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download."
 msgstr "Ручне завантаження оновлення*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip до /tmp/ буде пропустити завантаження."
 
-#: menu.sh:3631 menu.sh:3643 menu.sh:3655 menu.sh:3667
+#: menu.sh:3703 menu.sh:3715 menu.sh:3727 menu.sh:3739
 msgid "No longer supports update %s separately. Please choose to update All/RR"
 msgstr "Більше не підтримує оновлення %s окремо. Будь ласка, оберіть оновлення"
 
-#: menu.sh:3686
+#: menu.sh:3758
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
 msgstr "Введіть номер мобільного, який Ви вказали при укладаннi договору з банком - для ідентифікації.\\n"
 
-#: menu.sh:3687
+#: menu.sh:3759
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "Завантажити оновлення*.zip оновлення RR.\\n"
 
-#: menu.sh:3688
+#: menu.sh:3760
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "Завантажити плагіни*.zip оновлення Addons.\\n"
 
-#: menu.sh:3689
+#: menu.sh:3761
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "Завантажити модулі*.zip буде оновлювати модулі.\\n"
 
-#: menu.sh:3690
+#: menu.sh:3762
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "Завантажити rp-lkms*.zip буде оновлювати LKMs.\\n"
 
-#: menu.sh:3691
+#: menu.sh:3763
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "Завантажити rr-cks*.zip буде оновлювати CKs.\\n"
 
-#: menu.sh:3759
+#: menu.sh:3831
 msgid "This person is very lazy and hasn't written anything."
 msgstr "Ця людина є дуже мережива і не писала нічого."
 
-#: menu.sh:3770
+#: menu.sh:3842
 msgid "Another instance of the menu.sh is running."
 msgstr "Інший екземпляр menu.sh працює."
 
-#: menu.sh:3783
+#: menu.sh:3855
 msgid "Choose a model"
 msgstr "Виберіть модель"
 
-#: menu.sh:3785
+#: menu.sh:3857
 msgid "Choose a version"
 msgstr "Виберіть версію"
 
-#: menu.sh:3787
+#: menu.sh:3859
 msgid "Parse pat"
 msgstr "Парсе пат"
 
-#: menu.sh:3793
+#: menu.sh:3865
 msgid "Kernel:"
 msgstr "Кернел:"
 
-#: menu.sh:3795
+#: menu.sh:3867
 msgid "Addons menu"
 msgstr "Меню додатків"
 
-#: menu.sh:3796
+#: menu.sh:3868
 msgid "Modules menu"
 msgstr "Меню модуля"
 
-#: menu.sh:3797
+#: menu.sh:3869
 msgid "Cmdline menu"
 msgstr "Меню Cmdline"
 
-#: menu.sh:3798
+#: menu.sh:3870
 msgid "Synoinfo menu"
 msgstr "Меню Синоinfo"
 
-#: menu.sh:3800
+#: menu.sh:3872
 msgid "Advanced menu"
 msgstr "Розширене меню"
 
-#: menu.sh:3803
+#: menu.sh:3875
 msgid "Build the loader"
 msgstr "Створіть навантажувач"
 
-#: menu.sh:3807
+#: menu.sh:3879
 msgid "Direct boot:"
 msgstr "Завантаження:"
 
-#: menu.sh:3808
+#: menu.sh:3880
 msgid "Boot the loader"
 msgstr "Завантаження"
 
-#: menu.sh:3810
+#: menu.sh:3882
 msgid "Settings menu"
 msgstr "Settings menu"
 
-#: menu.sh:3812
+#: menu.sh:3884
 msgid "Clean disk cache"
 msgstr "Чистий кеш диска"
 
-#: menu.sh:3814
+#: menu.sh:3886
 msgid "Update menu"
 msgstr "Оновлення меню"
 
-#: menu.sh:3815
+#: menu.sh:3887
 msgid "Notepad"
 msgstr "Блокнот"
 
-#: menu.sh:3837
+#: menu.sh:3909
 msgid "Change ..."
 msgstr "Змінити…"
 
-#: menu.sh:3906 menu.sh:3924
+#: menu.sh:3978 menu.sh:3996
 msgid "Power off"
 msgstr "Потужність"
 
-#: menu.sh:3907 menu.sh:3930
+#: menu.sh:3979 menu.sh:4002
 msgid "Reboot"
 msgstr "Перезавантаження"
 
-#: menu.sh:3909 menu.sh:3942
+#: menu.sh:3981 menu.sh:4014
 msgid "Reboot to Recovery"
 msgstr "Перезавантаження на Recovery"
 
-#: menu.sh:3910 menu.sh:3948
+#: menu.sh:3982 menu.sh:4020
 msgid "Reboot to Junior"
 msgstr "Перезавантаження на Junior"
 
-#: menu.sh:3912 menu.sh:3954
+#: menu.sh:3984 menu.sh:4026
 msgid "Reboot to BIOS"
 msgstr "Перезавантаження на BIOS"
 
-#: menu.sh:3914
+#: menu.sh:3986
 msgid "Back to shell"
 msgstr "Повернутися до оболонки"
 
-#: menu.sh:3918
+#: menu.sh:3990
 msgid "Choose a action"
 msgstr "Виберіть дію"
 
-#: menu.sh:3972
+#: menu.sh:4044
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "Call \\033[1;32mmenu.sh\\033[0m для повернення в меню"
 
