@@ -2476,13 +2476,13 @@ function savemodrr() {
 ###############################################################################
 # Set static IP
 function setStaticIP() {
-  ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo)
-  for ETH in ${ETHX}; do
-    MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
+  ETHX=$(ip -o link show | awk -F': ' '{print $2}' | grep -v lo)
+  for N in ${ETHX}; do
+    MACR="$(cat /sys/class/net/${N}/address 2>/dev/null | sed 's/://g')"
     IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
     IFS='/' read -r -a IPRA <<<"${IPR}"
 
-    MSG="$(printf "$(TEXT "Set to %s: (Delete if empty)")" "${ETH}(${MACR})")"
+    MSG="$(printf "$(TEXT "Set to %s: (Delete if empty)")" "${N}(${MACR})")"
     while true; do
       DIALOG --title "$(TEXT "Settings")" \
         --form "${MSG}" 10 60 4 "address" 1 1 "${IPRA[0]}" 1 9 36 16 "netmask" 2 1 "${IPRA[1]}" 2 9 36 16 "gateway" 3 1 "${IPRA[2]}" 3 9 36 16 "dns" 4 1 "${IPRA[3]}" 4 9 36 16 \
@@ -2490,29 +2490,39 @@ function setStaticIP() {
       RET=$?
       case ${RET} in
       0) # ok-button
-        DIALOG --title "$(TEXT "Settings")" \
-          --infobox "$(TEXT "Setting IP ...")" 0 0
         address="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
         netmask="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
         gateway="$(cat "${TMP_PATH}/resp" | sed -n '3p')"
         dnsname="$(cat "${TMP_PATH}/resp" | sed -n '4p')"
-        if [ -z "${address}" ]; then
-          deleteConfigKey "network.${MACR}" "${USER_CONFIG_FILE}"
-        else
-          ip addr flush dev ${ETH}
-          ip addr add ${address}/${netmask:-"255.255.255.0"} dev ${ETH}
-          if [ -n "${gateway}" ]; then
-            ip route add default via ${gateway} dev ${ETH}
+        (
+          if [ -z "${address}" ]; then
+            if [ -n "$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")" ]; then
+              if [ "1" = "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
+                ip addr flush dev ${N}
+              fi
+              deleteConfigKey "network.${MACR}" "${USER_CONFIG_FILE}"
+              IP="$(getIP)"
+              sleep 1
+            fi
+          else
+            if [ "1" = "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
+              ip addr flush dev ${N}
+              ip addr add ${address}/${netmask:-"255.255.255.0"} dev ${N}
+              if [ -n "${gateway}" ]; then
+                ip route add default via ${gateway} dev ${N}
+              fi
+              if [ -n "${dnsname:-${gateway}}" ]; then
+                sed -i "/nameserver ${dnsname:-${gateway}}/d" /etc/resolv.conf
+                echo "nameserver ${dnsname:-${gateway}}" >>/etc/resolv.conf
+              fi
+            fi
+            writeConfigKey "network.${MACR}" "${address}/${netmask}/${gateway}/${dnsname}" "${USER_CONFIG_FILE}"
+            IP="$(getIP)"
+            sleep 1
           fi
-          if [ -n "${dnsname:-${gateway}}" ]; then
-            sed -i "/nameserver ${dnsname:-${gateway}}/d" /etc/resolv.conf
-            echo "nameserver ${dnsname:-${gateway}}" >>/etc/resolv.conf
-          fi
-          writeConfigKey "network.${MACR}" "${address}/${netmask}/${gateway}/${dnsname}" "${USER_CONFIG_FILE}"
-          IP="$(getIP)"
-          sleep 1
-        fi
-        touch ${PART1_PATH}/.build
+          touch ${PART1_PATH}/.build
+        ) 2>&1 | DIALOG --title "$(TEXT "Settings")" \
+          --progressbox "$(TEXT "Setting ...")" 20 100
         break
         ;;
       1) # cancel-button
@@ -2549,29 +2559,32 @@ function setWirelessAccount() {
     0) # ok-button
       SSID="$(cat "${TMP_PATH}/resp" | sed -n '1p')"
       PSK="$(cat "${TMP_PATH}/resp" | sed -n '2p')"
-      if [ -z "${SSID}" -o -z "${PSK}" ]; then
-        DIALOG --title "$(TEXT "Settings")" \
-          --yesno "$(TEXT "Invalid SSID/PSK, retry?")" 0 0
-        [ $? -eq 0 ] && continue || break
-      fi
       (
-        rm -f ${PART1_PATH}/wpa_supplicant.conf
-        echo "ctrl_interface=/var/run/wpa_supplicant" >>${PART1_PATH}/wpa_supplicant.conf
-        echo "update_config=1" >>${PART1_PATH}/wpa_supplicant.conf
-        echo "network={" >>${PART1_PATH}/wpa_supplicant.conf
-        echo "        ssid=\"${SSID}\"" >>${PART1_PATH}/wpa_supplicant.conf
-        echo "        psk=\"${PSK}\"" >>${PART1_PATH}/wpa_supplicant.conf
-        echo "}" >>${PART1_PATH}/wpa_supplicant.conf
+        ETHX=$(ls /sys/class/net/ 2>/dev/null | grep wlan) || true
+        if [ -z "${SSID}" ]; then
+          rm -f ${PART1_PATH}/wpa_supplicant.conf
+          for N in ${ETHX}; do
+            connectwlanif "${N}" 0 && sleep 1
+          done
+        else
+          rm -f ${PART1_PATH}/wpa_supplicant.conf
+          echo "ctrl_interface=/var/run/wpa_supplicant" >>${PART1_PATH}/wpa_supplicant.conf
+          echo "update_config=1" >>${PART1_PATH}/wpa_supplicant.conf
+          echo "network={" >>${PART1_PATH}/wpa_supplicant.conf
+          echo "        ssid=\"${SSID}\"" >>${PART1_PATH}/wpa_supplicant.conf
+          echo "        psk=\"${PSK}\"" >>${PART1_PATH}/wpa_supplicant.conf
+          echo "}" >>${PART1_PATH}/wpa_supplicant.conf
 
-        for ETH in $(ls /sys/class/net/ 2>/dev/null | grep wlan); do
-          connectwlanif "${ETH}" && sleep 1
-          MACR="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g')"
-          IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
-          if [ -n "${IPR}" ]; then
-            ip addr add ${IPC}/24 dev ${ETH}
-            sleep 1
-          fi
-        done
+          for N in ${ETHX}; do
+            connectwlanif "${N}" 1 && sleep 1
+            MACR="$(cat /sys/class/net/${N}/address 2>/dev/null | sed 's/://g')"
+            IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
+            if [ -n "${IPR}" ]; then
+              ip addr add ${IPC}/24 dev ${N}
+              sleep 1
+            fi
+          done
+        fi
       ) 2>&1 | DIALOG --title "$(TEXT "Settings")" \
         --progressbox "$(TEXT "Setting ...")" 20 100
       break

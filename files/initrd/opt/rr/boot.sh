@@ -274,7 +274,7 @@ else
   while [ ${COUNT} -lt $((${BOOTIPWAIT} + 32)) ]; do
     MSG=""
     for N in ${ETHX}; do
-      if ethtool ${N} 2>/dev/null | grep 'Link detected' | grep -q 'yes'; then
+      if [ "1" = "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
         MSG+="${N} "
       fi
     done
@@ -295,11 +295,11 @@ else
     DRIVER=$(ls -ld /sys/class/net/${N}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
     echo -en "${N}(${DRIVER}): "
     while true; do
-      if ! ip link show ${N} 2>/dev/null | grep -q 'UP'; then
+      if [ -z "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
         echo -en "\r${N}(${DRIVER}): $(TEXT "DOWN")\n"
         break
       fi
-      if ethtool ${N} 2>/dev/null | grep 'Link detected' | grep -q 'no'; then
+      if [ "0" = "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
         echo -en "\r${N}(${DRIVER}): $(TEXT "NOT CONNECTED")\n"
         break
       fi

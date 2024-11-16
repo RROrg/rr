@@ -231,10 +231,10 @@ function _get_fastest() {
 function _sort_netif() {
   local ETHLIST=""
   local ETHX="$(ls /sys/class/net/ 2>/dev/null | grep eth)" # real network cards list
-  for ETH in ${ETHX}; do
-    local MAC="$(cat /sys/class/net/${ETH}/address 2>/dev/null | sed 's/://g; s/.*/\L&/')"
-    local BUS="$(ethtool -i ${ETH} 2>/dev/null | grep bus-info | cut -d' ' -f2)"
-    ETHLIST="${ETHLIST}${BUS} ${MAC} ${ETH}\n"
+  for N in ${ETHX}; do
+    local MAC="$(cat /sys/class/net/${N}/address 2>/dev/null | sed 's/://g; s/.*/\L&/')"
+    local BUS="$(ethtool -i ${N} 2>/dev/null | grep bus-info | cut -d' ' -f2)"
+    ETHLIST="${ETHLIST}${BUS} ${MAC} ${N}\n"
   done
   local ETHLISTTMPM=""
   local ETHLISTTMPB="$(echo -e "${ETHLIST}" | sort)"
@@ -378,19 +378,26 @@ function rebootTo() {
 ###############################################################################
 # connect wlanif
 # 1 netif name
+# 2 enable/disable (1/0)
 function connectwlanif() {
   [ -z "${1}" -o ! -d "/sys/class/net/${1}" ] && return 1
+  if [ "${2}" = "0" ]; then
+    if [ -f "/var/run/wpa_supplicant.pid.${1}" ]; then
+      kill -9 $(cat /var/run/wpa_supplicant.pid.${1})
+      rm -f /var/run/wpa_supplicant.pid.${1}
+    fi
+  else
+    local CONF=""
+    [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf.${1}" ] && CONF="${PART1_PATH}/wpa_supplicant.conf.${1}"
+    [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf" ] && CONF="${PART1_PATH}/wpa_supplicant.conf"
+    [ -z "${CONF}" ] && return 2
 
-  local CONF=""
-  [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf.${1}" ] && CONF="${PART1_PATH}/wpa_supplicant.conf.${1}"
-  [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf" ] && CONF="${PART1_PATH}/wpa_supplicant.conf"
-  [ -z "${CONF}" ] && return 2
-
-  if [ -f "/var/run/wpa_supplicant.pid.${1}" ]; then
-    kill -9 $(cat /var/run/wpa_supplicant.pid.${1})
-    rm -f /var/run/wpa_supplicant.pid.${1}
+    if [ -f "/var/run/wpa_supplicant.pid.${1}" ]; then
+      kill -9 $(cat /var/run/wpa_supplicant.pid.${1})
+      rm -f /var/run/wpa_supplicant.pid.${1}
+    fi
+    wpa_supplicant -i ${1} -c "${CONF}" -B -P "/var/run/wpa_supplicant.pid.${1}" >/dev/null 2>&1
   fi
-  wpa_supplicant -i ${1} -c "${CONF}" -B -P "/var/run/wpa_supplicant.pid.${1}" >/dev/null 2>&1
   return 0
 }
 
