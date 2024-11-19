@@ -13,7 +13,7 @@ fi
 ##$1 from, $2 to, $3 file to path
 _replace_in_file() {
   if grep -q "${1}" "${3}"; then
-    "${SED_PATH}" -i "${3}" -e "s#${1}#${2}#"
+    "${SED_PATH}" -i "s#${1}#${2}#" "${3}" 2>/dev/null
   fi
 }
 
@@ -22,17 +22,18 @@ _replace_in_file() {
 # Args: $1 name, $2 new_val, $3 path
 _set_conf_kv() {
   # Delete
-  if [ -z "$2" ]; then
-    "${SED_PATH}" -i "${3}" -e "s/^${1}=.*$//"
+  if [ -z "${2}" ]; then
+    "${SED_PATH}" -i "/^${1}=/d" "${3}" 2>/dev/null
     return 0
   fi
 
   # Replace
   if grep -q "^${1}=" "${3}"; then
-    "${SED_PATH}" -i "${3}" -e "s\"^${1}=.*\"${1}=\\\"${2}\\\"\""
+    "${SED_PATH}" -i "s#^${1}=.*#${1}=\"${2}\"#" "${3}" 2>/dev/null
     return 0
   fi
 
   # Add if doesn't exist
   echo "${1}=\"${2}\"" >>"${3}"
+  return 0
 }

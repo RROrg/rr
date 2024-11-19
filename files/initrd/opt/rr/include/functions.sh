@@ -1,13 +1,13 @@
-[ -z "${WORK_PATH}" -o ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" >/dev/null 2>&1 && pwd)"
+[ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" >/dev/null 2>&1 && pwd)"
 
-. ${WORK_PATH}/include/consts.sh
-. ${WORK_PATH}/include/configFile.sh
-. ${WORK_PATH}/include/i18n.sh
+. "${WORK_PATH}/include/consts.sh"
+. "${WORK_PATH}/include/configFile.sh"
+. "${WORK_PATH}/include/i18n.sh"
 
 ###############################################################################
 # Check loader disk
 function checkBootLoader() {
-  while read KNAME RO; do
+  while read -r KNAME RO; do
     [ -z "${KNAME}" ] && continue
     [ "${RO}" = "0" ] && continue
     hdparm -r0 "${KNAME}" >/dev/null 2>&1 || true
@@ -51,48 +51,41 @@ function dieLog() {
 }
 
 ###############################################################################
-# Check if a item exists into array
+# Check if an item exists in an array
 # 1 - Item
 # 2.. - Array
 # Return 0 if exists
 function arrayExistItem() {
-  EXISTS=1
-  ITEM="${1}"
+  local ITEM="${1}"
   shift
   for i in "$@"; do
-    [ "${i}" = "${ITEM}" ] || continue
-    EXISTS=0
-    break
+    [ "${i}" = "${ITEM}" ] && return 0
   done
-  return ${EXISTS}
+  return 1
 }
 
 ###############################################################################
 # Generate a number with 6 digits from 1 to 30000
 function random() {
-  printf "%06d" $((${RANDOM} % 30000 + 1))
+  printf "%06d" $((RANDOM % 30000 + 1))
 }
 
 ###############################################################################
-# Generate a hexa number from 0x00 to 0xFF
+# Generate a hex number from 0x00 to 0xFF
 function randomhex() {
-  printf "&02X" "$((${RANDOM} % 255 + 1))"
+  printf "%02X" $((RANDOM % 255 + 1))
 }
 
 ###############################################################################
 # Generate a random letter
 function genRandomLetter() {
-  for i in A B C D E F G H J K L M N P Q R S T V W X Y Z; do
-    echo ${i}
-  done | sort -R | tail -1
+  echo {A..Z} | tr ' ' '\n' | grep -v '[IO]' | sort -R | head -1
 }
 
 ###############################################################################
 # Generate a random digit (0-9A-Z)
 function genRandomValue() {
-  for i in 0 1 2 3 4 5 6 7 8 9 A B C D E F G H J K L M N P Q R S T V W X Y Z; do
-    echo ${i}
-  done | sort -R | tail -1
+  echo {0..9} {A..Z} | tr ' ' '\n' | grep -v '[IO]' | sort -R | head -1
 }
 
 ###############################################################################
@@ -100,11 +93,12 @@ function genRandomValue() {
 # 1 - Model
 # Returns serial number
 function generateSerial() {
-  PREFIX="$(readConfigArray "${1}.prefix" "${WORK_PATH}/serialnumber.yml" 2>/dev/null | sort -R | tail -1)"
-  MIDDLE="$(readConfigArray "${1}.middle" "${WORK_PATH}/serialnumber.yml" 2>/dev/null | sort -R | tail -1)"
+  local PREFIX MIDDLE SUFFIX SERIAL
+  PREFIX="$(readConfigArray "${1}.prefix" "${WORK_PATH}/serialnumber.yml" 2>/dev/null | sort -R | head -1)"
+  MIDDLE="$(readConfigArray "${1}.middle" "${WORK_PATH}/serialnumber.yml" 2>/dev/null | sort -R | head -1)"
   SUFFIX="$(readConfigKey "${1}.suffix" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
 
-  local SERIAL="${PREFIX:-"0000"}${MIDDLE:-"XXX"}"
+  SERIAL="${PREFIX:-"0000"}${MIDDLE:-"XXX"}"
   case "${SUFFIX:-"alpha"}" in
   numeric)
     SERIAL+="$(random)"
@@ -122,12 +116,13 @@ function generateSerial() {
 # 2 - number
 # Returns serial number
 function generateMacAddress() {
+  local MACPRE MACSUF NUM MACS
   MACPRE="$(readConfigArray "${1}.macpre" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
-  MACSUF="$(printf '%02x%02x%02x' $((${RANDOM} % 256)) $((${RANDOM} % 256)) $((${RANDOM} % 256)))"
+  MACSUF="$(printf '%02x%02x%02x' $((RANDOM % 256)) $((RANDOM % 256)) $((RANDOM % 256)))"
   NUM=${2:-1}
-  local MACS=""
+  MACS=""
   for I in $(seq 1 ${NUM}); do
-    MACS+="$(printf '%06x%06x' $((0x${MACPRE:-"001132"})) $(($((0x${MACSUF})) + ${I})))"
+    MACS+="$(printf '%06x%06x' $((0x${MACPRE:-"001132"})) $((0x${MACSUF} + I)))"
     [ ${I} -lt ${NUM} ] && MACS+=" "
   done
   echo "${MACS}"
@@ -140,6 +135,7 @@ function generateMacAddress() {
 # 2 - Serial number to test
 # Returns 1 if serial number is invalid
 function validateSerial() {
+  local PREFIX MIDDLE SUFFIX P M S L
   PREFIX="$(readConfigArray "${1}.prefix" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
   MIDDLE="$(readConfigArray "${1}.middle" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
   SUFFIX="$(readConfigKey "${1}.suffix" "${WORK_PATH}/serialnumber.yml" 2>/dev/null)"
@@ -176,7 +172,7 @@ function validateSerial() {
 # 1 - key
 # 2 - file
 function _get_conf_kv() {
-  grep "${1}" "${2}" 2>/dev/null | sed "s|^${1}=\"\(.*\)\"$|\1|g"
+  grep "^${1}=" "${2}" 2>/dev/null | cut -d'=' -f2- | sed 's/^"//;s/"$//' 2>/dev/null
 }
 
 ###############################################################################
@@ -187,18 +183,19 @@ function _get_conf_kv() {
 function _set_conf_kv() {
   # Delete
   if [ -z "${2}" ]; then
-    sed -i "${3}" -e "s/^${1}=.*$//" 2>/dev/null
+    sed -i "/^${1}=/d" "${3}" 2>/dev/null
     return $?
   fi
 
   # Replace
   if grep -q "^${1}=" "${3}"; then
-    sed -i "${3}" -e "s\"^${1}=.*\"${1}=\\\"${2}\\\"\"" 2>/dev/null
+    sed -i "s#^${1}=.*#${1}=\"${2}\"#" "${3}" 2>/dev/null
     return $?
   fi
 
   # Add if doesn't exist
   echo "${1}=\"${2}\"" >>"${3}"
+  return $?
 }
 
 ###############################################################################
@@ -206,14 +203,14 @@ function _set_conf_kv() {
 # @ - url list
 function _get_fastest() {
   local speedlist=""
-  if ! command -v ping >/dev/null 2>&1; then
-    for I in $@; do
-      speed=$(ping -c 1 -W 5 ${I} 2>/dev/null | awk -F'[= ]' '/time=/ {for(i=1;i<=NF;i++) if ($i=="time") print $(i+1)}')
+  if command -v ping >/dev/null 2>&1; then
+    for I in "$@"; do
+      speed=$(ping -c 1 -W 5 "${I}" 2>/dev/null | awk -F'[= ]' '/time=/ {for(i=1;i<=NF;i++) if ($i=="time") print $(i+1)}')
       speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
     done
   else
-    for I in $@; do
-      speed=$(curl -o /dev/null -s -w '%{time_total}' ${I})
+    for I in "$@"; do
+      speed=$(curl -o /dev/null -s -w '%{time_total}' "${I}")
       speed=$(awk "BEGIN {print (${speed:-0.999} * 1000)}")
       speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
     done
@@ -222,7 +219,7 @@ function _get_fastest() {
   URL="$(echo "${fastest}" | awk '{print $1}')"
   SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
   echo "${URL}"
-  [ $(echo ${SPD:-999} | cut -d. -f1) -ge 999 ] && return 1 || return 0
+  [ $(echo "${SPD:-999}" | cut -d. -f1) -ge 999 ] && return 1 || return 0
 }
 
 ###############################################################################
@@ -245,7 +242,7 @@ function _sort_netif() {
       ETHLISTTMPB="$(echo -e "${ETHLISTTMPB}" | grep -v "${MACX}")\n"
     done
   fi
-  local ETHLIST="$(echo -e "${ETHLISTTMPM}${ETHLISTTMPB}" | grep -v '^$')"
+  ETHLIST="$(echo -e "${ETHLISTTMPM}${ETHLISTTMPB}" | grep -v '^$')"
   local ETHSEQ="$(echo -e "${ETHLIST}" | awk '{print $3}' | sed 's/eth//g')"
   local ETHNUM="$(echo -e "${ETHLIST}" | wc -l)"
 
@@ -255,12 +252,12 @@ function _sort_netif() {
     /etc/init.d/S41dhcpcd stop >/dev/null 2>&1
     /etc/init.d/S40network stop >/dev/null 2>&1
     for i in $(seq 0 $((${ETHNUM:0} - 1))); do
-      ip link set dev eth${i} name tmp${i}
+      ip link set dev "eth${i}" name "tmp${i}"
     done
     I=0
     for i in ${ETHSEQ}; do
-      ip link set dev tmp${i} name eth${I}
-      I=$((${I} + 1))
+      ip link set dev "tmp${i}" name "eth${I}"
+      I=$((I + 1))
     done
     /etc/init.d/S40network start >/dev/null 2>&1
     /etc/init.d/S41dhcpcd start >/dev/null 2>&1
@@ -287,9 +284,9 @@ function getBus() {
 # 1 - ethN
 function getIP() {
   local IP=""
-  if [ -n "${1}" -a -d "/sys/class/net/${1}" ]; then
-    IP=$(ip route show dev ${1} 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p')
-    [ -z "${IP}" ] && IP=$(ip addr show ${1} scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
+  if [ -n "${1}" ] && [ -d "/sys/class/net/${1}" ]; then
+    IP=$(ip route show dev "${1}" 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p')
+    [ -z "${IP}" ] && IP=$(ip addr show "${1}" scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
   else
     IP=$(ip route show 2>/dev/null | sed -n 's/.* via .* src \(.*\)  metric .*/\1/p' | head -1)
     [ -z "${IP}" ] && IP=$(ip addr show scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
@@ -309,7 +306,7 @@ function getLogo() {
     return 1
   fi
   local STATUS=$(curl -skL --connect-timeout 10 -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
-  if [ $? -ne 0 -o ${STATUS:-0} -ne 200 -o ! -f "${PART3_PATH}/logo.png" ]; then
+  if [ $? -ne 0 ] || [ "${STATUS:-0}" -ne 200 ] || [ ! -f "${PART3_PATH}/logo.png" ]; then
     rm -f "${PART3_PATH}/logo.png"
     return 1
   fi
@@ -324,40 +321,70 @@ function getLogo() {
 # 1 - key name
 # 2 - key string
 function checkCmdline() {
-  return $(grub-editenv ${USER_GRUBENVFILE} list 2>/dev/null | grep "^${1}=" | cut -d'=' -f2- | grep -q "${2}")
+  grub-editenv "${USER_GRUBENVFILE}" list 2>/dev/null | grep -q "^${1}=\"\?${2}\"\?"
 }
 
 ###############################################################################
-# get logo of model
+# set Cmdline
 # 1 - key name
 # 2 - key string
 function setCmdline() {
   [ -z "${1}" ] && return 1
   if [ -n "${2}" ]; then
-    grub-editenv ${USER_GRUBENVFILE} set "${1}=${2}"
+    grub-editenv "${USER_GRUBENVFILE}" set "${1}=${2}"
   else
-    grub-editenv ${USER_GRUBENVFILE} unset "${1}"
+    grub-editenv "${USER_GRUBENVFILE}" unset "${1}"
   fi
 }
 
 ###############################################################################
-# get logo of model
-# check Cmdline
+# add Cmdline
 # 1 - key name
 # 2 - key string
 function addCmdline() {
-  local CMDLINE="$(grub-editenv ${USER_GRUBENVFILE} list 2>/dev/null | grep "^${1}=" | cut -d'=' -f2-)"
+  local CMDLINE
+  CMDLINE="$(grub-editenv "${USER_GRUBENVFILE}" list 2>/dev/null | grep "^${1}=" | cut -d'=' -f2- | sed 's/^"//;s/"$//')"
   [ -n "${CMDLINE}" ] && CMDLINE="${CMDLINE} ${2}" || CMDLINE="${2}"
   setCmdline "${1}" "${CMDLINE}"
 }
 
 ###############################################################################
-# get logo of model
-# 1 - model
+# del Cmdline
+# 1 - key name
+# 2 - key string
 function delCmdline() {
-  local CMDLINE="$(grub-editenv ${USER_GRUBENVFILE} list 2>/dev/null | grep "^${1}=" | cut -d'=' -f2-)"
-  CMDLINE="$(echo "${CMDLINE}" | sed "s/ *${2}//; s/^[[:space:]]*//;s/[[:space:]]*$//")"
+  local CMDLINE
+  CMDLINE="$(grub-editenv "${USER_GRUBENVFILE}" list 2>/dev/null | grep "^${1}=" | cut -d'=' -f2- | sed 's/^"//;s/"$//')"
+  CMDLINE="$(echo "${CMDLINE}" | sed "s/[ \t]*${2}//; s/^[ \t]*//;s/[ \t]*$//")"
   setCmdline "${1}" "${CMDLINE}"
+}
+
+###############################################################################
+# check CPU Intel(VT-d)/AMD(AMD-Vi)
+function checkCPU_VT_d() {
+  lsmod | grep -q msr || modprobe msr 2>/dev/null
+  if grep -q "GenuineIntel" /proc/cpuinfo; then
+    local VT_D_ENABLED=$(rdmsr 0x3a 2>/dev/null)
+    [ "$((${VT_D_ENABLED:-0x0} & 0x5))" -eq $((0x5)) ] && return 0
+  elif grep -q "AuthenticAMD" /proc/cpuinfo; then
+    local IOMMU_ENABLED=$(rdmsr 0xC0010114 2>/dev/null)
+    [ "$((${IOMMU_ENABLED:-0x0} & 0x1))" -eq $((0x1)) ] && return 0
+  else
+    return 1
+  fi
+}
+
+###############################################################################
+# check BIOS Intel(VT-d)/AMD(AMD-Vi)
+function checkBIOS_VT_d() {
+  if grep -q "GenuineIntel" /proc/cpuinfo; then
+    dmesg | grep -iq "DMAR-IR.*DRHD base" && return 0
+  elif grep -q "AuthenticAMD" /proc/cpuinfo; then
+    # TODO: need check
+    dmesg | grep -iq "AMD-Vi.*enabled" && return 0
+  else
+    return 1
+  fi
 }
 
 ###############################################################################
@@ -367,11 +394,11 @@ function rebootTo() {
   local MODES="config recovery junior bios memtest"
   if [ -z "${1}" ] || ! echo "${MODES}" | grep -qw "${1}"; then exit 1; fi
   # echo "Rebooting to ${1} mode"
-  GRUBPATH="$(dirname $(find ${PART1_PATH}/ -name grub.cfg 2>/dev/null | head -1))"
+  GRUBPATH="$(dirname "$(find "${PART1_PATH}/" -name grub.cfg 2>/dev/null | head -1)")"
   [ -z "${GRUBPATH}" ] && exit 1
   ENVFILE="${GRUBPATH}/grubenv"
-  [ ! -f "${ENVFILE}" ] && grub-editenv ${ENVFILE} create
-  grub-editenv ${ENVFILE} set next_entry="${1}"
+  [ ! -f "${ENVFILE}" ] && grub-editenv "${ENVFILE}" create
+  grub-editenv "${ENVFILE}" set next_entry="${1}"
   reboot
 }
 
@@ -380,23 +407,23 @@ function rebootTo() {
 # 1 netif name
 # 2 enable/disable (1/0)
 function connectwlanif() {
-  [ -z "${1}" -o ! -d "/sys/class/net/${1}" ] && return 1
+  [ -z "${1}" ] || [ ! -d "/sys/class/net/${1}" ] && return 1
   if [ "${2}" = "0" ]; then
     if [ -f "/var/run/wpa_supplicant.pid.${1}" ]; then
-      kill -9 $(cat /var/run/wpa_supplicant.pid.${1})
-      rm -f /var/run/wpa_supplicant.pid.${1}
+      kill -9 "$(cat /var/run/wpa_supplicant.pid.${1})"
+      rm -f "/var/run/wpa_supplicant.pid.${1}"
     fi
   else
     local CONF=""
-    [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf.${1}" ] && CONF="${PART1_PATH}/wpa_supplicant.conf.${1}"
-    [ -z "${CONF}" -a -f "${PART1_PATH}/wpa_supplicant.conf" ] && CONF="${PART1_PATH}/wpa_supplicant.conf"
+    [ -z "${CONF}" ] && [ -f "${PART1_PATH}/wpa_supplicant.conf.${1}" ] && CONF="${PART1_PATH}/wpa_supplicant.conf.${1}"
+    [ -z "${CONF}" ] && [ -f "${PART1_PATH}/wpa_supplicant.conf" ] && CONF="${PART1_PATH}/wpa_supplicant.conf"
     [ -z "${CONF}" ] && return 2
 
     if [ -f "/var/run/wpa_supplicant.pid.${1}" ]; then
-      kill -9 $(cat /var/run/wpa_supplicant.pid.${1})
-      rm -f /var/run/wpa_supplicant.pid.${1}
+      kill -9 "$(cat /var/run/wpa_supplicant.pid.${1})"
+      rm -f "/var/run/wpa_supplicant.pid.${1}"
     fi
-    wpa_supplicant -i ${1} -c "${CONF}" -B -P "/var/run/wpa_supplicant.pid.${1}" >/dev/null 2>&1
+    wpa_supplicant -i "${1}" -c "${CONF}" -B -P "/var/run/wpa_supplicant.pid.${1}" >/dev/null 2>&1
   fi
   return 0
 }

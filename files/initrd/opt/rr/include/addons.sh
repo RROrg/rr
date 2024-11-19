@@ -3,23 +3,23 @@
 # 1 - Platform
 # 2 - Kernel Version
 function availableAddons() {
-  if [ -z "${1}" -o -z "${2}" ]; then
+  if [ -z "${1}" ] || [ -z "${2}" ]; then
     echo ""
     return 1
   fi
-  for D in $(find "${ADDONS_PATH}" -maxdepth 1 -type d 2>/dev/null | sort); do
+  while read -r D; do
     [ ! -f "${D}/manifest.yml" ] && continue
-    ADDON=$(basename ${D})
+    local ADDON=$(basename "${D}")
     checkAddonExist "${ADDON}" "${1}" "${2}" || continue
-    SYSTEM=$(readConfigKey "system" "${D}/manifest.yml")
+    local SYSTEM=$(readConfigKey "system" "${D}/manifest.yml")
     [ "${SYSTEM}" = "true" ] && continue
-    LOCALE="${LC_ALL%%.*}"
-    DESC=""
+    local LOCALE="${LC_ALL%%.*}"
+    local DESC=""
     [ -z "${DESC}" ] && DESC="$(readConfigKey "description.${LOCALE:-"en_US"}" "${D}/manifest.yml")"
     [ -z "${DESC}" ] && DESC="$(readConfigKey "description.en_US" "${D}/manifest.yml")"
     [ -z "${DESC}" ] && DESC="$(readConfigKey "description" "${D}/manifest.yml")"
     echo -e "${ADDON}\t${DESC:-"unknown"}"
-  done
+  done <<<$(find "${ADDONS_PATH}" -maxdepth 1 -type d 2>/dev/null | sort)
 }
 
 ###############################################################################
@@ -29,7 +29,7 @@ function availableAddons() {
 # 3 - Kernel Version
 # Return ERROR if not exists
 function checkAddonExist() {
-  if [ -z "${1}" -o -z "${2}" -o -z "${3}" ]; then
+  if [ -z "${1}" ] || [ -z "${2}" ] || [ -z "${3}" ]; then
     return 1 # ERROR
   fi
   # First check generic files
@@ -80,7 +80,7 @@ function installAddon() {
   fi
   cp -f "${TMP_PATH}/${ADDON}/install.sh" "${RAMDISK_PATH}/addons/${ADDON}.sh" 2>"${LOG_FILE}"
   chmod +x "${RAMDISK_PATH}/addons/${ADDON}.sh"
-  [ -d ${TMP_PATH}/${ADDON}/root ] && (cp -rnf "${TMP_PATH}/${ADDON}/root/"* "${RAMDISK_PATH}/" 2>"${LOG_FILE}")
+  [ -d "${TMP_PATH}/${ADDON}/root" ] && cp -rnf "${TMP_PATH}/${ADDON}/root/"* "${RAMDISK_PATH}/" 2>"${LOG_FILE}"
   rm -rf "${TMP_PATH}/${ADDON}"
   return 0
 }
@@ -88,7 +88,7 @@ function installAddon() {
 ###############################################################################
 # Untar an addon to correct path
 # 1 - Addon file path
-# Return name of addon on sucess or empty on error
+# Return name of addon on success or empty on error
 function untarAddon() {
   if [ -z "${1}" ]; then
     echo ""
@@ -96,10 +96,11 @@ function untarAddon() {
   fi
   rm -rf "${TMP_PATH}/addon"
   mkdir -p "${TMP_PATH}/addon"
-  tar -xaf "${1}" -C "${TMP_PATH}/addon" || return
+  tar -xaf "${1}" -C "${TMP_PATH}/addon" || return 1
   local ADDON=$(readConfigKey "name" "${TMP_PATH}/addon/manifest.yml")
-  [ -z "${ADDON}" ] && return
+  [ -z "${ADDON}" ] && return 1
   rm -rf "${ADDONS_PATH}/${ADDON}"
   mv -f "${TMP_PATH}/addon" "${ADDONS_PATH}/${ADDON}"
   echo "${ADDON}"
+  return 0
 }

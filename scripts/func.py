@@ -6,9 +6,10 @@
 # See /LICENSE for more information.
 #
 
-import os, sys, glob, json, yaml, click, shutil, tarfile, kmodule, requests
+import os, sys, glob, json, yaml, click, shutil, tarfile, kmodule, requests, urllib3
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry  # type: ignore
 from openpyxl import Workbook
-
 
 @click.group()
 def cli():
@@ -23,31 +24,40 @@ def cli():
 @click.option("-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile.")
 @click.option("-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile.")
 def getmodels(workpath, jsonpath, xlsxpath):
-
     models = {}
-    with open("{}/opt/rr/platforms.yml".format(workpath), "r") as f:
+    platforms_yml = os.path.join(workpath, "opt", "rr", "platforms.yml")
+    with open(platforms_yml, "r") as f:
         P_data = yaml.safe_load(f)
         P_platforms = P_data.get("platforms", [])
         for P in P_platforms:
             productvers = {}
             for V in P_platforms[P]["productvers"]:
-                if P_platforms[P]["productvers"][V].get("kpre", "") != "":
-                    productvers[V] = (P_platforms[P]["productvers"][V].get("kpre", "") + "-" + P_platforms[P]["productvers"][V].get("kver", ""))
-                else:
-                    productvers[V] = P_platforms[P]["productvers"][V].get("kver", "")
+                kpre = P_platforms[P]["productvers"][V].get("kpre", "")
+                kver = P_platforms[P]["productvers"][V].get("kver", "")
+                productvers[V] = f"{kpre}-{kver}" if kpre else kver
             models[P] = {"productvers": productvers, "models": []}
 
-    req = requests.get("https://autoupdate.synology.com/os/v2")
-    req.encoding = "utf-8"
-    data = json.loads(req.text)
+    adapter = HTTPAdapter(max_retries=Retry(total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504]))
+    session = requests.Session()
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    
+    try:
+        req = session.get("https://autoupdate.synology.com/os/v2", timeout=10, verify=False)
+        req.encoding = "utf-8"
+        data = json.loads(req.text)
+    except Exception as e:
+        click.echo(f"Error: {e}")
+        return
 
-    for I in data["channel"]["item"]:
-        if not I["title"].startswith("DSM"):
+    for item in data["channel"]["item"]:
+        if not item["title"].startswith("DSM"):
             continue
-        for J in I["model"]:
-            arch = J["mUnique"].split("_")[1].lower()
-            name = J["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
-            if arch not in models.keys():
+        for model in item["model"]:
+            arch = model["mUnique"].split("_")[1].lower()
+            name = model["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
+            if arch not in models:
                 continue
             if name in (A for B in models for A in models[B]["models"]):
                 continue
@@ -64,45 +74,51 @@ def getmodels(workpath, jsonpath, xlsxpath):
             ws.append([k, str(v["productvers"]), str(v["models"])])
         wb.save(xlsxpath)
 
+
 @cli.command()
 @click.option("-w", "--workpath", type=str, required=True, help="The workpath of RR.")
 @click.option("-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile.")
 @click.option("-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile.")
 def getpats(workpath, jsonpath, xlsxpath):
     def __fullversion(ver):
-        out = ver
         arr = ver.split('-')
-        if len(arr) > 0:
-            a = arr[0].split('.')[0] if len(arr[0].split('.')) > 0 else '0'
-            b = arr[0].split('.')[1] if len(arr[0].split('.')) > 1 else '0'
-            c = arr[0].split('.')[2] if len(arr[0].split('.')) > 2 else '0'
-            d = arr[1] if len(arr) > 1 else '00000'
-            e = arr[2] if len(arr) > 2 else '0'
-            out = '{}.{}.{}-{}-{}'.format(a,b,c,d,e)
-        return out
+        a, b, c = (arr[0].split('.') + ['0', '0', '0'])[:3]
+        d = arr[1] if len(arr) > 1 else '00000'
+        e = arr[2] if len(arr) > 2 else '0'
+        return f'{a}.{b}.{c}-{d}-{e}'
 
-    platforms = []
-    models = []
-    with open("{}/opt/rr/platforms.yml".format(workpath), "r") as f:
+    platforms_yml = os.path.join(workpath, "opt", "rr", "platforms.yml")
+    with open(platforms_yml, "r") as f:
         data = yaml.safe_load(f)
         platforms = data.get("platforms", [])
 
-    req = requests.get("https://autoupdate.synology.com/os/v2")
-    req.encoding = "utf-8"
-    data = json.loads(req.text)
+    adapter = HTTPAdapter(max_retries=Retry(total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504]))
+    session = requests.Session()
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    
+    try:
+        req = session.get("https://autoupdate.synology.com/os/v2", timeout=10, verify=False)
+        req.encoding = "utf-8"
+        data = json.loads(req.text)
+    except Exception as e:
+        click.echo(f"Error: {e}")
+        return
 
-    for I in data["channel"]["item"]:
-        if not I["title"].startswith("DSM"):
+    models = []
+    for item in data["channel"]["item"]:
+        if not item["title"].startswith("DSM"):
             continue
-        for J in I["model"]:
-            arch = J["mUnique"].split("_")[1].lower()
-            name = J["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
+        for model in item["model"]:
+            arch = model["mUnique"].split("_")[1].lower()
+            name = model["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
             if arch not in platforms:
                 continue
             if name in models:
                 continue
             models.append(name)
-    
+
     pats = {}
     for M in models:
         pats[M] = {}
@@ -112,57 +128,73 @@ def getpats(workpath, jsonpath, xlsxpath):
         #urlInfo = "https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn"
         #urlSteps = "https://www.synology.cn/api/support/findUpgradeSteps?"
 
-        major = "&major={}".format(version.split('.')[0]) if len(version.split('.')) > 0 else ""
-        minor = "&minor={}".format(version.split('.')[1]) if len(version.split('.')) > 1 else ""
-        req = requests.get("{}&product={}{}{}".format(urlInfo, M.replace("+", "%2B"), major, minor))
-        req.encoding = "utf-8"
-        data = json.loads(req.text)
+        major = f"&major={version.split('.')[0]}" if len(version.split('.')) > 0 else ""
+        minor = f"&minor={version.split('.')[1]}" if len(version.split('.')) > 1 else ""
+        try:
+            req = session.get(f"{urlInfo}&product={M.replace('+', '%2B')}{major}{minor}", timeout=10, verify=False)
+            req.encoding = "utf-8"
+            data = json.loads(req.text)
+        except Exception as e:
+            click.echo(f"Error: {e}")
+            continue
 
         build_ver = data['info']['system']['detail'][0]['items'][0]['build_ver']
         build_num = data['info']['system']['detail'][0]['items'][0]['build_num']
         buildnano = data['info']['system']['detail'][0]['items'][0]['nano']
-        V=__fullversion("{}-{}-{}".format(build_ver, build_num, buildnano))
-        if not V in pats[M]:
-            pats[M][V]={}
-            pats[M][V]['url'] = data['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0]
-            pats[M][V]['sum'] = data['info']['system']['detail'][0]['items'][0]['files'][0]['checksum']
+        V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
+        if V not in pats[M]:
+            pats[M][V] = {
+                'url': data['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0],
+                'sum': data['info']['system']['detail'][0]['items'][0]['files'][0]['checksum']
+            }
 
-        from_ver=0
-        for I in data['info']['pubVers']:
-            if from_ver == 0 or I['build'] < from_ver: from_ver = I['build']
+        from_ver = min(I['build'] for I in data['info']['pubVers'])
 
         for I in data['info']['productVers']:
-            if not I['version'].startswith(version): continue
-            if major == "" or minor == "":
-                majorTmp = "&major={}".format(I['version'].split('.')[0]) if len(I['version'].split('.')) > 0 else ""
-                minorTmp = "&minor={}".format(I['version'].split('.')[1]) if len(I['version'].split('.')) > 1 else ""
-                reqTmp = requests.get("{}&product={}{}{}".format(urlInfo, M.replace("+", "%2B"), majorTmp, minorTmp))
-                reqTmp.encoding = "utf-8"
-                dataTmp = json.loads(reqTmp.text)
+            if not I['version'].startswith(version):
+                continue
+            if not major or not minor:
+                majorTmp = f"&major={I['version'].split('.')[0]}" if len(I['version'].split('.')) > 0 else ""
+                minorTmp = f"&minor={I['version'].split('.')[1]}" if len(I['version'].split('.')) > 1 else ""
+                try:
+                    reqTmp = session.get(f"{urlInfo}&product={M.replace('+', '%2B')}{majorTmp}{minorTmp}", timeout=10, verify=False)
+                    reqTmp.encoding = "utf-8"
+                    dataTmp = json.loads(reqTmp.text)
+                except Exception as e:
+                    click.echo(f"Error: {e}")
+                    continue
 
                 build_ver = dataTmp['info']['system']['detail'][0]['items'][0]['build_ver']
                 build_num = dataTmp['info']['system']['detail'][0]['items'][0]['build_num']
                 buildnano = dataTmp['info']['system']['detail'][0]['items'][0]['nano']
-                V=__fullversion("{}-{}-{}".format(build_ver, build_num, buildnano))
-                if not V in pats[M]:
-                    pats[M][V]={}
-                    pats[M][V]['url'] = dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0]
-                    pats[M][V]['sum'] = dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['checksum']
+                V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
+                if V not in pats[M]:
+                    pats[M][V] = {
+                        'url': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0],
+                        'sum': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['checksum']
+                    }
 
             for J in I['versions']:
-                to_ver=J['build']
-                reqSteps = requests.get("{}&product={}&from_ver={}&to_ver={}".format(urlSteps, M.replace("+", "%2B"), from_ver, to_ver))
-                if reqSteps.status_code != 200: continue
-                reqSteps.encoding = "utf-8"
-                dataSteps = json.loads(reqSteps.text)
+                to_ver = J['build']
+                try:
+                    reqSteps = session.get(f"{urlSteps}&product={M.replace('+', '%2B')}&from_ver={from_ver}&to_ver={to_ver}", timeout=10, verify=False)
+                    if reqSteps.status_code != 200:
+                        continue
+                    reqSteps.encoding = "utf-8"
+                    dataSteps = json.loads(reqSteps.text)
+                except Exception as e:
+                    click.echo(f"Error: {e}")
+                    continue
+
                 for S in dataSteps['upgrade_steps']:
-                    if not 'full_patch' in S or S['full_patch'] is False: continue
-                    if not 'build_ver' in S or not S['build_ver'].startswith(version): continue
-                    V=__fullversion("{}-{}-{}".format(S['build_ver'], S['build_num'], S['nano']))
-                    if not V in pats[M]:
-                        pats[M][V] = {}
-                        pats[M][V]['url'] = S['files'][0]['url'].split('?')[0]
-                        pats[M][V]['sum'] = S['files'][0]['checksum']
+                    if not S.get('full_patch') or not S['build_ver'].startswith(version):
+                        continue
+                    V = __fullversion(f"{S['build_ver']}-{S['build_num']}-{S['nano']}")
+                    if V not in pats[M]:
+                        pats[M][V] = {
+                            'url': S['files'][0]['url'].split('?')[0],
+                            'sum': S['files'][0]['checksum']
+                        }
 
     if jsonpath:
         with open(jsonpath, "w") as f:
@@ -176,13 +208,13 @@ def getpats(workpath, jsonpath, xlsxpath):
                 ws.append([k1, k2, v2["url"], v2["sum"]])
         wb.save(xlsxpath)
 
+
 @cli.command()
 @click.option("-w", "--workpath", type=str, required=True, help="The workpath of RR.")
 @click.option("-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile.")
 @click.option("-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile.")
 def getaddons(workpath, jsonpath, xlsxpath):
-    # Read the manifest.yml file
-    AS = glob.glob("{}/mnt/p3/addons/*/manifest.yml".format(workpath))
+    AS = glob.glob(os.path.join(workpath, "mnt", "p3", "addons", "*", "manifest.yml"))
     AS.sort()
     addons = {}
     for A in AS:
@@ -200,7 +232,7 @@ def getaddons(workpath, jsonpath, xlsxpath):
         ws = wb.active
         ws.append(["Name", "system", "en_US", "zh_CN"])
         for k1, v1 in addons.items():
-            ws.append([k1, v1.get("system", False), v1.get("description").get("en_US", ""), v1.get("description").get("zh_CN", ""),])
+            ws.append([k1, v1.get("system", False), v1.get("description").get("en_US", ""), v1.get("description").get("zh_CN", "")])
         wb.save(xlsxpath)
 
 
@@ -209,8 +241,7 @@ def getaddons(workpath, jsonpath, xlsxpath):
 @click.option("-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile.")
 @click.option("-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile.")
 def getmodules(workpath, jsonpath, xlsxpath):
-    # Read the module files
-    MS = glob.glob("{}/mnt/p3/modules/*.tgz".format(workpath))
+    MS = glob.glob(os.path.join(workpath, "mnt", "p3", "modules", "*.tgz"))
     MS.sort()
     modules = {}
     TMP_PATH = "/tmp/modules"
@@ -219,12 +250,10 @@ def getmodules(workpath, jsonpath, xlsxpath):
     for M in MS:
         M_name = os.path.splitext(os.path.basename(M))[0]
         M_modules = {}
-        # Extract the module
         os.makedirs(TMP_PATH)
         with tarfile.open(M, "r") as tar:
             tar.extractall(TMP_PATH)
-        # Traverse the extracted files
-        KS = glob.glob("{}/*.ko".format(TMP_PATH))
+        KS = glob.glob(os.path.join(TMP_PATH, "*.ko"))
         KS.sort()
         for K in KS:
             K_name = os.path.splitext(os.path.basename(K))[0]

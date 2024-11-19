@@ -1,19 +1,14 @@
-[ -z "${WORK_PATH}" -o ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" >/dev/null 2>&1 && pwd)"
+[ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" >/dev/null 2>&1 && pwd)"
 
-if type gettext >/dev/null 2>&1; then
-  alias TEXT='gettext "rr"'
-  shopt -s expand_aliases
-else
-  alias TEXT='echo'
-  shopt -s expand_aliases
-fi
-if [ -d "${WORK_PATH}/lang" ]; then
-  export TEXTDOMAINDIR="${WORK_PATH}/lang"
-fi
-if [ -f "${PART1_PATH}/.locale" ]; then
-  export LC_ALL="$(cat ${PART1_PATH}/.locale)"
-fi
+type gettext >/dev/null 2>&1 && alias TEXT='gettext "rr"' || alias TEXT='echo'
+shopt -s expand_aliases
+
+[ -d "${WORK_PATH}/lang" ] && export TEXTDOMAINDIR="${WORK_PATH}/lang"
+[ -f "${PART1_PATH}/.locale" ] && export LC_ALL="$(cat "${PART1_PATH}/.locale")"
+
 if [ -f "${PART1_PATH}/.timezone" ]; then
-  TIMEZONE="$(cat ${PART1_PATH}/.timezone)"
-  ln -sf "/usr/share/zoneinfo/right/${TIMEZONE}" /etc/localtime
+  TIMEZONE="$(cat "${PART1_PATH}/.timezone")"
+  if [ -f "/usr/share/zoneinfo/right/${TIMEZONE}" ]; then
+    ln -sf "/usr/share/zoneinfo/right/${TIMEZONE}" /etc/localtime
+  fi
 fi

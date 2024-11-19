@@ -33,7 +33,7 @@ jobs:
 
           issuetitle = ${{ toJSON(github.event.issue.title) }};
           issuebody = ${{ toJSON(github.event.issue.body) }};
-          
+
           iscustom = 'false'
           warinfo = 'false'
 
@@ -148,20 +148,22 @@ jobs:
         run: |
           # 累了, 毁灭吧!
 
+          # yq need sudo !!!
           function writeConfigKey() {
-            [ "${2}" = "{}" ] && sudo yq eval '.'${1}' = {}' --inplace "${3}" 2>/dev/null || sudo yq eval '.'${1}' = "'"${2}"'"' --inplace "${3}" 2>/dev/null
+            local value="${2}"
+            [ "${value}" = "{}" ] && sudo yq eval ".${1} = {}" --inplace "${3}" 2>/dev/null || sudo yq eval ".${1} = \"${value}\"" --inplace "${3}" 2>/dev/null
           }
 
           function readConfigKey() {
-            RESULT=$(yq eval '.'${1}' | explode(.)' "${2}" 2>/dev/null)
-            [ "${RESULT}" == "null" ] && echo "" || echo "${RESULT}"
+            local result=$(sudo yq eval ".${1} | explode(.)" "${2}" 2>/dev/null)
+            [ "${result}" = "null" ] && echo "" || echo "${result}"
           }
 
           function mergeConfigStr() {
-            local JF=$(mktemp)
-            echo "${2}" | yq -p ${1} -o y > "${JF}"
-            yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${3}" "${JF}" 2>/dev/null
-            rm -f "${JF}"
+            local xmlfile=$(mktemp)
+            echo "${2}" | sudo yq -p "${1}" -o y >"${xmlfile}"
+            sudo yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${3}" "${xmlfile}" 2>/dev/null
+            rm -f "${xmlfile}"
           }
 
           REPO="${{ github.server_url }}/${{ github.repository }}"
@@ -179,11 +181,11 @@ jobs:
           [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
           rm -f rr-${TAG}.img.zip
           STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${REPO}/releases/download/${TAG}/rr-${TAG}.img.zip" -o "rr-${TAG}.img.zip")
-          if [ $? -ne 0 -o ${STATUS:-0} -ne 200 ]; then
+          if [ $? -ne 0 ] || [ ${STATUS:-0} -ne 200 ]; then
             echo "Download failed"
             exit 1
           fi
-          
+
           unzip rr-${TAG}.img.zip -d "rr"
 
           export TERM=xterm
@@ -197,7 +199,7 @@ jobs:
           # sudo cp -rf files/initrd/opt/rr/* rr/ws/initrd/opt/rr/
           # sudo sed -i "s/set -e/set -ex/" rr/ws/initrd/opt/rr/init.sh
           # sudo sed -i '/^alias/i\set -x' rr/ws/initrd/opt/rr/menu.sh
-                    
+
           [ -n "${{ env.language }}" ] && echo "${{ env.language }}.UTF-8" | sudo tee rr/ws/mnt/p1/.locale
 
           sudo ./localbuild.sh init
@@ -231,11 +233,11 @@ jobs:
             echo "set modules: ${{ env.modules }}"
             USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
             writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-            # L="$(for I in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do echo "modules.${I}:"; done)"
-            # mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
-            for M in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do
-              writeConfigKey "modules.\"${M}\"" "" "${USER_CONFIG_FILE}"
-            done
+            L="$(for I in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do echo "modules.${I}:"; done)"
+            mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+            # for M in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do
+            #   writeConfigKey "modules.\"${M}\"" "" "${USER_CONFIG_FILE}"
+            # done
           fi
 
           sudo ./localbuild.sh build
@@ -254,23 +256,22 @@ jobs:
 
           RR_VERSION_FILE="rr/ws/mnt/p1/RR_VERSION"
           USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
-          echo "" > README.txt
-          echo "RR: " >> README.txt
-          echo "  VERSION: $(cat ${RR_VERSION_FILE} 2>/dev/null | head -1)" >> README.txt
-          echo "  CUSTOM:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> README.txt
-
-          echo "" >> README.txt
-          echo "DSM:" >> README.txt
-          echo "  MODEL:   $(readConfigKey "model" "${USER_CONFIG_FILE}")" >> README.txt
-          echo "  VERSION: $(readConfigKey "productver" "${USER_CONFIG_FILE}")" >> README.txt
-          echo "  KERNEL:  $(readConfigKey "kernel" "${USER_CONFIG_FILE}")" >> README.txt
-          echo "  PATURL:  $(readConfigKey "paturl" "${USER_CONFIG_FILE}")" >> README.txt
-          echo "  PATSUM:  $(readConfigKey "patsum" "${USER_CONFIG_FILE}")" >> README.txt
-
-          echo "" >> README.txt
-          echo "" >> README.txt
-          echo "After the image is written to the disk, it will boot directly into DSM without the need to compile again." >> README.txt
-          echo "Of course, you can also modify the settings yourself." >> README.txt
+          {
+            echo "RR: "
+            echo "  VERSION: $(cat ${RR_VERSION_FILE} 2>/dev/null | head -1)"
+            echo "  CUSTOM:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo
+            echo "DSM:"
+            echo "  MODEL:   $(readConfigKey "model" "${USER_CONFIG_FILE}")"
+            echo "  VERSION: $(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+            echo "  KERNEL:  $(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
+            echo "  PATURL:  $(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
+            echo "  PATSUM:  $(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
+            echo
+            echo
+            echo "After the image is written to the disk, it will boot directly into DSM without the need to compile again."
+            echo "Of course, you can also modify the settings yourself."
+          } >README.txt
 
           if [ "${{ env.format }}" = "ova" ]; then
             . scripts/func.sh "${{ secrets.RRORG }}"

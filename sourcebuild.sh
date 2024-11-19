@@ -6,35 +6,40 @@
 # See /LICENSE for more information.
 #
 # sudo apt update
-# sudo apt install -y locales busybox dialog curl xz-utils cpio sed
+# sudo apt install -y locales busybox dialog gettext sed gawk jq curl 
+# sudo apt install -y python-is-python3 python3-pip libelf-dev qemu-utils cpio xz-utils lz4 lzma bzip2 gzip zstd
+# # sudo snap install yq
+# if ! command -v yq &>/dev/null || ! yq --version 2>/dev/null | grep -q "v4."; then
+#   sudo curl -kL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq && sudo chmod a+x /usr/bin/yq
+# fi
+# 
+# # Backup the original python3 executable.
+# sudo mv -f "$(realpath $(which python3))/EXTERNALLY-MANAGED" "$(realpath $(which python3))/EXTERNALLY-MANAGED.bak" 2>/dev/null || true
+# sudo pip3 install -U click requests requests-toolbelt urllib3 qrcode[pil] beautifulsoup4
+# 
 # sudo locale-gen ar_SA.UTF-8 de_DE.UTF-8 en_US.UTF-8 es_ES.UTF-8 fr_FR.UTF-8 ja_JP.UTF-8 ko_KR.UTF-8 ru_RU.UTF-8 th_TH.UTF-8 tr_TR.UTF-8 uk_UA.UTF-8 vi_VN.UTF-8 zh_CN.UTF-8 zh_HK.UTF-8 zh_TW.UTF-8
 #
 # export TOKEN="${1}"
 #
 
-set -e
-
-PROMPT=$(sudo -nv 2>&1)
-if [ $? -ne 0 ]; then
+if [ "$(id -u)" -ne 0 ]; then
   echo "This script must be run as root"
   exit 1
 fi
 
-PRE="true"
-
-. scripts/func.sh
+. scripts/func.sh "${TOKEN}"
 
 echo "Get extractor"
-getCKs "files/p3/cks" "${PRE}"
-getLKMs "files/p3/lkms" "${PRE}"
-getAddons "files/p3/addons" "${PRE}"
-getModules "files/p3/modules" "${PRE}"
-getBuildroot "files/p3" "${PRE}"
-getExtractor "files/p3/extractor"
+getCKs "files/mnt/p3/cks" "true"
+getLKMs "files/mnt/p3/lkms" "true"
+getAddons "files/mnt/p3/addons" "true"
+getModules "files/mnt/p3/modules" "true"
+getBuildroot "files/mnt/p3" "true"
+getExtractor "files/mnt/p3/extractor"
 
 echo "Repack initrd"
 convertpo2mo "files/initrd/opt/rr/lang"
-repackInitrd "files/p3/initrd-rr" "files/initrd"
+repackInitrd "files/mnt/p3/initrd-rr" "files/initrd"
 
 if [ -n "${1}" ]; then
   export LOADER_DISK="LOCALBUILD"
@@ -43,81 +48,63 @@ if [ -n "${1}" ]; then
     cd "${CHROOT_PATH}/initrd/opt/rr"
     ./init.sh
     ./menu.sh modelMenu "${1}"
-    ./menu.sh productversMenu "7.2"
+    ./menu.sh productversMenu "${2:-7.2}"
     ./menu.sh make -1
     ./menu.sh cleanCache -1
   )
 fi
 
 IMAGE_FILE="rr.img"
-gzip -dc "files/grub.img.gz" >"${IMAGE_FILE}"
+gzip -dc "files/initrd/opt/rr/grub.img.gz" >"${IMAGE_FILE}"
 fdisk -l "${IMAGE_FILE}"
 
 LOOPX=$(sudo losetup -f)
 sudo losetup -P "${LOOPX}" "${IMAGE_FILE}"
 
-echo "Mounting image file"
-rm -rf "/tmp/mnt/p1"
-rm -rf "/tmp/mnt/p2"
-rm -rf "/tmp/mnt/p3"
-mkdir -p "/tmp/mnt/p1"
-mkdir -p "/tmp/mnt/p2"
-mkdir -p "/tmp/mnt/p3"
-sudo mount ${LOOPX}p1 "/tmp/mnt/p1" || (
-  echo -e "Can't mount ${LOOPX}p1."
-  exit 1
-)
-sudo mount ${LOOPX}p2 "/tmp/mnt/p2" || (
-  echo -e "Can't mount ${LOOPX}p2."
-  exit 1
-)
-sudo mount ${LOOPX}p3 "/tmp/mnt/p3" || (
-  echo -e "Can't mount ${LOOPX}p3."
-  exit 1
-)
+for i in {1..3}; do
+  [ ! -d "files/mnt/p${i}" ] && continue
+  
+  rm -rf "/tmp/mnt/p${i}"
+  mkdir -p "/tmp/mnt/p${i}"
 
-echo "Copying files"
-sudo cp -af "files/mnt/p1/.locale" "/tmp/mnt/p1" 2>/dev/null
-sudo cp -rf "files/mnt/p1/"* "/tmp/mnt/p1" || (
-  echo -e "Can't cp ${LOOPX}p1."
-  exit 1
-)
-sudo cp -rf "files/mnt/p2/"* "/tmp/mnt/p2" || (
-  echo -e "Can't cp ${LOOPX}p2."
-  exit 1
-)
-sudo cp -rf "files/mnt/p3/"* "/tmp/mnt/p3" || (
-  echo -e "Can't cp ${LOOPX}p2."
-  exit 1
-)
+  echo "Mounting ${LOOPX}p${i}"
+  sudo mount "${LOOPX}p${i}" "/tmp/mnt/p${i}" || {
+    echo "Can't mount ${LOOPX}p${i}."
+    break
+  }
+  echo "Copying files to ${LOOPX}p${i}"
+  [ ${i} -eq 1 ] && sudo cp -af "files/mnt/p${i}/"{.locale,.timezone} "/tmp/mnt/p${i}/" 2>/dev/null || true
+  sudo cp -rf "files/mnt/p${i}/"* "/tmp/mnt/p${i}" || true
 
-sudo sync
+  sudo sync
+
+  echo "Unmounting ${LOOPX}p${i}"
+  sudo umount "/tmp/mnt/p${i}" || {
+    echo "Can't umount ${LOOPX}p${i}."
+    break
+  }
+  rm -rf "/tmp/mnt/p${i}"
+done
+
+sudo losetup --detach "${LOOPX}"
+
+resizeImg "${IMAGE_FILE}" "+2560M"
+
+# convertova "${IMAGE_FILE}" "${IMAGE_FILE/.img/.ova}"
 
 # update.zip
 sha256sum update-list.yml update-check.sh >sha256sum
-zip -9j update.zip update-list.yml update-check.sh
-while read F; do
-  if [ -d "/tmp/${F}" ]; then
-    FTGZ="$(basename "/tmp/${F}").tgz"
-    tar -czf "${FTGZ}" -C "/tmp/${F}" .
+zip -9j "update.zip" update-list.yml update-check.sh
+while read -r F; do
+  if [ -d "${F}" ]; then
+    FTGZ="$(basename "${F}").tgz"
+    tar -zcf "${FTGZ}" -C "${F}" .
     sha256sum "${FTGZ}" >>sha256sum
-    zip -9j update.zip "${FTGZ}"
-    sudo rm -f "${FTGZ}"
+    zip -9j "update.zip" "${FTGZ}"
+    rm -f "${FTGZ}"
   else
-    (cd $(dirname "/tmp/${F}") && sha256sum $(basename "/tmp/${F}")) >>sha256sum
-    zip -9j update.zip "/tmp/${F}"
+    (cd $(dirname "${F}") && sha256sum $(basename "${F}")) >>sha256sum
+    zip -9j "update.zip" "${F}"
   fi
 done <<<$(yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml)
-zip -9j update.zip sha256sum
-
-echo "Unmount image file"
-sudo umount "/tmp/files/p1"
-sudo umount "/tmp/files/p2"
-sudo umount "/tmp/files/p3"
-
-sudo losetup --detach ${LOOPX}
-
-if [ -n "${1}" ]; then
-  echo "Packing image file"
-  sudo mv "${IMAGE_FILE}" "rr-${1}.img"
-fi
+zip -9j "update.zip" sha256sum

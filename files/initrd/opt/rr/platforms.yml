@@ -17,47 +17,43 @@ synoinfo: &synoinfo
   maxlanport: "8"
   netif_seq: "0 1 2 3 4 5 6 7"
   buzzeroffen: "0xffff"
+
+productvers4: &productvers4
+  "7.0":
+    kver: "4.4.180"
+  "7.1":
+    kver: "4.4.180"
+  "7.2":
+    kver: "4.4.302"
+
+productvers5: &productvers5
+  "7.1":
+    kpre: "7.1"
+    kver: "5.10.55"
+  "7.2":
+    kpre: "7.2"
+    kver: "5.10.55"
+
 platforms:
   apollolake:
     dt: false
-    flags:
-      - "movbe"
-    noflags:
-      - "x2apic"
+    flags: ["movbe"]
+    noflags: ["x2apic"]
     synoinfo:
       <<: *synoinfo
       HddEnableDynamicPower: "no"
-    productvers:
-      "7.0":
-        kver: "4.4.180"
-      "7.1":
-        kver: "4.4.180"
-      "7.2":
-        kver: "4.4.302"
+    productvers: *productvers4
   broadwell:
     dt: false
-    synoinfo:
-      <<: *synoinfo
-    productvers:
-      "7.0":
-        kver: "4.4.180"
-      "7.1":
-        kver: "4.4.180"
-      "7.2":
-        kver: "4.4.302"
+    synoinfo: *synoinfo
+    productvers: *productvers4
   broadwellnk:
     dt: false
     synoinfo:
       <<: *synoinfo
       support_bde_internal_10g: "no"
       supportsas: "no"
-    productvers:
-      "7.0":
-        kver: "4.4.180"
-      "7.1":
-        kver: "4.4.180"
-      "7.2":
-        kver: "4.4.302"
+    productvers: *productvers4
   broadwellnkv2:
     dt: true
     synoinfo:
@@ -66,13 +62,7 @@ platforms:
       supportsas: "no"
       supportsas_v2_r1: "no"
       support_multipath: "yes"
-    productvers:
-      "7.0":
-        kver: "4.4.180"
-      "7.1":
-        kver: "4.4.180"
-      "7.2":
-        kver: "4.4.302"
+    productvers: *productvers4
   broadwellntbap:
     dt: false
     synoinfo:
@@ -84,43 +74,20 @@ platforms:
       support_auto_install: "no"
       support_install_only_dev: "no"
       required_system_disk_number: "0"
-    productvers:
-      "7.0":
-        kver: "4.4.180"
-      "7.1":
-        kver: "4.4.180"
-      "7.2":
-        kver: "4.4.302"
+    productvers: *productvers4
   denverton:
     dt: false
-    flags:
-      - "movbe"
-    synoinfo:
-      <<: *synoinfo
-    productvers:
-      "7.0":
-        kver: "4.4.180"
-      "7.1":
-        kver: "4.4.180"
-      "7.2":
-        kver: "4.4.302"
+    flags: ["movbe"]
+    synoinfo: *synoinfo
+    productvers: *productvers4
   geminilake:
     dt: true
-    noflags:
-      - "x2apic"
-    synoinfo:
-      <<: *synoinfo
-    productvers:
-      "7.0":
-        kver: "4.4.180"
-      "7.1":
-        kver: "4.4.180"
-      "7.2":
-        kver: "4.4.302"
+    noflags: ["x2apic"]
+    synoinfo: *synoinfo
+    productvers: *productvers4
   purley:
     dt: true
-    noflags:
-      - "x2apic"
+    noflags: ["x2apic"]
     synoinfo:
       <<: *synoinfo
       supportsas: "no"
@@ -130,42 +97,18 @@ platforms:
       isolated_disk_system: "no"
       required_system_disk_number: "0"
       internal_disk_without_led_mask: "no"
-    productvers:
-      "7.0":
-        kver: "4.4.180"
-      "7.1":
-        kver: "4.4.180"
-      "7.2":
-        kver: "4.4.302"
+    productvers: *productvers4
   r1000:
     dt: true
-    synoinfo:
-      <<: *synoinfo
-    productvers:
-      "7.1":
-        kver: "4.4.180"
-      "7.2":
-        kver: "4.4.302"
+    synoinfo: *synoinfo
+    productvers: *productvers4
   v1000:
     dt: true
-    synoinfo:
-      <<: *synoinfo
-    productvers:
-      "7.0":
-        kver: "4.4.180"
-      "7.1":
-        kver: "4.4.180"
-      "7.2":
-        kver: "4.4.302"
+    synoinfo: *synoinfo
+    productvers: *productvers4
   epyc7002:
     dt: true
     synoinfo:
       <<: *synoinfo
       netif_seq_by_dts: "no"
-    productvers:
-      "7.1":
-        kpre: "7.1"
-        kver: "5.10.55"
-      "7.2":
-        kpre: "7.2"
-        kver: "5.10.55"
+    productvers: *productvers5
