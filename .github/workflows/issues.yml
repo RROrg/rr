@@ -199,10 +199,7 @@ jobs:
           # sudo cp -rf files/initrd/opt/rr/* rr/ws/initrd/opt/rr/
           # sudo sed -i "s/set -e/set -ex/" rr/ws/initrd/opt/rr/init.sh
           # sudo sed -i '/^alias/i\set -x' rr/ws/initrd/opt/rr/menu.sh
-          
-          # TODO: Only v24.11.11
-          sudo sed -i 's/_get_fastest/_get_fastest_bak/; /function _get_fastest_bak() {/i function _get_fastest() {\n  echo "${1}"\n  return 0\n}\n' rr/ws/initrd/opt/rr/include/functions.sh 
-          
+
           [ -n "${{ env.language }}" ] && echo "${{ env.language }}.UTF-8" | sudo tee rr/ws/mnt/p1/.locale
 
           sudo ./localbuild.sh init
