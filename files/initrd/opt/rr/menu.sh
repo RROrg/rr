@@ -123,14 +123,9 @@ function modelMenu() {
   PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
   MJ="$(python3 ${WORK_PATH}/include/functions.py getmodels -p "${PS[*]}")"
 
-  if [ -z "${MJ}" ] || [ "${MJ}" = "[]" ]; then
-    if _get_fastest synology.com >/dev/null 2>&1; then
-      DIALOG --title "$(TEXT "Model")" \
-        --msgbox "$(TEXT "Failed to get models, Please check the network and try again, or use 'Parse Pat'!")" 0 0
-    else
-      DIALOG --title "$(TEXT "Model")" \
-        --msgbox "$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")" 0 0
-    fi
+  if [ "${MJ:-[]}" = "[]" ]; then
+    DIALOG --title "$(TEXT "Model")" \
+      --msgbox "$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")" 0 0
     return 1
   fi
 
@@ -242,7 +237,7 @@ function productversMenu() {
           --infobox "$(TEXT "Get pat data ...")" 0 0
       fi
       PJ="$(python3 ${WORK_PATH}/include/functions.py getpats4mv -m "${MODEL}" -v "${selver}")"
-      if [ -z "${PJ}" ] || [ "${PJ}" = "{}" ]; then
+      if [ "${PJ:-{}}" = "{}" ]; then
         if [ -z "${1}" ]; then
           MSG="$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")"
           DIALOG --title "$(TEXT "Addons")" \
@@ -694,27 +689,32 @@ function moduleMenu() {
           2>${TMP_PATH}/resp
         RET=$?
         case ${RET} in
-        0) # ok-button
+        0)
+          # ok-button
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
           L="$(for I in $(cat ${TMP_PATH}/resp 2>/dev/null); do echo "modules.${I}:"; done)"
           mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
           touch ${PART1_PATH}/.build
           break
           ;;
-        3) # extra-button
+        3)
+          # extra-button
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
           L="$(echo "${ALLMODULES}" | awk '{print "modules."$1":"}')"
           mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
           touch ${PART1_PATH}/.build
           ;;
-        2) # help-button
+        2)
+          # help-button
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
           touch ${PART1_PATH}/.build
           ;;
-        1) # cancel-button
+        1)
+          # cancel-button
           break
           ;;
-        255) # ESC
+        255)
+          # ESC
           break
           ;;
         esac
@@ -889,7 +889,7 @@ function cmdlineMenu() {
 
       LINENUM=0
       while read -r L; do LINENUM=$((LINENUM + 1 + ${#L} / 96)); done <<<"$(printf "${MSG}")" # When the width is 100, each line displays 96 characters.
-      LINENUM=$((${LINENUM:-0} + 9))                                                                # When there are 2 parameters, 9 is the minimum value to include 1 line of MSG.
+      LINENUM=$((${LINENUM:-0} + 9))                                                          # When there are 2 parameters, 9 is the minimum value to include 1 line of MSG.
 
       DIALOG_MAXX=$(ttysize 2>/dev/null | awk '{print $1}')
       DIALOG_MAXY=$(ttysize 2>/dev/null | awk '{print $2}')
@@ -904,7 +904,8 @@ function cmdlineMenu() {
           2>"${TMP_PATH}/resp"
         RET=$?
         case ${RET} in
-        0) # ok-button
+        0)
+          # ok-button
           NAME="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
           VALUE="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
           [ "${NAME: -1}" = "=" ] && NAME="${NAME:0:-1}"
@@ -917,10 +918,12 @@ function cmdlineMenu() {
           writeConfigKey "cmdline.\"${NAME//\"/}\"" "${VALUE}" "${USER_CONFIG_FILE}"
           break
           ;;
-        1) # cancel-button
+        1)
+          # cancel-button
           break
           ;;
-        255) # ESC
+        255)
+          # ESC
           break
           ;;
         esac
@@ -965,7 +968,8 @@ function cmdlineMenu() {
           2>"${TMP_PATH}/resp"
         RET=$?
         case ${RET} in
-        0) # ok-button
+        0)
+          # ok-button
           sn="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null | sed 's/.*/\U&/')"
           mac1="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null | sed 's/[:-]//g' | sed 's/.*/\U&/')"
           mac2="$(sed -n '3p' "${TMP_PATH}/resp" 2>/dev/null | sed 's/[:-]//g' | sed 's/.*/\U&/')"
@@ -982,17 +986,20 @@ function cmdlineMenu() {
           writeConfigKey "mac2" "${MAC2}" "${USER_CONFIG_FILE}"
           break
           ;;
-        3) # extra-button
+        3)
+          # extra-button
           sn=$(generateSerial "${MODEL}")
           NETIF_NUM=2
           MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
           mac1=${MACS[0]}
           mac2=${MACS[1]}
           ;;
-        1) # cancel-button
+        1)
+          # cancel-button
           break
           ;;
-        255) # ESC
+        255)
+          # ESC
           break
           ;;
         esac
@@ -1006,7 +1013,9 @@ function cmdlineMenu() {
     #   DIALOG --title "$(TEXT "Cmdline")" \
     #     --msgbox "${ITEMS}" 0 0
     #   ;;
-    e) return ;;
+    e)
+      return
+      ;;
     esac
   done
 }
@@ -1054,7 +1063,8 @@ function synoinfoMenu() {
           2>"${TMP_PATH}/resp"
         RET=$?
         case ${RET} in
-        0) # ok-button
+        0)
+          # ok-button
           NAME="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
           VALUE="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
           [ "${NAME: -1}" = "=" ] && NAME="${NAME:0:-1}"
@@ -1068,10 +1078,12 @@ function synoinfoMenu() {
           touch ${PART1_PATH}/.build
           break
           ;;
-        1) # cancel-button
+        1)
+          # cancel-button
           break
           ;;
-        255) # ESC
+        255)
+          # ESC
           break
           ;;
         esac
@@ -1105,7 +1117,9 @@ function synoinfoMenu() {
       done
       touch ${PART1_PATH}/.build
       ;;
-    e) return ;;
+    e)
+      return
+      ;;
     esac
   done
 }
@@ -1117,8 +1131,7 @@ function getSynoExtractor() {
   mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
   fastest=$(_get_fastest ${mirrors[@]})
   if [ $? -ne 0 ]; then
-    echo -e "$(TEXT "Network error, please check the network connection and try again.")" >"${LOG_FILE}"
-    return 1
+    echo -e "$(TEXT "The current network status is unknown, using the default mirror.")"
   fi
   OLDPAT_URL="https://${fastest}/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
   OLDPAT_PATH="${TMP_PATH}/DS3622xs+-42218.pat"
@@ -1261,8 +1274,7 @@ function extractDsmFiles() {
     mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
     fastest=$(_get_fastest ${mirrors[@]})
     if [ $? -ne 0 ]; then
-      echo -e "$(TEXT "Network error, please check the network connection and try again.")" >"${LOG_FILE}"
-      return 1
+      echo -e "$(TEXT "The current network status is unknown, using the default mirror.")"
     fi
     mirror="$(echo ${PATURL} | sed 's|^http[s]*://\([^/]*\).*|\1|')"
     if echo "${mirrors[@]}" | grep -wq "${mirror}" && [ "${mirror}" != "${fastest}" ]; then
@@ -1716,21 +1728,25 @@ function allowDSMDowngrade() {
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
     return
   fi
+  rm -f "${TMP_PATH}/isOk"
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
-      [ -f "${TMP_PATH}/mdX/etc/VERSION" ] && rm -f "${TMP_PATH}/mdX/etc/VERSION"
-      [ -f "${TMP_PATH}/mdX/etc.defaults/VERSION" ] && rm -f "${TMP_PATH}/mdX/etc.defaults/VERSION"
+      rm -f "${TMP_PATH}/mdX/etc/VERSION" "${TMP_PATH}/mdX/etc.defaults/VERSION"
       sync
+      echo "true" >"${TMP_PATH}/isOk"
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Removing ...")" 20 100
+  [ -f "${TMP_PATH}/isOk" ] &&
+    MSG="$(TEXT "Remove VERSION file for DSM system partition(md0) completed.")" ||
+    MSG="$(TEXT "Remove VERSION file for DSM system partition(md0) failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
-    --msgbox "$(TEXT "Remove VERSION file for DSM system partition(md0) completed.")" 0 0
+    --msgbox "${MSG}" 0 0
   return
 }
 
@@ -1783,10 +1799,12 @@ function resetDSMPassword() {
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "Invalid password")" 0 0
   done
-  # NEWPASSWD="$(python3 -c "from passlib.hash import sha512_crypt;pw=\"${VALUE}\";print(sha512_crypt.using(rounds=5000).hash(pw))")"
-  NEWPASSWD="$(openssl passwd -6 -salt $(openssl rand -hex 8) "${VALUE}")"
+  rm -f "${TMP_PATH}/isOk"
   (
     mkdir -p "${TMP_PATH}/mdX"
+    # local NEWPASSWD="$(python3 -c "from passlib.hash import sha512_crypt;pw=\"${VALUE}\";print(sha512_crypt.using(rounds=5000).hash(pw))")"
+    # local NEWPASSWD="$(echo "${VALUE}" | mkpasswd -m sha512)"
+    local NEWPASSWD="$(openssl passwd -6 -salt $(openssl rand -hex 8) "${VALUE}")"
     for I in ${DSMROOTS}; do
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
@@ -1794,13 +1812,17 @@ function resetDSMPassword() {
       sed -i "/^${USER}:/ s/^\(${USER}:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\)[^:]*:/\1:/" "${TMP_PATH}/mdX/etc/shadow"
       sed -i "s|status=on|status=off|g" "${TMP_PATH}/mdX/usr/syno/etc/packages/SecureSignIn/preference/${USER}/method.config" 2>/dev/null
       sync
+      echo "true" >"${TMP_PATH}/isOk"
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Resetting ...")" 20 100
+  [ -f "${TMP_PATH}/isOk" ] &&
+    MSG="$(printf "$(TEXT "Reset password for user '%s' completed.")" "${USER}")" ||
+    MSG="$(printf "$(TEXT "Reset password for user '%s' failed.")" "${USER}")"
   DIALOG --title "$(TEXT "Advanced")" \
-    --msgbox "$(TEXT "Password reset completed.")" 0 0
+    --msgbox "${MSG}" 0 0
   return
 }
 
@@ -1820,6 +1842,7 @@ function addNewDSMUser() {
   [ $? -ne 0 ] && return
   username="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
   password="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
+  rm -f "${TMP_PATH}/isOk"
   (
     ONBOOTUP=""
     ONBOOTUP="${ONBOOTUP}if synouser --enum local | grep -q ^${username}\$; then synouser --setpw ${username} ${password}; else synouser --add ${username} ${password} rr 0 user@rr.com 1; fi\n"
@@ -1835,16 +1858,17 @@ function addNewDSMUser() {
 DELETE FROM task WHERE task_name LIKE 'RRONBOOTUPRR_ADDUSER';
 INSERT INTO task VALUES('RRONBOOTUPRR_ADDUSER', '', 'bootup', '', 1, 0, 0, 0, '', 0, '$(echo -e ${ONBOOTUP})', 'script', '{}', '', '', '{}', '{}');
 EOF
-        sleep 1
         sync
-        echo "true" >${TMP_PATH}/isEnable
+        echo "true" >"${TMP_PATH}/isOk"
       fi
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Adding ...")" 20 100
-  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "User added successfully.")" || MSG="$(TEXT "User add failed.")"
+  [ -f "${TMP_PATH}/isOk" ] &&
+    MSG="$(printf "$(TEXT "Add new user '%s' completed.")" "${username}")" ||
+    MSG="$(printf "$(TEXT "Add new user '%s' failed.")" "${username}")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
   return
@@ -1859,6 +1883,7 @@ function forceEnableDSMTelnetSSH() {
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
     return
   fi
+  rm -f "${TMP_PATH}/isOk"
   (
     ONBOOTUP=""
     ONBOOTUP="${ONBOOTUP}systemctl restart inetd\n"
@@ -1873,16 +1898,17 @@ function forceEnableDSMTelnetSSH() {
 DELETE FROM task WHERE task_name LIKE 'RRONBOOTUPRR_SSH';
 INSERT INTO task VALUES('RRONBOOTUPRR_SSH', '', 'bootup', '', 1, 0, 0, 0, '', 0, '$(echo -e ${ONBOOTUP})', 'script', '{}', '', '', '{}', '{}');
 EOF
-        sleep 1
         sync
-        echo "true" >${TMP_PATH}/isEnable
+        echo "true" >"${TMP_PATH}/isOk"
       fi
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Enabling ...")" 20 100
-  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "Enabled Telnet&SSH successfully.")" || MSG="$(TEXT "Enabled Telnet&SSH failed.")"
+  [ -f "${TMP_PATH}/isOk" ] &&
+    MSG="$(TEXT "Force enable Telnet&SSH of DSM system completed.")" ||
+    MSG="$(TEXT "Force enable Telnet&SSH of DSM system failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
   return
@@ -1903,20 +1929,23 @@ function removeBlockIPDB {
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
     return
   fi
+  rm -f "${TMP_PATH}/isOk"
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
-      [ -f "${TMP_PATH}/mdX/etc/synoautoblock.db" ] && rm -f "${TMP_PATH}/mdX/etc/synoautoblock.db"
+      rm -f "${TMP_PATH}/mdX/etc/synoautoblock.db"
       sync
-      echo "true" >${TMP_PATH}/isEnable
+      echo "true" >"${TMP_PATH}/isOk"
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Removing ...")" 20 100
-  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "Removing The blocked ip database successfully.")" || MSG="$(TEXT "Removing The blocked ip database failed.")"
+  [ -f "${TMP_PATH}/isOk" ] &&
+    MSG="$(TEXT "Removing the blocked ip database completed.")" ||
+    MSG="$(TEXT "Removing the blocked ip database failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
   return
@@ -1931,6 +1960,7 @@ function disablescheduledTasks {
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
     return
   fi
+  rm -f "${TMP_PATH}/isOk"
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
@@ -1939,14 +1969,16 @@ function disablescheduledTasks {
       if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
         echo "UPDATE task SET enable = 0;" | sqlite3 ${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db
         sync
-        echo "true" >${TMP_PATH}/isEnable
+        echo "true" >"${TMP_PATH}/isOk"
       fi
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Enabling ...")" 20 100
-  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "Disable all scheduled tasks successfully.")" || MSG="$(TEXT "Disable all scheduled tasks failed.")"
+  [ -f "${TMP_PATH}/isOk" ] &&
+    MSG="$(TEXT "Disable all scheduled tasks of DSM completed.")" ||
+    MSG="$(TEXT "Disable all scheduled tasks of DSM failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
   return
@@ -1967,6 +1999,7 @@ function initDSMNetwork {
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
     return
   fi
+  rm -f "${TMP_PATH}/isOk"
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
@@ -1975,13 +2008,15 @@ function initDSMNetwork {
       rm -f "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-eth"*
       rm -f "${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-eth"*
       sync
-      echo "true" >${TMP_PATH}/isEnable
+      echo "true" >"${TMP_PATH}/isOk"
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Recovering ...")" 20 100
-  [ "$(cat ${TMP_PATH}/isEnable 2>/dev/null)" = "true" ] && MSG="$(TEXT "The network settings initialization successfully.")" || MSG="$(TEXT "The network settings initialization failed.")"
+  [ -f "${TMP_PATH}/isOk" ] &&
+    MSG="$(TEXT "Initialize DSM network settings completed.")" ||
+    MSG="$(TEXT "Initialize DSM network settings failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
   return
@@ -2138,8 +2173,8 @@ function tryRecoveryDSM() {
       __umountDSMRootDisk
       DIALOG --title "$(TEXT "Settings")" \
         --msgbox "$(TEXT "Found a backup of the user's configuration, and restored it. Please rebuild and boot.")" 0 0
-      exec "$0"
       touch ${PART1_PATH}/.build
+      exec "${0}"
       return
     fi
   fi
@@ -2241,22 +2276,16 @@ function cloneBootloaderDisk() {
       umount "${TMP_PATH}/sdX3" 2>/dev/null
     }
 
-    mkdir -p "${TMP_PATH}/sdX1" "${TMP_PATH}/sdX2" "${TMP_PATH}/sdX3"
-    mount "${NEW_BLDISK_P1}" "${TMP_PATH}/sdX1" || {
-      printf "$(TEXT "Can't mount %s.")" "${NEW_BLDISK_P1}" >"${LOG_FILE}"
-      __umountNewBlDisk
-      break
-    }
-    mount "${NEW_BLDISK_P2}" "${TMP_PATH}/sdX2" || {
-      printf "$(TEXT "Can't mount %s.")" "${NEW_BLDISK_P2}" >"${LOG_FILE}"
-      __umountNewBlDisk
-      break
-    }
-    mount "${NEW_BLDISK_P3}" "${TMP_PATH}/sdX3" || {
-      printf "$(TEXT "Can't mount %s.")" "${NEW_BLDISK_P3}" >"${LOG_FILE}"
-      __umountNewBlDisk
-      break
-    }
+    for i in {1..3}; do
+      rm -rf "${TMP_PATH}/sdX${i}"
+      mkdir -p "${TMP_PATH}/sdX${i}"
+      PART_NAME="$(eval "echo \${NEW_BLDISK_P${i}}")"
+      mount "${PART_NAME}" "${TMP_PATH}/sdX${i}" || {
+        printf "$(TEXT "Can't mount %s.")" "${PART_NAME}" >"${LOG_FILE}"
+        __umountNewBlDisk
+        break 2
+      }
+    done
 
     SIZEOLD1="$(du -sm "${PART1_PATH}" 2>/dev/null | awk '{print $1}')"
     SIZEOLD2="$(du -sm "${PART2_PATH}" 2>/dev/null | awk '{print $1}')"
@@ -2271,22 +2300,15 @@ function cloneBootloaderDisk() {
       __umountNewBlDisk
       break
     fi
-
-    cp -vRf "${PART1_PATH}/". "${TMP_PATH}/sdX1/" || {
-      printf "$(TEXT "Can't copy to %s.")" "${NEW_BLDISK_P1}" >"${LOG_FILE}"
-      __umountNewBlDisk
-      break
-    }
-    cp -vRf "${PART2_PATH}/". "${TMP_PATH}/sdX2/" || {
-      printf "$(TEXT "Can't copy to %s.")" "${NEW_BLDISK_P2}" >"${LOG_FILE}"
-      __umountNewBlDisk
-      break
-    }
-    cp -vRf "${PART3_PATH}/". "${TMP_PATH}/sdX3/" || {
-      printf "$(TEXT "Can't copy to %s.")" "${NEW_BLDISK_P3}" >"${LOG_FILE}"
-      __umountNewBlDisk
-      break
-    }
+    for i in {1..3}; do
+      PART_NAME="$(eval "echo \${PART${i}_PATH}")"
+      cp -vrf "${PART_NAME}/". "${TMP_PATH}/sdX${i}/" || {
+        PART_NAME="$(eval "echo \${NEW_BLDISK_P${i}}")"
+        printf "$(TEXT "Can't copy to %s.")" "${PART_NAME}" >"${LOG_FILE}"
+        __umountNewBlDisk
+        break 2
+      }
+    done
     sync
     __umountNewBlDisk
     sleep 3
@@ -2425,47 +2447,46 @@ function savemodrr() {
   DIALOG --title "$(TEXT "Settings")" \
     --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?")" 0 0
   [ $? -ne 0 ] && return
+
   DIALOG --title "$(TEXT "Settings")" \
     --infobox "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 0 0
   RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
   rm -rf "${RDXZ_PATH}"
   mkdir -p "${RDXZ_PATH}"
   INITRD_FORMAT=$(file -b --mime-type "${RR_RAMDISK_FILE}")
-  (
-    cd "${RDXZ_PATH}"
-    case "${INITRD_FORMAT}" in
-    *'x-cpio'*) cpio -idm <"${RR_RAMDISK_FILE}" ;;
-    *'x-xz'*) xz -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
-    *'x-lz4'*) lz4 -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
-    *'x-lzma'*) lzma -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
-    *'x-bzip2'*) bzip2 -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
-    *'gzip'*) gzip -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
-    *'zstd'*) zstd -dc "${RR_RAMDISK_FILE}" | cpio -idm ;;
-    *) ;;
-    esac
-  ) >/dev/null 2>&1 || true
+
+  case "${INITRD_FORMAT}" in
+  *'x-cpio'*) (cd "${RDXZ_PATH}" && cpio -idm <"${RR_RAMDISK_FILE}") >/dev/null 2>&1 ;;
+  *'x-xz'*) (cd "${RDXZ_PATH}" && xz -dc "${RR_RAMDISK_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+  *'x-lz4'*) (cd "${RDXZ_PATH}" && lz4 -dc "${RR_RAMDISK_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+  *'x-lzma'*) (cd "${RDXZ_PATH}" && lzma -dc "${RR_RAMDISK_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+  *'x-bzip2'*) (cd "${RDXZ_PATH}" && bzip2 -dc "${RR_RAMDISK_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+  *'gzip'*) (cd "${RDXZ_PATH}" && gzip -dc "${RR_RAMDISK_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+  *'zstd'*) (cd "${RDXZ_PATH}" && zstd -dc "${RR_RAMDISK_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+  *) ;;
+  esac
+
   if [ -z "$(ls -A "$RDXZ_PATH")" ]; then
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "initrd-rr file format error!")" 0 0
     return
   fi
   rm -rf "${RDXZ_PATH}/opt/rr"
-  cp -rf "$(dirname ${WORK_PATH})" "${RDXZ_PATH}/"
-  (
-    cd "${RDXZ_PATH}"
-    RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
-    case "${INITRD_FORMAT}" in
-    *'x-cpio'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} >"${RR_RAMDISK_FILE}" ;;
-    *'x-xz'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 -C crc32 -c - >"${RR_RAMDISK_FILE}" ;;
-    *'x-lz4'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lz4 -9 -l -c - >"${RR_RAMDISK_FILE}" ;;
-    *'x-lzma'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lzma -9 -c - >"${RR_RAMDISK_FILE}" ;;
-    *'x-bzip2'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | bzip2 -9 -c - >"${RR_RAMDISK_FILE}" ;;
-    *'gzip'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | gzip -9 -c - >"${RR_RAMDISK_FILE}" ;;
-    *'zstd'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | zstd -19 -T0 -f -c - >"${RR_RAMDISK_FILE}" ;;
-    *) ;;
-    esac
-  ) 2>&1 | DIALOG --title "$(TEXT "Settings")" \
-    --gauge "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 8 100
+  cp -rpf "$(dirname ${WORK_PATH})" "${RDXZ_PATH}/" 2>/dev/null
+  cp -apf "/root/"{.bashrc,.dialogrc} "${RDXZ_PATH}/root/" 2>/dev/null
+
+  RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
+  case "${INITRD_FORMAT}" in
+  *'x-cpio'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root >"${RR_RAMDISK_FILE}") >/dev/null 2>&1 ;;
+  *'x-xz'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | xz -9 -C crc32 -c - >"${RR_RAMDISK_FILE}") >/dev/null 2>&1 ;;
+  *'x-lz4'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | lz4 -9 -l -c - >"${RR_RAMDISK_FILE}") >/dev/null 2>&1 ;;
+  *'x-lzma'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | lzma -9 -c - >"${RR_RAMDISK_FILE}") >/dev/null 2>&1 ;;
+  *'x-bzip2'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | bzip2 -9 -c - >"${RR_RAMDISK_FILE}") >/dev/null 2>&1 ;;
+  *'gzip'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | gzip -9 -c - >"${RR_RAMDISK_FILE}") >/dev/null 2>&1 ;;
+  *'zstd'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | zstd -19 -T0 -f -c - >"${RR_RAMDISK_FILE}") >/dev/null 2>&1 ;;
+  *) ;;
+  esac
+
   rm -rf "${RDXZ_PATH}"
   DIALOG --title "$(TEXT "Settings")" \
     --msgbox "$(TEXT "Save is complete.")" 0 0
@@ -2488,7 +2509,8 @@ function setStaticIP() {
         2>"${TMP_PATH}/resp"
       RET=$?
       case ${RET} in
-      0) # ok-button
+      0)
+        # ok-button
         address="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
         netmask="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
         gateway="$(sed -n '3p' "${TMP_PATH}/resp" 2>/dev/null)"
@@ -2524,10 +2546,12 @@ function setStaticIP() {
           --progressbox "$(TEXT "Setting ...")" 20 100
         break
         ;;
-      1) # cancel-button
+      1)
+        # cancel-button
         break
         ;;
-      255) # ESC
+      255)
+        # ESC
         break 2
         ;;
       esac
@@ -2555,7 +2579,8 @@ function setWirelessAccount() {
       2>"${TMP_PATH}/resp"
     RET=$?
     case ${RET} in
-    0) # ok-button
+    0)
+      # ok-button
       SSID="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
       PSK="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
       (
@@ -2588,10 +2613,12 @@ function setWirelessAccount() {
         --progressbox "$(TEXT "Setting ...")" 20 100
       break
       ;;
-    1) # cancel-button
+    1)
+      # cancel-button
       break
       ;;
-    255) # ESC
+    255)
+      # ESC
       break
       ;;
     esac
@@ -2649,10 +2676,13 @@ function changePassword() {
     --inputbox "$(TEXT "New password: (Empty for default value 'rr')")" 0 70 \
     2>${TMP_PATH}/resp
   [ $? -ne 0 ] && return
+  DIALOG --title "$(TEXT "Settings")" \
+    --infobox "$(TEXT "Setting ...")" 20 100
   local STRPASSWD="$(cat "${TMP_PATH}/resp")"
   # local NEWPASSWD="$(python3 -c "from passlib.hash import sha512_crypt;pw=\"${STRPASSWD:-rr}\";print(sha512_crypt.using(rounds=5000).hash(pw))")"
+  # local NEWPASSWD="$(echo "${STRPASSWD:-rr}" | mkpasswd -m sha512)"
   local NEWPASSWD="$(openssl passwd -6 -salt $(openssl rand -hex 8) "${STRPASSWD:-rr}")"
-  cp -p /etc/shadow /etc/shadow-
+  cp -pf /etc/shadow /etc/shadow-
   sed -i "s|^root:[^:]*|root:${NEWPASSWD}|" /etc/shadow
 
   local RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
@@ -2661,19 +2691,16 @@ function changePassword() {
   local INITRD_FORMAT
   if [ -f "${RR_RAMUSER_FILE}" ]; then
     INITRD_FORMAT=$(file -b --mime-type "${RR_RAMUSER_FILE}")
-    (
-      cd "${RDXZ_PATH}"
-      case "${INITRD_FORMAT}" in
-      *'x-cpio'*) cpio -idm <"${RR_RAMUSER_FILE}" ;;
-      *'x-xz'*) xz -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-      *'x-lz4'*) lz4 -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-      *'x-lzma'*) lzma -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-      *'x-bzip2'*) bzip2 -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-      *'gzip'*) gzip -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-      *'zstd'*) zstd -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-      *) ;;
-      esac
-    ) >/dev/null 2>&1 || true
+    case "${INITRD_FORMAT}" in
+    *'x-cpio'*) (cd "${RDXZ_PATH}" && cpio -idm <"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+    *'x-xz'*) (cd "${RDXZ_PATH}" && xz -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+    *'x-lz4'*) (cd "${RDXZ_PATH}" && lz4 -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+    *'x-lzma'*) (cd "${RDXZ_PATH}" && lzma -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+    *'x-bzip2'*) (cd "${RDXZ_PATH}" && bzip2 -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+    *'gzip'*) (cd "${RDXZ_PATH}" && gzip -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+    *'zstd'*) (cd "${RDXZ_PATH}" && zstd -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+    *) ;;
+    esac
   else
     INITRD_FORMAT="application/zstd"
   fi
@@ -2682,28 +2709,26 @@ function changePassword() {
     rm -f ${RDXZ_PATH}/etc/shadow* 2>/dev/null
   else
     mkdir -p "${RDXZ_PATH}/etc"
-    cp -p /etc/shadow* ${RDXZ_PATH}/etc && chown root:root ${RDXZ_PATH}/etc/shadow* && chmod 600 ${RDXZ_PATH}/etc/shadow*
+    cp -pf /etc/shadow* ${RDXZ_PATH}/etc && chown root:root ${RDXZ_PATH}/etc/shadow* && chmod 600 ${RDXZ_PATH}/etc/shadow*
   fi
 
   if [ -n "$(ls -A "${RDXZ_PATH}" 2>/dev/null)" ] && [ -n "$(ls -A "${RDXZ_PATH}/etc" 2>/dev/null)" ]; then
-    (
-      cd "${RDXZ_PATH}"
-      local RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
-      case "${INITRD_FORMAT}" in
-      *'x-cpio'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} >"${RR_RAMUSER_FILE}" ;;
-      *'x-xz'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 -C crc32 -c - >"${RR_RAMUSER_FILE}" ;;
-      *'x-lz4'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lz4 -9 -l -c - >"${RR_RAMUSER_FILE}" ;;
-      *'x-lzma'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lzma -9 -c - >"${RR_RAMUSER_FILE}" ;;
-      *'x-bzip2'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | bzip2 -9 -c - >"${RR_RAMUSER_FILE}" ;;
-      *'gzip'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | gzip -9 -c - >"${RR_RAMUSER_FILE}" ;;
-      *'zstd'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | zstd -19 -T0 -f -c - >"${RR_RAMUSER_FILE}" ;;
-      *) ;;
-      esac
-    ) 2>&1 | DIALOG --title "$(TEXT "Settings")"
+    local RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
+    case "${INITRD_FORMAT}" in
+    *'x-cpio'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+    *'x-xz'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | xz -9 -C crc32 -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+    *'x-lz4'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | lz4 -9 -l -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+    *'x-lzma'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | lzma -9 -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+    *'x-bzip2'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | bzip2 -9 -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+    *'gzip'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | gzip -9 -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+    *'zstd'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | zstd -19 -T0 -f -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+    *) ;;
+    esac
   else
     rm -f "${RR_RAMUSER_FILE}"
   fi
   rm -rf "${RDXZ_PATH}"
+
   [ "${STRPASSWD:-rr}" = "rr" ] && MSG="$(TEXT "password for root restored.")" || MSG="$(TEXT "password for root changed.")"
   DIALOG --title "$(TEXT "Settings")" \
     --msgbox "${MSG}" 0 0
@@ -2723,7 +2748,8 @@ function changePorts() {
       2>"${TMP_PATH}/resp"
     RET=$?
     case ${RET} in
-    0) # ok-button
+    0)
+      # ok-button
       function check_port() {
         if [ -z "${1}" ]; then
           return 0
@@ -2745,6 +2771,8 @@ function changePorts() {
           --yesno "$(printf "$(TEXT "Invalid %s port number, retry?")" "${EP}")" 0 0
         [ $? -eq 0 ] && continue || break
       fi
+      DIALOG --title "$(TEXT "Settings")" \
+        --infobox "$(TEXT "Setting ...")" 20 100
       # save to rrorg.conf
       rm -f "/etc/rrorg.conf"
       [ ! "${HTTP:-7080}" = "7080" ] && (echo "HTTP_PORT=${HTTP}" >>"/etc/rrorg.conf" && /etc/init.d/S90thttpd restart >/dev/null 2>&1)
@@ -2757,19 +2785,16 @@ function changePorts() {
       local INITRD_FORMAT
       if [ -f "${RR_RAMUSER_FILE}" ]; then
         INITRD_FORMAT=$(file -b --mime-type "${RR_RAMUSER_FILE}")
-        (
-          cd "${RDXZ_PATH}"
-          case "${INITRD_FORMAT}" in
-          *'x-cpio'*) cpio -idm <"${RR_RAMUSER_FILE}" ;;
-          *'x-xz'*) xz -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-          *'x-lz4'*) lz4 -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-          *'x-lzma'*) lzma -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-          *'x-bzip2'*) bzip2 -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-          *'gzip'*) gzip -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-          *'zstd'*) zstd -dc "${RR_RAMUSER_FILE}" | cpio -idm ;;
-          *) ;;
-          esac
-        ) >/dev/null 2>&1 || true
+        case "${INITRD_FORMAT}" in
+        *'x-cpio'*) (cd "${RDXZ_PATH}" && cpio -idm <"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+        *'x-xz'*) (cd "${RDXZ_PATH}" && xz -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+        *'x-lz4'*) (cd "${RDXZ_PATH}" && lz4 -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+        *'x-lzma'*) (cd "${RDXZ_PATH}" && lzma -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+        *'x-bzip2'*) (cd "${RDXZ_PATH}" && bzip2 -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+        *'gzip'*) (cd "${RDXZ_PATH}" && gzip -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+        *'zstd'*) (cd "${RDXZ_PATH}" && zstd -dc "${RR_RAMUSER_FILE}" | cpio -idm) >/dev/null 2>&1 ;;
+        *) ;;
+        esac
       else
         INITRD_FORMAT="application/zstd"
       fi
@@ -2777,23 +2802,20 @@ function changePorts() {
         rm -f "${RDXZ_PATH}/etc/rrorg.conf" 2>/dev/null
       else
         mkdir -p "${RDXZ_PATH}/etc"
-        cp -p /etc/rrorg.conf ${RDXZ_PATH}/etc
+        cp -pf /etc/rrorg.conf ${RDXZ_PATH}/etc
       fi
       if [ -n "$(ls -A "${RDXZ_PATH}" 2>/dev/null)" ] && [ -n "$(ls -A "${RDXZ_PATH}/etc" 2>/dev/null)" ]; then
-        (
-          cd "${RDXZ_PATH}"
-          local RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
-          case "${INITRD_FORMAT}" in
-          *'x-cpio'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} >"${RR_RAMUSER_FILE}" ;;
-          *'x-xz'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | xz -9 -C crc32 -c - >"${RR_RAMUSER_FILE}" ;;
-          *'x-lz4'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lz4 -9 -l -c - >"${RR_RAMUSER_FILE}" ;;
-          *'x-lzma'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | lzma -9 -c - >"${RR_RAMUSER_FILE}" ;;
-          *'x-bzip2'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | bzip2 -9 -c - >"${RR_RAMUSER_FILE}" ;;
-          *'gzip'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | gzip -9 -c - >"${RR_RAMUSER_FILE}" ;;
-          *'zstd'*) find . 2>/dev/null | cpio -o -H newc -R root:root | pv -n -s ${RDSIZE:-1} | zstd -19 -T0 -f -c - >"${RR_RAMUSER_FILE}" ;;
-          *) ;;
-          esac
-        ) 2>&1 | DIALOG --title "$(TEXT "Settings")"
+        local RDSIZE=$(du -sb ${RDXZ_PATH} 2>/dev/null | awk '{print $1}')
+        case "${INITRD_FORMAT}" in
+        *'x-cpio'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+        *'x-xz'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | xz -9 -C crc32 -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+        *'x-lz4'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | lz4 -9 -l -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+        *'x-lzma'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | lzma -9 -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+        *'x-bzip2'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | bzip2 -9 -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+        *'gzip'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | gzip -9 -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+        *'zstd'*) (cd "${RDXZ_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | zstd -19 -T0 -f -c - >"${RR_RAMUSER_FILE}") >/dev/null 2>&1 ;;
+        *) ;;
+        esac
       else
         rm -f "${RR_RAMUSER_FILE}"
       fi
@@ -2803,10 +2825,12 @@ function changePorts() {
         --msgbox "${MSG}" 0 0
       break
       ;;
-    1) # cancel-button
+    1)
+      # cancel-button
       break
       ;;
-    255) # ESC
+    255)
+      # ESC
       break
       ;;
     esac
@@ -2835,6 +2859,9 @@ function advancedMenu() {
       if [ "${DIRECTBOOT}" = "false" ]; then
         echo "i \"$(TEXT "Timeout of get IP in boot:") \Z4${BOOTIPWAIT}\Zn\""
         echo "k \"$(TEXT "Kernel switching method:") \Z4${KERNELWAY}\Zn\""
+        # Some GPU have compatibility issues, so this function is temporarily disabled. RR_CMDLINE= ... nomodeset
+        # checkCmdline "rr_cmdline" "nomodeset" && POWEROFFDISPLAY="false" || POWEROFFDISPLAY="true"
+        # echo "v \"$(TEXT "Power off display after boot:") \Z4${POWEROFFDISPLAY}\Zn\"" >>"${TMP_PATH}/menu"
       fi
       echo "n \"$(TEXT "Reboot on kernel panic:") \Z4${KERNELPANIC}\Zn\""
       if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ]; then
@@ -2946,6 +2973,18 @@ function advancedMenu() {
       writeConfigKey "kernelway" "${KERNELWAY}" "${USER_CONFIG_FILE}"
       NEXT="k"
       ;;
+    # v)
+    #   DIALOG --title "$(TEXT "Advanced")" \
+    #     --yesno "$(TEXT "Modifying this item requires a reboot, continue?")" 0 0
+    #   RET=$?
+    #   [ ${RET} -ne 0 ] && continue
+    #   checkCmdline "rr_cmdline" "nomodeset" && delCmdline "rr_cmdline" "nomodeset" || addCmdline "rr_cmdline" "nomodeset"
+    #   DIALOG --title "$(TEXT "Advanced")" \
+    #     --infobox "$(TEXT "Reboot to RR")" 0 0
+    #   rebootTo config
+    #   exit 0
+    #   NEXT="v"
+    #   ;;
     n)
       rm -f "${TMP_PATH}/menu"
       {
@@ -3028,7 +3067,9 @@ function advancedMenu() {
       initDSMNetwork
       NEXT="e"
       ;;
-    e) break ;;
+    e)
+      break
+      ;;
     esac
   done
 }
@@ -3171,7 +3212,9 @@ function settingsMenu() {
         --msgbox "${MSG}" 0 0
       NEXT="e"
       ;;
-    e) break ;;
+    e)
+      break
+      ;;
     esac
   done
 }
@@ -3202,7 +3245,7 @@ function downloadExts() {
     TAG="${LATESTURL##*/}"
   fi
   [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
-  if [ -z "${TAG}" ] || [ "${TAG}" = "latest" ]; then
+  if [ "${TAG:-latest}" = "latest" ]; then
     MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error checking new version.")" "$(TEXT "Error")" "Tag is ${TAG}")"
     if [ "${5}" = "-1" ]; then
       echo "${T} - ${MSG}"
@@ -3388,7 +3431,7 @@ function updateRR() {
   done <<<$(readConfigArray "remove" "${TMP_PATH}/update/update-list.yml")
   while IFS=': ' read -r KEY VALUE; do
     if [ "${KEY: -1}" = "/" ]; then
-      rm -Rf "${VALUE}"/*
+      rm -rf "${VALUE}"/*
       mkdir -p "${VALUE}"
       cp -rf "${TMP_PATH}/update/${VALUE}"/* "${VALUE}"
       if [ "$(realpath "${VALUE}")" = "$(realpath "${MODULES_PATH}")" ]; then
@@ -3841,7 +3884,9 @@ function updateMenu() {
       writeConfigKey "prerelease" "${PRERELEASE}" "${USER_CONFIG_FILE}"
       NEXT="e"
       ;;
-    e) return ;;
+    e)
+      return
+      ;;
     esac
     [ -z "${1}" ] || return
   done

@@ -13,7 +13,7 @@ rm -rf "${PART1_PATH}/logs" /sys/fs/pstore/* >/dev/null 2>&1 || true
 
 # Check if machine has EFI
 EFI=$([ -d /sys/firmware/efi ] && echo 1 || echo 0)
-
+FBI=$(cat /sys/class/graphics/fb*/name 2>/dev/null | head -1)
 BUS=$(getBus "${LOADER_DISK}")
 
 # Print text centralized
@@ -167,12 +167,30 @@ CMDLINE['console']="ttyS0,115200n8"
 CMDLINE['consoleblank']="600"
 # CMDLINE['no_console_suspend']="1"
 CMDLINE['root']="/dev/md0"
-CMDLINE['rootwait']=""
 CMDLINE['loglevel']="15"
 CMDLINE['log_buf_len']="32M"
+CMDLINE['rootwait']=""
 CMDLINE['panic']="${KERNELPANIC:-0}"
+# CMDLINE['nointremap']="" # no need
+# CMDLINE['split_lock_detect']="off" # no need
 CMDLINE['pcie_aspm']="off"
+# CMDLINE['intel_pstate']="disable"
+# CMDLINE['nox2apic']=""  # check platform
+# CMDLINE['nomodeset']=""
 CMDLINE['modprobe.blacklist']="${MODBLACKLIST}"
+
+if echo "apollolake geminilake purley" | grep -wq "${PLATFORM}"; then
+  CMDLINE["nox2apic"]=""
+fi
+
+# # Save command line to grubenv  RR_CMDLINE= ... nox2apic
+# if echo "apollolake geminilake purley" | grep -wq "${PLATFORM}"; then
+#   if grep -q "^flags.*x2apic.*" /proc/cpuinfo; then
+#     checkCmdline "rr_cmdline" "nox2apic" || addCmdline "rr_cmdline" "nox2apic"
+#   fi
+# else
+#   checkCmdline "rr_cmdline" "nox2apic" && delCmdline "rr_cmdline" "nox2apic"
+# fi
 
 # if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ] && [ ! "${BUS}" = "mmc" ] && [ ! "${EMMCBOOT}" = "true" ]; then
 #   if ! echo "${CMDLINE['modprobe.blacklist']}" | grep -q "sdhci"; then
@@ -217,6 +235,8 @@ for KEY in "${!CMDLINE[@]}"; do
 done
 CMDLINE_LINE=$(echo "${CMDLINE_LINE}" | sed 's/^ //') # Remove leading space
 printf "%s:\n \033[1;36m%s\033[0m\n" "$(TEXT "Cmdline")" "${CMDLINE_LINE}"
+
+# Check if user wants to modify at this stage
 function _bootwait() {
   BOOTWAIT="$(readConfigKey "bootwait" "${USER_CONFIG_FILE}")"
   [ -z "${BOOTWAIT}" ] && BOOTWAIT=10
@@ -355,12 +375,18 @@ else
   # show warning message
   for T in $(busybox w 2>/dev/null | grep -v 'TTY' | awk '{print $2}'); do
     if [ -w "/dev/${T}" ]; then
-      echo -e "\n\033[1;43m$(TEXT "Interface not operational. Wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant.")\033[0m\n" > "/dev/${T}" 2>/dev/null || true
+      echo -e "\n\033[1;43m$(TEXT "Interface not operational. Wait a few minutes.\nFind DSM via http://find.synology.com/ or Synology Assistant.")\033[0m\n" >"/dev/${T}" 2>/dev/null || true
     fi
   done
 
   # # Unload all network interfaces
   # for D in $(readlink /sys/class/net/*/device/driver); do rmmod -f "$(basename ${D})" 2>/dev/null || true; done
+
+  # Unload all graphics drivers
+  # for D in $(lsmod | grep -E '^(nouveau|amdgpu|radeon|i915)' | awk '{print $1}'); do rmmod -f "${D}" 2>/dev/null || true; done
+  # for I in $(find /sys/devices -name uevent -exec bash -c 'cat {} 2>/dev/null | grep -Eq "PCI_CLASS=0?30[0|1|2]00" && dirname {}' \;); do
+  #   [ -e ${I}/reset ] && cat ${I}/vendor >/dev/null | grep -iq 0x10de && echo 1 >${I}/reset || true # Proc open nvidia driver when booting
+  # done
 
   # Reboot
   KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"

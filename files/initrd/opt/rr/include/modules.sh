@@ -78,7 +78,7 @@ function installModules() {
   local ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")"
   for F in $(ls "${TMP_PATH}/modules/"*.ko 2>/dev/null); do
     local M=$(basename "${F}")
-    [ "${ODP}" == "true" ] && [  -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] && continue
+    [ "${ODP}" = "true" ] && [ -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] && continue
     if echo "${MLIST}" | grep -wq "${M:0:-3}"; then
       cp -f "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}" 2>"${LOG_FILE}"
     else

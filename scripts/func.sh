@@ -5,9 +5,9 @@
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
 #
-# sudo apt install -y locales busybox dialog gettext sed gawk jq curl 
+# sudo apt install -y locales busybox dialog gettext sed gawk jq curl
 # sudo apt install -y python-is-python3 python3-pip libelf-dev qemu-utils cpio xz-utils lz4 lzma bzip2 gzip zstd
-  
+
 [ -n "${1}" ] && export TOKEN="${1}"
 
 REPO="https://api.github.com/repos/RROrg"
@@ -45,13 +45,13 @@ function getExtractor() {
   fi
 
   mkdir -p "${CACHE_DIR}/ramdisk"
-  tar -C "${CACHE_DIR}/ramdisk/" -xf "${CACHE_DIR}/${PAT_FILE}" rd.gz 2>&1
+  tar -C "${CACHE_DIR}/ramdisk/" -xf "${CACHE_DIR}/${PAT_FILE}" "rd.gz" 2>&1
   if [ $? -ne 0 ]; then
     echo "[E] extractor rd.gz error!"
     rm -rf "${CACHE_DIR}"
     exit 1
   fi
-  (cd "${CACHE_DIR}/ramdisk" && xz -dc <rd.gz | cpio -idm) >/dev/null 2>&1 || true
+  (cd "${CACHE_DIR}/ramdisk" && xz -dc <"rd.gz" | cpio -idm) >/dev/null 2>&1 || true
 
   rm -rf "${DEST_PATH}"
   mkdir -p "${DEST_PATH}"
@@ -251,34 +251,31 @@ function repackInitrd() {
   local RDXZ_PATH="rdxz_tmp"
   mkdir -p "${RDXZ_PATH}"
   local INITRD_FORMAT=$(file -b --mime-type "${INITRD_FILE}")
-  (
-    cd "${RDXZ_PATH}"
-    case "${INITRD_FORMAT}" in
-    *'x-cpio'*) sudo cpio -idm <"${INITRD_FILE}" ;;
-    *'x-xz'*) xz -dc "${INITRD_FILE}" | sudo cpio -idm ;;
-    *'x-lz4'*) lz4 -dc "${INITRD_FILE}" | sudo cpio -idm ;;
-    *'x-lzma'*) lzma -dc "${INITRD_FILE}" | sudo cpio -idm ;;
-    *'x-bzip2'*) bzip2 -dc "${INITRD_FILE}" | sudo cpio -idm ;;
-    *'gzip'*) gzip -dc "${INITRD_FILE}" | sudo cpio -idm ;;
-    *'zstd'*) zstd -dc "${INITRD_FILE}" | sudo cpio -idm ;;
-    *) ;;
-    esac
-  ) || true
+
+  case "${INITRD_FORMAT}" in
+  *'x-cpio'*) (cd "${RDXZ_PATH}" && sudo cpio -idm <"${INITRD_FILE}") >/dev/null 2>&1 ;;
+  *'x-xz'*) (cd "${RDXZ_PATH}" && xz -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *'x-lz4'*) (cd "${RDXZ_PATH}" && lz4 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *'x-lzma'*) (cd "${RDXZ_PATH}" && lzma -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *'x-bzip2'*) (cd "${RDXZ_PATH}" && bzip2 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *'gzip'*) (cd "${RDXZ_PATH}" && gzip -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *'zstd'*) (cd "${RDXZ_PATH}" && zstd -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *) ;;
+  esac
+
   sudo cp -rf "${PLUGIN_PATH}/"* "${RDXZ_PATH}/"
   [ -f "${OUTPUT_PATH}" ] && rm -rf "${OUTPUT_PATH}"
-  (
-    cd "${RDXZ_PATH}"
-    case "${INITRD_FORMAT}" in
-    *'x-cpio'*) sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root >"${OUTPUT_PATH}" ;;
-    *'x-xz'*) sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | xz -9 -C crc32 -c - >"${OUTPUT_PATH}" ;;
-    *'x-lz4'*) sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | lz4 -9 -l -c - >"${OUTPUT_PATH}" ;;
-    *'x-lzma'*) sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | lzma -9 -c - >"${OUTPUT_PATH}" ;;
-    *'x-bzip2'*) sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | bzip2 -9 -c - >"${OUTPUT_PATH}" ;;
-    *'gzip'*) sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | gzip -9 -c - >"${OUTPUT_PATH}" ;;
-    *'zstd'*) sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | zstd -19 -T0 -f -c - >"${OUTPUT_PATH}" ;;
-    *) ;;
-    esac
-  ) || true
+
+  case "${INITRD_FORMAT}" in
+  *'x-cpio'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+  *'x-xz'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | xz -9 -C crc32 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+  *'x-lz4'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | lz4 -9 -l -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+  *'x-lzma'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | lzma -9 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+  *'x-bzip2'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | bzip2 -9 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+  *'gzip'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | gzip -9 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+  *'zstd'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | zstd -19 -T0 -f -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+  *) ;;
+  esac
   sudo rm -rf "${RDXZ_PATH}"
 }
 
@@ -401,6 +398,9 @@ ethernet0.virtualDev = "vmxnet3"
 ethernet0.connectionType = "nat"
 ethernet0.allowguestconnectioncontrol = "true"
 ethernet0.present = "TRUE"
+serial0.fileType = "file"
+serial0.fileName = "serial0.log"
+serial0.present = "TRUE"
 sata0.present = "TRUE"
 sata0:0.fileName = "${VMNAME}-disk1.vmdk"
 sata0:0.present = "TRUE"

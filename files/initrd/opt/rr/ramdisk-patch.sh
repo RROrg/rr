@@ -8,23 +8,6 @@
 
 set -o pipefail # Get exit code from process piped
 
-# Sanity check
-if [ ! -f "${ORI_RDGZ_FILE}" ]; then
-  echo "ERROR: ${ORI_RDGZ_FILE} not found!" >"${LOG_FILE}"
-  exit 1
-fi
-
-echo -n "Patching Ramdisk"
-
-# Remove old rd.gz patched
-rm -f "${MOD_RDGZ_FILE}"
-
-# Unzipping ramdisk
-echo -n "."
-rm -rf "${RAMDISK_PATH}" # Force clean
-mkdir -p "${RAMDISK_PATH}"
-(cd "${RAMDISK_PATH}" && xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm) >/dev/null 2>&1 || true
-
 # get user data
 PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
 MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
@@ -42,32 +25,6 @@ PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
 ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")" # official drivers priorities
 HDDSORT="$(readConfigKey "hddsort" "${USER_CONFIG_FILE}")"
 
-[ "${PATURL:0:1}" = "#" ] && PATURL=""
-[ "${PATSUM:0:1}" = "#" ] && PATSUM=""
-
-# Check if DSM buildnumber changed
-. "${RAMDISK_PATH}/etc/VERSION"
-
-if [ -n "${PRODUCTVER}" ] && [ -n "${BUILDNUM}" ] && [ -n "${SMALLNUM}" ] &&
-  ([ ! "${PRODUCTVER}" = "${majorversion}.${minorversion}" ] || [ ! "${BUILDNUM}" = "${buildnumber}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber}" ]); then
-  OLDVER="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
-  NEWVER="${majorversion}.${minorversion}(${buildnumber}$([ ${smallfixnumber:-0} -ne 0 ] && echo "u${smallfixnumber}"))"
-  echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${OLDVER}\033[1;32m to \033[1;31m${NEWVER}\033[0m"
-  echo -n "Patching Ramdisk."
-  PATURL=""
-  PATSUM=""
-  # Clean old pat file
-  rm -f "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" 2>/dev/null || true
-fi
-# Update new buildnumber
-PRODUCTVER=${majorversion}.${minorversion}
-BUILDNUM=${buildnumber}
-SMALLNUM=${smallfixnumber}
-writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
-writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
-writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
-
-echo -n "."
 # Read model data
 KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
 KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
@@ -77,6 +34,44 @@ if [ -z "${PLATFORM}" ] || [ -z "${KVER}" ]; then
   echo "ERROR: Configuration for model ${MODEL} and productversion ${PRODUCTVER} not found." >"${LOG_FILE}"
   exit 1
 fi
+
+[ "${PATURL:0:1}" = "#" ] && PATURL=""
+[ "${PATSUM:0:1}" = "#" ] && PATSUM=""
+
+# Sanity check
+if [ ! -f "${ORI_RDGZ_FILE}" ]; then
+  echo "ERROR: ${ORI_RDGZ_FILE} not found!" >"${LOG_FILE}"
+  exit 1
+fi
+
+# Unzipping ramdisk
+rm -rf "${RAMDISK_PATH}" # Force clean
+mkdir -p "${RAMDISK_PATH}"
+(cd "${RAMDISK_PATH}" && xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm) >/dev/null 2>&1
+
+# Check if DSM buildnumber changed
+. "${RAMDISK_PATH}/etc/VERSION"
+
+if [ -n "${PRODUCTVER}" ] && [ -n "${BUILDNUM}" ] && [ -n "${SMALLNUM}" ] &&
+  ([ ! "${PRODUCTVER}" = "${majorversion}.${minorversion}" ] || [ ! "${BUILDNUM}" = "${buildnumber}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber}" ]); then
+  OLDVER="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
+  NEWVER="${majorversion}.${minorversion}(${buildnumber}$([ ${smallfixnumber:-0} -ne 0 ] && echo "u${smallfixnumber}"))"
+  echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${OLDVER}\033[1;32m to \033[1;31m${NEWVER}\033[0m"
+  PATURL=""
+  PATSUM=""
+  # Clean old pat file
+  rm -f "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" 2>/dev/null || true
+fi
+
+echo -n "Patching Ramdisk"
+
+# Update new buildnumber
+PRODUCTVER=${majorversion}.${minorversion}
+BUILDNUM=${buildnumber}
+SMALLNUM=${smallfixnumber}
+writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
+writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
+writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
 
 declare -A SYNOINFO
 declare -A ADDONS
@@ -108,7 +103,6 @@ for PE in "${PATCHS[@]}"; do
   echo "Patching with ${PE}" >"${LOG_FILE}"
   # ${PE} contains *, so double quotes cannot be added
   for PF in $(ls ${WORK_PATH}/patch/${PE} 2>/dev/null); do
-    echo -n "."
     echo "Patching with ${PF}" >>"${LOG_FILE}"
     # busybox patch and gun patch have different processing methods and parameters.
     (cd "${RAMDISK_PATH}" && busybox patch -p1 -i "${PF}") >>"${LOG_FILE}" 2>&1
@@ -131,7 +125,6 @@ for KEY in "${!SYNOINFO[@]}"; do
 done
 
 # Patch /sbin/init.post
-echo -n "."
 grep -v -e '^[\t ]*#' -e '^$' "${WORK_PATH}/patch/config-manipulators.sh" >"${TMP_PATH}/rp.txt"
 sed -e "/@@@CONFIG-MANIPULATORS-TOOLS@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
 rm -f "${TMP_PATH}/rp.txt"
@@ -149,7 +142,6 @@ rm -f "${TMP_PATH}/rp.txt"
 echo -n "."
 installModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${!MODULES[@]}" || exit 1
 
-echo -n "."
 # Copying fake modprobe
 [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 5 ] && cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
 # Copying LKM to /usr/lib/modules
@@ -254,7 +246,7 @@ for F in $(ls -1 "${SCRIPTS_PATH}/"*.sh 2>/dev/null); do
 done
 
 # Reassembly ramdisk
-echo -n "."
+rm -f "${MOD_RDGZ_FILE}"
 if [ "${RD_COMPRESSED}" = "true" ]; then
   (cd "${RAMDISK_PATH}" && find . 2>/dev/null | cpio -o -H newc -R root:root | xz -9 --format=lzma >"${MOD_RDGZ_FILE}") >"${LOG_FILE}" 2>&1 || exit 1
 else
@@ -267,8 +259,8 @@ sync
 rm -rf "${RAMDISK_PATH}"
 
 # Update SHA256 hash
-echo -n "."
 RAMDISK_HASH_CUR="$(sha256sum "${ORI_RDGZ_FILE}" | awk '{print $1}')"
 writeConfigKey "ramdisk-hash" "${RAMDISK_HASH_CUR}" "${USER_CONFIG_FILE}"
 
+echo -n "."
 echo

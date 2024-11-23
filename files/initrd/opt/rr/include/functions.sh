@@ -205,7 +205,7 @@ function _get_fastest() {
   local speedlist=""
   if command -v ping >/dev/null 2>&1; then
     for I in "$@"; do
-      speed=$(ping -c 1 -W 5 "${I}" 2>/dev/null | awk -F'[= ]' '/time=/ {for(i=1;i<=NF;i++) if ($i=="time") print $(i+1)}')
+      speed=$(LC_ALL=C ping -c 1 -W 5 "${I}" 2>/dev/null | awk -F'[= ]' '/time=/ {for(i=1;i<=NF;i++) if ($i=="time") print $(i+1)}')
       speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
     done
   else
@@ -215,10 +215,10 @@ function _get_fastest() {
       speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
     done
   fi
-  local fastest="$(echo -e "${speedlist}" | tr -s '\n' | sort -k2n | head -1)"
+  local fastest="$(echo -e "${speedlist}" | tr -s '\n' | grep -v '999$' | sort -k2n | head -1)"
   URL="$(echo "${fastest}" | awk '{print $1}')"
   SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
-  echo "${URL}"
+  echo "${URL:-${1}}"
   [ $(echo "${SPD:-999}" | cut -d. -f1) -ge 999 ] && return 1 || return 0
 }
 
@@ -301,10 +301,9 @@ function getIP() {
 function getLogo() {
   local MODEL="${1}"
   rm -f "${PART3_PATH}/logo.png"
-  local fastest="www.synology.com" # $(_get_fastest "www.synology.com" "www.synology.cn")
-  if [ $? -ne 0 ]; then
-    return 1
-  fi
+  local fastest="$(_get_fastest "www.synology.com" "www.synology.cn")"
+  # [ $? -ne 0 ] && return 1
+
   local STATUS=$(curl -skL --connect-timeout 10 -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
   if [ $? -ne 0 ] || [ "${STATUS:-0}" -ne 200 ] || [ ! -f "${PART3_PATH}/logo.png" ]; then
     rm -f "${PART3_PATH}/logo.png"
