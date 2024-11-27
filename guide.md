@@ -180,7 +180,7 @@
   lspci -d ::104                                   # 查看 RAID 总线控制器
   lspci -d ::105                                   # 查看 ATA 总线控制器
   lspci -d ::106                                   # 查看 SATA 总线控制器
-  lspci -d ::107                                   # 查看 串行 Attached SCSI
+  lspci -d ::107                                   # 查看 SAS 总线控制器
   lspci -d ::108                                   # 查看 NVM 控制器
 
   ls -l /sys/class/scsi_host                       # 查看 ATA 硬盘 host 信息

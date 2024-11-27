@@ -1519,8 +1519,7 @@ function showDisksInfo() {
     MSG+="\Zb${NAME}\Zn\nPorts: "
     PORTS=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
     for P in ${PORTS}; do
-      if lsscsi -b 2>/dev/null | grep -v - | grep -q "\[${P}:"; then
-        DUMMY="$([ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd 2>/dev/null)" = "0" ] && echo 1 || echo 2)"
+      if lsscsi -bS 2>/dev/null | awk '$3 != "0"' | grep -v - | grep -q "\[${P}:"; then
         if [ "$(cat /sys/class/scsi_host/host${P}/ahci_port_cmd 2>/dev/null)" = "0" ]; then
           MSG+="\Z1$(printf "%02d" ${P})\Zn "
         else
@@ -1537,16 +1536,16 @@ function showDisksInfo() {
   for PCI in $(lspci -d ::104 2>/dev/null | awk '{print $1}'); do
     NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
     PORT=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
-    PORTNUM=$(lsscsi -b 2>/dev/null | grep -v - | grep "\[${PORT}:" | wc -l)
+    PORTNUM=$(lsscsi -bS 2>/dev/null | awk '$3 != "0"' | grep -v - | grep "\[${PORT}:" | wc -l)
     [ ${PORTNUM} -eq 0 ] && continue
     MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
     NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
   done
-  [ $(lspci -d ::107 2>/dev/null | wc -l) -gt 0 ] && MSG+="\nSerial Attached SCSI:\n"
+  [ $(lspci -d ::107 2>/dev/null | wc -l) -gt 0 ] && MSG+="\nSAS:\n"
   for PCI in $(lspci -d ::107 2>/dev/null | awk '{print $1}'); do
     NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
     PORT=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
-    PORTNUM=$(lsscsi -b 2>/dev/null | grep -v - | grep "\[${PORT}:" | wc -l)
+    PORTNUM=$(lsscsi -bS 2>/dev/null | awk '$3 != "0"' | grep -v - | grep "\[${PORT}:" | wc -l)
     [ ${PORTNUM} -eq 0 ] && continue
     MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
     NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
@@ -1571,12 +1570,12 @@ function showDisksInfo() {
   for PCI in $(lspci -d ::c03 2>/dev/null | awk '{print $1}'); do
     NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
     PORT=$(ls -l /sys/class/scsi_host 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/host//' | sort -n)
-    PORTNUM=$(lsscsi -b 2>/dev/null | grep -v - | grep "\[${PORT}:" | wc -l)
+    PORTNUM=$(lsscsi -bS 2>/dev/null | awk '$3 != "0"' | grep -v - | grep "\[${PORT}:" | wc -l)
     [ ${PORTNUM} -eq 0 ] && continue
     MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
     NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
   done
-  [ $(ls -l /sys/class/mmc_host 2>/dev/null | grep mmc_host | wc -l) -gt 0 ] && MSG+="\nMMC:\n"
+  [ $(ls -l /sys/block/mmc* | wc -l) -gt 0 ] && MSG+="\nMMC:\n"
   for PCI in $(lspci -d ::805 2>/dev/null | awk '{print $1}'); do
     NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
     PORTNUM=$(ls -l /sys/block/mmc* 2>/dev/null | grep "${PCI}" | wc -l)
@@ -1588,7 +1587,7 @@ function showDisksInfo() {
   for PCI in $(lspci -d ::108 2>/dev/null | awk '{print $1}'); do
     NAME=$(lspci -s "${PCI}" 2>/dev/null | sed "s/\ .*://")
     PORT=$(ls -l /sys/class/nvme 2>/dev/null | grep "${PCI}" | awk -F'/' '{print $NF}' | sed 's/nvme//' | sort -n)
-    PORTNUM=$(lsscsi -b 2>/dev/null | grep -v - | grep "\[N:${PORT}:" | wc -l)
+    PORTNUM=$(lsscsi -bS 2>/dev/null | awk '$3 != "0"' | grep -v - | grep "\[N:${PORT}:" | wc -l)
     [ ${PORTNUM} -eq 0 ] && continue
     MSG+="\Zb${NAME}\Zn\nNumber: ${PORTNUM}\n"
     NUMPORTS=$((${NUMPORTS} + ${PORTNUM}))
@@ -1643,7 +1642,7 @@ function MountDSMVolume {
 function formatDisks() {
   rm -f "${TMP_PATH}/opts"
   while read -r KNAME ID SIZE TYPE PKNAME; do
-    [ "${KNAME}" = "N/A" ] && continue
+    [ "${KNAME}" = "N/A" ] || [ "${SIZE:0:1}" = "0" ] && continue
     [ "${KNAME:0:7}" = "/dev/md" ] && continue
     [ "${KNAME}" = "${LOADER_DISK}" ] || [ "${PKNAME}" = "${LOADER_DISK}" ] && continue
     printf "\"%s\" \"%-6s %-4s %s\" \"off\"\n" "${KNAME}" "${SIZE}" "${TYPE}" "${ID}" >>"${TMP_PATH}/opts"
@@ -1732,6 +1731,7 @@ function allowDSMDowngrade() {
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
+      fixDSMRootPart "${I}"
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       rm -f "${TMP_PATH}/mdX/etc/VERSION" "${TMP_PATH}/mdX/etc.defaults/VERSION"
@@ -1762,6 +1762,7 @@ function resetDSMPassword() {
   rm -f "${TMP_PATH}/menu"
   mkdir -p "${TMP_PATH}/mdX"
   for I in ${DSMROOTS}; do
+    fixDSMRootPart "${I}"
     mount -t ext4 "${I}" "${TMP_PATH}/mdX"
     [ $? -ne 0 ] && continue
     if [ -f "${TMP_PATH}/mdX/etc/shadow" ]; then
@@ -1806,6 +1807,7 @@ function resetDSMPassword() {
     # local NEWPASSWD="$(echo "${VALUE}" | mkpasswd -m sha512)"
     local NEWPASSWD="$(openssl passwd -6 -salt $(openssl rand -hex 8) "${VALUE}")"
     for I in ${DSMROOTS}; do
+      fixDSMRootPart "${I}"
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       sed -i "s|^${USER}:[^:]*|${USER}:${NEWPASSWD}|" "${TMP_PATH}/mdX/etc/shadow"
@@ -1851,6 +1853,7 @@ function addNewDSMUser() {
 
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
+      fixDSMRootPart "${I}"
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
@@ -1891,6 +1894,7 @@ function forceEnableDSMTelnetSSH() {
     ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR_SSH'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
+      fixDSMRootPart "${I}"
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
@@ -1933,6 +1937,7 @@ function removeBlockIPDB {
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
+      fixDSMRootPart "${I}"
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       rm -f "${TMP_PATH}/mdX/etc/synoautoblock.db"
@@ -1964,6 +1969,7 @@ function disablescheduledTasks {
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
+      fixDSMRootPart "${I}"
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
@@ -2003,6 +2009,7 @@ function initDSMNetwork {
   (
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
+      fixDSMRootPart "${I}"
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       rm -f "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-eth"*
@@ -2128,14 +2135,16 @@ function tryRecoveryDSM() {
   DIALOG --title "$(TEXT "Settings")" \
     --infobox "$(TEXT "Trying to recover an installed DSM system ...")" 0 0
   DSMROOTS="$(findDSMRoot)"
-  if [ -z "${DSMROOTS}" ]; then
+  DSMROOTPART="$(echo "${DSMROOTS}" | head -n 1 | cut -d' ' -f1)"
+  if [ -z "${DSMROOTPART}" ]; then
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
     return
   fi
-
+  
   mkdir -p "${TMP_PATH}/mdX"
-  mount -t ext4 "$(echo "${DSMROOTS}" | head -n 1 | cut -d' ' -f1)" "${TMP_PATH}/mdX"
+  fixDSMRootPart "${DSMROOTPART}"
+  mount -t ext4 "${DSMROOTPART}" "${TMP_PATH}/mdX"
   if [ $? -ne 0 ]; then
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "Mount DSM system partition(md0) failed!\nPlease insert all disks before continuing.")" 0 0
@@ -2359,6 +2368,7 @@ function reportBugs() {
   if [ -n "${DSMROOTS}" ]; then
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
+      fixDSMRootPart "${I}"
       mount -t ext4 "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       mkdir -p "${TMP_PATH}/logs/md0/log"
@@ -3919,6 +3929,11 @@ function notepadMenu() {
 if [ $# -ge 1 ]; then
   $@
 else
+  if [ -z "${MODEL}" ] && [ -z "${PRODUCTVER}" ] && [ -n "$(findDSMRoot)" ]; then
+    DIALOG --title "$(TEXT "Main menu")" \
+      --yesno "$(TEXT "An installed DSM system is detected on the hard disk. Do you want to try to restore it first?")" 0 0
+    [ $? -eq 0 ] && tryRecoveryDSM
+  fi
   # Main loop
   NEXT="m"
   [ -n "$(ls ${TMP_PATH}/pats/*.pat 2>/dev/null)" ] && NEXT="u"

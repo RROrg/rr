@@ -68,6 +68,7 @@ DT="$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")"
 KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
 KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
 
+MEV="$(virt-what 2>/dev/null)"
 DMI="$(dmesg 2>/dev/null | grep -i "DMI:" | head -1 | sed 's/\[.*\] DMI: //i')"
 CPU="$(awk -F': ' '/model name/ {print $2}' /proc/cpuinfo | uniq)"
 MEM="$(awk '/MemTotal:/ {printf "%.0f", $2 / 1024}' /proc/meminfo) MB"
@@ -76,6 +77,7 @@ printf "%s \033[1;36m%s(%s)\033[0m\n" "$(TEXT "Model:   ")" "${MODEL}" "${PLATFO
 printf "%s \033[1;36m%s(%s%s)\033[0m\n" "$(TEXT "Version: ")" "${PRODUCTVER}" "${BUILDNUM}" "$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}")"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "Kernel:  ")" "${KERNEL}"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "LKM:     ")" "${LKM}"
+printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "MEV:     ")" "${MEV:-physical}"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "DMI:     ")" "${DMI}"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "CPU:     ")" "${CPU}"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "MEM:     ")" "${MEM}"
@@ -178,6 +180,7 @@ CMDLINE['pcie_aspm']="off"
 # CMDLINE['nox2apic']=""  # check platform
 # CMDLINE['nomodeset']=""
 CMDLINE['modprobe.blacklist']="${MODBLACKLIST}"
+CMDLINE['mev']="${MEV:-physical}"
 
 if echo "apollolake geminilake purley" | grep -wq "${PLATFORM}"; then
   CMDLINE["nox2apic"]=""
@@ -266,6 +269,7 @@ if [ "${DIRECT}" = "true" ]; then
   grub-editenv ${USER_GRUBENVFILE} set dsm_version="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
   grub-editenv ${USER_GRUBENVFILE} set dsm_kernel="${KERNEL}"
   grub-editenv ${USER_GRUBENVFILE} set dsm_lkm="${LKM}"
+  grub-editenv ${USER_GRUBENVFILE} set sys_mev="${MEV:-physical}"
   grub-editenv ${USER_GRUBENVFILE} set sys_dmi="${DMI}"
   grub-editenv ${USER_GRUBENVFILE} set sys_cpu="${CPU}"
   grub-editenv ${USER_GRUBENVFILE} set sys_mem="${MEM}"
@@ -285,6 +289,7 @@ else
   grub-editenv ${USER_GRUBENVFILE} unset dsm_version
   grub-editenv ${USER_GRUBENVFILE} unset dsm_kernel
   grub-editenv ${USER_GRUBENVFILE} unset dsm_lkm
+  grub-editenv ${USER_GRUBENVFILE} unset sys_mev
   grub-editenv ${USER_GRUBENVFILE} unset sys_dmi
   grub-editenv ${USER_GRUBENVFILE} unset sys_cpu
   grub-editenv ${USER_GRUBENVFILE} unset sys_mem

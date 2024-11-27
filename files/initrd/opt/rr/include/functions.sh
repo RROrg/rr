@@ -215,7 +215,7 @@ function _get_fastest() {
       speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
     done
   fi
-  local fastest="$(echo -e "${speedlist}" | tr -s '\n' | grep -v '999$' | sort -k2n | head -1)"
+  local fastest="$(echo -e "${speedlist}" | tr -s '\n' | awk '$2 != "999"' | sort -k2n | head -1)"
   URL="$(echo "${fastest}" | awk '{print $1}')"
   SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
   echo "${URL:-${1}}"
@@ -436,6 +436,17 @@ function findDSMRoot() {
   [ -z "${DSMROOTS}" ] && DSMROOTS="$(lsblk -pno KNAME,PARTN,FSTYPE,FSVER,LABEL | grep -E "sd[a-z]{1,2}1" | grep -w "linux_raid_member" | grep "0.9" | awk '{print $1}')"
   echo "${DSMROOTS}"
   return 0
+}
+
+###############################################################################
+# check and fix the DSM root partition
+# 1 - DSM root path
+function fixDSMRootPart() {
+  if mdadm --detail "${1}" 2>/dev/null | grep -i "State" | grep -iEq "active|FAILED|Not Started"; then
+    mdadm --stop "${1}" >/dev/null 2>&1
+    mdadm --assemble --scan >/dev/null 2>&1
+    fsck "${1}" >/dev/null 2>&1
+  fi
 }
 
 ###############################################################################
