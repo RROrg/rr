@@ -68,7 +68,7 @@ DT="$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")"
 KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
 KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
 
-MEV="$(virt-what 2>/dev/null)"
+MEV="$(virt-what 2>/dev/null | head -1)"
 DMI="$(dmesg 2>/dev/null | grep -i "DMI:" | head -1 | sed 's/\[.*\] DMI: //i')"
 CPU="$(awk -F': ' '/model name/ {print $2}' /proc/cpuinfo | uniq)"
 MEM="$(awk '/MemTotal:/ {printf "%.0f", $2 / 1024}' /proc/meminfo) MB"
@@ -237,7 +237,7 @@ for KEY in "${!CMDLINE[@]}"; do
   [ -n "${VALUE}" ] && CMDLINE_LINE+="=${VALUE}"
 done
 CMDLINE_LINE=$(echo "${CMDLINE_LINE}" | sed 's/^ //') # Remove leading space
-printf "%s:\n \033[1;36m%s\033[0m\n" "$(TEXT "Cmdline")" "${CMDLINE_LINE}"
+printf "%s:\n\033[1;36m%s\033[0m\n" "$(TEXT "Cmdline")" "${CMDLINE_LINE}"
 
 # Check if user wants to modify at this stage
 function _bootwait() {
