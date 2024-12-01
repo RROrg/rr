@@ -244,9 +244,9 @@ function repackInitrd() {
   [ -z "${INITRD_FILE}" ] || [ ! -f "${INITRD_FILE}" ] && exit 1
   [ -z "${PLUGIN_PATH}" ] || [ ! -d "${PLUGIN_PATH}" ] && exit 1
 
-  INITRD_FILE="$(readlink -f "${INITRD_FILE}")"
-  PLUGIN_PATH="$(readlink -f "${PLUGIN_PATH}")"
-  OUTPUT_PATH="$(readlink -f "${OUTPUT_PATH}")"
+  INITRD_FILE="$(realpath "${INITRD_FILE}")"
+  PLUGIN_PATH="$(realpath "${PLUGIN_PATH}")"
+  OUTPUT_PATH="$(realpath "${OUTPUT_PATH}")"
 
   local RDXZ_PATH="rdxz_tmp"
   mkdir -p "${RDXZ_PATH}"
@@ -291,8 +291,8 @@ function resizeImg() {
   [ -z "${INPUT_FILE}" ] || [ ! -f "${INPUT_FILE}" ] && exit 1
   [ -z "${CHANGE_SIZE}" ] && exit 1
 
-  INPUT_FILE="$(readlink -f "${INPUT_FILE}")"
-  OUTPUT_FILE="$(readlink -f "${OUTPUT_FILE}")"
+  INPUT_FILE="$(realpath "${INPUT_FILE}")"
+  OUTPUT_FILE="$(realpath "${OUTPUT_FILE}")"
 
   local SIZE=$(($(du -sm "${INPUT_FILE}" 2>/dev/null | awk '{print $1}')$(echo "${CHANGE_SIZE}" | sed 's/M//g; s/b//g')))
   [ "${SIZE:-0}" -lt 0 ] && exit 1
@@ -310,44 +310,25 @@ function resizeImg() {
   sudo losetup -d ${LOOPX}
 }
 
-# convertova
+# createvmx
 # $1 bootloader file
-# $2 ova file
-function convertova() {
-  local BLIMAGE=${1}
-  local OVAPATH=${2}
+# $2 vmx name
+function createvmx() {
+  BLIMAGE=${1}
+  VMNAME=${2}
 
-  BLIMAGE="$(readlink -f "${BLIMAGE}")"
-  OVAPATH="$(readlink -f "${OVAPATH}")"
-  local VMNAME="$(basename "${OVAPATH}" .ova)"
-
-  # Download and install ovftool if it doesn't exist
-  if [ ! -x ovftool/ovftool ]; then
-    rm -rf ovftool ovftool.zip
-    curl -skL https://github.com/rgl/ovftool-binaries/raw/main/archive/VMware-ovftool-4.6.0-21452615-lin.x86_64.zip -o ovftool.zip
-    if [ $? -ne 0 ]; then
-      echo "Failed to download ovftool"
-      exit 1
-    fi
-    unzip ovftool.zip -d . >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-      echo "Failed to extract ovftool"
-      exit 1
-    fi
-    chmod +x ovftool/ovftool
-  fi
   if ! command -v qemu-img &>/dev/null; then
     sudo apt install -y qemu-utils
   fi
 
   # Convert raw image to VMDK
-  rm -rf "OVA_${VMNAME}"
-  mkdir -p "OVA_${VMNAME}"
-  qemu-img convert -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' "${BLIMAGE}" "OVA_${VMNAME}/${VMNAME}-disk1.vmdk"
-  qemu-img create -f vmdk "OVA_${VMNAME}/${VMNAME}-disk2.vmdk" "32G"
+  rm -rf "VMX_${VMNAME}"
+  mkdir -p "VMX_${VMNAME}"
+  qemu-img convert -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' "${BLIMAGE}" "VMX_${VMNAME}/${VMNAME}-disk1.vmdk"
+  qemu-img create -f vmdk "VMX_${VMNAME}/${VMNAME}-disk2.vmdk" "32G"
 
   # Create VM configuration
-  cat <<_EOF_ >"OVA_${VMNAME}/${VMNAME}.vmx"
+  cat <<_EOF_ >"VMX_${VMNAME}/${VMNAME}.vmx"
 .encoding = "UTF-8"
 config.version = "8"
 virtualHW.version = "17"
@@ -408,7 +389,81 @@ sata0:1.fileName = "${VMNAME}-disk2.vmdk"
 sata0:1.present = "TRUE"
 _EOF_
 
+}
+
+# convertvmx
+# $1 bootloader file
+# $2 vmx file
+function convertvmx() {
+  local BLIMAGE=${1}
+  local VMXPATH=${2}
+
+  BLIMAGE="$(realpath "${BLIMAGE}")"
+  VMXPATH="$(realpath "${VMXPATH}")"
+  local VMNAME="$(basename "${VMXPATH}" .vmx)"
+
+  createvmx "${BLIMAGE}" "${VMNAME}"
+
+  rm -rf "${VMXPATH}"
+  mv -f "VMX_${VMNAME}" "${VMXPATH}"
+}
+
+# convertova
+# $1 bootloader file
+# $2 ova file
+function convertova() {
+  local BLIMAGE=${1}
+  local OVAPATH=${2}
+
+  BLIMAGE="$(realpath "${BLIMAGE}")"
+  OVAPATH="$(realpath "${OVAPATH}")"
+  local VMNAME="$(basename "${OVAPATH}" .ova)"
+
+  createvmx "${BLIMAGE}" "${VMNAME}"
+
+  # Download and install ovftool if it doesn't exist
+  if [ ! -x ovftool/ovftool ]; then
+    rm -rf ovftool ovftool.zip
+    curl -skL https://github.com/rgl/ovftool-binaries/raw/main/archive/VMware-ovftool-4.6.0-21452615-lin.x86_64.zip -o ovftool.zip
+    if [ $? -ne 0 ]; then
+      echo "Failed to download ovftool"
+      exit 1
+    fi
+    unzip ovftool.zip -d . >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      echo "Failed to extract ovftool"
+      exit 1
+    fi
+    chmod +x ovftool/ovftool
+  fi
+
   rm -f "${OVAPATH}"
-  ovftool/ovftool "OVA_${VMNAME}/${VMNAME}.vmx" "${OVAPATH}"
-  rm -rf "OVA_${VMNAME}"
+  ovftool/ovftool "VMX_${VMNAME}/${VMNAME}.vmx" "${OVAPATH}"
+  rm -rf "VMX_${VMNAME}"
+}
+
+function createvmc() {
+  cat <<_EOF_ >"${1:-rr.vmc}"
+<?xml version="1.0" encoding="UTF-8"?>
+<preferences>
+    <version type="string">2.0</version>
+    <hardware>
+        <memory>
+          <ram_size type="integer">4096</ram_size>
+        </memory>
+        <pci_bus>
+            <ide_adapter>
+                <ide_controller id="0">
+                    <location id="0">
+                        <drive_type type="integer">1</drive_type>
+                        <pathname>
+                            <relative type="string">rr.vhd</relative>
+                        </pathname>
+                    </location>
+                </ide_controller>
+            </ide_adapter>
+        </pci_bus>
+    </hardware>
+</preferences>
+_EOF_
 }

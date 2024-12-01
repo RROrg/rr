@@ -263,7 +263,7 @@ function _bootwait() {
 }
 
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
-if [ "${DIRECT}" = "true" ]; then
+if [ "${DIRECT}" = "true" ] || [ "${MEV:-physical}" = "parallels" ]; then
   grub-editenv ${USER_GRUBENVFILE} set rr_version="$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")"
   grub-editenv ${USER_GRUBENVFILE} set dsm_model="${MODEL}(${PLATFORM})"
   grub-editenv ${USER_GRUBENVFILE} set dsm_version="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
@@ -385,7 +385,7 @@ else
   done
 
   # # Unload all network interfaces
-  # for D in $(readlink /sys/class/net/*/device/driver); do rmmod -f "$(basename ${D})" 2>/dev/null || true; done
+  # for D in $(realpath /sys/class/net/*/device/driver); do rmmod -f "$(basename ${D})" 2>/dev/null || true; done
 
   # Unload all graphics drivers
   # for D in $(lsmod | grep -E '^(nouveau|amdgpu|radeon|i915)' | awk '{print $1}'); do rmmod -f "${D}" 2>/dev/null || true; done

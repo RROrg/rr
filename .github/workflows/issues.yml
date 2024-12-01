@@ -278,10 +278,21 @@ jobs:
             convertova "rr/rr.img" "rr/rr.ova"
             (cd rr; sha256sum rr.ova >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova ${USER_CONFIG_FILE} sha256sum README.txt
+          elif [ "${{ env.format }}" = "vmx" ]; then
+            . scripts/func.sh "${{ secrets.RRORG }}"
+            convertvmx "rr/rr.img" "rr.vmx"  # rr.vmx is a directory
+            (cd rr.vmx; sha256sum * >../sha256sum)
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmx.zip" -r rr.vmx ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vmdk" ]; then
             qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' rr/rr.vmdk
             (cd rr; sha256sum rr.vmdk >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk ${USER_CONFIG_FILE} sha256sum README.txt
+          elif [ "${{ env.format }}" = "vhd" ]; then
+            . scripts/func.sh "${{ secrets.RRORG }}"
+            createvmc "rr/rr.vmc"
+            qemu-img convert rr/rr.img -O vpc rr/rr.vhd
+            (cd rr; sha256sum rr.vhd >../sha256sum)
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhd.zip" -j rr/rr.vmc rr/rr.vhd ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vhdx" ]; then
             qemu-img convert rr/rr.img -O vhdx -o subformat=dynamic rr/rr.vhdx
             (cd rr; sha256sum rr.vhdx >../sha256sum)

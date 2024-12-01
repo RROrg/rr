@@ -129,6 +129,14 @@
     ```shell
     curl -#kL https://bootstrap.pypa.io/get-pip.py | python3
     ```
+* virt-what (MEV):
+    ```shell
+    kvm          ---- Proxmox VE / Unraid  ...
+    qemu         ---- QEMU (windows)
+    vmware       ---- VMware / VMware ESXi
+    parallels    ---- Parallels Desktop
+    virtualbox   ---- VirtualBox
+    ```
 
 ## DEBUG
 * log:
