@@ -329,8 +329,7 @@ function productversMenu() {
   done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
   # Rewrite modules
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-  L="$(echo "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" | awk '{print "modules."$1":"}')"
-  mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+  mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
   # Remove old files
   rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
   rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
@@ -409,8 +408,7 @@ function setConfigFromDSM() {
   done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
   # Rebuild modules
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-  L="$(echo "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" | awk '{print "modules."$1":"}')"
-  mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+  mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
   touch ${PART1_PATH}/.build
   return 0
 }
@@ -692,16 +690,14 @@ function moduleMenu() {
         0)
           # ok-button
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-          L="$(for I in $(cat ${TMP_PATH}/resp 2>/dev/null); do echo "modules.${I}:"; done)"
-          mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+          mergeConfigModules "$(cat "${TMP_PATH}/resp" 2>/dev/null)" "${USER_CONFIG_FILE}"
           touch ${PART1_PATH}/.build
           break
           ;;
         3)
           # extra-button
           writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-          L="$(echo "${ALLMODULES}" | awk '{print "modules."$1":"}')"
-          mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+          mergeConfigModules "$(echo "${ALLMODULES}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
           touch ${PART1_PATH}/.build
           ;;
         2)
@@ -2141,7 +2137,7 @@ function tryRecoveryDSM() {
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
     return
   fi
-  
+
   mkdir -p "${TMP_PATH}/mdX"
   fixDSMRootPart "${DSMROOTPART}"
   mount -t ext4 "${DSMROOTPART}" "${TMP_PATH}/mdX"
@@ -3450,8 +3446,7 @@ function updateRR() {
           KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
           if [ -n "${PLATFORM}" ] && [ -n "${KVER}" ]; then
             writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-            L="$(echo "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" | awk '{print "modules."$1":"}')"
-            mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+            mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
           fi
         fi
       fi
@@ -3588,8 +3583,7 @@ function updateModules() {
     KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
     if [ -n "${PLATFORM}" ] && [ -n "${KVER}" ]; then
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-      L="$(echo "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" | awk '{print "modules."$1":"}')"
-      mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+      mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
     fi
   fi
   rm -rf "${TMP_PATH}/update"
@@ -3711,8 +3705,7 @@ function updateCKs() {
     KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
     if [ -n "${PLATFORM}" ] && [ -n "${KVER}" ]; then
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-      L="$(echo "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" | awk '{print "modules."$1":"}')"
-      mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+      mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
     fi
   fi
   rm -rf "${TMP_PATH}/update"
@@ -4005,8 +3998,7 @@ else
       fi
       if [ -n "${PLATFORM}" ] && [ -n "${KVER}" ]; then
         writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-        L="$(echo "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" | awk '{print "modules."$1":"}')"
-        mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+        mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
       fi
       touch ${PART1_PATH}/.build
 

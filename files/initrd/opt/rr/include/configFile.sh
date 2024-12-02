@@ -28,13 +28,17 @@ function readConfigKey() {
 
 ###############################################################################
 # Write to yaml config file
-# 1 - format
-# 2 - string
-# 3 - Path of yaml config file
-function mergeConfigStr() {
+# 1 - Modules
+# 2 - Path of yaml config file
+function mergeConfigModules() {
+  # Error: bad file '-': cannot index array with '8139cp' (strconv.ParseInt: parsing "8139cp": invalid syntax)
+  # When the first key is a pure number, yq will not process it as a string by default. The current solution is to insert a placeholder key.
+  local MS="RRORG\n${1// /\\n}"
+  local L="$(echo -en "${MS}" | awk '{print "modules."$1":"}')"
   local xmlfile=$(mktemp)
-  echo "${2}" | yq -p "${1}" -o y >"${xmlfile}"
-  yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${3}" "${xmlfile}" 2>/dev/null
+  echo -en "${L}" | yq -p p -o y >"${xmlfile}"
+  deleteConfigKey "modules.\"RRORG\"" "${xmlfile}"
+  yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${2}" "${xmlfile}" 2>/dev/null
   rm -f "${xmlfile}"
 }
 

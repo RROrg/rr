@@ -149,6 +149,10 @@ jobs:
           # 累了, 毁灭吧!
 
           # yq need sudo !!!
+          function deleteConfigKey() {
+            sudo yq eval "del(.${1})" --inplace "${2}" 2>/dev/null
+          }
+
           function writeConfigKey() {
             local value="${2}"
             [ "${value}" = "{}" ] && sudo yq eval ".${1} = {}" --inplace "${3}" 2>/dev/null || sudo yq eval ".${1} = \"${value}\"" --inplace "${3}" 2>/dev/null
@@ -159,10 +163,15 @@ jobs:
             [ "${result}" = "null" ] && echo "" || echo "${result}"
           }
 
-          function mergeConfigStr() {
+          function mergeConfigModules() {
+            # Error: bad file '-': cannot index array with '8139cp' (strconv.ParseInt: parsing "8139cp": invalid syntax)
+            # When the first key is a pure number, yq will not process it as a string by default. The current solution is to insert a placeholder key.
+            local MS="RRORG\n${1// /\\n}"
+            local L="$(echo -en "${MS}" | awk '{print "modules."$1":"}')"
             local xmlfile=$(mktemp)
-            echo "${2}" | sudo yq -p "${1}" -o y >"${xmlfile}"
-            sudo yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${3}" "${xmlfile}" 2>/dev/null
+            echo -en "${L}" | sudo yq -p p -o y >"${xmlfile}"
+            deleteConfigKey "modules.\"RRORG\"" "${xmlfile}"
+            sudo yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${2}" "${xmlfile}" 2>/dev/null
             rm -f "${xmlfile}"
           }
 
@@ -233,8 +242,7 @@ jobs:
             echo "set modules: ${{ env.modules }}"
             USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
             writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-            L="$(for I in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do echo "modules.${I}:"; done)"
-            mergeConfigStr p "${L}" "${USER_CONFIG_FILE}"
+            mergeConfigModules "$(echo "${{ env.modules }}" | sed 's/,/\n/g')" "${USER_CONFIG_FILE}"
             # for M in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do
             #   writeConfigKey "modules.\"${M}\"" "" "${USER_CONFIG_FILE}"
             # done
