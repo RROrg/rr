@@ -20,18 +20,18 @@ BUS=$(getBus "${LOADER_DISK}")
 clear
 COLUMNS=$(ttysize 2>/dev/null | awk '{print $1}')
 COLUMNS=${COLUMNS:-80}
-TITLE="$(printf "$(TEXT "Welcome to %s")" "$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")")"
+WTITLE="$(printf "$(TEXT "Welcome to %s")" "$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")")"
 DATE="$(date)"
 printf "\033[1;44m%*s\n" "${COLUMNS}" ""
 printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
-printf "\033[1;31m%*s\033[0m\n" "$(((${#TITLE} + ${COLUMNS}) / 2))" "${TITLE}"
+printf "\033[1;31m%*s\033[0m\n" "$(((${#WTITLE} + ${COLUMNS}) / 2))" "${WTITLE}"
 printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
 printf "\033[1;32m%*s\033[0m\n" "${COLUMNS}" "${DATE}"
 
-TITLE="BOOTING:"
-TITLE+="$([ ${EFI} -eq 1 ] && echo " [UEFI]" || echo " [BIOS]")"
-TITLE+="$([ "${BUS}" = "usb" ] && echo " [${BUS^^} flashdisk]" || echo " [${BUS^^} DoM]")"
-printf "\033[1;33m%*s\033[0m\n" $(((${#TITLE} + ${COLUMNS}) / 2)) "${TITLE}"
+BTITLE="Boot Type:"
+BTITLE+="$([ ${EFI} -eq 1 ] && echo " [UEFI]" || echo " [BIOS]")"
+BTITLE+="$([ "${BUS}" = "usb" ] && echo " [${BUS^^} flashdisk]" || echo " [${BUS^^} DoM]")"
+printf "\033[1;33m%*s\033[0m\n" $(((${#BTITLE} + ${COLUMNS}) / 2)) "${BTITLE}"
 
 # Check if DSM zImage changed, patch it if necessary
 ZIMAGE_HASH="$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")"
@@ -264,7 +264,8 @@ function _bootwait() {
 
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 if [ "${DIRECT}" = "true" ] || [ "${MEV:-physical}" = "parallels" ]; then
-  grub-editenv ${USER_GRUBENVFILE} set rr_version="$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")"
+  grub-editenv ${USER_GRUBENVFILE} set rr_version="${WTITLE}"
+  grub-editenv ${USER_GRUBENVFILE} set rr_booting="${BTITLE}"
   grub-editenv ${USER_GRUBENVFILE} set dsm_model="${MODEL}(${PLATFORM})"
   grub-editenv ${USER_GRUBENVFILE} set dsm_version="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
   grub-editenv ${USER_GRUBENVFILE} set dsm_kernel="${KERNEL}"
@@ -285,6 +286,7 @@ if [ "${DIRECT}" = "true" ] || [ "${MEV:-physical}" = "parallels" ]; then
   exit 0
 else
   grub-editenv ${USER_GRUBENVFILE} unset rr_version
+  grub-editenv ${USER_GRUBENVFILE} unset rr_booting
   grub-editenv ${USER_GRUBENVFILE} unset dsm_model
   grub-editenv ${USER_GRUBENVFILE} unset dsm_version
   grub-editenv ${USER_GRUBENVFILE} unset dsm_kernel
