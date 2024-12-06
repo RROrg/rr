@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-26 23:52+0800\n"
+"POT-Creation-Date: 2024-12-06 15:27+0800\n"
 "PO-Revision-Date: 2024-05-05 22:01+0800\n"
 "Last-Translator: miracozturk <info@miracozturk.com.tr>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/rrorg/rr/tr/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr "Yükleyici başlatılamıyor!"
 
-#: boot.sh:9 init.sh:151
+#: boot.sh:9 init.sh:154
 msgid "Loader is not configured!"
 msgstr "Yükleyici yapılandırılmamış!"
 
@@ -33,15 +33,15 @@ msgstr "Merhaba %s"
 msgid "DSM zImage changed"
 msgstr "DSM zImage değiştirildi"
 
-#: boot.sh:41 menu.sh:1357
+#: boot.sh:41 menu.sh:1353
 msgid "DSM zImage not patched"
 msgstr "DSM zImage düzeltilmedi"
 
-#: boot.sh:41 boot.sh:51 menu.sh:1357 menu.sh:1362
+#: boot.sh:41 boot.sh:51 menu.sh:1353 menu.sh:1358
 msgid "Please upgrade the bootloader version and try again."
 msgstr "Lütfen önyükleyici sürümünü yükseltin ve tekrar deneyin."
 
-#: boot.sh:41 boot.sh:51 menu.sh:17 menu.sh:1150 menu.sh:1234 menu.sh:1299 menu.sh:1357 menu.sh:1362 menu.sh:1385 menu.sh:1455 menu.sh:1492 menu.sh:2448 menu.sh:3259 menu.sh:3311 menu.sh:3354 menu.sh:3398 menu.sh:3495 menu.sh:3560 menu.sh:3626 menu.sh:3683
+#: boot.sh:41 boot.sh:51 menu.sh:17 menu.sh:1146 menu.sh:1230 menu.sh:1295 menu.sh:1353 menu.sh:1358 menu.sh:1381 menu.sh:1451 menu.sh:1488 menu.sh:2444 menu.sh:3260 menu.sh:3312 menu.sh:3355 menu.sh:3399 menu.sh:3495 menu.sh:3560 menu.sh:3625 menu.sh:3682
 msgid "Error"
 msgstr "Hata"
 
@@ -49,7 +49,7 @@ msgstr "Hata"
 msgid "DSM ramdisk changed"
 msgstr "DSM ramdisk değiştirildi"
 
-#: boot.sh:51 menu.sh:1362
+#: boot.sh:51 menu.sh:1358
 msgid "DSM ramdisk not patched"
 msgstr "DSM ramdisk düzeltilmedi"
 
@@ -93,7 +93,7 @@ msgstr "Uyarı: Lütfen sistem kurulumu için en az bir sata/scsi disk takın (y
 msgid "Notice: Please disable Intel(VT-d)/AMD(AMD-Vi) in BIOS/UEFI settings if you encounter a boot failure."
 msgstr "Uyarı: Eğer yükleme başarısız olursa lütfen BIOS/UEFI ayarlarından Intel(VT-d)/AMD(AMD-Vi) devre dışı bırakın."
 
-#: boot.sh:240 menu.sh:836 menu.sh:865 menu.sh:902 menu.sh:914 menu.sh:940 menu.sh:948 menu.sh:965 menu.sh:977
+#: boot.sh:240 menu.sh:832 menu.sh:861 menu.sh:898 menu.sh:910 menu.sh:936 menu.sh:944 menu.sh:961 menu.sh:973
 msgid "Cmdline"
 msgstr "cmdline"
 
@@ -109,35 +109,35 @@ msgstr "açıklama(ssh/web) durumu değiştirildi ve önyükleme kesintiye uğra
 msgid "Reboot to boot directly in DSM"
 msgstr "DSM'ye doğrudan yeniden başlatın"
 
-#: boot.sh:299 init.sh:168
+#: boot.sh:299 init.sh:171
 msgid "Detected %s network cards.\\n"
 msgstr "%s ağ kartı tespit edildi.\\n"
 
-#: boot.sh:300 init.sh:169
+#: boot.sh:300 init.sh:172
 msgid "Checking Connect."
 msgstr "Bağlantı kontrolü yapılıyor."
 
-#: boot.sh:312 init.sh:179
+#: boot.sh:312 init.sh:182
 msgid "connected."
 msgstr "bağlandı."
 
-#: boot.sh:322 init.sh:189
+#: boot.sh:322 init.sh:192
 msgid "Waiting IP.\\n"
 msgstr "IP adresi bekleniyor.\\n"
 
-#: boot.sh:329 init.sh:196
+#: boot.sh:329 init.sh:199
 msgid "DOWN"
 msgstr "DOWN"
 
-#: boot.sh:333 init.sh:200
+#: boot.sh:333 init.sh:203
 msgid "NOT CONNECTED"
 msgstr "BAĞLANAMADI"
 
-#: boot.sh:337 init.sh:204
+#: boot.sh:337 init.sh:207
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "ZAMAN AZALDI (Lütfen yönlendiricinin IP adresini kontrol edin.)"
 
-#: boot.sh:344 init.sh:211
+#: boot.sh:344 init.sh:214
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "LINK LOCAL (DHCP sunucusu tespit edilemedi.)"
 
@@ -169,59 +169,59 @@ msgstr "Yükleyici bozuk, lütfen yeniden yazın!"
 msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
 msgstr "Ağ bağlantısı yapıldıktan sonra init.sh'yi yeniden çalıştırın!"
 
-#: init.sh:127
+#: init.sh:130
 msgid "The boot disk does not support the current %s, only %s DoM is supported."
 msgstr "%s önyükleyici disk desteklemiyor, sadece %s DoM destekleniyor."
 
-#: init.sh:136
+#: init.sh:139
 msgid "Loader disk:"
 msgstr "Yükleyici disk:"
 
-#: init.sh:144
+#: init.sh:147
 msgid "Loading keymap:"
 msgstr "Kullanıcı tuş kartı yükleniyor:"
 
-#: init.sh:154
+#: init.sh:157
 msgid "User requested edit settings."
 msgstr "Kullanıcı ayarlarını düzenlemek ist."
 
-#: init.sh:213
+#: init.sh:216
 msgid "Access \\033[1;34mhttp://%s:%d\\033[0m to configure the loader via web terminal."
 msgstr "\\033[1;34mhttp://%s:%d\\033[0m ile yükleyiciyi web terminal üzerinden yapılandırın."
 
-#: init.sh:224
+#: init.sh:227
 msgid "Call \\033[1;32minit.sh\\033[0m to re get init info\\n"
 msgstr "\\033[1;32minit.sh\\033[0m ile yükleyici bilgilerini yeniden alın\\n"
 
-#: init.sh:225
+#: init.sh:228
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader\\n"
 msgstr "\\033[1;32mmenu.sh\\033[0m ile yükleyiciyi yapılandırın\\n"
 
-#: init.sh:227
+#: init.sh:230
 msgid "User config is on \\033[1;32m%s\\033[0m\\n"
 msgstr "Kullanıcı yapılandırması \\033[1;32m%s\\033[0m\\n"
 
-#: init.sh:228
+#: init.sh:231
 msgid "HTTP: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 msgstr "HTTP: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 
-#: init.sh:229
+#: init.sh:232
 msgid "DUFS: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 msgstr "DUFS: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 
-#: init.sh:230
+#: init.sh:233
 msgid "TTYD: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 msgstr "TTYD: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 
-#: init.sh:233
+#: init.sh:236
 msgid "SSH port is \\033[1;31m%d\\033[0m, The \\033[1;31mroot\\033[0m password has been changed\\n"
 msgstr "SSH bağlantı noktası \\033[1;31m%d\\033[0m, \\033[1;31mroot\\033[0m şifresi değiştirildi\\n"
 
-#: init.sh:235
+#: init.sh:238
 msgid "SSH port is \\033[1;31m%d\\033[0m, The \\033[1;31mroot\\033[0m password is \\033[1;31m%s\\033[0m\\n"
 msgstr "SSH bağlantı noktası \\033[1;31m%d\\033[0m, \\033[1;31mroot\\033[0m şifresi \\033[1;31m%s\\033[0m\\n"
 
-#: init.sh:254
+#: init.sh:257
 msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
 msgstr "4GB'dan az RAM varsa, yükleyici oluşturulurken hata oluşursa, belleği artırın."
 
@@ -265,7 +265,7 @@ msgstr "%s sürümü şu anda ayarlanmıştır. Bu sürüğü sıfırlamak ister
 msgid "Get pat data ..."
 msgstr "pat verisi alınıyor ..."
 
-#: menu.sh:243 menu.sh:529 menu.sh:542 menu.sh:547 menu.sh:553 menu.sh:564 menu.sh:572 menu.sh:595 menu.sh:601 menu.sh:605 menu.sh:619 menu.sh:623 menu.sh:631 menu.sh:635 menu.sh:3483 menu.sh:3532 menu.sh:3745 menu.sh:3782 menu.sh:3787
+#: menu.sh:243 menu.sh:527 menu.sh:540 menu.sh:545 menu.sh:551 menu.sh:562 menu.sh:570 menu.sh:593 menu.sh:599 menu.sh:603 menu.sh:617 menu.sh:621 menu.sh:629 menu.sh:633 menu.sh:3483 menu.sh:3532 menu.sh:3743 menu.sh:3780 menu.sh:3785
 msgid "Addons"
 msgstr "Eklentiler"
 
@@ -285,1211 +285,1211 @@ msgstr "Lütfen URL ve md5sum'ı gerektiği gibi değiştirin."
 msgid "Note: There is no version %s and automatically returns to version %s."
 msgstr "Not: %s sürümü yok, otomatik olarak %s sürümüne dönülüyor."
 
-#: menu.sh:306 menu.sh:374
+#: menu.sh:306 menu.sh:373
 msgid "Reconfiguring Synoinfo, Addons and Modules ..."
 msgstr "Synoinfo, Addons ve Modüller yeniden yapılandırılıyor ..."
 
-#: menu.sh:346 menu.sh:357
+#: menu.sh:345 menu.sh:356
 msgid "DSM Invalid, try again!"
 msgstr "DSM geçersiz, tekrar deneyin!"
 
-#: menu.sh:370
+#: menu.sh:369
 msgid "Currently, %s is not supported."
 msgstr "%s şu anda desteklenmiyor."
 
-#: menu.sh:422
+#: menu.sh:420
 msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
 msgstr "%s ve %s seçtiniz.\\n'Parse Pat' önceki seçimi üzerine yazacaktır.\\nDevam etmek istiyor musunuz?"
 
-#: menu.sh:423 menu.sh:438 menu.sh:444 menu.sh:486 menu.sh:490
+#: menu.sh:421 menu.sh:436 menu.sh:442 menu.sh:484 menu.sh:488
 msgid "Parse Pat"
 msgstr "Parse Pat"
 
-#: menu.sh:432
+#: menu.sh:430
 msgid "No pat file found in /tmp/pats/ folder!\\nPlease upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option."
 msgstr "/tmp/pats/ klasöründe pat dosyası bulunamadı!\\npat dosyasını /tmp/pats/ klasörüne DUFS ile yükleyin ve bu seçeneği yeniden girin."
 
-#: menu.sh:433 menu.sh:3743 menu.sh:3744 menu.sh:3745 menu.sh:3746 menu.sh:3747 menu.sh:3748 menu.sh:3756 menu.sh:3781 menu.sh:3793 menu.sh:3805 menu.sh:3817 menu.sh:3832 menu.sh:3843 menu.sh:3860 menu.sh:3885
+#: menu.sh:431 menu.sh:3741 menu.sh:3742 menu.sh:3743 menu.sh:3744 menu.sh:3745 menu.sh:3746 menu.sh:3754 menu.sh:3779 menu.sh:3791 menu.sh:3803 menu.sh:3815 menu.sh:3830 menu.sh:3841 menu.sh:3858 menu.sh:3883
 msgid "Update"
 msgstr "Güncelle"
 
-#: menu.sh:439
+#: menu.sh:437
 msgid "Choose a pat file"
 msgstr "pat dosyasını seçin"
 
-#: menu.sh:445 menu.sh:1161 menu.sh:1234
+#: menu.sh:443 menu.sh:1157 menu.sh:1230
 msgid "pat Invalid, try again!"
 msgstr "pat geçersiz, tekrar deneyin!"
 
-#: menu.sh:451
+#: menu.sh:449
 msgid "Parse %s ...\\n"
 msgstr "%s ayrıştırılıyor...\\n"
 
-#: menu.sh:483 menu.sh:1370
+#: menu.sh:481 menu.sh:1366
 msgid "Ready!"
 msgstr "Hazır!"
 
-#: menu.sh:487
+#: menu.sh:485
 msgid "Making ..."
 msgstr "Hazırlanıyor..."
 
-#: menu.sh:523
+#: menu.sh:521
 msgid "Add an addon"
 msgstr "Eklenti ekleyin"
 
-#: menu.sh:524
+#: menu.sh:522
 msgid "Delete addons"
 msgstr "Eklentileri silin"
 
-#: menu.sh:525
+#: menu.sh:523
 msgid "Show all addons"
 msgstr "Tüm eklentileri göster"
 
-#: menu.sh:526
+#: menu.sh:524
 msgid "Upload a external addon"
 msgstr "Harici bir eklenti yükleyin"
 
-#: menu.sh:527 menu.sh:663 menu.sh:863 menu.sh:1031 menu.sh:1422 menu.sh:2893 menu.sh:3116 menu.sh:3751 menu.sh:3978 menu.sh:4078
+#: menu.sh:525 menu.sh:661 menu.sh:859 menu.sh:1027 menu.sh:1418 menu.sh:2894 menu.sh:3117 menu.sh:3749 menu.sh:3976 menu.sh:4075
 msgid "Exit"
 msgstr "Çıkış"
 
-#: menu.sh:531 menu.sh:666 menu.sh:866 menu.sh:1034 menu.sh:3981
+#: menu.sh:529 menu.sh:664 menu.sh:862 menu.sh:1030 menu.sh:3979
 msgid "Choose a option"
 msgstr "Seçenek seçin"
 
-#: menu.sh:543
+#: menu.sh:541
 msgid "No available addons to add"
 msgstr "Eklentiler ekleyebileceğiniz bir eklenti yok"
 
-#: menu.sh:548
+#: menu.sh:546
 msgid "Select an addon"
 msgstr "Eklenti seçin"
 
-#: menu.sh:554
+#: menu.sh:552
 msgid "Type a optional params to addon"
 msgstr "Eklentiye isteğe bağlı parametreler girin"
 
-#: menu.sh:565
+#: menu.sh:563
 msgid "No user addons to remove"
 msgstr "Kullanıcı eklentileri kaldırılaca"
 
-#: menu.sh:573
+#: menu.sh:571
 msgid "Select addon to remove"
 msgstr "Eklentiyi kaldırmak için seçi"
 
-#: menu.sh:585
+#: menu.sh:583
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n"
 msgstr "\"\\Z4mavi\\Zn\" adlı isimli eklentiler eklendi, \"siyah\" adlı isimli eklentiler eklenmedi.\\n"
 
-#: menu.sh:600 menu.sh:1432 menu.sh:3830
+#: menu.sh:598 menu.sh:1428 menu.sh:3828
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
 msgstr "Bu özellik ssh üzerinden erişilirken (ZModem protokolünü destekleyen bir terminal gerektirir) yalnızca kullanılabilir.\\n\\n"
 
-#: menu.sh:606
+#: menu.sh:604
 msgid "Please upload the *.addons file."
 msgstr "*.addons dosyasını yükleyin."
 
-#: menu.sh:620 menu.sh:776 menu.sh:3861 menu.sh:3886
+#: menu.sh:618 menu.sh:772 menu.sh:3859 menu.sh:3884
 msgid "Not a valid file, please try again!"
 msgstr "Geçersiz dosya, lütfen tekrar deneyin!"
 
-#: menu.sh:624
+#: menu.sh:622
 msgid "The addon already exists. Do you want to overwrite it?"
 msgstr "Eklenti zaten mevcut. Üzerine yazmak istiyor musunuz?"
 
-#: menu.sh:632
+#: menu.sh:630
 msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
 msgstr "'%s' eklentisi yükleyiciye eklendi, 'Eklenti ekle' menüsünde etkinleştirin."
 
-#: menu.sh:636
+#: menu.sh:634
 msgid "File format not recognized!"
 msgstr "Dosya biçimi tanınmıyor!"
 
-#: menu.sh:656
+#: menu.sh:654
 msgid "Show/Select modules"
 msgstr "Modülleri göster/seç"
 
-#: menu.sh:657
+#: menu.sh:655
 msgid "Select loaded modules"
 msgstr "Yüklü modülleri seçin"
 
-#: menu.sh:658
+#: menu.sh:656
 msgid "Upload a external module"
 msgstr "Harici bir modül yükleyin"
 
-#: menu.sh:659
+#: menu.sh:657
 msgid "Deselect i915 with dependencies"
 msgstr "i915 ve bağımlılıklarını seçmeyin"
 
-#: menu.sh:660
+#: menu.sh:658
 msgid "Priority use of official drivers:"
 msgstr "Oficial sürücüleri öncelikli olarak kullanın:"
 
-#: menu.sh:661
+#: menu.sh:659
 msgid "Edit modules that need to be copied to DSM"
 msgstr "DSM'ye kopyalanması gereken gereken modülleri düzenleyi"
 
-#: menu.sh:662
+#: menu.sh:660
 msgid "modprobe blacklist"
 msgstr "modüller prob kara listesi"
 
-#: menu.sh:665 menu.sh:672 menu.sh:685 menu.sh:724 menu.sh:741 menu.sh:751 menu.sh:754 menu.sh:770 menu.sh:775 menu.sh:789 menu.sh:795 menu.sh:830 menu.sh:3548 menu.sh:3598 menu.sh:3746 menu.sh:3794 menu.sh:3799
+#: menu.sh:663 menu.sh:670 menu.sh:683 menu.sh:720 menu.sh:737 menu.sh:747 menu.sh:750 menu.sh:766 menu.sh:771 menu.sh:785 menu.sh:791 menu.sh:826 menu.sh:3548 menu.sh:3597 menu.sh:3744 menu.sh:3792 menu.sh:3797
 msgid "Modules"
 msgstr "Modüller"
 
-#: menu.sh:673
+#: menu.sh:671
 msgid "Reading modules ..."
 msgstr "Modüller okunuyor..."
 
-#: menu.sh:686
+#: menu.sh:684
 msgid "Select all"
 msgstr "Tümünü seçin"
 
-#: menu.sh:687
+#: menu.sh:685
 msgid "Deselect all"
 msgstr "Tümünü seçmeyin"
 
-#: menu.sh:688
+#: menu.sh:686
 msgid "Select modules to include"
 msgstr "Modülleri dahil etmek için seçin"
 
-#: menu.sh:725
+#: menu.sh:721
 msgid "Selecting loaded modules"
 msgstr "Yüklü modülleri seçin"
 
-#: menu.sh:740
+#: menu.sh:736
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol)."
 msgstr "Bu özellik ssh aracılığıyla erişildiğinde (ZModem protokolü desteği gerektiren bir terminal gerektirir) kullanılabilir."
 
-#: menu.sh:746
+#: menu.sh:742
 msgid "This function is experimental and dangerous. If you don't know much, please exit.\\n"
 msgstr "Bu özellik deneyseldir ve tehlikeli. Eğer çok az bilgiye sahip değilseniz çıkın.\\n"
 
-#: menu.sh:747
+#: menu.sh:743
 msgid "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\\n"
 msgstr "Bu işlev deneyseldir ve tehlikelidir. Eğer çok az bilgiye sahip değilseniz çıkın.\\n"
 
-#: menu.sh:748
+#: menu.sh:744
 msgid "This program will not determine the availability of imported modules or even make type judgments, as please double check if it is correct.\\n"
 msgstr "Bu program, içe aktarılan modüllerin mevcut olup olmadığını belirlemez veya çok fazla tür karar vermez, lütfen içe aktarılan modüllerin doğru olduğunu kontrol edin.\\n"
 
-#: menu.sh:749
+#: menu.sh:745
 msgid "If you want to remove it, please go to the \"Update Menu\" -> \"Update modules\" to forcibly update the modules. All imports will be reset.\\n"
 msgstr "Eğer kaldırmak istiyorsanız, lütfen \"Güncelleme Menüsü\" -> \"Modülleri Güncelle\"'ye gidin ve modülleri zorla güncelleştirin. Tüm içe aktarımlar sıfırlanacak.\\n"
 
-#: menu.sh:750
+#: menu.sh:746
 msgid "Do you want to continue?"
 msgstr "Devam etmek istiyor musunuz?"
 
-#: menu.sh:755
+#: menu.sh:751
 msgid "Please upload the *.ko file."
 msgstr "*.ko dosyasını yükleyin."
 
-#: menu.sh:771
+#: menu.sh:767
 msgid "Module '%s' added to %s-%s"
 msgstr "'%s' modülü %s-%s'e eklendi"
 
-#: menu.sh:790
+#: menu.sh:786
 msgid "No i915 with dependencies module to deselect."
 msgstr "i915 ve bağımlılıklarını seçmeyin."
 
-#: menu.sh:796
+#: menu.sh:792
 msgid "Module %s deselected."
 msgstr "%s modülü seçmeyin."
 
-#: menu.sh:812 menu.sh:1487 menu.sh:2093 menu.sh:2123 menu.sh:3920
+#: menu.sh:808 menu.sh:1483 menu.sh:2089 menu.sh:2119 menu.sh:3918
 msgid "Edit with caution"
 msgstr "Dikkatle düzenleyin"
 
-#: menu.sh:825
+#: menu.sh:821
 msgid "The blacklist is used to prevent the kernel from loading specific modules.\\n"
 msgstr "Kara liste, özel modüllerin kernel tarafından yüklenmesini engeller.\\n"
 
-#: menu.sh:826
+#: menu.sh:822
 msgid "The blacklist is a list of module names separated by ','.\\n"
 msgstr "Kara liste, ',' ile ayrılmış modül adlarının listesidir.\\n"
 
-#: menu.sh:827
+#: menu.sh:823
 msgid "For example: \\Z4evbug,cdc_ether\\Zn\\n"
 msgstr "örnek: \\Z4evbug,cdc_ether\\Zn\\n"
 
-#: menu.sh:837
+#: menu.sh:833
 msgid "Invalid list, No spaces should appear, retry?"
 msgstr "geçersiz list, boşluk görünmemelidir, yeniden denemek ister misiniz?"
 
-#: menu.sh:857
+#: menu.sh:853
 msgid "Add/Edit a cmdline item"
 msgstr "cmdline öğesi ekle/düzenle"
 
-#: menu.sh:858
+#: menu.sh:854
 msgid "Show/Delete cmdline items"
 msgstr "cmdline öğelerini göster/sil"
 
-#: menu.sh:860
+#: menu.sh:856
 msgid "Define SN/MAC"
 msgstr "SN/MAC tanımla"
 
-#: menu.sh:872
+#: menu.sh:868
 msgid "Commonly used cmdlines:\\n"
 msgstr "Genel kullanılan cmdline'lar:\\n"
 
-#: menu.sh:873
+#: menu.sh:869
 msgid " * \\Z4SpectreAll_on=\\Zn\\n    Enable Spectre and Meltdown protection to mitigate the threat of speculative execution vulnerability.\\n"
 msgstr "* \\Z4SpectreAll_on=\\Zn\\n     Spectre ve Meltdown korumasını kullanarak speculative execution güvenlik tehlikesini azaltır.\\n"
 
-#: menu.sh:874
+#: menu.sh:870
 msgid " * \\Z4disable_mtrr_trim=\\Zn\\n    disables kernel trim any uncacheable memory out.\\n"
 msgstr " * \\Z4disable_mtrr_trim=\\Zn\\n    kernel'in herhangi bir uncacheable bellek çıkarmasını devre dışı bırakır.\\n"
 
-#: menu.sh:875
+#: menu.sh:871
 msgid " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Set the maximum C-state depth allowed by the intel_idle driver.\\n"
 msgstr " * \\Z4intel_idle.max_cstate=1\\Zn\\n    intel_idle sürücüsü tarafından izin verilen maksimum C-düzeyini ayarlar.\\n"
 
-#: menu.sh:876
+#: menu.sh:872
 msgid " * \\Z4pcie_port_pm=off\\Zn\\n    Turn off the power management of the PCIe port.\\n"
 msgstr " * \\Z4pcie_port_pm=off\\Zn\\n    PCIe bağlantı noktasının güç yönetimini kapatır.\\n"
 
-#: menu.sh:877
+#: menu.sh:873
 msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
 msgstr " * \\Z4libata.force=noncq\\Zn\\n    Tüm SATA bağlantı noktaları için NCQ'yi devre dışı bırakır.\\n"
 
-#: menu.sh:878
+#: menu.sh:874
 msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map(Not apply to DT models).\\n"
 msgstr " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map(DT modeller için geçerli değil).\\n"
 
-#: menu.sh:879
+#: menu.sh:875
 msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence(Not apply to DT models).\\n"
 msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Disk adı dizisini değiştirin(DT modeller için geçerli değil).\\n"
 
-#: menu.sh:880
+#: menu.sh:876
 msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence(Not apply to DT models).\\n"
 msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Veri bağlantı noktası dizisini değiştirin(DT modeller için geçerli değil).\\n"
 
-#: menu.sh:881
+#: menu.sh:877
 msgid " * \\Z4scsi_mod.scan=sync\\Zn\\n    Synchronize scanning of devices on the SCSI bus during system startup(Resolve the disorderly order of HBA disks).\\n"
 msgstr " * \\Z4scsi_mod.scan=sync\\Zn\\n    Sistem başlangıcında SCSI bus'ta cihazların taranmasını senkronize edin(HBA disklerin düzgün sıralanmasını çözer).\\n"
 
-#: menu.sh:882
+#: menu.sh:878
 msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
 msgstr " * \\Z4i915.enable_guc=2\\Zn\\n    Intel grafik donanımında GuC firmware'yi etkinleştirin.(değer: 1,2 veya 3)\\n"
 
-#: menu.sh:883
+#: menu.sh:879
 msgid " * \\Z4i915.max_vfs=7\\Zn\\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\\n"
 msgstr " * \\Z4i915.max_vfs=7\\Zn\\n    Intel grafik donanımı için oluşturulabilecek maksimum sanal işlevler (VFs) sayısını ayarlayın.\\n"
 
-#: menu.sh:884
+#: menu.sh:880
 msgid " * \\Z4i915.modeset=0\\Zn\\n    Disable the kernel mode setting (KMS) feature of the i915 driver.\\n"
 msgstr " * \\Z4i915.modeset=0\\Zn\\n    i915 sürücüsünün KMS özelliğini devre dışı bırakın.\\n"
 
-#: menu.sh:885
+#: menu.sh:881
 msgid " * \\Z4apparmor.mode=complain\\Zn\\n    Set the AppArmor security module to complain mode.\\n"
 msgstr " * \\Z4apparmor.mode=complain\\Zn\\n    AppArmor güvenlik modülünü uyarı moduna ayarlayın.\\n"
 
-#: menu.sh:886
+#: menu.sh:882
 msgid " * \\Z4pci=nommconf\\Zn\\n    Disable the use of Memory-Mapped Configuration for PCI devices(use this parameter cautiously).\\n"
 msgstr " * \\Z4pci=nommconf\\Zn\\n    PCI cihazlar için bellek yönlendirme yapılandırmasını kullanmayı devre dışı bırakın(dikkatli bir şekilde bu parametreyi kullanın).\\n"
 
-#: menu.sh:887
+#: menu.sh:883
 msgid " * \\Z4consoleblank=300\\Zn\\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\\n"
 msgstr " * \\Z4consoleblank=300\\Zn\\n    300 saniye sonra etkisizleştirme ekranını otomatik olarak ayarlayın (saniye cinsinden ölçülü).\\n"
 
-#: menu.sh:888 menu.sh:897 menu.sh:1047 menu.sh:1056
+#: menu.sh:884 menu.sh:893 menu.sh:1043 menu.sh:1052
 msgid "Please enter the parameter key and value you need to add.\\n"
 msgstr "Eklemek istediğiniz parametre anahtarını ve değerini girin.\\n"
 
-#: menu.sh:915 menu.sh:1074
+#: menu.sh:911 menu.sh:1070
 msgid "Invalid parameter name, retry?"
 msgstr "Geçersiz parametre adı, yeniden denemek ister misiniz?"
 
-#: menu.sh:941
+#: menu.sh:937
 msgid "No user cmdline to remove"
 msgstr "Kullanıcı cmdline'ı kaldırılacak yok"
 
-#: menu.sh:949
+#: menu.sh:945
 msgid "Select cmdline to remove"
 msgstr "cmdline'ı kaldırmak için seçin"
 
-#: menu.sh:960
+#: menu.sh:956
 msgid "Note: (MAC will not be set to NIC, Only for activation services.)"
 msgstr "Nota: (MAC, NIC'e ayarlanmayacak, yalnızca etkinleştirme hizmetleri içindir.)"
 
-#: menu.sh:966
+#: menu.sh:962
 msgid "Random"
 msgstr "Rastgele"
 
-#: menu.sh:978
+#: menu.sh:974
 msgid "Invalid SN/MAC, retry?"
 msgstr "Geçersiz SN/MAC, yeniden denemek ister misiniz?"
 
-#: menu.sh:1029
+#: menu.sh:1025
 msgid "Add/edit a synoinfo item"
 msgstr "synoinfo öğesi ekle/düzenle"
 
-#: menu.sh:1030
+#: menu.sh:1026
 msgid "Show/Delete synoinfo items"
 msgstr "synoinfo öğelerini göster/sil"
 
-#: menu.sh:1033 menu.sh:1061 menu.sh:1073 menu.sh:1100 menu.sh:1108
+#: menu.sh:1029 menu.sh:1057 menu.sh:1069 menu.sh:1096 menu.sh:1104
 msgid "Synoinfo"
 msgstr "synoinfo"
 
-#: menu.sh:1040
+#: menu.sh:1036
 msgid "Commonly used synoinfo:\\n"
 msgstr "synoinfo kullanılan:\\n"
 
-#: menu.sh:1041
+#: menu.sh:1037
 msgid " * \\Z4support_apparmor=no\\Zn\\n    Disable apparmor.\\n"
 msgstr " * \\Z4support_apparmor=no\\Zn\\n    Apparmor'yi devre dışı bırakın.\\n"
 
-#: menu.sh:1042
+#: menu.sh:1038
 msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
 msgstr " * \\Z4maxdisks=??\\Zn\\n    Desteklenen disk sayısı.\\n"
 
-#: menu.sh:1043
+#: menu.sh:1039
 msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask(DT modeller için geçerli değil).\\n"
 
-#: menu.sh:1044
+#: menu.sh:1040
 msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask(DT modeller için geçerli değil).\\n"
 
-#: menu.sh:1045
+#: menu.sh:1041
 msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask(DT modeller için geçerli değil).\\n"
 
-#: menu.sh:1046
+#: menu.sh:1042
 msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
 msgstr " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
 
-#: menu.sh:1101
+#: menu.sh:1097
 msgid "No synoinfo entries to remove"
 msgstr "synoinfo girişi kaldırılacak yok"
 
-#: menu.sh:1109
+#: menu.sh:1105
 msgid "Select synoinfo entry to remove"
 msgstr "synoinfo girişi kaldırmak için seçin"
 
-#: menu.sh:1134 menu.sh:1277
+#: menu.sh:1130 menu.sh:1273
 msgid "The current network status is unknown, using the default mirror."
 msgstr "geçerli ağ durumu bilinmiyor, varsayılan çevrimiçi yuva kullanılıyor."
 
-#: menu.sh:1144
+#: menu.sh:1140
 msgid "Downloading old pat to extract synology .pat extractor..."
 msgstr "Eski pat'i indirerek synology .pat extractor'ını çıkartmak için..."
 
-#: menu.sh:1150 menu.sh:1299
+#: menu.sh:1146 menu.sh:1295
 msgid "Check internet or cache disk space."
 msgstr "İnternet veya önbellek disk alanını kontrol edin."
 
-#: menu.sh:1150 menu.sh:1299 menu.sh:3311
+#: menu.sh:1146 menu.sh:1295 menu.sh:3312
 msgid "(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "(Lütfen https://curl.se/libcurl/c/libcurl-errors.html adresinden hata açıklamasını kontrol ediniz.)"
 
-#: menu.sh:1187
+#: menu.sh:1183
 msgid "Uncompressed tar"
 msgstr "tar dosyası çıkartıldı"
 
-#: menu.sh:1191
+#: menu.sh:1187
 msgid "Compressed tar"
 msgstr "tar dosyası sıkıştırıldı"
 
-#: menu.sh:1195
+#: menu.sh:1191
 msgid "Encrypted"
 msgstr "Şifrelendi"
 
-#: menu.sh:1199
+#: menu.sh:1195
 msgid "Could not determine if pat file is encrypted or not, maybe corrupted, try again!"
 msgstr "pat dosyası şifrelenmiş mi değil mi belirlenemedi, dosya bozuk mu? tekrar deneyin!"
 
-#: menu.sh:1206 menu.sh:1316
+#: menu.sh:1202 menu.sh:1312
 msgid "Disassembling %s: "
 msgstr "%s çözülüyor: "
 
-#: menu.sh:1214
+#: menu.sh:1210
 msgid "Extractor cached."
 msgstr "Çıkarıcı önbelleğe alındı."
 
-#: menu.sh:1220 menu.sh:1224
+#: menu.sh:1216 menu.sh:1220
 msgid "Extracting ..."
 msgstr "Çıkarılıyor ..."
 
-#: menu.sh:1256
+#: menu.sh:1252
 msgid "The cache has been cleared. Please re 'Parse pat' before build."
 msgstr "Önbellek temizlendi. Lütfen 'Parse pat' yapmadan önce yeniden derle."
 
-#: menu.sh:1260
+#: menu.sh:1256
 msgid "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build."
 msgstr "Önbellek temizlendi. Lütfen 'Durumu geri yüklemeye çalış' yapmadan önce yeniden derle."
 
-#: menu.sh:1264
+#: menu.sh:1260
 msgid "The pat url is empty. Please re 'Choose a version' before build."
 msgstr "Pat url boş. Lütfen 'Bir sürüm seç' yapmadan önce yeniden derle."
 
-#: menu.sh:1269 menu.sh:3909
+#: menu.sh:1265 menu.sh:3907
 msgid "Cleaning cache ..."
 msgstr "Önbellek temizleniyor ..."
 
-#: menu.sh:1281
+#: menu.sh:1277
 msgid "Based on the current network situation, switch to %s mirror to downloading.\\n"
 msgstr "Şu anda ağ durumuna göre %s çekirdeğini kullanarak indirmeye geçiliyor.\\n"
 
-#: menu.sh:1284
+#: menu.sh:1280
 msgid "Downloading %s ...\\n"
 msgstr "%s indiriliyor ...\\n"
 
-#: menu.sh:1303
+#: menu.sh:1299
 msgid "%s cached."
 msgstr "%s önbelleğe alındı."
 
-#: menu.sh:1306
+#: menu.sh:1302
 msgid "Checking hash of %s: "
 msgstr "%s hash kontrolü: "
 
-#: menu.sh:1309
+#: menu.sh:1305
 msgid "md5 hash of pat not match, Please reget pat data from the version menu and try again!"
 msgstr "pat dosyasının md5 hash değeri eşleşmiyor, lütfen pat dosyasını versiyon menüsünden alıp tekrar deneyin!"
 
-#: menu.sh:1312 menu.sh:1328 menu.sh:1333
+#: menu.sh:1308 menu.sh:1324 menu.sh:1329
 msgid "OK"
 msgstr "TAMAM"
 
-#: menu.sh:1323
+#: menu.sh:1319
 msgid "Setting hash: "
 msgstr "Ayarlar hash: "
 
-#: menu.sh:1330
+#: menu.sh:1326
 msgid "Copying files: "
 msgstr "Dosyalar kopyalanıyor: "
 
-#: menu.sh:1352
+#: menu.sh:1348
 msgid "No disk space left, please clean the cache and try again!"
 msgstr "Disk alanı kalmadı, lütfen önbelleği temizleyin ve tekrar deneyin!"
 
-#: menu.sh:1367
+#: menu.sh:1363
 msgid "Cleaning ..."
 msgstr "Temizleniyor ..."
 
-#: menu.sh:1377 menu.sh:3908 menu.sh:3933 menu.sh:3980 menu.sh:3998 menu.sh:4080 menu.sh:4086 menu.sh:4092 menu.sh:4098 menu.sh:4104 menu.sh:4110 menu.sh:4116
+#: menu.sh:1373 menu.sh:3906 menu.sh:3931 menu.sh:3978 menu.sh:3996 menu.sh:4077 menu.sh:4083 menu.sh:4089 menu.sh:4095 menu.sh:4101 menu.sh:4107 menu.sh:4113
 msgid "Main menu"
 msgstr "Ana menü"
 
-#: menu.sh:1378
+#: menu.sh:1374
 msgid "Making ... ('ctrl + c' to exit)"
 msgstr "Yapılıyor ... ('ctrl + c' çıkmak için)"
 
-#: menu.sh:1403
+#: menu.sh:1399
 msgid "Alert"
 msgstr "Uyarı"
 
-#: menu.sh:1404
+#: menu.sh:1400
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "Yapılandırma değiştirildi, yükleyiciyi yeniden oluşturmak ister misiniz?"
 
-#: menu.sh:1419
+#: menu.sh:1415
 msgid "Upload dts file"
 msgstr "dts dosyasını yükle"
 
-#: menu.sh:1420
+#: menu.sh:1416
 msgid "Delete dts file"
 msgstr "dts dosyasını sil"
 
-#: menu.sh:1421
+#: menu.sh:1417
 msgid "Edit dts file"
 msgstr "dts dosyasını düzenle"
 
-#: menu.sh:1424 menu.sh:1434 menu.sh:1438 menu.sh:1456 menu.sh:1461 menu.sh:1480 menu.sh:1493 menu.sh:2866
+#: menu.sh:1420 menu.sh:1430 menu.sh:1434 menu.sh:1452 menu.sh:1457 menu.sh:1476 menu.sh:1489 menu.sh:2867
 msgid "Custom DTS"
 msgstr "Özel DTS"
 
-#: menu.sh:1425
+#: menu.sh:1421
 msgid "Custom dts: "
 msgstr "Özel dts: "
 
-#: menu.sh:1433
+#: menu.sh:1429
 msgid "Or upload the dts file to %s via DUFS, Will be automatically imported when building.\\n"
 msgstr "%s üzerinden dts dosyasını DUFS ile yükleyin, derleme sırasında otomatik olarak içe aktarılacaktır.\\n"
 
-#: menu.sh:1439
+#: menu.sh:1435
 msgid "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\\n(saved in /mnt/p3/users/)\\n"
 msgstr "Şu anda yalnızca dts format dosyaları desteklenmektedir. Lütfen yüklemeyi hazırlayın ve onaylamak için tıklayın.\\n(/mnt/p3/users/ klasöründe kaydedilmiştir)\\n"
 
-#: menu.sh:1455 menu.sh:1492
+#: menu.sh:1451 menu.sh:1488
 msgid "Not a valid dts file, please try again!"
 msgstr "Geçerli bir dts dosyası değil, lütfen tekrar deneyin!"
 
-#: menu.sh:1462
+#: menu.sh:1458
 msgid "A valid dts file, Automatically import at compile time."
 msgstr "Geçerli bir dts dosyası, derleme zamanında otomatik olarak içe aktarılır."
 
-#: menu.sh:1481
+#: menu.sh:1477
 msgid "No dts file to edit. Please upload first!"
 msgstr "Düzenlemek için hiçbir dts dosyası yok. Lütfen önce yükleyin!"
 
-#: menu.sh:1605
+#: menu.sh:1601
 msgid "Total of ports: %s\\n"
 msgstr "Toplam bağlantı noktası: %s\\n"
 
-#: menu.sh:1607
+#: menu.sh:1603
 msgid "Ports with color \\Z1red\\Zn as DUMMY, color \\Z2green\\Zn has drive connected."
 msgstr "\\Z1Kırmızı\\Zn renkli bağlantı noktaları DUMMY, \\Z2Yeşil\\Zn renkli bağlantı noktaları sürücü bağlı."
 
-#: menu.sh:1608 menu.sh:1652 menu.sh:2230
+#: menu.sh:1604 menu.sh:1648 menu.sh:2226
 msgid "No disk found!"
 msgstr "Disk bulunamadı!"
 
-#: menu.sh:1609 menu.sh:1621 menu.sh:1635 menu.sh:1651 menu.sh:1655 menu.sh:1656 menu.sh:1661 menu.sh:1665 menu.sh:1678 menu.sh:1680 menu.sh:1694 menu.sh:1698 menu.sh:1709 menu.sh:1721 menu.sh:1726 menu.sh:1743 menu.sh:1748 menu.sh:1758 menu.sh:1783
-#: menu.sh:1787 menu.sh:1794 menu.sh:1800 menu.sh:1821 menu.sh:1826 menu.sh:1836 menu.sh:1841 menu.sh:1870 menu.sh:1875 menu.sh:1885 menu.sh:1911 menu.sh:1916 menu.sh:1927 menu.sh:1932 menu.sh:1949 menu.sh:1954 menu.sh:1964 menu.sh:1983 menu.sh:1988
-#: menu.sh:1999 menu.sh:2004 menu.sh:2022 menu.sh:2027 menu.sh:2896 menu.sh:2923 menu.sh:2943 menu.sh:2959 menu.sh:2971 menu.sh:3005
+#: menu.sh:1605 menu.sh:1617 menu.sh:1631 menu.sh:1647 menu.sh:1651 menu.sh:1652 menu.sh:1657 menu.sh:1661 menu.sh:1674 menu.sh:1676 menu.sh:1690 menu.sh:1694 menu.sh:1705 menu.sh:1717 menu.sh:1722 menu.sh:1739 menu.sh:1744 menu.sh:1754 menu.sh:1779
+#: menu.sh:1783 menu.sh:1790 menu.sh:1796 menu.sh:1817 menu.sh:1822 menu.sh:1832 menu.sh:1837 menu.sh:1866 menu.sh:1871 menu.sh:1881 menu.sh:1907 menu.sh:1912 menu.sh:1923 menu.sh:1928 menu.sh:1945 menu.sh:1950 menu.sh:1960 menu.sh:1979 menu.sh:1984
+#: menu.sh:1995 menu.sh:2000 menu.sh:2018 menu.sh:2023 menu.sh:2897 menu.sh:2924 menu.sh:2944 menu.sh:2960 menu.sh:2972 menu.sh:3006
 msgid "Advanced"
 msgstr "Gelişmiş"
 
-#: menu.sh:1622
+#: menu.sh:1618
 msgid "No storage pool found!"
 msgstr "Depolama havuzu bulunamadı!"
 
-#: menu.sh:1633
+#: menu.sh:1629
 msgid "All storage pools are mounted under /mnt/DSM. Please check them yourself via shell/DUFS."
 msgstr "Tüm depolama havuzları /mnt/DSM altında bağlanmıştır. Lütfen bunları shell/DUFS aracılığıyla kendiniz kontrol edin."
 
-#: menu.sh:1634
+#: menu.sh:1630
 msgid "For encrypted volume / encrypted shared folder, please refer to https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC"
 msgstr "Şifrelenmiş bir disk veya paylaşım, https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC adresindeki yönergeleri takip ederek geri yüklenebilir."
 
-#: menu.sh:1662 menu.sh:1720 menu.sh:1926 menu.sh:1998
+#: menu.sh:1658 menu.sh:1716 menu.sh:1922 menu.sh:1994
 msgid "Warning:\\nThis operation is irreversible. Please backup important data. Do you want to continue?"
 msgstr "Uyarı:\\nBu işlem geri alınamaz. Lütfen önemli verileri yedekleyin. Devam etmek istiyor musunuz?"
 
-#: menu.sh:1666
+#: menu.sh:1662
 msgid "Warning:\\nThe current hds is in raid, do you still want to format them?"
 msgstr "Uyarı:\\nMevcut hds raid altında, hala formatlamak istiyor musunuz?"
 
-#: menu.sh:1679
+#: menu.sh:1675
 msgid "Formatting ..."
 msgstr "Formatlama ..."
 
-#: menu.sh:1681
+#: menu.sh:1677
 msgid "Formatting is complete."
 msgstr "Formatlama tamamlandı."
 
-#: menu.sh:1695
+#: menu.sh:1691
 msgid "Please via %s to download the scbk,\\nAnd unzip it and back it up in order by file name."
 msgstr "Lütfen %s ile scbk'yi indirin,\\nSıkıştırmayı açın ve dosya adlarına göre sırayla yedekleyin."
 
-#: menu.sh:1699
+#: menu.sh:1695
 msgid "Please unzip it and back it up in order by file name."
 msgstr "Sıkıştırmayı açın ve dosya adlarına göre sırayla yedekleyin."
 
-#: menu.sh:1703
+#: menu.sh:1699
 msgid "\\Z1No scbk found!\\Zn\\n"
 msgstr "\\Z1scbk bulunamadı!\\Zn\\n"
 
-#: menu.sh:1705 menu.sh:2403
+#: menu.sh:1701 menu.sh:2399
 msgid "Please do as follows:\\n"
 msgstr "Aşağıdaki gibi yapın:\\n"
 
-#: menu.sh:1706
+#: menu.sh:1702
 msgid " 1. Add synoconfbkp in addons and rebuild.\\n"
 msgstr " 1. addons'a synoconfbkp ekleyin ve yeniden oluşturun.\\n"
 
-#: menu.sh:1707
+#: menu.sh:1703
 msgid " 2. Normal use.\\n"
 msgstr " 2. Normal kullanım.\\n"
 
-#: menu.sh:1708 menu.sh:2406
+#: menu.sh:1704 menu.sh:2402
 msgid " 3. Reboot into RR and go to this option.\\n"
 msgstr " 3. RR'ye yeniden başlatın ve bu seçeneğe gidin.\\n"
 
-#: menu.sh:1719
+#: menu.sh:1715
 msgid "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\\n"
 msgstr "Bu özellik, tüm disklerin ilk bölümünden VERSION dosyasını kaldırarak yüklemeyi geri almanıza olanak tanır.\\n"
 
-#: menu.sh:1727 menu.sh:1759 menu.sh:1837 menu.sh:1886 menu.sh:1933 menu.sh:1965 menu.sh:2005 menu.sh:2141
+#: menu.sh:1723 menu.sh:1755 menu.sh:1833 menu.sh:1882 menu.sh:1929 menu.sh:1961 menu.sh:2001 menu.sh:2137
 msgid "No DSM system partition(md0) found!\\nPlease insert all disks before continuing."
 msgstr "DSM sistem disk bölümü(md0) bulunamadı!\\nDevam etmeden önce tüm diskleri ekleyin."
 
-#: menu.sh:1744 menu.sh:1950
+#: menu.sh:1740 menu.sh:1946
 msgid "Removing ..."
 msgstr "Kaldırılıyor ..."
 
-#: menu.sh:1746
+#: menu.sh:1742
 msgid "Remove VERSION file for DSM system partition(md0) completed."
 msgstr "DSM sistem bölümü için VERSION dosyası kaldırıldı."
 
-#: menu.sh:1747
+#: menu.sh:1743
 msgid "Remove VERSION file for DSM system partition(md0) failed."
 msgstr "DSM sistem bölümü için VERSION dosyası kaldırılamadı."
 
-#: menu.sh:1784
+#: menu.sh:1780
 msgid "All existing users have been disabled. Please try adding new user."
 msgstr "Mevcut tüm kullanıcılar devre dışı bırakıldı. Lütfen yeni kullanıcı eklemeyi deneyin."
 
-#: menu.sh:1788
+#: menu.sh:1784
 msgid "Choose a user name"
 msgstr "Kullanıcı adı seçin"
 
-#: menu.sh:1795
+#: menu.sh:1791
 msgid "Type a new password for user '%s'"
 msgstr "'%s' kullanıcısı için yeni bir şifre girin"
 
-#: menu.sh:1801
+#: menu.sh:1797
 msgid "Invalid password"
 msgstr "Geçersiz şifre"
 
-#: menu.sh:1822
+#: menu.sh:1818
 msgid "Resetting ..."
 msgstr "Sıfırlanıyor ..."
 
-#: menu.sh:1824
+#: menu.sh:1820
 msgid "Reset password for user '%s' completed."
 msgstr "Kullanıcı '%s' için şifre sıfırlama işlemi tamamlandı."
 
-#: menu.sh:1825
+#: menu.sh:1821
 msgid "Reset password for user '%s' failed."
 msgstr "Kullanıcı '%s' için şifre sıfırlama işlemi başarısız."
 
-#: menu.sh:1840
+#: menu.sh:1836
 msgid "Add to administrators group by default"
 msgstr "Varsayılan olarak yöneticiler grubuna ekleniyor"
 
-#: menu.sh:1871
+#: menu.sh:1867
 msgid "Adding ..."
 msgstr "Ekleniyor ..."
 
-#: menu.sh:1873
+#: menu.sh:1869
 msgid "Add new user '%s' completed."
 msgstr "Yeni kullanıcı '%s' ekleniyor."
 
-#: menu.sh:1874
+#: menu.sh:1870
 msgid "Add new user '%s' failed."
 msgstr "Yeni kullanıcı '%s' eklenemedi."
 
-#: menu.sh:1912 menu.sh:1984
+#: menu.sh:1908 menu.sh:1980
 msgid "Enabling ..."
 msgstr "Etkinleştiriliyor ..."
 
-#: menu.sh:1914
+#: menu.sh:1910
 msgid "Force enable Telnet&SSH of DSM system completed."
 msgstr "DSM sisteminin Telnet&SSH'sini zorla etkinleştir."
 
-#: menu.sh:1915
+#: menu.sh:1911
 msgid "Force enable Telnet&SSH of DSM system failed."
 msgstr "DSM sisteminin Telnet&SSH'sini zorla etkinleştirme başarısız."
 
-#: menu.sh:1925
+#: menu.sh:1921
 msgid "This feature will removing the blocked ip database from the first partition of all disks.\\n"
 msgstr "Bu özellik tüm disklerin ilk bölümünden engellenen ip veritabanını siler.\\n"
 
-#: menu.sh:1952
+#: menu.sh:1948
 msgid "Removing the blocked ip database completed."
 msgstr "DSM sisteminin engellenen ip veritabanı kaldırıldı."
 
-#: menu.sh:1953
+#: menu.sh:1949
 msgid "Removing the blocked ip database failed."
 msgstr "DSM sisteminin engellenen ip veritabanı kaldırılamadı."
 
-#: menu.sh:1986
+#: menu.sh:1982
 msgid "Disable all scheduled tasks of DSM completed."
 msgstr "DSM sisteminin tüm zamanlanmış görevleri devre dışı bırakıldı."
 
-#: menu.sh:1987
+#: menu.sh:1983
 msgid "Disable all scheduled tasks of DSM failed."
 msgstr "DSM sisteminin tüm zamanlanmış görevleri devre dışı bırakılamadı."
 
-#: menu.sh:1997
+#: menu.sh:1993
 msgid "This option will clear all customized settings of the network card and restore them to the default state.\\n"
 msgstr "Bu seçenek, ağ kartının tüm özelleştirilmiş ayarlarını temizleyecek ve bunları varsayılan durumuna geri yükleyecektir.\\n"
 
-#: menu.sh:2023
+#: menu.sh:2019
 msgid "Recovering ..."
 msgstr "Kurtarılıyor ..."
 
-#: menu.sh:2025
+#: menu.sh:2021
 msgid "Initialize DSM network settings completed."
 msgstr "DSM ağ ayarlarını başlat."
 
-#: menu.sh:2026
+#: menu.sh:2022
 msgid "Initialize DSM network settings failed."
 msgstr "DSM ağ ayarlarını başlatma başarısız."
 
-#: menu.sh:2041 menu.sh:2056 menu.sh:2071 menu.sh:2077 menu.sh:2100 menu.sh:2135 menu.sh:2140 menu.sh:2149 menu.sh:2160 menu.sh:2183 menu.sh:2191 menu.sh:2197 menu.sh:2212 menu.sh:2229 menu.sh:2234 menu.sh:2241 menu.sh:2248 menu.sh:2254 menu.sh:2324
-#: menu.sh:2328 menu.sh:2331 menu.sh:2343 menu.sh:2353 menu.sh:2425 menu.sh:2432 menu.sh:2446 menu.sh:2449 menu.sh:2457 menu.sh:2461 menu.sh:2480 menu.sh:2501 menu.sh:2517 menu.sh:2555 menu.sh:2575 menu.sh:2587 menu.sh:2622 menu.sh:2647 menu.sh:2658
-#: menu.sh:2685 menu.sh:2689 menu.sh:2743 menu.sh:2756 menu.sh:2780 menu.sh:2784 menu.sh:2834 menu.sh:3119 menu.sh:3148 menu.sh:3221
+#: menu.sh:2037 menu.sh:2052 menu.sh:2067 menu.sh:2073 menu.sh:2096 menu.sh:2131 menu.sh:2136 menu.sh:2145 menu.sh:2156 menu.sh:2179 menu.sh:2187 menu.sh:2193 menu.sh:2208 menu.sh:2225 menu.sh:2230 menu.sh:2237 menu.sh:2244 menu.sh:2250 menu.sh:2320
+#: menu.sh:2324 menu.sh:2327 menu.sh:2339 menu.sh:2349 menu.sh:2421 menu.sh:2428 menu.sh:2442 menu.sh:2445 menu.sh:2453 menu.sh:2457 menu.sh:2476 menu.sh:2497 menu.sh:2513 menu.sh:2551 menu.sh:2571 menu.sh:2583 menu.sh:2618 menu.sh:2643 menu.sh:2654
+#: menu.sh:2681 menu.sh:2685 menu.sh:2739 menu.sh:2752 menu.sh:2776 menu.sh:2780 menu.sh:2835 menu.sh:3120 menu.sh:3149 menu.sh:3222
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: menu.sh:2042 menu.sh:3094
+#: menu.sh:2038 menu.sh:3095
 msgid "Choose a language"
 msgstr "Choose a language"
 
-#: menu.sh:2057 menu.sh:3095
+#: menu.sh:2053 menu.sh:3096
 msgid "Choose a timezone"
 msgstr "Zaman dilimi seçin"
 
-#: menu.sh:2072
+#: menu.sh:2068
 msgid "Choose a layout"
 msgstr "Düzen seçin"
 
-#: menu.sh:2078
+#: menu.sh:2074
 msgid "Choice a keymap"
 msgstr "Anahtar haritası seçin"
 
-#: menu.sh:2136
+#: menu.sh:2132
 msgid "Trying to recover an installed DSM system ..."
 msgstr "DSM sistemini geri yüklemeye çalışıyor ..."
 
-#: menu.sh:2150
+#: menu.sh:2146
 msgid "Mount DSM system partition(md0) failed!\\nPlease insert all disks before continuing."
 msgstr "DSM sistem disk bölümü(md0) başarısız!\\nDevam etmeden önce tüm diskleri ekleyin."
 
-#: menu.sh:2161
+#: menu.sh:2157
 msgid "Checking for backup of user's configuration for bootloader ..."
 msgstr "bootloader için kullanıcı yapılandırmasının yedeklenmesi kontrol ediliyor ..."
 
-#: menu.sh:2184
+#: menu.sh:2180
 msgid "Found a backup of the user's configuration, and restored it. Please rebuild and boot."
 msgstr "Kullanıcı yapılandırmasının yedeklenmesi bulundu ve geri yüklendi. Lütfen yeniden derleyin ve başlatın."
 
-#: menu.sh:2192
+#: menu.sh:2188
 msgid "Checking for installed DSM system ..."
 msgstr "DSM sisteminin yüklü olup olmadığı kontrol ediliyor ..."
 
-#: menu.sh:2198
+#: menu.sh:2194
 msgid "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build."
 msgstr "Yüklü DSM sistem bulunamadı veya sistem bozuk ve geri yüklenemez. Lütfen modeli ve yeniden derlemeyi seçin."
 
-#: menu.sh:2213
+#: menu.sh:2209
 msgid "Found an installed DSM system and restored it. Please rebuild and boot."
 msgstr "Yüklü DSM sistem bulundu ve geri yüklendi. Lütfen yeniden derleyin ve başlatın."
 
-#: menu.sh:2235
+#: menu.sh:2231
 msgid "Choose a disk to clone to"
 msgstr "Disk seçin"
 
-#: menu.sh:2242
+#: menu.sh:2238
 msgid "No disk selected!"
 msgstr "Disk seçilmedi!"
 
-#: menu.sh:2249
+#: menu.sh:2245
 msgid "Disk %s size is less than 1GB and cannot be cloned!"
 msgstr "%s disk boyutu 1GB'den küçük ve klonlanamaz!"
 
-#: menu.sh:2253
+#: menu.sh:2249
 msgid "Warning:\\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \\nDo you want to continue?"
 msgstr "Uyarı:\\nDisk %s formatlandırılacak ve bootloader'a yazılacak. Lütfen önemli verilerin yedeklendiğine emin olun. \\nDevam etmek istiyor musunuz?"
 
-#: menu.sh:2293
+#: menu.sh:2289
 msgid "Can't mount %s."
 msgstr "%s bağlanamıyor."
 
-#: menu.sh:2307
+#: menu.sh:2303
 msgid "Cloning failed due to insufficient remaining disk space on the selected hard drive."
 msgstr "Seçilen sabit diskte yeterli kalan disk alanı bulunamadığı için kopyalama işlemi başarısız oldu."
 
-#: menu.sh:2316
+#: menu.sh:2312
 msgid "Can't copy to %s."
 msgstr "%s'e kopyalanamıyor."
 
-#: menu.sh:2325
+#: menu.sh:2321
 msgid "Cloning ..."
 msgstr "Kopyalanıyor ..."
 
-#: menu.sh:2332
+#: menu.sh:2328
 msgid "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\\nReboot?"
 msgstr "%s'e yükleyici kopyalandı, lütfen mevcut yükleyici diski kaldırın!\\nYeniden başlatılsın mı?"
 
-#: menu.sh:2344
+#: menu.sh:2340
 msgid "Download"
 msgstr "İndir"
 
-#: menu.sh:2344
+#: menu.sh:2340
 msgid "Cancel"
 msgstr "İptal"
 
-#: menu.sh:2352
+#: menu.sh:2348
 msgid "Please via %s to download the system.txt."
 msgstr "%s aracılığıyla sistem.txt indirin."
 
-#: menu.sh:2382
+#: menu.sh:2378
 msgid "Find the system logs!\\n"
 msgstr "Sistem günlüklerini bul!\\n"
 
-#: menu.sh:2382
+#: menu.sh:2378
 msgid "Not Find system logs!\\n"
 msgstr "Sistem günlükleri bulunamadı!\\n"
 
-#: menu.sh:2391
+#: menu.sh:2387
 msgid "Find the pstore logs!\\n"
 msgstr "pstore günlüklerini bul!\\n"
 
-#: menu.sh:2391
+#: menu.sh:2387
 msgid "Not Find pstore logs!\\n"
 msgstr "pstore günlükleri bulunamadı!\\n"
 
-#: menu.sh:2400
+#: menu.sh:2396
 msgid "Find the addons logs!\\n"
 msgstr "addons günlüklerini bul!\\n"
 
-#: menu.sh:2402
+#: menu.sh:2398
 msgid "Not Find addons logs!\\n"
 msgstr "addons günlükleri bulunamadı!\\n"
 
-#: menu.sh:2404
+#: menu.sh:2400
 msgid " 1. Add dbgutils in addons and rebuild.\\n"
 msgstr " 1. dbgutils ekler ve yeniden derleyin.\\n"
 
-#: menu.sh:2405
+#: menu.sh:2401
 msgid " 2. Wait 10 minutes after booting.\\n"
 msgstr " 2. Başlatıldıktan sonra 10 dakika bekleyin.\\n"
 
-#: menu.sh:2419
+#: menu.sh:2415
 msgid "Please via %s to download the logs,\\nAnd go to github to create an issue and upload the logs.\\n"
 msgstr "Lütfen %s ile günlükleri indirin,\\nGithub'a gidin ve bir sorun oluşturun ve günlükleri yükleyin.\\n"
 
-#: menu.sh:2422
+#: menu.sh:2418
 msgid "Please go to github to create an issue and upload the logs.\\n"
 msgstr "Lütfen Github'a gidin ve bir sorun oluşturun ve günlükleri yükleyin.\\n"
 
-#: menu.sh:2433
+#: menu.sh:2429
 msgid "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?"
 msgstr "Bu seçenek yalnızca opkg paket yönetimi yükler, bu sayede daha fazla araç ve hata ayıklama için kullanabilirsiniz. Devam etmek istiyor musunuz?"
 
-#: menu.sh:2447
+#: menu.sh:2443
 msgid "opkg installing ..."
 msgstr "opkg yükleniyor..."
 
-#: menu.sh:2448
+#: menu.sh:2444
 msgid "opkg install failed."
 msgstr "opkg yükleme başarısız."
 
-#: menu.sh:2448
+#: menu.sh:2444
 msgid "opkg install complete."
 msgstr "opkg yükleme tamamlandı."
 
-#: menu.sh:2458
+#: menu.sh:2454
 msgid "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?"
 msgstr "Uyarı:\\nİşlemi ortasında sonlandırmayın, aksi taktirde RR'nin hasar görebilir. Devam etmek istiyor musunuz?"
 
-#: menu.sh:2462
+#: menu.sh:2458
 msgid "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
 msgstr "Kayıt yapılıyor...\\n(Genellikle 5-10 dakika sürer, lütfen sabırlı olun ve bekleyin.)"
 
-#: menu.sh:2481
+#: menu.sh:2477
 msgid "initrd-rr file format error!"
 msgstr "initrd-rr dosya biçimi hatası!"
 
-#: menu.sh:2502
+#: menu.sh:2498
 msgid "Save is complete."
 msgstr "Kayıt tamamlandı."
 
-#: menu.sh:2515
+#: menu.sh:2511
 msgid "Set to %s: (Delete if empty)"
 msgstr "%s olarak ayarlandı: (Boş ise silin)"
 
-#: menu.sh:2556 menu.sh:2623 menu.sh:2690 menu.sh:2785
+#: menu.sh:2552 menu.sh:2619 menu.sh:2686 menu.sh:2781
 msgid "Setting ..."
 msgstr "Ayarlanıyor ..."
 
-#: menu.sh:2576
+#: menu.sh:2572
 msgid "Scanning ..."
 msgstr "Taranıyor ..."
 
-#: menu.sh:2579
+#: menu.sh:2575
 msgid "Scanned SSIDs:\\n"
 msgstr "Taranan SSID'ler:\\n"
 
-#: menu.sh:2648
+#: menu.sh:2644
 msgid "Please enter a proxy server url.(e.g., %s)"
 msgstr "Lütfen bir proxy sunucu url'si giriniz.(örn., %s)"
 
-#: menu.sh:2659
+#: menu.sh:2655
 msgid "Invalid proxy server url, continue?"
 msgstr "Geçersiz proxy sunucu url'si, devam etsin mi?"
 
-#: menu.sh:2686
+#: menu.sh:2682
 msgid "New password: (Empty for default value 'rr')"
 msgstr "Yeni şifre: (Varsayılan değer 'rr' olarak boş bırakabilirsiniz)"
 
-#: menu.sh:2742
+#: menu.sh:2738
 msgid "password for root restored."
 msgstr "root şifresi geri yüklendi."
 
-#: menu.sh:2742
+#: menu.sh:2738
 msgid "password for root changed."
 msgstr "root şifresi değiştirildi."
 
-#: menu.sh:2751
+#: menu.sh:2747
 msgid "Please fill in a number between 0-65535: (Empty for default value.)"
 msgstr "Lütfen 0-65535 arasında bir sayı girin: (Varsayılan değer olarak boş bırakabilirsiniz.)"
 
-#: menu.sh:2781
+#: menu.sh:2777
 msgid "Invalid %s port number, retry?"
 msgstr "%s bağlantı noktası numarası geçersiz, tekrar dene?"
 
-#: menu.sh:2833
+#: menu.sh:2834
 msgid "Ports for TTYD/DUFS/HTTP restored."
 msgstr "TTYD/DUFS/HTTP bağlantı noktaları geri yüklendi."
 
-#: menu.sh:2833
+#: menu.sh:2834
 msgid "Ports for TTYD/DUFS/HTTP changed."
 msgstr "TTYD/DUFS/HTTP bağlantı noktaları değiştirildi."
 
-#: menu.sh:2858
+#: menu.sh:2859
 msgid "DSM rd compression:"
 msgstr "DSM rd sıkıştırması:"
 
-#: menu.sh:2859
+#: menu.sh:2860
 msgid "Switch LKM version:"
 msgstr "LKM sürümü değiştir:"
 
-#: menu.sh:2860
+#: menu.sh:2861
 msgid "HDD sort(hotplug):"
 msgstr "HDD sıralama(hotplug):"
 
-#: menu.sh:2862
+#: menu.sh:2863
 msgid "Show/modify the current pat data"
 msgstr "Geçerli pat verilerini göster/değiştir"
 
-#: menu.sh:2863
+#: menu.sh:2864
 msgid "Switch SATADOM mode:"
 msgstr "SATADOM modu değiştir:"
 
-#: menu.sh:2868
+#: menu.sh:2869
 msgid "Timeout of boot wait:"
 msgstr "Boot bekleme zaman aşımı:"
 
-#: menu.sh:2870
+#: menu.sh:2871
 msgid "Timeout of get IP in boot:"
 msgstr "Bootta IP alınması zaman aşımı:"
 
-#: menu.sh:2871
+#: menu.sh:2872
 msgid "Kernel switching method:"
 msgstr "Kernel değiştirme yöntemi:"
 
-#: menu.sh:2876
+#: menu.sh:2877
 msgid "Reboot on kernel panic:"
 msgstr "Kernel panic yeniden başlat:"
 
-#: menu.sh:2878
+#: menu.sh:2879
 msgid "Use EMMC as the system disk:"
 msgstr "Sistem disk olarak EMMC kullan:"
 
-#: menu.sh:2881
+#: menu.sh:2882
 msgid "Show disks information"
 msgstr "Disk bilgilerini göster"
 
-#: menu.sh:2882
+#: menu.sh:2883
 msgid "Mounting DSM storage pool"
 msgstr "DSM depolama havuzu bağlanıyor"
 
-#: menu.sh:2883
+#: menu.sh:2884
 msgid "Format disk(s) # Without loader disk"
 msgstr "Disk(leri) biçir # Loader diski olmadan"
 
-#: menu.sh:2884
+#: menu.sh:2885
 msgid "Download DSM config backup files"
 msgstr "DSM yapılandırma yedek dosyalarını indir"
 
-#: menu.sh:2885
+#: menu.sh:2886
 msgid "Allow downgrade installation"
 msgstr "DSM sistemini geri yüklemeye izin ver"
 
-#: menu.sh:2886
+#: menu.sh:2887
 msgid "Reset DSM system password"
 msgstr "DSM sistem şifresini sıfırla"
 
-#: menu.sh:2887
+#: menu.sh:2888
 msgid "Add a new user to DSM system"
 msgstr "DSM sistemine yeni bir kullanıcı ekle"
 
-#: menu.sh:2888
+#: menu.sh:2889
 msgid "Force enable Telnet&SSH of DSM system"
 msgstr "DSM sisteminin Telnet&SSH'sini zorla etkinleştir"
 
-#: menu.sh:2889
+#: menu.sh:2890
 msgid "Remove the blocked IP database of DSM"
 msgstr "DSM'nin engellenen IP veritabanını kaldır"
 
-#: menu.sh:2890
+#: menu.sh:2891
 msgid "Disable all scheduled tasks of DSM"
 msgstr "DSM sisteminin tüm zamanlanmış görevlerini devre dışı bırak"
 
-#: menu.sh:2891
+#: menu.sh:2892
 msgid "Initialize DSM network settings"
 msgstr "DSM ağ ayarlarını başlat"
 
-#: menu.sh:2897
+#: menu.sh:2898
 msgid "Advanced option"
 msgstr "Gelişmiş seçenek"
 
-#: menu.sh:2922
+#: menu.sh:2923
 msgid "pat: (editable)"
 msgstr "pat: (düzenlenebilir)"
 
-#: menu.sh:2944
+#: menu.sh:2945
 msgid "Choose a mode(Only supported for kernel version 4)"
 msgstr "Modu seçin(Yalnızca kernel sürümü 4 desteklenir)"
 
-#: menu.sh:2960 menu.sh:2972 menu.sh:3006
+#: menu.sh:2961 menu.sh:2973 menu.sh:3007
 msgid "Choose a time(seconds)"
 msgstr "Zamanı seçin(saniye)"
 
-#: menu.sh:3096
+#: menu.sh:3097
 msgid "Choose a keymap"
 msgstr "Klavye haritası seçin"
 
-#: menu.sh:3097
+#: menu.sh:3098
 msgid "Show QR logo:"
 msgstr "QR logo göster:"
 
-#: menu.sh:3098
+#: menu.sh:3099
 msgid "Custom patch script # Developer"
 msgstr "Özel düzeltme betiği # Geliştirici"
 
-#: menu.sh:3099
+#: menu.sh:3100
 msgid "Edit user config file manually"
 msgstr "Kullanıcı yapılandırma dosyasını manuel olarak düzenle"
 
-#: menu.sh:3100
+#: menu.sh:3101
 msgid "Edit grub.cfg file manually"
 msgstr "Grub.cfg dosyasını manuel olarak düzenle"
 
-#: menu.sh:3102
+#: menu.sh:3103
 msgid "Try to recovery a installed DSM system"
 msgstr "DSM sistemini geri yüklemeyi dene"
 
-#: menu.sh:3103
+#: menu.sh:3104
 msgid "Clone bootloader disk to another disk"
 msgstr "Bootloader diskini başka bir diskine kopyala"
 
-#: menu.sh:3104
+#: menu.sh:3105
 msgid "System Environment Report"
 msgstr "Sistem ortam raporu"
 
-#: menu.sh:3105
+#: menu.sh:3106
 msgid "Report bugs to the author"
 msgstr "Hataları yazara bildirin"
 
-#: menu.sh:3106
+#: menu.sh:3107
 msgid "Install development tools"
 msgstr "Geliştirme araçlarını kur"
 
-#: menu.sh:3107
+#: menu.sh:3108
 msgid "Save modifications of '/opt/rr'"
 msgstr "'/opt/rr' dizinini kaydet"
 
-#: menu.sh:3108
+#: menu.sh:3109
 msgid "Set static IP"
 msgstr "Sabit IP ayarla"
 
-#: menu.sh:3109
+#: menu.sh:3110
 msgid "Set wireless account"
 msgstr "Kablosuz hesap ayarla"
 
-#: menu.sh:3111
+#: menu.sh:3112
 msgid "Set global proxy"
 msgstr "Genel proxy ayarla"
 
-#: menu.sh:3112
+#: menu.sh:3113
 msgid "Set github proxy"
 msgstr "Github proxy ayarla"
 
-#: menu.sh:3113
+#: menu.sh:3114
 msgid "Change root password # Only RR"
 msgstr "root şifresini değiştir # Yalnızca RR"
 
-#: menu.sh:3114
+#: menu.sh:3115
 msgid "Change ports of TTYD/DUFS/HTTP"
 msgstr "TTYD/DUFS/HTTP bağlantı noktalarını değiştir"
 
-#: menu.sh:3115
+#: menu.sh:3116
 msgid "Vigorously miracle"
 msgstr "Şiddetli mucize"
 
-#: menu.sh:3120
+#: menu.sh:3121
 msgid "Settings option"
 msgstr "Ayarlar seçeneği"
 
-#: menu.sh:3143
+#: menu.sh:3144
 msgid "This option provides information about custom patch scripts for the ramdisk.\\n"
 msgstr "Bu seçenek, ramdiskin özel düzeltme betikleri hakkında bilgi sağlar.\\n"
 
-#: menu.sh:3145
+#: menu.sh:3146
 msgid "These scripts are executed before the ramdisk is packaged.\\n"
 msgstr "Bu betikler, ramdiskin paketlenmeden önce çalıştırılır.\\n"
 
-#: menu.sh:3146
+#: menu.sh:3147
 msgid "You can place your custom scripts in the following location:\\n"
 msgstr "Özel betiklerinizi aşağıdaki konumda yerleştirebilirsiniz:\\n"
 
-#: menu.sh:3147
+#: menu.sh:3148
 msgid "/mnt/p3/scripts/*.sh\\n"
 msgstr "/mnt/p3/scripts/*.sh\\n"
 
-#: menu.sh:3241 menu.sh:3342 menu.sh:3483 menu.sh:3548 menu.sh:3614 menu.sh:3671
+#: menu.sh:3242 menu.sh:3343 menu.sh:3483 menu.sh:3548 menu.sh:3613 menu.sh:3670
 msgid "Update %s"
 msgstr "%s güncelle"
 
-#: menu.sh:3242
+#: menu.sh:3243
 msgid "Checking last version ..."
 msgstr "Son versiyonu kontrol ediliyor..."
 
-#: menu.sh:3259
+#: menu.sh:3260
 msgid "Error checking new version."
 msgstr "Yeni versiyon kontrol edilirken hata oluştu."
 
-#: menu.sh:3272
+#: menu.sh:3273
 msgid "No new version.\\n"
 msgstr "Yeni versiyon yok.\\n"
 
-#: menu.sh:3276
+#: menu.sh:3277
 msgid "Actual version is %s.\\nForce update?"
 msgstr "Aktif versiyon %s.\\nGüncellemek istiyor musunuz?"
 
-#: menu.sh:3287
+#: menu.sh:3288
 msgid "Latest: %s\\n"
 msgstr "Son: %s\\n"
 
-#: menu.sh:3291
+#: menu.sh:3292
 msgid "Do you want to update?"
 msgstr "Güncellemek istiyor musunuz?"
 
-#: menu.sh:3311
+#: menu.sh:3312
 msgid "Error downloading new version."
 msgstr "Yeni versiyon indirilirken hata oluştu."
 
-#: menu.sh:3321
+#: menu.sh:3322
 msgid "Downloading ..."
 msgstr "İndiriliyor ..."
 
-#: menu.sh:3342 menu.sh:3466 menu.sh:3744 menu.sh:3775
+#: menu.sh:3343 menu.sh:3466 menu.sh:3742 menu.sh:3773
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:3343 menu.sh:3484 menu.sh:3549 menu.sh:3615 menu.sh:3672
+#: menu.sh:3344 menu.sh:3484 menu.sh:3549 menu.sh:3614 menu.sh:3671
 msgid "Extracting update file ..."
 msgstr "Güncelleme dosyası çıkarılıyor ..."
 
-#: menu.sh:3354 menu.sh:3398 menu.sh:3495 menu.sh:3560 menu.sh:3626 menu.sh:3683
+#: menu.sh:3355 menu.sh:3399 menu.sh:3495 menu.sh:3560 menu.sh:3625 menu.sh:3682
 msgid "Error extracting update file."
 msgstr "Güncelleme dosyası çıkarılırken hata oluştu."
 
-#: menu.sh:3366
+#: menu.sh:3367
 msgid "Checksum do not match!"
 msgstr "Sağlama kontrolü eşleşmiyor!"
 
-#: menu.sh:3379
+#: menu.sh:3380
 msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
 msgstr "Geçerli sürüm, en son güncelleme.zip'e yükseltilmesini desteklemiyor. Lütfen başlatıcı diskini yeniden oluşturun!"
 
-#: menu.sh:3420 menu.sh:3517 menu.sh:3574 menu.sh:3640 menu.sh:3697
+#: menu.sh:3421 menu.sh:3517 menu.sh:3574 menu.sh:3639 menu.sh:3696
 msgid "Failed to install due to insufficient remaining disk space on local hard drive, consider reallocate your disk %s with at least %sM."
 msgstr "Yerel sabit sürücüde kalan disk alanının yetersiz olması nedeniyle yükleme başarısız oldu; %s diskinizi en az %sM ile yeniden tahsis etmeyi düşünün."
 
-#: menu.sh:3430
+#: menu.sh:3431
 msgid "Installing new files ..."
 msgstr "Yeni dosyalar yükleniyor ..."
 
-#: menu.sh:3466 menu.sh:3532 menu.sh:3598 menu.sh:3655 menu.sh:3721
+#: menu.sh:3466 menu.sh:3532 menu.sh:3597 menu.sh:3654 menu.sh:3719
 msgid "%s updated with success!\\n"
 msgstr "%s başarıyla güncellendi!\\n"
 
@@ -1497,166 +1497,166 @@ msgstr "%s başarıyla güncellendi!\\n"
 msgid "Reboot?"
 msgstr "Yeniden başlatılsın mı?"
 
-#: menu.sh:3473 menu.sh:4071 menu.sh:4099
+#: menu.sh:3473 menu.sh:4068 menu.sh:4096
 msgid "Reboot to RR"
 msgstr "RR'ye yeniden başlat"
 
-#: menu.sh:3614 menu.sh:3655 menu.sh:3747 menu.sh:3806 menu.sh:3811
+#: menu.sh:3613 menu.sh:3654 menu.sh:3745 menu.sh:3804 menu.sh:3809
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:3671 menu.sh:3721 menu.sh:3748 menu.sh:3818 menu.sh:3823
+#: menu.sh:3670 menu.sh:3719 menu.sh:3746 menu.sh:3816 menu.sh:3821
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:3743 menu.sh:3768
+#: menu.sh:3741 menu.sh:3766
 msgid "All"
 msgstr "Tümü"
 
-#: menu.sh:3749
+#: menu.sh:3747
 msgid "Local upload"
 msgstr "Yerel yükleme"
 
-#: menu.sh:3750
+#: menu.sh:3748
 msgid "Pre Release:"
 msgstr "Ön Sürüm:"
 
-#: menu.sh:3755 menu.sh:3831
+#: menu.sh:3753 menu.sh:3829
 msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download.\\n"
 msgstr "/tmp/ dizinine update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip dosyalarını elle yüklemek, indirmeyi atlayacaktır.\\n"
 
-#: menu.sh:3782 menu.sh:3794 menu.sh:3806 menu.sh:3818
+#: menu.sh:3780 menu.sh:3792 menu.sh:3804 menu.sh:3816
 msgid "No longer supports update %s separately. Please choose to update All/RR"
 msgstr "%s güncellemesini ayrı olarak desteklemez. Lütfen tümü/RR güncellemesini seçin."
 
-#: menu.sh:3837
+#: menu.sh:3835
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
 msgstr "Github'daki ek dosyanın adı ile ek dosyanın adı tutarlı kalmalıdır.\\n"
 
-#: menu.sh:3838
+#: menu.sh:3836
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "update*.zip güncellemeyi yükleyecektir.\\n"
 
-#: menu.sh:3839
+#: menu.sh:3837
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "addons*.zip eklentileri güncellemeyi yükleyecektir.\\n"
 
-#: menu.sh:3840
+#: menu.sh:3838
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "modules*.zip modülleri güncellemeyi yükleyecektir.\\n"
 
-#: menu.sh:3841
+#: menu.sh:3839
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "rp-lkms*.zip LKMs'i güncellemeyi yükleyecektir.\\n"
 
-#: menu.sh:3842
+#: menu.sh:3840
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "rr-cks*.zip CK'leri güncellemeyi yükleyecektir.\\n"
 
-#: menu.sh:3919
+#: menu.sh:3917
 msgid "This person is very lazy and hasn't written anything."
 msgstr "Bu kişi çok hafif ve hiçbir şey yazmamış."
 
-#: menu.sh:3934
+#: menu.sh:3932
 msgid "An installed DSM system is detected on the hard disk. Do you want to try to restore it first?"
 msgstr "Sabit sürücüde bir DSM sisteminin tespit edildi. Önce onu denemek ister misiniz?"
 
-#: menu.sh:3945
+#: menu.sh:3943
 msgid "Choose a model"
 msgstr "Bir model seçin"
 
-#: menu.sh:3947
+#: menu.sh:3945
 msgid "Choose a version"
 msgstr "Bir sürüm seçin"
 
-#: menu.sh:3949
+#: menu.sh:3947
 msgid "Parse pat"
 msgstr "Pat'i çöz"
 
-#: menu.sh:3955
+#: menu.sh:3953
 msgid "Kernel:"
 msgstr "Çekirdek:"
 
-#: menu.sh:3957
+#: menu.sh:3955
 msgid "Addons menu"
 msgstr "Eklentiler menüsü"
 
-#: menu.sh:3958
+#: menu.sh:3956
 msgid "Modules menu"
 msgstr "Modüller menüsü"
 
-#: menu.sh:3959
+#: menu.sh:3957
 msgid "Cmdline menu"
 msgstr "Cmdline menüsü"
 
-#: menu.sh:3960
+#: menu.sh:3958
 msgid "Synoinfo menu"
 msgstr "Synoinfo menüsü"
 
-#: menu.sh:3962
+#: menu.sh:3960
 msgid "Advanced menu"
 msgstr "Gelişmiş menüsü"
 
-#: menu.sh:3965
+#: menu.sh:3963
 msgid "Build the loader"
 msgstr "Loader derleniyor"
 
-#: menu.sh:3969
+#: menu.sh:3967
 msgid "Direct boot:"
 msgstr "Doğrudan başlat:"
 
-#: menu.sh:3970
+#: menu.sh:3968
 msgid "Boot the loader"
 msgstr "Loader başlatılıyor"
 
-#: menu.sh:3972
+#: menu.sh:3970
 msgid "Settings menu"
 msgstr "Settings menu"
 
-#: menu.sh:3974
+#: menu.sh:3972
 msgid "Clean disk cache"
 msgstr "Disk önbelleği temizleniyor"
 
-#: menu.sh:3976
+#: menu.sh:3974
 msgid "Update menu"
 msgstr "Menü güncelleniyor"
 
-#: menu.sh:3977
+#: menu.sh:3975
 msgid "Notepad"
 msgstr "Not Defteri"
 
-#: menu.sh:3999
+#: menu.sh:3997
 msgid "Change ..."
 msgstr "Değiştir ..."
 
-#: menu.sh:4069 menu.sh:4087
+#: menu.sh:4066 menu.sh:4084
 msgid "Power off"
 msgstr "Kapat"
 
-#: menu.sh:4070 menu.sh:4093
+#: menu.sh:4067 menu.sh:4090
 msgid "Reboot"
 msgstr "Yeniden başlat"
 
-#: menu.sh:4072 menu.sh:4105
+#: menu.sh:4069 menu.sh:4102
 msgid "Reboot to Recovery"
 msgstr "Recovery'ye yeniden başlat"
 
-#: menu.sh:4073 menu.sh:4111
+#: menu.sh:4070 menu.sh:4108
 msgid "Reboot to Junior"
 msgstr "Junior'ya yeniden başlat"
 
-#: menu.sh:4075 menu.sh:4117
+#: menu.sh:4072 menu.sh:4114
 msgid "Reboot to BIOS"
 msgstr "BIOS'ye yeniden başlat"
 
-#: menu.sh:4077
+#: menu.sh:4074
 msgid "Back to shell"
 msgstr "Shell'e geri dön"
 
-#: menu.sh:4081
+#: menu.sh:4078
 msgid "Choose a action"
 msgstr "Eylem seçin"
 
-#: menu.sh:4135
+#: menu.sh:4132
 msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
 msgstr "\\033[1;32mmenu.sh\\033[0m'i çağırarak menüye geri dönün"
