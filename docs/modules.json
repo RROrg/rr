@@ -8,6 +8,10 @@
             "description": "RealTek RTL-8139 Fast Ethernet driver",
             "depends": "mii"
         },
+        "8390": {
+            "description": "",
+            "depends": ""
+        },
         "aacraid": {
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
@@ -647,6 +651,10 @@
         "nct6775": {
             "description": "Driver for NCT6775F and compatible chips (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
+        },
+        "ne2k-pci": {
+            "description": "PCI NE2000 clone driver",
+            "depends": "8390"
         },
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
