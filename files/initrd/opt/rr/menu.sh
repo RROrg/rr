@@ -2781,9 +2781,9 @@ function changePorts() {
         --infobox "$(TEXT "Setting ...")" 20 100
       # save to rrorg.conf
       rm -f "/etc/rrorg.conf"
-      [ ! "${HTTP:-7080}" = "7080" ] && (echo "HTTP_PORT=${HTTP}" >>"/etc/rrorg.conf" && /etc/init.d/S90thttpd restart >/dev/null 2>&1)
-      [ ! "${DUFS:-7304}" = "7304" ] && (echo "DUFS_PORT=${DUFS}" >>"/etc/rrorg.conf" && /etc/init.d/S99dufs restart >/dev/null 2>&1)
-      [ ! "${TTYD:-7681}" = "7681" ] && (echo "TTYD_PORT=${TTYD}" >>"/etc/rrorg.conf" && /etc/init.d/S99ttyd restart >/dev/null 2>&1)
+      [ ! "${HTTP:-7080}" = "7080" ] && echo "HTTP_PORT=${HTTP}" >>"/etc/rrorg.conf"
+      [ ! "${DUFS:-7304}" = "7304" ] && echo "DUFS_PORT=${DUFS}" >>"/etc/rrorg.conf"
+      [ ! "${TTYD:-7681}" = "7681" ] && echo "TTYD_PORT=${TTYD}" >>"/etc/rrorg.conf"
       # save to rru
       local RDXZ_PATH="${TMP_PATH}/rdxz_tmp"
       rm -rf "${RDXZ_PATH}"
@@ -2826,6 +2826,11 @@ function changePorts() {
         rm -f "${RR_RAMUSER_FILE}"
       fi
       rm -rf "${RDXZ_PATH}"
+      {
+        [ ! "${HTTP:-7080}" = "7080" ] && /etc/init.d/S90thttpd restart
+        [ ! "${DUFS:-7304}" = "7304" ] && /etc/init.d/S99dufs restart
+        [ ! "${TTYD:-7681}" = "7681" ] && /etc/init.d/S99ttyd restart
+      } >/dev/null 2>&1 &
       [ ! -f "/etc/rrorg.conf" ] && MSG="$(TEXT "Ports for TTYD/DUFS/HTTP restored.")" || MSG="$(TEXT "Ports for TTYD/DUFS/HTTP changed.")"
       DIALOG --title "$(TEXT "Settings")" \
         --msgbox "${MSG}" 0 0
