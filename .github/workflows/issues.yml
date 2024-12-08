@@ -297,8 +297,8 @@ jobs:
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vhd" ]; then
             . scripts/func.sh "${{ secrets.RRORG }}"
-            createvmc "rr/rr.vmc"
             qemu-img convert rr/rr.img -O vpc rr/rr.vhd
+            createvmc "rr/rr.vhd" "rr/rr.vmc"
             (cd rr; sha256sum rr.vhd >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhd.zip" -j rr/rr.vmc rr/rr.vhd ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vhdx" ]; then

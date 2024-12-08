@@ -442,8 +442,17 @@ function convertova() {
   rm -rf "VMX_${VMNAME}"
 }
 
+# createvmc
+# $1 vhd file
+# $2 vmc file
 function createvmc() {
-  cat <<_EOF_ >"${1:-rr.vmc}"
+  local BLIMAGE=${1:-rr.vhd}
+  local VMCPATH=${2:-rr.vmc}
+
+  BLIMAGE="$(basename "${BLIMAGE}")"
+  VMCPATH="$(realpath "${VMCPATH}")"
+
+  cat <<_EOF_ >"${VMCPATH}"
 <?xml version="1.0" encoding="UTF-8"?>
 <preferences>
     <version type="string">2.0</version>
@@ -457,7 +466,7 @@ function createvmc() {
                     <location id="0">
                         <drive_type type="integer">1</drive_type>
                         <pathname>
-                            <relative type="string">rr.vhd</relative>
+                            <relative type="string">${BLIMAGE}</relative>
                         </pathname>
                     </location>
                 </ide_controller>
