@@ -17,8 +17,7 @@ flock -n 304 || {
   dialog --colors --aspect 50 --title "$(TEXT "Error")" --msgbox "${MSG}" 0 0
   exit 1
 }
-trap 'rm -f $LOCKFILE' EXIT
-trap 'rm -f $LOCKFILE; exit' INT TERM HUP
+trap 'flock -u 304; rm -f "${WORK_PATH}/menu.lock"' EXIT INT TERM HUP
 
 # Check partition 3 space, if < 2GiB is necessary clean cache folder
 SPACELEFT=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
@@ -1338,16 +1337,15 @@ function make() {
       extractDsmFiles || return 1
     fi
 
-    while true; do
-      SIZE=256 # initrd-dsm + zImage-dsm ≈ 210M
-      SPACELEFT=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
-      ZIMAGESIZE=$(du -m ${MOD_ZIMAGE_FILE} 2>/dev/null | awk '{print $1}')
-      RDGZSIZE=$(du -m ${MOD_RDGZ_FILE} 2>/dev/null | awk '{print $1}')
-      SPACEALL=$((${SPACELEFT:-0} + ${ZIMAGESIZE:-0} + ${RDGZSIZE:-0}))
-      [ ${SPACEALL:-0} -ge ${SIZE} ] && break
+    SIZE=256 # initrd-dsm + zImage-dsm ≈ 210M
+    SPACELEFT=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
+    ZIMAGESIZE=$(du -m ${MOD_ZIMAGE_FILE} 2>/dev/null | awk '{print $1}')
+    RDGZSIZE=$(du -m ${MOD_RDGZ_FILE} 2>/dev/null | awk '{print $1}')
+    SPACEALL=$((${SPACELEFT:-0} + ${ZIMAGESIZE:-0} + ${RDGZSIZE:-0}))
+    if [ ${SPACEALL:-0} -lt ${SIZE} ]; then
       echo -e "$(TEXT "No disk space left, please clean the cache and try again!")" >"${LOG_FILE}"
       return 1
-    done
+    fi
 
     ${WORK_PATH}/zimage-patch.sh || {
       printf "%s\n%s\n%s:\n%s\n" "$(TEXT "DSM zImage not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")" >"${LOG_FILE}"
@@ -2032,7 +2030,7 @@ function languageMenu() {
   while read -r L; do
     A="$(echo "$(strings "${WORK_PATH}/lang/${L}/LC_MESSAGES/rr.mo" 2>/dev/null | grep "Last-Translator" | sed "s/Last-Translator://")")"
     echo "${L} \"${A:-"anonymous"}\"" >>"${TMP_PATH}/menu"
-  done <<<$(ls ${WORK_PATH}/lang/*/LC_MESSAGES/rr.mo 2>/dev/null | sort | sed -r 's/.*\/lang\/(.*)\/LC_MESSAGES\/rr\.mo$/\1/')
+  done <<<$(ls ${WORK_PATH}/lang/*/LC_MESSAGES/rr.mo 2>/dev/null | sort | sed -E 's/.*\/lang\/(.*)\/LC_MESSAGES\/rr\.mo$/\1/')
 
   DIALOG --title "$(TEXT "Settings")" \
     --default-item "${LAYOUT}" --menu "$(TEXT "Choose a language")" 0 0 20 --file "${TMP_PATH}/menu" \
@@ -2268,11 +2266,18 @@ function cloneBootloaderDisk() {
     ENDSECTOR=$(($(fdisk -l ${RESP} | grep "${NEW_BLDISK_P3}" | awk '{print $3}') + 1))
 
     if [ ${SIZEOFDISK}0 -ne ${ENDSECTOR}0 ]; then
-      echo -e "\033[1;36mResizing ${NEW_BLDISK_P3}\033[0m"
-      echo -e "d\n\nn\n\n\n\n\nn\nw" | fdisk "${RESP}" >/dev/null 2>&1
-      resize2fs "${NEW_BLDISK_P3}"
-      fdisk -l "${RESP}"
-      sleep 1
+      if [ -f "/mnt/p1/.noresize" ] || [ ${SIZEOFDISK:-0} -gt $((32 * 1024 * 1024 * 2)) ]; then
+        # Create partition 4 with remaining space
+        echo -e "\033[1;36mCreating partition 4 with remaining space.\033[0m"
+        echo -e "n\n\n\n\n\nw" | fdisk "${RESP}" >/dev/null 2>&1
+        PART4="${RESP}4"
+        mkfs.ext4 -F "${PART4}" # mkfs.ext4 -F -L "RR4" "${PART4}"
+      else
+        echo -e "\033[1;36mResizing ${NEW_BLDISK_P3}\033[0m"
+        echo -e "d\n\nn\n\n\n\n\nn\nw" | fdisk "${RESP}" >/dev/null 2>&1
+        resize2fs "${NEW_BLDISK_P3}"
+        fdisk -l "${RESP}"
+      fi
     fi
 
     function __umountNewBlDisk() {
@@ -2745,9 +2750,12 @@ function changePassword() {
 # Change ports of TTYD/DUFS/HTTP
 function changePorts() {
   local MSG="$(TEXT "Please fill in a number between 0-65535: (Empty for default value.)")"
-  local HTTP=$(grep -i '^HTTP_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
-  local DUFS=$(grep -i '^DUFS_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
-  local TTYD=$(grep -i '^TTYD_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
+  unset HTTP_PORT DUFS_PORT TTYD_PORT
+  [ -f "/etc/rrorg.conf" ] && source "/etc/rrorg.conf" 2>/dev/null
+  local HTTP=${HTTP_PORT:-7080}
+  local DUFS=${DUFS_PORT:-7304}
+  local TTYD=${TTYD_PORT:-7681}
+
   while true; do
     DIALOG --title "$(TEXT "Settings")" \
       --form "${MSG}" 11 70 3 "HTTP" 1 1 "${HTTP:-7080}" 1 10 55 0 "DUFS" 2 1 "${DUFS:-7304}" 2 10 55 0 "TTYD" 3 1 "${TTYD:-7681}" 3 10 55 0 \
@@ -2826,14 +2834,17 @@ function changePorts() {
         rm -f "${RR_RAMUSER_FILE}"
       fi
       rm -rf "${RDXZ_PATH}"
-      {
-        [ ! "${HTTP:-7080}" = "7080" ] && /etc/init.d/S90thttpd restart
-        [ ! "${DUFS:-7304}" = "7304" ] && /etc/init.d/S99dufs restart
-        [ ! "${TTYD:-7681}" = "7681" ] && /etc/init.d/S99ttyd restart
-      } >/dev/null 2>&1 &
       [ ! -f "/etc/rrorg.conf" ] && MSG="$(TEXT "Ports for TTYD/DUFS/HTTP restored.")" || MSG="$(TEXT "Ports for TTYD/DUFS/HTTP changed.")"
       DIALOG --title "$(TEXT "Settings")" \
         --msgbox "${MSG}" 0 0
+      rm -f "${TMP_PATH}/restartS.sh"
+      {
+        [ ! "${HTTP:-7080}" = "${HTTP_PORT:-7080}" ] && echo "/etc/init.d/S90thttpd restart"
+        [ ! "${DUFS:-7304}" = "${DUFS_PORT:-7304}" ] && echo "/etc/init.d/S99dufs restart"
+        [ ! "${TTYD:-7681}" = "${TTYD_PORT:-7681}" ] && echo "/etc/init.d/S99ttyd restart"
+      } >"${TMP_PATH}/restartS.sh"
+      chmod +x "${TMP_PATH}/restartS.sh"
+      nohup "${TMP_PATH}/restartS.sh" >/dev/null 2>&1
       break
       ;;
     1)
@@ -2872,7 +2883,7 @@ function advancedMenu() {
         echo "k \"$(TEXT "Kernel switching method:") \Z4${KERNELWAY}\Zn\""
         # Some GPU have compatibility issues, so this function is temporarily disabled. RR_CMDLINE= ... nomodeset
         # checkCmdline "rr_cmdline" "nomodeset" && POWEROFFDISPLAY="false" || POWEROFFDISPLAY="true"
-        # echo "v \"$(TEXT "Power off display after boot:") \Z4${POWEROFFDISPLAY}\Zn\"" >>"${TMP_PATH}/menu"
+        # echo "v \"$(TEXT "Power off display after boot:") \Z4${POWEROFFDISPLAY}\Zn\""
       fi
       echo "n \"$(TEXT "Reboot on kernel panic:") \Z4${KERNELPANIC}\Zn\""
       if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ]; then
@@ -3250,7 +3261,7 @@ function downloadExts() {
   TAG=""
   if [ "${PRERELEASE}" = "true" ]; then
     # TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | pup 'a[class="Link--muted"] attr{href}' | grep ".zip" | head -1)"
-    TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
+    TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | sed -E 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
   else
     LATESTURL="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${PROXY}${3}/releases/latest")"
     TAG="${LATESTURL##*/}"
@@ -4045,7 +4056,6 @@ else
       settingsMenu
       NEXT="m"
       ;;
-
     c)
       cleanCache
       NEXT="d"

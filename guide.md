@@ -65,7 +65,7 @@
 * RR 备份 (Any version):
     ```shell
     # 备份为 disk.img.gz, 自行导出.
-    dd if=`blkid | grep 'LABEL="RR3"' | cut -d3 -f1` | gzip > disk.img.gz
+    dd if="$(blkid | grep 'LABEL="RR3"' | cut -d3 -f1)" | gzip > disk.img.gz
     # 结合 transfer.sh 直接导出链接
     curl -skL --insecure -w '\n' --upload-file disk.img.gz https://transfer.sh
     ```
@@ -73,7 +73,7 @@
 * RR 开机强行进入到 RR shell:
     ```shell
     # 在 wait IP 的时候, 快速的连上, 杀死 boot.sh 进程.
-    kill `ps | grep -v grep | grep boot.sh | awk '{print $1}'`
+    kill $(ps | grep -v grep | grep boot.sh | awk '{print $1}')
     ```
 
 # SYNO:
@@ -109,7 +109,7 @@
     SN=xxxxxxxxxx   # 输入你要设置的SN
     echo 1 > /proc/sys/kernel/syno_install_flag
     [ -b "/dev/synoboot1" ] && (mkdir -p /tmp/synoboot1; mount /dev/synoboot1 /tmp/synoboot1)
-    [ -f "/tmp/synoboot1/user-config.yml" ] && OLD_SN=`grep '^sn:' /tmp/synoboot1/user-config.yml | sed -r 's/sn:(.*)/\1/; s/[\" ]//g'`
+    [ -f "/tmp/synoboot1/user-config.yml" ] && OLD_SN=$(sed -E 's/^sn:(.*)/\1/; s/[\" ]//g' /tmp/synoboot1/user-config.yml)
     [ -n "${OLD_SN}" ] && sed -i "s/${OLD_SN}/${SN}/g" /tmp/synoboot1/user-config.yml
     reboot
     ```

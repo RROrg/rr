@@ -125,16 +125,21 @@ for KEY in "${!SYNOINFO[@]}"; do
 done
 
 # Patch /sbin/init.post
+# Apply config manipulators
 grep -v -e '^[\t ]*#' -e '^$' "${WORK_PATH}/patch/config-manipulators.sh" >"${TMP_PATH}/rp.txt"
 sed -e "/@@@CONFIG-MANIPULATORS-TOOLS@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
 rm -f "${TMP_PATH}/rp.txt"
-touch "${TMP_PATH}/rp.txt"
-echo "_set_conf_kv 'SN' '${SN}' '/tmpRoot/etc/synoinfo.conf'" >>"${TMP_PATH}/rp.txt"
-echo "_set_conf_kv 'SN' '${SN}' '/tmpRoot/etc.defaults/synoinfo.conf'" >>"${TMP_PATH}/rp.txt"
-for KEY in "${!SYNOINFO[@]}"; do
-  echo "_set_conf_kv '${KEY}' '${SYNOINFO[${KEY}]}' '/tmpRoot/etc/synoinfo.conf'" >>"${TMP_PATH}/rp.txt"
-  echo "_set_conf_kv '${KEY}' '${SYNOINFO[${KEY}]}' '/tmpRoot/etc.defaults/synoinfo.conf'" >>"${TMP_PATH}/rp.txt"
-done
+
+# Generate synoinfo configurations
+{
+  echo "_set_conf_kv 'SN' '${SN}' '/tmpRoot/etc/synoinfo.conf'"
+  echo "_set_conf_kv 'SN' '${SN}' '/tmpRoot/etc.defaults/synoinfo.conf'"
+  for KEY in "${!SYNOINFO[@]}"; do
+    echo "_set_conf_kv '${KEY}' '${SYNOINFO[${KEY}]}' '/tmpRoot/etc/synoinfo.conf'"
+    echo "_set_conf_kv '${KEY}' '${SYNOINFO[${KEY}]}' '/tmpRoot/etc.defaults/synoinfo.conf'"
+  done
+} >"${TMP_PATH}/rp.txt"
+
 sed -e "/@@@CONFIG-GENERATED@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
 rm -f "${TMP_PATH}/rp.txt"
 
