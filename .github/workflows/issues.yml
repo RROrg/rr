@@ -31,8 +31,8 @@ jobs:
           def set_output(name, value):
             subprocess.call(["echo '{}={}' >> $GITHUB_ENV".format(name, value)], shell=True)
 
-          issuetitle = ${{ toJSON(github.event.issue.title) }};
-          issuebody = ${{ toJSON(github.event.issue.body) }};
+          issuetitle = ${{ toJSON(github.event.issue.title) }}
+          issuebody = ${{ toJSON(github.event.issue.body) }}
 
           iscustom = 'false'
           warinfo = 'false'
