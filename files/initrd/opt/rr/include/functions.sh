@@ -76,6 +76,13 @@ function randomhex() {
   printf "%02X" $((RANDOM % 255 + 1))
 }
 
+
+###############################################################################
+# Generate a random digit (0-9A-Z)
+function genRandomDigit() {
+  echo {0..9} | tr ' ' '\n' | sort -R | head -1
+}
+
 ###############################################################################
 # Generate a random letter
 function genRandomLetter() {
@@ -429,7 +436,6 @@ function connectwlanif() {
 
 ###############################################################################
 # Find and mount the DSM root filesystem
-# (based on pocopico's TCRP code)
 function findDSMRoot() {
   local DSMROOTS=""
   [ -z "${DSMROOTS}" ] && DSMROOTS="$(mdadm --detail --scan 2>/dev/null | grep -E "name=SynologyNAS:0|name=DiskStation:0|name=SynologyNVR:0|name=BeeStation:0" | awk '{print $2}' | uniq)"
