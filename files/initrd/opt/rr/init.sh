@@ -119,8 +119,8 @@ BUS=$(getBus "${LOADER_DISK}")
 
 BUSLIST="usb sata sas scsi nvme mmc ide virtio vmbus xen"
 if [ "${BUS}" = "usb" ]; then
-  VID="0x$(udevadm info --query property --name "${LOADER_DISK}" 2>/dev/null | grep ID_VENDOR_ID | cut -d= -f2)"
-  PID="0x$(udevadm info --query property --name "${LOADER_DISK}" 2>/dev/null | grep ID_MODEL_ID | cut -d= -f2)"
+  VID="0x$(udevadm info --query property --name "${LOADER_DISK}" 2>/dev/null | grep "ID_VENDOR_ID" | cut -d= -f2)"
+  PID="0x$(udevadm info --query property --name "${LOADER_DISK}" 2>/dev/null | grep "ID_MODEL_ID" | cut -d= -f2)"
   TYPE="flashdisk"
 elif ! echo "${BUSLIST}" | grep -wq "${BUS}"; then
   if [ "LOCALBUILD" = "${LOADER_DISK}" ]; then

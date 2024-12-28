@@ -8,6 +8,9 @@
 
 [ -z "${LOADER_DISK}" ] && die "$(TEXT "Loader is not init!")"
 
+# Disable the XON/XOFF flow control in the terminal
+# stty -ixon
+
 alias DIALOG='dialog --backtitle "$(backtitle)" --colors --aspect 50'
 
 # lock
@@ -135,6 +138,13 @@ function modelMenu() {
     while true; do
       rm -f "${TMP_PATH}/menu"
       FLGNEX=0
+      IGPUPS=(apollolake geminilake)
+      IGPUID="$(lspci -nd ::300 2>/dev/null | grep "8086" | cut -d' ' -f3 | sed 's/://g')"
+      NVMEMS=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
+      NVMEPS=(/sys/devices/pci0000:00/0000:*/nvme /sys/devices/pci0000:00/0000:*/*/nvme)
+      if [ -n "${IGPUID}" ]; then grep -iq "${IGPUID}" ${WORK_PATH}/i915ids && hasiGPU=1 || hasiGPU=2; else hasiGPU=0; fi
+      if [ $(ls -d ${NVMEPS[0]} 2>/dev/null | wc -l) -gt 0 ]; then hasNVME=1; else [ $(ls -d ${NVMEPS[1]} 2>/dev/null | wc -l) -gt 0 ] && hasNVME=2 || hasNVME=0; fi
+      [ $(lspci -d ::104 2>/dev/null | wc -l) -gt 0 -o $(lspci -d ::107 2>/dev/null | wc -l) -gt 0 ] && hasHBA=1 || hasHBA=0
       while read -r M A; do
         COMPATIBLE=1
         if [ ${RESTRICT} -eq 1 ]; then
@@ -146,12 +156,22 @@ function modelMenu() {
             fi
           done
         fi
+        unset DT G N H
         [ "$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")" = "true" ] && DT="DT" || DT=""
-        [ ${COMPATIBLE} -eq 1 ] && printf "%s \"\Zb%-15s %-2s\Zn\" " "${M}" "${A}" "${DT}" >>"${TMP_PATH}/menu"
+        [ -z "${G}" ] && [ ${hasiGPU} -eq 1 ] && echo "${IGPUPS[@]}" | grep -wq "${A}" && G="G"
+        [ -z "${G}" ] && [ ${hasiGPU} -eq 2 ] && echo "epyc7002" | grep -wq "${A}" && G="G"
+        [ -z "${N}" ] && [ ${hasNVME} -ne 0 ] && [ "${DT}" = "DT" ] && N="N"
+        [ -z "${N}" ] && [ ${hasNVME} -eq 2 ] && echo "${NVMEMS[@]}" | grep -wq "${M}" && N="N"
+        [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && [ ! "${DT}" = "DT" ] && H="H"
+        [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && echo "epyc7002" | grep -wq "${A}" && H="H"
+        [ ${COMPATIBLE} -eq 1 ] && printf "%s \"\Zb%-14s  %-2s  %-3s\Zn\" " "${M}" "${A}" "${DT}" "${G}${N}${H}" >>"${TMP_PATH}/menu"
       done <"${TMP_PATH}/modellist"
       [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
+      MSG="$(TEXT "Choose the model")"
+      MSG+="\n\Z1$(TEXT "DT: Disk identification method is device tree")\Zn"
+      MSG+="\n\Z1$(TEXT "G: Support iGPU; N: Support NVMe; H: Support HBA")\Zn"
       DIALOG --title "$(TEXT "Model")" \
-        --menu "$(TEXT "Choose the model")" 0 0 20 --file "${TMP_PATH}/menu" \
+        --menu "${MSG}" 0 0 20 --file "${TMP_PATH}/menu" \
         2>${TMP_PATH}/resp
       [ $? -ne 0 ] && return 0
       resp=$(cat ${TMP_PATH}/resp)
@@ -163,7 +183,7 @@ function modelMenu() {
       break
     done
   else
-    grep -qw "${1}" "${TMP_PATH}/modellist" || return 1
+    grep -wq "${1}" "${TMP_PATH}/modellist" || return 1
     resp="${1}"
   fi
 
@@ -600,7 +620,7 @@ function addonMenu() {
         continue
       fi
       DIALOG --title "$(TEXT "Addons")" \
-        --msgbox "$(TEXT "Please upload the *.addons file.")" 0 0
+        --msgbox "$(TEXT "Please upload the *.addon file.")" 0 0
       TMP_UP_PATH=${TMP_PATH}/users
       USER_FILE=""
       rm -rf ${TMP_UP_PATH}
@@ -616,7 +636,7 @@ function addonMenu() {
         DIALOG --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
       else
-        if [ -d "${ADDONS_PATH}/$(basename ${USER_FILE} .addons)" ]; then
+        if [ -d "${ADDONS_PATH}/$(basename ${USER_FILE} .addon)" ]; then
           DIALOG --title "$(TEXT "Addons")" \
             --yesno "$(TEXT "The addon already exists. Do you want to overwrite it?")" 0 0
           RET=$?
@@ -2768,7 +2788,7 @@ function changePorts() {
         if [ -z "${1}" ]; then
           return 0
         else
-          if echo "${1}" | grep -qE '^[0-9]+$' && [ "${1}" -ge 0 ] && [ "${1}" -le 65535 ]; then
+          if echo "${1}" | grep -Eq '^[0-9]+$' && [ "${1}" -ge 0 ] && [ "${1}" -le 65535 ]; then
             return 0
           else
             return 1
@@ -3261,7 +3281,7 @@ function downloadExts() {
   TAG=""
   if [ "${PRERELEASE}" = "true" ]; then
     # TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | pup 'a[class="Link--muted"] attr{href}' | grep ".zip" | head -1)"
-    TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | grep /refs/tags/.*\.zip | sed -E 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
+    TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | grep "/refs/tags/.*\.zip" | sed -E 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
   else
     LATESTURL="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${PROXY}${3}/releases/latest")"
     TAG="${LATESTURL##*/}"
