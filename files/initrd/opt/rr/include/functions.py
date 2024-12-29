@@ -9,7 +9,7 @@
 #
 # # Backup the original python3 executable.
 # sudo mv -f "$(realpath $(which python3))/EXTERNALLY-MANAGED" "$(realpath $(which python3))/EXTERNALLY-MANAGED.bak" 2>/dev/null || true
-# sudo pip3 install -U click requests requests-toolbelt urllib3 qrcode[pil] beautifulsoup4
+# sudo pip3 install -U click requests requests-toolbelt qrcode[pil] beautifulsoup4
 
 import os, click
 
