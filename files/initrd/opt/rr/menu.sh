@@ -57,6 +57,7 @@ KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
 KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
 ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")" # official drivers priorities
 HDDSORT="$(readConfigKey "hddsort" "${USER_CONFIG_FILE}")"
+USBASINTERNAL="$(readConfigKey "usbasinternal" "${USER_CONFIG_FILE}")"
 EMMCBOOT="$(readConfigKey "emmcboot" "${USER_CONFIG_FILE}")"
 SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
@@ -338,6 +339,11 @@ function productversMenu() {
   else
     KERNEL='official'
     writeConfigKey "kernel" "${KERNEL}" "${USER_CONFIG_FILE}"
+  fi
+  # Check usbasinternal
+  if [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
+    USBASINTERNAL='false'
+    writeConfigKey "usbasinternal" "${USBASINTERNAL}" "${USER_CONFIG_FILE}"
   fi
   # Check addons
   while IFS=': ' read -r ADDON PARAM; do
@@ -2894,8 +2900,9 @@ function advancedMenu() {
         echo "p \"$(TEXT "Show/modify the current pat data")\""
         echo "m \"$(TEXT "Switch SATADOM mode:") \Z4${SATADOM}\Zn\""
       fi
-      if [ -n "${PLATFORM}" ] && [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
+      if [ -n "${PLATFORM}" ]; then
         echo "d \"$(TEXT "Custom DTS")\""
+        echo "u \"$(TEXT "USB disk as internal disk:") \Z4${USBASINTERNAL}\Zn\""
       fi
       echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\""
       if [ "${DIRECTBOOT}" = "false" ]; then
@@ -2983,8 +2990,24 @@ function advancedMenu() {
       NEXT="m"
       ;;
     d)
-      customDTS
+      if [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
+        customDTS
+      else
+        DIALOG --title "$(TEXT "Advanced")" \
+          --msgbox "$(TEXT "Custom DTS is not supported for current model.")" 0 0
+      fi
       NEXT="e"
+      ;;
+    u)
+      if [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
+        DIALOG --title "$(TEXT "Advanced")" \
+          --msgbox "$(TEXT "USB disk as internal disk is not supported for current model.")" 0 0
+        NEXT="e"
+      else
+        USBASINTERNAL=$([ "${USBASINTERNAL}" = "true" ] && echo 'false' || echo 'true')
+        writeConfigKey "usbasinternal" "${USBASINTERNAL}" "${USER_CONFIG_FILE}"
+        NEXT="u"
+      fi
       ;;
     w)
       ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
