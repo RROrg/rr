@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-28 23:23+0800\n"
+"POT-Creation-Date: 2025-01-01 20:05+0800\n"
 "PO-Revision-Date: 2024-05-05 22:06+0800\n"
 "Last-Translator: Ing <wjz304>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@RROrg>\n"
@@ -93,75 +93,79 @@ msgstr "注意: 请插入至少一个 sata/scsi 磁盘以用于系统安装 (但
 msgid "Notice: Please disable Intel(VT-d)/AMD(AMD-Vi) in BIOS/UEFI settings if you encounter a boot failure."
 msgstr "注意: 请在BIOS/UEFI设置中禁用 Intel(VT-d)/AMD(AMD-Vi), 如果遇到启动失败问题."
 
-#: boot.sh:245 menu.sh:857 menu.sh:886 menu.sh:923 menu.sh:935 menu.sh:961 menu.sh:969 menu.sh:986 menu.sh:998
+#: boot.sh:247 menu.sh:857 menu.sh:886 menu.sh:923 menu.sh:935 menu.sh:961 menu.sh:969 menu.sh:986 menu.sh:998
 msgid "Cmdline"
 msgstr "Cmdline"
 
-#: boot.sh:254
+#: boot.sh:258
 msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
 msgstr "%2ds ((ssh/web)连接状态改变将中断启动)"
 
-#: boot.sh:258
-msgid "access(ssh/web) status has changed and booting is interrupted."
+#: boot.sh:263
+msgid "Access(ssh/web) status has changed and booting is interrupted."
 msgstr "(ssh/web)连接状态已改变, 启动被中断."
 
-#: boot.sh:289
+#: boot.sh:269
+msgid "Menu opened and booting is interrupted."
+msgstr "菜单已打开, 启动被中断."
+
+#: boot.sh:298
 msgid "Reboot to boot directly in DSM"
 msgstr "重启并直接进入 DSM 引导"
 
-#: boot.sh:306 init.sh:172
+#: boot.sh:315 init.sh:172
 msgid "Detected %s network cards.\\n"
 msgstr "检测到 %s 个网卡.\\n"
 
-#: boot.sh:307 init.sh:173
+#: boot.sh:316 init.sh:173
 msgid "Checking Connect."
 msgstr "检查连接."
 
-#: boot.sh:319 init.sh:183
+#: boot.sh:328 init.sh:183
 msgid "connected."
 msgstr "已连接."
 
-#: boot.sh:329 init.sh:193
+#: boot.sh:338 init.sh:193
 msgid "Waiting IP.\\n"
 msgstr "获取 IP.\\n"
 
-#: boot.sh:336
+#: boot.sh:345
 msgid "IGNORE (Does not support non-wired network card.)"
 msgstr "忽略 (不支持无网卡环境.)"
 
-#: boot.sh:340 init.sh:200
+#: boot.sh:349 init.sh:200
 msgid "DOWN"
 msgstr "关闭"
 
-#: boot.sh:344 init.sh:204
+#: boot.sh:353 init.sh:204
 msgid "NOT CONNECTED"
 msgstr "未连接"
 
-#: boot.sh:348 init.sh:208
+#: boot.sh:357 init.sh:208
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "超时 (请检查路由器上的IP.)"
 
-#: boot.sh:355 init.sh:215
+#: boot.sh:364 init.sh:215
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "LINK LOCAL (未检测到 DHCP 服务器.)"
 
-#: boot.sh:357
+#: boot.sh:366
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr "在浏览器中访问 \\033[1;34mhttp://%s:5000\\033[0m 链接 DSM."
 
-#: boot.sh:368
+#: boot.sh:377
 msgid "Loading DSM kernel ..."
 msgstr "加载 DSM 内核 ..."
 
-#: boot.sh:385
+#: boot.sh:394
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "警告, 使用'--noefi'参数运行'kexec', 可能有不好的事情发生!!"
 
-#: boot.sh:390
+#: boot.sh:399
 msgid "Booting ..."
 msgstr "引导中 ..."
 
-#: boot.sh:394
+#: boot.sh:403
 msgid "Interface not operational. Wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant."
 msgstr "该界面已不可操作. 请在数分钟后. \\n通过 http://find.synology.com/ 或者 Synology Assistant 查找 DSM 并访问."
 

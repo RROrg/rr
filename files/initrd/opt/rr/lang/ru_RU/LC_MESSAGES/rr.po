@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-28 23:23+0800\n"
+"POT-Creation-Date: 2025-01-01 20:05+0800\n"
 "PO-Revision-Date: 2024-05-05 21:54+0800\n"
 "Last-Translator: Alex TG @xpenology_russian\n"
 "Language-Team: Русский перевод TG @xpenology_russian\n"
@@ -93,75 +93,79 @@ msgstr "Замечание: Пожалуйста, подключите мини�
 msgid "Notice: Please disable Intel(VT-d)/AMD(AMD-Vi) in BIOS/UEFI settings if you encounter a boot failure."
 msgstr "Замечание: Пожалуйста, отключите Intel(VT-d)/AMD(AMD-Vi) в настройках BIOS/UEFI, если вы столкнулись с ошибкой загрузки."
 
-#: boot.sh:245 menu.sh:857 menu.sh:886 menu.sh:923 menu.sh:935 menu.sh:961 menu.sh:969 menu.sh:986 menu.sh:998
+#: boot.sh:247 menu.sh:857 menu.sh:886 menu.sh:923 menu.sh:935 menu.sh:961 menu.sh:969 menu.sh:986 menu.sh:998
 msgid "Cmdline"
 msgstr "Cmdline"
 
-#: boot.sh:254
+#: boot.sh:258
 msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
 msgstr "%2ds (Изменение статуса доступа(ssh/web) прервет загрузку)"
 
-#: boot.sh:258
-msgid "access(ssh/web) status has changed and booting is interrupted."
+#: boot.sh:263
+msgid "Access(ssh/web) status has changed and booting is interrupted."
 msgstr "Статус доступа(ssh/web) изменился, и загрузка прервана."
 
-#: boot.sh:289
+#: boot.sh:269
+msgid "Menu opened and booting is interrupted."
+msgstr "Меню открыто, и загрузка прервана."
+
+#: boot.sh:298
 msgid "Reboot to boot directly in DSM"
 msgstr "Перезагрузитесь, чтобы загрузиться непосредственно в DSM"
 
-#: boot.sh:306 init.sh:172
+#: boot.sh:315 init.sh:172
 msgid "Detected %s network cards.\\n"
 msgstr "Обнаружено %s сетевых карт.\\n"
 
-#: boot.sh:307 init.sh:173
+#: boot.sh:316 init.sh:173
 msgid "Checking Connect."
 msgstr "Проверка соединения."
 
-#: boot.sh:319 init.sh:183
+#: boot.sh:328 init.sh:183
 msgid "connected."
 msgstr "Подключено."
 
-#: boot.sh:329 init.sh:193
+#: boot.sh:338 init.sh:193
 msgid "Waiting IP.\\n"
 msgstr "Ожидание IP.\\n"
 
-#: boot.sh:336
+#: boot.sh:345
 msgid "IGNORE (Does not support non-wired network card.)"
 msgstr "ИGNOR (Не поддерживается сетевой картой без провода.)"
 
-#: boot.sh:340 init.sh:200
+#: boot.sh:349 init.sh:200
 msgid "DOWN"
 msgstr "ВЫКЛ"
 
-#: boot.sh:344 init.sh:204
+#: boot.sh:353 init.sh:204
 msgid "NOT CONNECTED"
 msgstr "НЕ ПОДКЛЮЧЕНО"
 
-#: boot.sh:348 init.sh:208
+#: boot.sh:357 init.sh:208
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "ТАЙМАУТ (Пожалуйста, проверьте IP на роутере.)"
 
-#: boot.sh:355 init.sh:215
+#: boot.sh:364 init.sh:215
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "LINK LOCAL (DHCP-сервер не обнаружен.)"
 
-#: boot.sh:357
+#: boot.sh:366
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr "Доступ \\033[1;34mhttp://%s:5000\\033[0m для подключения к DSM через веб."
 
-#: boot.sh:368
+#: boot.sh:377
 msgid "Loading DSM kernel ..."
 msgstr "Загрузка ядра DSM ..."
 
-#: boot.sh:385
+#: boot.sh:394
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "Внимание, запуск kexec с параметром --noefi, могут произойти странные вещи!!"
 
-#: boot.sh:390
+#: boot.sh:399
 msgid "Booting ..."
 msgstr "Загрузка ..."
 
-#: boot.sh:394
+#: boot.sh:403
 msgid "Interface not operational. Wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant."
 msgstr "Интерфейс не доступен. Ожидайте несколько минут.\\nИщите DSM через http://find.synology.com/ или Synology Assistant."
 

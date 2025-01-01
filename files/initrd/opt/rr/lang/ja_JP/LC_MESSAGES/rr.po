@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-28 23:23+0800\n"
+"POT-Creation-Date: 2025-01-01 20:05+0800\n"
 "PO-Revision-Date: 2024-05-05 21:50+0800\n"
 "Last-Translator: Anda Toshiki <hello@toshiki.dev>\n"
 "Language-Team: Toshiki's Devpedia <hello@toshiki.dev>\n"
@@ -93,75 +93,79 @@ msgstr "注意：システムインストールのため少なくとも一つの
 msgid "Notice: Please disable Intel(VT-d)/AMD(AMD-Vi) in BIOS/UEFI settings if you encounter a boot failure."
 msgstr "注意：Intel(VT-d)/AMD(AMD-Vi)をBIOS/UEFI設定で無効にしてください。ブートエラーが発生した場合。"
 
-#: boot.sh:245 menu.sh:857 menu.sh:886 menu.sh:923 menu.sh:935 menu.sh:961 menu.sh:969 menu.sh:986 menu.sh:998
+#: boot.sh:247 menu.sh:857 menu.sh:886 menu.sh:923 menu.sh:935 menu.sh:961 menu.sh:969 menu.sh:986 menu.sh:998
 msgid "Cmdline"
 msgstr "コマンドライン"
 
-#: boot.sh:254
+#: boot.sh:258
 msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
 msgstr "%2ds（アクセス（ssh/web）の状態を変更すると、ブートが中断されます）"
 
-#: boot.sh:258
-msgid "access(ssh/web) status has changed and booting is interrupted."
+#: boot.sh:263
+msgid "Access(ssh/web) status has changed and booting is interrupted."
 msgstr "アクセス（ssh/web）の状態が変更され、ブートが中断されました。"
 
-#: boot.sh:289
+#: boot.sh:269
+msgid "Menu opened and booting is interrupted."
+msgstr "メニューを開いたため、ブートが中断されました。"
+
+#: boot.sh:298
 msgid "Reboot to boot directly in DSM"
 msgstr "DSMで直接ブートするために再起動します"
 
-#: boot.sh:306 init.sh:172
+#: boot.sh:315 init.sh:172
 msgid "Detected %s network cards.\\n"
 msgstr "%sのネットワークカードを検出しました。\\n"
 
-#: boot.sh:307 init.sh:173
+#: boot.sh:316 init.sh:173
 msgid "Checking Connect."
 msgstr "接続を確認中。"
 
-#: boot.sh:319 init.sh:183
+#: boot.sh:328 init.sh:183
 msgid "connected."
 msgstr "接続済み。"
 
-#: boot.sh:329 init.sh:193
+#: boot.sh:338 init.sh:193
 msgid "Waiting IP.\\n"
 msgstr "IPを待っています。\\n"
 
-#: boot.sh:336
+#: boot.sh:345
 msgid "IGNORE (Does not support non-wired network card.)"
 msgstr "IGNORE（非ワイヤレスネットワークカードをサポートしていません。）"
 
-#: boot.sh:340 init.sh:200
+#: boot.sh:349 init.sh:200
 msgid "DOWN"
 msgstr "ダウン"
 
-#: boot.sh:344 init.sh:204
+#: boot.sh:353 init.sh:204
 msgid "NOT CONNECTED"
 msgstr "接続されていません"
 
-#: boot.sh:348 init.sh:208
+#: boot.sh:357 init.sh:208
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "タイムアウト（ルーター上のIPを確認してください。）"
 
-#: boot.sh:355 init.sh:215
+#: boot.sh:364 init.sh:215
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "LINK LOCAL (DHCP サーバーが検出されませんでした。)"
 
-#: boot.sh:357
+#: boot.sh:366
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr "ウェブ経由でDSMに接続するには、\\033[1;34mhttp://%s:5000\\033[0mにアクセスします。"
 
-#: boot.sh:368
+#: boot.sh:377
 msgid "Loading DSM kernel ..."
 msgstr "DSMカーネルをロード中..."
 
-#: boot.sh:385
+#: boot.sh:394
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "警告、--noefiパラメーターでkexecを実行すると、奇妙なことが起こります!!"
 
-#: boot.sh:390
+#: boot.sh:399
 msgid "Booting ..."
 msgstr "ブート中..."
 
-#: boot.sh:394
+#: boot.sh:403
 msgid "Interface not operational. Wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant."
 msgstr "インターフェースが動作していません。数分待ってください。\\nhttp://find.synology.com/ か SynologyアシスタントでDSMを見つけてください。"
 

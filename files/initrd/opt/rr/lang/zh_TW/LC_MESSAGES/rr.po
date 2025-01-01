@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-28 23:23+0800\n"
+"POT-Creation-Date: 2025-01-01 20:05+0800\n"
 "PO-Revision-Date: 2024-05-05 22:10+0800\n"
 "Last-Translator: March Fun <https://cyber.suma.tw/>\n"
 "Language-Team: Chinese (Taiwan) <https://cyber.suma.tw/>\n"
@@ -93,75 +93,79 @@ msgstr "注意: 请插入至少一个sata/scsi硬盘用于系统安装(除引导
 msgid "Notice: Please disable Intel(VT-d)/AMD(AMD-Vi) in BIOS/UEFI settings if you encounter a boot failure."
 msgstr "注意: 請在 BIOS/UEFI 設定中關閉 Intel(VT-d)/AMD(AMD-Vi)，以防止系統在啟動時出現問題。"
 
-#: boot.sh:245 menu.sh:857 menu.sh:886 menu.sh:923 menu.sh:935 menu.sh:961 menu.sh:969 menu.sh:986 menu.sh:998
+#: boot.sh:247 menu.sh:857 menu.sh:886 menu.sh:923 menu.sh:935 menu.sh:961 menu.sh:969 menu.sh:986 menu.sh:998
 msgid "Cmdline"
 msgstr "Cmdline"
 
-#: boot.sh:254
+#: boot.sh:258
 msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
 msgstr "%2ds (變更存取 (ssh/web) 狀態將中斷開機)"
 
-#: boot.sh:258
-msgid "access(ssh/web) status has changed and booting is interrupted."
-msgstr "存取 (ssh/web) 狀態已變更，開機已中斷。"
+#: boot.sh:263
+msgid "Access(ssh/web) status has changed and booting is interrupted."
+msgstr "(ssh/web) 鏈接狀態已變更，開機已中斷。"
 
-#: boot.sh:289
+#: boot.sh:269
+msgid "Menu opened and booting is interrupted."
+msgstr "開啟選單，開機已中斷。"
+
+#: boot.sh:298
 msgid "Reboot to boot directly in DSM"
 msgstr "重新開機以直接啟動 DSM"
 
-#: boot.sh:306 init.sh:172
+#: boot.sh:315 init.sh:172
 msgid "Detected %s network cards.\\n"
 msgstr "檢測到 %s 個網路卡。\\n"
 
-#: boot.sh:307 init.sh:173
+#: boot.sh:316 init.sh:173
 msgid "Checking Connect."
 msgstr "檢查連線。"
 
-#: boot.sh:319 init.sh:183
+#: boot.sh:328 init.sh:183
 msgid "connected."
 msgstr "已連線。"
 
-#: boot.sh:329 init.sh:193
+#: boot.sh:338 init.sh:193
 msgid "Waiting IP.\\n"
 msgstr "正在取得 IP。\\n"
 
-#: boot.sh:336
+#: boot.sh:345
 msgid "IGNORE (Does not support non-wired network card.)"
 msgstr "忽略 (不支援無線網卡.)"
 
-#: boot.sh:340 init.sh:200
+#: boot.sh:349 init.sh:200
 msgid "DOWN"
 msgstr "關機"
 
-#: boot.sh:344 init.sh:204
+#: boot.sh:353 init.sh:204
 msgid "NOT CONNECTED"
 msgstr "未連線"
 
-#: boot.sh:348 init.sh:208
+#: boot.sh:357 init.sh:208
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "逾時 (請檢查路由器上的IP.)"
 
-#: boot.sh:355 init.sh:215
+#: boot.sh:364 init.sh:215
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "LINK LOCAL (未偵測到 DHCP 伺服器.)"
 
-#: boot.sh:357
+#: boot.sh:366
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr "在瀏覽器中瀏覽 \\033[1;34mhttp://%s:5000\\033[0m 連線 DSM。"
 
-#: boot.sh:368
+#: boot.sh:377
 msgid "Loading DSM kernel ..."
 msgstr "載入 DSM 核心..."
 
-#: boot.sh:385
+#: boot.sh:394
 msgid "Warning, running kexec with --noefi param, strange things will happen!!"
 msgstr "警告，使用'--noefi'參數執行'kexec'，可能有意外事情發生！"
 
-#: boot.sh:390
+#: boot.sh:399
 msgid "Booting ..."
 msgstr "開機中..."
 
-#: boot.sh:394
+#: boot.sh:403
 msgid "Interface not operational. Wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant."
 msgstr "該介面已無法操作。請於數分鐘後。\\n透過 http://find.synology.com/ 或者 Synology Assistant 搜尋 DSM 並連線。"
 
