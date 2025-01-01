@@ -369,10 +369,10 @@ function delCmdline() {
 # check CPU Intel(VT-d)/AMD(AMD-Vi)
 function checkCPU_VT_d() {
   lsmod | grep -q msr || modprobe msr 2>/dev/null
-  if grep -q "GenuineIntel" /proc/cpuinfo; then
+  if grep -q "GenuineIntel" /proc/cpuinfo 2>/dev/null; then
     local VT_D_ENABLED=$(rdmsr 0x3a 2>/dev/null)
     [ "$((${VT_D_ENABLED:-0x0} & 0x5))" -eq $((0x5)) ] && return 0
-  elif grep -q "AuthenticAMD" /proc/cpuinfo; then
+  elif grep -q "AuthenticAMD" /proc/cpuinfo 2>/dev/null; then
     local IOMMU_ENABLED=$(rdmsr 0xC0010114 2>/dev/null)
     [ "$((${IOMMU_ENABLED:-0x0} & 0x1))" -eq $((0x1)) ] && return 0
   else
@@ -383,11 +383,11 @@ function checkCPU_VT_d() {
 ###############################################################################
 # check BIOS Intel(VT-d)/AMD(AMD-Vi)
 function checkBIOS_VT_d() {
-  if grep -q "GenuineIntel" /proc/cpuinfo; then
-    dmesg | grep -iq "DMAR-IR.*DRHD base" && return 0
-  elif grep -q "AuthenticAMD" /proc/cpuinfo; then
+  if grep -q "GenuineIntel" /proc/cpuinfo 2>/dev/null; then
+    dmesg 2>/dev/null | grep -iq "DMAR-IR.*DRHD base" && return 0
+  elif grep -q "AuthenticAMD" /proc/cpuinfo 2>/dev/null; then
     # TODO: need check
-    dmesg | grep -iq "AMD-Vi.*enabled" && return 0
+    dmesg 2>/dev/null | grep -iq "AMD-Vi.*enabled" && return 0
   else
     return 1
   fi
