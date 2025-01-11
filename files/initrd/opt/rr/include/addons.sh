@@ -23,6 +23,22 @@ function availableAddons() {
 }
 
 ###############################################################################
+# Read Addon Key
+# 1 - Addon
+# 2 - key
+function readAddonKey() {
+  if [ -z "${1}" ] || [ -z "${2}" ]; then
+    echo ""
+    return 1
+  fi
+  if [ ! -f "${ADDONS_PATH}/${1}/manifest.yml" ]; then
+    echo ""
+    return 1
+  fi
+  readConfigKey "${2}" "${ADDONS_PATH}/${1}/manifest.yml"
+}
+
+###############################################################################
 # Check if addon exist
 # 1 - Addon id
 # 2 - Platform

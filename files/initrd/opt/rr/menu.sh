@@ -142,9 +142,9 @@ function modelMenu() {
       IGPUPS=(apollolake geminilake)
       IGPUID="$(lspci -nd ::300 2>/dev/null | grep "8086" | cut -d' ' -f3 | sed 's/://g')"
       NVMEMS=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
-      NVMEPS=(/sys/devices/pci0000:00/0000:*/nvme /sys/devices/pci0000:00/0000:*/*/nvme)
+      NVMEMD=$(find /sys/devices -type d -name nvme | awk -F'/' '{print NF}' | sort -n | tail -n1)
       if [ -n "${IGPUID}" ]; then grep -iq "${IGPUID}" ${WORK_PATH}/i915ids && hasiGPU=1 || hasiGPU=2; else hasiGPU=0; fi
-      if [ $(ls -d ${NVMEPS[0]} 2>/dev/null | wc -l) -gt 0 ]; then hasNVME=1; else [ $(ls -d ${NVMEPS[1]} 2>/dev/null | wc -l) -gt 0 ] && hasNVME=2 || hasNVME=0; fi
+      if [ ${NVMEMD:-0} -lt 6 ]; then hasNVME=0; elif [ ${NVMEMD:-0} -eq 6 ]; then hasNVME=1; else hasNVME=2; fi
       [ $(lspci -d ::104 2>/dev/null | wc -l) -gt 0 -o $(lspci -d ::107 2>/dev/null | wc -l) -gt 0 ] && hasHBA=1 || hasHBA=0
       while read -r M A; do
         COMPATIBLE=1
@@ -573,11 +573,15 @@ function addonMenu() {
       [ $? -ne 0 ] && continue
       ADDON="$(cat "${TMP_PATH}/resp")"
       [ -z "${ADDON}" ] && continue
-      DIALOG --title "$(TEXT "Addons")" \
-        --inputbox "$(TEXT "Type a optional params to addon")" 0 70 \
-        2>${TMP_PATH}/resp
-      [ $? -ne 0 ] && continue
-      VALUE="$(cat "${TMP_PATH}/resp")"
+      if [ "$(readAddonKey "${ADDON}" "params")" = "true" ]; then
+        DIALOG --title "$(TEXT "Addons")" \
+          --inputbox "$(TEXT "Type a optional params to addon")" 0 70 \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && continue
+        VALUE="$(cat "${TMP_PATH}/resp")"
+      else
+        VALUE=""
+      fi
       ADDONS[${ADDON}]="${VALUE}"
       writeConfigKey "addons.\"${ADDON}\"" "${VALUE}" "${USER_CONFIG_FILE}"
       touch ${PART1_PATH}/.build
