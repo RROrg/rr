@@ -126,7 +126,7 @@ function modelMenu() {
   PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
   MJ="$(python3 ${WORK_PATH}/include/functions.py getmodels -p "${PS[*]}")"
 
-  if [ "${MJ:-[]}" = "[]" ]; then
+  if [ "${MJ:-"[]"}" = "[]" ]; then
     DIALOG --title "$(TEXT "Model")" \
       --msgbox "$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")" 0 0
     return 1
@@ -257,7 +257,7 @@ function productversMenu() {
           --infobox "$(TEXT "Get pat data ...")" 0 0
       fi
       PJ="$(python3 ${WORK_PATH}/include/functions.py getpats4mv -m "${MODEL}" -v "${selver}")"
-      if [ "${PJ:-{}}" = "{}" ]; then
+      if [ "${PJ:-"{}"}" = "{}" ]; then
         if [ -z "${1}" ]; then
           MSG="$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")"
           DIALOG --title "$(TEXT "Addons")" \
@@ -4125,9 +4125,9 @@ else
           echo "x \"$(TEXT "Reboot to RR")\""
           echo "y \"$(TEXT "Reboot to Recovery")\""
           echo "z \"$(TEXT "Reboot to Junior")\""
-          #if efibootmgr | grep -q "^Boot0000"; then
-          echo "b \"$(TEXT "Reboot to BIOS")\""
-          #fi
+          if [ -d "/sys/firmware/efi" ]; then
+            echo "b \"$(TEXT "Reboot to UEFI")\""
+          fi
           echo "s \"$(TEXT "Back to shell")\""
           echo "e \"$(TEXT "Exit")\""
         } >"${TMP_PATH}/menu"
@@ -4168,10 +4168,8 @@ else
           ;;
         b)
           DIALOG --title "$(TEXT "Main menu")" \
-            --infobox "$(TEXT "Reboot to BIOS")" 0 0
-          #efibootmgr -n 0000 >/dev/null 2>&1
-          #reboot
-          rebootTo bios
+            --infobox "$(TEXT "Reboot to UEFI")" 0 0
+          rebootTo uefi
           exit 0
           ;;
         s)

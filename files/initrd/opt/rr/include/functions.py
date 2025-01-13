@@ -145,7 +145,8 @@ def getmodels(platforms=None):
         models.sort(key=lambda k: (k["arch"], k["name"]))
 
     except Exception as e:
-        click.echo(f"Error: {e}")
+        # click.echo(f"Error: {e}")
+        pass
 
     print(json.dumps(models, indent=4))
 
@@ -190,7 +191,8 @@ def getmodelsbykb(platforms=None):
                 continue
             models.append({"name": d[0].split("<br")[0], "arch": d[5].lower()})
     except Exception as e:
-        click.echo(f"Error: {e}")
+        # click.echo(f"Error: {e}")
+        pass
 
     models.sort(key=lambda x: (x["arch"], x["name"]))
     print(json.dumps(models, indent=4))
@@ -272,7 +274,8 @@ def getpats4mv(model, version):
                             'sum': S['files'][0]['checksum']
                         }
     except Exception as e:
-        click.echo(f"Error: {e}")
+        # click.echo(f"Error: {e}")
+        pass
 
     pats = {k: pats[k] for k in sorted(pats.keys(), reverse=True)}
     print(json.dumps(pats, indent=4))
@@ -321,7 +324,8 @@ def getpats(models=None):
                         pats[model] = {}
                     pats[model][__fullversion(ver)] = item.attrs['href']
     except Exception as e:
-        click.echo(f"Error: {e}")
+        # click.echo(f"Error: {e}")
+        pass
 
     print(json.dumps(pats, indent=4))
 
