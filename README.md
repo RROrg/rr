@@ -27,13 +27,13 @@
 
 - During the compilation process, you need to connect to the Internet to obtain model and version information and download the corresponding ROM.
 If you cannot connect to the Internet, please build a pre-compiled bootloader through [RR-CUSTOM](https://rrorg.github.io/rr/).
+  - Models: [models](https://github.com/RROrg/rr/raw/main/docs/models.xlsx)
+  - PATs: [pats](https://github.com/RROrg/rr/raw/main/docs/pats.xlsx)
+  - Addons: [addons](https://github.com/RROrg/rr/raw/main/docs/addons.xlsx)
+  - Modules: [modules](https://github.com/RROrg/rr/raw/main/docs/modules.xlsx)
 
-> Models: [models](https://github.com/RROrg/rr/raw/main/docs/models.xlsx)  
-> PATs: [pats](https://github.com/RROrg/rr/raw/main/docs/pats.xlsx)  
-> Addons: [addons](https://github.com/RROrg/rr/raw/main/docs/addons.xlsx)  
-> Modules: [modules](https://github.com/RROrg/rr/raw/main/docs/modules.xlsx)  
 
-### 4: GPU: 
+### 4: GPU:
 
 - vGPU:
   - [蔚然小站](https://blog.kkk.rs/) 

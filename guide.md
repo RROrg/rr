@@ -6,6 +6,7 @@
    * sftp 工具 WinSCP (下载: https://winscp.net/eng/index.php)
    * 文本编辑工具 Notepad3 (下载: https://github.com/rizonesoft/Notepad3/releases)
    * 镜像写盘工具 Rufus (下载: https://rufus.ie/zh/)
+   * 镜像转换工具 qemu-img (下载: https://cloudbase.it/qemu-img-windows/)
    * 镜像转换工具 StarWind V2V Image Converter (下载: https://www.starwindsoftware.com/starwind-v2v-converter)
    * 磁盘管理工具 Diskgenius (下载: https://www.diskgenius.com/)
 
