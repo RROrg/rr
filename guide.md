@@ -34,12 +34,33 @@
      * https://dataupdate7.synology.com/toolchain/v1/get_download_list?identify=toolkit&version=7.2&platform=purley
 
 # 安装条件
-  1. 引导盘：当前支持 SATA/SCSI/NVME/MMC/IDE or USB 设备, 且要大于 2GB. (SCSI比较复杂, 并不是全部可用)
-  2. 安装盘: 至少需要1个SATA接口硬盘 或者 1个 MMC 作为存储设备. 且要大于 32GB 才可创建存储池.
+  1. 引导盘：当前支持 SATA/SCSI/NVME/MMC/IDE or USB 设备, 且要大于 2GB. (SCSI 比较复杂, 并不是全部可用)
+  2. 安装盘: 至少需要 1 个 SATA 接口硬盘(DT 型号支持 NVME 安装) 或者 1 个 MMC 作为存储设备. 且要大于 32GB 才可创建存储池.
   3. 内存: 需要大于 4GB.
-  4. DT的型号目前不支持HBA扩展卡(较新版本的RR引导 SA6400 支持).
-  5. NVME的PCIPATH有两种格式, 单层路径的兼容 DT 的型号, 多层路径的兼容 DS918+ 等型号.
+  4. DT 的型号目前不支持 HBA 扩展卡(较新版本的RR引导 SA6400 支持).
+  5. NVME 的 PCIPATH 有两种格式, 单层深度路径的仅兼容 DT 的型号, 多层深度路径的兼容 DT 和非 DT 等型号.
   
+# 镜像格式
+  ```shell
+  # 安装 qemu-img
+  # https://cloudbase.it/qemu-img-windows/     # Windows
+  # apt install qemu-img                       # Debian/Ubuntu
+  # yum install qemu-img                       # CentOS
+  # brew install qemu-img                      # MacOS
+
+  # img to vmdk (VMWare / ESXi6 / ESXi7)
+  qemu-img convert -O vmdk -o adapter_type=lsilogic,subformat=streamOptimized,compat6 rr.img rr.vmdk
+
+  # img to vmdk (ESXi8)
+  qemu-img convert -O vmdk -o adapter_type=lsilogic,subformat=monolithicFlat,compat6 rr.img rr.vmdk
+
+  # img to vhdx (Hyper-V)
+  qemu-img convert -O vhdx -o subformat=dynamic rr.img rr.vhdx
+
+  # img to vhd (Parallels Desktop)
+  qemu-img convert -O vpc rr.img rr.vhd
+  ```
+
 
 # GPU
 * vGPU: https://blog.kkk.rs/
