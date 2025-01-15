@@ -61,7 +61,7 @@ jobs:
           if iscustom == 'false':
               if issuebody.find('DMI') < 0 and issuebody.find('CPU') < 0 and issuebody.find('NIC') < 0:
                   warinfo = 'true'
-    
+
           set_output("iscustom", iscustom)
           set_output("warinfo", warinfo)  
 
@@ -295,6 +295,10 @@ jobs:
             qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' rr/rr.vmdk
             (cd rr; sha256sum rr.vmdk >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk ${USER_CONFIG_FILE} sha256sum README.txt
+          elif [ "${{ env.format }}" = "flat" ]; then
+            qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=monolithicFlat,compat6' rr/rr.vmdk
+            (cd rr; sha256sum rr*.vmdk >../sha256sum)
+            zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.flat.zip" -j rr/rr*.vmdk ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vhd" ]; then
             . scripts/func.sh "${{ secrets.RRORG }}"
             qemu-img convert rr/rr.img -O vpc rr/rr.vhd
