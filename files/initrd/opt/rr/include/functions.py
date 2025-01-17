@@ -113,7 +113,7 @@ def getmodels(platforms=None):
     """
     Get Syno Models.
     """
-    import json, requests, urllib3
+    import re, json, requests, urllib3
     from requests.adapters import HTTPAdapter
     from requests.packages.urllib3.util.retry import Retry  # type: ignore
 
@@ -127,20 +127,23 @@ def getmodels(platforms=None):
 
     models = []
     try:
-        req = session.get("https://autoupdate.synology.com/os/v2", timeout=10, verify=False)
-        req.encoding = "utf-8"
-        data = json.loads(req.text)
+        url = "http://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
+        #url = "https://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
 
-        for item in data["channel"]["item"]:
-            if not item["title"].startswith("DSM"):
+        req = session.get(url, timeout=10, verify=False)
+        req.encoding = "utf-8"
+        p = re.compile(r"<mUnique>(.*?)</mUnique>.*?<mLink>(.*?)</mLink>", re.MULTILINE | re.DOTALL)
+
+        data = p.findall(req.text)
+        for item in data:
+            if not "DSM" in item[1]:
                 continue
-            for model in item["model"]:
-                arch = model["mUnique"].split("_")[1]
-                name = model["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
-                if PS and arch.lower() not in PS:
-                    continue
-                if not any(m["name"] == name for m in models):
-                    models.append({"name": name, "arch": arch})
+            arch = item[0].split("_")[1]
+            name = item[1].split("/")[-1].split("_")[1].replace("%2B", "+")
+            if PS and arch.lower() not in PS:
+                continue
+            if not any(m["name"] == name for m in models):
+                models.append({"name": name, "arch": arch})
 
         models.sort(key=lambda k: (k["arch"], k["name"]))
 
