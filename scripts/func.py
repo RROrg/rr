@@ -6,7 +6,7 @@
 # See /LICENSE for more information.
 #
 
-import os, sys, glob, json, yaml, click, shutil, tarfile, kmodule, requests, urllib3
+import os, re, sys, glob, json, yaml, click, shutil, tarfile, kmodule, requests, urllib3
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry  # type: ignore
 from openpyxl import Workbook
@@ -44,24 +44,28 @@ def getmodels(workpath, jsonpath, xlsxpath):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
     try:
-        req = session.get("https://autoupdate.synology.com/os/v2", timeout=10, verify=False)
+        url = "http://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
+        #url = "https://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
+
+        req = session.get(url, timeout=10, verify=False)
         req.encoding = "utf-8"
-        data = json.loads(req.text)
+        p = re.compile(r"<mUnique>(.*?)</mUnique>.*?<mLink>(.*?)</mLink>", re.MULTILINE | re.DOTALL)
+
+        data = p.findall(req.text)
     except Exception as e:
         click.echo(f"Error: {e}")
         return
 
-    for item in data["channel"]["item"]:
-        if not item["title"].startswith("DSM"):
+    for item in data:
+        if not "DSM" in item[1]:
             continue
-        for model in item["model"]:
-            arch = model["mUnique"].split("_")[1].lower()
-            name = model["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
-            if arch not in models:
-                continue
-            if name in (A for B in models for A in models[B]["models"]):
-                continue
-            models[arch]["models"].append(name)
+        arch = item[0].split("_")[1]
+        name = item[1].split("/")[-1].split("_")[1].replace("%2B", "+")
+        if arch not in models:
+            continue
+        if name in (A for B in models for A in models[B]["models"]):
+            continue
+        models[arch]["models"].append(name)
 
     if jsonpath:
         with open(jsonpath, "w") as f:
@@ -99,25 +103,28 @@ def getpats(workpath, jsonpath, xlsxpath):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
     try:
-        req = session.get("https://autoupdate.synology.com/os/v2", timeout=10, verify=False)
+        url = "http://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
+        #url = "https://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
+
+        req = session.get(url, timeout=10, verify=False)
         req.encoding = "utf-8"
-        data = json.loads(req.text)
+        p = re.compile(r"<mUnique>(.*?)</mUnique>.*?<mLink>(.*?)</mLink>", re.MULTILINE | re.DOTALL)
+        data = p.findall(req.text)
     except Exception as e:
         click.echo(f"Error: {e}")
         return
 
     models = []
-    for item in data["channel"]["item"]:
-        if not item["title"].startswith("DSM"):
+    for item in data:
+        if not "DSM" in item[1]:
             continue
-        for model in item["model"]:
-            arch = model["mUnique"].split("_")[1].lower()
-            name = model["mLink"].split("/")[-1].split("_")[1].replace("%2B", "+")
-            if arch not in platforms:
-                continue
-            if name in models:
-                continue
-            models.append(name)
+        arch = item[0].split("_")[1]
+        name = item[1].split("/")[-1].split("_")[1].replace("%2B", "+")
+        if arch not in platforms:
+            continue
+        if name in models:
+            continue
+        models.append(name)
 
     pats = {}
     for M in models:
