@@ -133,7 +133,6 @@ def getmodels(platforms=None):
         req = session.get(url, timeout=10, verify=False)
         req.encoding = "utf-8"
         p = re.compile(r"<mUnique>(.*?)</mUnique>.*?<mLink>(.*?)</mLink>", re.MULTILINE | re.DOTALL)
-
         data = p.findall(req.text)
         for item in data:
             if not "DSM" in item[1]:

@@ -429,7 +429,7 @@ function connectwlanif() {
       kill -9 "$(cat /var/run/wpa_supplicant.pid.${1})"
       rm -f "/var/run/wpa_supplicant.pid.${1}"
     fi
-    wpa_supplicant -i "${1}" -c "${CONF}" -B -P "/var/run/wpa_supplicant.pid.${1}" >/dev/null 2>&1
+    wpa_supplicant -i "${1}" -c "${CONF}" -qq -B -P "/var/run/wpa_supplicant.pid.${1}" >/dev/null 2>&1
   fi
   return 0
 }
