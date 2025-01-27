@@ -173,7 +173,7 @@ mkdir -p "${RAMDISK_PATH}/addons"
 chmod +x "${RAMDISK_PATH}/addons/addons.sh"
 
 # This order cannot be changed.
-for ADDON in "redpill" "revert" "misc" "eudev" "disks" "localrss" "notify" "wol" "rndis"; do
+for ADDON in "redpill" "revert" "misc" "eudev" "disks" "localrss" "notify" "wol"; do
   PARAMS=""
   if [ "${ADDON}" = "disks" ]; then
     PARAMS=${HDDSORT}
