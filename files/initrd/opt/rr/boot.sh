@@ -339,31 +339,32 @@ else
   for N in ${ETHX}; do
     COUNT=0
     DRIVER=$(ls -ld /sys/class/net/${N}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
-    printf "%s(%s): " "${N}" "${DRIVER}"
+    MAC=$(cat /sys/class/net/${N}/address 2>/dev/null)
+    printf "%s(%s): " "${N}" "${MAC}@${DRIVER}"
     while true; do
       if [ ! "${N::3}" = "eth" ]; then
-        printf "\r%s(%s): %s\n" "${N}" "${DRIVER}" "$(TEXT "IGNORE (Does not support non-wired network card.)")"
+        printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "IGNORE (Does not support non-wired network card.)")"
         break
       fi
       if [ -z "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
-        printf "\r%s(%s): %s\n" "${N}" "${DRIVER}" "$(TEXT "DOWN")"
+        printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "DOWN")"
         break
       fi
       if [ "0" = "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
-        printf "\r%s(%s): %s\n" "${N}" "${DRIVER}" "$(TEXT "NOT CONNECTED")"
+        printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "NOT CONNECTED")"
         break
       fi
       if [ ${COUNT} -eq ${BOOTIPWAIT} ]; then # Under normal circumstances, no errors should occur here.
-        printf "\r%s(%s): %s\n" "${N}" "${DRIVER}" "$(TEXT "TIMEOUT (Please check the IP on the router.)")"
+        printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "TIMEOUT (Please check the IP on the router.)")"
         break
       fi
       COUNT=$((COUNT + 1))
       IP="$(getIP "${N}")"
       if [ -n "${IP}" ]; then
         if echo "${IP}" | grep -q "^169\.254\."; then
-          printf "\r%s(%s): %s\n" "${N}" "${DRIVER}" "$(TEXT "LINK LOCAL (No DHCP server detected.)")"
+          printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "LINK LOCAL (No DHCP server detected.)")"
         else
-          printf "\r%s(%s): %s\n" "${N}" "${DRIVER}" "$(printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}")"
+          printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}")"
         fi
         break
       fi
