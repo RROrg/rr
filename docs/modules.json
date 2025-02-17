@@ -1074,9 +1074,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -1192,7 +1200,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -1892,6 +1900,14 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -3250,9 +3266,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": ""
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -3364,7 +3388,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -4016,6 +4040,14 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -5354,9 +5386,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": ""
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -5468,7 +5508,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -6120,6 +6160,14 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -7458,9 +7506,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": ""
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -7572,7 +7628,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -8224,6 +8280,14 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -9570,9 +9634,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": ""
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -9684,7 +9756,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -10348,6 +10420,14 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -11694,9 +11774,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -11804,7 +11892,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -12478,6 +12566,14 @@
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "rndis_host": {
             "description": "USB Host side RNDIS driver",
             "depends": "usbnet,usbcore,cdc_ether"
@@ -12864,9 +12960,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alcor_pci": {
             "description": "PCI driver for Alcor Micro AU6601 Secure Digital Host Controller Interface",
@@ -12982,7 +13086,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -13832,6 +13936,14 @@
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
             "depends": ""
         },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "rndis_host": {
             "description": "USB Host side RNDIS driver",
             "depends": "usbnet,usbcore,cdc_ether"
@@ -14430,9 +14542,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alcor_pci": {
             "description": "PCI driver for Alcor Micro AU6601 Secure Digital Host Controller Interface",
@@ -14552,7 +14672,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -15404,6 +15524,14 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -17015,9 +17143,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -17129,7 +17265,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -17821,6 +17957,14 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -19195,9 +19339,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": ""
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -19309,7 +19461,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -19981,6 +20133,14 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -21347,9 +21507,17 @@
             "description": "ADT7470 driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw,usbcore"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": "usbcore"
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -21461,7 +21629,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -22153,6 +22321,14 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
@@ -23539,9 +23715,17 @@
             "description": "adt7475 driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
         },
+        "aic8800_fdrv": {
+            "description": "RivieraWaves 11nac driver for Linux cfg80211 (Compiled by RR for DSM)",
+            "depends": "cfg80211,aic_load_fw"
+        },
         "aic94xx": {
             "description": "Adaptec aic94xx SAS/SATA driver",
             "depends": "libsas,scsi_transport_sas"
+        },
+        "aic_load_fw": {
+            "description": "AIC BLUETOOTH (Compiled by RR for DSM)",
+            "depends": ""
         },
         "alx": {
             "description": "Qualcomm Atheros(R) AR816x/AR817x PCI-E Ethernet Network Driver",
@@ -23653,7 +23837,7 @@
         },
         "cfg80211": {
             "description": "wireless configuration support",
-            "depends": ""
+            "depends": "rfkill"
         },
         "ch": {
             "description": "device driver for scsi media changer devices",
@@ -24349,6 +24533,14 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "rfkill-gpio": {
+            "description": "gpio rfkill (Compiled by RR for DSM)",
+            "depends": "rfkill"
+        },
+        "rfkill": {
+            "description": "RF switch support (Compiled by RR for DSM)",
             "depends": ""
         },
         "rndis_host": {
