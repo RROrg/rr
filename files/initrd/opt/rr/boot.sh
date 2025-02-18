@@ -405,7 +405,9 @@ else
     fi
   done
 
-  # # Unload all network interfaces
+  # Disconnect wireless
+  lsmod | grep -q iwlwifi && for N in $(ls /sys/class/net/ 2>/dev/null | grep wlan); do connectwlanif "${N}" 0 2>/dev/null; done
+  # Unload all network drivers
   # for D in $(realpath /sys/class/net/*/device/driver); do rmmod -f "$(basename ${D})" 2>/dev/null || true; done
 
   # Unload all graphics drivers
