@@ -2632,6 +2632,7 @@ function setWirelessAccount() {
         else
           echo -e "ctrl_interface=/var/run/wpa_supplicant\nupdate_config=1\nnetwork={\n        ssid=\"${SSID}\"\n        priority=1\n        psk=\"${PSK}\"\n}" >${PART1_PATH}/wpa_supplicant.conf
           for N in ${ETHX}; do
+            connectwlanif "${N}" 0 && sleep 1
             connectwlanif "${N}" 1 && sleep 1
             MACR="$(cat /sys/class/net/${N}/address 2>/dev/null | sed 's/://g')"
             IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
