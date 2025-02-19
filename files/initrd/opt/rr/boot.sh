@@ -228,6 +228,13 @@ if echo "purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
   CMDLINE["SASmodel"]="1"
 fi
 
+SSID="$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep 'ssid=' | cut -d'=' -f2 | sed 's/^"//; s/"$//')"
+PSK="$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep 'psk=' | cut -d'=' -f2 | sed 's/^"//; s/"$//')"
+if [ -n "${SSID}" ] && [ -n "${PSK}" ]; then
+  CMDLINE["wpa.ssid"]="${SSID}"
+  CMDLINE["wpa.psk"]="${PSK}"
+fi
+
 while IFS=': ' read -r KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["network.${KEY}"]="${VALUE}"
 done <<<$(readConfigMap "network" "${USER_CONFIG_FILE}")
@@ -264,7 +271,7 @@ function _bootwait() {
       rm -f WB WC
       return 1
     fi
-    if false && [ -f "${WORK_PATH}/menu.lock" ]; then
+    if false && [ -f "${TMP_PATH}/menu.lock" ]; then
       printf "\r%$((${#MSG} * 2))s\n" " "
       printf "\r\033[1;33m%s\033[0m\n" "$(TEXT "Menu opened and booting is interrupted.")"
       rm -f WB WC
@@ -342,7 +349,7 @@ else
     MAC=$(cat /sys/class/net/${N}/address 2>/dev/null)
     printf "%s(%s): " "${N}" "${MAC}@${DRIVER}"
     while true; do
-      if [ ! "${N::3}" = "eth" ]; then
+      if false && [ ! "${N::3}" = "eth" ]; then
         printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "IGNORE (Does not support non-wired network card.)")"
         break
       fi

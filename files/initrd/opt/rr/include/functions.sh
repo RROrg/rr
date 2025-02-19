@@ -420,9 +420,7 @@ function connectwlanif() {
       rm -f "/var/run/wpa_supplicant.pid.${1}"
     fi
   else
-    local CONF=""
-    [ -z "${CONF}" ] && [ -f "${PART1_PATH}/wpa_supplicant.conf.${1}" ] && CONF="${PART1_PATH}/wpa_supplicant.conf.${1}"
-    [ -z "${CONF}" ] && [ -f "${PART1_PATH}/wpa_supplicant.conf" ] && CONF="${PART1_PATH}/wpa_supplicant.conf"
+    local CONF="$([ -f "${PART1_PATH}/wpa_supplicant.conf" ] && echo "${PART1_PATH}/wpa_supplicant.conf" || echo "")"
     [ -z "${CONF}" ] && return 2
 
     if [ -f "/var/run/wpa_supplicant.pid.${1}" ]; then

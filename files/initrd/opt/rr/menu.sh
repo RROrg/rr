@@ -14,13 +14,13 @@
 alias DIALOG='dialog --backtitle "$(backtitle)" --colors --aspect 50'
 
 # lock
-exec 304>"${WORK_PATH}/menu.lock"
+exec 304>"${TMP_PATH}/menu.lock"
 flock -n 304 || {
   MSG="$(TEXT "The menu.sh instance is already running in another terminal. To avoid conflicts, please operate in one instance only.")"
   dialog --colors --aspect 50 --title "$(TEXT "Error")" --msgbox "${MSG}" 0 0
   exit 1
 }
-trap 'flock -u 304; rm -f "${WORK_PATH}/menu.lock"' EXIT INT TERM HUP
+trap 'flock -u 304; rm -f "${TMP_PATH}/menu.lock"' EXIT INT TERM HUP
 
 # Check partition 3 space, if < 2GiB is necessary clean cache folder
 SPACELEFT=$(df -m ${PART3_PATH} 2>/dev/null | awk 'NR==2 {print $4}')
@@ -2611,10 +2611,8 @@ function setWirelessAccount() {
   for I in $(iw wlan0 scan 2>/dev/null | grep SSID: | awk '{print $2}'); do MSG+="${I}\n"; done
   LINENUM=$(($(echo -e "${MSG}" | wc -l) + 8))
   while true; do
-    SSID=$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep -i SSID | cut -d'=' -f2)
-    PSK=$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep -i PSK | cut -d'=' -f2)
-    SSID="${SSID//\"/}"
-    PSK="${PSK//\"/}"
+    SSID="$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep 'ssid=' | cut -d'=' -f2 | sed 's/^"//; s/"$//')"
+    PSK="$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep 'psk=' | cut -d'=' -f2 | sed 's/^"//; s/"$//')"
     DIALOG --title "$(TEXT "Settings")" \
       --form "${MSG}" ${LINENUM:-16} 70 2 "SSID" 1 1 "${SSID}" 1 7 58 0 " PSK" 2 1 "${PSK}" 2 7 58 0 \
       2>"${TMP_PATH}/resp"
@@ -2632,14 +2630,7 @@ function setWirelessAccount() {
             connectwlanif "${N}" 0 && sleep 1
           done
         else
-          rm -f ${PART1_PATH}/wpa_supplicant.conf
-          echo "ctrl_interface=/var/run/wpa_supplicant" >>${PART1_PATH}/wpa_supplicant.conf
-          echo "update_config=1" >>${PART1_PATH}/wpa_supplicant.conf
-          echo "network={" >>${PART1_PATH}/wpa_supplicant.conf
-          echo "        ssid=\"${SSID}\"" >>${PART1_PATH}/wpa_supplicant.conf
-          echo "        psk=\"${PSK}\"" >>${PART1_PATH}/wpa_supplicant.conf
-          echo "}" >>${PART1_PATH}/wpa_supplicant.conf
-
+          echo -e "ctrl_interface=/var/run/wpa_supplicant\nupdate_config=1\nnetwork={\n        ssid=\"${SSID}\"\n        priority=1\n        psk=\"${PSK}\"\n}" >${PART1_PATH}/wpa_supplicant.conf
           for N in ${ETHX}; do
             connectwlanif "${N}" 1 && sleep 1
             MACR="$(cat /sys/class/net/${N}/address 2>/dev/null | sed 's/://g')"
