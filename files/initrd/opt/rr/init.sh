@@ -67,6 +67,7 @@ initConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
 if [ -z "$(readConfigMap "addons" "${USER_CONFIG_FILE}")" ]; then
   initConfigKey "addons.acpid" "" "${USER_CONFIG_FILE}"
   initConfigKey "addons.trivial" "" "${USER_CONFIG_FILE}"
+  initConfigKey "addons.vmtools" "" "${USER_CONFIG_FILE}"
   initConfigKey "addons.mountloader" "" "${USER_CONFIG_FILE}"
   initConfigKey "addons.powersched" "" "${USER_CONFIG_FILE}"
   initConfigKey "addons.reboottoloader" "" "${USER_CONFIG_FILE}"
