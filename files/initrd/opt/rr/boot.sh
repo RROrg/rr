@@ -182,6 +182,8 @@ CMDLINE['pcie_aspm']="off"
 # CMDLINE['amd_pstate']="disable"
 # CMDLINE['nox2apic']=""  # check platform
 # CMDLINE['nomodeset']=""
+CMDLINE['nowatchdog']=""
+
 CMDLINE['modprobe.blacklist']="${MODBLACKLIST}"
 CMDLINE['mev']="${MEV:-physical}"
 
