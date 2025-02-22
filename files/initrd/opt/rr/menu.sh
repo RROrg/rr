@@ -3441,7 +3441,7 @@ function updateRR() {
   SIZEOLD=0
   while IFS=': ' read -r KEY VALUE; do
     if [ "${KEY: -1}" = "/" ]; then
-      rm -Rf "${TMP_PATH}/update/${VALUE}"
+      rm -rf "${TMP_PATH}/update/${VALUE}"
       mkdir -p "${TMP_PATH}/update/${VALUE}"
       tar -zxf "${TMP_PATH}/update/$(basename "${KEY}").tgz" -C "${TMP_PATH}/update/${VALUE}" >"${LOG_FILE}" 2>&1
       if [ $? -ne 0 ]; then
@@ -3487,7 +3487,7 @@ function updateRR() {
   # Process update-list.yml
   while read -r F; do
     [ -f "${F}" ] && rm -f "${F}"
-    [ -d "${F}" ] && rm -Rf "${F}"
+    [ -d "${F}" ] && rm -rf "${F}"
   done <<<$(readConfigArray "remove" "${TMP_PATH}/update/update-list.yml")
   while IFS=': ' read -r KEY VALUE; do
     if [ "${KEY: -1}" = "/" ]; then
@@ -3573,7 +3573,7 @@ function updateAddons() {
     return 1
   fi
 
-  rm -Rf "${ADDONS_PATH}/"*
+  rm -rf "${ADDONS_PATH}/"*
   cp -rf "${TMP_PATH}/update/"* "${ADDONS_PATH}/"
   rm -rf "${TMP_PATH}/update"
   touch ${PART1_PATH}/.build
