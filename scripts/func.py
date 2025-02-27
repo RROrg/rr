@@ -197,6 +197,9 @@ def getpats(workpath, jsonpath, xlsxpath):
                         continue
                     V = __fullversion(f"{S['build_ver']}-{S['build_num']}-{S['nano']}")
                     if V not in pats[M]:
+                        reqPat = session.head(S['files'][0]['url'].split('?')[0], timeout=10, verify=False)
+                        if reqPat.status_code == 403:
+                            continue
                         pats[M][V] = {
                             'url': S['files'][0]['url'].split('?')[0],
                             'sum': S['files'][0]['checksum']

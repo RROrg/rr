@@ -4,15 +4,15 @@
 # 2 - Kernel Version
 function unpackModules() {
   local PLATFORM=${1}
-  local KVER=${2}
+  local PKVER=${2}
   local KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 
   rm -rf "${TMP_PATH}/modules"
   mkdir -p "${TMP_PATH}/modules"
   if [ "${KERNEL}" = "custom" ]; then
-    tar -zxf "${CKS_PATH}/modules-${PLATFORM}-${KVER}.tgz" -C "${TMP_PATH}/modules"
+    tar -zxf "${CKS_PATH}/modules-${PLATFORM}-${PKVER}.tgz" -C "${TMP_PATH}/modules"
   else
-    tar -zxf "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" -C "${TMP_PATH}/modules"
+    tar -zxf "${MODULES_PATH}/${PLATFORM}-${PKVER}.tgz" -C "${TMP_PATH}/modules"
   fi
 }
 
@@ -22,13 +22,13 @@ function unpackModules() {
 # 2 - Kernel Version
 function packagModules() {
   local PLATFORM=${1}
-  local KVER=${2}
+  local PKVER=${2}
   local KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 
   if [ "${KERNEL}" = "custom" ]; then
-    tar -zcf "${CKS_PATH}/modules-${PLATFORM}-${KVER}.tgz" -C "${TMP_PATH}/modules" .
+    tar -zcf "${CKS_PATH}/modules-${PLATFORM}-${PKVER}.tgz" -C "${TMP_PATH}/modules" .
   else
-    tar -zcf "${MODULES_PATH}/${PLATFORM}-${KVER}.tgz" -C "${TMP_PATH}/modules" .
+    tar -zcf "${MODULES_PATH}/${PLATFORM}-${PKVER}.tgz" -C "${TMP_PATH}/modules" .
   fi
 }
 
@@ -38,13 +38,13 @@ function packagModules() {
 # 2 - Kernel Version
 function getAllModules() {
   local PLATFORM=${1}
-  local KVER=${2}
+  local PKVER=${2}
 
-  if [ -z "${PLATFORM}" ] || [ -z "${KVER}" ]; then
+  if [ -z "${PLATFORM}" ] || [ -z "${PKVER}" ]; then
     return 1
   fi
 
-  unpackModules "${PLATFORM}" "${KVER}"
+  unpackModules "${PLATFORM}" "${PKVER}"
 
   for F in $(ls ${TMP_PATH}/modules/*.ko 2>/dev/null); do
     local X=$(basename "${F}")
@@ -64,16 +64,16 @@ function getAllModules() {
 # 3 - Module list
 function installModules() {
   local PLATFORM=${1}
-  local KVER=${2}
+  local PKVER=${2}
   shift 2
   local MLIST="${@}"
 
-  if [ -z "${PLATFORM}" ] || [ -z "${KVER}" ]; then
+  if [ -z "${PLATFORM}" ] || [ -z "${PKVER}" ]; then
     echo "ERROR: installModules: Platform or Kernel Version not defined" >"${LOG_FILE}"
     return 1
   fi
 
-  unpackModules "${PLATFORM}" "${KVER}"
+  unpackModules "${PLATFORM}" "${PKVER}"
 
   local ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")"
   for F in $(ls "${TMP_PATH}/modules/"*.ko 2>/dev/null); do
@@ -108,19 +108,19 @@ function installModules() {
 # 3 - ko file
 function addToModules() {
   local PLATFORM=${1}
-  local KVER=${2}
+  local PKVER=${2}
   local KOFILE=${3}
 
-  if [ -z "${PLATFORM}" ] || [ -z "${KVER}" ] || [ -z "${KOFILE}" ]; then
+  if [ -z "${PLATFORM}" ] || [ -z "${PKVER}" ] || [ -z "${KOFILE}" ]; then
     echo ""
     return 1
   fi
 
-  unpackModules "${PLATFORM}" "${KVER}"
+  unpackModules "${PLATFORM}" "${PKVER}"
 
   cp -f "${KOFILE}" "${TMP_PATH}/modules"
 
-  packagModules "${PLATFORM}" "${KVER}"
+  packagModules "${PLATFORM}" "${PKVER}"
 }
 
 ###############################################################################
@@ -130,19 +130,19 @@ function addToModules() {
 # 3 - ko name
 function delToModules() {
   local PLATFORM=${1}
-  local KVER=${2}
+  local PKVER=${2}
   local KONAME=${3}
 
-  if [ -z "${PLATFORM}" ] || [ -z "${KVER}" ] || [ -z "${KONAME}" ]; then
+  if [ -z "${PLATFORM}" ] || [ -z "${PKVER}" ] || [ -z "${KONAME}" ]; then
     echo ""
     return 1
   fi
 
-  unpackModules "${PLATFORM}" "${KVER}"
+  unpackModules "${PLATFORM}" "${PKVER}"
 
   rm -f "${TMP_PATH}/modules/${KONAME}"
 
-  packagModules "${PLATFORM}" "${KVER}"
+  packagModules "${PLATFORM}" "${PKVER}"
 }
 
 ###############################################################################
@@ -164,15 +164,15 @@ function getdepends() {
   }
 
   local PLATFORM=${1}
-  local KVER=${2}
+  local PKVER=${2}
   local KONAME=${3}
 
-  if [ -z "${PLATFORM}" ] || [ -z "${KVER}" ] || [ -z "${KONAME}" ]; then
+  if [ -z "${PLATFORM}" ] || [ -z "${PKVER}" ] || [ -z "${KONAME}" ]; then
     echo ""
     return 1
   fi
 
-  unpackModules "${PLATFORM}" "${KVER}"
+  unpackModules "${PLATFORM}" "${PKVER}"
 
   local DPS=($(_getdepends "${KONAME}" | tr ' ' '\n' | sort -u))
   echo "${DPS[@]}"

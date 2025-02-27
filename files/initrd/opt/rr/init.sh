@@ -52,6 +52,9 @@ initConfigKey "modelid" "" "${USER_CONFIG_FILE}"
 initConfigKey "productver" "" "${USER_CONFIG_FILE}"
 initConfigKey "buildnum" "" "${USER_CONFIG_FILE}"
 initConfigKey "smallnum" "" "${USER_CONFIG_FILE}"
+initConfigKey "dt" "" "${USER_CONFIG_FILE}"
+initConfigKey "kver" "" "${USER_CONFIG_FILE}"
+initConfigKey "kpre" "" "${USER_CONFIG_FILE}"
 initConfigKey "paturl" "" "${USER_CONFIG_FILE}"
 initConfigKey "patsum" "" "${USER_CONFIG_FILE}"
 initConfigKey "sn" "" "${USER_CONFIG_FILE}"
@@ -74,18 +77,6 @@ if [ -z "$(readConfigMap "addons" "${USER_CONFIG_FILE}")" ]; then
 fi
 initConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
 initConfigKey "modblacklist" "evbug,cdc_ether" "${USER_CONFIG_FILE}"
-
-# for update
-if [ -f "${PART2_PATH}/GRUB_VER" ]; then
-  PLATFORMTMP="$(_get_conf_kv "PLATFORM" "${PART2_PATH}/GRUB_VER")"
-  MODELTMP="$(_get_conf_kv "MODEL" "${PART2_PATH}/GRUB_VER")"
-  [ -z "$(readConfigKey "platform" "${USER_CONFIG_FILE}")" ] &&
-    writeConfigKey "platform" "${PLATFORMTMP,,}" "${USER_CONFIG_FILE}"
-  [ -z "$(readConfigKey "model" "${USER_CONFIG_FILE}")" ] &&
-    writeConfigKey "model" "$(echo "${MODELTMP}" | sed 's/d$/D/; s/rp$/RP/; s/rp+/RP+/')" "${USER_CONFIG_FILE}"
-  [ -z "$(readConfigKey "modelid" "${USER_CONFIG_FILE}")" ] &&
-    writeConfigKey "modelid" "${MODELTMP}" "${USER_CONFIG_FILE}"
-fi
 
 if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   if arrayExistItem "sortnetif:" "$(readConfigMap "addons" "${USER_CONFIG_FILE}")"; then

@@ -33,6 +33,26 @@ BTITLE+="$([ ${EFI} -eq 1 ] && echo " [UEFI]" || echo " [BIOS]")"
 BTITLE+="$([ "${BUS}" = "usb" ] && echo " [${BUS^^} flashdisk]" || echo " [${BUS^^} DoM]")"
 printf "\033[1;33m%*s\033[0m\n" $(((${#BTITLE} + ${COLUMNS}) / 2)) "${BTITLE}"
 
+if [ -f ${PART1_PATH}/.upgraded ]; then
+  MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
+  if [ -n "${MODEL}" ]; then
+    printf "\033[1;43m%s\033[0m\n" "$(TEXT "Reconfigure after upgrade ...")"
+    PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+    PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
+    PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
+    ./menu.sh modelMenu "${MODEL}" || {
+      echo -e "$(TEXT "Reconfiguration failed!")"
+      exit 1
+    }
+    if [ -n "${PRODUCTVER}" ] && [ -n "${PATURL}" ]; then
+      ./menu.sh productversMenu "${PRODUCTVER}" "${PATURL}" "${PATSUM}" || {
+        echo -e "$(TEXT "Reconfiguration failed!")"
+        exit 1
+      }
+    fi
+  fi
+  rm -f ${PART1_PATH}/.upgraded
+fi
 # Check if DSM zImage changed, patch it if necessary
 ZIMAGE_HASH="$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")"
 if [ -f ${PART1_PATH}/.build ] || [ "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print $1}')" != "${ZIMAGE_HASH}" ]; then
@@ -61,12 +81,11 @@ MODELID="$(readConfigKey "modelid" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
 BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
 SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
+DT="$(readConfigKey "dt" "${USER_CONFIG_FILE}")"
+KVER="$(readConfigKey "kver" "${USER_CONFIG_FILE}")"
+KPRE="$(readConfigKey "kpre" "${USER_CONFIG_FILE}")"
 KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 LKM="$(readConfigKey "lkm" "${USER_CONFIG_FILE}")"
-
-DT="$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")"
-KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
-KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
 
 MEV="$(virt-what 2>/dev/null | head -1)"
 DMI="$(dmesg 2>/dev/null | grep -i "DMI:" | head -1 | sed 's/\[.*\] DMI: //i')"
@@ -288,16 +307,18 @@ function _bootwait() {
 
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 if [ "${DIRECT}" = "true" ] || [ "${MEV:-physical}" = "parallels" ]; then
-  grub-editenv ${USER_GRUBENVFILE} set rr_version="${WTITLE}"
-  grub-editenv ${USER_GRUBENVFILE} set rr_booting="${BTITLE}"
-  grub-editenv ${USER_GRUBENVFILE} set dsm_model="${MODEL}(${PLATFORM})"
-  grub-editenv ${USER_GRUBENVFILE} set dsm_version="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
-  grub-editenv ${USER_GRUBENVFILE} set dsm_kernel="${KERNEL}"
-  grub-editenv ${USER_GRUBENVFILE} set dsm_lkm="${LKM}"
-  grub-editenv ${USER_GRUBENVFILE} set sys_mev="${MEV:-physical}"
-  grub-editenv ${USER_GRUBENVFILE} set sys_dmi="${DMI}"
-  grub-editenv ${USER_GRUBENVFILE} set sys_cpu="${CPU}"
-  grub-editenv ${USER_GRUBENVFILE} set sys_mem="${MEM}"
+  # grubenv file limit is 1024 bytes.
+  grub-editenv ${USER_RSYSENVFILE} create
+  grub-editenv ${USER_RSYSENVFILE} set rr_version="${WTITLE}"
+  grub-editenv ${USER_RSYSENVFILE} set rr_booting="${BTITLE}"
+  grub-editenv ${USER_RSYSENVFILE} set dsm_model="${MODEL}(${PLATFORM})"
+  grub-editenv ${USER_RSYSENVFILE} set dsm_version="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
+  grub-editenv ${USER_RSYSENVFILE} set dsm_kernel="${KERNEL}"
+  grub-editenv ${USER_RSYSENVFILE} set dsm_lkm="${LKM}"
+  grub-editenv ${USER_RSYSENVFILE} set sys_mev="${MEV:-physical}"
+  grub-editenv ${USER_RSYSENVFILE} set sys_dmi="${DMI}"
+  grub-editenv ${USER_RSYSENVFILE} set sys_cpu="${CPU}"
+  grub-editenv ${USER_RSYSENVFILE} set sys_mem="${MEM}"
 
   CMDLINE_DIRECT=$(echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g') # Escape special chars
   grub-editenv ${USER_GRUBENVFILE} set dsm_cmdline="${CMDLINE_DIRECT}"
@@ -309,16 +330,7 @@ if [ "${DIRECT}" = "true" ] || [ "${MEV:-physical}" = "parallels" ]; then
   reboot
   exit 0
 else
-  grub-editenv ${USER_GRUBENVFILE} unset rr_version
-  grub-editenv ${USER_GRUBENVFILE} unset rr_booting
-  grub-editenv ${USER_GRUBENVFILE} unset dsm_model
-  grub-editenv ${USER_GRUBENVFILE} unset dsm_version
-  grub-editenv ${USER_GRUBENVFILE} unset dsm_kernel
-  grub-editenv ${USER_GRUBENVFILE} unset dsm_lkm
-  grub-editenv ${USER_GRUBENVFILE} unset sys_mev
-  grub-editenv ${USER_GRUBENVFILE} unset sys_dmi
-  grub-editenv ${USER_GRUBENVFILE} unset sys_cpu
-  grub-editenv ${USER_GRUBENVFILE} unset sys_mem
+  rm -f ${USER_RSYSENVFILE} 2>/dev/null || true
   grub-editenv ${USER_GRUBENVFILE} unset dsm_cmdline
   grub-editenv ${USER_GRUBENVFILE} unset next_entry
   ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo) || true

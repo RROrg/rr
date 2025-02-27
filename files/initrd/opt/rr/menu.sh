@@ -42,6 +42,9 @@ MODELID="$(readConfigKey "modelid" "${USER_CONFIG_FILE}")"
 PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
 BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
 SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
+DT="$(readConfigKey "dt" "${USER_CONFIG_FILE}")"
+KVER="$(readConfigKey "kver" "${USER_CONFIG_FILE}")"
+KPRE="$(readConfigKey "kpre" "${USER_CONFIG_FILE}")"
 LAYOUT="$(readConfigKey "layout" "${USER_CONFIG_FILE}")"
 KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
 KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
@@ -188,12 +191,13 @@ function modelMenu() {
     resp="${1}"
   fi
 
-  # If user change model, clean build* and pat* and SN
-  if [ "${MODEL}" != "${resp}" ]; then
-    PLATFORM="$(grep -w "${resp}" "${TMP_PATH}/modellist" | awk '{print $2}' | head -1)"
-    MODEL="${resp}"
-    writeConfigKey "platform" "${PLATFORM}" "${USER_CONFIG_FILE}"
-    writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
+  local BASEMODEL="${MODEL}"
+  MODEL="${resp}"
+  writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
+  PLATFORM="$(grep -w "${MODEL}" "${TMP_PATH}/modellist" | awk '{print $2}' | head -1)"
+  writeConfigKey "platform" "${PLATFORM}" "${USER_CONFIG_FILE}"
+
+  if [ "${MODEL}" != "${BASEMODEL}" ]; then
     MODELID=""
     PRODUCTVER=""
     BUILDNUM=""
@@ -217,8 +221,22 @@ function modelMenu() {
     # Remove old files
     rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
     rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
-    touch ${PART1_PATH}/.build
+    rm -f "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" >/dev/null 2>&1 || true
+  else
+    if [ -z "${SN}" ]; then
+      SN="$(generateSerial "${MODEL}")"
+      writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
+    fi
+    if [ -z "${MAC1}" ]; then
+      NETIF_NUM=2
+      MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
+      for I in $(seq 1 ${NETIF_NUM}); do
+        eval MAC${I}="${MACS[$((${I} - 1))]}"
+        writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
+      done
+    fi
   fi
+  touch ${PART1_PATH}/.build
   rm -f "${TMP_PATH}/modellist"
   return 0
 }
@@ -312,53 +330,71 @@ function productversMenu() {
     paturl="${2}"
     patsum="${3}"
   fi
+
+  [ "${paturl:0:1}" = "#" ] && patsum="${paturl}"
   [ -z "${paturl}" ] || [ -z "${patsum}" ] && return 1
-  writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
-  writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
-  PRODUCTVER=${selver}
-  writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
-  BUILDNUM=""
-  SMALLNUM=""
-  writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
-  writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
+
   if [ -z "${1}" ]; then
     DIALOG --title "$(TEXT "Product Version")" \
       --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules ...")" 0 0
   fi
-  # Delete synoinfo and reload model/build synoinfo
-  writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
-  while IFS=': ' read -r KEY VALUE; do
-    writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
-  done <<<$(readConfigMap "platforms.${PLATFORM}.synoinfo" "${WORK_PATH}/platforms.yml")
+  local BASEPATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
+  local BASEPATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
+
+  PRODUCTVER=${selver}
+  writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
+  if [ "${BASEPATURL}" != "${paturl}" ] || [ "${BASEPATSUM}" != "${patsum}" ]; then
+    BUILDNUM=""
+    SMALLNUM=""
+    writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
+    writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
+  fi
+  writeConfigKey "paturl" "${paturl}" "${USER_CONFIG_FILE}"
+  writeConfigKey "patsum" "${patsum}" "${USER_CONFIG_FILE}"
+  DT="$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")"
   KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
   KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
+  writeConfigKey "dt" "${DT}" "${USER_CONFIG_FILE}"
+  writeConfigKey "kver" "${KVER}" "${USER_CONFIG_FILE}"
+  writeConfigKey "kpre" "${KPRE}" "${USER_CONFIG_FILE}"
   # Check kernel
-  if [ -f "${CKS_PATH}/bzImage-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.gz" ] &&
-    [ -f "${CKS_PATH}/modules-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.tgz" ]; then
+  if [ -f "${CKS_PATH}/bzImage-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}.gz" ] &&
+    [ -f "${CKS_PATH}/modules-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}.tgz" ]; then
     :
   else
     KERNEL='official'
     writeConfigKey "kernel" "${KERNEL}" "${USER_CONFIG_FILE}"
   fi
   # Check usbasinternal
-  if [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
+  if [ "true" = "${DT}" ]; then
     USBASINTERNAL='false'
     writeConfigKey "usbasinternal" "${USBASINTERNAL}" "${USER_CONFIG_FILE}"
   fi
+
+  # Delete synoinfo and reload model/build synoinfo
+  writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
+  while IFS=': ' read -r KEY VALUE; do
+    writeConfigKey "synoinfo.\"${KEY}\"" "${VALUE}" "${USER_CONFIG_FILE}"
+  done <<<$(readConfigMap "platforms.${PLATFORM}.synoinfo" "${WORK_PATH}/platforms.yml")
+
   # Check addons
   while IFS=': ' read -r ADDON PARAM; do
     [ -z "${ADDON}" ] && continue
-    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
+    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}"; then
       deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
     fi
   done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
   # Rewrite modules
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-  mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
-  # Remove old files
-  rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
-  rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
-  rm -f "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" >/dev/null 2>&1 || true
+  mergeConfigModules "$(getAllModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
+
+  if [ "${BASEPATURL}" != "${paturl}" ] || [ "${BASEPATSUM}" != "${patsum}" ]; then
+    # Remove old files
+    rm -f "${ORI_ZIMAGE_FILE}" "${ORI_RDGZ_FILE}" "${MOD_ZIMAGE_FILE}" "${MOD_RDGZ_FILE}" >/dev/null 2>&1 || true
+    rm -f "${PART1_PATH}/grub_cksum.syno" "${PART1_PATH}/GRUB_VER" "${PART2_PATH}/"* >/dev/null 2>&1 || true
+    rm -f "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" >/dev/null 2>&1 || true
+  fi
+
   touch ${PART1_PATH}/.build
   return 0
 }
@@ -412,10 +448,28 @@ function setConfigFromDSM() {
   writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
   writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
   writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
-
   writeConfigKey "paturl" "#" "${USER_CONFIG_FILE}"
   writeConfigKey "patsum" "#" "${USER_CONFIG_FILE}"
 
+  DT="$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")"
+  KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
+  KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
+  writeConfigKey "dt" "${DT}" "${USER_CONFIG_FILE}"
+  writeConfigKey "kver" "${KVER}" "${USER_CONFIG_FILE}"
+  writeConfigKey "kpre" "${KPRE}" "${USER_CONFIG_FILE}"
+  # Check kernel
+  if [ -f "${CKS_PATH}/bzImage-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}.gz" ] &&
+    [ -f "${CKS_PATH}/modules-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}.tgz" ]; then
+    :
+  else
+    KERNEL='official'
+    writeConfigKey "kernel" "${KERNEL}" "${USER_CONFIG_FILE}"
+  fi
+  # Check usbasinternal
+  if [ "true" = "${DT}" ]; then
+    USBASINTERNAL='false'
+    writeConfigKey "usbasinternal" "${USBASINTERNAL}" "${USER_CONFIG_FILE}"
+  fi
   # Delete synoinfo and reload model/build synoinfo
   writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
   while IFS=': ' read -r KEY VALUE; do
@@ -423,17 +477,16 @@ function setConfigFromDSM() {
   done <<<$(readConfigMap "platforms.${PLATFORM}.synoinfo" "${WORK_PATH}/platforms.yml")
 
   # Check addons
-  KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
-  KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
   while IFS=': ' read -r ADDON PARAM; do
     [ -z "${ADDON}" ] && continue
-    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}"; then
+    if ! checkAddonExist "${ADDON}" "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}"; then
       deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
     fi
   done <<<$(readConfigMap "addons" "${USER_CONFIG_FILE}")
+
   # Rebuild modules
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-  mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
+  mergeConfigModules "$(getAllModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
   touch ${PART1_PATH}/.build
   return 0
 }
@@ -497,7 +550,7 @@ function ParsePat() {
     fi
 
     writeConfigKey "paturl" "#PARSEPAT" "${USER_CONFIG_FILE}"
-    writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
+    writeConfigKey "patsum" "#PARSEPAT" "${USER_CONFIG_FILE}"
     copyDSMFiles "${UNTAR_PAT_PATH}"
 
     touch ${PART1_PATH}/.build
@@ -521,6 +574,11 @@ function ParsePat() {
     PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
     BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
     SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
+    DT="$(readConfigKey "dt" "${USER_CONFIG_FILE}")"
+    KVER="$(readConfigKey "kver" "${USER_CONFIG_FILE}")"
+    KPRE="$(readConfigKey "kpre" "${USER_CONFIG_FILE}")"
+    KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
+    USBASINTERNAL="$(readConfigKey "usbasinternal" "${USER_CONFIG_FILE}")"
     SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
     MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
     MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
@@ -531,9 +589,6 @@ function ParsePat() {
 ###############################################################################
 # Manage addons
 function addonMenu() {
-  KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
-  KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
-
   NEXT="a"
   while true; do
     unset ADDONS
@@ -560,7 +615,7 @@ function addonMenu() {
       while read -r ADDON DESC; do
         arrayExistItem "${ADDON}" "${!ADDONS[@]}" && continue # Check if addon has already been added
         echo "${ADDON} \"${DESC}\"" >>"${TMP_PATH}/menu"
-      done <<<$(availableAddons "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+      done <<<$(availableAddons "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}")
       if [ ! -f "${TMP_PATH}/menu" ]; then
         DIALOG --title "$(TEXT "Addons")" \
           --msgbox "$(TEXT "No available addons to add")" 0 0
@@ -618,7 +673,7 @@ function addonMenu() {
           MSG+="${MODULE}"
         fi
         MSG+=": \Z5${DESC}\Zn\n"
-      done <<<$(availableAddons "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+      done <<<$(availableAddons "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}")
       DIALOG --title "$(TEXT "Addons")" \
         --msgbox "${MSG}" 0 0
       ;;
@@ -673,8 +728,6 @@ function addonMenu() {
 
 ###############################################################################
 function moduleMenu() {
-  KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
-  KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
   NEXT="c"
   # loop menu
   while true; do
@@ -698,7 +751,7 @@ function moduleMenu() {
       while true; do
         DIALOG --title "$(TEXT "Modules")" \
           --infobox "$(TEXT "Reading modules ...")" 0 0
-        ALLMODULES=$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")
+        ALLMODULES=$(getAllModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}")
         unset USERMODULES
         declare -A USERMODULES
         while IFS=': ' read -r KEY VALUE; do
@@ -750,7 +803,7 @@ function moduleMenu() {
         --infobox "$(TEXT "Selecting loaded modules")" 0 0
       KOLIST=""
       for I in $(lsmod 2>/dev/null | awk -F' ' '{print $1}' | grep -v 'Module'); do
-        KOLIST+="$(getdepends "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${I}") ${I} "
+        KOLIST+="$(getdepends "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" "${I}") ${I} "
       done
       KOLIST=($(echo ${KOLIST} | tr ' ' '\n' | sort -u))
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
@@ -790,10 +843,10 @@ function moduleMenu() {
       done
       popd
       if [ -n "${USER_FILE}" ] && [ "${USER_FILE##*.}" = "ko" ]; then
-        addToModules ${PLATFORM} "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" "${TMP_UP_PATH}/${USER_FILE}"
+        addToModules ${PLATFORM} "${KPRE:+${KPRE}-}${KVER}" "${TMP_UP_PATH}/${USER_FILE}"
         [ -f "${MODULES_PATH}/VERSION" ] && rm -f "${MODULES_PATH}/VERSION"
         DIALOG --title "$(TEXT "Modules")" \
-          --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${USER_FILE}" "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}")" 0 0
+          --msgbox "$(printf "$(TEXT "Module '%s' added to %s-%s")" "${USER_FILE}" "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}")" 0 0
         rm -f "${TMP_UP_PATH}/${USER_FILE}"
         touch ${PART1_PATH}/.build
       else
@@ -802,7 +855,7 @@ function moduleMenu() {
       fi
       ;;
     i)
-      DEPS="$(getdepends "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" i915) i915"
+      DEPS="$(getdepends "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" i915) i915"
       DELS=()
       while IFS=': ' read -r KEY VALUE; do
         [ -z "${KEY}" ] && continue
@@ -1228,7 +1281,7 @@ function extractPatFiles() {
 
   rm -rf "${EXT_PATH}"
   mkdir -p "${EXT_PATH}"
-  printf "$(TEXT "Disassembling %s: ")" "$(basename "${PAT_PATH}")"
+  printf "$(TEXT "Disassembling %s:")" "$(basename "${PAT_PATH}")"
 
   RET=0
   if [ "${isencrypted}" = "yes" ]; then
@@ -1328,7 +1381,7 @@ function extractDsmFiles() {
     printf "$(TEXT "%s cached.")" "${PAT_FILE}"
   fi
 
-  printf "$(TEXT "Checking hash of %s: ")" "${PAT_FILE}"
+  printf "$(TEXT "Checking hash of %s:")" "${PAT_FILE}"
   if [ "$(md5sum ${PAT_PATH} | awk '{print $1}')" != "${PATSUM}" ]; then
     rm -f ${PAT_PATH}
     echo -e "$(TEXT "md5 hash of pat not match, Please reget pat data from the version menu and try again!")" >"${LOG_FILE}"
@@ -1338,21 +1391,21 @@ function extractDsmFiles() {
 
   rm -rf "${UNTAR_PAT_PATH}"
   mkdir -p "${UNTAR_PAT_PATH}"
-  printf "$(TEXT "Disassembling %s: ")" "${PAT_FILE}"
+  printf "$(TEXT "Disassembling %s:")" "${PAT_FILE}"
 
   extractPatFiles "${PAT_PATH}" "${UNTAR_PAT_PATH}"
   if [ $? -ne 0 ]; then
     rm -rf "${UNTAR_PAT_PATH}"
     return 1
   fi
-  echo -n "$(TEXT "Setting hash: ")"
+  echo -n "$(TEXT "Setting hash:")"
   ZIMAGE_HASH="$(sha256sum ${UNTAR_PAT_PATH}/zImage | awk '{print $1}')"
   writeConfigKey "zimage-hash" "${ZIMAGE_HASH}" "${USER_CONFIG_FILE}"
   RAMDISK_HASH="$(sha256sum ${UNTAR_PAT_PATH}/rd.gz | awk '{print $1}')"
   writeConfigKey "ramdisk-hash" "${RAMDISK_HASH}" "${USER_CONFIG_FILE}"
   echo "$(TEXT "OK")"
 
-  echo -n "$(TEXT "Copying files: ")"
+  echo -n "$(TEXT "Copying files:")"
   copyDSMFiles "${UNTAR_PAT_PATH}"
   rm -rf "${UNTAR_PAT_PATH}"
   echo "$(TEXT "OK")"
@@ -1375,6 +1428,19 @@ function make() {
     if [ ${SPACEALL:-0} -lt ${SIZE} ]; then
       echo -e "$(TEXT "No disk space left, please clean the cache and try again!")" >"${LOG_FILE}"
       return 1
+    fi
+
+    if [ -f ${PART1_PATH}/.upgraded ]; then
+      echo "$(TEXT "Reconfigure after upgrade ...")"
+      PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
+      PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
+      modelMenu "${MODEL}"
+      productversMenu "${PRODUCTVER}" "${PATURL}" "${PATSUM}"
+      if [ $? -ne 0 ]; then
+        echo -e "$(TEXT "Reconfiguration failed!")" >"${LOG_FILE}"
+        return 1
+      fi
+      rm -f ${PART1_PATH}/.upgraded
     fi
 
     ${WORK_PATH}/zimage-patch.sh || {
@@ -1446,7 +1512,7 @@ function customDTS() {
       echo "e \"$(TEXT "Exit")\""
     } >"${TMP_PATH}/menu"
     DIALOG --title "$(TEXT "Custom DTS")" \
-      --menu "$(TEXT "Custom dts: ") ${CUSTOMDTS}" 0 0 0 --file "${TMP_PATH}/menu" \
+      --menu "$(TEXT "Custom dts:") ${CUSTOMDTS}" 0 0 0 --file "${TMP_PATH}/menu" \
       2>${TMP_PATH}/resp
     [ $? -ne 0 ] && return
     case "$(cat ${TMP_PATH}/resp)" in
@@ -2206,6 +2272,7 @@ function tryRecoveryDSM() {
       __umountDSMRootDisk
       DIALOG --title "$(TEXT "Settings")" \
         --msgbox "$(TEXT "Found a backup of the user's configuration, and restored it. Please rebuild and boot.")" 0 0
+      touch ${PART1_PATH}/.upgraded
       touch ${PART1_PATH}/.build
       exec "${0}"
       return
@@ -2229,7 +2296,7 @@ function tryRecoveryDSM() {
   fi
 
   writeConfigKey "paturl" "#RECOVERY" "${USER_CONFIG_FILE}"
-  writeConfigKey "patsum" "" "${USER_CONFIG_FILE}"
+  writeConfigKey "patsum" "#RECOVERY" "${USER_CONFIG_FILE}"
 
   copyDSMFiles "${TMP_PATH}/mdX/.syno/patch"
   __umountDSMRootDisk
@@ -2704,6 +2771,23 @@ function setProxy() {
 
 ###############################################################################
 # Change root password
+function createMicrocode() {
+  rm -rf ${TMP_PATH}/kernel
+  if [ -d /usr/lib/firmware/amd-ucode ]; then
+    mkdir -p ${TMP_PATH}/kernel/x86/microcode
+    cat /usr/lib/firmware/amd-ucode/microcode_amd*.bin >${TMP_PATH}/kernel/x86/microcode/AuthenticAMD.bin
+  fi
+  if [ -d /usr/lib/firmware/intel-ucode ]; then
+    mkdir -p ${TMP_PATH}/kernel/x86/microcode
+    cat /usr/lib/firmware/intel-ucode/* >${TMP_PATH}/kernel/x86/microcode/GenuineIntel.bin
+  fi
+  if [ -d ${TMP_PATH}/kernel/x86/microcode ]; then
+    (cd ${TMP_PATH} && find kernel 2>/dev/null | cpio -o -H newc -R root:root >"${MC_RAMDISK_FILE}") >/dev/null 2>&1
+  fi
+}
+
+###############################################################################
+# Change root password
 function changePassword() {
   DIALOG --title "$(TEXT "Settings")" \
     --inputbox "$(TEXT "New password: (Empty for default value 'rr')")" 0 70 \
@@ -2900,6 +2984,8 @@ function advancedMenu() {
         echo "d \"$(TEXT "Custom DTS")\""
         echo "u \"$(TEXT "USB disk as internal disk:") \Z4${USBASINTERNAL}\Zn\""
       fi
+      AU=$(readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q "blockupdate" && echo "false" || echo "true")
+      echo "j \"$(TEXT "DSM automatic update:") \Z4${AU}\Zn\""
       echo "w \"$(TEXT "Timeout of boot wait:") \Z4${BOOTWAIT}\Zn\""
       if [ "${DIRECTBOOT}" = "false" ]; then
         echo "i \"$(TEXT "Timeout of get IP in boot:") \Z4${BOOTIPWAIT}\Zn\""
@@ -2986,7 +3072,7 @@ function advancedMenu() {
       NEXT="m"
       ;;
     d)
-      if [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
+      if [ "true" = "${DT}" ]; then
         customDTS
       else
         DIALOG --title "$(TEXT "Advanced")" \
@@ -2995,7 +3081,7 @@ function advancedMenu() {
       NEXT="e"
       ;;
     u)
-      if [ "true" = "$(readConfigKey "platforms.${PLATFORM}.dt" "${WORK_PATH}/platforms.yml")" ]; then
+      if [ "true" = "${DT}" ]; then
         DIALOG --title "$(TEXT "Advanced")" \
           --msgbox "$(TEXT "USB disk as internal disk is not supported for current model.")" 0 0
         NEXT="e"
@@ -3004,6 +3090,16 @@ function advancedMenu() {
         writeConfigKey "usbasinternal" "${USBASINTERNAL}" "${USER_CONFIG_FILE}"
         NEXT="u"
       fi
+      ;;
+    j)
+      AU=$(readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q "blockupdate" && echo "false" || echo "true")
+      if [ "${AU}" = "true" ]; then
+        writeConfigKey "addons.\"blockupdate\"" "" "${USER_CONFIG_FILE}"
+      else
+        deleteConfigKey "addons.\"blockupdate\"" "${USER_CONFIG_FILE}"
+      fi
+      touch ${PART1_PATH}/.build
+      NEXT="j"
       ;;
     w)
       ITEMS="$(echo -e "1 \n5 \n10 \n30 \n60 \n")"
@@ -3161,8 +3257,10 @@ function settingsMenu() {
       fi
       echo "1 \"$(TEXT "Set global proxy")\""
       echo "2 \"$(TEXT "Set github proxy")\""
-      echo "3 \"$(TEXT "Change root password # Only RR")\""
-      echo "4 \"$(TEXT "Change ports of TTYD/DUFS/HTTP")\""
+      UPDMC="$([ -f "${MC_RAMDISK_FILE}" ] && echo "true" || echo "false")"
+      echo "3 \"$(TEXT "Update microcode:") \Z4${UPDMC}\Zn\""
+      echo "4 \"$(TEXT "Change root password # Only RR")\""
+      echo "5 \"$(TEXT "Change ports of TTYD/DUFS/HTTP")\""
       echo "! \"$(TEXT "Vigorously miracle")\""
       echo "e \"$(TEXT "Exit")\""
     } >"${TMP_PATH}/menu"
@@ -3249,13 +3347,23 @@ function settingsMenu() {
       NEXT="e"
       ;;
     3)
-      changePassword
+      UPDMC="$([ -f "${MC_RAMDISK_FILE}" ] && echo "true" || echo "false")"
+      if [ "${UPDMC}" = "true" ]; then
+        rm -f "${MC_RAMDISK_FILE}"
+      else
+        createMicrocode
+      fi
       NEXT="e"
       ;;
     4)
+      changePassword
+      NEXT="e"
+      ;;
+    5)
       changePorts
       NEXT="e"
       ;;
+
     !)
       MSG=""
       MSG+="                                            \n"
@@ -3440,9 +3548,11 @@ function updateRR() {
   SIZENEW=0
   SIZEOLD=0
   while IFS=': ' read -r KEY VALUE; do
+    VALUE="${VALUE#/}" # Remove leading slash
+    VALUE="${VALUE%/}" # Remove trailing slash
     if [ "${KEY: -1}" = "/" ]; then
       rm -rf "${TMP_PATH}/update/${VALUE}"
-      mkdir -p "${TMP_PATH}/update/${VALUE}"
+      mkdir -p "${TMP_PATH}/update/${VALUE}/"
       tar -zxf "${TMP_PATH}/update/$(basename "${KEY}").tgz" -C "${TMP_PATH}/update/${VALUE}" >"${LOG_FILE}" 2>&1
       if [ $? -ne 0 ]; then
         MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error extracting update file.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")")"
@@ -3456,11 +3566,11 @@ function updateRR() {
       fi
       rm "${TMP_PATH}/update/$(basename "${KEY}").tgz"
     else
-      mkdir -p "${TMP_PATH}/update/$(dirname "${VALUE}")"
+      mkdir -p "${TMP_PATH}/update/$(dirname "/${VALUE}")"
       mv -f "${TMP_PATH}/update/$(basename "${KEY}")" "${TMP_PATH}/update/${VALUE}"
     fi
     FSNEW=$(du -sm "${TMP_PATH}/update/${VALUE}" 2>/dev/null | awk '{print $1}')
-    FSOLD=$(du -sm "${VALUE}" 2>/dev/null | awk '{print $1}')
+    FSOLD=$(du -sm "/${VALUE}" 2>/dev/null | awk '{print $1}')
     SIZENEW=$((${SIZENEW} + ${FSNEW:-0}))
     SIZEOLD=$((${SIZEOLD} + ${FSOLD:-0}))
   done <<<$(readConfigMap "replace" "${TMP_PATH}/update/update-list.yml")
@@ -3490,26 +3600,25 @@ function updateRR() {
     [ -d "${F}" ] && rm -rf "${F}"
   done <<<$(readConfigArray "remove" "${TMP_PATH}/update/update-list.yml")
   while IFS=': ' read -r KEY VALUE; do
+    VALUE="${VALUE#/}" # Remove leading slash
+    VALUE="${VALUE%/}" # Remove trailing slash
     if [ "${KEY: -1}" = "/" ]; then
-      rm -rf "${VALUE}"/*
-      mkdir -p "${VALUE}"
-      cp -rf "${TMP_PATH}/update/${VALUE}"/* "${VALUE}"
-      if [ "$(realpath "${VALUE}")" = "$(realpath "${MODULES_PATH}")" ]; then
-        if [ -n "${MODEL}" ] && [ -n "${PRODUCTVER}" ]; then
-          KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
-          KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
-          if [ -n "${PLATFORM}" ] && [ -n "${KVER}" ]; then
-            writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-            mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
-          fi
+      rm -rf "/${VALUE}/"*
+      mkdir -p "/${VALUE}/"
+      cp -rf "${TMP_PATH}/update/${VALUE}/". "/${VALUE}/"
+      if [ "$(realpath "/${VALUE}/")" = "$(realpath "${MODULES_PATH}")" ]; then
+        if [ -n "${PLATFORM}" ] && [ -n "${PRODUCTVER}" ] && [ -n "${KVER}" ]; then
+          writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+          mergeConfigModules "$(getAllModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
         fi
       fi
     else
-      mkdir -p "$(dirname "${VALUE}")"
-      cp -f "${TMP_PATH}/update/${VALUE}" "${VALUE}"
+      mkdir -p "$(dirname "/${VALUE}")"
+      cp -f "${TMP_PATH}/update/${VALUE}" "/${VALUE}"
     fi
   done <<<$(readConfigMap "replace" "${TMP_PATH}/update/update-list.yml")
   rm -rf "${TMP_PATH}/update"
+  touch ${PART1_PATH}/.upgraded
   touch ${PART1_PATH}/.build
   sync
   MSG="$(printf "$(TEXT "%s updated with success!\n")$(TEXT "Reboot?")" "$(TEXT "RR")")"
@@ -3632,13 +3741,9 @@ function updateModules() {
 
   rm -rf "${MODULES_PATH}/"*
   cp -rf "${TMP_PATH}/update/"* "${MODULES_PATH}/"
-  if [ -n "${MODEL}" ] && [ -n "${PRODUCTVER}" ]; then
-    KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
-    KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
-    if [ -n "${PLATFORM}" ] && [ -n "${KVER}" ]; then
-      writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-      mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
-    fi
+  if [ -n "${PLATFORM}" ] && [ -n "${PRODUCTVER}" ] && [ -n "${KVER}" ]; then
+    writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+    mergeConfigModules "$(getAllModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
   fi
   rm -rf "${TMP_PATH}/update"
   touch ${PART1_PATH}/.build
@@ -3754,13 +3859,9 @@ function updateCKs() {
 
   rm -rf "${CKS_PATH}/"*
   cp -rf "${TMP_PATH}/update/"* "${CKS_PATH}/"
-  if [ -n "${MODEL}" ] && [ -n "${PRODUCTVER}" ] && [ "${KERNEL}" = "custom" ]; then
-    KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
-    KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
-    if [ -n "${PLATFORM}" ] && [ -n "${KVER}" ]; then
-      writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-      mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
-    fi
+  if [ "${KERNEL}" = "custom" ] && [ -n "${PLATFORM}" ] && [ -n "${PRODUCTVER}" ] && [ -n "${KVER}" ]; then
+    writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
+    mergeConfigModules "$(getAllModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
   fi
   rm -rf "${TMP_PATH}/update"
   touch ${PART1_PATH}/.build
@@ -3995,10 +4096,8 @@ else
       fi
       echo "u \"$(TEXT "Parse pat")\""
       if [ -n "${PRODUCTVER}" ]; then
-        KVER="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kver" "${WORK_PATH}/platforms.yml")"
-        KPRE="$(readConfigKey "platforms.${PLATFORM}.productvers.\"${PRODUCTVER}\".kpre" "${WORK_PATH}/platforms.yml")"
-        if [ -f "${CKS_PATH}/bzImage-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.gz" ] &&
-          [ -f "${CKS_PATH}/modules-${PLATFORM}-$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}.tgz" ]; then
+        if [ -f "${CKS_PATH}/bzImage-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}.gz" ] &&
+          [ -f "${CKS_PATH}/modules-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}.tgz" ]; then
           echo "s \"$(TEXT "Kernel:") \Z4${KERNEL}\Zn\""
         fi
         echo "a \"$(TEXT "Addons menu")\""
@@ -4007,10 +4106,8 @@ else
         echo "i \"$(TEXT "Synoinfo menu")\""
       fi
       echo "v \"$(TEXT "Advanced menu")\""
-      if [ -n "${MODEL}" ]; then
-        if [ -n "${PRODUCTVER}" ]; then
-          echo "d \"$(TEXT "Build the loader")\""
-        fi
+      if [ -n "${MODEL}" ] && [ -n "${PRODUCTVER}" ]; then
+        echo "d \"$(TEXT "Build the loader")\""
       fi
       if loaderIsConfigured; then
         echo "q \"$(TEXT "Direct boot:") \Z4${DIRECTBOOT}\Zn\""
@@ -4052,10 +4149,9 @@ else
       fi
       if [ -n "${PLATFORM}" ] && [ -n "${KVER}" ]; then
         writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-        mergeConfigModules "$(getAllModules "${PLATFORM}" "$([ -n "${KPRE}" ] && echo "${KPRE}-")${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
+        mergeConfigModules "$(getAllModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
       fi
       touch ${PART1_PATH}/.build
-
       NEXT="o"
       ;;
     a)
