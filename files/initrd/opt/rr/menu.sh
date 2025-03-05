@@ -121,80 +121,87 @@ function backtitle() {
 ###############################################################################
 # Shows available models to user choose one
 function modelMenu() {
-  if [ -z "${1}" ]; then
+  if [ -z "${1}" ] || [ -z "${2}" ]; then
     DIALOG --title "$(TEXT "Model")" \
       --infobox "$(TEXT "Getting models ...")" 0 0
-  fi
 
-  PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
-  MJ="$(python3 ${WORK_PATH}/include/functions.py getmodels -p "${PS[*]}")"
+    rm -f "${TMP_PATH}/modellist"
+    PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
+    MJ="$(python3 ${WORK_PATH}/include/functions.py getmodels -p "${PS[*]}")"
 
-  if [ "${MJ:-"[]"}" = "[]" ]; then
-    DIALOG --title "$(TEXT "Model")" \
-      --msgbox "$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")" 0 0
-    return 1
-  fi
-
-  echo "${MJ}" | jq -r '.[] | "\(.name) \(.arch)"' >"${TMP_PATH}/modellist"
-
-  if [ -z "${1}" ]; then
-    RESTRICT=1
-    while true; do
-      rm -f "${TMP_PATH}/menu"
-      FLGNEX=0
-      IGPUPS=(apollolake geminilake)
-      IGPUID="$(lspci -nd ::300 2>/dev/null | grep "8086" | cut -d' ' -f3 | sed 's/://g')"
-      NVMEMS=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
-      NVMEMD=$(find /sys/devices -type d -name nvme | awk -F'/' '{print NF}' | sort -n | tail -n1)
-      if [ -n "${IGPUID}" ]; then grep -iq "${IGPUID}" ${WORK_PATH}/i915ids && hasiGPU=1 || hasiGPU=2; else hasiGPU=0; fi
-      if [ ${NVMEMD:-0} -lt 6 ]; then hasNVME=0; elif [ ${NVMEMD:-0} -eq 6 ]; then hasNVME=1; else hasNVME=2; fi
-      [ $(lspci -d ::104 2>/dev/null | wc -l) -gt 0 -o $(lspci -d ::107 2>/dev/null | wc -l) -gt 0 ] && hasHBA=1 || hasHBA=0
-      while read -r M A; do
-        COMPATIBLE=1
-        if [ ${RESTRICT} -eq 1 ]; then
-          for F in $(readConfigArray "platforms.${A}.flags" "${WORK_PATH}/platforms.yml"); do
-            if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
-              COMPATIBLE=0
-              FLGNEX=1
-              break
-            fi
-          done
-        fi
-        unset DT G N H
-        [ "$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")" = "true" ] && DT="DT" || DT=""
-        [ -z "${G}" ] && [ ${hasiGPU} -eq 1 ] && echo "${IGPUPS[@]}" | grep -wq "${A}" && G="G"
-        [ -z "${G}" ] && [ ${hasiGPU} -eq 2 ] && echo "epyc7002" | grep -wq "${A}" && G="G"
-        [ -z "${N}" ] && [ ${hasNVME} -ne 0 ] && [ "${DT}" = "DT" ] && N="N"
-        [ -z "${N}" ] && [ ${hasNVME} -eq 2 ] && echo "${NVMEMS[@]}" | grep -wq "${M}" && N="N"
-        [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && [ ! "${DT}" = "DT" ] && H="H"
-        [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && echo "epyc7002" | grep -wq "${A}" && H="H"
-        [ ${COMPATIBLE} -eq 1 ] && printf "%s \"\Zb%-14s  %-2s  %-3s\Zn\" " "${M}" "${A}" "${DT}" "${G}${N}${H}" >>"${TMP_PATH}/menu"
-      done <"${TMP_PATH}/modellist"
-      [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
-      MSG="$(TEXT "Choose the model")"
-      MSG+="\n\Z1$(TEXT "DT: Disk identification method is device tree")\Zn"
-      MSG+="\n\Z1$(TEXT "G: Support iGPU; N: Support NVMe; H: Support HBA")\Zn"
+    if [ "${MJ:-"[]"}" = "[]" ]; then
       DIALOG --title "$(TEXT "Model")" \
-        --menu "${MSG}" 0 0 20 --file "${TMP_PATH}/menu" \
-        2>${TMP_PATH}/resp
-      [ $? -ne 0 ] && return 0
-      resp=$(cat ${TMP_PATH}/resp)
-      [ -z "${resp}" ] && return 1
-      if [ "${resp}" = "f" ]; then
-        RESTRICT=0
-        continue
-      fi
-      break
-    done
+        --msgbox "$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")" 0 0
+      return 1
+    fi
+
+    echo "${MJ}" | jq -r '.[] | "\(.name) \(.arch)"' >"${TMP_PATH}/modellist"
+
+    if [ -z "${1}" ]; then
+      RESTRICT=1
+      while true; do
+        rm -f "${TMP_PATH}/menu"
+        FLGNEX=0
+        IGPUPS=(apollolake geminilake)
+        IGPUID="$(lspci -nd ::300 2>/dev/null | grep "8086" | cut -d' ' -f3 | sed 's/://g')"
+        NVMEMS=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
+        NVMEMD=$(find /sys/devices -type d -name nvme | awk -F'/' '{print NF}' | sort -n | tail -n1)
+        if [ -n "${IGPUID}" ]; then grep -iq "${IGPUID}" ${WORK_PATH}/i915ids && hasiGPU=1 || hasiGPU=2; else hasiGPU=0; fi
+        if [ ${NVMEMD:-0} -lt 6 ]; then hasNVME=0; elif [ ${NVMEMD:-0} -eq 6 ]; then hasNVME=1; else hasNVME=2; fi
+        [ "$(lspci -d ::104 2>/dev/null | wc -l)" -gt 0 -o "$(lspci -d ::107 2>/dev/null | wc -l)" -gt 0 ] && hasHBA=1 || hasHBA=0
+        while read -r M A; do
+          COMPATIBLE=1
+          if [ ${RESTRICT} -eq 1 ]; then
+            for F in $(readConfigArray "platforms.${A}.flags" "${WORK_PATH}/platforms.yml"); do
+              if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
+                COMPATIBLE=0
+                FLGNEX=1
+                break
+              fi
+            done
+          fi
+          unset DT G N H
+          [ "$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")" = "true" ] && DT="DT" || DT=""
+          [ -z "${G}" ] && [ ${hasiGPU} -eq 1 ] && echo "${IGPUPS[@]}" | grep -wq "${A}" && G="G"
+          [ -z "${G}" ] && [ ${hasiGPU} -eq 2 ] && echo "epyc7002" | grep -wq "${A}" && G="G"
+          [ -z "${N}" ] && [ ${hasNVME} -ne 0 ] && [ "${DT}" = "DT" ] && N="N"
+          [ -z "${N}" ] && [ ${hasNVME} -eq 2 ] && echo "${NVMEMS[@]}" | grep -wq "${M}" && N="N"
+          [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && [ ! "${DT}" = "DT" ] && H="H"
+          [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && echo "epyc7002" | grep -wq "${A}" && H="H"
+          [ ${COMPATIBLE} -eq 1 ] && printf "%s \"\Zb%-14s  %-2s  %-3s\Zn\" " "${M}" "${A}" "${DT}" "${G}${N}${H}" >>"${TMP_PATH}/menu"
+        done <"${TMP_PATH}/modellist"
+        [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
+        MSG="$(TEXT "Choose the model")"
+        MSG+="\n\Z1$(TEXT "DT: Disk identification method is device tree")\Zn"
+        MSG+="\n\Z1$(TEXT "G: Support iGPU; N: Support NVMe; H: Support HBA")\Zn"
+        DIALOG --title "$(TEXT "Model")" \
+          --menu "${MSG}" 0 0 20 --file "${TMP_PATH}/menu" \
+          2>${TMP_PATH}/resp
+        [ $? -ne 0 ] && return 0
+        respM=$(cat ${TMP_PATH}/resp)
+        [ -z "${resp}" ] && return 1
+        if [ "${resp}" = "f" ]; then
+          RESTRICT=0
+          continue
+        fi
+        break
+      done
+    else
+      respM="${1}"
+    fi
+    respP="$(grep -w "${respM}" "${TMP_PATH}/modellist" 2>/dev/null | awk '{print $2}' | head -1)"
+    [ -z "${respP}" ] && return 1
   else
-    grep -wq "${1}" "${TMP_PATH}/modellist" || return 1
-    resp="${1}"
+    respM="${1}"
+    respP="${2}"
   fi
 
   local BASEMODEL="${MODEL}"
-  MODEL="${resp}"
+  local BASEPLATFORM="${PLATFORM}"
+
+  MODEL="${respM}"
   writeConfigKey "model" "${MODEL}" "${USER_CONFIG_FILE}"
-  PLATFORM="$(grep -w "${MODEL}" "${TMP_PATH}/modellist" | awk '{print $2}' | head -1)"
+  PLATFORM="${respP}"
   writeConfigKey "platform" "${PLATFORM}" "${USER_CONFIG_FILE}"
 
   if [ "${MODEL}" != "${BASEMODEL}" ]; then
@@ -211,10 +218,10 @@ function modelMenu() {
     SN="$(generateSerial "${MODEL}")"
     writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
     NETIF_NUM=2
-    MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
+    MACS="$(generateMacAddress "${MODEL}" ${NETIF_NUM})"
     for I in $(seq 1 ${NETIF_NUM}); do
-      eval MAC${I}="${MACS[$((${I} - 1))]}"
-      writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
+      eval MAC${I}="$(echo ${MACS} | cut -d' ' -f${I})"
+      writeConfigKey "mac${I}" "$(echo ${MACS} | cut -d' ' -f${I})" "${USER_CONFIG_FILE}"
     done
     writeConfigKey "synoinfo" "{}" "${USER_CONFIG_FILE}"
     writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
@@ -229,10 +236,10 @@ function modelMenu() {
     fi
     if [ -z "${MAC1}" ]; then
       NETIF_NUM=2
-      MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
+      MACS="$(generateMacAddress "${MODEL}" ${NETIF_NUM})"
       for I in $(seq 1 ${NETIF_NUM}); do
-        eval MAC${I}="${MACS[$((${I} - 1))]}"
-        writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
+        eval MAC${I}="$(echo ${MACS} | cut -d' ' -f${I})"
+        writeConfigKey "mac${I}" "$(echo ${MACS} | cut -d' ' -f${I})" "${USER_CONFIG_FILE}"
       done
     fi
   fi
@@ -439,10 +446,10 @@ function setConfigFromDSM() {
   SN="$(generateSerial "${MODEL}")"
   writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
   NETIF_NUM=2
-  MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
+  MACS="$(generateMacAddress "${MODEL}" ${NETIF_NUM})"
   for I in $(seq 1 ${NETIF_NUM}); do
-    eval MAC${I}="${MACS[$((${I} - 1))]}"
-    writeConfigKey "mac${I}" "${MACS[$((${I} - 1))]}" "${USER_CONFIG_FILE}"
+    eval MAC${I}="$(echo ${MACS} | cut -d' ' -f${I})"
+    writeConfigKey "mac${I}" "$(echo ${MACS} | cut -d' ' -f${I})" "${USER_CONFIG_FILE}"
   done
 
   writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
@@ -1068,9 +1075,10 @@ function cmdlineMenu() {
           # extra-button
           sn=$(generateSerial "${MODEL}")
           NETIF_NUM=2
-          MACS=($(generateMacAddress "${MODEL}" ${NETIF_NUM}))
-          mac1=${MACS[0]}
-          mac2=${MACS[1]}
+          MACS="$(generateMacAddress "${MODEL}" ${NETIF_NUM})"
+          for I in $(seq 1 ${NETIF_NUM}); do
+            eval mac${I}="$(echo ${MACS} | cut -d' ' -f${I})"
+          done
           ;;
         1)
           # cancel-button
@@ -1434,7 +1442,7 @@ function make() {
       echo "$(TEXT "Reconfigure after upgrade ...")"
       PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
       PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
-      modelMenu "${MODEL}"
+      modelMenu "${MODEL}" "${PLATFORM}"
       productversMenu "${PRODUCTVER}" "${PATURL}" "${PATSUM}"
       if [ $? -ne 0 ]; then
         echo -e "$(TEXT "Reconfiguration failed!")" >"${LOG_FILE}"
@@ -2346,7 +2354,7 @@ function cloneBootloaderDisk() {
     --yesno "${MSG}" 0 0
   [ $? -ne 0 ] && return
 
-  (
+  while true; do
     rm -f "${LOG_FILE}"
     rm -rf "${PART3_PATH}/dl"
     CLEARCACHE=0
@@ -2405,7 +2413,7 @@ function cloneBootloaderDisk() {
       MSG="$(TEXT "Cloning failed due to insufficient remaining disk space on the selected hard drive.")"
       echo "${MSG}" >"${LOG_FILE}"
       __umountNewBlDisk
-      break
+      break 1
     fi
     for i in {1..3}; do
       PART_NAME="$(eval "echo \${PART${i}_PATH}")"
@@ -2419,7 +2427,8 @@ function cloneBootloaderDisk() {
     sync
     __umountNewBlDisk
     sleep 3
-  ) 2>&1 | DIALOG --title "$(TEXT "Settings")" \
+    break
+  done 2>&1 | DIALOG --title "$(TEXT "Settings")" \
     --progressbox "$(TEXT "Cloning ...")" 20 100
 
   if [ -f "${LOG_FILE}" ]; then
@@ -2461,7 +2470,7 @@ function systemReport() {
 function reportBugs() {
   rm -rf "${TMP_PATH}/logs" "${TMP_PATH}/logs.tar.gz"
   MSG=""
-  SYSLOG=0
+  FLAG_SYSLOG=0
   DSMROOTS="$(findDSMRoot)"
   if [ -n "${DSMROOTS}" ]; then
     mkdir -p "${TMP_PATH}/mdX"
@@ -2472,29 +2481,29 @@ function reportBugs() {
       mkdir -p "${TMP_PATH}/logs/md0/log"
       cp -rf ${TMP_PATH}/mdX/.log.junior "${TMP_PATH}/logs/md0" 2>/dev/null
       cp -rf ${TMP_PATH}/mdX/var/log/messages ${TMP_PATH}/mdX/var/log/*.log "${TMP_PATH}/logs/md0/log" 2>/dev/null
-      SYSLOG=1
+      FLAG_SYSLOG=1
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
   fi
-  MSG+=$([ ${SYSLOG} -eq 1 ] && echo "$(TEXT "Find the system logs!\n")" || echo "$(TEXT "Not Find system logs!\n")")
+  MSG+=$([ ${FLAG_SYSLOG} -eq 1 ] && echo "$(TEXT "Find the system logs!\n")" || echo "$(TEXT "Not Find system logs!\n")")
 
-  PSTORE=0
+  FLAG_PSTORE=0
   if [ -n "$(ls /sys/fs/pstore 2>/dev/null)" ]; then
     mkdir -p "${TMP_PATH}/logs/pstore"
     cp -rf /sys/fs/pstore/* "${TMP_PATH}/logs/pstore" 2>/dev/null
     [ -n "$(ls /sys/fs/pstore/*.z 2>/dev/null)" ] && zlib-flate -uncompress </sys/fs/pstore/*.z >"${TMP_PATH}/logs/pstore/ps.log" 2>/dev/null
-    PSTORE=1
+    FLAG_PSTORE=1
   fi
-  MSG+=$([ ${PSTORE} -eq 1 ] && echo "$(TEXT "Find the pstore logs!\n")" || echo "$(TEXT "Not Find pstore logs!\n")")
+  MSG+=$([ ${FLAG_PSTORE} -eq 1 ] && echo "$(TEXT "Find the pstore logs!\n")" || echo "$(TEXT "Not Find pstore logs!\n")")
 
-  ADDONS=0
+  FLAG_ADDONS=0
   if [ -d "${PART1_PATH}/logs" ]; then
     mkdir -p "${TMP_PATH}/logs/addons"
     cp -rf "${PART1_PATH}/logs"/* "${TMP_PATH}/logs/addons" 2>/dev/null
-    ADDONS=1
+    FLAG_ADDONS=1
   fi
-  if [ ${ADDONS} -eq 1 ]; then
+  if [ ${FLAG_ADDONS} -eq 1 ]; then
     MSG+="$(TEXT "Find the addons logs!\n")"
   else
     MSG+="$(TEXT "Not Find addons logs!\n")"
@@ -2672,7 +2681,6 @@ function setStaticIP() {
 function setWirelessAccount() {
   DIALOG --title "$(TEXT "Settings")" \
     --infobox "$(TEXT "Scanning ...")" 0 0
-  ITEM=$(iw wlan0 scan 2>/dev/null | grep SSID: | awk '{print $2}')
   MSG=""
   MSG+="$(TEXT "Scanned SSIDs:\n")"
   for I in $(iw wlan0 scan 2>/dev/null | grep SSID: | awk '{print $2}'); do MSG+="${I}\n"; done
@@ -3602,6 +3610,7 @@ function updateRR() {
   while IFS=': ' read -r KEY VALUE; do
     VALUE="${VALUE#/}" # Remove leading slash
     VALUE="${VALUE%/}" # Remove trailing slash
+    [ -z "${VALUE}" ] && continue
     if [ "${KEY: -1}" = "/" ]; then
       rm -rf "/${VALUE}/"*
       mkdir -p "/${VALUE}/"
@@ -3995,7 +4004,7 @@ function updateMenu() {
       USER_FILE=""
       rm -rf "${TMP_UP_PATH}"
       mkdir -p "${TMP_UP_PATH}"
-      pushd "${TMP_UP_PATH}"
+      pushd "${TMP_UP_PATH}" 2>/dev/null || return
       rz -be
       for F in $(ls -A 2>/dev/null); do
         for I in ${EXTS[@]}; do
@@ -4003,7 +4012,7 @@ function updateMenu() {
         done
         break
       done
-      popd
+      popd 2>/dev/null || return
       if [ -z "${USER_FILE}" ]; then
         DIALOG --title "$(TEXT "Update")" \
           --msgbox "$(TEXT "Not a valid file, please try again!")" 0 0
@@ -4075,7 +4084,7 @@ function notepadMenu() {
 ###############################################################################
 ###############################################################################
 if [ $# -ge 1 ]; then
-  $@
+  "$@"
 else
   if [ -z "${MODEL}" ] && [ -z "${PRODUCTVER}" ] && [ -n "$(findDSMRoot)" ]; then
     DIALOG --title "$(TEXT "Main menu")" \
