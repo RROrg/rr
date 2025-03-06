@@ -35,12 +35,13 @@ printf "\033[1;33m%*s\033[0m\n" $(((${#BTITLE} + ${COLUMNS}) / 2)) "${BTITLE}"
 
 if [ -f ${PART1_PATH}/.upgraded ]; then
   MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
-  if [ -n "${MODEL}" ]; then
+  PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
+  if [ -n "${MODEL}" ] && [ -n "${PLATFORM}" ]; then
     printf "\033[1;43m%s\033[0m\n" "$(TEXT "Reconfigure after upgrade ...")"
     PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
     PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
     PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
-    ./menu.sh modelMenu "${MODEL}" || {
+    ./menu.sh modelMenu "${MODEL}" "${PLATFORM}" || {
       echo -e "$(TEXT "Reconfiguration failed!")"
       exit 1
     }
