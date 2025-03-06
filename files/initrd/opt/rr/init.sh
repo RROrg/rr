@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
 
 set -e
 [ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -22,7 +28,7 @@ printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
 printf "\033[1;32m%*s\033[0m\n" "${COLUMNS}" "${DATE}"
 
 # Get first MAC address
-ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo) || true
+ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort)"
 # No network devices
 [ "$(echo "${ETHX}" | wc -w)" -le 0 ] && die "$(TEXT "Network devices not found! Please re execute init.sh after connecting to the network!")"
 
@@ -83,9 +89,9 @@ if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
     _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
   fi
   for N in ${ETHX}; do
-    MACR="$(cat /sys/class/net/${N}/address 2>/dev/null | sed 's/://g')"
+    MACR="$(cat "/sys/class/net/${N}/address" 2>/dev/null | sed 's/://g')"
     IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
-    if [ -n "${IPR}" ] && [ "1" = "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
+    if [ -n "${IPR}" ] && [ "1" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
       IFS='/' read -r -a IPRA <<<"${IPR}"
       ip addr flush dev "${N}"
       ip addr add "${IPRA[0]}/${IPRA[1]:-"255.255.255.0"}" dev "${N}"
@@ -167,7 +173,7 @@ COUNT=0
 while [ ${COUNT} -lt 30 ]; do
   MSG=""
   for N in ${ETHX}; do
-    if [ "1" = "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
+    if [ "1" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
       MSG+="${N} "
     fi
   done
@@ -185,15 +191,15 @@ done
 printf "$(TEXT "Waiting IP.\n")"
 for N in ${ETHX}; do
   COUNT=0
-  DRIVER=$(ls -ld /sys/class/net/${N}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
-  MAC=$(cat /sys/class/net/${N}/address 2>/dev/null)
+  DRIVER="$(basename "$(realpath "/sys/class/net/${N}/device/driver" 2>/dev/null)" 2>/dev/null)"
+  MAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)"
   printf "%s(%s): " "${N}" "${MAC}@${DRIVER}"
   while true; do
-    if [ -z "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
+    if [ -z "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
       printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "DOWN")"
       break
     fi
-    if [ "0" = "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
+    if [ "0" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
       printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "NOT CONNECTED")"
       break
     fi
@@ -246,7 +252,7 @@ if [ "${DSMLOGO}" = "true" ] && [ -c "/dev/fb0" ] && [ ! "LOCALBUILD" = "${LOADE
 fi
 
 # Check memory
-RAM=$(awk '/MemTotal:/ {printf "%.0f", $2 / 1024}' /proc/meminfo 2>/dev/null)
+RAM="$(awk '/MemTotal:/ {printf "%.0f", $2 / 1024}' /proc/meminfo 2>/dev/null)"
 if [ "${RAM:-0}" -le 3500 ]; then
   printf "\033[1;33m%s\033[0m\n" "$(TEXT "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory.")"
 fi

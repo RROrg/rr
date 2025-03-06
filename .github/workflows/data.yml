@@ -47,7 +47,7 @@ jobs:
           if [ "${PRERELEASE}" = "true" ]; then
             TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep "/refs/tags/.*\.zip" | sed -E 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
           else
-            TAG="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${REPO}/releases/latest" | awk -F'/' '{print $NF}')"
+            TAG="$(curl -skL --connect-timeout 10 -w "%{url_effective}" -o /dev/null "${REPO}/releases/latest" | awk -F'/' '{print $NF}')"
           fi
           [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
           rm -f rr-${TAG}.img.zip

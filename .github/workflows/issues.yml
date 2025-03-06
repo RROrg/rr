@@ -159,20 +159,23 @@ jobs:
           }
 
           function readConfigKey() {
-            local result=$(sudo yq eval ".${1} | explode(.)" "${2}" 2>/dev/null)
+            local result
+            result=$(sudo yq eval ".${1} | explode(.)" "${2}" 2>/dev/null)
             [ "${result}" = "null" ] && echo "" || echo "${result}"
           }
 
           function mergeConfigModules() {
             # Error: bad file '-': cannot index array with '8139cp' (strconv.ParseInt: parsing "8139cp": invalid syntax)
             # When the first key is a pure number, yq will not process it as a string by default. The current solution is to insert a placeholder key.
-            local MS="RRORG\n${1// /\\n}"
-            local L="$(echo -en "${MS}" | awk '{print "modules."$1":"}')"
-            local xmlfile=$(mktemp)
-            echo -en "${L}" | sudo yq -p p -o y >"${xmlfile}"
-            deleteConfigKey "modules.\"RRORG\"" "${xmlfile}"
-            sudo yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${2}" "${xmlfile}" 2>/dev/null
-            rm -f "${xmlfile}"
+            local MS ML XF
+            MS="RRORG\n${1// /\\n}"
+            ML="$(echo -en "${MS}" | awk '{print "modules."$1":"}')"
+            XF=$(mktemp 2>/dev/null)
+            XF=${XF:-/tmp/tmp.XXXXXXXXXX}
+            echo -en "${ML}" | sudo yq -p p -o y >"${XF}"
+            deleteConfigKey "modules.\"RRORG\"" "${XF}"
+            sudo yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${2}" "${XF}" 2>/dev/null
+            rm -f "${XF}"
           }
 
           REPO="${{ github.server_url }}/${{ github.repository }}"
@@ -184,7 +187,7 @@ jobs:
           if [ "${PRERELEASE}" = "true" ]; then
             TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep "/refs/tags/.*\.zip" | sed -E 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
           else
-            TAG="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${REPO}/releases/latest" | awk -F'/' '{print $NF}')"
+            TAG="$(curl -skL --connect-timeout 10 -w "%{url_effective}" -o /dev/null "${REPO}/releases/latest" | awk -F'/' '{print $NF}')"
           fi
           [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
           rm -f rr-${TAG}.img.zip
@@ -283,33 +286,33 @@ jobs:
           if [ "${{ env.format }}" = "ova" ]; then
             . scripts/func.sh "${{ secrets.RRORG }}"
             convertova "rr/rr.img" "rr/rr.ova"
-            (cd rr; sha256sum rr.ova >../sha256sum)
+            (cd rr && sha256sum rr.ova >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vmx" ]; then
             . scripts/func.sh "${{ secrets.RRORG }}"
             convertvmx "rr/rr.img" "rr.vmx"  # rr.vmx is a directory
-            (cd rr.vmx; sha256sum * >../sha256sum)
+            (cd rr.vmx && sha256sum * >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmx.zip" -r rr.vmx ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vmdk" ]; then
             qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' rr/rr.vmdk
-            (cd rr; sha256sum rr.vmdk >../sha256sum)
+            (cd rr && sha256sum rr.vmdk >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "flat" ]; then
             qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=monolithicFlat,compat6' rr/rr.vmdk
-            (cd rr; sha256sum rr*.vmdk >../sha256sum)
+            (cd rr && sha256sum rr*.vmdk >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.flat.zip" -j rr/rr*.vmdk ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vhd" ]; then
             . scripts/func.sh "${{ secrets.RRORG }}"
             qemu-img convert rr/rr.img -O vpc rr/rr.vhd
             createvmc "rr/rr.vhd" "rr/rr.vmc"
-            (cd rr; sha256sum rr.vhd >../sha256sum)
+            (cd rr && sha256sum rr.vhd >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhd.zip" -j rr/rr.vmc rr/rr.vhd ${USER_CONFIG_FILE} sha256sum README.txt
           elif [ "${{ env.format }}" = "vhdx" ]; then
             qemu-img convert rr/rr.img -O vhdx -o subformat=dynamic rr/rr.vhdx
-            (cd rr; sha256sum rr.vhdx >../sha256sum)
+            (cd rr && sha256sum rr.vhdx >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx ${USER_CONFIG_FILE} sha256sum README.txt
           else
-            (cd rr; sha256sum rr.img >../sha256sum)
+            (cd rr && sha256sum rr.img >../sha256sum)
             zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img ${USER_CONFIG_FILE} sha256sum README.txt
           fi
 

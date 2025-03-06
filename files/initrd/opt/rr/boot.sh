@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+# shellcheck disable=SC2034
 
 set -e
 [ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -114,7 +122,7 @@ if ! readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q nvmesystem; then
   [ ${HASATA} = "0" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one sata/scsi disk for system installation (except for the bootloader disk).")"
 fi
 
-if checkBIOS_VT_d && [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 5 ]; then
+if checkBIOS_VT_d && [ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ]; then
   printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please disable Intel(VT-d)/AMD(AMD-Vi) in BIOS/UEFI settings if you encounter a boot failure.")"
 fi
 
@@ -158,10 +166,10 @@ if [ ${EFI} -eq 1 ]; then
 else
   CMDLINE['noefi']=""
 fi
-if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 5 ]; then
+if [ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ]; then
   if [ ! "${BUS}" = "usb" ]; then
-    SZ=$(blockdev --getsz ${LOADER_DISK} 2>/dev/null) # SZ=$(cat /sys/block/${LOADER_DISK/\/dev\//}/size)
-    SS=$(blockdev --getss ${LOADER_DISK} 2>/dev/null) # SS=$(cat /sys/block/${LOADER_DISK/\/dev\//}/queue/hw_sector_size)
+    SZ=$(blockdev --getsz "${LOADER_DISK}" 2>/dev/null) # SZ=$(cat /sys/block/${LOADER_DISK/\/dev\//}/size)
+    SS=$(blockdev --getss "${LOADER_DISK}" 2>/dev/null) # SS=$(cat /sys/block/${LOADER_DISK/\/dev\//}/queue/hw_sector_size)
     SIZE=$((${SZ:-0} * ${SS:-0} / 1024 / 1024 + 10))
     # Read SATADoM type
     SATADOM="$(readConfigKey "satadom" "${USER_CONFIG_FILE}")"
@@ -250,8 +258,8 @@ if echo "purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
   CMDLINE["SASmodel"]="1"
 fi
 
-SSID="$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep 'ssid=' | cut -d'=' -f2 | sed 's/^"//; s/"$//' | xxd -p | tr -d '\n')"
-PSK="$(cat ${PART1_PATH}/wpa_supplicant.conf 2>/dev/null | grep 'psk=' | cut -d'=' -f2 | sed 's/^"//; s/"$//' | xxd -p | tr -d '\n')"
+SSID="$(cat "${PART1_PATH}/wpa_supplicant.conf" 2>/dev/null | grep 'ssid=' | cut -d'=' -f2 | sed 's/^"//; s/"$//' | xxd -p | tr -d '\n')"
+PSK="$(cat "${PART1_PATH}/wpa_supplicant.conf" 2>/dev/null | grep 'psk=' | cut -d'=' -f2 | sed 's/^"//; s/"$//' | xxd -p | tr -d '\n')"
 
 if [ -n "${SSID}" ] && [ -n "${PSK}" ]; then
   CMDLINE["wpa.ssid"]="${SSID}"
@@ -260,11 +268,11 @@ fi
 
 while IFS=': ' read -r KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["network.${KEY}"]="${VALUE}"
-done <<<$(readConfigMap "network" "${USER_CONFIG_FILE}")
+done <<<"$(readConfigMap "network" "${USER_CONFIG_FILE}")"
 
 while IFS=': ' read -r KEY VALUE; do
   [ -n "${KEY}" ] && CMDLINE["${KEY}"]="${VALUE}"
-done <<<$(readConfigMap "cmdline" "${USER_CONFIG_FILE}")
+done <<<"$(readConfigMap "cmdline" "${USER_CONFIG_FILE}")"
 
 # Prepare command line
 CMDLINE_LINE=""
@@ -273,7 +281,7 @@ for KEY in "${!CMDLINE[@]}"; do
   CMDLINE_LINE+=" ${KEY}"
   [ -n "${VALUE}" ] && CMDLINE_LINE+="=${VALUE}"
 done
-CMDLINE_LINE=$(echo "${CMDLINE_LINE}" | sed 's/^ //') # Remove leading space
+CMDLINE_LINE="$(echo "${CMDLINE_LINE}" | sed 's/^ //')" # Remove leading space
 printf "%s:\n\033[1;36m%s\033[0m\n" "$(TEXT "Cmdline")" "${CMDLINE_LINE}"
 
 # Check if user wants to modify at this stage
@@ -334,7 +342,7 @@ else
   rm -f ${USER_RSYSENVFILE} 2>/dev/null || true
   grub-editenv ${USER_GRUBENVFILE} unset dsm_cmdline
   grub-editenv ${USER_GRUBENVFILE} unset next_entry
-  ETHX=$(ls /sys/class/net/ 2>/dev/null | grep -v lo) || true
+  ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort)"
   printf "$(TEXT "Detected %s network cards.\n")" "$(echo "${ETHX}" | wc -w)"
   printf "$(TEXT "Checking Connect.")"
   COUNT=0
@@ -343,7 +351,7 @@ else
   while [ ${COUNT} -lt $((${BOOTIPWAIT} + 32)) ]; do
     MSG=""
     for N in ${ETHX}; do
-      if [ "1" = "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
+      if [ "1" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
         MSG+="${N} "
       fi
     done
@@ -361,19 +369,19 @@ else
   printf "$(TEXT "Waiting IP.\n")"
   for N in ${ETHX}; do
     COUNT=0
-    DRIVER=$(ls -ld /sys/class/net/${N}/device/driver 2>/dev/null | awk -F '/' '{print $NF}')
-    MAC=$(cat /sys/class/net/${N}/address 2>/dev/null)
+    DRIVER="$(basename "$(realpath "/sys/class/net/${N}/device/driver" 2>/dev/null)" 2>/dev/null)"
+    MAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)"
     printf "%s(%s): " "${N}" "${MAC}@${DRIVER}"
     while true; do
       if false && [ ! "${N::3}" = "eth" ]; then
         printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "IGNORE (Does not support non-wired network card.)")"
         break
       fi
-      if [ -z "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
+      if [ -z "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
         printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "DOWN")"
         break
       fi
-      if [ "0" = "$(cat /sys/class/net/${N}/carrier 2>/dev/null)" ]; then
+      if [ "0" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
         printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "NOT CONNECTED")"
         break
       fi
@@ -405,16 +413,16 @@ else
     IP="$(getIP)"
     echo "${IP}" | grep -q "^169\.254\." && IP=""
     [ -n "${IP}" ] && URL="http://${IP}:5000" || URL="http://find.synology.com/"
-    python3 ${WORK_PATH}/include/functions.py makeqr -d "${URL}" -l "6" -o "${TMP_PATH}/qrcode_boot.png"
+    python3 "${WORK_PATH}/include/functions.py" "makeqr" -d "${URL}" -l "6" -o "${TMP_PATH}/qrcode_boot.png"
     [ -f "${TMP_PATH}/qrcode_boot.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_boot.png" >/dev/null 2>/dev/null || true
 
-    python3 ${WORK_PATH}/include/functions.py makeqr -f "${WORK_PATH}/include/qhxg.png" -l "7" -o "${TMP_PATH}/qrcode_qhxg.png"
+    python3 "${WORK_PATH}/include/functions.py" "makeqr" -f "${WORK_PATH}/include/qhxg.png" -l "7" -o "${TMP_PATH}/qrcode_qhxg.png"
     [ -f "${TMP_PATH}/qrcode_qhxg.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_qhxg.png" >/dev/null 2>/dev/null || true
   fi
 
   # Executes DSM kernel via KEXEC
   KEXECARGS="-a"
-  if [ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 4 ] && [ ${EFI} -eq 1 ]; then
+  if [ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 4 ] && [ ${EFI} -eq 1 ]; then
     printf "\033[1;33m%s\033[0m\n" "$(TEXT "Warning, running kexec with --noefi param, strange things will happen!!")"
     KEXECARGS+=" --noefi"
   fi
@@ -429,9 +437,9 @@ else
   done
 
   # Disconnect wireless
-  lsmod | grep -q iwlwifi && for N in $(ls /sys/class/net/ 2>/dev/null | grep wlan); do connectwlanif "${N}" 0 2>/dev/null; done
+  lsmod | grep -q iwlwifi && for F in /sys/class/net/wlan*; do [ ! -e "${F}" ] && continue; connectwlanif "$(basename "${F}")" 0 2>/dev/null; done
   # Unload all network drivers
-  # for D in $(realpath /sys/class/net/*/device/driver); do rmmod -f "$(basename ${D})" 2>/dev/null || true; done
+  # for F in $(realpath /sys/class/net/*/device/driver); do [ ! -e "${F}" ] && continue; rmmod -f "$(basename ${F})" 2>/dev/null || true; done
 
   # Unload all graphics drivers
   # for D in $(lsmod | grep -E '^(nouveau|amdgpu|radeon|i915)' | awk '{print $1}'); do rmmod -f "${D}" 2>/dev/null || true; done

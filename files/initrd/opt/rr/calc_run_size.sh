@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 #
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
 # Calculate the amount of space needed to run the kernel, including room for
 # the .bss and .brk sections.
 #
@@ -14,7 +19,7 @@ if [ -z "${OUT}" ]; then
   exit 1
 fi
 
-read -r sizeA offsetA sizeB offsetB <<<$(echo ${OUT} | awk '{printf "%d %d %d %d", strtonum($1), strtonum($2), strtonum($3), strtonum($4)}')
+read -r sizeA offsetA sizeB offsetB <<<"$(echo ${OUT} | awk '{printf "%d %d %d %d", strtonum($1), strtonum($2), strtonum($3), strtonum($4)}')"
 
 runSize=$((offsetA + sizeA + sizeB))
 

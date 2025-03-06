@@ -21,7 +21,7 @@ function convertpo2mo() {
     # Use msgfmt command to compile the .po file into a binary .mo file
     echo "msgfmt ${P} to ${P/.po/.mo}"
     msgfmt "${P}" -o "${P/.po/.mo}"
-  done <<<$(find "${DEST_PATH}" -type f -name 'rr.po')
+  done <<<"$(find "${DEST_PATH}" -type f -name 'rr.po')"
   echo "Convert po2mo end"
 }
 
@@ -37,7 +37,8 @@ function getExtractor() {
   # global.synologydownload.com, global.download.synology.com, cndl.synology.cn
   local PAT_URL="https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
   local PAT_FILE="DSM_DS3622xs+_42218.pat"
-  local STATUS=$(curl -#L -w "%{http_code}" "${PAT_URL}" -o "${CACHE_DIR}/${PAT_FILE}")
+  local STATUS
+  STATUS=$(curl -#L -w "%{http_code}" "${PAT_URL}" -o "${CACHE_DIR}/${PAT_FILE}")
   if [ $? -ne 0 ] || [ "${STATUS:-0}" -ne 200 ]; then
     echo "[E] DSM_DS3622xs%2B_42218.pat download error!"
     rm -rf "${CACHE_DIR}"
@@ -84,11 +85,12 @@ function getBuildroot() {
   fi
   while read -r ID NAME; do
     if [ "${NAME}" = "buildroot-${TAG}.zip" ]; then
+      local STATUS
       STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "${REPO}/rr-buildroot/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
-  done <<<$(curl -skL -H "Authorization: Bearer ${TOKEN}" "${REPO}/rr-buildroot/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  done <<<"$(curl -skL -H "Authorization: Bearer ${TOKEN}" "${REPO}/rr-buildroot/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')"
   # Unzip Buildroot
   rm -rf "${CACHE_DIR}"
   mkdir -p "${CACHE_DIR}"
@@ -117,11 +119,12 @@ function getCKs() {
   fi
   while read -r ID NAME; do
     if [ "${NAME}" = "rr-cks-${TAG}.zip" ]; then
+      local STATUS
       STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "${REPO}/rr-cks/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
-  done <<<$(curl -skL -H "Authorization: Bearer ${TOKEN}" "${REPO}/rr-cks/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  done <<<"$(curl -skL -H "Authorization: Bearer ${TOKEN}" "${REPO}/rr-cks/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')"
   [ ! -f "${CACHE_FILE}" ] && exit 1
   # Unzip CKs
   rm -rf "${DEST_PATH}"
@@ -147,11 +150,12 @@ function getLKMs() {
   fi
   while read -r ID NAME; do
     if [ "${NAME}" = "rp-lkms-${TAG}.zip" ]; then
+      local STATUS
       STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "${REPO}/rr-lkms/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
-  done <<<$(curl -skL -H "Authorization: Bearer ${TOKEN}" "${REPO}/rr-lkms/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  done <<<"$(curl -skL -H "Authorization: Bearer ${TOKEN}" "${REPO}/rr-lkms/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')"
   [ ! -f "${CACHE_FILE}" ] && exit 1
   # Unzip LKMs
   rm -rf "${DEST_PATH}"
@@ -177,11 +181,12 @@ function getAddons() {
   fi
   while read -r ID NAME; do
     if [ "${NAME}" = "addons-${TAG}.zip" ]; then
+      local STATUS
       STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "${REPO}/rr-addons/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
-  done <<<$(curl -skL -H "Authorization: Bearer ${TOKEN}" "${REPO}/rr-addons/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  done <<<"$(curl -skL -H "Authorization: Bearer ${TOKEN}" "${REPO}/rr-addons/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')"
   [ ! -f "${CACHE_FILE}" ] && exit 1
   rm -rf "${DEST_PATH}"
   mkdir -p "${DEST_PATH}"
@@ -191,11 +196,15 @@ function getAddons() {
   unzip "${CACHE_FILE}" -d "${CACHE_DIR}"
   echo "Installing addons to ${DEST_PATH}"
   [ -f "/tmp/addons/VERSION" ] && cp -f "/tmp/addons/VERSION" "${DEST_PATH}/"
-  for PKG in "${CACHE_DIR}"/*.addon; do
-    ADDON=$(basename "${PKG}" .addon)
+  for F in ${CACHE_DIR}/*.addon; do
+    [ ! -e "${F}" ] && continue
+    ADDON=$(basename "${F}" .addon)
+    # shellcheck disable=SC2115
+    rm -rf "${DEST_PATH}/${ADDON}"
     mkdir -p "${DEST_PATH}/${ADDON}"
-    echo "Extracting ${PKG} to ${DEST_PATH}/${ADDON}"
-    tar -xaf "${PKG}" -C "${DEST_PATH}/${ADDON}"
+    echo "Extracting ${F} to ${DEST_PATH}/${ADDON}"
+    tar -xaf "${F}" -C "${DEST_PATH}/${ADDON}"
+    rm -f "${F}"
   done
   rm -rf "${CACHE_DIR}"
   rm -f "${CACHE_FILE}"
@@ -218,11 +227,12 @@ function getModules() {
   fi
   while read -r ID NAME; do
     if [ "${NAME}" = "modules-${TAG}.zip" ]; then
+      local STATUS
       STATUS=$(curl -kL -w "%{http_code}" -H "Authorization: token ${TOKEN}" -H "Accept: application/octet-stream" "${REPO}/rr-modules/releases/assets/${ID}" -o "${CACHE_FILE}")
       echo "TAG=${TAG}; Status=${STATUS}"
       [ ${STATUS:-0} -ne 200 ] && exit 1
     fi
-  done <<<$(curl -skL -H "Authorization: Bearer ${TOKEN}" "${REPO}/rr-modules/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')
+  done <<<"$(curl -skL -H "Authorization: Bearer ${TOKEN}" "${REPO}/rr-modules/releases/tags/${TAG}" | jq -r '.assets[] | "\(.id) \(.name)"')"
   [ ! -f "${CACHE_FILE}" ] && exit 1
   # Unzip Modules
   rm -rf "${DEST_PATH}"
@@ -250,7 +260,8 @@ function repackInitrd() {
 
   local RDXZ_PATH="rdxz_tmp"
   mkdir -p "${RDXZ_PATH}"
-  local INITRD_FORMAT=$(file -b --mime-type "${INITRD_FILE}")
+  local INITRD_FORMAT
+  INITRD_FORMAT=$(file -b --mime-type "${INITRD_FILE}")
 
   case "${INITRD_FORMAT}" in
   *'x-cpio'*) (cd "${RDXZ_PATH}" && sudo cpio -idm <"${INITRD_FILE}") >/dev/null 2>&1 ;;
@@ -265,7 +276,7 @@ function repackInitrd() {
 
   sudo cp -rf "${PLUGIN_PATH}/"* "${RDXZ_PATH}/"
   [ -f "${OUTPUT_PATH}" ] && rm -rf "${OUTPUT_PATH}"
-
+  # shellcheck disable=SC2024
   case "${INITRD_FORMAT}" in
   *'x-cpio'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
   *'x-xz'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | xz -9 -C crc32 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
@@ -303,19 +314,20 @@ function resizeImg() {
 
   sudo truncate -s ${SIZE}M "${OUTPUT_FILE}"
   echo -e "d\n\nn\n\n\n\n\nn\nw" | sudo fdisk "${OUTPUT_FILE}" >/dev/null 2>&1
-  local LOOPX=$(sudo losetup -f)
-  sudo losetup -P ${LOOPX} "${OUTPUT_FILE}"
-  sudo e2fsck -fp $(ls ${LOOPX}* 2>/dev/null | sort -n | tail -1)
-  sudo resize2fs $(ls ${LOOPX}* 2>/dev/null | sort -n | tail -1)
-  sudo losetup -d ${LOOPX}
+  local LOOPX
+  LOOPX=$(sudo losetup -f)
+  sudo losetup -P "${LOOPX}" "${OUTPUT_FILE}"
+  sudo e2fsck -fp "$(ls ${LOOPX}* 2>/dev/null | sort -n | tail -1)"
+  sudo resize2fs "$(ls ${LOOPX}* 2>/dev/null | sort -n | tail -1)"
+  sudo losetup -d "${LOOPX}"
 }
 
 # createvmx
 # $1 bootloader file
 # $2 vmx name
 function createvmx() {
-  BLIMAGE=${1}
-  VMNAME=${2}
+  local BLIMAGE=${1}
+  local VMNAME=${2}
 
   if ! command -v qemu-img &>/dev/null; then
     sudo apt install -y qemu-utils
@@ -397,10 +409,10 @@ _EOF_
 function convertvmx() {
   local BLIMAGE=${1}
   local VMXPATH=${2}
-
+  local VMNAME
   BLIMAGE="$(realpath "${BLIMAGE}")"
   VMXPATH="$(realpath "${VMXPATH}")"
-  local VMNAME="$(basename "${VMXPATH}" .vmx)"
+  VMNAME="$(basename "${VMXPATH}" .vmx)"
 
   createvmx "${BLIMAGE}" "${VMNAME}"
 
@@ -414,10 +426,11 @@ function convertvmx() {
 function convertova() {
   local BLIMAGE=${1}
   local OVAPATH=${2}
+  local VMNAME
 
   BLIMAGE="$(realpath "${BLIMAGE}")"
   OVAPATH="$(realpath "${OVAPATH}")"
-  local VMNAME="$(basename "${OVAPATH}" .ova)"
+  VMNAME="$(basename "${OVAPATH}" .ova)"
 
   createvmx "${BLIMAGE}" "${VMNAME}"
 

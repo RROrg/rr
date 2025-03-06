@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+# shellcheck disable=SC2034
 
 [ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
@@ -53,7 +61,7 @@ mkdir -p "${RAMDISK_PATH}"
 . "${RAMDISK_PATH}/etc/VERSION"
 
 if [ -n "${PRODUCTVER}" ] && [ -n "${BUILDNUM}" ] && [ -n "${SMALLNUM}" ] &&
-  ([ ! "${PRODUCTVER}" = "${majorversion}.${minorversion}" ] || [ ! "${BUILDNUM}" = "${buildnumber}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber}" ]); then
+  ([ ! "${PRODUCTVER}" = "${majorversion:-0}.${minorversion:-0}" ] || [ ! "${BUILDNUM}" = "${buildnumber:-0}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber:-0}" ]); then
   OLDVER="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
   NEWVER="${majorversion}.${minorversion}(${buildnumber}$([ ${smallfixnumber:-0} -ne 0 ] && echo "u${smallfixnumber}"))"
   echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${OLDVER}\033[1;32m to \033[1;31m${NEWVER}\033[0m"
@@ -102,7 +110,8 @@ for PE in "${PATCHS[@]}"; do
   RET=1
   echo "Patching with ${PE}" >"${LOG_FILE}"
   # ${PE} contains *, so double quotes cannot be added
-  for PF in $(ls ${WORK_PATH}/patch/${PE} 2>/dev/null); do
+  for PF in ${WORK_PATH}/patch/${PE}; do
+    [ ! -e "${PF}" ] && continue
     echo "Patching with ${PF}" >>"${LOG_FILE}"
     # busybox patch and gun patch have different processing methods and parameters.
     (cd "${RAMDISK_PATH}" && busybox patch -p1 -i "${PF}") >>"${LOG_FILE}" 2>&1
@@ -148,7 +157,7 @@ echo -n "."
 installModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" "${!MODULES[@]}" || exit 1
 
 # Copying fake modprobe
-[ $(echo "${KVER:-4}" | cut -d'.' -f1) -lt 5 ] && cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
+[ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ] && cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
 # Copying LKM to /usr/lib/modules
 gzip -dc "${LKMS_PATH}/rp-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko" 2>"${LOG_FILE}" || exit 1
 
@@ -196,7 +205,7 @@ echo "inetd" >>"${RAMDISK_PATH}/addons/addons.sh"
 echo -n "."
 echo "Modify files" >"${LOG_FILE}"
 # Remove function from scripts
-[ "2" = "${BUILDNUM:0:1}" ] && sed -i 's/function //g' $(find "${RAMDISK_PATH}/addons/" -type f -name "*.sh")
+[ "2" = "${BUILDNUM:0:1}" ] && find "${RAMDISK_PATH}/addons/" -type f -name "*.sh" -exec sed -i 's/function //g' {} \;
 
 # Build modules dependencies
 # ${WORK_PATH}/depmod -a -b ${RAMDISK_PATH} 2>/dev/null  # addon eudev will do this
@@ -245,8 +254,10 @@ fi
 
 # Call user patch scripts
 echo -n "."
-for F in $(ls -1 "${SCRIPTS_PATH}/"*.sh 2>/dev/null); do
+for F in ${SCRIPTS_PATH}/*.sh; do
+  [ ! -e "${F}" ] && continue
   echo "Calling ${F}" >"${LOG_FILE}"
+  # shellcheck source=/dev/null
   . "${F}" >>"${LOG_FILE}" 2>&1 || exit 1
 done
 

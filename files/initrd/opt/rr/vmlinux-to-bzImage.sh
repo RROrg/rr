@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
 # Based on code and ideas from @jumkey
 
 [ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -12,7 +18,7 @@ calculate_run_size() {
     return 1
   fi
 
-  read -r sizeA offsetA sizeB offsetB <<<$(echo ${OUT} | awk '{printf "%d %d %d %d", strtonum($1), strtonum($2), strtonum($3), strtonum($4)}')
+  read -r sizeA offsetA sizeB offsetB <<<"$(echo ${OUT} | awk '{printf "%d %d %d %d", strtonum($1), strtonum($2), strtonum($3), strtonum($4)}')"
 
   runSize=$((offsetA + sizeA + sizeB))
 
@@ -38,23 +44,23 @@ calculate_run_size() {
 # Usage: size_append FILE [FILE2] [FILEn]...
 # Output: LE HEX with size of file in bytes (to STDOUT)
 file_size_le() {
-  printf $(
+  printf "$(
     local dec_size=0
     for F in "$@"; do dec_size=$((dec_size + $(stat -c "%s" "${F}"))); done
     printf "%08x\n" "${dec_size}" | sed 's/\(..\)/\1 /g' | {
       read -r ch0 ch1 ch2 ch3
       for ch in "${ch3}" "${ch2}" "${ch1}" "${ch0}"; do printf '%s%03o' '\' "$((0x${ch}))"; done
     }
-  )
+  )"
 }
 
 size_le() {
-  printf $(
+  printf "$(
     printf "%08x\n" "${@}" | sed 's/\(..\)/\1 /g' | {
       read -r ch0 ch1 ch2 ch3
       for ch in "${ch3}" "${ch2}" "${ch1}" "${ch0}"; do printf '%s%03o' '\' "$((0x${ch}))"; done
     }
-  )
+  )"
 }
 
 VMLINUX_MOD=${1}

@@ -1,3 +1,11 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
 ###############################################################################
 # Unpack modules from a tgz file
 # 1 - Platform
@@ -5,7 +13,8 @@
 function unpackModules() {
   local PLATFORM=${1}
   local PKVER=${2}
-  local KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
+  local KERNEL
+  KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 
   rm -rf "${TMP_PATH}/modules"
   mkdir -p "${TMP_PATH}/modules"
@@ -23,7 +32,8 @@ function unpackModules() {
 function packagModules() {
   local PLATFORM=${1}
   local PKVER=${2}
-  local KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
+  local KERNEL
+  KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 
   if [ "${KERNEL}" = "custom" ]; then
     tar -zcf "${CKS_PATH}/modules-${PLATFORM}-${PKVER}.tgz" -C "${TMP_PATH}/modules" .
@@ -46,10 +56,12 @@ function getAllModules() {
 
   unpackModules "${PLATFORM}" "${PKVER}"
 
-  for F in $(ls ${TMP_PATH}/modules/*.ko 2>/dev/null); do
-    local X=$(basename "${F}")
-    local M=${X:0:-3}
-    local DESC=$(modinfo "${F}" 2>/dev/null | awk -F':' '/description:/{ print $2}' | awk '{sub(/^[ ]+/,""); print}')
+  for F in ${TMP_PATH}/modules/*.ko; do
+    [ ! -e "${F}" ] && continue
+    local X M DESC
+    X=$(basename "${F}")
+    M=$(basename "${F}" .ko)
+    DESC=$(modinfo "${F}" 2>/dev/null | awk -F':' '/description:/{ print $2}' | awk '{sub(/^[ ]+/,""); print}')
     [ -z "${DESC}" ] && DESC="${X}"
     echo "${M} \"${DESC}\""
   done
@@ -65,21 +77,23 @@ function getAllModules() {
 function installModules() {
   local PLATFORM=${1}
   local PKVER=${2}
-  shift 2
-  local MLIST="${@}"
 
   if [ -z "${PLATFORM}" ] || [ -z "${PKVER}" ]; then
     echo "ERROR: installModules: Platform or Kernel Version not defined" >"${LOG_FILE}"
     return 1
   fi
+  local MLIST ODP KERNEL
+  shift 2
+  MLIST="${*}"
 
   unpackModules "${PLATFORM}" "${PKVER}"
 
-  local ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")"
-  for F in $(ls "${TMP_PATH}/modules/"*.ko 2>/dev/null); do
-    local M=$(basename "${F}")
+  ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")"
+  for F in ${TMP_PATH}/modules/*.ko; do
+    [ ! -e "${F}" ] && continue
+    M=$(basename "${F}")
     [ "${ODP}" = "true" ] && [ -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] && continue
-    if echo "${MLIST}" | grep -wq "${M:0:-3}"; then
+    if echo "${MLIST}" | grep -wq "$(basename "${M}" .ko)"; then
       cp -f "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}" 2>"${LOG_FILE}"
     else
       rm -f "${RAMDISK_PATH}/usr/lib/modules/${M}" 2>"${LOG_FILE}"
@@ -87,7 +101,7 @@ function installModules() {
   done
 
   mkdir -p "${RAMDISK_PATH}/usr/lib/firmware"
-  local KERNEL=$(readConfigKey "kernel" "${USER_CONFIG_FILE}")
+  KERNEL=$(readConfigKey "kernel" "${USER_CONFIG_FILE}")
   if [ "${KERNEL}" = "custom" ]; then
     tar -zxf "${CKS_PATH}/firmware.tgz" -C "${RAMDISK_PATH}/usr/lib/firmware" 2>"${LOG_FILE}"
   else
@@ -153,9 +167,10 @@ function delToModules() {
 function getdepends() {
   function _getdepends() {
     if [ -f "${TMP_PATH}/modules/${1}.ko" ]; then
-      local depends=($(modinfo "${TMP_PATH}/modules/${1}.ko" 2>/dev/null | grep depends: | awk -F: '{print $2}' | awk '$1=$1' | sed 's/,/ /g'))
-      if [ ${#depends[@]} -gt 0 ]; then
-        for k in "${depends[@]}"; do
+      local depends
+      depends="$(modinfo "${TMP_PATH}/modules/${1}.ko" 2>/dev/null | grep depends: | awk -F: '{print $2}' | awk '$1=$1' | sed 's/,/\n/g')"
+      if [ "$(echo "${depends}" | wc -w)" -gt 0 ]; then
+        for k in ${depends}; do
           echo "${k}"
           _getdepends "${k}"
         done
@@ -174,7 +189,7 @@ function getdepends() {
 
   unpackModules "${PLATFORM}" "${PKVER}"
 
-  local DPS=($(_getdepends "${KONAME}" | tr ' ' '\n' | sort -u))
-  echo "${DPS[@]}"
+  _getdepends "${KONAME}" | sort -u
+  echo "${KONAME}"
   rm -rf "${TMP_PATH}/modules"
 }

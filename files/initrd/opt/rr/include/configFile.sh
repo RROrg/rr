@@ -1,3 +1,11 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
 ###############################################################################
 # Delete a key in config file
 # 1 - Path of Key
@@ -22,7 +30,8 @@ function writeConfigKey() {
 # 2 - Path of yaml config file
 # Return Value
 function readConfigKey() {
-  local result=$(yq eval ".${1} | explode(.)" "${2}" 2>/dev/null)
+  local result
+  result=$(yq eval ".${1} | explode(.)" "${2}" 2>/dev/null)
   [ "${result}" = "null" ] && echo "" || echo "${result}"
 }
 
@@ -33,13 +42,15 @@ function readConfigKey() {
 function mergeConfigModules() {
   # Error: bad file '-': cannot index array with '8139cp' (strconv.ParseInt: parsing "8139cp": invalid syntax)
   # When the first key is a pure number, yq will not process it as a string by default. The current solution is to insert a placeholder key.
-  local MS="RRORG\n${1// /\\n}"
-  local L="$(echo -en "${MS}" | awk '{print "modules."$1":"}')"
-  local xmlfile=$(mktemp)
-  echo -en "${L}" | yq -p p -o y >"${xmlfile}"
-  deleteConfigKey "modules.\"RRORG\"" "${xmlfile}"
-  yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${2}" "${xmlfile}" 2>/dev/null
-  rm -f "${xmlfile}"
+  local MS ML XF
+  MS="RRORG\n${1// /\\n}"
+  ML="$(echo -en "${MS}" | awk '{print "modules."$1":"}')"
+  XF=$(mktemp 2>/dev/null)
+  XF=${XF:-/tmp/tmp.XXXXXXXXXX}
+  echo -en "${ML}" | yq -p p -o y >"${XF}"
+  deleteConfigKey "modules.\"RRORG\"" "${XF}"
+  yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${2}" "${XF}" 2>/dev/null
+  rm -f "${XF}"
 }
 
 ###############################################################################

@@ -6,17 +6,17 @@
 # See /LICENSE for more information.
 #
 # sudo apt update
-# sudo apt install -y locales busybox dialog gettext sed gawk jq curl 
-# sudo apt install -y python-is-python3 python3-pip libelf-dev qemu-utils cpio xz-utils lz4 lzma bzip2 gzip zstd
+# sudo apt install -y locales busybox dialog gettext sed gawk jq curl
+# sudo apt install -y python-is-python3 python3-pip libelf-dev qemu-utils dosfstools cpio xz-utils lz4 lzma bzip2 gzip zstd
 # # sudo snap install yq
 # if ! command -v yq &>/dev/null || ! yq --version 2>/dev/null | grep -q "v4."; then
 #   sudo curl -kL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq && sudo chmod a+x /usr/bin/yq
 # fi
-# 
+#
 # # Backup the original python3 executable.
 # sudo mv -f "$(realpath $(which python3))/EXTERNALLY-MANAGED" "$(realpath $(which python3))/EXTERNALLY-MANAGED.bak" 2>/dev/null || true
 # sudo pip3 install -U click requests requests-toolbelt qrcode[pil] beautifulsoup4
-# 
+#
 # sudo locale-gen ar_SA.UTF-8 de_DE.UTF-8 en_US.UTF-8 es_ES.UTF-8 fr_FR.UTF-8 ja_JP.UTF-8 ko_KR.UTF-8 ru_RU.UTF-8 th_TH.UTF-8 tr_TR.UTF-8 uk_UA.UTF-8 vi_VN.UTF-8 zh_CN.UTF-8 zh_HK.UTF-8 zh_TW.UTF-8
 #
 # export TOKEN="${1}"
@@ -42,10 +42,12 @@ convertpo2mo "files/initrd/opt/rr/lang"
 repackInitrd "files/mnt/p3/initrd-rr" "files/initrd"
 
 if [ -n "${1}" ]; then
+  LOADER_DISK="LOCALBUILD"
+  CHROOT_PATH="$(realpath files)"
   export LOADER_DISK="LOCALBUILD"
-  export CHROOT_PATH="$(realpath files)"
+  export CHROOT_PATH="${CHROOT_PATH}"
   (
-    cd "${CHROOT_PATH}/initrd/opt/rr"
+    cd "${CHROOT_PATH}/initrd/opt/rr" || exit 1
     ./init.sh
     ./menu.sh modelMenu "${1}"
     ./menu.sh productversMenu "${2:-7.2}"
@@ -61,9 +63,14 @@ fdisk -l "${IMAGE_FILE}"
 LOOPX=$(sudo losetup -f)
 sudo losetup -P "${LOOPX}" "${IMAGE_FILE}"
 
+# Check partitions and ignore errors
+fsck.vfat -aw "${LOOPX}p1" >/dev/null 2>&1 || true
+fsck.ext2 -p "${LOOPX}p2" >/dev/null 2>&1 || true
+fsck.ext4 -p "${LOOPX}p3" >/dev/null 2>&1 || true
+
 for i in {1..3}; do
   [ ! -d "files/mnt/p${i}" ] && continue
-  
+
   rm -rf "/tmp/mnt/p${i}"
   mkdir -p "/tmp/mnt/p${i}"
 
@@ -103,8 +110,8 @@ while read -r F; do
     zip -9j "update.zip" "${FTGZ}"
     rm -f "${FTGZ}"
   else
-    (cd $(dirname "${F}") && sha256sum $(basename "${F}")) >>sha256sum
+    (cd "$(dirname "${F}")" && sha256sum "$(basename "${F}")") >>sha256sum
     zip -9j "update.zip" "${F}"
   fi
-done <<<$(yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml)
+done <<<"$(yq '.replace | explode(.) | to_entries | map([.key])[] | .[]' update-list.yml)"
 zip -9j "update.zip" sha256sum

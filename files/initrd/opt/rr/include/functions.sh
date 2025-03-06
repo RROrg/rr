@@ -1,3 +1,11 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
 [ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" >/dev/null 2>&1 && pwd)"
 
 . "${WORK_PATH}/include/consts.sh"
@@ -11,7 +19,7 @@ function checkBootLoader() {
     [ -z "${KNAME}" ] && continue
     [ "${RO}" = "0" ] && continue
     hdparm -r0 "${KNAME}" >/dev/null 2>&1 || true
-  done <<<$(lsblk -pno KNAME,RO 2>/dev/null)
+  done <<<"$(lsblk -pno KNAME,RO 2>/dev/null)"
   [ ! -w "${PART1_PATH}" ] && return 1
   [ ! -w "${PART2_PATH}" ] && return 1
   [ ! -w "${PART3_PATH}" ] && return 1
@@ -36,7 +44,7 @@ function loaderIsConfigured() {
 ###############################################################################
 # Just show error message and dies
 function die() {
-  echo -e "\033[1;41m$@\033[0m"
+  echo -e "\033[1;41m${*}\033[0m"
   exit 1
 }
 
@@ -75,7 +83,6 @@ function random() {
 function randomhex() {
   printf "%02X" $((RANDOM % 255 + 1))
 }
-
 
 ###############################################################################
 # Generate a random digit (0-9A-Z)
@@ -202,7 +209,7 @@ function _set_conf_kv() {
 
   # Add if doesn't exist
   echo "${1}=\"${2}\"" >>"${3}"
-  return $?
+  return 0
 }
 
 ###############################################################################
@@ -222,36 +229,38 @@ function _get_fastest() {
       speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
     done
   fi
-  local fastest="$(echo -e "${speedlist}" | tr -s '\n' | awk '$2 != "999"' | sort -k2n | head -1)"
+  local fastest
+  fastest="$(echo -e "${speedlist}" | tr -s '\n' | awk '$2 != "999"' | sort -k2n | head -1)"
   URL="$(echo "${fastest}" | awk '{print $1}')"
   SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
   echo "${URL:-${1}}"
-  [ $(echo "${SPD:-999}" | cut -d. -f1) -ge 999 ] && return 1 || return 0
+  [ "$(echo "${SPD:-999}" | cut -d. -f1)" -ge 999 ] && return 1 || return 0
 }
 
 ###############################################################################
 # sort netif name
 # @1 -mac1,mac2,mac3...
 function _sort_netif() {
-  local ETHLIST=""
-  local ETHX="$(ls /sys/class/net/ 2>/dev/null | grep eth)" # real network cards list
-  for N in ${ETHX}; do
-    local MAC="$(cat /sys/class/net/${N}/address 2>/dev/null | sed 's/://g; s/.*/\L&/')"
-    local BUS="$(ethtool -i ${N} 2>/dev/null | grep bus-info | cut -d' ' -f2)"
-    ETHLIST="${ETHLIST}${BUS} ${MAC} ${N}\n"
+  ETHLIST=""
+  for F in /sys/class/net/eth*; do
+    [ ! -e "${F}" ] && continue
+    ETH="$(basename "${F}")"
+    MAC="$(cat "/sys/class/net/${ETH}/address" 2>/dev/null | sed 's/://g; s/.*/\L&/')"
+    BUS="$(ethtool -i "${ETH}" 2>/dev/null | grep bus-info | cut -d' ' -f2)"
+    ETHLIST="${ETHLIST}${BUS} ${MAC} ${ETH}\n"
   done
-  local ETHLISTTMPM=""
-  local ETHLISTTMPB="$(echo -e "${ETHLIST}" | sort)"
+  ETHLISTTMPM=""
+  ETHLISTTMPB="$(echo -e "${ETHLIST}" | sort)"
   if [ -n "${1}" ]; then
-    local MACS="$(echo "${1}" | sed 's/://g; s/,/ /g; s/.*/\L&/')"
+    MACS="$(echo "${1}" | sed 's/://g; s/,/ /g; s/.*/\L&/')"
     for MACX in ${MACS}; do
       ETHLISTTMPM="${ETHLISTTMPM}$(echo -e "${ETHLISTTMPB}" | grep "${MACX}")\n"
       ETHLISTTMPB="$(echo -e "${ETHLISTTMPB}" | grep -v "${MACX}")\n"
     done
   fi
   ETHLIST="$(echo -e "${ETHLISTTMPM}${ETHLISTTMPB}" | grep -v '^$')"
-  local ETHSEQ="$(echo -e "${ETHLIST}" | awk '{print $3}' | sed 's/eth//g')"
-  local ETHNUM="$(echo -e "${ETHLIST}" | wc -l)"
+  ETHSEQ="$(echo -e "${ETHLIST}" | awk '{print $3}' | sed 's/eth//g')"
+  ETHNUM="$(echo -e "${ETHLIST}" | wc -l)"
 
   # echo "${ETHSEQ}"
   # sort
@@ -307,13 +316,14 @@ function getIP() {
 # 1 - model
 function getLogo() {
   local MODEL="${1}"
-  rm -f "${PART3_PATH}/logo.png"
-  local fastest="$(_get_fastest "www.synology.com" "www.synology.cn")"
-  # [ $? -ne 0 ] && return 1
+  local fastest
+  local STATUS
 
-  local STATUS=$(curl -skL --connect-timeout 10 -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
+  rm -f "${PART3_PATH}/logo.png"
+
+  fastest="$(_get_fastest "www.synology.com" "www.synology.cn")"
+  STATUS=$(curl -skL --connect-timeout 10 -w "%{http_code}" "https://${fastest}/api/products/getPhoto?product=${MODEL/+/%2B}&type=img_s&sort=0" -o "${PART3_PATH}/logo.png")
   if [ $? -ne 0 ] || [ "${STATUS:-0}" -ne 200 ] || [ ! -f "${PART3_PATH}/logo.png" ]; then
-    rm -f "${PART3_PATH}/logo.png"
     return 1
   fi
   convert -rotate 180 "${PART3_PATH}/logo.png" "${PART3_PATH}/logo.png" 2>/dev/null
@@ -370,10 +380,10 @@ function delCmdline() {
 function checkCPU_VT_d() {
   lsmod | grep -q msr || modprobe msr 2>/dev/null
   if grep -q "GenuineIntel" /proc/cpuinfo 2>/dev/null; then
-    local VT_D_ENABLED=$(rdmsr 0x3a 2>/dev/null)
+    VT_D_ENABLED=$(rdmsr 0x3a 2>/dev/null)
     [ "$((${VT_D_ENABLED:-0x0} & 0x5))" -eq $((0x5)) ] && return 0
   elif grep -q "AuthenticAMD" /proc/cpuinfo 2>/dev/null; then
-    local IOMMU_ENABLED=$(rdmsr 0xC0010114 2>/dev/null)
+    IOMMU_ENABLED=$(rdmsr 0xC0010114 2>/dev/null)
     [ "$((${IOMMU_ENABLED:-0x0} & 0x1))" -eq $((0x1)) ] && return 0
   else
     return 1
@@ -420,7 +430,8 @@ function connectwlanif() {
       rm -f "/var/run/wpa_supplicant.pid.${1}"
     fi
   else
-    local CONF="$([ -f "${PART1_PATH}/wpa_supplicant.conf" ] && echo "${PART1_PATH}/wpa_supplicant.conf" || echo "")"
+    local CONF
+    CONF="$([ -f "${PART1_PATH}/wpa_supplicant.conf" ] && echo "${PART1_PATH}/wpa_supplicant.conf" || echo "")"
     [ -z "${CONF}" ] && return 2
     [ -f "/var/run/wpa_supplicant.pid.${1}" ] && return 0
     wpa_supplicant -i "${1}" -c "${CONF}" -qq -B -P "/var/run/wpa_supplicant.pid.${1}" >/dev/null 2>&1
