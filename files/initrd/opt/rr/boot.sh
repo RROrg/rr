@@ -41,7 +41,7 @@ BTITLE+="$([ ${EFI} -eq 1 ] && echo " [UEFI]" || echo " [BIOS]")"
 BTITLE+="$([ "${BUS}" = "usb" ] && echo " [${BUS^^} flashdisk]" || echo " [${BUS^^} DoM]")"
 printf "\033[1;33m%*s\033[0m\n" $(((${#BTITLE} + ${COLUMNS}) / 2)) "${BTITLE}"
 
-if [ -f ${PART1_PATH}/.upgraded ]; then
+if [ -f "${PART1_PATH}/.upgraded" ]; then
   MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
   PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
   if [ -n "${MODEL}" ] && [ -n "${PLATFORM}" ]; then
@@ -60,11 +60,11 @@ if [ -f ${PART1_PATH}/.upgraded ]; then
       }
     fi
   fi
-  rm -f ${PART1_PATH}/.upgraded
+  rm -f "${PART1_PATH}/.upgraded"
 fi
 # Check if DSM zImage changed, patch it if necessary
 ZIMAGE_HASH="$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")"
-if [ -f ${PART1_PATH}/.build ] || [ "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print $1}')" != "${ZIMAGE_HASH}" ]; then
+if [ -f "${PART1_PATH}/.build" ] || [ "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print $1}')" != "${ZIMAGE_HASH}" ]; then
   printf "\033[1;43m%s\033[0m\n" "$(TEXT "DSM zImage changed")"
   ${WORK_PATH}/zimage-patch.sh || {
     printf "\033[1;43m%s\n%s\n%s:\n%s\033[0m\n" "$(TEXT "DSM zImage not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")"
@@ -74,14 +74,14 @@ fi
 
 # Check if DSM ramdisk changed, patch it if necessary
 RAMDISK_HASH="$(readConfigKey "ramdisk-hash" "${USER_CONFIG_FILE}")"
-if [ -f ${PART1_PATH}/.build ] || [ "$(sha256sum "${ORI_RDGZ_FILE}" | awk '{print $1}')" != "${RAMDISK_HASH}" ]; then
+if [ -f "${PART1_PATH}/.build" ] || [ "$(sha256sum "${ORI_RDGZ_FILE}" | awk '{print $1}')" != "${RAMDISK_HASH}" ]; then
   printf "\033[1;43m%s\033[0m\n" "$(TEXT "DSM ramdisk changed")"
   ${WORK_PATH}/ramdisk-patch.sh || {
     printf "\033[1;43m%s\n%s\n%s:\n%s\033[0m\n" "$(TEXT "DSM ramdisk not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")"
     exit 1
   }
 fi
-[ -f ${PART1_PATH}/.build ] && rm -f ${PART1_PATH}/.build
+[ -f "${PART1_PATH}/.build" ] && rm -f "${PART1_PATH}/.build"
 
 # Load necessary variables
 PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
@@ -317,21 +317,21 @@ function _bootwait() {
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 if [ "${DIRECT}" = "true" ] || [ "${MEV:-physical}" = "parallels" ]; then
   # grubenv file limit is 1024 bytes.
-  grub-editenv ${USER_RSYSENVFILE} create
-  grub-editenv ${USER_RSYSENVFILE} set rr_version="${WTITLE}"
-  grub-editenv ${USER_RSYSENVFILE} set rr_booting="${BTITLE}"
-  grub-editenv ${USER_RSYSENVFILE} set dsm_model="${MODEL}(${PLATFORM})"
-  grub-editenv ${USER_RSYSENVFILE} set dsm_version="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
-  grub-editenv ${USER_RSYSENVFILE} set dsm_kernel="${KERNEL}"
-  grub-editenv ${USER_RSYSENVFILE} set dsm_lkm="${LKM}"
-  grub-editenv ${USER_RSYSENVFILE} set sys_mev="${MEV:-physical}"
-  grub-editenv ${USER_RSYSENVFILE} set sys_dmi="${DMI}"
-  grub-editenv ${USER_RSYSENVFILE} set sys_cpu="${CPU}"
-  grub-editenv ${USER_RSYSENVFILE} set sys_mem="${MEM}"
+  grub-editenv "${USER_RSYSENVFILE}" create
+  grub-editenv "${USER_RSYSENVFILE}" set rr_version="${WTITLE}"
+  grub-editenv "${USER_RSYSENVFILE}" set rr_booting="${BTITLE}"
+  grub-editenv "${USER_RSYSENVFILE}" set dsm_model="${MODEL}(${PLATFORM})"
+  grub-editenv "${USER_RSYSENVFILE}" set dsm_version="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
+  grub-editenv "${USER_RSYSENVFILE}" set dsm_kernel="${KERNEL}"
+  grub-editenv "${USER_RSYSENVFILE}" set dsm_lkm="${LKM}"
+  grub-editenv "${USER_RSYSENVFILE}" set sys_mev="${MEV:-physical}"
+  grub-editenv "${USER_RSYSENVFILE}" set sys_dmi="${DMI}"
+  grub-editenv "${USER_RSYSENVFILE}" set sys_cpu="${CPU}"
+  grub-editenv "${USER_RSYSENVFILE}" set sys_mem="${MEM}"
 
-  CMDLINE_DIRECT=$(echo ${CMDLINE_LINE} | sed 's/>/\\\\>/g') # Escape special chars
-  grub-editenv ${USER_GRUBENVFILE} set dsm_cmdline="${CMDLINE_DIRECT}"
-  grub-editenv ${USER_GRUBENVFILE} set next_entry="direct"
+  CMDLINE_DIRECT=$(echo "${CMDLINE_LINE}" | sed 's/>/\\\\>/g') # Escape special chars
+  grub-editenv "${USER_GRUBENVFILE}" set dsm_cmdline="${CMDLINE_DIRECT}"
+  grub-editenv "${USER_GRUBENVFILE}" set next_entry="direct"
 
   _bootwait || exit 0
 
@@ -339,9 +339,9 @@ if [ "${DIRECT}" = "true" ] || [ "${MEV:-physical}" = "parallels" ]; then
   reboot
   exit 0
 else
-  rm -f ${USER_RSYSENVFILE} 2>/dev/null || true
-  grub-editenv ${USER_GRUBENVFILE} unset dsm_cmdline
-  grub-editenv ${USER_GRUBENVFILE} unset next_entry
+  rm -f "${USER_RSYSENVFILE}" 2>/dev/null || true
+  grub-editenv "${USER_GRUBENVFILE}" unset dsm_cmdline
+  grub-editenv "${USER_GRUBENVFILE}" unset next_entry
   ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort)"
   printf "$(TEXT "Detected %s network cards.\n")" "$(echo "${ETHX}" | wc -w)"
   printf "$(TEXT "Checking Connect.")"
@@ -444,7 +444,7 @@ else
   # Unload all graphics drivers
   # for D in $(lsmod | grep -E '^(nouveau|amdgpu|radeon|i915)' | awk '{print $1}'); do rmmod -f "${D}" 2>/dev/null || true; done
   # for I in $(find /sys/devices -name uevent -exec bash -c 'cat {} 2>/dev/null | grep -Eq "PCI_CLASS=0?30[0|1|2]00" && dirname {}' \;); do
-  #   [ -e ${I}/reset ] && cat ${I}/vendor >/dev/null | grep -iq 0x10de && echo 1 >${I}/reset || true # Proc open nvidia driver when booting
+  #   [ -e ${I}/reset ] && cat "${I}/vendor" >/dev/null | grep -iq 0x10de && echo 1 >${I}/reset || true # Proc open nvidia driver when booting
   # done
 
   # Reboot

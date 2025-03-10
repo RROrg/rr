@@ -9,7 +9,7 @@
 
 [ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-calculate_run_size() {
+calc_run_size() {
   NUM='\([0-9a-fA-F]*[ \t]*\)'
   OUT=$(sed -n 's/^[ \t0-9]*.b[sr][sk][ \t]*'"${NUM}${NUM}${NUM}${NUM}"'.*/0x\1 0x\4/p')
 
@@ -18,7 +18,7 @@ calculate_run_size() {
     return 1
   fi
 
-  read -r sizeA offsetA sizeB offsetB <<<"$(echo ${OUT} | awk '{printf "%d %d %d %d", strtonum($1), strtonum($2), strtonum($3), strtonum($4)}')"
+  read -r sizeA offsetA sizeB offsetB <<<"$(echo "${OUT}" | awk '{printf "%d %d %d %d", strtonum($1), strtonum($2), strtonum($3), strtonum($4)}')"
 
   runSize=$((offsetA + sizeA + sizeB))
 
@@ -27,10 +27,10 @@ calculate_run_size() {
     # Gold linker shows them as consecutive.
     endSize=$((offsetB + sizeB))
     if [ "${endSize}" -ne "${runSize}" ]; then
-      printf "sizeA: 0x%x\n" ${sizeA} >&2
-      printf "offsetA: 0x%x\n" ${offsetA} >&2
-      printf "sizeB: 0x%x\n" ${sizeB} >&2
-      printf "offsetB: 0x%x\n" ${offsetB} >&2
+      printf "sizeA: 0x%x\n" "${sizeA}" >&2
+      printf "offsetA: 0x%x\n" "${offsetA}" >&2
+      printf "sizeB: 0x%x\n" "${sizeB}" >&2
+      printf "offsetB: 0x%x\n" "${offsetB}" >&2
       echo ".bss and .brk are non-contiguous" >&2
       return 1
     fi

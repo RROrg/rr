@@ -268,7 +268,7 @@ jobs:
           USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
           {
             echo "RR: "
-            echo "  VERSION: $(cat ${RR_VERSION_FILE} 2>/dev/null | head -1)"
+            echo "  VERSION: $(cat "${RR_VERSION_FILE}" 2>/dev/null | head -1)"
             echo "  CUSTOM:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             echo
             echo "DSM:"
