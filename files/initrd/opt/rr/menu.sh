@@ -655,7 +655,7 @@ function addonMenu() {
           2>"${TMP_PATH}/resp"
         [ $? -ne 0 ] && continue
         resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-        [ -z "${resp}" ] && continue
+        # [ -z "${resp}" ] && continue  # Addons params can be empty
         VALUE="${resp}"
       else
         VALUE=""
