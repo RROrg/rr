@@ -3556,7 +3556,8 @@ function updateRR() {
   fi
   # Check conditions
   if [ -f "${TMP_PATH}/update/update-check.sh" ]; then
-    cat "${TMP_PATH}/update/update-check.sh" | bash
+    chmod +x "${TMP_PATH}/update/update-check.sh"
+    bash "${TMP_PATH}/update/update-check.sh"
     if [ $? -ne 0 ]; then
       MSG="$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")"
       if [ "${2}" = "-1" ]; then
