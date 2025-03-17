@@ -1550,7 +1550,7 @@ function customDTS() {
       (cd "${TMP_UP_PATH}" && rz -be) || true
       USER_FILE="$(find "${TMP_UP_PATH}" -type f | head -1)"
       DTC_ERRLOG="/tmp/dtc.log"
-      [ -z "${USER_FILE}" ] && dtc -q -I dts -O dtb "${USER_FILE}" >"test.dtb" 2>"${DTC_ERRLOG}"
+      [ -n "${USER_FILE}" ] && dtc -q -I dts -O dtb "${USER_FILE}" >"test.dtb" 2>"${DTC_ERRLOG}"
       RET=$?
       if [ -z "${USER_FILE}" ] || [ ${RET} -ne 0 ]; then
         MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Not a valid dts file, please try again!")" "$(TEXT "Error")" "$(cat "${DTC_ERRLOG}")")"
