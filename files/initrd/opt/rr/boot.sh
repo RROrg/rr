@@ -302,7 +302,7 @@ function _bootwait() {
       rm -f WB WC
       return 1
     fi
-    if false && [ -f "${TMP_PATH}/menu.lock" ]; then
+    if ! ps -p "${PPID}" -o cmd | grep -q "menu.sh" && [ -f "${TMP_PATH}/menu.lock" ]; then
       printf "\r%$((${#MSG} * 2))s\n" " "
       printf "\r\033[1;33m%s\033[0m\n" "$(TEXT "Menu opened and booting is interrupted.")"
       rm -f WB WC
