@@ -1,242 +1,242 @@
 <!DOCTYPE html>
 <html lang="zh-Hans-CN" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark"
-    data-a11y-animated-images="system">
+  data-a11y-animated-images="system">
 
 <head>
-    <meta charset="utf-8" />
-    <link rel="dns-prefetch" href="https://github.githubassets.com" />
-    <link rel="dns-prefetch" href="https://avatars.githubusercontent.com" />
-    <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com" />
-    <link rel="dns-prefetch" href="https://user-images.githubusercontent.com/" />
-    <link rel="preconnect" href="https://github.githubassets.com" crossorigin />
-    <link rel="preconnect" href="https://avatars.githubusercontent.com" />
+  <meta charset="utf-8" />
+  <link rel="dns-prefetch" href="https://github.githubassets.com" />
+  <link rel="dns-prefetch" href="https://avatars.githubusercontent.com" />
+  <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com" />
+  <link rel="dns-prefetch" href="https://user-images.githubusercontent.com/" />
+  <link rel="preconnect" href="https://github.githubassets.com" crossorigin />
+  <link rel="preconnect" href="https://avatars.githubusercontent.com" />
 
-    <link crossorigin="anonymous" media="all" rel="stylesheet"
-        href="https://github.githubassets.com/assets/light-0eace2597ca3.css" />
-    <link crossorigin="anonymous" media="all" rel="stylesheet"
-        href="https://github.githubassets.com/assets/dark-a167e256da9c.css" />
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/light-0eace2597ca3.css" />
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/dark-a167e256da9c.css" />
 
-    <link crossorigin="anonymous" media="all" rel="stylesheet"
-        href="https://github.githubassets.com/assets/primer-711f412bb361.css" />
-    <link crossorigin="anonymous" media="all" rel="stylesheet"
-        href="https://github.githubassets.com/assets/global-78704364aaba.css" />
-    <style>
-        select,
-        .input-style {
-            width: 100%;
-        }
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/primer-711f412bb361.css" />
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/global-78704364aaba.css" />
+  <style>
+    select,
+    .input-style {
+      width: 100%;
+    }
 
-        .textarea-style {
-            width: 100%;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js"></script>
-    <!-- <script src="https://fastly.jsdelivr.net/npm/marked/marked.min.js"></script> -->
-    <script type="application/javascript">
+    .textarea-style {
+      width: 100%;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> -->
+  <script type="application/javascript">
 
-        var repo = "RROrg/rr"
+    var repo = "RROrg/rr"
 
-        var _models = {};
-        var _pats = {};
-        var _addons = {};
-        var _modules = {};
+    var _models = {};
+    var _pats = {};
+    var _addons = {};
+    var _modules = {};
 
-        function httpGetAsync(theUrl, callback) {
-            let xmlHttpReq = new XMLHttpRequest();
-            xmlHttpReq.onreadystatechange = function () {
-                if (xmlHttpReq.readyState == 4 && xmlHttpReq.status == 200)
-                    callback(xmlHttpReq.responseText);
-            };
-            xmlHttpReq.open("GET", theUrl, true); // true for asynchronous
-            xmlHttpReq.send(null);
-        }
+    function httpGetAsync(theUrl, callback) {
+      let xmlHttpReq = new XMLHttpRequest();
+      xmlHttpReq.onreadystatechange = function () {
+        if (xmlHttpReq.readyState == 4 && xmlHttpReq.status == 200)
+          callback(xmlHttpReq.responseText);
+      };
+      xmlHttpReq.open("GET", theUrl, true); // true for asynchronous
+      xmlHttpReq.send(null);
+    }
 
-        window.onload = function () {
-            init();
-        }
+    window.onload = function () {
+      init();
+    }
 
-        function init() {
-            httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/models.json", function (result) {
-                _models = JSON.parse(result);
-                httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/pats.json", function (result) {
-                    _pats = JSON.parse(result);
-                    httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/addons.json", function (result) {
-                        _addons = JSON.parse(result);
-                        httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/modules.json", function (result) {
-                            _modules = JSON.parse(result);
-                            $("#model").on("change", changeModel);
-                            $("#version").on("change", changeVersion);
-                            $("#language").on("change", changeVersion);
-                            $("#kernel").on("change", chanageKernel);
-                            $('#addons').val("acpid,mountloader,powersched,reboottoloader,trivial,vmtools");
-                            setModels();
-                        });
-                    });
-                });
+    function init() {
+      httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/models.json", function (result) {
+        _models = JSON.parse(result);
+        httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/pats.json", function (result) {
+          _pats = JSON.parse(result);
+          httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/addons.json", function (result) {
+            _addons = JSON.parse(result);
+            httpGetAsync("https://raw.githubusercontent.com/RROrg/rr/main/docs/modules.json", function (result) {
+              _modules = JSON.parse(result);
+              $("#model").on("change", changeModel);
+              $("#version").on("change", changeVersion);
+              $("#language").on("change", changeVersion);
+              $("#kernel").on("change", chanageKernel);
+              $('#addons').val("acpid,mountloader,powersched,reboottoloader,trivial,vmtools");
+              setModels();
             });
-        }
+          });
+        });
+      });
+    }
 
-        function setModels() {
-            var models = [];
-            for (var P in _models) {
-                models = models.concat(_models[P]["models"]);
-            }
-            $("#model")[0].options.length = 0;
-            for (var i = 0; i < models.length; i++) {
-                var model = models[i];
-                $("#model").append(`<option value="${model}">${model}</option>`);
-            }
-            changeModel();
-        }
-        function changeModel() {
-            model = $("#model").val();
-            var versions = [];
-            if (model in _pats) {
-                versions = Object.keys(_pats[model]);
-                versions.sort((a, b) => b.localeCompare(a));
-            }
-            $("#version")[0].options.length = 0;
-            for (var i = 0; i < versions.length; i++) {
-                var version = versions[i];
-                $("#version").append(`<option value="${version}">${version}</option>`);
-            }
-            changeproductsimage();
-            changeVersion();
-        }
+    function setModels() {
+      var models = [];
+      for (var P in _models) {
+        models = models.concat(_models[P]["models"]);
+      }
+      $("#model")[0].options.length = 0;
+      for (var i = 0; i < models.length; i++) {
+        var model = models[i];
+        $("#model").append(`<option value="${model}">${model}</option>`);
+      }
+      changeModel();
+    }
+    function changeModel() {
+      model = $("#model").val();
+      var versions = [];
+      if (model in _pats) {
+        versions = Object.keys(_pats[model]);
+        versions.sort((a, b) => b.localeCompare(a));
+      }
+      $("#version")[0].options.length = 0;
+      for (var i = 0; i < versions.length; i++) {
+        var version = versions[i];
+        $("#version").append(`<option value="${version}">${version}</option>`);
+      }
+      changeproductsimage();
+      changeVersion();
+    }
 
-        function changeproductsimage() {
-            //var model = $("#model").val().replace("#","").replace("+","plus");
-            //$('#products').html(`<img src="https://www.synology.cn/img/products/detail/${model}/heading.png" width="20%">`);
-            var model = $("#model").val().replace("#", "").replace("+", "%2B");
-            $('#products').html(`<img src="https://www.synology.com/api/products/getPhoto?product=${model}&type=img_s&sort=0" width="20%">`);
-        }
+    function changeproductsimage() {
+      //var model = $("#model").val().replace("#","").replace("+","plus");
+      //$('#products').html(`<img src="https://www.synology.cn/img/products/detail/${model}/heading.png" width="20%">`);
+      var model = $("#model").val().replace("#", "").replace("+", "%2B");
+      $('#products').html(`<img src="https://www.synology.com/api/products/getPhoto?product=${model}&type=img_s&sort=0" width="20%">`);
+    }
 
-        function changeVersion() {
-            createAddonsBtn();
-            createModulesBtn();
-            chanageKernel();
+    function changeVersion() {
+      createAddonsBtn();
+      createModulesBtn();
+      chanageKernel();
+    }
+    function createAddonsBtn() {
+      var language = $("#language").val();
+      var extstr = $('#addons').val().split(",");
+      var idx = 1;
+      var html = `<div class="form-group-body" id="addons_btns">`;
+      for (var ext in _addons) {
+        var dispar = "";
+        if (_addons[ext]["system"] == true) {
+          dispar = "disabled";
         }
-        function createAddonsBtn() {
-            var language = $("#language").val();
-            var extstr = $('#addons').val().split(",");
-            var idx = 1;
-            var html = `<div class="form-group-body" id="addons_btns">`;
-            for (var ext in _addons) {
-                var dispar = "";
-                if (_addons[ext]["system"] == true) {
-                    dispar = "disabled";
-                }
-                var par = "";
-                if (extstr.includes(ext)) {
-                    par = "btn-danger";
-                }
-                html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} ${dispar} onclick="return onclickext('addons', '${ext}')" autofocus="" title="${_addons[ext]["description"][language]}">${ext}</button>&nbsp;`;
-                //if (idx++ % 10 == 0) html += "<br />";
-            }
-            html += `</div>`;
-            $('#addons_btns').html(html);
+        var par = "";
+        if (extstr.includes(ext)) {
+          par = "btn-danger";
         }
+        html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} ${dispar} onclick="return onclickext('addons', '${ext}')" autofocus="" title="${_addons[ext]["description"][language]}">${ext}</button>&nbsp;`;
+        //if (idx++ % 10 == 0) html += "<br />";
+      }
+      html += `</div>`;
+      $('#addons_btns').html(html);
+    }
 
-        function createModulesBtn() {
-            var model = $("#model").val();
-            var version = $("#version").val().split(".").slice(0, 2).join(".");
-            var platform = "";
-            for (var P in _models) {
-                if (_models[P]["models"].includes(model)) {
-                    platform = P + "-" + _models[P]["productvers"][version];
-                    break;
-                }
-            }
-            var extstr = [];
-            var idx = 1;
-            var html = `<div class="form-group-body" id="modules_btns">`;
-            for (var ext in _modules[platform]) {
-                extstr.push(ext);
-                var par = "btn-danger";
-                html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} onclick="return onclickext('modules', '${ext}')" autofocus="" title="${_modules[platform][ext]["description"]}">${ext}</button>&nbsp;`;
-                //if (idx++ % 10 == 0) html += "<br />";
-            }
-            html += `</div>`;
-            $('#modules_btns').html(html);
-            if (extstr.length > 0) {
-                $('#modules').val(extstr.join(","));
-            }
+    function createModulesBtn() {
+      var model = $("#model").val();
+      var version = $("#version").val().split(".").slice(0, 2).join(".");
+      var platform = "";
+      for (var P in _models) {
+        if (_models[P]["models"].includes(model)) {
+          platform = P + "-" + _models[P]["productvers"][version];
+          break;
         }
+      }
+      var extstr = [];
+      var idx = 1;
+      var html = `<div class="form-group-body" id="modules_btns">`;
+      for (var ext in _modules[platform]) {
+        extstr.push(ext);
+        var par = "btn-danger";
+        html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} onclick="return onclickext('modules', '${ext}')" autofocus="" title="${_modules[platform][ext]["description"]}">${ext}</button>&nbsp;`;
+        //if (idx++ % 10 == 0) html += "<br />";
+      }
+      html += `</div>`;
+      $('#modules_btns').html(html);
+      if (extstr.length > 0) {
+        $('#modules').val(extstr.join(","));
+      }
+    }
 
-        function chanageKernel() {
-            var model = $("#model").val();
-            var version = $("#version").val().split(".").slice(0, 2).join(".");
-            var kernel = $("#kernel").val();
-            if (model == "SA6400" && version == "7.2") {
-                $("#kernel_item").show();
-                if (kernel == "custom") {
-                    $('#modules_item').hide();
-                } else {
-                    $('#modules_item').show();
-                }
-            } else {
-                $('#modules_item').show();
-                $("#kernel_item").hide();
-            }
+    function chanageKernel() {
+      var model = $("#model").val();
+      var version = $("#version").val().split(".").slice(0, 2).join(".");
+      var kernel = $("#kernel").val();
+      if (model == "SA6400" && version == "7.2") {
+        $("#kernel_item").show();
+        if (kernel == "custom") {
+          $('#modules_item').hide();
+        } else {
+          $('#modules_item').show();
         }
+      } else {
+        $('#modules_item').show();
+        $("#kernel_item").hide();
+      }
+    }
 
-        function onclickext(type, ext) {
-            var btnobj = $("#btn_" + ext);
-            var extstr = $('#' + type).val().split(",");
-            if (btnobj.hasClass("btn-danger")) {
-                extstr.map((val, i) => {
-                    if (val === ext) {
-                        extstr.splice(i, 1);
-                    }
-                });
-                btnobj.removeClass("btn-danger");
-            } else {
-                btnobj.addClass("btn-danger");
-                extstr.push(ext);
-            }
-            extstr.map((val, i) => {
-                if (val === "") {
-                    extstr.splice(i, 1);
-                }
-            });
-            $('#' + type).val(extstr.join(","));
+    function onclickext(type, ext) {
+      var btnobj = $("#btn_" + ext);
+      var extstr = $('#' + type).val().split(",");
+      if (btnobj.hasClass("btn-danger")) {
+        extstr.map((val, i) => {
+          if (val === ext) {
+            extstr.splice(i, 1);
+          }
+        });
+        btnobj.removeClass("btn-danger");
+      } else {
+        btnobj.addClass("btn-danger");
+        extstr.push(ext);
+      }
+      extstr.map((val, i) => {
+        if (val === "") {
+          extstr.splice(i, 1);
         }
-        function createIssues() {
-            var form = document.getElementById("inputs");
-            let formData = new FormData(form);
-            var title = "custom";
-            var body = {};
-            var _parameters = ["title", "format", "language", "model", "version", "kernel", "addons", "modules"];
-            for (var key in _parameters) {
-                var name = _parameters[key];
-                if ($("#" + name).is(":hidden")) { continue; }
-                if (name == "title") {
-                    if ($("#" + name).val()) {
-                        title += " " + $("#" + name).val();
-                    } else {
-                        title += " " + new Date().toISOString().substr(0, 10);
-                    }
-                    continue;
-                }
-                if ($("#" + name).val()) {
-                    body[name] = $("#" + name).val();
-                }
-            }
-
-            body = JSON.stringify(body).replace(/\+/g, "%2b");
-            window.location.href = `https://github.com/${repo}/issues/new?title=${title}&body=${body}`;
-
+      });
+      $('#' + type).val(extstr.join(","));
+    }
+    function createIssues() {
+      var form = document.getElementById("inputs");
+      let formData = new FormData(form);
+      var title = "custom";
+      var body = {};
+      var _parameters = ["title", "format", "language", "model", "version", "kernel", "addons", "modules"];
+      for (var key in _parameters) {
+        var name = _parameters[key];
+        if ($("#" + name).is(":hidden")) { continue; }
+        if (name == "title") {
+          if ($("#" + name).val()) {
+            title += " " + $("#" + name).val();
+          } else {
+            title += " " + new Date().toISOString().substr(0, 10);
+          }
+          continue;
         }
-    </script>
+        if ($("#" + name).val()) {
+          body[name] = $("#" + name).val();
+        }
+      }
 
-    <title>RR-CUSTOM</title>
-    <link rel="icon" href="https://avatars.githubusercontent.com/u/151816514?s=200&v=4">
+      body = JSON.stringify(body).replace(/\+/g, "%2b");
+      window.location.href = `https://github.com/${repo}/issues/new?title=${title}&body=${body}`;
+
+    }
+  </script>
+
+  <title>RR-CUSTOM</title>
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/151816514?s=200&v=4">
 </head>
 
 <body class="logged-in env-production page-responsive" style="word-wrap: break-word">
-    <div class="application-main left-0 text-left p-3 mx-auto container-xl px-3 px-md-4 px-lg-5 mt-4">
-        <pre id="logo" style="
+  <div class="application-main left-0 text-left p-3 mx-auto container-xl px-3 px-md-4 px-lg-5 mt-4">
+    <pre id="logo" style="
           display: block;
           font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
             Liberation Mono, monospace !important;
@@ -253,155 +253,154 @@
 ╚═╝  ╚═╝╚═╝  ╚═╝       ╚═════╝ ╚═════╝ ╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝
                                                                                                                                   
       </pre>
-        <div class="image" id="products" style="height: 50px; margin-left: 200px;">
-            <img src="https://www.synology.cn/img/products/detail/SA6400/heading.png" width="20%">
-        </div>
-        <div class="flex-auto min-width-0 width-fit mr-3">
-            <div class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal">
-                <a id="titleA" href="https://github.com/RROrg/rr">
-                    <img alt="GitHub Release"
-                        src="https://img.shields.io/github/v/release/rrorg/rr?include_prereleases&style=flat-square&label=current">
-                    <img alt="GitHub Issues"
-                        src="https://img.shields.io/github/issues-closed-raw/rrorg/rr/custom?style=flat-square&label=custom">
-                </a>
-            </div>
-            <div class="btn-link tabnav-tab preview-tab js-preview-tab flex-1 flex-md-auto width-full">
-                <marquee id="content" direction="up" height="36" scrollamount="1" onMouseOut="this.start()"
-                    onMouseOver="this.stop()">
-                </marquee>
-            </div>
-        </div>
-        <div class="form-group mt-1 mb-2" id="title_item">
-            <div class="form-group-header">
-                <label class="color-fg-default text-mono f6">Title: (Please do not delete the "custom " in the title of
-                    the issue creation page.)</label>
-            </div>
-            <div class="form-group-body">
-                <input class="form-control input-contrast input-sm" type="text" id="title" name="inputs[title]"
-                    value="" />
-            </div>
-        </div>
-        <div class="form-group mt-1 mb-2" id="format_item">
-            <div class="form-group-header">
-                <label class="color-fg-default text-mono f6">Format:</label>
-            </div>
-            <div class="form-group-body">
-                <select class="form-select form-control select-sm input-contrast" id="format" name="inputs[format]"
-                    value="">
-                    <option selected="selected" value="img">img</option>
-                    <option value="ova">ova</option>
-                    <option value="vmx">vmx</option>
-                    <option value="vmdk">vmdk</option>
-                    <option value="flat">flat</option>
-                    <option value="vhd">vhd</option>
-                    <option value="vhdx">vhdx</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group mt-1 mb-2" id="language_item">
-            <div class="form-group-header">
-                <label class="color-fg-default text-mono f6">Language:</label>
-            </div>
-            <div class="form-group-body">
-                <select class="form-select form-control select-sm input-contrast" id="language" name="inputs[language]"
-                    value="">
-                    <option value="ar_SA">ar_SA</option>
-                    <option value="de_DE">de_DE</option>
-                    <option selected="selected" value="en_US">en_US</option>
-                    <option value="es_ES">es_ES</option>
-                    <option value="fr_FR">fr_FR</option>
-                    <option value="ja_JP">ja_JP</option>
-                    <option value="ko_KR">ko_KR</option>
-                    <option value="ru_RU">ru_RU</option>
-                    <option value="th_TH">th_TH</option>
-                    <option value="tr_TR">tr_TR</option>
-                    <option value="uk_UA">uk_UA</option>
-                    <option value="vi_VN">vi_VN</option>
-                    <option value="zh_CN">zh_CN</option>
-                    <option value="zh_HK">zh_HK</option>
-                    <option value="zh_TW">zh_TW</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group mt-1 mb-2" id="model_item">
-            <div class="form-group-header">
-                <label class="color-fg-default text-mono f6">Model:</label>
-            </div>
-            <div class="form-group-body">
-                <select class="form-select form-control select-sm input-contrast" id="model" name="inputs[model]"
-                    value="">
-                    <option selected="selected" value="SA6400">SA6400</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group mt-1 mb-2" id="version_item">
-            <div class="form-group-header">
-                <label class="color-fg-default text-mono f6">Version:</label>
-                <a href="https://github.com/RROrg/rr/raw/main/docs/pats.xlsx"> Details</a>
-            </div>
-            <div class="form-group-body">
-                <select class="form-select form-control select-sm input-contrast" id="version" name="inputs[version]"
-                    value="">
-                    <option selected="selected" value="7.2">7.2</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group mt-1 mb-2" id="kernel_item">
-            <div class="form-group-header">
-                <label class="color-fg-default text-mono f6">Kernel: (only "custom" supports Hyper-V, Xen.)</label>
-            </div>
-            <div class="form-group-body">
-                <select class="form-select form-control select-sm input-contrast" id="kernel" name="inputs[kernel]"
-                    value="">
-                    <option selected="selected" value="official">official</option>
-                    <option value="custom">custom</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group mt-1 mb-2" id="addons_item">
-            <div class="form-group-header">
-                <label class="color-fg-default text-mono f6">Addons:</label>
-                <a href="https://github.com/RROrg/rr/raw/main/docs/addons.xlsx"> Details</a>
-            </div>
-            <div class="form-group-body">
-                <textarea class="textarea-style input-contrast input-sm" type="text" id="addons" name="inputs[addons]"
-                    disabled></textarea>
-                <div class="form-group-body" id="addons_btns">
-                </div>
-            </div>
-        </div>
-        <div class="form-group mt-1 mb-2" id="modules_item">
-            <div class="form-group-header">
-                <label class="color-fg-default text-mono f6">Modules:</label>
-                <a href="https://github.com/RROrg/rr/raw/main/docs/modules.xlsx"> Details</a>
-            </div>
-            <div class="form-group-body">
-                <textarea class="textarea-style input-contrast input-sm" type="text" id="modules" name="inputs[modules]"
-                    disabled></textarea>
-                <div class="form-group-body" id="modules_btns">
-                </div>
-            </div>
-        </div>
-        <div data-replace-remote-form-target="" class="workflow-dispatch">
-            <form id="inputs">
-                <button type="button" class="btn State--merged" onclick="return createIssues()" autofocus="">
-                    Create
-                </button>
-            </form>
-        </div>
+    <div class="image" id="products" style="height: 50px; margin-left: 200px;">
+      <img src="https://www.synology.cn/img/products/detail/SA6400/heading.png" width="20%">
     </div>
-    <footer class="footer width-full container-xl mt-3 text-center color-fg-muted">
-        <a aria-label="RROrg" title="GitHub" class="footer-octicon mr-2" href="https://github.com/RROrg">
-            <img class="avatar rounded-2 avatar-user"
-                src="https://avatars.githubusercontent.com/u/151816514?s=88&amp;v=4" width="40" height="40"
-                alt="@RROrg" />
+    <div class="flex-auto min-width-0 width-fit mr-3">
+      <div class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal">
+        <a id="titleA" href="https://github.com/RROrg/rr">
+          <img alt="GitHub Release"
+            src="https://img.shields.io/github/v/release/rrorg/rr?include_prereleases&style=flat-square&label=current">
+          <img alt="GitHub Issues"
+            src="https://img.shields.io/github/issues-closed-raw/rrorg/rr/custom?style=flat-square&label=custom">
         </a>
-        <a aria-label="RROrg" title="GitHub" class="footer-octicon mr-2" href="https://github.com/wjz304">
-            <img class="avatar rounded-2 avatar-user" src="https://avatars.githubusercontent.com/u/5615843?s=88&amp;v=4"
-                width="40" height="40" alt="@wjz304" />
+      </div>
+      <div class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal">
+        <a id="titleB" href="./changelogs.html">
+          <img alt="GitHub Release" src="https://img.shields.io/badge/Changelogs-8A2BE2&style=flat">
         </a>
-        <span> © 2022 RROrg, Ing, Inc. </span>
-    </footer>
+      </div>
+      <div class="btn-link tabnav-tab preview-tab js-preview-tab flex-1 flex-md-auto width-full">
+        <marquee id="content" direction="up" height="36" scrollamount="1" onMouseOut="this.start()"
+          onMouseOver="this.stop()">
+        </marquee>
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="title_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">Title: (Please do not delete the "custom " in the title of
+          the issue creation page.)</label>
+      </div>
+      <div class="form-group-body">
+        <input class="form-control input-contrast input-sm" type="text" id="title" name="inputs[title]" value="" />
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="format_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">Format:</label>
+      </div>
+      <div class="form-group-body">
+        <select class="form-select form-control select-sm input-contrast" id="format" name="inputs[format]" value="">
+          <option selected="selected" value="img">img</option>
+          <option value="ova">ova</option>
+          <option value="vmx">vmx</option>
+          <option value="vmdk">vmdk</option>
+          <option value="flat">flat</option>
+          <option value="vhd">vhd</option>
+          <option value="vhdx">vhdx</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="language_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">Language:</label>
+      </div>
+      <div class="form-group-body">
+        <select class="form-select form-control select-sm input-contrast" id="language" name="inputs[language]"
+          value="">
+          <option value="ar_SA">ar_SA</option>
+          <option value="de_DE">de_DE</option>
+          <option selected="selected" value="en_US">en_US</option>
+          <option value="es_ES">es_ES</option>
+          <option value="fr_FR">fr_FR</option>
+          <option value="ja_JP">ja_JP</option>
+          <option value="ko_KR">ko_KR</option>
+          <option value="ru_RU">ru_RU</option>
+          <option value="th_TH">th_TH</option>
+          <option value="tr_TR">tr_TR</option>
+          <option value="uk_UA">uk_UA</option>
+          <option value="vi_VN">vi_VN</option>
+          <option value="zh_CN">zh_CN</option>
+          <option value="zh_HK">zh_HK</option>
+          <option value="zh_TW">zh_TW</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="model_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">Model:</label>
+      </div>
+      <div class="form-group-body">
+        <select class="form-select form-control select-sm input-contrast" id="model" name="inputs[model]" value="">
+          <option selected="selected" value="SA6400">SA6400</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="version_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">Version:</label>
+        <a href="https://github.com/RROrg/rr/raw/main/docs/pats.xlsx"> Details</a>
+      </div>
+      <div class="form-group-body">
+        <select class="form-select form-control select-sm input-contrast" id="version" name="inputs[version]" value="">
+          <option selected="selected" value="7.2">7.2</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="kernel_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">Kernel: (only "custom" supports Hyper-V, Xen.)</label>
+      </div>
+      <div class="form-group-body">
+        <select class="form-select form-control select-sm input-contrast" id="kernel" name="inputs[kernel]" value="">
+          <option selected="selected" value="official">official</option>
+          <option value="custom">custom</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="addons_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">Addons:</label>
+        <a href="https://github.com/RROrg/rr/raw/main/docs/addons.xlsx"> Details</a>
+      </div>
+      <div class="form-group-body">
+        <textarea class="textarea-style input-contrast input-sm" type="text" id="addons" name="inputs[addons]"
+          disabled></textarea>
+        <div class="form-group-body" id="addons_btns">
+        </div>
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="modules_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">Modules:</label>
+        <a href="https://github.com/RROrg/rr/raw/main/docs/modules.xlsx"> Details</a>
+      </div>
+      <div class="form-group-body">
+        <textarea class="textarea-style input-contrast input-sm" type="text" id="modules" name="inputs[modules]"
+          disabled></textarea>
+        <div class="form-group-body" id="modules_btns">
+        </div>
+      </div>
+    </div>
+    <div data-replace-remote-form-target="" class="workflow-dispatch">
+      <form id="inputs">
+        <button type="button" class="btn State--merged" onclick="return createIssues()" autofocus="">
+          Create
+        </button>
+      </form>
+    </div>
+  </div>
+  <footer class="footer width-full container-xl mt-3 text-center color-fg-muted">
+    <a aria-label="RROrg" title="GitHub" class="footer-octicon mr-2" href="https://github.com/RROrg">
+      <img class="avatar rounded-2 avatar-user" src="https://avatars.githubusercontent.com/u/151816514?s=88&amp;v=4"
+        width="40" height="40" alt="@RROrg" />
+    </a>
+    <a aria-label="RROrg" title="GitHub" class="footer-octicon mr-2" href="https://github.com/wjz304">
+      <img class="avatar rounded-2 avatar-user" src="https://avatars.githubusercontent.com/u/5615843?s=88&amp;v=4"
+        width="40" height="40" alt="@wjz304" />
+    </a>
+    <span> © 2022 RROrg, Ing, Inc. </span>
+  </footer>
 </body>
 
 </html>
