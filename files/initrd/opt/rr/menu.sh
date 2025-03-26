@@ -150,7 +150,8 @@ function modelMenu() {
       while true; do
         rm -f "${TMP_PATH}/menu"
         FLGNEX=0
-        IGPUPS=(apollolake geminilake)
+        IGPU1L=(apollolake geminilake epyc7002)
+        IGPU2L=(epyc7002)
         IGPUID="$(lspci -nd ::300 2>/dev/null | grep "8086" | cut -d' ' -f3 | sed 's/://g')"
         NVMEMS=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
         NVMEMD=$(find /sys/devices -type d -name nvme | awk -F'/' '{print NF}' | sort -n | tail -n1)
@@ -170,8 +171,8 @@ function modelMenu() {
           fi
           unset DT G N H
           [ "$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")" = "true" ] && DT="DT" || DT=""
-          [ -z "${G}" ] && [ ${hasiGPU} -eq 1 ] && echo "${IGPUPS[@]}" | grep -wq "${A}" && G="G"
-          [ -z "${G}" ] && [ ${hasiGPU} -eq 2 ] && echo "epyc7002" | grep -wq "${A}" && G="G"
+          [ -z "${G}" ] && [ ${hasiGPU} -eq 1 ] && echo "${IGPU1L[@]}" | grep -wq "${A}" && G="G"
+          [ -z "${G}" ] && [ ${hasiGPU} -eq 2 ] && echo "${IGPU2L[@]}" | grep -wq "${A}" && G="G"
           [ -z "${N}" ] && [ ${hasNVME} -ne 0 ] && [ "${DT}" = "DT" ] && N="N"
           [ -z "${N}" ] && [ ${hasNVME} -eq 2 ] && echo "${NVMEMS[@]}" | grep -wq "${M}" && N="N"
           [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && [ ! "${DT}" = "DT" ] && H="H"
@@ -2161,7 +2162,7 @@ function languageMenu() {
 ###############################################################################
 # Choose a timezone
 function timezoneMenu() {
-  OPTIONS="$(find /usr/share/zoneinfo/right -type f | cut -d '/' -f 6- | sort | uniq | xargs)"
+  OPTIONS="$(find /usr/share/zoneinfo/right -type f | cut -d'/' -f6- | sort | uniq | xargs)"
   DIALOG --title "$(TEXT "Settings")" \
     --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a timezone")" 0 0 20 ${OPTIONS} \
     2>"${TMP_PATH}/resp"

@@ -295,7 +295,7 @@
   lspci -d ::302                                   # 查看 3D 控制器 (不是 VGA 兼容)
 
   # Intel GPU
-  lspci -nd ::300 | cut -d " " -f 3                # PIDVID 
+  lspci -nd ::300 | cut -d' ' -f3                  # PIDVID 
   ls /dev/dri                                      # 查看显卡设备
   cat /sys/kernel/debug/dri/0/i915_frequency_info  # 显卡驱动详细信息
 

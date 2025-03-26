@@ -234,7 +234,7 @@ function _get_fastest() {
   URL="$(echo "${fastest}" | awk '{print $1}')"
   SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
   echo "${URL:-${1}}"
-  [ "$(echo "${SPD:-999}" | cut -d. -f1)" -ge 999 ] && return 1 || return 0
+  [ "$(echo "${SPD:-999}" | cut -d'.' -f1)" -ge 999 ] && return 1 || return 0
 }
 
 ###############################################################################
@@ -301,11 +301,11 @@ function getBus() {
 function getIP() {
   local IP=""
   if [ -n "${1}" ] && [ -d "/sys/class/net/${1}" ]; then
-    IP=$(ip route show dev "${1}" 2>/dev/null | sed -n 's/.* via .* src \(.*\) metric .*/\1/p')
-    [ -z "${IP}" ] && IP=$(ip addr show "${1}" scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
+    IP=$(ip route show dev "${1}" 2>/dev/null | sed -n 's/.* via .* src \(.*\) metric .*/\1/p' | head -1)
+    [ -z "${IP}" ] && IP=$(ip addr show "${1}" scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -d'/' -f1 | head -1)
   else
     IP=$(ip route show 2>/dev/null | sed -n 's/.* via .* src \(.*\) metric .*/\1/p' | head -1)
-    [ -z "${IP}" ] && IP=$(ip addr show scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -f1 -d'/' | head -1)
+    [ -z "${IP}" ] && IP=$(ip addr show scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -d'/' -f1 | head -1)
   fi
   echo "${IP}"
   return 0
