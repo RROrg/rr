@@ -318,6 +318,14 @@
   synodsdefault --reinstall                        # 重装系统
   synodsdefault --factory-default                  # 重置系统 (清空全部数据)
 
+  # 虚拟机
+  virsh -h                                         # 列出所有虚拟机命令
+  virsh list --all                                 # 列出所有虚拟机
+  virsh console <guest_name>                       # 进入虚拟机控制台
+
+  etcdctl -h                                       # 列出所有 etcd 命令
+  etcdctl ls /syno/live_cluster/guests/            # 列出所有虚拟机 (etcd)
+
   # API
   # 获取系统信息
   synowebapi --exec api=SYNO.Core.System method=info

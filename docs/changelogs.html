@@ -1,67 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-Hans-CN" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark"
-    data-a11y-animated-images="system">
+  data-a11y-animated-images="system">
 
 <head>
-    <meta charset="utf-8" />
-    <link rel="dns-prefetch" href="https://github.githubassets.com" />
-    <link rel="dns-prefetch" href="https://avatars.githubusercontent.com" />
-    <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com" />
-    <link rel="dns-prefetch" href="https://user-images.githubusercontent.com/" />
-    <link rel="preconnect" href="https://github.githubassets.com" crossorigin />
-    <link rel="preconnect" href="https://avatars.githubusercontent.com" />
+  <meta charset="utf-8" />
+  <link rel="dns-prefetch" href="https://github.githubassets.com" />
+  <link rel="dns-prefetch" href="https://avatars.githubusercontent.com" />
+  <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com" />
+  <link rel="dns-prefetch" href="https://user-images.githubusercontent.com/" />
+  <link rel="preconnect" href="https://github.githubassets.com" crossorigin />
+  <link rel="preconnect" href="https://avatars.githubusercontent.com" />
 
-    <link crossorigin="anonymous" media="all" rel="stylesheet"
-        href="https://github.githubassets.com/assets/light-0eace2597ca3.css" />
-    <link crossorigin="anonymous" media="all" rel="stylesheet"
-        href="https://github.githubassets.com/assets/dark-a167e256da9c.css" />
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/light-0eace2597ca3.css" />
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/dark-a167e256da9c.css" />
 
-    <link crossorigin="anonymous" media="all" rel="stylesheet"
-        href="https://github.githubassets.com/assets/primer-711f412bb361.css" />
-    <link crossorigin="anonymous" media="all" rel="stylesheet"
-        href="https://github.githubassets.com/assets/global-78704364aaba.css" />
-    <style>
-        select,
-        .input-style {
-            width: 100%;
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/primer-711f412bb361.css" />
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/global-78704364aaba.css" />
+  <style>
+    select,
+    .input-style {
+      width: 100%;
+    }
+
+    .textarea-style {
+      width: 100%;
+    }
+
+    .loading-message {
+      text-align: center;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    async function fetchChangelog() {
+      let page = 1;
+      const changelogContainer = document.getElementById('changelog');
+      const loadingMessage = document.createElement('p');
+      loadingMessage.textContent = 'Loading...';
+      loadingMessage.className = 'loading-message';
+      changelogContainer.appendChild(loadingMessage);
+
+      while (true) {
+        const response = await fetch(`https://api.github.com/repos/RROrg/rr/releases?page=${page}&per_page=100`);
+        const releases = await response.json();
+        if ((!response.ok) || (releases.length === 0)) {
+          const errorMessage = document.createElement('p');
+          errorMessage.textContent = releases.message;
+          errorMessage.className = 'error-message';
+          changelogContainer.appendChild(errorMessage);
+          break;
         }
+        releases.forEach(release => {
+          const releaseElement = document.createElement('div');
+          releaseElement.innerHTML = `<h2><a href="${release.html_url}" target="_blank">${release.name}</a></h2>${marked.parse(release.body)}`;
+          changelogContainer.appendChild(releaseElement);
+        });
+        page++;
+      }
 
-        .textarea-style {
-            width: 100%;
-        }
-        .loading-message {
-            text-align: center;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-        async function fetchChangelog() {
-            let page = 1;
-            const changelogContainer = document.getElementById('changelog');
-            const loadingMessage = document.createElement('p');
-            loadingMessage.textContent = 'Loading...';
-            loadingMessage.className = 'loading-message';
-            changelogContainer.appendChild(loadingMessage);
+      changelogContainer.removeChild(loadingMessage);
+    }
 
-            while (true) {
-                const response = await fetch(`https://api.github.com/repos/RROrg/rr/releases?page=${page}&per_page=100`);
-                const releases = await response.json();
-                if (releases.length === 0) break;
-                releases.forEach(release => {
-                    const releaseElement = document.createElement('div');
-                    releaseElement.innerHTML = `<h2><a href="${release.html_url}" target="_blank">${release.name}</a></h2>${marked.parse(release.body)}`;
-                    changelogContainer.appendChild(releaseElement);
-                });
-                page++;
-            }
-
-            changelogContainer.removeChild(loadingMessage);
-        }
-
-        document.addEventListener('DOMContentLoaded', fetchChangelog);
-    </script>
+    document.addEventListener('DOMContentLoaded', fetchChangelog);
+  </script>
 </head>
+
 <body>
-    <div id="changelog"></div>
+  <div id="changelog"></div>
 </body>
+
 </html>
