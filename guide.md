@@ -270,14 +270,19 @@
   lsof -i :7681                                    # 查看 7681 端口占用情况
 
   # CPU
-  cat /sys/devices/system/cpu/cpufreq/boost        # 查看 CPU 睿频状态
-  echo 1 > /sys/devices/system/cpu/cpufreq/boost   # 开启 CPU 睿频
-  echo 0 > /sys/devices/system/cpu/cpufreq/boost   # 关闭 CPU 睿频
-  cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_available_governors # 查看可用的 CPU 频率调节器状态
-  cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor            # 查看 CPU 频率调节器状态
-  cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq            # 查看 CPU 当前频率 
-  cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq            # 查看 CPU 最大频率
-  cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq            # 查看 CPU 最小频率
+  cat /sys/devices/system/cpu/cpufreq/boost                                    # 查看 CPU 睿频状态
+  echo 1 > /sys/devices/system/cpu/cpufreq/boost                               # 开启 CPU 睿频
+  echo 0 > /sys/devices/system/cpu/cpufreq/boost                               # 关闭 CPU 睿频
+  cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_available_governors         # 查看可用的 CPU 频率调节器状态
+  cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor                    # 查看 CPU 频率调节器状态
+  echo userspace | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor   # 设置 CPU 频率调节器状态为 userspace
+  cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq                    # 查看 CPU 当前频率
+  cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq                    # 查看 CPU 最大频率
+  echo 2000000 | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq     # 设置 CPU 最大频率
+  cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_min_freq                    # 查看 CPU 最小频率
+  echo 1000000 | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_min_freq     # 设置 CPU 最小频率
+  cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_setspeed                    # 查看 CPU 设置频率
+  echo 1000000 | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_setspeed     # 设置 CPU 设置频率
 
 
   # 日志相关
