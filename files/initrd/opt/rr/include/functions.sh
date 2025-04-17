@@ -224,7 +224,7 @@ function _get_fastest() {
     done
   else
     for I in "$@"; do
-      speed=$(curl -skL -w '%{time_total}' "${I}" -o /dev/null)
+      speed=$(curl -skL -m 10 --connect-timeout 10 -w '%{time_total}' "${I}" -o /dev/null)
       speed=$(awk "BEGIN {print (${speed:-0.999} * 1000)}")
       speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
     done
