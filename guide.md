@@ -333,7 +333,8 @@
 
   # API
   # 获取系统信息
-  synowebapi --exec api=SYNO.Core.System method=info version=1
+  synowebapi --exec api=SYNO.Core.System method=info version=3
+  synowebapi --exec api=SYNO.Core.System method=info version=3 type="firmware"
   # 获取设备信息
   synowebapi --exec api=SYNO.Core.System.Utilization method=get version=1
   # 关闭 自动 https 重定向
