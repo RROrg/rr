@@ -107,6 +107,12 @@ platforms:
     dt: true
     synoinfo: *synoinfo
     productvers: *productvers4
+  v1000nk:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+      netif_seq_by_dts: "no"
+    productvers: *productvers5
   epyc7002:
     dt: true
     synoinfo:

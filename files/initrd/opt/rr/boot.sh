@@ -238,7 +238,7 @@ fi
 #     CMDLINE['modprobe.blacklist']+="sdhci,sdhci_pci,sdhci_acpi"
 #   fi
 # fi
-if [ "${DT}" = "true" ] && ! echo "epyc7002 purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
+if [ "${DT}" = "true" ] && ! echo "v1000nk epyc7002 purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
   if ! echo "${CMDLINE['modprobe.blacklist']}" | grep -q "mpt3sas"; then
     [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
     CMDLINE['modprobe.blacklist']+="mpt3sas"

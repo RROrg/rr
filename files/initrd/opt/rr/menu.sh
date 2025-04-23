@@ -150,8 +150,9 @@ function modelMenu() {
       while true; do
         rm -f "${TMP_PATH}/menu"
         FLGNEX=0
-        IGPU1L=(apollolake geminilake epyc7002)
-        IGPU2L=(epyc7002)
+        IGPU1L=(apollolake geminilake v1000nk epyc7002)
+        IGPU2L=(v1000nk epyc7002)
+        KVER5L=(v1000nk epyc7002)
         IGPUID="$(lspci -nd ::300 2>/dev/null | grep "8086" | cut -d' ' -f3 | sed 's/://g')"
         NVMEMS=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
         NVMEMD=$(find /sys/devices -type d -name nvme | awk -F'/' '{print NF}' | sort -n | tail -n1)
@@ -176,7 +177,7 @@ function modelMenu() {
           [ -z "${N}" ] && [ ${hasNVME} -ne 0 ] && [ "${DT}" = "DT" ] && N="N"
           [ -z "${N}" ] && [ ${hasNVME} -eq 2 ] && echo "${NVMEMS[@]}" | grep -wq "${M}" && N="N"
           [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && [ ! "${DT}" = "DT" ] && H="H"
-          [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && echo "epyc7002" | grep -wq "${A}" && H="H"
+          [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && echo "${KVER5L[@]}" | grep -wq "${A}" && H="H"
           [ ${COMPATIBLE} -eq 1 ] && printf "%s \"\Zb%-14s  %-2s  %-3s\Zn\" " "${M}" "${A}" "${DT}" "${G}${N}${H}" >>"${TMP_PATH}/menu"
         done <"${TMP_PATH}/modellist"
         [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"

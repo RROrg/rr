@@ -243,7 +243,9 @@ for N in $(seq 0 7); do
 done
 
 # issues/313
-if [ "${PLATFORM}" = "epyc7002" ]; then
+if [ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ]; then
+  :
+else
   sed -i 's#/dev/console#/var/log/lrc#g' "${RAMDISK_PATH}/usr/bin/busybox"
   sed -i '/^echo "START/a \\nmknod -m 0666 /dev/console c 1 3' "${RAMDISK_PATH}/linuxrc.syno"
 fi
