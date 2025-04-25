@@ -1522,7 +1522,8 @@ function boot() {
 function customDTS() {
   # Loop menu
   while true; do
-    [ -f "${USER_UP_PATH}/${MODEL}.dts" ] && CUSTOMDTS="Yes" || CUSTOMDTS="No"
+    [ -f "${USER_UP_PATH}/${MODEL}.dts" ] && mv -f "${USER_UP_PATH}/${MODEL}.dts" "${USER_UP_PATH}/model.dts"
+    [ -f "${USER_UP_PATH}/model.dts" ] && CUSTOMDTS="Yes" || CUSTOMDTS="No"
     rm -f "${TMP_PATH}/menu"
     {
       echo "u \"$(TEXT "Upload dts file")\""
@@ -1539,7 +1540,7 @@ function customDTS() {
       if ! tty 2>/dev/null | grep -q "/dev/pts"; then #if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
         MSG=""
         MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\n")"
-        MSG+="$(printf "$(TEXT "Or upload the dts file to %s via DUFS, Will be automatically imported when building.\n")" "${USER_UP_PATH}/${MODEL}.dts")"
+        MSG+="$(printf "$(TEXT "Or upload the dts file to %s via DUFS, Will be automatically imported when building.\n")" "${USER_UP_PATH}/model.dts")"
         DIALOG --title "$(TEXT "Custom DTS")" \
           --msgbox "${MSG}" 0 0
         return
@@ -1560,7 +1561,7 @@ function customDTS() {
           --msgbox "${MSG}" 0 0
       else
         [ -d "{USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
-        cp -f "${USER_FILE}" "${USER_UP_PATH}/${MODEL}.dts"
+        cp -f "${USER_FILE}" "${USER_UP_PATH}/model.dts"
         DIALOG --title "$(TEXT "Custom DTS")" \
           --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
       fi
@@ -1569,13 +1570,13 @@ function customDTS() {
       touch "${PART1_PATH}/.build"
       ;;
     d)
-      rm -f "${USER_UP_PATH}/${MODEL}.dts"
+      rm -f "${USER_UP_PATH}/model.dts"
       touch "${PART1_PATH}/.build"
       ;;
     i)
       rm -rf "${TMP_PATH}/model.dts"
-      if [ -f "${USER_UP_PATH}/${MODEL}.dts" ]; then
-        cp -f "${USER_UP_PATH}/${MODEL}.dts" "${TMP_PATH}/model.dts"
+      if [ -f "${USER_UP_PATH}/model.dts" ]; then
+        cp -f "${USER_UP_PATH}/model.dts" "${TMP_PATH}/model.dts"
       else
         ODTB="$(find "${PART2_PATH}" -type f -name "*.dtb" | head -1)"
         if [ -f "${ODTB}" ]; then
@@ -1598,7 +1599,7 @@ function customDTS() {
             --msgbox "${MSG}" 0 0
         else
           mkdir -p "${USER_UP_PATH}"
-          cp -f "${TMP_PATH}/modelEdit.dts" "${USER_UP_PATH}/${MODEL}.dts"
+          cp -f "${TMP_PATH}/modelEdit.dts" "${USER_UP_PATH}/model.dts"
           rm -r "${TMP_PATH}/model.dts" "${TMP_PATH}/modelEdit.dts"
           touch "${PART1_PATH}/.build"
           break

@@ -186,6 +186,7 @@ for ADDON in "redpill" "revert" "misc" "eudev" "disks" "localrss" "notify" "wol"
   PARAMS=""
   if [ "${ADDON}" = "disks" ]; then
     PARAMS=${HDDSORT}
+    [ -f "${USER_UP_PATH}/model.dts" ] && cp -f "${USER_UP_PATH}/model.dts" "${RAMDISK_PATH}/addons/model.dts"
     [ -f "${USER_UP_PATH}/${MODEL}.dts" ] && cp -f "${USER_UP_PATH}/${MODEL}.dts" "${RAMDISK_PATH}/addons/model.dts"
   fi
   installAddon "${ADDON}" "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" || exit 1
