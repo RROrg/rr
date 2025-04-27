@@ -249,27 +249,6 @@ if [ "${DT}" = "true" ] && ! echo "v1000nk epyc7002 purley broadwellnkv2" | grep
 #  CMDLINE['scsi_mod.scan']="sync"  # TODO: redpill panic of vmware scsi? (add to cmdline)
 fi
 
-########### V1000NK DEBUG ###########
-if echo "v1000nk" | grep -wq "${PLATFORM}"; then
-  if ! echo "${CMDLINE['modprobe.blacklist']}" | grep -q "virtio"; then
-    [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
-    CMDLINE['modprobe.blacklist']+="virtio,virtio_blk,virtio_console,virtio_input,virtio_mmio,virtio_net,virtio_pci,virtio_ring,virtio_scsi"
-  fi
-  if ! echo "${CMDLINE['modprobe.blacklist']}" | grep -q "e1000"; then
-    [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
-    CMDLINE['modprobe.blacklist']+="e1000,e1000e"
-  fi
-  if ! echo "${CMDLINE['modprobe.blacklist']}" | grep -q "mpt3sas"; then
-    [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
-    CMDLINE['modprobe.blacklist']+="mpt3sas"
-  fi
-  if ! echo "${CMDLINE['modprobe.blacklist']}" | grep -q "megaraid_sas"; then
-    [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
-    CMDLINE['modprobe.blacklist']+="megaraid_sas"
-  fi
-fi
-########### V1000NK DEBUG ###########
-
 # CMDLINE['kvm.ignore_msrs']="1"
 # CMDLINE['kvm.report_ignored_msrs']="0"
 
