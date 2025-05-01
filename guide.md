@@ -337,6 +337,11 @@
   synowebapi --exec api=SYNO.Core.System method=info version=3 type="firmware"
   # 获取设备信息
   synowebapi --exec api=SYNO.Core.System.Utilization method=get version=1
+  # 关机
+  synowebapi --exec api=SYNO.Core.System method=shutdown version=2 local=true force=false
+  # 重启
+  synowebapi --exec api=SYNO.Core.System method=reboot version=2 local=true force=false
+
   # 关闭 自动 https 重定向
   synowebapi --exec api=SYNO.Core.Web.DSM method=set version=2 enable_https_redirect=false
   # 开启 telnet/ssh
