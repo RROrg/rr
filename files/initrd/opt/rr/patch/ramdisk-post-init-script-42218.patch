@@ -2,10 +2,10 @@
 +++ b/usr/sbin/init.post
 @@ -18,6 +18,8 @@
  fi
- mount $RootDevice /tmpRoot -o barrier=1
+ Mount "$RootDevice" /tmpRoot -o barrier=1
  
 +/addons/addons.sh late
 +
- mkdir -p /tmpRoot/initrd
+ Mkdir -p /tmpRoot/initrd
  
- umount /proc &> /dev/null
+ Umount /proc >/dev/null 2>&1

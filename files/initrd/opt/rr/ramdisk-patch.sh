@@ -81,14 +81,11 @@ writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
 writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
 writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
 
-declare -A SYNOINFO
 declare -A ADDONS
 declare -A MODULES
+declare -A SYNOINFO
 
-# Read synoinfo and addons from config
-while IFS=': ' read -r KEY VALUE; do
-  [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
-done <<<"$(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")"
+# Read addons, modules and synoinfo from user config
 while IFS=': ' read -r KEY VALUE; do
   [ -n "${KEY}" ] && ADDONS["${KEY}"]="${VALUE}"
 done <<<"$(readConfigMap "addons" "${USER_CONFIG_FILE}")"
@@ -98,13 +95,16 @@ while IFS=': ' read -r KEY VALUE; do
   [ -n "${KEY}" ] && MODULES["${KEY}"]="${VALUE}"
 done <<<"$(readConfigMap "modules" "${USER_CONFIG_FILE}")"
 
+SYNOINFO["SN"]="${SN}"
+while IFS=': ' read -r KEY VALUE; do
+  [ -n "${KEY}" ] && SYNOINFO["${KEY}"]="${VALUE}"
+done <<<"$(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")"
+
 # Patches (diff -Naru OLDFILE NEWFILE > xxx.patch)
 PATCHS=(
   "ramdisk-etc-rc-*.patch"
   "ramdisk-init-script-*.patch"
   "ramdisk-post-init-script-*.patch"
-  "ramdisk-disable-root-pwd-*.patch"
-  "ramdisk-disable-disabled-ports-*.patch"
 )
 for PE in "${PATCHS[@]}"; do
   RET=1
@@ -121,50 +121,11 @@ for PE in "${PATCHS[@]}"; do
   [ ${RET} -ne 0 ] && exit 1
 done
 
-# Patch /etc/synoinfo.conf /etc.defaults/synoinfo.conf
-echo -n "."
-# Add serial number to synoinfo.conf, to help to recovery a installed DSM
-echo "Set synoinfo SN" >"${LOG_FILE}"
-_set_conf_kv "SN" "${SN}" "${RAMDISK_PATH}/etc/synoinfo.conf" >>"${LOG_FILE}" 2>&1 || exit 1
-_set_conf_kv "SN" "${SN}" "${RAMDISK_PATH}/etc.defaults/synoinfo.conf" >>"${LOG_FILE}" 2>&1 || exit 1
-for KEY in "${!SYNOINFO[@]}"; do
-  echo "Set synoinfo ${KEY}" >>"${LOG_FILE}"
-  _set_conf_kv "${KEY}" "${SYNOINFO[${KEY}]}" "${RAMDISK_PATH}/etc/synoinfo.conf" >>"${LOG_FILE}" 2>&1 || exit 1
-  _set_conf_kv "${KEY}" "${SYNOINFO[${KEY}]}" "${RAMDISK_PATH}/etc.defaults/synoinfo.conf" >>"${LOG_FILE}" 2>&1 || exit 1
-done
-
-# Patch /sbin/init.post
-# Apply config manipulators
-grep -v -e '^[\t ]*#' -e '^$' "${WORK_PATH}/patch/config-manipulators.sh" >"${TMP_PATH}/rp.txt"
-sed -e "/@@@CONFIG-MANIPULATORS-TOOLS@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
-rm -f "${TMP_PATH}/rp.txt"
-
-# Generate synoinfo configurations
-{
-  echo "_set_conf_kv 'SN' '${SN}' '/tmpRoot/etc/synoinfo.conf'"
-  echo "_set_conf_kv 'SN' '${SN}' '/tmpRoot/etc.defaults/synoinfo.conf'"
-  for KEY in "${!SYNOINFO[@]}"; do
-    echo "_set_conf_kv '${KEY}' '${SYNOINFO[${KEY}]}' '/tmpRoot/etc/synoinfo.conf'"
-    echo "_set_conf_kv '${KEY}' '${SYNOINFO[${KEY}]}' '/tmpRoot/etc.defaults/synoinfo.conf'"
-  done
-} >"${TMP_PATH}/rp.txt"
-
-sed -e "/@@@CONFIG-GENERATED@@@/ {" -e "r ${TMP_PATH}/rp.txt" -e 'd' -e '}' -i "${RAMDISK_PATH}/sbin/init.post"
-rm -f "${TMP_PATH}/rp.txt"
-
-# Extract ck modules to ramdisk
-echo -n "."
-installModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" "${!MODULES[@]}" || exit 1
-
-# Copying fake modprobe
-[ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ] && cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
-# Copying LKM to /usr/lib/modules
-gzip -dc "${LKMS_PATH}/rp-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko" 2>"${LOG_FILE}" || exit 1
+mkdir -p "${RAMDISK_PATH}/addons"
 
 # Addons
 echo -n "."
 echo "Create addons.sh" >"${LOG_FILE}"
-mkdir -p "${RAMDISK_PATH}/addons"
 {
   echo "#!/bin/sh"
   echo 'echo "addons.sh called with params ${@}"'
@@ -200,8 +161,32 @@ for ADDON in "${!ADDONS[@]}"; do
   echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >>"${RAMDISK_PATH}/addons/addons.sh" 2>>"${LOG_FILE}" || exit 1
 done
 
-# Enable Telnet
-echo "inetd" >>"${RAMDISK_PATH}/addons/addons.sh"
+# Extract ck modules to ramdisk
+echo -n "."
+installModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" "${!MODULES[@]}" || exit 1
+
+# Copying fake modprobe
+[ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ] && cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
+# Copying LKM to /usr/lib/modules
+gzip -dc "${LKMS_PATH}/rp-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko" 2>"${LOG_FILE}" || exit 1
+
+# Patch synoinfo.conf
+echo -n "."
+echo -n "" >"${RAMDISK_PATH}/addons/synoinfo.conf"
+for KEY in "${!SYNOINFO[@]}"; do
+  echo "Set synoinfo ${KEY}" >>"${LOG_FILE}"
+  echo "${KEY}=\"${SYNOINFO[${KEY}]}\"" >>"${RAMDISK_PATH}/addons/synoinfo.conf"
+  _set_conf_kv "${RAMDISK_PATH}/etc/synoinfo.conf" "${KEY}" "${SYNOINFO[${KEY}]}" || exit 1
+  _set_conf_kv "${RAMDISK_PATH}/etc.defaults/synoinfo.conf" "${KEY}" "${SYNOINFO[${KEY}]}" || exit 1
+done
+if [ ! -x "${RAMDISK_PATH}/usr/bin/get_key_value" ]; then
+  printf '#!/bin/sh\n%s\n_get_conf_kv "$@"' "$(declare -f _get_conf_kv)" >"${RAMDISK_PATH}/usr/bin/get_key_value"
+  chmod a+x "${RAMDISK_PATH}/usr/bin/get_key_value"
+fi
+if [ ! -x "${RAMDISK_PATH}/usr/bin/set_key_value" ]; then
+  printf '#!/bin/sh\n%s\n_set_conf_kv "$@"' "$(declare -f _set_conf_kv)" >"${RAMDISK_PATH}/usr/bin/set_key_value"
+  chmod a+x "${RAMDISK_PATH}/usr/bin/set_key_value"
+fi
 
 echo -n "."
 echo "Modify files" >"${LOG_FILE}"

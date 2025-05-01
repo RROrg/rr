@@ -428,12 +428,12 @@ function setConfigFromDSM() {
     return 1
   fi
 
-  PLATFORMTMP="$(_get_conf_kv "PLATFORM" "${DSM_ROOT}/GRUB_VER")"
-  MODELTMP="$(_get_conf_kv "MODEL" "${DSM_ROOT}/GRUB_VER")"
-  majorversion="$(_get_conf_kv "majorversion" "${DSM_ROOT}/VERSION")"
-  minorversion="$(_get_conf_kv "minorversion" "${DSM_ROOT}/VERSION")"
-  buildnumber="$(_get_conf_kv "buildnumber" "${DSM_ROOT}/VERSION")"
-  smallfixnumber="$(_get_conf_kv "smallfixnumber" "${DSM_ROOT}/VERSION")"
+  PLATFORMTMP="$(_get_conf_kv "${DSM_ROOT}/GRUB_VER" "PLATFORM")"
+  MODELTMP="$(_get_conf_kv "${DSM_ROOT}/GRUB_VER" "MODEL")"
+  majorversion="$(_get_conf_kv "${DSM_ROOT}/VERSION" "majorversion")"
+  minorversion="$(_get_conf_kv "${DSM_ROOT}/VERSION" "minorversion")"
+  buildnumber="$(_get_conf_kv "${DSM_ROOT}/VERSION" "buildnumber")"
+  smallfixnumber="$(_get_conf_kv "${DSM_ROOT}/VERSION" "smallfixnumber")"
   if [ -z "${PLATFORMTMP}" ] || [ -z "${MODELTMP}" ] || [ -z "${majorversion}" ] || [ -z "${minorversion}" ]; then
     echo -e "$(TEXT "DSM Invalid, try again!")" >"${LOG_FILE}"
     return 1
@@ -2315,7 +2315,7 @@ function tryRecoveryDSM() {
   fi
 
   if [ -f "${TMP_PATH}/mdX/etc.defaults/synoinfo.conf" ]; then
-    R_SN="$(_get_conf_kv SN "${TMP_PATH}/mdX/etc.defaults/synoinfo.conf")"
+    R_SN="$(_get_conf_kv "${TMP_PATH}/mdX/etc.defaults/synoinfo.conf" "SN")"
     [ -n "${R_SN}" ] && SN=${R_SN} && writeConfigKey "sn" "${SN}" "${USER_CONFIG_FILE}"
   fi
 
