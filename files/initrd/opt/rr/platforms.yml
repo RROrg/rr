@@ -5,6 +5,7 @@ synoinfo: &synoinfo
   support_usb_printer: "yes"
   support_disk_compatibility: "no"
   support_memory_compatibility: "no"
+  support_memory_limitation: "no"  # DVA3219
   support_led_brightness_adjustment: "no"
   support_leds_atmega1608: "no"
   support_leds_lp3943: "no"
@@ -13,11 +14,11 @@ synoinfo: &synoinfo
   supportraidgroup: "no"
   enableRCPower: "yes"
   support_fan: "no"
+  support_fan_adjust_dual_mode: "no"
   supportadt7490: "no"
   maxlanport: "8"
   netif_seq: ""
   buzzeroffen: "0xffff"
-  usbcopy: "yes"
 
 productvers4: &productvers4
   "7.0":
