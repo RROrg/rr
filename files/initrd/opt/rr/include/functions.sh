@@ -34,10 +34,11 @@ function checkBootLoader() {
 # Check if loader is fully configured
 # Returns 1 if not
 function loaderIsConfigured() {
-  SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
-  [ -z "${SN}" ] && return 1
   [ ! -f "${MOD_ZIMAGE_FILE}" ] && return 1
   [ ! -f "${MOD_RDGZ_FILE}" ] && return 1
+  [ -z "$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")" ] && return 1
+  [ -z "$(readConfigKey "ramdisk-hash" "${USER_CONFIG_FILE}")" ] && return 1
+  
   return 0 # OK
 }
 
