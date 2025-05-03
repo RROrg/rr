@@ -31,7 +31,6 @@ KEYMAP="$(readConfigKey "keymap" "${USER_CONFIG_FILE}")"
 PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
 PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
 ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")" # official drivers priorities
-HDDSORT="$(readConfigKey "hddsort" "${USER_CONFIG_FILE}")"
 
 DT="$(readConfigKey "dt" "${USER_CONFIG_FILE}")"
 KVER="$(readConfigKey "kver" "${USER_CONFIG_FILE}")"

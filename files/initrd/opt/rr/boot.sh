@@ -132,6 +132,7 @@ SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
 MAC1="$(readConfigKey "mac1" "${USER_CONFIG_FILE}")"
 MAC2="$(readConfigKey "mac2" "${USER_CONFIG_FILE}")"
 KERNELPANIC="$(readConfigKey "kernelpanic" "${USER_CONFIG_FILE}")"
+HDDSORT="$(readConfigKey "hddsort" "${USER_CONFIG_FILE}")"
 USBASINTERNAL="$(readConfigKey "usbasinternal" "${USER_CONFIG_FILE}")"
 EMMCBOOT="$(readConfigKey "emmcboot" "${USER_CONFIG_FILE}")"
 MODBLACKLIST="$(readConfigKey "modblacklist" "${USER_CONFIG_FILE}")"
@@ -236,6 +237,9 @@ CMDLINE['nowatchdog']=""
 CMDLINE['modprobe.blacklist']="${MODBLACKLIST}"
 CMDLINE['mev']="${MEV:-physical}"
 
+if [ "${HDDSORT}" = "true" ]; then
+  CMDLINE['hddsort']=""
+fi
 if [ "${USBASINTERNAL}" = "true" ]; then
   CMDLINE['usbasinternal']=""
 fi
