@@ -317,8 +317,8 @@ function resizeImg() {
   local LOOPX
   LOOPX=$(sudo losetup -f)
   sudo losetup -P "${LOOPX}" "${OUTPUT_FILE}"
-  sudo e2fsck -fp "$(ls ${LOOPX}* 2>/dev/null | sort -n | tail -1)"
-  sudo resize2fs "$(ls ${LOOPX}* 2>/dev/null | sort -n | tail -1)"
+  sudo e2fsck -fp "$(find "${LOOPX}p"* -maxdepth 0 2>/dev/null | sort -n | tail -1)"
+  sudo resize2fs "$(find "${LOOPX}p"* -maxdepth 0 2>/dev/null | sort -n | tail -1)"
   sudo losetup -d "${LOOPX}"
 }
 
