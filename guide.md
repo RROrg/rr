@@ -79,7 +79,7 @@
     # 解压 并写入到引导盘
     # Decompress and write to the boot disk
     # 获取当前的引导盘
-    LOADER_DISK="$(blkid | grep 'LABEL="RR3"' | cut -d3 -f1)"
+    LOADER_DISK="$(blkid -L RR3 2>/dev/null | cut -d3 -f1)"
     unzip -p rr.zip | dd of=${LOADER_DISK} bs=1M conv=fsync
     # 重启 reboot
     reboot
@@ -87,7 +87,7 @@
 * RR 备份 (Any version):
     ```shell
     # 备份为 disk.img.gz, 自行导出.
-    dd if="$(blkid | grep 'LABEL="RR3"' | cut -d3 -f1)" | gzip > disk.img.gz
+    dd if="$(blkid -L RR3 2>/dev/null | cut -d3 -f1)" | gzip > disk.img.gz
     # 结合 transfer.sh 直接导出链接
     curl -skL --insecure -w '\n' --upload-file disk.img.gz https://transfer.sh
     ```
@@ -247,13 +247,14 @@
   mdadm --zero-superblock /dev/sda1                # 清除 sda1 磁盘分区的 RAID 超级块 (使这个磁盘分区不再被识别为 RAID 设备的一部分)
 
   # eudev 
-  udevadm control --reload-rules                   # 重新加载 udev 规则
-  udevadm trigger                                  # 触发 udev 事件
-  udevadm info --query all --name /dev/sda1        # 查看 udev 属性
+  udevadm control --reload-rules                               # 重新加载 udev 规则
+  udevadm trigger                                              # 触发 udev 事件
+  udevadm info --query all --name /dev/sata1                   # 查看 udev 属性
   udevadm info --query all --path /sys/class/net/eth0          # 查看 udev 属性
-  udevadm monitor --property --udev                # 监控 udev 事件
-  udevadm test /dev/sda1                           # 测试 udev 规则
-
+  udevadm info --attribute-walk --name=/dev/sata1              # 列出 udev 属性
+  udevadm monitor --property --udev                            # 监控 udev 事件
+  udevadm test /dev/sata1                                      # 测试 udev 规则
+  
   # 服务相关
   journalctl -xe                                   # 查看服务日志
   systemctl                                        # 查看服务
