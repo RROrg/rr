@@ -2359,9 +2359,9 @@ function cloneBootloaderDisk() {
   fi
   TODESK="${resp}"
   SIZE=$(df -m "${TODESK}" 2>/dev/null | awk 'NR==2 {print $2}')
-  if [ ${SIZE:-0} -lt 1024 ]; then
+  if [ ${SIZE:-0} -lt 1536 ]; then
     DIALOG --title "$(TEXT "Settings")" \
-      --msgbox "$(printf "$(TEXT "Disk %s size is less than 1GB and cannot be cloned!")" "${TODESK}")" 0 0
+      --msgbox "$(printf "$(TEXT "Disk %s size is less than 2GB and cannot be cloned!")" "${TODESK}")" 0 0
     return
   fi
 

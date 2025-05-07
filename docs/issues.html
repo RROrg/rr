@@ -207,7 +207,7 @@
       let formData = new FormData(form);
       var title = "custom";
       var body = {};
-      var _parameters = ["title", "format", "language", "model", "version", "kernel", "addons", "modules"];
+      var _parameters = ["title", "format", "size", "language", "model", "version", "kernel", "addons", "modules"];
       for (var key in _parameters) {
         var name = _parameters[key];
         if ($("#" + name).is(":hidden")) { continue; }
@@ -298,6 +298,18 @@
           <option value="flat">flat</option>
           <option value="vhd">vhd</option>
           <option value="vhdx">vhdx</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="size_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">Size:</label>
+      </div>
+      <div class="form-group-body">
+        <select class="form-select form-control select-sm input-contrast" id="size" name="inputs[size]" value="">
+          <option value="2GB">2GB</option>
+          <option selected="selected" value="4GB">4GB</option>
+          <option value="8GB">8GB</option>
         </select>
       </div>
     </div>
