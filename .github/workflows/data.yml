@@ -79,10 +79,9 @@ jobs:
           sudo pip3 install -U -r scripts/requirements.txt
 
           python3 scripts/func.py getmodels -w "rr/ws/initrd" -j "docs/models.json" -x "docs/models.xlsx"
+          python3 scripts/func.py getpats -w "rr/ws/initrd" -j "docs/pats.json" -x "docs/pats.xlsx"
           python3 scripts/func.py getaddons -w "rr/ws" -j "docs/addons.json" -x "docs/addons.xlsx"
           python3 scripts/func.py getmodules -w "rr/ws" -j "docs/modules.json" -x "docs/modules.xlsx"
-
-          python3 scripts/func.py getpats -w "rr/ws/initrd" -j "docs/pats.json" -x "docs/pats.xlsx"
 
       - name: Upload to Artifacts
         if: success()

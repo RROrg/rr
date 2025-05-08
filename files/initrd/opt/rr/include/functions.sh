@@ -23,10 +23,10 @@ function checkBootLoader() {
   [ ! -w "${PART1_PATH}" ] && return 1
   [ ! -w "${PART2_PATH}" ] && return 1
   [ ! -w "${PART3_PATH}" ] && return 1
-  command -v awk >/dev/null 2>&1 || return 1
-  command -v cut >/dev/null 2>&1 || return 1
-  command -v sed >/dev/null 2>&1 || return 1
-  command -v tar >/dev/null 2>&1 || return 1
+  type awk >/dev/null 2>&1 || return 1
+  type cut >/dev/null 2>&1 || return 1
+  type sed >/dev/null 2>&1 || return 1
+  type tar >/dev/null 2>&1 || return 1
   return 0
 }
 
@@ -220,7 +220,7 @@ function _set_conf_kv() {
 # @ - url list
 function _get_fastest() {
   local speedlist=""
-  if command -v ping >/dev/null 2>&1; then
+  if type ping >/dev/null 2>&1; then
     for I in "$@"; do
       speed=$(LC_ALL=C ping -c 1 -W 5 "${I}" 2>/dev/null | awk -F'[= ]' '/time=/ {for(i=1;i<=NF;i++) if ($i=="time") print $(i+1)}')
       speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
