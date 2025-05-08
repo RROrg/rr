@@ -1838,7 +1838,8 @@ function allowDSMDowngrade() {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      mount -t "$(blkid -o value -s TYPE "${I}")" "${I}" "${TMP_PATH}/mdX"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       rm -f "${TMP_PATH}/mdX/etc/VERSION" "${TMP_PATH}/mdX/etc.defaults/VERSION"
       sync
@@ -1869,7 +1870,8 @@ function resetDSMPassword() {
   mkdir -p "${TMP_PATH}/mdX"
   for I in ${DSMROOTS}; do
     fixDSMRootPart "${I}"
-    mount -t "$(blkid -o value -s TYPE "${I}")" "${I}" "${TMP_PATH}/mdX"
+    T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+    mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
     [ $? -ne 0 ] && continue
     if [ -f "${TMP_PATH}/mdX/etc/shadow" ]; then
       while read -r L; do
@@ -1920,7 +1922,8 @@ function resetDSMPassword() {
     NEWPASSWD="$(openssl passwd -6 -salt "$(openssl rand -hex 8)" "${STRPASSWD}")"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      mount -t "$(blkid -o value -s TYPE "${I}")" "${I}" "${TMP_PATH}/mdX"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       sed -i "s|^${USER}:[^:]*|${USER}:${NEWPASSWD}|" "${TMP_PATH}/mdX/etc/shadow"
       sed -i "/^${USER}:/ s/^\(${USER}:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\)[^:]*:/\1:/" "${TMP_PATH}/mdX/etc/shadow"
@@ -1966,7 +1969,8 @@ function addNewDSMUser() {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      mount -t "$(blkid -o value -s TYPE "${I}")" "${I}" "${TMP_PATH}/mdX"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
         sqlite3 "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" <<EOF
@@ -2007,7 +2011,8 @@ function forceEnableDSMTelnetSSH() {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      mount -t "$(blkid -o value -s TYPE "${I}")" "${I}" "${TMP_PATH}/mdX"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
         sqlite3 "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" <<EOF
@@ -2050,7 +2055,8 @@ function removeBlockIPDB {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      mount -t "$(blkid -o value -s TYPE "${I}")" "${I}" "${TMP_PATH}/mdX"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       rm -f "${TMP_PATH}/mdX/etc/synoautoblock.db"
       sync
@@ -2082,7 +2088,8 @@ function disablescheduledTasks {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      mount -t "$(blkid -o value -s TYPE "${I}")" "${I}" "${TMP_PATH}/mdX"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
         echo "UPDATE task SET enable = 0;" | sqlite3 "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db"
@@ -2122,7 +2129,8 @@ function initDSMNetwork {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      mount -t "$(blkid -o value -s TYPE "${I}")" "${I}" "${TMP_PATH}/mdX"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       rm -f "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-eth"*
       rm -f "${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-eth"*
@@ -2258,7 +2266,8 @@ function tryRecoveryDSM() {
 
   mkdir -p "${TMP_PATH}/mdX"
   fixDSMRootPart "${DSMROOTPART}"
-  mount -t "$(blkid -o value -s TYPE "${I}")" "${DSMROOTPART}" "${TMP_PATH}/mdX"
+  T="$(blkid -o value -s TYPE "${DSMROOTPART}" 2>/dev/null)"
+  mount -t "${T:-ext4}" "${DSMROOTPART}" "${TMP_PATH}/mdX"
   if [ $? -ne 0 ]; then
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "Mount DSM system partition(md0) failed!\nPlease insert all disks before continuing.")" 0 0
@@ -2491,7 +2500,8 @@ function reportBugs() {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      mount -t "$(blkid -o value -s TYPE "${I}")" "${I}" "${TMP_PATH}/mdX"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       mkdir -p "${TMP_PATH}/logs/md0/log"
       cp -rf ${TMP_PATH}/mdX/.log.junior "${TMP_PATH}/logs/md0" 2>/dev/null
