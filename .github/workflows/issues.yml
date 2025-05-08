@@ -39,6 +39,7 @@ jobs:
 
           format = ''
           size = ''
+          template = ''
           language= ''
           model = ''
           version = ''
@@ -51,6 +52,7 @@ jobs:
                   iscustom = 'true'
                   format = jsonbody.get('format', '')
                   size = jsonbody.get('size', '')
+                  template = jsonbody.get('template', '')
                   language = jsonbody.get('language', '')
                   model = jsonbody.get('model', '')
                   version = jsonbody.get('version', '')
@@ -69,6 +71,7 @@ jobs:
 
           set_output("format", format)
           set_output("size", size)
+          set_output("template", template)
           set_output("language", language)
           set_output("model", model)
           set_output("version", version)
@@ -257,6 +260,14 @@ jobs:
           if [ $? -ne 0 ]; then
             echo "build failed"
             exit 1
+          fi
+
+          if [ "true" = "${{ env.template }}" ]; then
+            echo "set template: ${{ env.template }}"
+            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+            writeConfigKey "sn" "" "${USER_CONFIG_FILE}"
+            writeConfigKey "mac1" "" "${USER_CONFIG_FILE}"
+            writeConfigKey "mac2" "" "${USER_CONFIG_FILE}"
           fi
 
           sudo ./localbuild.sh pack rr/rr.img
