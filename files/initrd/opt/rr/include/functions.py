@@ -234,7 +234,7 @@ def getpats4mv(model, version):
         if V not in pats:
             pats[V] = {
                 'url': data['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0],
-                'sum': data['info']['system']['detail'][0]['items'][0]['files'][0]['checksum']
+                'sum': data['info']['system']['detail'][0]['items'][0]['files'][0].get('checksum', '0' * 32)
             }
 
         from_ver = min(I['build'] for I in data['info']['pubVers'])
@@ -256,7 +256,7 @@ def getpats4mv(model, version):
                 if V not in pats:
                     pats[V] = {
                         'url': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0],
-                        'sum': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['checksum']
+                        'sum': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0].get('checksum', '0' * 32)
                     }
 
             for J in I['versions']:
@@ -276,7 +276,7 @@ def getpats4mv(model, version):
                             continue
                         pats[V] = {
                             'url': S['files'][0]['url'].split('?')[0],
-                            'sum': S['files'][0]['checksum']
+                            'sum': S['files'][0].get('checksum', '0' * 32)
                         }
     except Exception as e:
         # click.echo(f"Error: {e}")

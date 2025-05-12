@@ -151,7 +151,7 @@ def getpats(workpath, jsonpath, xlsxpath):
         if V not in pats[M]:
             pats[M][V] = {
                 'url': data['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0],
-                'sum': data['info']['system']['detail'][0]['items'][0]['files'][0]['checksum']
+                'sum': data['info']['system']['detail'][0]['items'][0]['files'][0].get('checksum', '0' * 32)
             }
 
         from_ver = min(I['build'] for I in data['info']['pubVers'])
@@ -177,7 +177,7 @@ def getpats(workpath, jsonpath, xlsxpath):
                 if V not in pats[M]:
                     pats[M][V] = {
                         'url': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0],
-                        'sum': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['checksum']
+                        'sum': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0].get('checksum', '0' * 32)
                     }
 
             for J in I['versions']:
@@ -202,7 +202,7 @@ def getpats(workpath, jsonpath, xlsxpath):
                             continue
                         pats[M][V] = {
                             'url': S['files'][0]['url'].split('?')[0],
-                            'sum': S['files'][0]['checksum']
+                            'sum': S['files'][0].get('checksum', '0' * 32)
                         }
 
     if jsonpath:
