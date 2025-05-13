@@ -41,6 +41,8 @@ jobs:
           size = ''
           template = ''
           language= ''
+          sn = ''
+          macs = ''
           model = ''
           version = ''
           kernel = ''
@@ -54,6 +56,8 @@ jobs:
                   size = jsonbody.get('size', '')
                   template = jsonbody.get('template', '')
                   language = jsonbody.get('language', '')
+                  sn = jsonbody.get('sn', '')
+                  macs = jsonbody.get('macs', '')
                   model = jsonbody.get('model', '')
                   version = jsonbody.get('version', '')
                   kernel = jsonbody.get('kernel', '')
@@ -73,6 +77,8 @@ jobs:
           set_output("size", size)
           set_output("template", template)
           set_output("language", language)
+          set_output("sn", sn)
+          set_output("macs", macs)
           set_output("model", model)
           set_output("version", version)
           set_output("kernel", kernel)
@@ -235,6 +241,20 @@ jobs:
           if [ $? -ne 0 ]; then
             echo "config failed"
             exit 1
+          fi
+
+          if [ -n "${{ env.sn }}" ]; then
+            echo "set sn: ${{ env.sn }}"
+            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+            writeConfigKey "sn" "${{ env.sn }}" "${USER_CONFIG_FILE}"
+          fi
+          
+          if [ -n "${{ env.macs }}" ]; then
+            echo "set macs: ${{ env.macs }}"
+            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
+            MACS=($(echo "${{ env.macs }}" | sed 's/[:-]//g' | sed 's/.*/\U&/' | sed 's/[;,]/ /g'))
+            writeConfigKey "mac1" "${MACS[0]}" "${USER_CONFIG_FILE}"
+            writeConfigKey "mac2" "${MACS[1]}" "${USER_CONFIG_FILE}"
           fi
 
           if [ -n "${{ env.addons }}" ]; then

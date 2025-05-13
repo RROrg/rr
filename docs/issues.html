@@ -36,11 +36,28 @@
   <script type="application/javascript">
 
     var repo = "RROrg/rr"
+    var debug = getUrlParam("debug");
 
     var _models = {};
     var _pats = {};
     var _addons = {};
     var _modules = {};
+
+    function getUrlParam(paraName) {
+      var url = document.location.toString();
+      var arrObj = url.split("?");
+      if (arrObj.length > 1) {
+        var arrPara = arrObj[1].split("&");
+        var arr;
+        for (var i = 0; i < arrPara.length; i++) {
+          arr = arrPara[i].split("=");
+          if (arr != null && arr[0] == paraName) {
+            return arr[1];
+          }
+        }
+      }
+      return "";
+    }
 
     function httpGetAsync(theUrl, callback) {
       let xmlHttpReq = new XMLHttpRequest();
@@ -70,6 +87,13 @@
               $("#language").on("change", changeVersion);
               $("#kernel").on("change", chanageKernel);
               $('#addons').val("acpid,mountloader,powersched,reboottoloader,trivial,vmtools");
+              if (debug) {
+                $('#sn_item').show();
+                $('#macs_item').show();
+              } else {
+                $('#sn_item').hide();
+                $('#macs_item').hide();
+              }
               setModels();
             });
           });
@@ -89,6 +113,7 @@
       }
       changeModel();
     }
+
     function changeModel() {
       model = $("#model").val();
       var versions = [];
@@ -117,6 +142,7 @@
       createModulesBtn();
       chanageKernel();
     }
+
     function createAddonsBtn() {
       var language = $("#language").val();
       var extstr = $('#addons').val().split(",");
@@ -208,6 +234,9 @@
       var title = "custom";
       var body = {};
       var _parameters = ["title", "format", "size", "template", "language", "model", "version", "kernel", "addons", "modules"];
+      if (debug) {
+        _parameters.push("sn", "macs");
+      }
       for (var key in _parameters) {
         var name = _parameters[key];
         if ($("#" + name).is(":hidden")) { continue; }
@@ -318,7 +347,8 @@
         <label class="color-fg-default text-mono f6">Template:</label>
       </div>
       <div class="form-group-body">
-        <select class="form-select form-control select-sm input-contrast" id="template" name="inputs[template]" value="">
+        <select class="form-select form-control select-sm input-contrast" id="template" name="inputs[template]"
+          value="">
           <option value="true">true</option>
           <option selected="selected" value="false">false</option>
         </select>
@@ -347,6 +377,22 @@
           <option value="zh_HK">zh_HK</option>
           <option value="zh_TW">zh_TW</option>
         </select>
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="sn_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">SN:</label>
+      </div>
+      <div class="form-group-body">
+        <input class="form-control input-contrast input-sm" type="text" id="sn" name="inputs[sn]" value=""></input>
+      </div>
+    </div>
+    <div class="form-group mt-1 mb-2" id="macs_item">
+      <div class="form-group-header">
+        <label class="color-fg-default text-mono f6">MACs: (Please separate multiple with ','.)</label>
+      </div>
+      <div class="form-group-body">
+        <input class="form-control input-contrast input-sm" type="text" id="macs" name="inputs[macs]" value=""></input>
       </div>
     </div>
     <div class="form-group mt-1 mb-2" id="model_item">
