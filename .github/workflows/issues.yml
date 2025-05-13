@@ -382,7 +382,7 @@ jobs:
           update-mode: replace
           body: |
             Hi @${{ github.event.issue.user.login }}.  
-            RR-${{ env.model }} build success, please download the attachment from the below link (Attachments are only kept for 5 days).
+            RR-${{ env.model }}-${{ env.TAG }} build success, please download the attachment from the below link (Attachments are only kept for 5 days).
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: hooray
@@ -405,7 +405,7 @@ jobs:
           update-mode: replace
           body: |
             Hi @${{ github.event.issue.user.login }}.  
-            RR-${{ env.model }} build failed, please try again.  
+            RR-${{ env.model }}-${{ env.TAG }} build failed, please try again.  
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: confused
