@@ -234,6 +234,11 @@ CMDLINE['nowatchdog']=""
 CMDLINE['modprobe.blacklist']="${MODBLACKLIST}"
 CMDLINE['mev']="${MEV:-physical}"
 
+if [ "${MEV:-physical}" = "vmware" ]; then
+  CMDLINE['tsc']="reliable"
+  CMDLINE['pmtmr']="0x0"
+fi
+
 if [ "${HDDSORT}" = "true" ]; then
   CMDLINE['hddsort']=""
 fi
