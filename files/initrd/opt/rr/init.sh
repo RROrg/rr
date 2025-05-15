@@ -12,6 +12,12 @@ set -e
 . "${WORK_PATH}/include/functions.sh"
 . "${WORK_PATH}/include/addons.sh"
 
+if type -p vmware-toolbox-cmd; then
+  if [ ! "Enabled" = "$(vmware-toolbox-cmd timesync status 2>/dev/null)" ]; then
+    vmware-toolbox-cmd timesync enable >/dev/null 2>&1 || true
+  fi
+fi
+
 [ -z "${LOADER_DISK}" ] && die "$(TEXT "Loader is not init!")"
 checkBootLoader || die "$(TEXT "The loader is corrupted, please rewrite it!")"
 
