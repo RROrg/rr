@@ -157,7 +157,7 @@
         if (extstr.includes(ext)) {
           par = "btn-danger";
         }
-        html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} ${dispar} onclick="return onclickext('addons', '${ext}')" autofocus="" title="${_addons[ext]["description"][language]}">${ext}</button>&nbsp;`;
+        html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} ${dispar} onclick="return onclickextAddon('${ext}')" autofocus="" title="${_addons[ext]["description"][language]}">${ext}</button>&nbsp;`;
         //if (idx++ % 10 == 0) html += "<br />";
       }
       html += `</div>`;
@@ -180,7 +180,7 @@
       for (var ext in _modules[platform]) {
         extstr.push(ext);
         var par = "btn-danger";
-        html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} onclick="return onclickext('modules', '${ext}')" autofocus="" title="${_modules[platform][ext]["description"]}">${ext}</button>&nbsp;`;
+        html += `<button type="button" class="btn btn-primary btn-sm mt-2 ${par}" id="btn_${ext}" ${par} onclick="return onclickextModule('${ext}')" autofocus="" title="${_modules[platform][ext]["description"]}">${ext}</button>&nbsp;`;
         //if (idx++ % 10 == 0) html += "<br />";
       }
       html += `</div>`;
@@ -207,9 +207,36 @@
       }
     }
 
-    function onclickext(type, ext) {
+    function onclickextAddon(ext) {
       var btnobj = $("#btn_" + ext);
-      var extstr = $('#' + type).val().split(",");
+      var extstr = $('#addons').val().split(",");
+      if (btnobj.hasClass("btn-danger")) {
+        extstr.map((val, i) => {
+          if (val.split(':')[0] === ext) {
+            extstr.splice(i, 1);
+          }
+        });
+        btnobj.removeClass("btn-danger");
+      } else {
+        btnobj.addClass("btn-danger");
+        var param = window.prompt("Please enter parameters (optional):", "");
+        if (param !== null && param.trim() !== "") {
+          extstr.push(ext + ":" + param.trim());
+        } else {
+          extstr.push(ext);
+        }
+      }
+      extstr.map((val, i) => {
+        if (val === "") {
+          extstr.splice(i, 1);
+        }
+      });
+      $('#addons').val(extstr.join(","));
+    }
+
+    function onclickextModule(ext) {
+      var btnobj = $("#btn_" + ext);
+      var extstr = $('#modules').val().split(",");
       if (btnobj.hasClass("btn-danger")) {
         extstr.map((val, i) => {
           if (val === ext) {
@@ -226,7 +253,7 @@
           extstr.splice(i, 1);
         }
       });
-      $('#' + type).val(extstr.join(","));
+      $('#modules').val(extstr.join(","));
     }
     function createIssues() {
       var form = document.getElementById("inputs");
