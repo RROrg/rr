@@ -12,9 +12,12 @@ set -e
 . "${WORK_PATH}/include/functions.sh"
 . "${WORK_PATH}/include/addons.sh"
 
-if type -p vmware-toolbox-cmd; then
-  if [ ! "Enabled" = "$(vmware-toolbox-cmd timesync status 2>/dev/null)" ]; then
+if type vmware-toolbox-cmd >/dev/null 2>&1; then
+  if [ "Disable" = "$(vmware-toolbox-cmd timesync status 2>/dev/null)" ]; then
     vmware-toolbox-cmd timesync enable >/dev/null 2>&1 || true
+  fi
+  if [ "Enabled" = "$(vmware-toolbox-cmd timesync status 2>/dev/null)" ]; then
+    vmware-toolbox-cmd timesync disable >/dev/null 2>&1 || true
   fi
 fi
 
@@ -251,10 +254,10 @@ if [ "${DSMLOGO}" = "true" ] && [ -c "/dev/fb0" ] && [ ! "LOCALBUILD" = "${LOADE
   echo "${IP}" | grep -q "^169\.254\." && IP=""
   [ -n "${IP}" ] && URL="http://${IP}:${TTYD:-7681}" || URL="http://rr:${TTYD:-7681}"
   python3 "${WORK_PATH}/include/functions.py" makeqr -d "${URL}" -l "0" -o "${TMP_PATH}/qrcode_init.png"
-  [ -f "${TMP_PATH}/qrcode_init.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_init.png" >/dev/null 2>/dev/null || true
+  [ -f "${TMP_PATH}/qrcode_init.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_init.png" >/dev/null 2>&1 || true
 
   python3 "${WORK_PATH}/include/functions.py" makeqr -f "${WORK_PATH}/include/qhxg.png" -l "7" -o "${TMP_PATH}/qrcode_qhxg.png"
-  [ -f "${TMP_PATH}/qrcode_qhxg.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_qhxg.png" >/dev/null 2>/dev/null || true
+  [ -f "${TMP_PATH}/qrcode_qhxg.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_qhxg.png" >/dev/null 2>&1 || true
 fi
 
 # Check memory
