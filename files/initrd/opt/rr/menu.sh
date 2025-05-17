@@ -2131,8 +2131,13 @@ function initDSMNetwork {
       T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
-      rm -f "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-eth"*
-      rm -f "${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-bond"* "${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-eth"*
+      for F in ${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-* ${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-*; do
+        [ ! -e "${F}" ] && continue
+        echo "${F}" | grep -Eq "\-lo$|\-tun$|\-eth99$" && continue
+        sed -i "s|^BOOTPROTO=.*|BOOTPROTO=dhcp|; s|^ONBOOT=.*|ONBOOT=yes|; s|^IPV6INIT=.*|IPV6INIT=dhcp|; /^IPADDR/d; /NETMASK/d; /GATEWAY/d; /DNS1/d; /DNS2/d" "${F}"
+      done
+      sed -i 's/_mtu=".*"$/_mtu="1500"/g' ${TMP_PATH}/mdX/etc/synoinfo.conf ${TMP_PATH}/mdX/etc.defaults/synoinfo.conf
+      # systemctl restart rc-network.service
       sync
       echo "true" >"${TMP_PATH}/isOk"
       umount "${TMP_PATH}/mdX"
