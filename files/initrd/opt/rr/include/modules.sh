@@ -58,12 +58,11 @@ function getAllModules() {
 
   for F in ${TMP_PATH}/modules/*.ko; do
     [ ! -e "${F}" ] && continue
-    local X M DESC
-    X=$(basename "${F}")
-    M=$(basename "${F}" .ko)
-    DESC=$(modinfo "${F}" 2>/dev/null | awk -F':' '/description:/{ print $2}' | awk '{sub(/^[ ]+/,""); print}')
-    [ -z "${DESC}" ] && DESC="${X}"
-    echo "${M} \"${DESC}\""
+    local N DESC
+    N="$(basename "${F}" .ko)"
+    DESC="$(modinfo -F description "${F}" 2>/dev/null)"
+    DESC="$(echo "${DESC}" | sed -E 's/["\n]/ /g' | xargs)"
+    echo "${N} \"${DESC:-${N}}\""
   done
 
   rm -rf "${TMP_PATH}/modules"
@@ -168,7 +167,7 @@ function getdepends() {
   function _getdepends() {
     if [ -f "${TMP_PATH}/modules/${1}.ko" ]; then
       local depends
-      depends="$(modinfo "${TMP_PATH}/modules/${1}.ko" 2>/dev/null | grep depends: | awk -F: '{print $2}' | awk '$1=$1' | sed 's/,/\n/g')"
+      depends="$(modinfo -F depends "${TMP_PATH}/modules/${1}.ko" 2>/dev/null | sed 's/,/\n/g')"
       if [ "$(echo "${depends}" | wc -w)" -gt 0 ]; then
         for k in ${depends}; do
           echo "${k}"

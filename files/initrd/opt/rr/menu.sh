@@ -636,7 +636,7 @@ function addonMenu() {
       rm -f "${TMP_PATH}/menu"
       while read -r ADDON DESC; do
         arrayExistItem "${ADDON}" "${!ADDONS[@]}" && continue # Check if addon has already been added
-        echo "${ADDON} \"${DESC}\"" >>"${TMP_PATH}/menu"
+        echo "${ADDON} ${DESC}" >>"${TMP_PATH}/menu"
       done <<<"$(availableAddons "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}")"
       if [ ! -f "${TMP_PATH}/menu" ]; then
         DIALOG --title "$(TEXT "Addons")" \
@@ -690,15 +690,14 @@ function addonMenu() {
       touch "${PART1_PATH}/.build"
       ;;
     s)
-      MSG="$(TEXT "Name with color \"\Z4blue\Zn\" have been added, with color \"black\" are not added.\n")"
+      MSG="$(TEXT "Name with color \"\Z4blue\Zn\" have been added, with color \"\Z1red\Zn\" are not added.\n")"
       MSG+="\n"
-      while read -r MODULE DESC; do
-        if arrayExistItem "${MODULE}" "${!ADDONS[@]}"; then
-          MSG+="\Z4${MODULE}\Zn"
+      while read -r ADDON DESC; do
+        if arrayExistItem "${ADDON}" "${!ADDONS[@]}"; then
+          MSG+="\Z4${ADDON}:\Zn \Z5${DESC}\Zn\n"
         else
-          MSG+="${MODULE}"
+          MSG+="\Z1${ADDON}:\Z1 \Z5${DESC}\Zn\n"
         fi
-        MSG+=": \Z5${DESC}\Zn\n"
       done <<<"$(availableAddons "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}")"
       DIALOG --title "$(TEXT "Addons")" \
         --msgbox "${MSG}" 0 0
