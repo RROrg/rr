@@ -29,7 +29,7 @@ function availableAddons() {
     [ -z "${DESC}" ] && DESC="$(readConfigKey "description.en_US" "${D}/manifest.yml")"
     [ -z "${DESC}" ] && DESC="$(readConfigKey "description" "${D}/manifest.yml")"
 
-    DESC="$(echo "${DESC}" | sed -E 's/["\n]/ /g' | xargs)"
+    DESC="$(echo "${DESC}" | tr -d '\n\r\t\\' | sed "s/\"/'/g")"
     echo "${ADDON} \"${DESC:-"unknown"}\""
   done <<<"$(find "${ADDONS_PATH}" -maxdepth 1 -type d 2>/dev/null | sort)"
 }

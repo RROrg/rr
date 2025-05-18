@@ -61,7 +61,7 @@ function getAllModules() {
     local N DESC
     N="$(basename "${F}" .ko)"
     DESC="$(modinfo -F description "${F}" 2>/dev/null)"
-    DESC="$(echo "${DESC}" | sed -E 's/["\n]/ /g' | xargs)"
+    DESC="$(echo "${DESC}" | tr -d '\n\r\t\\' | sed "s/\"/'/g")"
     echo "${N} \"${DESC:-${N}}\""
   done
 
