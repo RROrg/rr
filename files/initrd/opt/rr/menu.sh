@@ -1960,25 +1960,20 @@ function addNewDSMUser() {
   password="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
   rm -f "${TMP_PATH}/isOk"
   (
-    ONBOOTUP=""
-    ONBOOTUP="${ONBOOTUP}if synouser --enum local | grep -q ^${username}\$; then synouser --setpw ${username} ${password}; else synouser --add ${username} ${password} rr 0 user@rr.com 1; fi\n"
-    ONBOOTUP="${ONBOOTUP}synogroup --memberadd administrators ${username}\n"
-    ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR_ADDUSER'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
-
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
       T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
-      if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
-        sqlite3 "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" <<EOF
-DELETE FROM task WHERE task_name LIKE 'RRONBOOTUPRR_ADDUSER';
-INSERT INTO task VALUES('RRONBOOTUPRR_ADDUSER', '', 'bootup', '', 1, 0, 0, 0, '', 0, '$(echo -e "${ONBOOTUP}")', 'script', '{}', '', '', '{}', '{}');
-EOF
-        sync
-        echo "true" >"${TMP_PATH}/isOk"
-      fi
+      mkdir -p "${TMP_PATH}/mdX/usr/rr/once.d"
+      {
+        echo "#!/usr/bin/env bash"
+        echo "if synouser --enum local | grep -q ^${username}\$; then synouser --setpw ${username} ${password}; else synouser --add ${username} ${password} rr 0 user@rr.com 1; fi"
+        echo "synogroup --memberadd administrators ${username}"
+      } >"${TMP_PATH}/mdX/usr/rr/once.d/addNewDSMUser.sh"
+      sync
+      echo "true" >"${TMP_PATH}/isOk"
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
@@ -2003,24 +1998,20 @@ function forceEnableDSMTelnetSSH() {
   fi
   rm -f "${TMP_PATH}/isOk"
   (
-    ONBOOTUP=""
-    ONBOOTUP="${ONBOOTUP}systemctl restart inetd\n"
-    ONBOOTUP="${ONBOOTUP}synowebapi --exec api=SYNO.Core.Terminal method=set version=3 enable_telnet=true enable_ssh=true ssh_port=22 forbid_console=false\n"
-    ONBOOTUP="${ONBOOTUP}echo \"DELETE FROM task WHERE task_name LIKE ''RRONBOOTUPRR_SSH'';\" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db\n"
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
       T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
-      if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
-        sqlite3 "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" <<EOF
-DELETE FROM task WHERE task_name LIKE 'RRONBOOTUPRR_SSH';
-INSERT INTO task VALUES('RRONBOOTUPRR_SSH', '', 'bootup', '', 1, 0, 0, 0, '', 0, '$(echo -e "${ONBOOTUP}")', 'script', '{}', '', '', '{}', '{}');
-EOF
-        sync
-        echo "true" >"${TMP_PATH}/isOk"
-      fi
+      mkdir -p "${TMP_PATH}/mdX/usr/rr/once.d"
+      {
+        echo "#!/usr/bin/env bash"
+        echo "systemctl restart inetd"
+        echo "synowebapi -s --exec api=SYNO.Core.Terminal method=set version=3 enable_telnet=true enable_ssh=true ssh_port=22 forbid_console=false"
+      } >"${TMP_PATH}/mdX/usr/rr/once.d/enableTelnetSSH.sh"
+      sync
+      echo "true" >"${TMP_PATH}/isOk"
       umount "${TMP_PATH}/mdX"
     done
     rm -rf "${TMP_PATH}/mdX"
