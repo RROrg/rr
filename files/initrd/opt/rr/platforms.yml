@@ -111,16 +111,30 @@ platforms:
     dt: true
     synoinfo: *synoinfo
     productvers: *productvers4
-  v1000nk:
+  epyc7002:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+      netif_seq_by_dts: "no"
+    productvers: *productvers5
+  geminilakenk:
     dt: true
     synoinfo:
       <<: *synoinfo
       netif_seq_by_dts: "no"
       show_autoupdatetype_notify: "yes"
     productvers: *productvers5
-  epyc7002:
+  r1000nk:
     dt: true
     synoinfo:
       <<: *synoinfo
       netif_seq_by_dts: "no"
+      show_autoupdatetype_notify: "yes"
+    productvers: *productvers5
+  v1000nk:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+      netif_seq_by_dts: "no"
+      show_autoupdatetype_notify: "yes"
     productvers: *productvers5
