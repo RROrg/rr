@@ -1795,7 +1795,8 @@ function downloadBackupFiles() {
     tar -czf "${TMP_PATH}/scbk.tar.gz" -C "${PART1_PATH}" scbk
     if [ -z "${SSH_TTY}" ]; then # web
       mv -f "${TMP_PATH}/scbk.tar.gz" "/var/www/data/scbk.tar.gz"
-      URL="http://$(getIP)/scbk.tar.gz"
+      HTTP=$(grep -i '^HTTP_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
+      URL="http://$(getIP):${HTTP:-7080}/scbk.tar.gz"
       DIALOG --title "$(TEXT "Advanced")" \
         --msgbox "$(printf "$(TEXT "Please via %s to download the scbk,\nAnd unzip it and back it up in order by file name.")" "${URL}")" 0 0
     else
@@ -2474,7 +2475,8 @@ function systemReport() {
   inxi -c 0 -F >"${TMP_PATH}/system.txt" 2>/dev/null
   if [ -z "${SSH_TTY}" ]; then # web
     mv -f "${TMP_PATH}/system.txt" "/var/www/data/system.txt"
-    URL="http://$(getIP)/system.txt"
+    HTTP=$(grep -i '^HTTP_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
+    URL="http://$(getIP):${HTTP:-7080}/system.txt"
     MSG="$(printf "$(TEXT "Please via %s to download the system.txt.")" "${URL}")"
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "${MSG}" 0 0
@@ -2542,7 +2544,8 @@ function reportBugs() {
     tar -czf "${TMP_PATH}/logs.tar.gz" -C "${TMP_PATH}" logs
     if [ -z "${SSH_TTY}" ]; then # web
       mv -f "${TMP_PATH}/logs.tar.gz" "/var/www/data/logs.tar.gz"
-      URL="http://$(getIP)/logs.tar.gz"
+      HTTP=$(grep -i '^HTTP_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
+      URL="http://$(getIP):${HTTP:-7080}/logs.tar.gz"
       MSG+="$(printf "$(TEXT "Please via %s to download the logs,\nAnd go to github to create an issue and upload the logs.\n")" "${URL}")"
     else
       sz -be -B 536870912 "${TMP_PATH}/logs.tar.gz"
