@@ -246,12 +246,12 @@ if [ "${USBASINTERNAL}" = "true" ]; then
   CMDLINE['usbasinternal']=""
 fi
 
-if echo "apollolake geminilake purley" | grep -wq "${PLATFORM}"; then
+if echo "apollolake geminilake purley geminilakenk" | grep -wq "${PLATFORM}"; then
   CMDLINE["nox2apic"]=""
 fi
 
 # # Save command line to grubenv  RR_CMDLINE= ... nox2apic
-# if echo "apollolake geminilake purley" | grep -wq "${PLATFORM}"; then
+# if echo "apollolake geminilake purley geminilakenk" | grep -wq "${PLATFORM}"; then
 #   if grep -Eq "^flags.*x2apic.*" /proc/cpuinfo; then
 #     checkCmdline "rr_cmdline" "nox2apic" || addCmdline "rr_cmdline" "nox2apic"
 #   fi
@@ -265,7 +265,7 @@ fi
 #     CMDLINE['modprobe.blacklist']+="sdhci,sdhci_pci,sdhci_acpi"
 #   fi
 # fi
-if [ "${DT}" = "true" ] && ! echo "v1000nk epyc7002 purley broadwellnkv2" | grep -wq "${PLATFORM}"; then
+if [ "${DT}" = "true" ] && ! echo "purley broadwellnkv2 epyc7002 geminilakenk r1000nk v1000nk" | grep -wq "${PLATFORM}"; then
   if ! echo "${CMDLINE['modprobe.blacklist']}" | grep -q "mpt3sas"; then
     [ ! "${CMDLINE['modprobe.blacklist']}" = "" ] && CMDLINE['modprobe.blacklist']+=","
     CMDLINE['modprobe.blacklist']+="mpt3sas"
@@ -277,7 +277,7 @@ fi
 # CMDLINE['kvm.ignore_msrs']="1"
 # CMDLINE['kvm.report_ignored_msrs']="0"
 
-if echo "apollolake geminilake" | grep -wq "${PLATFORM}"; then
+if echo "apollolake geminilake geminilakenk" | grep -wq "${PLATFORM}"; then
   CMDLINE["intel_iommu"]="igfx_off"
 fi
 
