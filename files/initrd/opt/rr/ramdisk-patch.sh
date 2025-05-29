@@ -202,6 +202,12 @@ else
 fi
 
 # backup current loader configs
+mkdir -p "${RAMDISK_PATH}/usr/rr"
+{
+  echo "LOADERLABEL=\"RR\""
+  echo "LOADERRELEASE=\"${RR_RELEASE}\""
+  echo "LOADERVERSION=\"${RR_VERSION}\""
+} >"${RAMDISK_PATH}/usr/rr/VERSION"
 BACKUP_PATH="${RAMDISK_PATH}/usr/rr/backup"
 rm -rf "${BACKUP_PATH}"
 for F in "${USER_GRUB_CONFIG}" "${USER_CONFIG_FILE}" "${USER_LOCALE_FILE}" "${USER_UP_PATH}" "${SCRIPTS_PATH}"; do
