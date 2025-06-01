@@ -28,7 +28,7 @@ checkBootLoader || die "$(TEXT "The loader is corrupted, please rewrite it!")"
 clear
 COLUMNS=$(ttysize 2>/dev/null | awk '{print $1}')
 COLUMNS=${COLUMNS:-80}
-TITLE="$(printf "$(TEXT "Welcome to %s")" "$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")")"
+TITLE="$(printf "$(TEXT "Welcome to %s")" "${RR_TITLE}${RR_RELEASE:+(${RR_RELEASE})}")"
 DATE="$(date)"
 printf "\033[1;44m%*s\n" "${COLUMNS}" ""
 printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
@@ -261,6 +261,15 @@ if [ "${DSMLOGO}" = "true" ] && [ -c "/dev/fb0" ] && [ ! "LOCALBUILD" = "${LOADE
 
   python3 "${WORK_PATH}/include/functions.py" makeqr -f "${WORK_PATH}/include/qhxg.png" -l "7" -o "${TMP_PATH}/qrcode_qhxg.png"
   [ -f "${TMP_PATH}/qrcode_qhxg.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_qhxg.png" >/dev/null 2>&1 || true
+fi
+WEBHOOKURL="$(readConfigKey "webhookurl" "${USER_CONFIG_FILE}")"
+if [ -n "${WEBHOOKURL}" ] && [ ! -f "${TMP_PATH}/WebhookSent" ]; then
+  DMI="$(dmesg 2>/dev/null | grep -i "DMI:" | head -1 | sed 's/\[.*\] DMI: //i')"
+  IP="$(getIP)"
+  echo "${IP}" | grep -q "^169\.254\." && IP=""
+  [ -n "${IP}" ] && URL="http://${IP}:${TTYD:-7681}" || URL="http://rr:${TTYD:-7681}"
+  sendWebhook "${WEBHOOKURL}" "{\"RR\":\"${RR_TITLE}${RR_RELEASE:+(${RR_RELEASE})}\", \"DATE\":\"$(date +'%Y-%m-%d %H:%M:%S')\", \"DMI\":\"${DMI}\", \"URL\":\"${URL}\"}"
+  touch "${TMP_PATH}/WebhookSent"
 fi
 
 # Check memory

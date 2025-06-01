@@ -28,7 +28,7 @@ BUS=$(getBus "${LOADER_DISK}")
 clear
 COLUMNS=$(ttysize 2>/dev/null | awk '{print $1}')
 COLUMNS=${COLUMNS:-80}
-WTITLE="$(printf "$(TEXT "Welcome to %s")" "$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")")"
+WTITLE="$(printf "$(TEXT "Welcome to %s")" "${RR_TITLE}${RR_RELEASE:+(${RR_RELEASE})}")"
 DATE="$(date)"
 printf "\033[1;44m%*s\n" "${COLUMNS}" ""
 printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""

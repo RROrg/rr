@@ -38,7 +38,6 @@ function loaderIsConfigured() {
   [ ! -f "${MOD_RDGZ_FILE}" ] && return 1
   [ -z "$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")" ] && return 1
   [ -z "$(readConfigKey "ramdisk-hash" "${USER_CONFIG_FILE}")" ] && return 1
-  
   return 0 # OK
 }
 
@@ -484,4 +483,19 @@ function copyDSMFiles() {
   else
     return 1
   fi
+}
+
+###############################################################################
+# Send a webhook notification
+# 1 - webhook url
+# 2 - message (optional)
+function sendWebhook() {
+  local URL="${1}"
+  local MSGT="Notification from ${RR_TITLE}${RR_RELEASE:+(${RR_RELEASE})}"
+  local MSGC="${2:-"test at $(date +'%Y-%m-%d %H:%M:%S')"}"
+
+  [ -z "${URL}" ] && return 1
+
+  curl -skL -X POST -H "Content-Type: application/json" -d "{\"title\":\"${MSGT}\", \"text\":\"${MSGC}\"}" "${URL}" >/dev/null 2>&1
+  return $?
 }

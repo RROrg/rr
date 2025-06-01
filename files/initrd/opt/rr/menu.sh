@@ -87,7 +87,7 @@ function backtitle() {
   if [ "LOCALBUILD" = "${LOADER_DISK}" ]; then
     BACKTITLE="LOCAL "
   fi
-  BACKTITLE+="$([ -z "${RR_RELEASE}" ] && echo "${RR_TITLE}" || echo "${RR_TITLE}(${RR_RELEASE})")"
+  BACKTITLE+="${RR_TITLE}${RR_RELEASE:+(${RR_RELEASE})}"
   if [ -n "${MODEL}" ]; then
     BACKTITLE+=" ${MODEL}(${PLATFORM})"
   else
@@ -2205,6 +2205,48 @@ function keymapMenu() {
 }
 
 ###############################################################################
+# Bootloader notifications (Webhook)
+function notificationsMenu() {
+  MSG=""
+  MSG+="$(TEXT "Please enter the webhook url and content text.\n")"
+  MSG+="$(TEXT "The webhook url must be a valid URL (Reference https://webhook-test.com/).\n")"
+  MSG+="$(TEXT "The notify text is not currently supported, please ignore.\n")"
+  WEBHOOKURL="$(readConfigKey "webhookurl" "${USER_CONFIG_FILE}")"
+  # NOTIFYTEXT="$(readConfigKey "notifytext" "${USER_CONFIG_FILE}")"
+  while true; do
+    DIALOG --title "$(TEXT "Settings")" \
+      --extra-button --extra-label "$(TEXT "Test")" \
+      --form "${MSG}" 10 110 2 "webhookurl" 1 1 "${WEBHOOKURL}" 1 12 93 0 "notifytext" 2 1 "${NOTIFYTEXT}" 2 12 93 0 \
+      2>"${TMP_PATH}/resp"
+    RET=$?
+    case ${RET} in
+    0)
+      # ok-button
+      WEBHOOKURL="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
+      # NOTIFYTEXT="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
+      writeConfigKey "webhookurl" "${WEBHOOKURL}" "${USER_CONFIG_FILE}"
+      # writeConfigKey "notifytext" "${NOTIFYTEXT}" "${USER_CONFIG_FILE}"
+      break
+      ;;
+    3)
+      # extra-button
+      WEBHOOKURL="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
+      # NOTIFYTEXT="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
+      sendWebhook "${WEBHOOKURL}"
+      ;;
+    1)
+      # cancel-button
+      break
+      ;;
+    255)
+      # ESC
+      break
+      ;;
+    esac
+  done
+}
+
+###############################################################################
 # Permits user edit the user config
 function editUserConfig() {
   while true; do
@@ -3277,6 +3319,7 @@ function settingsMenu() {
       echo "t \"$(TEXT "Choose a timezone")\""
       echo "k \"$(TEXT "Choose a keymap")\""
       echo "o \"$(TEXT "Show QR logo:") \Z4${DSMLOGO}\Zn\""
+      echo "n \"$(TEXT "Bootloader notifications (Webhook)")\""
       echo "p \"$(TEXT "Custom patch script # Developer")\""
       echo "u \"$(TEXT "Edit user config file manually")\""
       echo "g \"$(TEXT "Edit grub.cfg file manually")\""
@@ -3321,6 +3364,10 @@ function settingsMenu() {
       [ "${DSMLOGO}" = "true" ] && DSMLOGO='false' || DSMLOGO='true'
       writeConfigKey "dsmlogo" "${DSMLOGO}" "${USER_CONFIG_FILE}"
       NEXT="o"
+      ;;
+    n)
+      notificationsMenu
+      NEXT="e"
       ;;
     p)
       MSG=""
