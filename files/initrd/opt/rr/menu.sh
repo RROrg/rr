@@ -978,6 +978,7 @@ function cmdlineMenu() {
       MSG+="$(TEXT " * \Z4i915.max_vfs=7\Zn\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\n")"
       MSG+="$(TEXT " * \Z4i915.modeset=0\Zn\n    Disable the kernel mode setting (KMS) feature of the i915 driver.\n")"
       MSG+="$(TEXT " * \Z4apparmor.mode=complain\Zn\n    Set the AppArmor security module to complain mode.\n")"
+      MSG+="$(TEXT " * \Z4acpi_enforce_resources=lax\Zn\n    Resolve the issue of some devices (such as fan controllers) not recognizing or using properly.\n")"
       MSG+="$(TEXT " * \Z4pci=nommconf\Zn\n    Disable the use of Memory-Mapped Configuration for PCI devices(use this parameter cautiously).\n")"
       MSG+="$(TEXT " * \Z4consoleblank=300\Zn\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\n")"
       MSG+="$(TEXT "Please enter the parameter key and value you need to add.\n")"
