@@ -1244,7 +1244,7 @@ function getSynoExtractor() {
   RET=$?
   if [ ${RET} -ne 0 ] || [ ${STATUS:-0} -ne 200 ]; then
     rm -f "${OLDPAT_PATH}"
-    printf "%s\n%s: %d:%d\n%s\n" "$(TEXT "Check internet or cache disk space.")" "$(TEXT "Error")" "${RET}" "${STATUS}" "$(TEXT "(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" >"${LOG_FILE}"
+    printf "%s\n%s: %d:%d\n%s\n" "$(TEXT "Check internet.")" "$(TEXT "Error")" "${RET}" "${STATUS}" "$(TEXT "(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" >"${LOG_FILE}"
     return 1
   fi
 
@@ -1393,7 +1393,7 @@ function extractDsmFiles() {
     rm -f "${PAT_PATH}.downloading"
     if [ ${RET} -ne 0 ] || [ ${STATUS:-0} -ne 200 ]; then
       rm -f "${PAT_PATH}"
-      printf "%s\n%s: %d:%d\n%s\n" "$(TEXT "Check internet or cache disk space.")" "$(TEXT "Error")" "${RET}" "${STATUS}" "$(TEXT "(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" >"${LOG_FILE}"
+      printf "%s\n%s: %d:%d\n%s\n" "$(TEXT "Check internet.")" "$(TEXT "Error")" "${RET}" "${STATUS}" "$(TEXT "(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)")" >"${LOG_FILE}"
       return 1
     fi
   else
