@@ -13645,11 +13645,11 @@
             "depends": ""
         },
         "mlx4_core": {
-            "description": "Mellanox ConnectX HCA low-level driver",
+            "description": "Mellanox ConnectX HCA low-level driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mlx4_en": {
-            "description": "Mellanox ConnectX HCA Ethernet driver",
+            "description": "Mellanox ConnectX HCA Ethernet driver (Compiled by RR for DSM)",
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
@@ -13657,12 +13657,12 @@
             "depends": "mlx4_core,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox 5th generation network adapters (ConnectX series) core driver",
-            "depends": ""
+            "description": "Mellanox 5th generation network adapters (ConnectX series) core driver (Compiled by RR for DSM)",
+            "depends": "mlxfw"
         },
         "mlx5_ib": {
             "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,ib_uverbs"
         },
         "mlxfw": {
             "description": "Mellanox firmware flash lib",
@@ -13894,7 +13894,7 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "qed,ipv6"
+            "depends": "ipv6,qed"
         },
         "qedr": {
             "description": "QLogic 40G/100G ROCE Driver",
@@ -15235,11 +15235,11 @@
             "depends": ""
         },
         "mlx4_core": {
-            "description": "Mellanox ConnectX HCA low-level driver",
+            "description": "Mellanox ConnectX HCA low-level driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mlx4_en": {
-            "description": "Mellanox ConnectX HCA Ethernet driver",
+            "description": "Mellanox ConnectX HCA Ethernet driver (Compiled by RR for DSM)",
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
@@ -15247,12 +15247,12 @@
             "depends": "mlx4_core,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox 5th generation network adapters (ConnectX series) core driver",
-            "depends": ""
+            "description": "Mellanox 5th generation network adapters (ConnectX series) core driver (Compiled by RR for DSM)",
+            "depends": "mlxfw"
         },
         "mlx5_ib": {
             "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver",
-            "depends": "mlx5_core,ib_core"
+            "depends": "mlx5_core,ib_core,ib_uverbs"
         },
         "mlxfw": {
             "description": "Mellanox firmware flash lib",
@@ -15484,7 +15484,7 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "qed,ipv6"
+            "depends": "ipv6,qed"
         },
         "qedr": {
             "description": "QLogic 40G/100G ROCE Driver",
@@ -24924,11 +24924,11 @@
             "depends": ""
         },
         "mlx4_core": {
-            "description": "Mellanox ConnectX HCA low-level driver",
+            "description": "Mellanox ConnectX HCA low-level driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mlx4_en": {
-            "description": "Mellanox ConnectX HCA Ethernet driver",
+            "description": "Mellanox ConnectX HCA Ethernet driver (Compiled by RR for DSM)",
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
@@ -24936,8 +24936,8 @@
             "depends": "mlx4_core,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox 5th generation network adapters (ConnectX series) core driver",
-            "depends": ""
+            "description": "Mellanox 5th generation network adapters (ConnectX series) core driver (Compiled by RR for DSM)",
+            "depends": "mlxfw"
         },
         "mlx5_ib": {
             "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver",
@@ -25169,7 +25169,7 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "qed,ipv6"
+            "depends": "ipv6,qed"
         },
         "qedr": {
             "description": "QLogic 40G/100G ROCE Driver",
@@ -28722,11 +28722,11 @@
             "depends": ""
         },
         "mlx4_core": {
-            "description": "Mellanox ConnectX HCA low-level driver",
+            "description": "Mellanox ConnectX HCA low-level driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mlx4_en": {
-            "description": "Mellanox ConnectX HCA Ethernet driver",
+            "description": "Mellanox ConnectX HCA Ethernet driver (Compiled by RR for DSM)",
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
@@ -28734,8 +28734,8 @@
             "depends": "mlx4_core,ib_core"
         },
         "mlx5_core": {
-            "description": "Mellanox 5th generation network adapters (ConnectX series) core driver",
-            "depends": ""
+            "description": "Mellanox 5th generation network adapters (ConnectX series) core driver (Compiled by RR for DSM)",
+            "depends": "mlxfw"
         },
         "mlx5_ib": {
             "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver",
@@ -28967,7 +28967,7 @@
         },
         "qede": {
             "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
-            "depends": "qed,ipv6"
+            "depends": "ipv6,qed"
         },
         "qedr": {
             "description": "QLogic 40G/100G ROCE Driver",
