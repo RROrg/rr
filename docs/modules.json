@@ -448,6 +448,26 @@
             "description": "IOSF Mailbox Interface accessor",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -573,11 +593,11 @@
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
+            "description": "Mellanox Connect-IB, ConnectX-4 core driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mlx5_ib": {
@@ -605,19 +625,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -653,7 +673,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -1514,6 +1534,26 @@
             "description": "IOSF Mailbox Interface accessor",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -1663,11 +1703,11 @@
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
+            "description": "Mellanox Connect-IB, ConnectX-4 core driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mlx5_ib": {
@@ -1695,19 +1735,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -1715,7 +1755,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -1767,7 +1807,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -2066,6 +2106,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": "scsi_transport_sas"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
@@ -2247,7 +2291,7 @@
             "depends": "hwmon-vid"
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -2656,6 +2700,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -2817,19 +2881,19 @@
             "depends": ""
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -2865,7 +2929,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -3650,6 +3714,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -3835,19 +3919,19 @@
             "depends": ""
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -3855,7 +3939,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -3907,7 +3991,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -4202,6 +4286,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
@@ -4367,7 +4455,7 @@
             "depends": ""
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -4776,6 +4864,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -4937,19 +5045,19 @@
             "depends": ""
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -4985,7 +5093,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -5770,6 +5878,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -5955,19 +6083,19 @@
             "depends": ""
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -5975,7 +6103,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -6027,7 +6155,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -6322,6 +6450,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
@@ -6487,7 +6619,7 @@
             "depends": ""
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -6896,6 +7028,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -7057,19 +7209,19 @@
             "depends": ""
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -7105,7 +7257,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -7890,6 +8042,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -8075,19 +8247,19 @@
             "depends": ""
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -8095,7 +8267,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -8147,7 +8319,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -8442,6 +8614,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
@@ -8607,7 +8783,7 @@
             "depends": ""
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -9028,6 +9204,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -9189,19 +9385,19 @@
             "depends": ""
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -9237,7 +9433,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -10030,6 +10226,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -10215,19 +10431,19 @@
             "depends": ""
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -10235,7 +10451,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -10287,7 +10503,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -10582,6 +10798,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
@@ -10743,7 +10963,7 @@
             "depends": ""
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -11168,6 +11388,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -11293,7 +11533,7 @@
             "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
@@ -11329,19 +11569,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -11377,7 +11617,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -12174,6 +12414,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -12323,7 +12583,7 @@
             "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
@@ -12359,19 +12619,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -12379,7 +12639,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -12431,7 +12691,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -12726,6 +12986,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": "scsi_transport_sas"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
@@ -12887,7 +13151,7 @@
             "depends": "hwmon-vid"
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -13039,6 +13303,10 @@
         "broadcom": {
             "description": "Broadcom PHY driver",
             "depends": "bcm-phy-lib,libphy"
+        },
+        "bt-bmc": {
+            "description": "Linux device interface to the IPMI BT interface",
+            "depends": "regmap-mmio"
         },
         "btcoexist": {
             "description": "Realtek 802.11n PCI wireless core",
@@ -13440,6 +13708,30 @@
             "description": "",
             "depends": "ip_vs"
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_plat_data": {
+            "description": "IPMI platform device (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler,ipmi_plat_data"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "iptable_filter": {
             "description": "iptables filter table",
             "depends": "x_tables,ip_tables"
@@ -13503,6 +13795,18 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kcs_bmc": {
+            "description": "KCS BMC to handle the IPMI request from system software",
+            "depends": ""
+        },
+        "kcs_bmc_aspeed": {
+            "description": "Aspeed device interface to the KCS BMC device",
+            "depends": "kcs_bmc"
+        },
+        "kcs_bmc_npcm7xx": {
+            "description": "NPCM7xx device interface to the KCS BMC device",
+            "depends": "kcs_bmc"
         },
         "kvm-amd": {
             "description": "",
@@ -13609,7 +13913,7 @@
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core"
         },
         "mlx5_core": {
@@ -13617,7 +13921,7 @@
             "depends": "mlxfw"
         },
         "mlx5_ib": {
-            "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver",
+            "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver (Compiled by RR for DSM)",
             "depends": "mlx5_core,ib_core,ib_uverbs"
         },
         "mlxfw": {
@@ -13653,19 +13957,19 @@
             "depends": "scsi_transport_sas"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -13677,7 +13981,7 @@
             "depends": "mac80211,cfg80211"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -13789,7 +14093,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-intel-lgm-emmc": {
@@ -13918,6 +14222,10 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "regmap-mmio": {
+            "description": "MMIO register map driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "rfkill-gpio": {
@@ -14176,6 +14484,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": "scsi_transport_sas"
+        },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
             "depends": "cdrom"
@@ -14361,7 +14673,7 @@
             "depends": "hwmon-vid"
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -14629,6 +14941,10 @@
         "broadcom": {
             "description": "Broadcom PHY driver",
             "depends": "bcm-phy-lib,libphy"
+        },
+        "bt-bmc": {
+            "description": "Linux device interface to the IPMI BT interface",
+            "depends": "regmap-mmio"
         },
         "btcoexist": {
             "description": "Realtek 802.11n PCI wireless core",
@@ -15034,6 +15350,30 @@
             "description": "",
             "depends": "ip_vs"
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_plat_data": {
+            "description": "IPMI platform device (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler,ipmi_plat_data"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "iptable_filter": {
             "description": "iptables filter table",
             "depends": "x_tables,ip_tables"
@@ -15097,6 +15437,18 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kcs_bmc": {
+            "description": "KCS BMC to handle the IPMI request from system software",
+            "depends": ""
+        },
+        "kcs_bmc_aspeed": {
+            "description": "Aspeed device interface to the KCS BMC device",
+            "depends": "kcs_bmc"
+        },
+        "kcs_bmc_npcm7xx": {
+            "description": "NPCM7xx device interface to the KCS BMC device",
+            "depends": "kcs_bmc"
         },
         "kvm-amd": {
             "description": "",
@@ -15203,7 +15555,7 @@
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core"
         },
         "mlx5_core": {
@@ -15211,7 +15563,7 @@
             "depends": "mlxfw"
         },
         "mlx5_ib": {
-            "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver",
+            "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver (Compiled by RR for DSM)",
             "depends": "mlx5_core,ib_core,ib_uverbs"
         },
         "mlxfw": {
@@ -15247,19 +15599,19 @@
             "depends": "scsi_transport_sas"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -15271,7 +15623,7 @@
             "depends": "mac80211,cfg80211"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -15383,7 +15735,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-intel-lgm-emmc": {
@@ -15512,6 +15864,10 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "regmap-mmio": {
+            "description": "MMIO register map driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "rfkill-gpio": {
@@ -15770,6 +16126,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": "scsi_transport_sas"
+        },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
             "depends": "cdrom"
@@ -15975,7 +16335,7 @@
             "depends": "hwmon-vid"
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -16541,6 +16901,26 @@
             "description": "IOSF Mailbox Interface accessor",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -16666,11 +17046,11 @@
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
+            "description": "Mellanox Connect-IB, ConnectX-4 core driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mlx5_ib": {
@@ -16698,19 +17078,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -16746,7 +17126,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -17595,6 +17975,26 @@
             "description": "IOSF Mailbox Interface accessor",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -17744,11 +18144,11 @@
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
-            "description": "Mellanox Connect-IB, ConnectX-4 core driver",
+            "description": "Mellanox Connect-IB, ConnectX-4 core driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mlx5_ib": {
@@ -17776,19 +18176,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -17796,7 +18196,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -17848,7 +18248,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -18147,6 +18547,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": "scsi_transport_sas"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
@@ -18328,7 +18732,7 @@
             "depends": "hwmon-vid"
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -18473,6 +18877,10 @@
             "description": "Broadcom PHY driver",
             "depends": "bcm-phy-lib,libphy"
         },
+        "bt-bmc": {
+            "description": "Linux device interface to the IPMI BT interface",
+            "depends": "regmap-mmio"
+        },
         "btcoexist": {
             "description": "Realtek 802.11n PCI wireless core",
             "depends": "rtlwifi"
@@ -18596,10 +19004,6 @@
         "drm_kms_helper": {
             "description": "DRM KMS helper",
             "depends": "drm,dmabuf"
-        },
-        "drm_mipi_dsi": {
-            "description": "MIPI DSI Bus",
-            "depends": "dmabuf"
         },
         "drm_panel_orientation_quirks": {
             "description": "",
@@ -18845,6 +19249,30 @@
             "description": "",
             "depends": "ip_vs"
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_plat_data": {
+            "description": "IPMI platform device (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler,ipmi_plat_data"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "iptable_filter": {
             "description": "iptables filter table",
             "depends": "x_tables,ip_tables"
@@ -18900,6 +19328,18 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kcs_bmc": {
+            "description": "KCS BMC to handle the IPMI request from system software",
+            "depends": ""
+        },
+        "kcs_bmc_aspeed": {
+            "description": "Aspeed device interface to the KCS BMC device",
+            "depends": "kcs_bmc"
+        },
+        "kcs_bmc_npcm7xx": {
+            "description": "NPCM7xx device interface to the KCS BMC device",
+            "depends": "kcs_bmc"
         },
         "kvm-amd": {
             "description": "KVM AMD SVM Processor Support (Compiled by RR for DSM)",
@@ -19014,19 +19454,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -19038,7 +19478,7 @@
             "depends": "mac80211,cfg80211"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -19150,7 +19590,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-intel-lgm-emmc": {
@@ -19271,6 +19711,10 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "regmap-mmio": {
+            "description": "MMIO register map driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "rfkill-gpio": {
@@ -19517,6 +19961,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": "scsi_transport_sas"
+        },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
             "depends": "cdrom"
@@ -19726,7 +20174,7 @@
             "depends": "hwmon-vid"
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -20267,6 +20715,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -20428,19 +20896,19 @@
             "depends": ""
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -20476,7 +20944,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -21277,6 +21745,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -21462,19 +21950,19 @@
             "depends": ""
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -21482,7 +21970,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -21534,7 +22022,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -21829,6 +22317,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
@@ -21990,7 +22482,7 @@
             "depends": ""
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -22435,6 +22927,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -22560,7 +23072,7 @@
             "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
@@ -22596,19 +23108,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -22644,7 +23156,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -23465,6 +23977,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -23614,7 +24146,7 @@
             "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
@@ -23650,19 +24182,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -23670,7 +24202,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211,usbcore"
         },
         "mtk-sd": {
@@ -23722,7 +24254,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -24021,6 +24553,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": "scsi_transport_sas"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
@@ -24182,7 +24718,7 @@
             "depends": "hwmon-vid"
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -24330,6 +24866,10 @@
         "broadcom": {
             "description": "Broadcom PHY driver",
             "depends": "bcm-phy-lib"
+        },
+        "bt-bmc": {
+            "description": "Linux device interface to the IPMI BT interface",
+            "depends": "regmap-mmio"
         },
         "btcoexist": {
             "description": "Realtek 802.11n PCI wireless core",
@@ -24719,6 +25259,30 @@
             "description": "",
             "depends": "ip_vs"
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_plat_data": {
+            "description": "IPMI platform device (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler,ipmi_plat_data"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "iptable_filter": {
             "description": "iptables filter table",
             "depends": "x_tables,ip_tables"
@@ -24778,6 +25342,18 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kcs_bmc": {
+            "description": "KCS BMC to handle the IPMI request from system software",
+            "depends": ""
+        },
+        "kcs_bmc_aspeed": {
+            "description": "Aspeed device interface to the KCS BMC device",
+            "depends": "kcs_bmc"
+        },
+        "kcs_bmc_npcm7xx": {
+            "description": "NPCM7xx device interface to the KCS BMC device",
+            "depends": "kcs_bmc"
         },
         "kvm-amd": {
             "description": "",
@@ -24876,7 +25452,7 @@
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core"
         },
         "mlx5_core": {
@@ -24884,7 +25460,7 @@
             "depends": "mlxfw"
         },
         "mlx5_ib": {
-            "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver",
+            "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver (Compiled by RR for DSM)",
             "depends": "mlx5_core,ib_core,ib_uverbs"
         },
         "mlxfw": {
@@ -24920,19 +25496,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -24944,7 +25520,7 @@
             "depends": "mac80211,cfg80211"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211"
         },
         "mtk-sd": {
@@ -25052,7 +25628,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-intel-lgm-emmc": {
@@ -25185,6 +25761,10 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "regmap-mmio": {
+            "description": "MMIO register map driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "rfkill-gpio": {
@@ -25435,6 +26015,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": "scsi_transport_sas"
+        },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
             "depends": "cdrom"
@@ -25640,7 +26224,7 @@
             "depends": "hwmon-vid"
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -26201,6 +26785,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -26330,7 +26934,7 @@
             "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
@@ -26366,19 +26970,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -26414,7 +27018,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -27243,6 +27847,26 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
             "depends": ""
@@ -27396,7 +28020,7 @@
             "depends": "mlx4_core,mlx_compat,vxlan"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core,ib_mad,ib_sa"
         },
         "mlx5_core": {
@@ -27432,19 +28056,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -27452,7 +28076,7 @@
             "depends": "mptscsih,mptbase,scsi_transport_spi"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211"
         },
         "mtk-sd": {
@@ -27504,7 +28128,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-mt65xx-usb3": {
@@ -27807,6 +28431,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": "scsi_transport_sas"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
@@ -27968,7 +28596,7 @@
             "depends": "hwmon-vid"
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
@@ -28120,6 +28748,10 @@
         "broadcom": {
             "description": "Broadcom PHY driver",
             "depends": "bcm-phy-lib"
+        },
+        "bt-bmc": {
+            "description": "Linux device interface to the IPMI BT interface",
+            "depends": "regmap-mmio"
         },
         "btcoexist": {
             "description": "Realtek 802.11n PCI wireless core",
@@ -28509,6 +29141,30 @@
             "description": "",
             "depends": "ip_vs"
         },
+        "ipmi_devintf": {
+            "description": "Linux device interface for the IPMI message handler.",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_msghandler": {
+            "description": "Incoming and outgoing message routing for an IPMI interface.",
+            "depends": ""
+        },
+        "ipmi_plat_data": {
+            "description": "IPMI platform device (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "ipmi_poweroff": {
+            "description": "IPMI Poweroff extension to sys_reboot",
+            "depends": "ipmi_msghandler"
+        },
+        "ipmi_si": {
+            "description": "Interface to the IPMI driver for the KCS, SMIC, and BT system interfaces.",
+            "depends": "ipmi_msghandler,ipmi_plat_data"
+        },
+        "ipmi_ssif": {
+            "description": "IPMI driver for management controllers on a SMBus",
+            "depends": "ipmi_msghandler"
+        },
         "iptable_filter": {
             "description": "iptables filter table",
             "depends": "x_tables,ip_tables"
@@ -28568,6 +29224,18 @@
         "jme": {
             "description": "JMicron JMC2x0 PCI Express Ethernet driver (Compiled by RR for DSM)",
             "depends": "mii"
+        },
+        "kcs_bmc": {
+            "description": "KCS BMC to handle the IPMI request from system software",
+            "depends": ""
+        },
+        "kcs_bmc_aspeed": {
+            "description": "Aspeed device interface to the KCS BMC device",
+            "depends": "kcs_bmc"
+        },
+        "kcs_bmc_npcm7xx": {
+            "description": "NPCM7xx device interface to the KCS BMC device",
+            "depends": "kcs_bmc"
         },
         "kvm-amd": {
             "description": "",
@@ -28670,7 +29338,7 @@
             "depends": "mlx4_core"
         },
         "mlx4_ib": {
-            "description": "Mellanox ConnectX HCA InfiniBand driver",
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
             "depends": "mlx4_core,ib_core"
         },
         "mlx5_core": {
@@ -28678,7 +29346,7 @@
             "depends": "mlxfw"
         },
         "mlx5_ib": {
-            "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver",
+            "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver (Compiled by RR for DSM)",
             "depends": "mlx5_core,ib_core,ib_uverbs"
         },
         "mlxfw": {
@@ -28714,19 +29382,19 @@
             "depends": "scsi_transport_sas,raid_class"
         },
         "mptbase": {
-            "description": "Fusion MPT base driver",
+            "description": "Fusion MPT base driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "mptctl": {
-            "description": "Fusion MPT misc device (ioctl) driver",
+            "description": "Fusion MPT misc device (ioctl) driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptsas": {
-            "description": "Fusion MPT SAS Host driver",
+            "description": "Fusion MPT SAS Host driver (Compiled by RR for DSM)",
             "depends": "mptscsih,mptbase,scsi_transport_sas"
         },
         "mptscsih": {
-            "description": "Fusion MPT SCSI Host driver",
+            "description": "Fusion MPT SCSI Host driver (Compiled by RR for DSM)",
             "depends": "mptbase"
         },
         "mptspi": {
@@ -28738,7 +29406,7 @@
             "depends": "mac80211,cfg80211"
         },
         "mt7601u": {
-            "description": "Mediatek MT7601U USB driver",
+            "description": "Mediatek MT7601U USB driver (Compiled by RR for DSM)",
             "depends": "mac80211,cfg80211"
         },
         "mtk-sd": {
@@ -28846,7 +29514,7 @@
             "depends": ""
         },
         "pcspkr": {
-            "description": "PC Speaker beeper driver",
+            "description": "PC Speaker beeper driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "phy-intel-lgm-emmc": {
@@ -28979,6 +29647,10 @@
         },
         "regmap-i2c": {
             "description": "I2C bus support for the regmap API (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "regmap-mmio": {
+            "description": "MMIO register map driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "rfkill-gpio": {
@@ -29233,6 +29905,10 @@
             "description": "Marvell Yukon 2 Gigabit Ethernet driver",
             "depends": ""
         },
+        "smartpqi": {
+            "description": "Driver for Microchip Smart Family Controller version 2.1.30-031 (d-5b50ac9/s-61bca4b) (Compiled by RR for DSM)",
+            "depends": "scsi_transport_sas"
+        },
         "sr_mod": {
             "description": "SCSI cdrom (sr) driver",
             "depends": "cdrom"
@@ -29438,7 +30114,7 @@
             "depends": "hwmon-vid"
         },
         "wch": {
-            "description": "WCH Multi-I/O Board Driver Module (Compiled by RR for DSM)",
+            "description": "WCH Multi-I/O Board Driver Module",
             "depends": ""
         },
         "wch_pre": {
