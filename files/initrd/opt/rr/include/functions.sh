@@ -445,7 +445,7 @@ function connectwlanif() {
 # Find and mount the DSM root filesystem
 function findDSMRoot() {
   local DSMROOTS=""
-  [ -z "${DSMROOTS}" ] && DSMROOTS="$(mdadm --detail --scan 2>/dev/null | grep -E "name=SynologyNAS:0|name=DiskStation:0|name=SynologyNVR:0|name=BeeStation:0" | awk '{print $2}' | uniq)"
+  [ -z "${DSMROOTS}" ] && DSMROOTS="$(mdadm --detail --scan 2>/dev/null | grep -v "INACTIVE-ARRAY" | grep -E "name=SynologyNAS:0|name=DiskStation:0|name=SynologyNVR:0|name=BeeStation:0" | awk '{print $2}' | uniq)"
   [ -z "${DSMROOTS}" ] && DSMROOTS="$(lsblk -pno KNAME,PARTN,FSTYPE,FSVER,LABEL | grep -E "sd[a-z]{1,2}1" | grep -w "linux_raid_member" | grep "0.9" | awk '{print $1}')"
   echo "${DSMROOTS}"
   return 0
@@ -458,7 +458,12 @@ function fixDSMRootPart() {
   if mdadm --detail "${1}" 2>/dev/null | grep -i "State" | grep -iEq "active|FAILED|Not Started"; then
     mdadm --stop "${1}" >/dev/null 2>&1
     mdadm --assemble --scan >/dev/null 2>&1
-    fsck "${1}" >/dev/null 2>&1
+    T="$(blkid -o value -s TYPE "${1}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
+    if [ "${T}" = "btrfs" ]; then
+      btrfs check --readonly "${1}" >/dev/null 2>&1
+    else
+      fsck "${1}" >/dev/null 2>&1
+    fi
   fi
 }
 

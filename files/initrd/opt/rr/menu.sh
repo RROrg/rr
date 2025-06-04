@@ -1839,7 +1839,7 @@ function allowDSMDowngrade() {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       rm -f "${TMP_PATH}/mdX/etc/VERSION" "${TMP_PATH}/mdX/etc.defaults/VERSION"
@@ -1871,7 +1871,7 @@ function resetDSMPassword() {
   mkdir -p "${TMP_PATH}/mdX"
   for I in ${DSMROOTS}; do
     fixDSMRootPart "${I}"
-    T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+    T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
     mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
     [ $? -ne 0 ] && continue
     if [ -f "${TMP_PATH}/mdX/etc/shadow" ]; then
@@ -1923,7 +1923,7 @@ function resetDSMPassword() {
     NEWPASSWD="$(openssl passwd -6 -salt "$(openssl rand -hex 8)" "${STRPASSWD}")"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       sed -i "s|^${USER}:[^:]*|${USER}:${NEWPASSWD}|" "${TMP_PATH}/mdX/etc/shadow"
@@ -1965,7 +1965,7 @@ function addNewDSMUser() {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       mkdir -p "${TMP_PATH}/mdX/usr/rr/once.d"
@@ -2003,7 +2003,7 @@ function forceEnableDSMTelnetSSH() {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       mkdir -p "${TMP_PATH}/mdX/usr/rr/once.d"
@@ -2047,7 +2047,7 @@ function removeBlockIPDB {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       rm -f "${TMP_PATH}/mdX/etc/synoautoblock.db"
@@ -2080,7 +2080,7 @@ function disablescheduledTasks {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       if [ -f "${TMP_PATH}/mdX/usr/syno/etc/esynoscheduler/esynoscheduler.db" ]; then
@@ -2121,7 +2121,7 @@ function initDSMNetwork {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       for F in ${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-* ${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-*; do
@@ -2305,7 +2305,7 @@ function tryRecoveryDSM() {
 
   mkdir -p "${TMP_PATH}/mdX"
   fixDSMRootPart "${DSMROOTPART}"
-  T="$(blkid -o value -s TYPE "${DSMROOTPART}" 2>/dev/null)"
+  T="$(blkid -o value -s TYPE "${DSMROOTPART}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
   mount -t "${T:-ext4}" "${DSMROOTPART}" "${TMP_PATH}/mdX"
   if [ $? -ne 0 ]; then
     DIALOG --title "$(TEXT "Settings")" \
@@ -2540,7 +2540,7 @@ function reportBugs() {
     mkdir -p "${TMP_PATH}/mdX"
     for I in ${DSMROOTS}; do
       fixDSMRootPart "${I}"
-      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null)"
+      T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       mkdir -p "${TMP_PATH}/logs/md0/log"
