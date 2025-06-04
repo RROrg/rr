@@ -1929,6 +1929,7 @@ function resetDSMPassword() {
       sed -i "s|^${USER}:[^:]*|${USER}:${NEWPASSWD}|" "${TMP_PATH}/mdX/etc/shadow"
       sed -i "/^${USER}:/ s/^\(${USER}:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\)[^:]*:/\1:/" "${TMP_PATH}/mdX/etc/shadow"
       sed -i "s|status=on|status=off|g" "${TMP_PATH}/mdX/usr/syno/etc/packages/SecureSignIn/preference/${USER}/method.config" 2>/dev/null
+      sed -i "s|list=*$|list=|; s|type=*$|type=none|" "${TMP_PATH}/mdX/usr/syno/etc/packages/SecureSignIn/secure_signin.conf" 2>/dev/null
       sync
       echo "true" >"${TMP_PATH}/isOk"
       umount "${TMP_PATH}/mdX"
