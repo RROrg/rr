@@ -186,9 +186,14 @@
   lsblk                                            # 查看磁盘设备
   lspci -Qnnk                                      # 查看 PCI 设备
 
-  # 驱动相关
+  # 网卡
   ls -ld /sys/class/net/*/device/driver            # 查看已加载网卡和对应驱动
   cat /sys/class/net/*/address                     # 查看已加载网卡的 MAC 地址
+  ethtool -i eth0                                  # 查看网卡驱动信息
+  ethtool -s eth0 wol g                            # 配置网卡进入低功耗模式
+  ethtool -s eth0 autoneg on                       # 开启网卡自动协商
+  ethtool -s eth0 speed 1000                       # 设置网卡速度为 1000 Mbps
+  ethtool -s eth0 duplex full                      # 设置网卡全双工
 
   # 串口
   cat /proc/tty/drivers                            # 查看串口属性
