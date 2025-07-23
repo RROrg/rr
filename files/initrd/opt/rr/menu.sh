@@ -326,7 +326,7 @@ function productversMenu() {
       fi
       if [ -z "${1}" ]; then
         MSG=""
-        MSG+="$(TEXT "Please confirm or modify the URL and md5sum to you need.")"
+        MSG+="$(TEXT "Please confirm or modify the URL and md5sum to you need (32 '0's will skip the md5 check).")"
         if [ ! "${selver}" = "${urlver}" ]; then
           MSG+="$(printf "$(TEXT "Note: There is no version %s and automatically returns to version %s.")" "${selver}" "${urlver}")"
           selver=${urlver}
