@@ -29,6 +29,23 @@
     .textarea-style {
       width: 100%;
     }
+
+    #logo {
+      text-align: center;
+      margin: 20px auto !important;
+    }
+
+    #labels {
+      text-align: center;
+      margin: 20px auto !important;
+      height: auto !important;
+    }
+
+    #products {
+      text-align: center;
+      margin: 20px auto !important;
+      height: auto !important;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="https://polyfill.io/v3/polyfill.min.js"></script>
@@ -309,28 +326,21 @@
 ╚═╝  ╚═╝╚═╝  ╚═╝       ╚═════╝ ╚═════╝ ╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝
                                                                                                                                   
       </pre>
-    <div class="image" id="products" style="height: 50px; margin-left: 200px;">
-      <img src="https://www.synology.cn/img/products/detail/SA6400/heading.png" width="20%">
+    <div class="shields" id="labels">
+      <a id="titleA" href="https://github.com/RROrg/rr">
+        <img alt="GitHub Release"
+          src="https://img.shields.io/github/v/release/rrorg/rr?include_prereleases&style=flat-square&label=current">
+      </a>
+      <a id="titleA" href="https://github.com/RROrg/rr">
+        <img alt="GitHub Issues"
+          src="https://img.shields.io/github/issues-closed-raw/rrorg/rr/custom?style=flat-square&label=custom">
+      </a>
+      <a id="titleB" href="./changelogs.html">
+        <img alt="GitHub Release" src="https://img.shields.io/badge/Changelogs-8A2BE2&style=flat">
+      </a>
     </div>
-    <div class="flex-auto min-width-0 width-fit mr-3">
-      <div class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal">
-        <a id="titleA" href="https://github.com/RROrg/rr">
-          <img alt="GitHub Release"
-            src="https://img.shields.io/github/v/release/rrorg/rr?include_prereleases&style=flat-square&label=current">
-          <img alt="GitHub Issues"
-            src="https://img.shields.io/github/issues-closed-raw/rrorg/rr/custom?style=flat-square&label=custom">
-        </a>
-      </div>
-      <div class="d-flex flex-wrap flex-items-center wb-break-word f3 text-normal">
-        <a id="titleB" href="./changelogs.html">
-          <img alt="GitHub Release" src="https://img.shields.io/badge/Changelogs-8A2BE2&style=flat">
-        </a>
-      </div>
-      <div class="btn-link tabnav-tab preview-tab js-preview-tab flex-1 flex-md-auto width-full">
-        <marquee id="content" direction="up" height="36" scrollamount="1" onMouseOut="this.start()"
-          onMouseOver="this.stop()">
-        </marquee>
-      </div>
+    <div class="image" id="products">
+      <img src="https://www.synology.cn/img/products/detail/SA6400/heading.png" width="20%">
     </div>
     <div class="form-group mt-1 mb-2" id="title_item">
       <div class="form-group-header">
