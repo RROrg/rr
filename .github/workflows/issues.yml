@@ -43,6 +43,7 @@ jobs:
           language= ''
           sn = ''
           macs = ''
+          tips = ''
           model = ''
           version = ''
           kernel = ''
@@ -58,6 +59,7 @@ jobs:
                   language = jsonbody.get('language', '')
                   sn = jsonbody.get('sn', '')
                   macs = jsonbody.get('macs', '')
+                  tips = jsonbody.get('tips', '')
                   model = jsonbody.get('model', '')
                   version = jsonbody.get('version', '')
                   kernel = jsonbody.get('kernel', '')
@@ -79,6 +81,7 @@ jobs:
           set_output("language", language)
           set_output("sn", sn)
           set_output("macs", macs)
+          set_output("tips", tips)
           set_output("model", model)
           set_output("version", version)
           set_output("kernel", kernel)
@@ -248,13 +251,18 @@ jobs:
             USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
             writeConfigKey "sn" "${{ env.sn }}" "${USER_CONFIG_FILE}"
           fi
-          
+
           if [ -n "${{ env.macs }}" ]; then
             echo "set macs: ${{ env.macs }}"
             USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
             MACS=($(echo "${{ env.macs }}" | sed 's/[:-]//g' | sed 's/.*/\U&/' | sed 's/[;,]/ /g'))
             writeConfigKey "mac1" "${MACS[0]}" "${USER_CONFIG_FILE}"
             writeConfigKey "mac2" "${MACS[1]}" "${USER_CONFIG_FILE}"
+          fi
+
+          if [ -n "${{ env.tips }}" ]; then
+            echo "set tips: ${{ env.tips }}"
+            echo -e "${{ env.tips }}" | sudo tee rr/ws/mnt/p3/AddTips
           fi
 
           if [ -n "${{ env.addons }}" ]; then
@@ -415,14 +423,6 @@ jobs:
             ----
           emoji: hooray
 
-      - name: Close Issues
-        if: env.iscustom == 'true' && success()
-        uses: actions-cool/issues-helper@v3
-        with:
-          actions: 'close-issue'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
-
       - name: Update Comment Fail
         if: env.iscustom == 'true' && failure()
         uses: actions-cool/issues-helper@v3
@@ -437,3 +437,11 @@ jobs:
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: confused
+
+      - name: Close Issues
+        if: env.iscustom == 'true'
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'close-issue'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}

@@ -433,6 +433,7 @@ else
 
   _bootwait || exit 0
 
+  [ -n "$(cat "${ADD_TIPS_FILE}" 2>/dev/null)" ] && printf "$(TEXT "%s\n")" "$(cat "${ADD_TIPS_FILE}" 2>/dev/null)"
   printf "\033[1;37m%s\033[0m\n" "$(TEXT "Loading DSM kernel ...")"
 
   DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
