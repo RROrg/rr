@@ -132,13 +132,14 @@ BUSLIST="usb sata sas scsi nvme mmc ide virtio vmbus xen"
 if [ "${BUS}" = "usb" ]; then
   VID="0x$(udevadm info --query property --name "${LOADER_DISK}" 2>/dev/null | grep "ID_VENDOR_ID" | cut -d= -f2)"
   PID="0x$(udevadm info --query property --name "${LOADER_DISK}" 2>/dev/null | grep "ID_MODEL_ID" | cut -d= -f2)"
+  [ "${VID}" = "0x" ] || [ "${PID}" = "0x" ] && die "$(TEXT "The loader disk does not support the current USB Portable Hard Disk.")"
   TYPE="flashdisk"
 elif ! echo "${BUSLIST}" | grep -wq "${BUS}"; then
   if [ "LOCALBUILD" = "${LOADER_DISK}" ]; then
     echo "LOCALBUILD MODE"
     TYPE="PC"
   else
-    die "$(printf "$(TEXT "The boot disk does not support the current %s, only %s DoM is supported.")" "${BUS}" "${BUSLIST// /\/}")"
+    die "$(printf "$(TEXT "The loader disk does not support the current %s, only %s DoM is supported.")" "${BUS}" "${BUSLIST// /\/}")"
   fi
 fi
 
