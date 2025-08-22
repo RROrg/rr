@@ -29,7 +29,9 @@ jobs:
           # -*- coding: utf-8 -*-
           import json, subprocess
           def set_output(name, value):
-            subprocess.call(["echo '{}={}' >> $GITHUB_ENV".format(name, value)], shell=True)
+              subprocess.call(f'echo "{name}<<EOF" >> $GITHUB_ENV', shell=True)
+              subprocess.call(f'echo "{value}" >> $GITHUB_ENV', shell=True)
+              subprocess.call(f'echo "EOF" >> $GITHUB_ENV', shell=True)
 
           issuetitle = ${{ toJSON(github.event.issue.title) }}
           issuebody = ${{ toJSON(github.event.issue.body) }}
