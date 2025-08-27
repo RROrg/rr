@@ -1240,7 +1240,7 @@ function getSynoExtractor() {
 
   echo "$(TEXT "Downloading old pat to extract synology .pat extractor...")"
   rm -f "${OLDPAT_PATH}"
-  STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${OLDPAT_URL}" -o "${OLDPAT_PATH}")
+  STATUS=$(curl -kL --http1.1 --connect-timeout 10 -w "%{http_code}" "${OLDPAT_URL}" -o "${OLDPAT_PATH}")
   RET=$?
   if [ ${RET} -ne 0 ] || [ ${STATUS:-0} -ne 200 ]; then
     rm -f "${OLDPAT_PATH}"
@@ -1382,13 +1382,13 @@ function extractDsmFiles() {
     # Check disk space left
     SPACELEFT=$(df --block-size=1 "${PART3_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
     # Discover remote file size
-    FILESIZE=$(curl -skLI --connect-timeout 10 "${PATURL}" | grep -i Content-Length | tail -n 1 | tr -d '\r\n' | awk '{print $2}')
+    FILESIZE=$(curl -skLI --http1.1 --connect-timeout 10 "${PATURL}" | grep -i Content-Length | tail -n 1 | tr -d '\r\n' | awk '{print $2}')
     if [ ${FILESIZE:-0} -ge ${SPACELEFT:-0} ]; then
       # No disk space to download, change it to RAMDISK
       PAT_PATH="${TMP_PATH}/${PAT_FILE}"
     fi
     touch "${PAT_PATH}.downloading"
-    STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${PATURL}" -o "${PAT_PATH}")
+    STATUS=$(curl -kL --http1.1 --connect-timeout 10 -w "%{http_code}" "${PATURL}" -o "${PAT_PATH}")
     RET=$?
     rm -f "${PAT_PATH}.downloading"
     if [ ${RET} -ne 0 ] || [ ${STATUS:-0} -ne 200 ]; then
