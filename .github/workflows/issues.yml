@@ -228,6 +228,8 @@ jobs:
           # sudo sed -i "s/set -e/set -ex/" rr/ws/initrd/opt/rr/init.sh
           # sudo sed -i '/^alias/i\set -x' rr/ws/initrd/opt/rr/menu.sh
 
+          sudo sed -i 's/"global.synologydownload.com" "global.download.synology.com"/"global.download.synology.com" "global.synologydownload.com"/g' rr/ws/initrd/opt/rr/menu.sh
+
           [ -n "${{ env.language }}" ] && echo "${{ env.language }}.UTF-8" | sudo tee rr/ws/mnt/p1/.locale
 
           sudo ./localbuild.sh init
