@@ -1225,7 +1225,7 @@ function synoinfoMenu() {
 # Extract linux and ramdisk files from the DSM .pat
 function getSynoExtractor() {
   rm -f "${LOG_FILE}"
-  mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
+  mirrors=("global.download.synology.com" "global.synologydownload.com"  "cndl.synology.cn")
   fastest=$(_get_fastest "${mirrors[@]}")
   if [ $? -ne 0 ]; then
     echo -e "$(TEXT "The current network status is unknown, using the default mirror.")"
@@ -1368,7 +1368,7 @@ function extractDsmFiles() {
       CLEARCACHE=0
     fi
     mkdir -p "${PART3_PATH}/dl"
-    mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
+    mirrors=("global.download.synology.com" "global.synologydownload.com"  "cndl.synology.cn")
     fastest=$(_get_fastest "${mirrors[@]}")
     if [ $? -ne 0 ]; then
       echo -e "$(TEXT "The current network status is unknown, using the default mirror.")"
