@@ -340,7 +340,7 @@
   # API
   # 获取系统信息
   synowebapi --exec api=SYNO.Core.System method=info version=3
-  synowebapi --exec api=SYNO.Core.System method=info version=3 type="firmware"
+  synowebapi --exec api=SYNO.Core.System method=info version=3 type='"firmware"'
   # 获取设备信息
   synowebapi --exec api=SYNO.Core.System.Utilization method=get version=1
   # 关机
@@ -352,7 +352,26 @@
   synowebapi --exec api=SYNO.Core.Web.DSM method=set version=2 enable_https_redirect=false
   # 开启 telnet/ssh
   synowebapi --exec api=SYNO.Core.Terminal method=set version=3 enable_telnet=true enable_ssh=true ssh_port=22 forbid_console=false
-  
+
+  # 强制以下用户启用双重验证
+  synowebapi --exec api=SYNO.Core.OTP.EnforcePolicy method=set version=1 enable_otp_enforcement=true otp_enforce_option='"none"'    # 开 管理员群组用户
+  synowebapi --exec api=SYNO.Core.OTP.EnforcePolicy method=set version=1 enable_otp_enforcement=true otp_enforce_option='"user"'    # 开 所有用户
+  synowebapi --exec api=SYNO.Core.OTP.EnforcePolicy method=custom_set version=1 type='"local_user"' settings='[{"id":"1026","is_enforced":true}]'
+  synowebapi --exec api=SYNO.Core.OTP.EnforcePolicy method=set version=1 enable_otp_enforcement=true otp_enforce_option='"custom"'  # 开 指定用户或群组
+  synowebapi --exec api=SYNO.Core.OTP.EnforcePolicy method=set version=1 enable_otp_enforcement=false otp_enforce_option='"none"'   # 关
+
+  # 为管理员群组的用户启用自适应多重验证
+  synowebapi --exec api=SYNO.SecureSignIn.AMFA.Policy method=set version=1 type='"admin"'  # 开
+  synowebapi --exec api=SYNO.SecureSignIn.AMFA.Policy method=set version=1 type='"none"'   # 关
+
+  # 启用帐户保护
+  synowebapi --exec api=SYNO.Core.SmartBlock method=set version=1 enabled=true untrust_try=5 untrust_minute=1 untrust_lock=30 trust_try=10 trust_minute=1 trust_lock=30   # 开
+  synowebapi --exec api=SYNO.Core.SmartBlock method=set version=1 enabled=false untrust_try=5 untrust_minute=1 untrust_lock=30 trust_try=10 trust_minute=1 trust_lock=30  # 关
+
+  # 禁用双重验证 (admin 用户)
+  synowebapi --exec api=SYNO.SecureSignIn.Method.Admin method=reset version=1 account='"admin"' keep_amfa_settings=true
+
+
   # Get MD5
   certutil -hashfile xxx.pat MD5                   # windows
   md5sum xxx.pat                                   # linux/mac
