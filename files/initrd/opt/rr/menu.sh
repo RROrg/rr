@@ -1225,7 +1225,7 @@ function synoinfoMenu() {
 # Extract linux and ramdisk files from the DSM .pat
 function getSynoExtractor() {
   rm -f "${LOG_FILE}"
-  mirrors=("global.download.synology.com" "global.synologydownload.com"  "cndl.synology.cn")
+  mirrors=("global.download.synology.com" "global.synologydownload.com" "cndl.synology.cn")
   fastest=$(_get_fastest "${mirrors[@]}")
   if [ $? -ne 0 ]; then
     echo -e "$(TEXT "The current network status is unknown, using the default mirror.")"
@@ -1368,7 +1368,7 @@ function extractDsmFiles() {
       CLEARCACHE=0
     fi
     mkdir -p "${PART3_PATH}/dl"
-    mirrors=("global.download.synology.com" "global.synologydownload.com"  "cndl.synology.cn")
+    mirrors=("global.download.synology.com" "global.synologydownload.com" "cndl.synology.cn")
     fastest=$(_get_fastest "${mirrors[@]}")
     if [ $? -ne 0 ]; then
       echo -e "$(TEXT "The current network status is unknown, using the default mirror.")"
@@ -1936,8 +1936,8 @@ function resetDSMPassword() {
         echo "#!/usr/bin/env bash"
         echo "synowebapi -s --exec api=SYNO.Core.OTP.EnforcePolicy method=set version=1 enable_otp_enforcement=false otp_enforce_option='\"none\"'"
         echo "synowebapi -s --exec api=SYNO.SecureSignIn.AMFA.Policy method=set version=1 type='\"none\"'"
-				echo "synowebapi -s --exec api=SYNO.Core.SmartBlock method=set version=1 enabled=false untrust_try=5 untrust_minute=1 untrust_lock=30 trust_try=10 trust_minute=1 trust_lock=30"
-				echo "synowebapi -s --exec api=SYNO.SecureSignIn.Method.Admin method=reset version=1 account='\"${USER}\"' keep_amfa_settings=true"
+        echo "synowebapi -s --exec api=SYNO.Core.SmartBlock method=set version=1 enabled=false untrust_try=5 untrust_minute=1 untrust_lock=30 trust_try=10 trust_minute=1 trust_lock=30"
+        echo "synowebapi -s --exec api=SYNO.SecureSignIn.Method.Admin method=reset version=1 account='\"${USER}\"' keep_amfa_settings=true"
       } >"${TMP_PATH}/mdX/usr/rr/once.d/addNewDSMUser.sh"
 
       sync
@@ -2137,8 +2137,14 @@ function initDSMNetwork {
       [ $? -ne 0 ] && continue
       for F in ${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-* ${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-*; do
         [ ! -e "${F}" ] && continue
-        echo "${F}" | grep -Eq "\-lo$|\-tun$|\-eth99$" && continue
-        sed -i "s|^BOOTPROTO=.*|BOOTPROTO=dhcp|; s|^ONBOOT=.*|ONBOOT=yes|; s|^IPV6INIT=.*|IPV6INIT=auto_dhcp|; /^IPADDR/d; /NETMASK/d; /GATEWAY/d; /DNS1/d; /DNS2/d" "${F}"
+        case "${F}" in
+        *ovs_* | *-bond*) rm -f "${F}" ;;
+        *-eth*)
+          ETHX=$(echo "${F}" | sed -E 's/.*ifcfg-(eth[0-9]+)$/\1/')
+          echo -e "DEVICE=${ETHX}\nONBOOT=yes\nBOOTPROTO=dhcp\nIPV6INIT=auto_dhcp\nIPV6_ACCEPT_RA=1" >"${F}"
+          ;;
+        *) ;;
+        esac
       done
       sed -i 's/_mtu=".*"$/_mtu="1500"/g' ${TMP_PATH}/mdX/etc/synoinfo.conf ${TMP_PATH}/mdX/etc.defaults/synoinfo.conf
       # systemctl restart rc-network.service
