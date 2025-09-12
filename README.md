@@ -32,6 +32,11 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
   - Addons: [addons](https://github.com/RROrg/rr/raw/main/docs/addons.xlsx)
   - Modules: [modules](https://github.com/RROrg/rr/raw/main/docs/modules.xlsx)
 
+- Proxmox VE One Click Install:
+  ```
+  curl -fsSL https://raw.githubusercontent.com/RROrg/rr/refs/heads/main/scripts/pve.sh | bash -s -- --onboot 1
+  ```
+
 
 ### 4: GPU:
 
