@@ -34,7 +34,15 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
 
 - Proxmox VE One Click Install:
   ```
-  curl -fsSL https://raw.githubusercontent.com/RROrg/rr/refs/heads/main/scripts/pve.sh | bash -s -- --onboot 1
+  curl -fsSL https://github.com/RROrg/rr/raw/refs/heads/main/scripts/pve.sh | bash -s -- --bltype usb
+
+  # Optional Parameters:
+  --onboot <0|1>           Enable VM on boot, default 1 (enable)
+  --efi <0|1>              Enable UEFI boot, default 1 (enable)
+  --bltype <sata|usb|nvme> Bootloader disk type, default sata
+  --9ppath <path>          Set to /path/to/9p to mount 9p share
+  --tag <tag>              Image tag, download latest release if not set
+  --img <path>             Local image path, use local image if set
   ```
 
 
