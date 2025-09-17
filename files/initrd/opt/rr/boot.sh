@@ -112,7 +112,7 @@ printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "MEM:     ")" "${MEM}"
 
 if ! readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q nvmesystem; then
   HASATA=0
-  for D in $(lsblk -dpno NAME); do
+  for D in $(lsblk -dpno KNAME); do
     [ "${D}" = "${LOADER_DISK}" ] && continue
     if echo "sata sas scsi" | grep -wq "$(getBus "${D}")"; then
       HASATA=1

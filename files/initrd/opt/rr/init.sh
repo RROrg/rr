@@ -94,7 +94,7 @@ fi
 initConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
 initConfigKey "modblacklist" "evbug,cdc_ether" "${USER_CONFIG_FILE}"
 
-if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+if [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   if arrayExistItem "sortnetif:" "$(readConfigMap "addons" "${USER_CONFIG_FILE}")"; then
     _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
   fi
@@ -129,12 +129,14 @@ PID="0x0001"
 TYPE="DoM"
 BUS=$(getBus "${LOADER_DISK}")
 
-BUSLIST="usb sata sas scsi nvme mmc ide virtio vmbus xen"
+BUSLIST="usb sata sas scsi nvme mmc ide virtio vmbus xen docker"
 if [ "${BUS}" = "usb" ]; then
   VID="0x$(udevadm info --query property --name "${LOADER_DISK}" 2>/dev/null | grep "ID_VENDOR_ID" | cut -d= -f2)"
   PID="0x$(udevadm info --query property --name "${LOADER_DISK}" 2>/dev/null | grep "ID_MODEL_ID" | cut -d= -f2)"
   [ "${VID}" = "0x" ] || [ "${PID}" = "0x" ] && die "$(TEXT "The loader disk does not support the current USB Portable Hard Disk.")"
   TYPE="flashdisk"
+elif [ "${BUS}" = "docker" ]; then
+  TYPE="PC"
 elif ! echo "${BUSLIST}" | grep -wq "${BUS}"; then
   if [ "LOCALBUILD" = "${LOADER_DISK}" ]; then
     echo "LOCALBUILD MODE"

@@ -246,6 +246,7 @@ function _sort_netif() {
   ETHLIST=""
   for F in /sys/class/net/eth*; do
     [ ! -e "${F}" ] && continue
+    local ETH MAC BUS
     ETH="$(basename "${F}")"
     MAC="$(cat "/sys/class/net/${ETH}/address" 2>/dev/null | sed 's/://g; s/.*/\L&/')"
     BUS="$(ethtool -i "${ETH}" 2>/dev/null | grep bus-info | cut -d' ' -f2)"
@@ -288,10 +289,11 @@ function _sort_netif() {
 # 1 - device path
 function getBus() {
   local BUS=""
+  [ -f "/.dockerenv" ] && BUS="docker"
   # usb/ata(ide)/sata/sas/spi(scsi)/virtio/mmc/nvme
   [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,TRAN 2>/dev/null | grep "${1} " | awk '{print $2}' | sed 's/^ata$/ide/' | sed 's/^spi$/scsi/') #Spaces are intentional
   # usb/scsi(ide/sata/sas)/virtio/mmc/nvme/vmbus/xen(xvd)
-  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | awk '{print $2}' | awk -F':' '{print $(NF-1)}' | sed 's/_host//' | sed 's/^.*xen.*$/xen/') # Spaces are intentional
+  [ -z "${BUS}" ] && BUS=$(lsblk -dpno KNAME,SUBSYSTEMS 2>/dev/null | grep "${1} " | awk '{split($2,a,":"); if(length(a)>1) print a[length(a)-1]}' | sed 's/_host//' | sed 's/^.*xen.*$/xen/') # Spaces are intentional
   [ -z "${BUS}" ] && BUS="unknown"
   echo "${BUS}"
   return 0
