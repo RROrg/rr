@@ -27,68 +27,51 @@ jobs:
         shell: python
         run: |
           # -*- coding: utf-8 -*-
-          import json, subprocess
-          def set_output(name, value):
-              subprocess.call(f'echo "{name}<<EOF" >> $GITHUB_ENV', shell=True)
-              subprocess.call(f'echo "{value}" >> $GITHUB_ENV', shell=True)
-              subprocess.call(f'echo "EOF" >> $GITHUB_ENV', shell=True)
+          import json
+          import os
 
-          issuetitle = ${{ toJSON(github.event.issue.title) }}
-          issuebody = ${{ toJSON(github.event.issue.body) }}
+          def set_env(name, value):
+            with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as f:
+              f.write(f'{name}={value}\n')
+
+          issuetitle = """${{ github.event.issue.title }}"""
+          issuebody = """${{ github.event.issue.body }}"""
 
           iscustom = 'false'
           warinfo = 'false'
 
-          format = ''
-          size = ''
-          template = ''
-          language= ''
-          sn = ''
-          macs = ''
-          tips = ''
-          model = ''
-          version = ''
-          kernel = ''
-          addons = ''
-          modules = ''
+          fields = {
+            "format": "",
+            "size": "",
+            "template": "",
+            "language": "",
+            "sn": "",
+            "macs": "",
+            "tips": "",
+            "model": "",
+            "version": "",
+            "kernel": "",
+            "addons": "",
+            "modules": ""
+          }
+
           try:
-              if issuetitle.lower().startswith('custom'):
-                  jsonbody = json.loads(issuebody)
-                  iscustom = 'true'
-                  format = jsonbody.get('format', '')
-                  size = jsonbody.get('size', '')
-                  template = jsonbody.get('template', '')
-                  language = jsonbody.get('language', '')
-                  sn = jsonbody.get('sn', '')
-                  macs = jsonbody.get('macs', '')
-                  tips = jsonbody.get('tips', '')
-                  model = jsonbody.get('model', '')
-                  version = jsonbody.get('version', '')
-                  kernel = jsonbody.get('kernel', '')
-                  addons = jsonbody.get('addons', '')
-                  modules = jsonbody.get('modules', '')
-          except ValueError as e:
-              pass
+            if issuetitle.strip().lower().startswith('custom'):
+              jsonbody = json.loads(issuebody)
+              iscustom = 'true'
+              for k in fields:
+                fields[k] = jsonbody.get(k, "")
+          except Exception:
+            pass
 
           if iscustom == 'false':
-              if issuebody.find('DMI') < 0 and issuebody.find('CPU') < 0 and issuebody.find('NIC') < 0:
-                  warinfo = 'true'
+            if not any(x in issuebody for x in ['DMI', 'CPU', 'NIC']):
+              warinfo = 'true'
 
-          set_output("iscustom", iscustom)
-          set_output("warinfo", warinfo)  
-
-          set_output("format", format)
-          set_output("size", size)
-          set_output("template", template)
-          set_output("language", language)
-          set_output("sn", sn)
-          set_output("macs", macs)
-          set_output("tips", tips)
-          set_output("model", model)
-          set_output("version", version)
-          set_output("kernel", kernel)
-          set_output("addons", addons)
-          set_output("modules", modules)
+          set_env("iscustom", iscustom)
+          set_env("warinfo", warinfo)
+          for k, v in fields.items():
+            set_env(k, v)
 
       - name: Update Comment Warinfo
         if: env.warinfo == 'true'
