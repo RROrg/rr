@@ -106,7 +106,7 @@ else
   if ! command -v unzip >/dev/null 2>&1; then
     apt-get update >/dev/null 2>&1 && apt-get install -y unzip >/dev/null 2>&1
   fi
-  IMG_FILE=$(unzip -l "/tmp/rr-${TAG}.img.zip" | awk '{print $4}' | grep '\.img$' | head -n 1)
+  IMG_FILE=$(unzip -l "/tmp/rr-${TAG}.img.zip" | awk '{print $4}' | grep '\.img$' | head -1)
   if [ -z "${IMG_FILE}" ]; then
     echo "No img file found in rr-${TAG}.img.zip"
     exit 1
@@ -137,9 +137,17 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# 获取 存储
+STORAGE=$(pvesm status -content images | awk 'NR>1 {print $1}' | grep local | tail -1)
+if [ -z "${STORAGE}" ]; then
+	echo "No storage for images"
+	qm destroy ${VMID} --purge
+	exit 1
+fi
+
 # 启用 UEFI 引导
 if [ "${EFI:-1}" -eq 1 ]; then
-  if ! qm set ${VMID} --bios ovmf --efidisk0 local-lvm:4,efitype=4m,pre-enrolled-keys=0; then
+  if ! qm set ${VMID} --bios ovmf --efidisk0 ${STORAGE}:4,efitype=4m,pre-enrolled-keys=0; then
     echo "Set UEFI failed"
     qm destroy ${VMID} --purge
     exit 1
@@ -147,12 +155,6 @@ if [ "${EFI:-1}" -eq 1 ]; then
 fi
 
 # 导入 RR 镜像
-STORAGE=$(pvesm status -content images | awk 'NR>1 {print $1}')
-if [ -z "${STORAGE}" ]; then
-	echo "No storage for images"
-	qm destroy ${VMID} --purge
-	exit 1
-fi
 BLDISK=$(qm importdisk ${VMID} "${IMG_PATH}" "${STORAGE}" | grep 'successfully imported disk' | sed -n "s/.*'\(.*\)'.*/\1/p")
 STATUS=$?
 if [ "${STATUS:-0}" -ne 0 ] || [ -z "${BLDISK}" ]; then
@@ -203,9 +205,9 @@ if [ $? -ne 0 ]; then
 fi
 
 # 添加 32G 数据盘
-qm set ${VMID} --sata1 local-lvm:32
+qm set ${VMID} --sata1 ${STORAGE}:32
 
-BRIDGE=$(awk -F: '/^iface vmbr/ {print $1}' /etc/network/interfaces | awk '{print $2}' | head -n 1)
+BRIDGE=$(awk -F: '/^iface vmbr/ {print $1}' /etc/network/interfaces | awk '{print $2}' | head -1)
 if [ -z "${BRIDGE}" ]; then
   echo "Get bridge failed"
   qm destroy ${VMID} --purge
