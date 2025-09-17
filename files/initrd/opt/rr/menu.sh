@@ -2141,10 +2141,17 @@ function initDSMNetwork {
       [ $? -ne 0 ] && continue
       for F in ${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-* ${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-*; do
         [ ! -e "${F}" ] && continue
-        case "${F}" in
-        *ovs_* | *-bond*) rm -f "${F}" ;;
-        *-eth*)
-          ETHX=$(echo "${F}" | sed -E 's/.*ifcfg-(eth[0-9]+)$/\1/')
+        ETHX=$(echo "${F}" | sed -E 's/.*ifcfg-(.*)$/\1/')
+        case "${ETHX}" in
+        ovs_bond*)
+          rm -f "${F}"
+          ;;
+        ovs_eth*)
+          ovs-vsctl del-br ${ETHX}
+          sed -i "/${ETHX##ovs_}/"d ${TMP_PATH}/mdX/usr/syno/etc/synoovs/ovs_interface.conf
+          rm -f "${F}"
+          ;;
+        eth*)
           echo -e "DEVICE=${ETHX}\nONBOOT=yes\nBOOTPROTO=dhcp\nIPV6INIT=auto_dhcp\nIPV6_ACCEPT_RA=1" >"${F}"
           ;;
         *) ;;
