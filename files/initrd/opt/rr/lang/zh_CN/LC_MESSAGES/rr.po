@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-22 21:16+0800\n"
+"POT-Creation-Date: 2025-09-10 18:09+0800\n"
 "PO-Revision-Date: 2024-05-05 22:06+0800\n"
 "Last-Translator: Ing <wjz304>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@RROrg>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Loader is not init!"
 msgstr "引导未初始化!"
 
-#: boot.sh:17 init.sh:166
+#: boot.sh:17 init.sh:167
 msgid "Loader is not configured!"
 msgstr "引导未配置!"
 
@@ -29,11 +29,11 @@ msgstr "引导未配置!"
 msgid "Welcome to %s"
 msgstr "Welcome to %s"
 
-#: boot.sh:48 menu.sh:1453
+#: boot.sh:48 menu.sh:1457
 msgid "Reconfigure after upgrade ..."
 msgstr "升级后重新配置 ..."
 
-#: boot.sh:53 boot.sh:58 menu.sh:1459
+#: boot.sh:53 boot.sh:58 menu.sh:1463
 msgid "Reconfiguration failed!"
 msgstr "重新配置失败!"
 
@@ -41,15 +41,15 @@ msgstr "重新配置失败!"
 msgid "DSM zImage changed"
 msgstr "DSM zImage 已更改"
 
-#: boot.sh:70 menu.sh:1466
+#: boot.sh:70 menu.sh:1470
 msgid "DSM zImage not patched"
 msgstr "DSM zImage patch 失败"
 
-#: boot.sh:70 boot.sh:80 menu.sh:1466 menu.sh:1471
+#: boot.sh:70 boot.sh:80 menu.sh:1470 menu.sh:1475
 msgid "Please upgrade the bootloader version and try again."
 msgstr "请升级引导版本并重试."
 
-#: boot.sh:70 boot.sh:80 menu.sh:28 menu.sh:1247 menu.sh:1331 menu.sh:1396 menu.sh:1466 menu.sh:1471 menu.sh:1494 menu.sh:1559 menu.sh:1597 menu.sh:2622 menu.sh:3501 menu.sh:3553 menu.sh:3596 menu.sh:3643 menu.sh:3739 menu.sh:3805 menu.sh:3866 menu.sh:3923
+#: boot.sh:70 boot.sh:80 menu.sh:28 menu.sh:1251 menu.sh:1335 menu.sh:1400 menu.sh:1470 menu.sh:1475 menu.sh:1498 menu.sh:1563 menu.sh:1601 menu.sh:2642 menu.sh:3521 menu.sh:3573 menu.sh:3616 menu.sh:3663 menu.sh:3759 menu.sh:3825 menu.sh:3886 menu.sh:3943
 msgid "Error"
 msgstr "错误"
 
@@ -57,7 +57,7 @@ msgstr "错误"
 msgid "DSM ramdisk changed"
 msgstr "DSM ramdisk 已更改"
 
-#: boot.sh:80 menu.sh:1471
+#: boot.sh:80 menu.sh:1475
 msgid "DSM ramdisk not patched"
 msgstr "DSM ramdisk patch 失败"
 
@@ -101,7 +101,7 @@ msgstr "注意: 请插入至少一个 sata/scsi 磁盘以用于系统安装 (但
 msgid "Notice: Please disable Intel(VT-d)/AMD(AMD-Vi) in BIOS/UEFI settings if you encounter a boot failure."
 msgstr "注意: 请在BIOS/UEFI设置中禁用 Intel(VT-d)/AMD(AMD-Vi), 如果遇到启动失败问题."
 
-#: boot.sh:312 menu.sh:931 menu.sh:960 menu.sh:998 menu.sh:1010 menu.sh:1036 menu.sh:1044 menu.sh:1061 menu.sh:1073
+#: boot.sh:312 menu.sh:935 menu.sh:964 menu.sh:1002 menu.sh:1014 menu.sh:1040 menu.sh:1048 menu.sh:1065 menu.sh:1077
 msgid "Cmdline"
 msgstr "Cmdline"
 
@@ -121,19 +121,19 @@ msgstr "菜单已打开, 启动被中断."
 msgid "Reboot to boot directly in DSM"
 msgstr "重启并直接进入 DSM 引导"
 
-#: boot.sh:373 init.sh:183
+#: boot.sh:373 init.sh:184
 msgid "Detected %s network cards.\\n"
 msgstr "检测到 %s 个网卡.\\n"
 
-#: boot.sh:374 init.sh:184
+#: boot.sh:374 init.sh:185
 msgid "Checking Connect."
 msgstr "检查连接."
 
-#: boot.sh:386 init.sh:194
+#: boot.sh:386 init.sh:195
 msgid "connected."
 msgstr "已连接."
 
-#: boot.sh:396 init.sh:204
+#: boot.sh:396 init.sh:205
 msgid "Waiting IP.\\n"
 msgstr "获取 IP.\\n"
 
@@ -141,19 +141,19 @@ msgstr "获取 IP.\\n"
 msgid "IGNORE (Does not support non-wired network card.)"
 msgstr "忽略 (不支持无网卡环境.)"
 
-#: boot.sh:408 init.sh:212
+#: boot.sh:408 init.sh:213
 msgid "DOWN"
 msgstr "关闭"
 
-#: boot.sh:412 init.sh:216
+#: boot.sh:412 init.sh:217
 msgid "NOT CONNECTED"
 msgstr "未连接"
 
-#: boot.sh:416 init.sh:220
+#: boot.sh:416 init.sh:221
 msgid "TIMEOUT (Please check the IP on the router.)"
 msgstr "超时 (请检查路由器上的IP.)"
 
-#: boot.sh:423 init.sh:227
+#: boot.sh:423 init.sh:228
 msgid "LINK LOCAL (No DHCP server detected.)"
 msgstr "LINK LOCAL (未检测到 DHCP 服务器.)"
 
@@ -161,7 +161,7 @@ msgstr "LINK LOCAL (未检测到 DHCP 服务器.)"
 msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
 msgstr "在浏览器中访问 \\033[1;34mhttp://%s:5000\\033[0m 链接 DSM."
 
-#: boot.sh:436 init.sh:243
+#: boot.sh:436 init.sh:244
 msgid "%s\\n"
 msgstr "%s\\n"
 
@@ -181,6 +181,30 @@ msgstr "引导中 ..."
 msgid "Interface not operational. Wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant."
 msgstr "该界面已不可操作. 请在数分钟后. \\n通过 http://find.synology.com/ 或者 Synology Assistant 查找 DSM 并访问."
 
+#: helper.sh:18
+msgid "Another instance is already running."
+msgstr "已经有一个实例正在运行."
+
+#: helper.sh:19 helper.sh:29 menu.sh:4215
+msgid "Online Assistance"
+msgstr "在线帮助"
+
+#: helper.sh:25
+msgid "Closing this window or press 'ctrl + c' to exit the assistance."
+msgstr "关闭此窗口或按 'ctrl + c' 退出帮助。"
+
+#: helper.sh:26
+msgid "Please give the following link to the helper. (Click to open and copy)"
+msgstr "请将此链接提供给助手。(点击打开并复制)"
+
+#: helper.sh:29
+msgid "Notice: Please keep this window open."
+msgstr "注意：请保持此窗口打开。"
+
+#: helper.sh:32 menu.sh:4377
+msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
+msgstr "执行 \\033[1;32mmenu.sh\\033[0m 重新进入设置菜单"
+
 #: init.sh:25
 msgid "The loader is corrupted, please rewrite it!"
 msgstr "引导已损坏, 请重写!"
@@ -189,63 +213,63 @@ msgstr "引导已损坏, 请重写!"
 msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
 msgstr "找不到网络设备! 请在连接到网络后重新执行init.sh!"
 
-#: init.sh:135
+#: init.sh:136
 msgid "The loader disk does not support the current USB Portable Hard Disk."
 msgstr "引导磁盘不支持当前USB可移动硬盘。"
 
-#: init.sh:142
+#: init.sh:143
 msgid "The loader disk does not support the current %s, only %s DoM is supported."
 msgstr "引导盘不支持当前 %s, 只支持 %s DoM."
 
-#: init.sh:151
+#: init.sh:152
 msgid "Loader disk:"
 msgstr "引导盘:"
 
-#: init.sh:159
+#: init.sh:160
 msgid "Loading keymap:"
 msgstr "加载键盘映射:"
 
-#: init.sh:169
+#: init.sh:170
 msgid "User requested edit settings."
 msgstr "用户触发编辑设置."
 
-#: init.sh:229
+#: init.sh:230
 msgid "Access \\033[1;34mhttp://%s:%d\\033[0m to configure the loader via web terminal."
 msgstr "在浏览器中访问 \\033[1;34mhttp://%s:%d\\033[0m 进入 WEB 终端进行配置."
 
-#: init.sh:240
+#: init.sh:241
 msgid "Call \\033[1;32minit.sh\\033[0m to re get init info\\n"
 msgstr "执行 \\033[1;32minit.sh\\033[0m 重新获取初始化信息\\n"
 
-#: init.sh:241
+#: init.sh:242
 msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader\\n"
 msgstr "执行 \\033[1;32mmenu.sh\\033[0m 进入设置菜单\\n"
 
-#: init.sh:244
+#: init.sh:245
 msgid "User config is on \\033[1;32m%s\\033[0m\\n"
 msgstr "用户配置文件位于 \\033[1;32m%s\\033[0m\\n"
 
-#: init.sh:245
+#: init.sh:246
 msgid "HTTP: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 msgstr "HTTP: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 
-#: init.sh:246
+#: init.sh:247
 msgid "DUFS: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 msgstr "DUFS: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 
-#: init.sh:247
+#: init.sh:248
 msgid "TTYD: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 msgstr "TTYD: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 
-#: init.sh:250
+#: init.sh:251
 msgid "SSH port is \\033[1;31m%d\\033[0m, The \\033[1;31mroot\\033[0m password has been changed\\n"
 msgstr "SSH 端口为 \\033[1;31m%d\\033[0m, \\033[1;31mroot\\033[0m 密码已修改\\n"
 
-#: init.sh:252
+#: init.sh:253
 msgid "SSH port is \\033[1;31m%d\\033[0m, The \\033[1;31mroot\\033[0m password is \\033[1;31m%s\\033[0m\\n"
 msgstr "SSH 端口为 \\033[1;31m%d\\033[0m, \\033[1;31mroot\\033[0m 密码为 \\033[1;31m%s\\033[0m\\n"
 
-#: init.sh:280
+#: init.sh:281
 msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
 msgstr "您的 RAM 不足 4GB, 如果在创建引导时出现错误, 请增加内存."
 
@@ -253,1486 +277,1485 @@ msgstr "您的 RAM 不足 4GB, 如果在创建引导时出现错误, 请增加�
 msgid "The menu.sh instance is already running in another terminal. To avoid conflicts, please operate in one instance only."
 msgstr "menu.sh 实例已经在另一个终端中运行, 为了避免冲突, 请仅在一个实例中操作."
 
-#: menu.sh:133 menu.sh:141 menu.sh:187
+#: menu.sh:137 menu.sh:145 menu.sh:191
 msgid "Model"
 msgstr "型号"
 
-#: menu.sh:134
+#: menu.sh:138
 msgid "Getting models ..."
 msgstr "获取型号中 ..."
 
-#: menu.sh:142 menu.sh:298
+#: menu.sh:146 menu.sh:302
 msgid "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!"
 msgstr "无法连接到 Synology 网站, 请检查网络并重试, 或者使用 '解析 Pat'!"
 
-#: menu.sh:183
+#: menu.sh:187
 msgid "Disable flags restriction"
 msgstr "禁用标志限制"
 
-#: menu.sh:184
+#: menu.sh:188
 msgid "Choose the model"
 msgstr "选择型号"
 
-#: menu.sh:185
+#: menu.sh:189
 msgid "DT: Disk identification method is device tree"
 msgstr "DT: 磁盘识别方法是设备树"
 
-#: menu.sh:186
+#: menu.sh:190
 msgid "G: Support iGPU; N: Support NVMe; H: Support HBA"
 msgstr "G: 支持 iGPU; N: 支持 NVMe; H: 支持 HBA"
 
-#: menu.sh:267 menu.sh:276 menu.sh:292 menu.sh:308 menu.sh:334 menu.sh:358
+#: menu.sh:271 menu.sh:280 menu.sh:296 menu.sh:312 menu.sh:338 menu.sh:362
 msgid "Product Version"
 msgstr "版本"
 
-#: menu.sh:268
+#: menu.sh:272
 msgid "Choose a product version"
 msgstr "选择版本"
 
-#: menu.sh:275
+#: menu.sh:279
 msgid "The current version has been set to %s. Do you want to reset the version?"
 msgstr "当前版本已设置为 %s. 是否要重置版本?"
 
-#: menu.sh:293
+#: menu.sh:297
 msgid "Get pat data ..."
 msgstr "获取 pat 数据 ..."
 
-#: menu.sh:299 menu.sh:629 menu.sh:642 menu.sh:647 menu.sh:655 menu.sh:671 menu.sh:679 menu.sh:702 menu.sh:708 menu.sh:712 menu.sh:720 menu.sh:724 menu.sh:736 menu.sh:740 menu.sh:3727 menu.sh:3777 menu.sh:3980 menu.sh:4017 menu.sh:4022
+#: menu.sh:303 menu.sh:633 menu.sh:646 menu.sh:651 menu.sh:659 menu.sh:675 menu.sh:683 menu.sh:706 menu.sh:712 menu.sh:716 menu.sh:724 menu.sh:728 menu.sh:740 menu.sh:744 menu.sh:3747 menu.sh:3797 menu.sh:4000 menu.sh:4037 menu.sh:4042
 msgid "Addons"
 msgstr "插件"
 
-#: menu.sh:300 menu.sh:335
+#: menu.sh:304 menu.sh:339
 msgid "Retry"
 msgstr "重试"
 
-#: menu.sh:309
+#: menu.sh:313
 msgid "Choose a pat version"
 msgstr "选择 pat 版本"
 
-#: menu.sh:329
+#: menu.sh:333
 msgid "Please confirm or modify the URL and md5sum to you need (32 '0's will skip the md5 check)."
 msgstr "请确认或修改 URL 和 md5sum 为你需要的 (32 个 0 会跳过 md5 校验)."
 
-#: menu.sh:331
+#: menu.sh:335
 msgid "Note: There is no version %s and automatically returns to version %s."
 msgstr "注意: 没有 %s 版本, 自动返回 %s 版本."
 
-#: menu.sh:359 menu.sh:455
+#: menu.sh:363 menu.sh:459
 msgid "Reconfiguring Synoinfo, Addons and Modules ..."
 msgstr "重新配置 Syninfo, 插件和模块 ..."
 
-#: menu.sh:427 menu.sh:438
+#: menu.sh:431 menu.sh:442
 msgid "DSM Invalid, try again!"
 msgstr "DSM 不支持, 请重试!"
 
-#: menu.sh:451
+#: menu.sh:455
 msgid "Currently, %s is not supported."
 msgstr "目前，不支持 %s."
 
-#: menu.sh:519
+#: menu.sh:523
 msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
 msgstr "你已经选择了 %s 和 %s.\\n‘解析 Pat' 将覆盖之前的选择.\\n是否继续?"
 
-#: menu.sh:520 menu.sh:534 menu.sh:542 menu.sh:584 menu.sh:588
+#: menu.sh:524 menu.sh:538 menu.sh:546 menu.sh:588 menu.sh:592
 msgid "Parse Pat"
 msgstr "解析 Pat"
 
-#: menu.sh:528
+#: menu.sh:532
 msgid "No pat file found in /tmp/pats/ folder!\\nPlease upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option."
 msgstr "在 /tmp/pats/ 文件夹中找不到 pat 文件!\\n请通过 DUFS 将 pat 文件上传到 /tmp/pats/ 文件夹，然后重新输入此选项."
 
-#: menu.sh:529 menu.sh:3978 menu.sh:3979 menu.sh:3980 menu.sh:3981 menu.sh:3982 menu.sh:3983 menu.sh:3991 menu.sh:4016 menu.sh:4028 menu.sh:4040 menu.sh:4052 menu.sh:4067 menu.sh:4078 menu.sh:4086 menu.sh:4111
+#: menu.sh:533 menu.sh:3998 menu.sh:3999 menu.sh:4000 menu.sh:4001 menu.sh:4002 menu.sh:4003 menu.sh:4011 menu.sh:4036 menu.sh:4048 menu.sh:4060 menu.sh:4072 menu.sh:4087 menu.sh:4098 menu.sh:4106 menu.sh:4131
 msgid "Update"
 msgstr "更新"
 
-#: menu.sh:535
+#: menu.sh:539
 msgid "Choose a pat file"
 msgstr "选择一个 pat 文件"
 
-#: menu.sh:543 menu.sh:1258 menu.sh:1331
+#: menu.sh:547 menu.sh:1262 menu.sh:1335
 msgid "pat Invalid, try again!"
 msgstr "无效的 pat, 请重试!"
 
-#: menu.sh:549
+#: menu.sh:553
 msgid "Parse %s ...\\n"
 msgstr "解析 %s ...\\n"
 
-#: menu.sh:581 menu.sh:1479
+#: menu.sh:585 menu.sh:1483
 msgid "Ready!"
 msgstr "已就绪!"
 
-#: menu.sh:585
+#: menu.sh:589
 msgid "Making ..."
 msgstr "编译中 ..."
 
-#: menu.sh:623
+#: menu.sh:627
 msgid "Add an addon"
 msgstr "添加插件"
 
-#: menu.sh:624
+#: menu.sh:628
 msgid "Delete addons"
 msgstr "删除插件"
 
-#: menu.sh:625
+#: menu.sh:629
 msgid "Show all addons"
 msgstr "显示所有插件"
 
-#: menu.sh:626
+#: menu.sh:630
 msgid "Upload a external addon"
 msgstr "上传外部插件"
 
-#: menu.sh:627 menu.sh:766 menu.sh:958 menu.sh:1128 menu.sh:1532 menu.sh:3093 menu.sh:3345 menu.sh:3986 menu.sh:4200 menu.sh:4297
+#: menu.sh:631 menu.sh:770 menu.sh:962 menu.sh:1132 menu.sh:1536 menu.sh:3113 menu.sh:3365 menu.sh:4006 menu.sh:4221 menu.sh:4322
 msgid "Exit"
 msgstr "退出"
 
-#: menu.sh:631 menu.sh:769 menu.sh:961 menu.sh:1131 menu.sh:4203
+#: menu.sh:635 menu.sh:773 menu.sh:965 menu.sh:1135 menu.sh:4224
 msgid "Choose a option"
 msgstr "选择一个选项"
 
-#: menu.sh:643
+#: menu.sh:647
 msgid "No available addons to add"
 msgstr "没有可用的插件可添加"
 
-#: menu.sh:648
+#: menu.sh:652
 msgid "Select an addon"
 msgstr "选择插件"
 
-#: menu.sh:656
+#: menu.sh:660
 msgid "Type a optional params to addon"
 msgstr "输入插件的加载参数"
 
-#: menu.sh:672
+#: menu.sh:676
 msgid "No user addons to remove"
 msgstr "没有要删除的用户插件"
 
-#: menu.sh:680
+#: menu.sh:684
 msgid "Select addon to remove"
 msgstr "选择要删除的插件"
 
-#: menu.sh:693
+#: menu.sh:697
 msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"\\Z1red\\Zn\" are not added.\\n"
 msgstr "名称带有颜色\"\\Z4蓝色\\Zn\"已添加，带有颜色\"\\Z1红色\\Zn\"未添加。\\n"
 
-#: menu.sh:707 menu.sh:1542 menu.sh:4065
+#: menu.sh:711 menu.sh:1546 menu.sh:4085
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
 msgstr "此功能仅在通过 ssh 访问时可用(需要支持 ZModem 协议的终端).\\n"
 
-#: menu.sh:713
+#: menu.sh:717
 msgid "Please upload the *.addon file."
 msgstr "请上传 *.addon 文件."
 
-#: menu.sh:721 menu.sh:868 menu.sh:4087 menu.sh:4112
+#: menu.sh:725 menu.sh:872 menu.sh:4107 menu.sh:4132
 msgid "Not a valid file, please try again!"
 msgstr "不是有效的文件, 请重试!"
 
-#: menu.sh:725
+#: menu.sh:729
 msgid "The addon already exists. Do you want to overwrite it?"
 msgstr "该插件已存在, 是否覆盖?"
 
-#: menu.sh:737
+#: menu.sh:741
 msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
 msgstr "插件 '%s' 已添加到引导中, 请在'添加插件' 菜单中开启."
 
-#: menu.sh:741
+#: menu.sh:745
 msgid "File format not recognized!"
 msgstr "文件格式无法识别!"
 
-#: menu.sh:759
+#: menu.sh:763
 msgid "Show/Select modules"
 msgstr "显示/选择模块"
 
-#: menu.sh:760
+#: menu.sh:764
 msgid "Select loaded modules"
 msgstr "选择已识别的模块"
 
-#: menu.sh:761
+#: menu.sh:765
 msgid "Upload a external module"
 msgstr "上传一个外部模块"
 
-#: menu.sh:762
+#: menu.sh:766
 msgid "Deselect i915 with dependencies"
 msgstr "取消选择 i915 及其依赖模块"
 
-#: menu.sh:763
+#: menu.sh:767
 msgid "Priority use of official drivers:"
 msgstr "优先使用官方模块:"
 
-#: menu.sh:764
+#: menu.sh:768
 msgid "Edit modules that need to be copied to DSM"
 msgstr "编辑需要拷贝到 DSM 的模块"
 
-#: menu.sh:765
+#: menu.sh:769
 msgid "modprobe blacklist"
 msgstr "模块探测黑名单"
 
-#: menu.sh:768 menu.sh:775 menu.sh:788 menu.sh:825 menu.sh:839 menu.sh:849 menu.sh:852 menu.sh:862 menu.sh:867 menu.sh:882 menu.sh:888 menu.sh:923 menu.sh:3793 menu.sh:3838 menu.sh:3981 menu.sh:4029 menu.sh:4034
+#: menu.sh:772 menu.sh:779 menu.sh:792 menu.sh:829 menu.sh:843 menu.sh:853 menu.sh:856 menu.sh:866 menu.sh:871 menu.sh:886 menu.sh:892 menu.sh:927 menu.sh:3813 menu.sh:3858 menu.sh:4001 menu.sh:4049 menu.sh:4054
 msgid "Modules"
 msgstr "模块"
 
-#: menu.sh:776
+#: menu.sh:780
 msgid "Reading modules ..."
 msgstr "读取模块中 ..."
 
-#: menu.sh:789
+#: menu.sh:793
 msgid "Select all"
 msgstr "选择全部"
 
-#: menu.sh:790
+#: menu.sh:794
 msgid "Deselect all"
 msgstr "取消全选"
 
-#: menu.sh:791
+#: menu.sh:795
 msgid "Select modules to include"
 msgstr "选择要加载的模块"
 
-#: menu.sh:826
+#: menu.sh:830
 msgid "Selecting loaded modules"
 msgstr "选择已识别的模块"
 
-#: menu.sh:838
+#: menu.sh:842
 msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol)."
 msgstr "此功能仅在通过 ssh 访问时可用(需要支持 ZModem 协议的终端)."
 
-#: menu.sh:844
+#: menu.sh:848
 msgid "This function is experimental and dangerous. If you don't know much, please exit.\\n"
 msgstr "这个功能是实验性的, 很危险. 如果你知道的不多, 请退出. \\n"
 
-#: menu.sh:845
+#: menu.sh:849
 msgid "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\\n"
 msgstr "该功能导入 .ko 将被植入相应的架构的模块包中, 这将影响该架构的所有型号.\\n"
 
-#: menu.sh:846
+#: menu.sh:850
 msgid "This program will not determine the availability of imported modules or even make type judgments, as please double check if it is correct.\\n"
 msgstr "该程序不会判断导入的驱动模块的可用性, 甚至不会做类型判断, 因从请你再三确认是否正确.\\n"
 
-#: menu.sh:847
+#: menu.sh:851
 msgid "If you want to remove it, please go to the \"Update Menu\" -> \"Update modules\" to forcibly update the modules. All imports will be reset.\\n"
 msgstr "如果您想删除它, 请转到 \"更新\"->\"更新模块\" 强制更新模块, 所有导入都将被重置.\\n"
 
-#: menu.sh:848
+#: menu.sh:852
 msgid "Do you want to continue?"
 msgstr "是否继续?"
 
-#: menu.sh:853
+#: menu.sh:857
 msgid "Please upload the *.ko file."
 msgstr "请上传 *.ko 文件."
 
-#: menu.sh:863
+#: menu.sh:867
 msgid "Module '%s' added to %s-%s"
 msgstr "模块 '%s' 已添加到 %s-%s"
 
-#: menu.sh:883
+#: menu.sh:887
 msgid "No i915 with dependencies module to deselect."
 msgstr "没有 i915 及其依赖模块取消选择."
 
-#: menu.sh:889
+#: menu.sh:893
 msgid "Module %s deselected."
 msgstr "模块 %s 已取消选择."
 
-#: menu.sh:905 menu.sh:1592 menu.sh:2255 menu.sh:2285 menu.sh:4146
+#: menu.sh:909 menu.sh:1596 menu.sh:2275 menu.sh:2305 menu.sh:4166
 msgid "Edit with caution"
 msgstr "请谨慎编辑"
 
-#: menu.sh:918
+#: menu.sh:922
 msgid "The blacklist is used to prevent the kernel from loading specific modules.\\n"
 msgstr "黑名单用于防止内核加载特定的模块.\\n"
 
-#: menu.sh:919
+#: menu.sh:923
 msgid "The blacklist is a list of module names separated by ','.\\n"
 msgstr "黑名单是模块名称列表, 用 ',' 分隔.\\n"
 
-#: menu.sh:920
+#: menu.sh:924
 msgid "For example: \\Z4evbug,cdc_ether\\Zn\\n"
 msgstr "例如: \\Z4evbug,cdc_ether\\Zn\\n"
 
-#: menu.sh:932
+#: menu.sh:936
 msgid "Invalid list, No spaces should appear, retry?"
 msgstr "无效列表, 不能出现空格, 重试?"
 
-#: menu.sh:952
+#: menu.sh:956
 msgid "Add/Edit a cmdline item"
 msgstr "添加/编辑 cmdline 参数"
 
-#: menu.sh:953
+#: menu.sh:957
 msgid "Show/Delete cmdline items"
 msgstr "显示/删除 cmdline 参数"
 
-#: menu.sh:955
+#: menu.sh:959
 msgid "Define SN/MAC"
 msgstr "自定义 SN/MAC"
 
-#: menu.sh:967
+#: menu.sh:971
 msgid "Commonly used cmdlines:\\n"
 msgstr "常用 cmdlines:\\n"
 
-#: menu.sh:968
+#: menu.sh:972
 msgid " * \\Z4SpectreAll_on=\\Zn\\n    Enable Spectre and Meltdown protection to mitigate the threat of speculative execution vulnerability.\\n"
 msgstr " * \\Z4SpectreAll_on=\\Zn\\n    启用 Spectre 和 Meltdown 防护, 以缓解 speculative execution 漏洞.\\n"
 
-#: menu.sh:969
+#: menu.sh:973
 msgid " * \\Z4disable_mtrr_trim=\\Zn\\n    disables kernel trim any uncacheable memory out.\\n"
 msgstr " * \\Z4disable_mtrr_trim=\\Zn\\n    禁用内核修剪任何不可缓存的内存.\\n"
 
-#: menu.sh:970
+#: menu.sh:974
 msgid " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Set the maximum C-state depth allowed by the intel_idle driver.\\n"
 msgstr " * \\Z4intel_idle.max_cstate=1\\Zn\\n    设置 intel_idle 驱动允许使用的最大 C-state 深度.\\n"
 
-#: menu.sh:971
+#: menu.sh:975
 msgid " * \\Z4pcie_port_pm=off\\Zn\\n    Turn off the power management of the PCIe port.\\n"
 msgstr " * \\Z4pcie_port_pm=off\\Zn\\n    关闭 PCIe 端口的电源管理.\\n"
 
-#: menu.sh:972
+#: menu.sh:976
 msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
 msgstr " * \\Z4libata.force=noncq\\Zn\\n    禁用硬盘的 NCQ 功能.\\n"
 
-#: menu.sh:973
+#: menu.sh:977
 msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map(Not apply to DT models).\\n"
 msgstr " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map(不适用于DT型号).\\n"
 
-#: menu.sh:974
+#: menu.sh:978
 msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence(Not apply to DT models).\\n"
 msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, 修改磁盘名称顺序(不适用于DT型号).\\n"
 
-#: menu.sh:975
+#: menu.sh:979
 msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence(Not apply to DT models).\\n"
 msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    重映射数据端口序列(不适用于DT型号).\\n"
 
-#: menu.sh:976
+#: menu.sh:980
 msgid " * \\Z4scsi_mod.scan=sync\\Zn\\n    Synchronize scanning of devices on the SCSI bus during system startup(Resolve the disorderly order of HBA disks).\\n"
 msgstr " * \\Z4scsi_mod.scan=sync\\Zn\\n    在系统启动期间同步扫描 SCSI 总线上的设备(解决 HBA 磁盘的乱序问题).\\n"
 
-#: menu.sh:977
+#: menu.sh:981
 msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
 msgstr " * \\Z4i915.enable_guc=2\\Zn\\n    启用 Intel 核显上的 GuC 固件.(值: 1,2 or 3)\\n"
 
-#: menu.sh:978
+#: menu.sh:982
 msgid " * \\Z4i915.max_vfs=7\\Zn\\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\\n"
 msgstr " * \\Z4i915.max_vfs=7\\Zn\\n    设置可创建虚拟核显 (VFs) 的最大数量.\\n"
 
-#: menu.sh:979
+#: menu.sh:983
 msgid " * \\Z4i915.modeset=0\\Zn\\n    Disable the kernel mode setting (KMS) feature of the i915 driver.\\n"
 msgstr " * \\Z4i915.modeset=0\\Zn\\n    禁用 i915 驱动的程序内核模式设置(KMS)功能.\\n"
 
-#: menu.sh:980
+#: menu.sh:984
 msgid " * \\Z4apparmor.mode=complain\\Zn\\n    Set the AppArmor security module to complain mode.\\n"
 msgstr " * \\Z4apparmor.mode=complain\\Zn\\n    将 AppArmor 安全模块设置为 观察模式.\\n"
 
-#: menu.sh:981
+#: menu.sh:985
 msgid " * \\Z4acpi_enforce_resources=lax\\Zn\\n    Resolve the issue of some devices (such as fan controllers) not recognizing or using properly.\\n"
 msgstr " * \\Z4acpi_enforce_resources=lax\\Zn\\n    解决某些设备 (如风扇控制器) 未正确识别或使用的问题.\\n"
 
-#: menu.sh:982
+#: menu.sh:986
 msgid " * \\Z4pci=nommconf\\Zn\\n    Disable the use of Memory-Mapped Configuration for PCI devices(use this parameter cautiously).\\n"
 msgstr " * \\Z4pci=nommconf\\Zn\\n    禁用 PCI 设备的 Memory-Mapped Configuration 功能(谨慎使用).\\n"
 
-#: menu.sh:983
+#: menu.sh:987
 msgid " * \\Z4consoleblank=300\\Zn\\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\\n"
 msgstr " * \\Z4consoleblank=300\\Zn\\n    将控制台设置为无活动后300秒自动关闭显示 (以秒为单位).\\n"
 
-#: menu.sh:984 menu.sh:993 menu.sh:1144 menu.sh:1153
+#: menu.sh:988 menu.sh:997 menu.sh:1148 menu.sh:1157
 msgid "Please enter the parameter key and value you need to add.\\n"
 msgstr "请输入需要添加的参数名称和值.\\n"
 
-#: menu.sh:1011 menu.sh:1171
+#: menu.sh:1015 menu.sh:1175
 msgid "Invalid parameter name, retry?"
 msgstr "无效参数名称, 重试?"
 
-#: menu.sh:1037
+#: menu.sh:1041
 msgid "No user cmdline to remove"
 msgstr "没有用户参数被删除"
 
-#: menu.sh:1045
+#: menu.sh:1049
 msgid "Select cmdline to remove"
 msgstr "选择要删除的参数"
 
-#: menu.sh:1056
+#: menu.sh:1060
 msgid "Note: (MAC will not be set to NIC, Only for activation services.)"
 msgstr "注意: (MAC 不会设置到 NIC, 仅用于激活服务.)"
 
-#: menu.sh:1062
+#: menu.sh:1066
 msgid "Random"
 msgstr "随机"
 
-#: menu.sh:1074
+#: menu.sh:1078
 msgid "Invalid SN/MAC, retry?"
 msgstr "无效 SN/MAC, 重试?"
 
-#: menu.sh:1126
+#: menu.sh:1130
 msgid "Add/edit a synoinfo item"
 msgstr "添加/编辑 Synoinfo 参数"
 
-#: menu.sh:1127
+#: menu.sh:1131
 msgid "Show/Delete synoinfo items"
 msgstr "显示/删除 Synoinfo 参数"
 
-#: menu.sh:1130 menu.sh:1158 menu.sh:1170 menu.sh:1197 menu.sh:1205
+#: menu.sh:1134 menu.sh:1162 menu.sh:1174 menu.sh:1201 menu.sh:1209
 msgid "Synoinfo"
 msgstr "Synoinfo"
 
-#: menu.sh:1137
+#: menu.sh:1141
 msgid "Commonly used synoinfo:\\n"
 msgstr "常用 synoinfo:\\n"
 
-#: menu.sh:1138
+#: menu.sh:1142
 msgid " * \\Z4support_apparmor=no\\Zn\\n    Disable apparmor.\\n"
 msgstr "* \\Z4support_apparmor=no\\Zn\\n    禁用 apparmor.\\n"
 
-#: menu.sh:1139
+#: menu.sh:1143
 msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
 msgstr " * \\Z4maxdisks=??\\Zn\\n    最大硬盘数.\\n"
 
-#: menu.sh:1140
+#: menu.sh:1144
 msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) 磁盘掩码(不适用于DT型号).\\n"
 
-#: menu.sh:1141
+#: menu.sh:1145
 msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Esata 磁盘掩码(不适用于DT型号).\\n"
 
-#: menu.sh:1142
+#: menu.sh:1146
 msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask(Not apply to DT models).\\n"
 msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    USB 磁盘掩码(不适用于DT型号).\\n"
 
-#: menu.sh:1143
+#: menu.sh:1147
 msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
 msgstr " * \\Z4max_sys_raid_disks=12\\Zn\\n    系统分区(md0) raid 的最大磁盘个数.\\n"
 
-#: menu.sh:1198
+#: menu.sh:1202
 msgid "No synoinfo entries to remove"
 msgstr "没有 Synoinfo 参数被删除"
 
-#: menu.sh:1206
+#: menu.sh:1210
 msgid "Select synoinfo entry to remove"
 msgstr "选择要删除的参数"
 
-#: menu.sh:1231 menu.sh:1374
+#: menu.sh:1235 menu.sh:1378
 msgid "The current network status is unknown, using the default mirror."
 msgstr "当前网络状态未知, 使用默认镜像服务器."
 
-#: menu.sh:1241
+#: menu.sh:1245
 msgid "Downloading old pat to extract synology .pat extractor..."
 msgstr "下载旧 pat, 提取 .pat 解密程序中..."
 
-#: menu.sh:1247 menu.sh:1396
+#: menu.sh:1251 menu.sh:1400
 msgid "Check internet."
 msgstr "检查网络."
 
-#: menu.sh:1247 menu.sh:1396 menu.sh:3553
+#: menu.sh:1251 menu.sh:1400 menu.sh:3573
 msgid "(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
 msgstr "(请通过 https://curl.se/libcurl/c/libcurl-errors.html 检查错误描述.)"
 
-#: menu.sh:1284
+#: menu.sh:1288
 msgid "Uncompressed tar"
 msgstr "未压缩 tar"
 
-#: menu.sh:1288
+#: menu.sh:1292
 msgid "Compressed tar"
 msgstr "已压缩 tar"
 
-#: menu.sh:1292
+#: menu.sh:1296
 msgid "Encrypted"
 msgstr "已加密"
 
-#: menu.sh:1296
+#: menu.sh:1300
 msgid "Could not determine if pat file is encrypted or not, maybe corrupted, try again!"
 msgstr "无法确定 pat 文件是否加密, 可能已损坏, 请重试!"
 
-#: menu.sh:1303 menu.sh:1413
+#: menu.sh:1307 menu.sh:1417
 msgid "Disassembling %s:"
 msgstr "解压缩 %s:"
 
-#: menu.sh:1311
+#: menu.sh:1315
 msgid "Extractor cached."
 msgstr "已存在解密程序."
 
-#: menu.sh:1317 menu.sh:1321
+#: menu.sh:1321 menu.sh:1325
 msgid "Extracting ..."
 msgstr "解压中 ..."
 
-#: menu.sh:1353
+#: menu.sh:1357
 msgid "The cache has been cleared. Please re 'Parse pat' before build."
 msgstr "缓存已被清除. 请在编译前重新 \"解析 pat\"."
 
-#: menu.sh:1357
+#: menu.sh:1361
 msgid "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build."
 msgstr "缓存已被清除. 请在编译前重新 \"尝试恢复已安装的 DSM 系统\"."
 
-#: menu.sh:1361
+#: menu.sh:1365
 msgid "The pat url is empty. Please re 'Choose a version' before build."
 msgstr "pat 的 url 为空. 请在编译前重新 \"选择版本\"."
 
-#: menu.sh:1366 menu.sh:4135
+#: menu.sh:1370 menu.sh:4155
 msgid "Cleaning cache ..."
 msgstr "清除缓存 ..."
 
-#: menu.sh:1378
+#: menu.sh:1382
 msgid "Based on the current network situation, switch to %s mirror to downloading.\\n"
 msgstr "根据当前的网络状况, 已切换到 %s 镜像服务器进行下载.\\n"
 
-#: menu.sh:1381
+#: menu.sh:1385
 msgid "Downloading %s ...\\n"
 msgstr "下载 %s 中 ...\\n"
 
-#: menu.sh:1400
+#: menu.sh:1404
 msgid "%s cached."
 msgstr "%s 已缓存."
 
-#: menu.sh:1403
+#: menu.sh:1407
 msgid "Checking hash of %s:"
 msgstr "检查 %s 的 hash:"
 
-#: menu.sh:1406
+#: menu.sh:1410
 msgid "md5 hash of pat not match, Please reget pat data from the version menu and try again!"
 msgstr "pat 的 md5 Hash 不匹配, 请在版本菜单中重新获取 pat 数据后重试!"
 
-#: menu.sh:1409 menu.sh:1425 menu.sh:1430
+#: menu.sh:1413 menu.sh:1429 menu.sh:1434
 msgid "OK"
 msgstr "OK"
 
-#: menu.sh:1420
+#: menu.sh:1424
 msgid "Setting hash:"
 msgstr "设置 hash:"
 
-#: menu.sh:1427
+#: menu.sh:1431
 msgid "Copying files:"
 msgstr "拷贝文件:"
 
-#: menu.sh:1448
+#: menu.sh:1452
 msgid "No disk space left, please clean the cache and try again!"
 msgstr "磁盘空间不足, 请清理缓存并重试!"
 
-#: menu.sh:1476
+#: menu.sh:1480
 msgid "Cleaning ..."
 msgstr "清除中 ..."
 
-#: menu.sh:1486 menu.sh:4134 menu.sh:4159 menu.sh:4202 menu.sh:4220 menu.sh:4299 menu.sh:4305 menu.sh:4311 menu.sh:4317 menu.sh:4323 menu.sh:4329 menu.sh:4335
+#: menu.sh:1490 menu.sh:4154 menu.sh:4179 menu.sh:4223 menu.sh:4241 menu.sh:4324 menu.sh:4330 menu.sh:4336 menu.sh:4342 menu.sh:4348 menu.sh:4354 menu.sh:4360
 msgid "Main menu"
 msgstr "主菜单"
 
-#: menu.sh:1487
+#: menu.sh:1491
 msgid "Making ... ('ctrl + c' to exit)"
 msgstr "编译中 ... ('ctrl + c' 退出)"
 
-#: menu.sh:1512
+#: menu.sh:1516
 msgid "Alert"
 msgstr "警告"
 
-#: menu.sh:1513
+#: menu.sh:1517
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "配置已更改, 是否重新编译引导?"
 
-#: menu.sh:1529
+#: menu.sh:1533
 msgid "Upload dts file"
 msgstr "上传 dts 文件"
 
-#: menu.sh:1530
+#: menu.sh:1534
 msgid "Delete dts file"
 msgstr "删除 dts 文件"
 
-#: menu.sh:1531
+#: menu.sh:1535
 msgid "Edit dts file"
 msgstr "编辑 dts 文件"
 
-#: menu.sh:1534 menu.sh:1544 menu.sh:1548 menu.sh:1560 menu.sh:1565 menu.sh:1585 menu.sh:1598 menu.sh:3063
+#: menu.sh:1538 menu.sh:1548 menu.sh:1552 menu.sh:1564 menu.sh:1569 menu.sh:1589 menu.sh:1602 menu.sh:3083
 msgid "Custom DTS"
 msgstr "自定义 DTS"
 
-#: menu.sh:1535
+#: menu.sh:1539
 msgid "Custom dts:"
 msgstr "自定义 dts:"
 
-#: menu.sh:1543
+#: menu.sh:1547
 msgid "Or upload the dts file to %s via DUFS, Will be automatically imported when building.\\n"
 msgstr "或者通过 DUFS 上传 dts 文件到 %s, 编译时会自动导入.\\n"
 
-#: menu.sh:1549
+#: menu.sh:1553
 msgid "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\\n(saved in /mnt/p3/users/)\\n"
 msgstr "目前, 只支持 dts 格式的文件, 请准备并点击确认上传.\\n(保存于 /mnt/p3/users/ 中)\\n"
 
-#: menu.sh:1559 menu.sh:1597
+#: menu.sh:1563 menu.sh:1601
 msgid "Not a valid dts file, please try again!"
 msgstr "dts 文件无效, 请重试!"
 
-#: menu.sh:1566
+#: menu.sh:1570
 msgid "A valid dts file, Automatically import at compile time."
 msgstr "dts 文件有效, 将在编译时自动导入."
 
-#: menu.sh:1586
+#: menu.sh:1590
 msgid "No dts file to edit. Please upload first!"
 msgstr "没有可编辑的 dts 文件, 请先上传!"
 
-#: menu.sh:1710
+#: menu.sh:1714
 msgid "Total of ports: %s\\n"
 msgstr "端口总数: %s\\n"
 
-#: menu.sh:1712
+#: menu.sh:1716
 msgid "Ports with color \\Z1red\\Zn as DUMMY, color \\Z2green\\Zn has drive connected."
 msgstr "\\Z1红色\\Zn 为模拟端口, \\Z2绿色\\Zn 为已驱动的物理端口."
 
-#: menu.sh:1713 menu.sh:1757 menu.sh:2394
+#: menu.sh:1717 menu.sh:1761 menu.sh:2414
 msgid "No disk found!"
 msgstr "未找到磁盘!"
 
-#: menu.sh:1714 menu.sh:1726 menu.sh:1740 menu.sh:1756 menu.sh:1760 menu.sh:1761 menu.sh:1766 menu.sh:1770 menu.sh:1784 menu.sh:1786 menu.sh:1801 menu.sh:1805 menu.sh:1816 menu.sh:1828 menu.sh:1833 menu.sh:1851 menu.sh:1856 menu.sh:1866 menu.sh:1892
-#: menu.sh:1896 menu.sh:1904 menu.sh:1910 menu.sh:1938 menu.sh:1943 menu.sh:1953 menu.sh:1958 menu.sh:1983 menu.sh:1988 menu.sh:1998 menu.sh:2021 menu.sh:2026 menu.sh:2037 menu.sh:2042 menu.sh:2060 menu.sh:2065 menu.sh:2075 menu.sh:2095 menu.sh:2100
-#: menu.sh:2111 menu.sh:2116 menu.sh:2140 menu.sh:2145 menu.sh:3096 menu.sh:3123 menu.sh:3143 menu.sh:3157 menu.sh:3164 menu.sh:3185 menu.sh:3197 menu.sh:3231
+#: menu.sh:1718 menu.sh:1730 menu.sh:1744 menu.sh:1760 menu.sh:1764 menu.sh:1765 menu.sh:1770 menu.sh:1774 menu.sh:1788 menu.sh:1790 menu.sh:1805 menu.sh:1809 menu.sh:1820 menu.sh:1832 menu.sh:1837 menu.sh:1855 menu.sh:1860 menu.sh:1870 menu.sh:1896
+#: menu.sh:1900 menu.sh:1908 menu.sh:1914 menu.sh:1952 menu.sh:1957 menu.sh:1967 menu.sh:1972 menu.sh:1997 menu.sh:2002 menu.sh:2012 menu.sh:2035 menu.sh:2040 menu.sh:2051 menu.sh:2056 menu.sh:2074 menu.sh:2079 menu.sh:2089 menu.sh:2109 menu.sh:2114
+#: menu.sh:2125 menu.sh:2130 menu.sh:2160 menu.sh:2165 menu.sh:3116 menu.sh:3143 menu.sh:3163 menu.sh:3177 menu.sh:3184 menu.sh:3205 menu.sh:3217 menu.sh:3251
 msgid "Advanced"
 msgstr "高级"
 
-#: menu.sh:1727
+#: menu.sh:1731
 msgid "No storage pool found!"
 msgstr "未找到存储池!"
 
-#: menu.sh:1738
+#: menu.sh:1742
 msgid "All storage pools are mounted under /mnt/DSM. Please check them yourself via shell/DUFS."
 msgstr "所有存储池已挂载到 /mnt/DSM 下. 请通过 shell/DUFS 自行操作."
 
-#: menu.sh:1739
+#: menu.sh:1743
 msgid "For encrypted volume / encrypted shared folder, please refer to https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC"
 msgstr "对于加密卷 / 加密共享文件夹，请参考 https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC"
 
-#: menu.sh:1767 menu.sh:1827 menu.sh:2036 menu.sh:2110
+#: menu.sh:1771 menu.sh:1831 menu.sh:2050 menu.sh:2124
 msgid "Warning:\\nThis operation is irreversible. Please backup important data. Do you want to continue?"
 msgstr "警告:\\n该操作不可逆, 请提前备份重要数据. 是否继续?"
 
-#: menu.sh:1771
+#: menu.sh:1775
 msgid "Warning:\\nThe current hds is in raid, do you still want to format them?"
 msgstr "警告:\\n当前的硬盘处于 raid 中，是否仍要格式化?"
 
-#: menu.sh:1785
+#: menu.sh:1789
 msgid "Formatting ..."
 msgstr "格式化中 ..."
 
-#: menu.sh:1787
+#: menu.sh:1791
 msgid "Formatting is complete."
 msgstr "格式化完成."
 
-#: menu.sh:1802
+#: menu.sh:1806
 msgid "Please via %s to download the scbk,\\nAnd unzip it and back it up in order by file name."
 msgstr "请通过%s下载scbk,\\n并解压并按文件名顺序备份."
 
-#: menu.sh:1806
+#: menu.sh:1810
 msgid "Please unzip it and back it up in order by file name."
 msgstr "请解压并按文件名顺序备份."
 
-#: menu.sh:1810
+#: menu.sh:1814
 msgid "\\Z1No scbk found!\\Zn\\n"
 msgstr "\\Z1备份 scbk 未找到!\\Zn\\n"
 
-#: menu.sh:1812 menu.sh:2576
+#: menu.sh:1816 menu.sh:2596
 msgid "Please do as follows:\\n"
 msgstr "请按如下操作:\\n"
 
-#: menu.sh:1813
+#: menu.sh:1817
 msgid " 1. Add synoconfbkp in addons and rebuild.\\n"
 msgstr " 1. 在插件中添加 synoconfbkp 并重新编译.\\n"
 
-#: menu.sh:1814
+#: menu.sh:1818
 msgid " 2. Normal use.\\n"
 msgstr " 2. 正常使用.\\n"
 
-#: menu.sh:1815 menu.sh:2579
+#: menu.sh:1819 menu.sh:2599
 msgid " 3. Reboot into RR and go to this option.\\n"
 msgstr " 3. 重启到 RR 并回到该选项.\\n"
 
-#: menu.sh:1826
+#: menu.sh:1830
 msgid "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\\n"
 msgstr "此功能通过删除所有磁盘的第一个分区的 VERSION 文件来允许你降级安装.\\n"
 
-#: menu.sh:1834 menu.sh:1867 menu.sh:1954 menu.sh:1999 menu.sh:2043 menu.sh:2076 menu.sh:2117 menu.sh:2303
+#: menu.sh:1838 menu.sh:1871 menu.sh:1968 menu.sh:2013 menu.sh:2057 menu.sh:2090 menu.sh:2131 menu.sh:2323
 msgid "No DSM system partition(md0) found!\\nPlease insert all disks before continuing."
 msgstr "未找到 DSM 系统分区(md0)! \\n请插入所有磁盘，然后再继续."
 
-#: menu.sh:1852 menu.sh:2061
+#: menu.sh:1856 menu.sh:2075
 msgid "Removing ..."
 msgstr "删除中 ..."
 
-#: menu.sh:1854
+#: menu.sh:1858
 msgid "Remove VERSION file for DSM system partition(md0) completed."
 msgstr "删除 DSM 系统分区 (md0) 的 VERSION 文件已完成."
 
-#: menu.sh:1855
+#: menu.sh:1859
 msgid "Remove VERSION file for DSM system partition(md0) failed."
 msgstr "删除 DSM 系统分区 (md0) 的 VERSION 文件失败."
 
-#: menu.sh:1893
+#: menu.sh:1897
 msgid "All existing users have been disabled. Please try adding new user."
 msgstr "所有现有用户均已被禁用. 请尝试添加新用户."
 
-#: menu.sh:1897
+#: menu.sh:1901
 msgid "Choose a user name"
 msgstr "选择一个用户"
 
-#: menu.sh:1905
+#: menu.sh:1909
 msgid "Type a new password for user '%s'"
 msgstr "输入用户 '%s' 的新密码"
 
-#: menu.sh:1911
+#: menu.sh:1915
 msgid "Invalid password"
 msgstr "无效密码"
 
-#: menu.sh:1939
+#: menu.sh:1953
 msgid "Resetting ..."
 msgstr "重置中 ..."
 
-#: menu.sh:1941
+#: menu.sh:1955
 msgid "Reset password for user '%s' completed."
 msgstr "重置用户 '%s' 密码完成."
 
-#: menu.sh:1942
+#: menu.sh:1956
 msgid "Reset password for user '%s' failed."
 msgstr "重置用户 '%s' 密码失败."
 
-#: menu.sh:1957
+#: menu.sh:1971
 msgid "Add to administrators group by default"
 msgstr "默认添加到管理员组"
 
-#: menu.sh:1984
+#: menu.sh:1998
 msgid "Adding ..."
 msgstr "添加中 ..."
 
-#: menu.sh:1986
+#: menu.sh:2000
 msgid "Add new user '%s' completed."
 msgstr "添加新用户 '%s' 完成."
 
-#: menu.sh:1987
+#: menu.sh:2001
 msgid "Add new user '%s' failed."
 msgstr "添加新用户 '%s' 失败."
 
-#: menu.sh:2022 menu.sh:2096
+#: menu.sh:2036 menu.sh:2110
 msgid "Enabling ..."
 msgstr "开启中 ..."
 
-#: menu.sh:2024
+#: menu.sh:2038
 msgid "Force enable Telnet&SSH of DSM system completed."
 msgstr "强制打开 DSM 的 Telnet&SSH 完成."
 
-#: menu.sh:2025
+#: menu.sh:2039
 msgid "Force enable Telnet&SSH of DSM system failed."
 msgstr "强制打开 DSM 的 Telnet&SSH 失败."
 
-#: menu.sh:2035
+#: menu.sh:2049
 msgid "This feature will removing the blocked ip database from the first partition of all disks.\\n"
 msgstr "此功能将从所有磁盘的第一个分区中删除被阻止的 ip 数据库.\\n"
 
-#: menu.sh:2063
+#: menu.sh:2077
 msgid "Removing the blocked ip database completed."
 msgstr "从 DSM 第一个分区中删除封锁的 ip 数据库完成."
 
-#: menu.sh:2064
+#: menu.sh:2078
 msgid "Removing the blocked ip database failed."
 msgstr "从 DSM 第一个分区中删除封锁的 ip 数据库失败."
 
-#: menu.sh:2098
+#: menu.sh:2112
 msgid "Disable all scheduled tasks of DSM completed."
 msgstr "禁用 DSM 所有计划任务完成."
 
-#: menu.sh:2099
+#: menu.sh:2113
 msgid "Disable all scheduled tasks of DSM failed."
 msgstr "禁用 DSM 所有计划任务失败."
 
-#: menu.sh:2109
+#: menu.sh:2123
 msgid "This option will clear all customized settings of the network card and restore them to the default state.\\n"
 msgstr "此选项将清除网卡的所有自定义设置，并将其恢复为默认状态.\\n"
 
-#: menu.sh:2141
+#: menu.sh:2161
 msgid "Recovering ..."
 msgstr "恢复中 ..."
 
-#: menu.sh:2143
+#: menu.sh:2163
 msgid "Initialize DSM network settings completed."
 msgstr "恢复 DSM 网络设置完成."
 
-#: menu.sh:2144
+#: menu.sh:2164
 msgid "Initialize DSM network settings failed."
 msgstr "恢复 DSM 网络设置失败."
 
-#: menu.sh:2159 menu.sh:2174 menu.sh:2189 menu.sh:2197 menu.sh:2219 menu.sh:2262 menu.sh:2297 menu.sh:2302 menu.sh:2312 menu.sh:2323 menu.sh:2346 menu.sh:2355 menu.sh:2361 menu.sh:2376 menu.sh:2393 menu.sh:2398 menu.sh:2405 menu.sh:2412 menu.sh:2418
-#: menu.sh:2495 menu.sh:2499 menu.sh:2502 menu.sh:2514 menu.sh:2525 menu.sh:2599 menu.sh:2606 menu.sh:2620 menu.sh:2623 menu.sh:2631 menu.sh:2635 menu.sh:2654 menu.sh:2675 menu.sh:2691 menu.sh:2729 menu.sh:2749 menu.sh:2758 menu.sh:2787 menu.sh:2812
-#: menu.sh:2823 menu.sh:2868 menu.sh:2872 menu.sh:2929 menu.sh:2945 menu.sh:2969 menu.sh:2973 menu.sh:3023 menu.sh:3348 menu.sh:3381 menu.sh:3464
+#: menu.sh:2179 menu.sh:2194 menu.sh:2209 menu.sh:2217 menu.sh:2239 menu.sh:2282 menu.sh:2317 menu.sh:2322 menu.sh:2332 menu.sh:2343 menu.sh:2366 menu.sh:2375 menu.sh:2381 menu.sh:2396 menu.sh:2413 menu.sh:2418 menu.sh:2425 menu.sh:2432 menu.sh:2438
+#: menu.sh:2515 menu.sh:2519 menu.sh:2522 menu.sh:2534 menu.sh:2545 menu.sh:2619 menu.sh:2626 menu.sh:2640 menu.sh:2643 menu.sh:2651 menu.sh:2655 menu.sh:2674 menu.sh:2695 menu.sh:2711 menu.sh:2749 menu.sh:2769 menu.sh:2778 menu.sh:2807 menu.sh:2832
+#: menu.sh:2843 menu.sh:2888 menu.sh:2892 menu.sh:2949 menu.sh:2965 menu.sh:2989 menu.sh:2993 menu.sh:3043 menu.sh:3368 menu.sh:3401 menu.sh:3484
 msgid "Settings"
 msgstr "设置"
 
-#: menu.sh:2160 menu.sh:3320
+#: menu.sh:2180 menu.sh:3340
 msgid "Choose a language"
 msgstr "Choose a language"
 
-#: menu.sh:2175 menu.sh:3321
+#: menu.sh:2195 menu.sh:3341
 msgid "Choose a timezone"
 msgstr "选择时区"
 
-#: menu.sh:2190
+#: menu.sh:2210
 msgid "Choose a layout"
 msgstr "选择布局"
 
-#: menu.sh:2198
+#: menu.sh:2218
 msgid "Choice a keymap"
 msgstr "选择键盘映射"
 
-#: menu.sh:2213
+#: menu.sh:2233
 msgid "Please enter the webhook url and content text.\\n"
 msgstr "请输入 webhook url 和内容文本.\\n"
 
-#: menu.sh:2214
+#: menu.sh:2234
 msgid "The webhook url must be a valid URL (Reference https://webhook-test.com/).\\n"
 msgstr "webhook url 必须是一个有效的 URL (参考 https://webhook-test.com/).\\n"
 
-#: menu.sh:2215
+#: menu.sh:2235
 msgid "The notify text is not currently supported, please ignore.\\n"
 msgstr "当前不支持通知文本, 请忽略.\\n"
 
-#: menu.sh:2220
+#: menu.sh:2240
 msgid "Test"
 msgstr "测试"
 
-#: menu.sh:2298
+#: menu.sh:2318
 msgid "Trying to recover an installed DSM system ..."
 msgstr "尝试恢复已安装的 DSM 系统中 ..."
 
-#: menu.sh:2313
+#: menu.sh:2333
 msgid "Mount DSM system partition(md0) failed!\\nPlease insert all disks before continuing."
 msgstr "挂载 DSM 系统分区(md0) 失败! \\n请插入所有磁盘, 然后再继续."
 
-#: menu.sh:2324
+#: menu.sh:2344
 msgid "Checking for backup of user's configuration for bootloader ..."
 msgstr "检查引导程序的用户配置备份中 ..."
 
-#: menu.sh:2347
+#: menu.sh:2367
 msgid "Found a backup of the user's configuration, and restored it. Please rebuild and boot."
 msgstr "找到用户配置的备份, 并已还原. 请重新编译并启动."
 
-#: menu.sh:2356
+#: menu.sh:2376
 msgid "Checking for installed DSM system ..."
 msgstr "检查已安装的 DSM 系统中 ..."
 
-#: menu.sh:2362
+#: menu.sh:2382
 msgid "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build."
 msgstr "未找到已安装的DSM系统, 或者系统已损坏, 将无法恢复. 请重新选择模型并构建."
 
-#: menu.sh:2377
+#: menu.sh:2397
 msgid "Found an installed DSM system and restored it. Please rebuild and boot."
 msgstr "找到已安装的DSM系统, 并已还原. 请重新编译并启动."
 
-#: menu.sh:2399
+#: menu.sh:2419
 msgid "Choose a disk to clone to"
 msgstr "选择要克隆到的磁盘"
 
-#: menu.sh:2406
+#: menu.sh:2426
 msgid "No disk selected!"
 msgstr "未选择磁盘!"
 
-#: menu.sh:2413
+#: menu.sh:2433
 msgid "Disk %s size is less than 2GB and cannot be cloned!"
 msgstr "磁盘 %s 的大小小于 2GB，无法克隆!"
 
-#: menu.sh:2417
+#: menu.sh:2437
 msgid "Warning:\\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \\nDo you want to continue?"
 msgstr "警告:\\n磁盘 %s 将被格式化并写入引导程序. 请确认重要数据已备份. \\n是否继续?"
 
-#: menu.sh:2463
+#: menu.sh:2483
 msgid "Can't mount %s."
 msgstr "无法挂载 %s."
 
-#: menu.sh:2477
+#: menu.sh:2497
 msgid "Cloning failed due to insufficient remaining disk space on the selected hard drive."
 msgstr "由于所选硬盘驱动器上的剩余磁盘空间不足, 克隆失败."
 
-#: menu.sh:2486
+#: menu.sh:2506
 msgid "Can't copy to %s."
 msgstr "无法复制到 %s."
 
-#: menu.sh:2496
+#: menu.sh:2516
 msgid "Cloning ..."
 msgstr "克隆中 ..."
 
-#: menu.sh:2503
+#: menu.sh:2523
 msgid "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\\nReboot?"
 msgstr "引导程序已克隆到磁盘 %s, 请移除当前引导盘! \\n重启?"
 
-#: menu.sh:2515
+#: menu.sh:2535
 msgid "Download"
 msgstr "下载"
 
-#: menu.sh:2515
+#: menu.sh:2535
 msgid "Cancel"
 msgstr "取消"
 
-#: menu.sh:2524
+#: menu.sh:2544
 msgid "Please via %s to download the system.txt."
 msgstr "请通过 %s 下载 system.txt."
 
-#: menu.sh:2555
+#: menu.sh:2575
 msgid "Find the system logs!\\n"
 msgstr "找到系统日志!\\n"
 
-#: menu.sh:2555
+#: menu.sh:2575
 msgid "Not Find system logs!\\n"
 msgstr "未找到系统日志!\\n"
 
-#: menu.sh:2564
+#: menu.sh:2584
 msgid "Find the pstore logs!\\n"
 msgstr "找到 pstore 日志!\\n"
 
-#: menu.sh:2564
+#: menu.sh:2584
 msgid "Not Find pstore logs!\\n"
 msgstr "未找到 pstore 日志!\\n"
 
-#: menu.sh:2573
+#: menu.sh:2593
 msgid "Find the addons logs!\\n"
 msgstr "找到插件日志!\\n"
 
-#: menu.sh:2575
+#: menu.sh:2595
 msgid "Not Find addons logs!\\n"
 msgstr "未找到插件日志!\\n"
 
-#: menu.sh:2577
+#: menu.sh:2597
 msgid " 1. Add dbgutils in addons and rebuild.\\n"
 msgstr " 1. 在插件中添加 dbgutils 并重新编译.\\n"
 
-#: menu.sh:2578
+#: menu.sh:2598
 msgid " 2. Wait 10 minutes after booting.\\n"
 msgstr " 2. 启动后等待10分钟.\\n"
 
-#: menu.sh:2593
+#: menu.sh:2613
 msgid "Please via %s to download the logs,\\nAnd go to github to create an issue and upload the logs.\\n"
 msgstr "请通过 %s 下载日志 logs,\\n并前往 github 创建问题并上传日志 logs.\\n"
 
-#: menu.sh:2596
+#: menu.sh:2616
 msgid "Please go to github to create an issue and upload the logs.\\n"
 msgstr "请前往 github 创建问题并上传日志 logs.\\n"
 
-#: menu.sh:2607
+#: menu.sh:2627
 msgid "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?"
 msgstr "该选项仅安装 opkg 包管理工具, 使你能够安装更多的工具以供使用和调试, 是否继续?"
 
-#: menu.sh:2621
+#: menu.sh:2641
 msgid "opkg installing ..."
 msgstr "opkg 安装中 ..."
 
-#: menu.sh:2622
+#: menu.sh:2642
 msgid "opkg install failed."
 msgstr "opkg 安装失败."
 
-#: menu.sh:2622
+#: menu.sh:2642
 msgid "opkg install complete."
 msgstr "opkg 安装完成."
 
-#: menu.sh:2632
+#: menu.sh:2652
 msgid "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?"
 msgstr "警告:\\n请不要中途停止, 否则将导致 RR 引导损毁, 是否继续?"
 
-#: menu.sh:2636
+#: menu.sh:2656
 msgid "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
 msgstr "保存中 ...\\n(一般需要 5~10 分钟，请耐心等待.)"
 
-#: menu.sh:2655
+#: menu.sh:2675
 msgid "initrd-rr file format error!"
 msgstr "initrd-rr 文件格式错误!"
 
-#: menu.sh:2676
+#: menu.sh:2696
 msgid "Save is complete."
 msgstr "保存完成."
 
-#: menu.sh:2689
+#: menu.sh:2709
 msgid "Set to %s: (Delete if empty)"
 msgstr "为 %s 设置: (如果为空则删除)"
 
-#: menu.sh:2730 menu.sh:2788 menu.sh:2873 menu.sh:2974
+#: menu.sh:2750 menu.sh:2808 menu.sh:2893 menu.sh:2994
 msgid "Setting ..."
 msgstr "设置中 ..."
 
-#: menu.sh:2750
+#: menu.sh:2770
 msgid "Scanning ..."
 msgstr "扫描中 ..."
 
-#: menu.sh:2752
+#: menu.sh:2772
 msgid "Scanned SSIDs:\\n"
 msgstr "扫描到的 SSIDs:\\n"
 
-#: menu.sh:2813
+#: menu.sh:2833
 msgid "Please enter a proxy server url.(e.g., %s)"
 msgstr "请输入代理服务器 url.(e.g., %s)"
 
-#: menu.sh:2824
+#: menu.sh:2844
 msgid "Invalid proxy server url, continue?"
 msgstr "无效的代理服务器 url, 是否继续?"
 
-#: menu.sh:2869
+#: menu.sh:2889
 msgid "New password: (Empty for default value 'rr')"
 msgstr "新密码: (留空为默认值 'rr')"
 
-#: menu.sh:2928
+#: menu.sh:2948
 msgid "password for root restored."
 msgstr "root 密码已还原."
 
-#: menu.sh:2928
+#: menu.sh:2948
 msgid "password for root changed."
 msgstr "root 密码已更改."
 
-#: menu.sh:2937
+#: menu.sh:2957
 msgid "Please fill in a number between 0-65535: (Empty for default value.)"
 msgstr "请输入 0-65535 之间的数字: (留空为默认值.)"
 
-#: menu.sh:2970
+#: menu.sh:2990
 msgid "Invalid %s port number, retry?"
 msgstr "%s 端口号无效, 重试?"
 
-#: menu.sh:3022
+#: menu.sh:3042
 msgid "Ports for TTYD/DUFS/HTTP restored."
 msgstr "TTYD/DUFS/HTTP 的端口已还原."
 
-#: menu.sh:3022
+#: menu.sh:3042
 msgid "Ports for TTYD/DUFS/HTTP changed."
 msgstr "TTYD/DUFS/HTTP 的端口已更改."
 
-#: menu.sh:3055
+#: menu.sh:3075
 msgid "DSM rd compression:"
 msgstr "DSM rd 压缩:"
 
-#: menu.sh:3056
+#: menu.sh:3076
 msgid "Switch LKM version:"
 msgstr "选择 LKM 版本:"
 
-#: menu.sh:3057
+#: menu.sh:3077
 msgid "HDD sort(hotplug):"
 msgstr "HDD 排序(hotplug):"
 
-#: menu.sh:3059
+#: menu.sh:3079
 msgid "Show/modify the current pat data"
 msgstr "显示/修改当前 pat 下载链接"
 
-#: menu.sh:3060
+#: menu.sh:3080
 msgid "Switch SATADOM mode:"
 msgstr "切换 SATADOM 模式:"
 
-#: menu.sh:3064
+#: menu.sh:3084
 msgid "USB disk as internal disk:"
 msgstr "USB 磁盘作为内置磁盘:"
 
-#: menu.sh:3067
+#: menu.sh:3087
 msgid "DSM automatic update:"
 msgstr "DSM 自动更新:"
 
-#: menu.sh:3068
+#: menu.sh:3088
 msgid "Timeout of boot wait:"
 msgstr "启动超时时间:"
 
-#: menu.sh:3070
+#: menu.sh:3090
 msgid "Timeout of get IP in boot:"
 msgstr "启动时获取 IP 的超时时间:"
 
-#: menu.sh:3071
+#: menu.sh:3091
 msgid "Kernel switching method:"
 msgstr "内核切换的方式:"
 
-#: menu.sh:3076
+#: menu.sh:3096
 msgid "Reboot on kernel panic:"
 msgstr "内核恐慌时重新启动:"
 
-#: menu.sh:3078
+#: menu.sh:3098
 msgid "Use EMMC as the system disk:"
 msgstr "使用 EMMC 作为系统磁盘:"
 
-#: menu.sh:3081
+#: menu.sh:3101
 msgid "Show disks information"
 msgstr "显示磁盘信息"
 
-#: menu.sh:3082
+#: menu.sh:3102
 msgid "Mounting DSM storage pool"
 msgstr "挂载 DSM 存储池"
 
-#: menu.sh:3083
+#: menu.sh:3103
 msgid "Format disk(s) # Without loader disk"
 msgstr "格式化磁盘(s) # 不含启动盘"
 
-#: menu.sh:3084
+#: menu.sh:3104
 msgid "Download DSM config backup files"
 msgstr "下载 DSM 配置备份文件"
 
-#: menu.sh:3085
+#: menu.sh:3105
 msgid "Allow downgrade installation"
 msgstr "允许降级安装"
 
-#: menu.sh:3086
+#: menu.sh:3106
 msgid "Reset DSM system password"
 msgstr "重置 DSM 系统密码"
 
-#: menu.sh:3087
+#: menu.sh:3107
 msgid "Add a new user to DSM system"
 msgstr "添加新用户到 DSM 系统"
 
-#: menu.sh:3088
+#: menu.sh:3108
 msgid "Force enable Telnet&SSH of DSM system"
 msgstr "强制打开 DSM 的 Telnet&SSH"
 
-#: menu.sh:3089
+#: menu.sh:3109
 msgid "Remove the blocked IP database of DSM"
 msgstr "删除 DSM 封锁的 IP 数据库"
 
-#: menu.sh:3090
+#: menu.sh:3110
 msgid "Disable all scheduled tasks of DSM"
 msgstr "禁用 DSM 所有计划任务"
 
-#: menu.sh:3091
+#: menu.sh:3111
 msgid "Initialize DSM network settings"
 msgstr "初始化 DSM 网络设置"
 
-#: menu.sh:3097
+#: menu.sh:3117
 msgid "Advanced option"
 msgstr "高级设置"
 
-#: menu.sh:3122
+#: menu.sh:3142
 msgid "pat: (editable)"
 msgstr "pat: (可编辑)"
 
-#: menu.sh:3144
+#: menu.sh:3164
 msgid "Choose a mode(Only supported for kernel version 4)"
 msgstr "选择一个模式(仅支持内核版本 4)"
 
-#: menu.sh:3158
+#: menu.sh:3178
 msgid "Custom DTS is not supported for current model."
 msgstr "当前型号不支持自定义 DTS."
 
-#: menu.sh:3165
+#: menu.sh:3185
 msgid "USB disk as internal disk is not supported for current model."
 msgstr "当前型号不支持使用 USB 磁盘作为内置磁盘."
 
-#: menu.sh:3186 menu.sh:3198 menu.sh:3232
+#: menu.sh:3206 menu.sh:3218 menu.sh:3252
 msgid "Choose a time(seconds)"
 msgstr "选择一个时间(秒)"
 
-#: menu.sh:3322
+#: menu.sh:3342
 msgid "Choose a keymap"
 msgstr "选择键盘"
 
-#: menu.sh:3323
+#: menu.sh:3343
 msgid "Show QR logo:"
 msgstr "显示 QR logo:"
 
-#: menu.sh:3324
+#: menu.sh:3344
 msgid "Bootloader notifications (Webhook)"
 msgstr "引导程序通知 (Webhook)"
 
-#: menu.sh:3325
+#: menu.sh:3345
 msgid "Custom patch script # Developer"
 msgstr "自定义补丁脚本 # 开发"
 
-#: menu.sh:3326
+#: menu.sh:3346
 msgid "Edit user config file manually"
 msgstr "手动编辑用户配置文件"
 
-#: menu.sh:3327
+#: menu.sh:3347
 msgid "Edit grub.cfg file manually"
 msgstr "手动编辑 grub.cfg 文件"
 
-#: menu.sh:3329
+#: menu.sh:3349
 msgid "Try to recovery a installed DSM system"
 msgstr "尝试恢复已安装的 DSM 系统"
 
-#: menu.sh:3330
+#: menu.sh:3350
 msgid "Clone bootloader disk to another disk"
 msgstr "克隆引导盘到另一个磁盘"
 
-#: menu.sh:3331
+#: menu.sh:3351
 msgid "System Environment Report"
 msgstr "系统环境报告"
 
-#: menu.sh:3332
+#: menu.sh:3352
 msgid "Report bugs to the author"
 msgstr "向作者报告错误"
 
-#: menu.sh:3333
+#: menu.sh:3353
 msgid "Install development tools"
 msgstr "安装开发者工具"
 
-#: menu.sh:3334
+#: menu.sh:3354
 msgid "Save modifications of '/opt/rr'"
 msgstr "保存'/opt/rr'的修改"
 
-#: menu.sh:3335
+#: menu.sh:3355
 msgid "Set static IP"
 msgstr "设置静态 IP"
 
-#: menu.sh:3336
+#: menu.sh:3356
 msgid "Set wireless account"
 msgstr "设置无线帐号"
 
-#: menu.sh:3338
+#: menu.sh:3358
 msgid "Set global proxy"
 msgstr "设置全局代理"
 
-#: menu.sh:3339
+#: menu.sh:3359
 msgid "Set github proxy"
 msgstr "设置 GitHub 代理"
 
-#: menu.sh:3341
+#: menu.sh:3361
 msgid "Update microcode:"
 msgstr "更新微码:"
 
-#: menu.sh:3342
+#: menu.sh:3362
 msgid "Change root password # Only RR"
 msgstr "修改 root 密码 # 仅 RR"
 
-#: menu.sh:3343
+#: menu.sh:3363
 msgid "Change ports of TTYD/DUFS/HTTP"
 msgstr "修改 TTYD/DUFS/HTTP 的端口"
 
-#: menu.sh:3344
+#: menu.sh:3364
 msgid "Vigorously miracle"
 msgstr "大力出奇迹"
 
-#: menu.sh:3349
+#: menu.sh:3369
 msgid "Settings option"
 msgstr "设置选项"
 
-#: menu.sh:3376
+#: menu.sh:3396
 msgid "This option provides information about custom patch scripts for the ramdisk.\\n"
 msgstr "此选项提供了有关 ramdisk 自定义补丁脚本的信息.\\n"
 
-#: menu.sh:3378
+#: menu.sh:3398
 msgid "These scripts are executed before the ramdisk is packaged.\\n"
 msgstr "这些脚本将在 ramdisk 打包之前执行.\\n"
 
-#: menu.sh:3379
+#: menu.sh:3399
 msgid "You can place your custom scripts in the following location:\\n"
 msgstr "您可以将自定义脚本放置在以下位置:\\n"
 
-#: menu.sh:3380
+#: menu.sh:3400
 msgid "/mnt/p3/scripts/*.sh\\n"
 msgstr "/mnt/p3/scripts/*.sh\\n"
 
-#: menu.sh:3484 menu.sh:3584 menu.sh:3727 menu.sh:3793 menu.sh:3854 menu.sh:3911
+#: menu.sh:3504 menu.sh:3604 menu.sh:3747 menu.sh:3813 menu.sh:3874 menu.sh:3931
 msgid "Update %s"
 msgstr "更新 %s"
 
-#: menu.sh:3485
+#: menu.sh:3505
 msgid "Checking last version ..."
 msgstr "检测新版本中 ..."
 
-#: menu.sh:3501
+#: menu.sh:3521
 msgid "Error checking new version."
 msgstr "检测新版本错误."
 
-#: menu.sh:3514
+#: menu.sh:3534
 msgid "No new version.\\n"
 msgstr "没有新版本.\\n"
 
-#: menu.sh:3518
+#: menu.sh:3538
 msgid "Actual version is %s.\\nForce update?"
 msgstr "实际版本为 %s.\\n强制更新?"
 
-#: menu.sh:3529
+#: menu.sh:3549
 msgid "Latest: %s\\n"
 msgstr "最新: %s\\n"
 
-#: menu.sh:3533
+#: menu.sh:3553
 msgid "Do you want to update?"
 msgstr "是否更新?"
 
-#: menu.sh:3553
+#: menu.sh:3573
 msgid "Error downloading new version."
 msgstr "下载新版本时出错."
 
-#: menu.sh:3563
+#: menu.sh:3583
 msgid "Downloading ..."
 msgstr "下载中 ..."
 
-#: menu.sh:3584 menu.sh:3710 menu.sh:3979 menu.sh:4010
+#: menu.sh:3604 menu.sh:3730 menu.sh:3999 menu.sh:4030
 msgid "RR"
 msgstr "RR"
 
-#: menu.sh:3585 menu.sh:3728 menu.sh:3794 menu.sh:3855 menu.sh:3912
+#: menu.sh:3605 menu.sh:3748 menu.sh:3814 menu.sh:3875 menu.sh:3932
 msgid "Extracting update file ..."
 msgstr "解压更新文件 ..."
 
-#: menu.sh:3596 menu.sh:3643 menu.sh:3739 menu.sh:3805 menu.sh:3866 menu.sh:3923
+#: menu.sh:3616 menu.sh:3663 menu.sh:3759 menu.sh:3825 menu.sh:3886 menu.sh:3943
 msgid "Error extracting update file."
 msgstr "更新文件解压错误."
 
-#: menu.sh:3608
+#: menu.sh:3628
 msgid "Checksum do not match!"
 msgstr "Checksum 不匹配!"
 
-#: menu.sh:3622
+#: menu.sh:3642
 msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
 msgstr "当前版本不支持最新的 update.zip 升级, 请重新制作引导盘!"
 
-#: menu.sh:3665 menu.sh:3762 menu.sh:3819 menu.sh:3880 menu.sh:3937
+#: menu.sh:3685 menu.sh:3782 menu.sh:3839 menu.sh:3900 menu.sh:3957
 msgid "Failed to install due to insufficient remaining disk space on local hard drive, consider reallocate your disk %s with at least %sM."
 msgstr "由于本地硬盘上剩余磁盘空间不足, 安装失败, 请清理 %s 的磁盘空间, 至少还需要用 %sM."
 
-#: menu.sh:3675
+#: menu.sh:3695
 msgid "Installing new files ..."
 msgstr "安装更新中 ..."
 
-#: menu.sh:3710 menu.sh:3777 menu.sh:3838 menu.sh:3895 menu.sh:3956
+#: menu.sh:3730 menu.sh:3797 menu.sh:3858 menu.sh:3915 menu.sh:3976
 msgid "%s updated with success!\\n"
 msgstr "%s 更新成功!\\n"
 
-#: menu.sh:3710
+#: menu.sh:3730
 msgid "Reboot?"
 msgstr "重启?"
 
-#: menu.sh:3717 menu.sh:4290 menu.sh:4318
+#: menu.sh:3737 menu.sh:4315 menu.sh:4343
 msgid "Reboot to RR"
 msgstr "重启到 RR"
 
-#: menu.sh:3854 menu.sh:3895 menu.sh:3982 menu.sh:4041 menu.sh:4046
+#: menu.sh:3874 menu.sh:3915 menu.sh:4002 menu.sh:4061 menu.sh:4066
 msgid "LKMs"
 msgstr "LKMs"
 
-#: menu.sh:3911 menu.sh:3956 menu.sh:3983 menu.sh:4053 menu.sh:4058
+#: menu.sh:3931 menu.sh:3976 menu.sh:4003 menu.sh:4073 menu.sh:4078
 msgid "CKs"
 msgstr "CKs"
 
-#: menu.sh:3978 menu.sh:4003
+#: menu.sh:3998 menu.sh:4023
 msgid "All"
 msgstr "全部"
 
-#: menu.sh:3984
+#: menu.sh:4004
 msgid "Local upload"
 msgstr "本地上传"
 
-#: menu.sh:3985
+#: menu.sh:4005
 msgid "Pre Release:"
 msgstr "预发布:"
 
-#: menu.sh:3990 menu.sh:4066
+#: menu.sh:4010 menu.sh:4086
 msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download.\\n"
 msgstr "手动上传 update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip 到 /tmp/ 将跳过下载.\\n"
 
-#: menu.sh:4017 menu.sh:4029 menu.sh:4041 menu.sh:4053
+#: menu.sh:4037 menu.sh:4049 menu.sh:4061 menu.sh:4073
 msgid "No longer supports update %s separately. Please choose to update All/RR"
 msgstr "不再支持单独更新%s. 请选择更新全部/RR"
 
-#: menu.sh:4072
+#: menu.sh:4092
 msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
 msgstr "请保持附件名称与 github 上附件名称一致.\\n"
 
-#: menu.sh:4073
+#: menu.sh:4093
 msgid "Upload update*.zip will update RR.\\n"
 msgstr "上传 update*.zip 将更新 RR.\\n"
 
-#: menu.sh:4074
+#: menu.sh:4094
 msgid "Upload addons*.zip will update Addons.\\n"
 msgstr "上传 addons*.zip 将更新 插件.\\n"
 
-#: menu.sh:4075
+#: menu.sh:4095
 msgid "Upload modules*.zip will update Modules.\\n"
 msgstr "上传 modules*.zip 将更新 模块.\\n"
 
-#: menu.sh:4076
+#: menu.sh:4096
 msgid "Upload rp-lkms*.zip will update LKMs.\\n"
 msgstr "上传 rp-lkms*.zip 将更新 LKMs.\\n"
 
-#: menu.sh:4077
+#: menu.sh:4097
 msgid "Upload rr-cks*.zip will update CKs.\\n"
 msgstr "上传 rr-cks*.zip 将更新 CKs.\\n"
 
-#: menu.sh:4145
+#: menu.sh:4165
 msgid "This person is very lazy and hasn't written anything."
 msgstr "这个人很懒, 什么也没有写."
 
-#: menu.sh:4160
+#: menu.sh:4180
 msgid "An installed DSM system is detected on the hard disk. Do you want to try to restore it first?"
 msgstr "在硬盘上检测到已安装的 DSM 系统. 是否尝试先还原它?"
 
-#: menu.sh:4171
+#: menu.sh:4191
 msgid "Choose a model"
 msgstr "选择型号"
 
-#: menu.sh:4173
+#: menu.sh:4193
 msgid "Choose a version"
 msgstr "选择版本"
 
-#: menu.sh:4175
+#: menu.sh:4195
 msgid "Parse pat"
 msgstr "解析 pat"
 
-#: menu.sh:4179
+#: menu.sh:4199
 msgid "Kernel:"
 msgstr "内核:"
 
-#: menu.sh:4181
+#: menu.sh:4201
 msgid "Addons menu"
 msgstr "插件设置"
 
-#: menu.sh:4182
+#: menu.sh:4202
 msgid "Modules menu"
 msgstr "模块设置"
 
-#: menu.sh:4183
+#: menu.sh:4203
 msgid "Cmdline menu"
 msgstr "设置 Cmdline"
 
-#: menu.sh:4184
+#: menu.sh:4204
 msgid "Synoinfo menu"
 msgstr "设置 Synoinfo"
 
-#: menu.sh:4186
+#: menu.sh:4206
 msgid "Advanced menu"
 msgstr "高级设置"
 
-#: menu.sh:4188
+#: menu.sh:4208
 msgid "Build the loader"
 msgstr "编译引导"
 
-#: menu.sh:4191
+#: menu.sh:4211
 msgid "Direct boot:"
 msgstr "直接启动:"
 
-#: menu.sh:4192
+#: menu.sh:4212
 msgid "Boot the loader"
 msgstr "启动"
 
-#: menu.sh:4194
+#: menu.sh:4214
 msgid "Settings menu"
 msgstr "Settings menu"
 
-#: menu.sh:4196
+#: menu.sh:4217
 msgid "Clean disk cache"
 msgstr "清除磁盘缓存"
 
-#: menu.sh:4198
+#: menu.sh:4219
 msgid "Update menu"
 msgstr "更新"
 
-#: menu.sh:4199
+#: menu.sh:4220
 msgid "Notepad"
 msgstr "备注"
 
-#: menu.sh:4221
+#: menu.sh:4242
 msgid "Change ..."
 msgstr "改变 ..."
 
-#: menu.sh:4288 menu.sh:4306
+#: menu.sh:4313 menu.sh:4331
 msgid "Power off"
 msgstr "关机"
 
-#: menu.sh:4289 menu.sh:4312
+#: menu.sh:4314 menu.sh:4337
 msgid "Reboot"
 msgstr "重启"
 
-#: menu.sh:4291 menu.sh:4324
+#: menu.sh:4316 menu.sh:4349
 msgid "Reboot to Recovery"
 msgstr "重启到 Recovery"
 
-#: menu.sh:4292 menu.sh:4330
+#: menu.sh:4317 menu.sh:4355
 msgid "Reboot to Junior"
 msgstr "重启到 Junior"
 
-#: menu.sh:4294 menu.sh:4336
+#: menu.sh:4319 menu.sh:4361
 msgid "Reboot to UEFI"
 msgstr "重启到 UEFI"
 
-#: menu.sh:4296
+#: menu.sh:4321
 msgid "Back to shell"
 msgstr "退出到 shell"
 
-#: menu.sh:4300
+#: menu.sh:4325
 msgid "Choose a action"
 msgstr "选择动作"
 
-#: menu.sh:4352
-msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
-msgstr "执行 \\033[1;32mmenu.sh\\033[0m 重新进入设置菜单"
+#~ msgid "Notice: ('ctrl + c' to exit the assistance)"
+#~ msgstr "注意: ('ctrl + c' 退出帮助)"
