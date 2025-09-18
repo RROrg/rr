@@ -1564,7 +1564,7 @@ function customDTS() {
         DIALOG --title "$(TEXT "Custom DTS")" \
           --msgbox "${MSG}" 0 0
       else
-        [ -d "{USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
+        [ -d "${USER_UP_PATH}" ] || mkdir -p "${USER_UP_PATH}"
         cp -f "${USER_FILE}" "${USER_UP_PATH}/model.dts"
         DIALOG --title "$(TEXT "Custom DTS")" \
           --msgbox "$(TEXT "A valid dts file, Automatically import at compile time.")" 0 0
@@ -4132,7 +4132,7 @@ function updateMenu() {
           ;;
         *rr-cks*.zip)
           rm -f ${TMP_PATH}/rr-cks*.zip
-          updateCKs "{USER_FILE}" "${SILENT}"
+          updateCKs "${USER_FILE}" "${SILENT}"
           ;;
         *)
           DIALOG --title "$(TEXT "Update")" \
