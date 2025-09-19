@@ -171,6 +171,9 @@ if ! loaderIsConfigured; then
 elif grep -q "IWANTTOCHANGETHECONFIG" /proc/cmdline; then
   printf "\033[1;33m%s\033[0m\n" "$(TEXT "User requested edit settings.")"
   BOOT=0
+elif [ -f "/.dockerenv" ]; then
+  printf "\033[1;33m%s\033[0m\n" "$(TEXT "Docker edit settings.")"
+  BOOT=0
 fi
 
 # If is to boot automatically, do it
@@ -202,13 +205,15 @@ while [ ${COUNT} -lt 30 ]; do
   sleep 1
 done
 
-[ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
+if [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+  [ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
+fi
 
 printf "$(TEXT "Waiting IP.\n")"
 for N in ${ETHX}; do
   COUNT=0
   DRIVER="$(basename "$(realpath "/sys/class/net/${N}/device/driver" 2>/dev/null)" 2>/dev/null)"
-  MAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)"
+  MAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)" || MAC="00:00:00:00:00:00"
   printf "%s(%s): " "${N}" "${MAC}@${DRIVER}"
   while true; do
     if [ -z "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
@@ -257,7 +262,7 @@ fi
 printf "\n"
 
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
-if [ "${DSMLOGO}" = "true" ] && [ -c "/dev/fb0" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+if [ "${DSMLOGO}" = "true" ] && [ -c "/dev/fb0" ] && [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   IP="$(getIP)"
   echo "${IP}" | grep -q "^169\.254\." && IP=""
   [ -n "${IP}" ] && URL="http://${IP}:${TTYD:-7681}" || URL="http://rr:${TTYD:-7681}"
@@ -268,7 +273,7 @@ if [ "${DSMLOGO}" = "true" ] && [ -c "/dev/fb0" ] && [ ! "LOCALBUILD" = "${LOADE
   [ -f "${TMP_PATH}/qrcode_qhxg.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_qhxg.png" >/dev/null 2>&1 || true
 fi
 WEBHOOKURL="$(readConfigKey "webhookurl" "${USER_CONFIG_FILE}")"
-if [ -n "${WEBHOOKURL}" ] && [ ! -f "${TMP_PATH}/WebhookSent" ]; then
+if [ -n "${WEBHOOKURL}" ] && [ ! -f "${TMP_PATH}/WebhookSent" ] && [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
   DMI="$(dmesg 2>/dev/null | grep -i "DMI:" | head -1 | sed 's/\[.*\] DMI: //i')"
   IP="$(getIP)"
   echo "${IP}" | grep -q "^169\.254\." && IP=""

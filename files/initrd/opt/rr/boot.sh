@@ -397,7 +397,7 @@ else
   for N in ${ETHX}; do
     COUNT=0
     DRIVER="$(basename "$(realpath "/sys/class/net/${N}/device/driver" 2>/dev/null)" 2>/dev/null)"
-    MAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)"
+    MAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)" || MAC="00:00:00:00:00:00"
     printf "%s(%s): " "${N}" "${MAC}@${DRIVER}"
     while true; do
       if false && [ ! "${N::3}" = "eth" ]; then

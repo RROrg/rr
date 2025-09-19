@@ -1513,12 +1513,16 @@ function make() {
 ###############################################################################
 # Calls boot.sh to boot into DSM kernel/ramdisk
 function boot() {
-  [ -f "${PART1_PATH}/.build" ] && DIALOG --title "$(TEXT "Alert")" \
-    --yesno "$(TEXT "Config changed, would you like to rebuild the loader?")" 0 0
-  if [ $? -eq 0 ]; then
-    make || return
+  if [ -f "${PART1_PATH}/.build" ]; then
+    DIALOG --title "$(TEXT "Alert")" \
+      --yesno "$(TEXT "Config changed, would you like to rebuild the loader?")" 0 0
+    if [ $? -eq 0 ]; then
+      make || return 1
+      "${WORK_PATH}/boot.sh" && exit 0
+    fi
+  else
+    "${WORK_PATH}/boot.sh" && exit 0
   fi
-  ${WORK_PATH}/boot.sh
 }
 
 ###############################################################################
@@ -2456,9 +2460,9 @@ function cloneBootloaderDisk() {
     fdisk -l "${TODESK}"
     sleep 1
 
-    NEW_BLDISK_P1="$(lsblk "${TODESK}" -pno KNAME,LABEL 2>/dev/null | grep 'RR1' | awk '{print $1}')"
-    NEW_BLDISK_P2="$(lsblk "${TODESK}" -pno KNAME,LABEL 2>/dev/null | grep 'RR2' | awk '{print $1}')"
-    NEW_BLDISK_P3="$(lsblk "${TODESK}" -pno KNAME,LABEL 2>/dev/null | grep 'RR3' | awk '{print $1}')"
+    NEW_BLDISK_P1="$(blkid | grep -v "${LOADER_DISK_PART1}:" | awk -F: '/LABEL="RR1"/ {print $1}')"
+    NEW_BLDISK_P2="$(blkid | grep -v "${LOADER_DISK_PART2}:" | awk -F: '/LABEL="RR2"/ {print $1}')"
+    NEW_BLDISK_P3="$(blkid | grep -v "${LOADER_DISK_PART3}:" | awk -F: '/LABEL="RR3"/ {print $1}')"
     SIZEOFDISK=$(blockdev --getsz "${TODESK}" 2>/dev/null) # SIZEOFDISK=$(cat /sys/block/${TODESK/\/dev\//}/size)
     ENDSECTOR=$(fdisk -l "${TODESK}" | grep "${NEW_BLDISK_P3}" | awk '{print $(NF-4)}')
     if [ ${SIZEOFDISK:-0} -ne $((${ENDSECTOR:-0} + 1)) ]; then
@@ -3477,19 +3481,19 @@ function settingsMenu() {
 
     !)
       MSG=""
-      MSG+="                                            \n"
-      MSG+=" ██▀███   ██▀███   ▒█████   ██▀███    ▄████ \n"
-      MSG+="▓██ ▒ ██▒▓██ ▒ ██▒▒██▒  ██▒▓██ ▒ ██▒ ██▒ ▀█▒\n"
-      MSG+="▓██ ░▄█ ▒▓██ ░▄█ ▒▒██░  ██▒▓██ ░▄█ ▒▒██░▄▄▄░\n"
-      MSG+="▒██▀▀█▄  ▒██▀▀█▄  ▒██   ██░▒██▀▀█▄  ░▓█  ██▓\n"
-      MSG+="░██▓ ▒██▒░██▓ ▒██▒░ ████▓▒░░██▓ ▒██▒░▒▓███▀▒\n"
-      MSG+="░ ▒▓ ░▒▓░░ ▒▓ ░▒▓░░ ▒░▒░▒░ ░ ▒▓ ░▒▓░ ░▒   ▒ \n"
-      MSG+="  ░▒ ░ ▒░  ░▒ ░ ▒░  ░ ▒ ▒░   ░▒ ░ ▒░  ░   ░ \n"
-      MSG+="  ░░   ░   ░░   ░ ░ ░ ░ ▒    ░░   ░ ░ ░   ░ \n"
-      MSG+="   ░        ░         ░ ░     ░           ░ \n"
-      MSG+="                                            \n"
+      MSG+="                                                        \n"
+      MSG+="   ██▀███     ██▀███     ▒█████     ██▀███      ▄████   \n"
+      MSG+="  ▓██ ▒ ██▒  ▓██ ▒ ██▒  ▒██▒  ██▒  ▓██ ▒ ██▒   ██▒ ▀█▒  \n"
+      MSG+="  ▓██ ░▄█ ▒  ▓██ ░▄█ ▒  ▒██░  ██▒  ▓██ ░▄█ ▒▒  ██░▄▄▄░  \n"
+      MSG+="  ▒██▀▀█▄    ▒██▀▀█▄    ▒██   ██░  ▒██▀▀█▄  ░  ▓█  ██▓  \n"
+      MSG+="  ░██▓ ▒██▒  ░██▓ ▒██▒  ░ ████▓▒░  ░██▓ ▒██▒░  ▒▓███▀▒  \n"
+      MSG+="  ░ ▒▓ ░▒▓░  ░ ▒▓ ░▒▓░  ░ ▒░▒░▒░   ░ ▒▓ ░▒▓░   ░▒   ▒   \n"
+      MSG+="    ░▒ ░ ▒░    ░▒ ░ ▒░    ░ ▒ ▒░     ░▒ ░ ▒░    ░   ░   \n"
+      MSG+="    ░░   ░     ░░   ░   ░ ░ ░ ▒      ░░   ░ ░   ░   ░   \n"
+      MSG+="     ░          ░           ░ ░       ░             ░   \n"
+      MSG+="                                                        \n"
       DIALOG --title "$(TEXT "Settings")" \
-        --msgbox "${MSG}" 0 0
+        --ascii-lines --msgbox "${MSG}" 15 60
       NEXT="e"
       ;;
     e)
