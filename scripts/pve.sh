@@ -194,20 +194,12 @@ sata)
 esac
 
 X86_VENDOR=$(awk -F: '/vendor_id/ {gsub(/^[ \t]+/, "", $2); print $2; exit}' /proc/cpuinfo)
-case "${X86_VENDOR,,}" in
-*intel*)
-  ARGS+="-cpu host,+kvm_pv_eoi,+kvm_pv_unhalt,+vmx,hv_vendor_id=${X86_VENDOR} "
-  ;;
-*amd*)
-  ARGS+="-cpu host,+kvm_pv_eoi,+kvm_pv_unhalt,+svm,hv_vendor_id=${X86_VENDOR} "
-  ;;
-*)
-  echo "x86_vendor: Unknown"
-  ;;
-esac
+VT_FLAGS=$(grep '^flags' /proc/cpuinfo | head -n 1 | grep -wEo 'vmx|svm')
+ARGS+="-cpu host,+kvm_pv_eoi,+kvm_pv_unhalt,${VT_FLAGS:+${VT_FLAGS},}hv_vendor_id=${X86_VENDOR:-unknown} "
 
 if [ -d "${V9PPATH}" ]; then
-  ARGS+="-fsdev local,security_model=passthrough,id=fsdev0,path=${V9PPATH} -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=hostshare "
+  [ "virtio9p" = "${VFSDIRID}" ] && V9PTAG="virtio9p0" || V9PTAG="virtio9p"
+  ARGS+="-fsdev local,security_model=passthrough,id=fsdev0,path=${V9PPATH} -device virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=${V9PTAG} "
 fi
 
 qm set ${VMID} --args "${ARGS}"
