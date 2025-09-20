@@ -13672,6 +13672,10 @@
             "description": "Fairchild FUSB302 Type-C Chip Driver",
             "depends": "tcpm,usb-common"
         },
+        "fuse": {
+            "description": "Filesystem in Userspace",
+            "depends": ""
+        },
         "gpio-beeper": {
             "description": "Generic GPIO beeper driver",
             "depends": ""
@@ -14788,6 +14792,10 @@
             "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring,blk-mq-virtio"
         },
+        "virtiofs": {
+            "description": "Virtio Filesystem (Compiled by RR for DSM)",
+            "depends": "fuse,virtio_ring,virtio"
+        },
         "vmw_pvscsi": {
             "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
             "depends": ""
@@ -15325,6 +15333,10 @@
         "fusb302": {
             "description": "Fairchild FUSB302 Type-C Chip Driver",
             "depends": "tcpm,usb-common"
+        },
+        "fuse": {
+            "description": "Filesystem in Userspace",
+            "depends": ""
         },
         "gasket": {
             "description": "Google Gasket driver framework",
@@ -16465,6 +16477,10 @@
         "virtio_scsi": {
             "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring,blk-mq-virtio"
+        },
+        "virtiofs": {
+            "description": "Virtio Filesystem (Compiled by RR for DSM)",
+            "depends": "fuse,virtio_ring,virtio"
         },
         "vmw_pvscsi": {
             "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
@@ -19297,6 +19313,10 @@
             "description": "Fairchild FUSB302 Type-C Chip Driver",
             "depends": "tcpm,usb-common"
         },
+        "fuse": {
+            "description": "Filesystem in Userspace",
+            "depends": ""
+        },
         "gpio-beeper": {
             "description": "Generic GPIO beeper driver",
             "depends": ""
@@ -20344,6 +20364,10 @@
         "virtio_scsi": {
             "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring,blk-mq-virtio"
+        },
+        "virtiofs": {
+            "description": "Virtio Filesystem (Compiled by RR for DSM)",
+            "depends": "fuse,virtio_ring,virtio"
         },
         "vmw_pvscsi": {
             "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
@@ -25347,6 +25371,10 @@
             "description": "Fairchild FUSB302 Type-C Chip Driver",
             "depends": "tcpm"
         },
+        "fuse": {
+            "description": "Filesystem in Userspace",
+            "depends": ""
+        },
         "gpio-beeper": {
             "description": "Generic GPIO beeper driver",
             "depends": ""
@@ -26458,6 +26486,10 @@
         "virtio_scsi": {
             "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring,blk-mq-virtio"
+        },
+        "virtiofs": {
+            "description": "Virtio Filesystem (Compiled by RR for DSM)",
+            "depends": "fuse,virtio_ring,virtio"
         },
         "vmw_pvscsi": {
             "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
@@ -29269,6 +29301,10 @@
             "description": "Fairchild FUSB302 Type-C Chip Driver",
             "depends": "tcpm"
         },
+        "fuse": {
+            "description": "Filesystem in Userspace",
+            "depends": ""
+        },
         "gpio-beeper": {
             "description": "Generic GPIO beeper driver",
             "depends": ""
@@ -30388,6 +30424,10 @@
         "virtio_scsi": {
             "description": "Virtio SCSI HBA driver (Compiled by RR for DSM)",
             "depends": "virtio,virtio_ring,blk-mq-virtio"
+        },
+        "virtiofs": {
+            "description": "Virtio Filesystem (Compiled by RR for DSM)",
+            "depends": "fuse,virtio_ring,virtio"
         },
         "vmw_pvscsi": {
             "description": "VMware PVSCSI driver (Compiled by RR for DSM)",
