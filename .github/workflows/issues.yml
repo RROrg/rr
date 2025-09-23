@@ -167,6 +167,7 @@ jobs:
 
           unzip rr-${TAG}.img.zip -d rr rr.img
 
+          echo "TAG=${TAG}" >> $GITHUB_ENV
 
           case "${{ env.size }}" in
             2GB)
@@ -230,7 +231,7 @@ jobs:
           chmod +x build.sh
 
           docker pull wjz304/rr:${TAG}
-          docker run -it --rm --privileged -p 7681:7681 -p 7304:7304 -p 7080:7080 -p 7022:22 -v ${PWD}/build.sh:/opt/rr/build.sh wjz304/rr:${TAG} bash build.sh
+          docker run --rm --privileged -p 7681:7681 -p 7304:7304 -p 7080:7080 -p 7022:22 -v ${PWD}/build.sh:/opt/rr/build.sh wjz304/rr:${TAG} bash build.sh
 
           sudo losetup --detach "${LOOPX}"
 
@@ -251,26 +252,26 @@ jobs:
               . scripts/func.sh "${{ secrets.RRORG }}"
               convertova "rr/rr.img" "rr/rr.ova"
               (cd rr && sha256sum rr.ova >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova sha256sum README.txt
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova sha256sum README.txt
               ;;
             vmx)
               echo "VMX"
               . scripts/func.sh "${{ secrets.RRORG }}"
               convertvmx "rr/rr.img" "rr.vmx"  # rr.vmx is a directory
               (cd rr.vmx && sha256sum * >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmx.zip" -r rr.vmx sha256sum README.txt
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.vmx.zip" -r rr.vmx sha256sum README.txt
               ;;
             vmdk)
               echo "VMDK"
               qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' rr/rr.vmdk
               (cd rr && sha256sum rr.vmdk >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk sha256sum README.txt
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk sha256sum README.txt
               ;;
             flat)
               echo "FLAT"
               qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=monolithicFlat,compat6' rr/rr.vmdk
               (cd rr && sha256sum rr*.vmdk >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.flat.zip" -j rr/rr*.vmdk sha256sum README.txt
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.flat.zip" -j rr/rr*.vmdk sha256sum README.txt
               ;;
             vhd)
               echo "VHD"
@@ -278,21 +279,19 @@ jobs:
               qemu-img convert rr/rr.img -O vpc rr/rr.vhd
               createvmc "rr/rr.vhd" "rr/rr.vmc"
               (cd rr && sha256sum rr.vhd >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhd.zip" -j rr/rr.vmc rr/rr.vhd sha256sum README.txt
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.vhd.zip" -j rr/rr.vmc rr/rr.vhd sha256sum README.txt
               ;;
             vhdx)
               echo "VHDX"
               qemu-img convert rr/rr.img -O vhdx -o subformat=dynamic rr/rr.vhdx
               (cd rr && sha256sum rr.vhdx >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx sha256sum README.txt
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx sha256sum README.txt
               ;;
             *)
               echo "IMG"
               (cd rr && sha256sum rr.img >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img sha256sum README.txt
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img sha256sum README.txt
           esac
-
-          echo "TAG=${TAG}" >> $GITHUB_ENV
 
       - name: Upload to Artifacts
         if: env.iscustom == 'true' && success()
