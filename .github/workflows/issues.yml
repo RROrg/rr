@@ -148,6 +148,8 @@ jobs:
         run: |
           # 累了, 毁灭吧!
 
+          . scripts/func.sh "${{ secrets.RRORG }}"
+
           REPO="${{ github.server_url }}/${{ github.repository }}"
           PRERELEASE="true"
 
@@ -175,11 +177,11 @@ jobs:
               ;;
             4GB)
               echo "4GB"
-              sudo ./localbuild.sh resize rr/rr.img +2048M
+              resizeImg rr/rr.img +2048M
               ;;
             8GB)
               echo "8GB"
-              sudo ./localbuild.sh resize rr/rr.img +6144M
+              resizeImg rr/rr.img +6144M
               ;;
             *)
               echo "unknown size"
@@ -249,14 +251,12 @@ jobs:
           case "${{ env.format }}" in
             ova)
               echo "OVA"
-              . scripts/func.sh "${{ secrets.RRORG }}"
               convertova "rr/rr.img" "rr/rr.ova"
               (cd rr && sha256sum rr.ova >../sha256sum)
               zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova sha256sum README.txt
               ;;
             vmx)
               echo "VMX"
-              . scripts/func.sh "${{ secrets.RRORG }}"
               convertvmx "rr/rr.img" "rr.vmx"  # rr.vmx is a directory
               (cd rr.vmx && sha256sum * >../sha256sum)
               zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.vmx.zip" -r rr.vmx sha256sum README.txt
@@ -275,7 +275,6 @@ jobs:
               ;;
             vhd)
               echo "VHD"
-              . scripts/func.sh "${{ secrets.RRORG }}"
               qemu-img convert rr/rr.img -O vpc rr/rr.vhd
               createvmc "rr/rr.vhd" "rr/rr.vmc"
               (cd rr && sha256sum rr.vhd >../sha256sum)
