@@ -250,7 +250,6 @@ function unpackInitrd() {
   local OUTPUT_PATH="${2}"
 
   [ -z "${INITRD_FILE}" ] || [ ! -f "${INITRD_FILE}" ] && exit 1
-  [ -z "${OUTPUT_PATH}" ] || [ ! -d "${OUTPUT_PATH}" ] && exit 1
 
   INITRD_FILE="$(realpath "${INITRD_FILE}")"
   OUTPUT_PATH="$(realpath "${OUTPUT_PATH}")"

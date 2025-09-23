@@ -19,7 +19,49 @@
 # Disable the XON/XOFF flow control in the terminal
 # stty -ixon
 
-alias DIALOG='dialog --backtitle "$(backtitle)" --colors --aspect 50'
+if [ $# -gt 0 ]; then
+  DIALOG() {
+    [ ! -t 0 ] && cat
+    echo "$@"
+    local ret=0
+    for ((i = 1; i <= $#; i++)); do
+      if [ "${!i}" = "--err" ]; then
+        next=$((i + 1))
+        printf "%s" "${!next}" >&2
+      fi
+      if [ "${!i}" = "--ret" ]; then
+        next=$((i + 1))
+        ret="${!next}"
+      fi
+    done
+    return "${ret}"
+  }
+else
+  DIALOG() {
+    args=()
+    skip_next=0
+    for arg in "$@"; do
+      if [ $skip_next -eq 1 ]; then
+        skip_next=0
+        continue
+      fi
+      if [ "$arg" = "--err" ]; then
+        skip_next=1
+        continue
+      fi
+      if [ "$arg" = "--ret" ]; then
+        skip_next=1
+        continue
+      fi
+      args+=("$arg")
+    done
+    if [ ! -t 0 ]; then
+      cat | dialog --backtitle "$(backtitle)" --ignore --colors --aspect 50 "${args[@]}"
+    else
+      dialog --backtitle "$(backtitle)" --ignore --colors --aspect 50 "${args[@]}"
+    fi
+  }
+fi
 
 # lock
 exec 304>"${TMP_PATH}/menu.lock"
@@ -133,84 +175,88 @@ function backtitle() {
 ###############################################################################
 # Shows available models to user choose one
 function modelMenu() {
-  if [ -z "${1}" ] || [ -z "${2}" ]; then
+  DIALOG --title "$(TEXT "Model")" \
+    --infobox "$(TEXT "Getting models ...")" 0 0
+
+  rm -f "${TMP_PATH}/modellist"
+  PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
+  MJ="$(python3 ${WORK_PATH}/include/functions.py getmodels -p "${PS[*]}")"
+
+  if [ "${MJ:-"[]"}" = "[]" ]; then
     DIALOG --title "$(TEXT "Model")" \
-      --infobox "$(TEXT "Getting models ...")" 0 0
-
-    rm -f "${TMP_PATH}/modellist"
-    PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
-    MJ="$(python3 ${WORK_PATH}/include/functions.py getmodels -p "${PS[*]}")"
-
-    if [ "${MJ:-"[]"}" = "[]" ]; then
-      DIALOG --title "$(TEXT "Model")" \
-        --msgbox "$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")" 0 0
-      return 1
-    fi
-
-    echo "${MJ}" | jq -r '.[] | "\(.name) \(.arch)"' >"${TMP_PATH}/modellist"
-
-    if [ -z "${1}" ]; then
-      RESTRICT=1
-      while true; do
-        rm -f "${TMP_PATH}/menu"
-        FLGNEX=0
-        IGPU1L=(apollolake geminilake epyc7002 geminilakenk r1000nk v1000nk)
-        IGPU2L=(epyc7002 geminilakenk r1000nk v1000nk)
-        KVER5L=(epyc7002 geminilakenk r1000nk v1000nk)
-        IGPUID="$(lspci -nd ::300 2>/dev/null | grep "8086" | cut -d' ' -f3 | sed 's/://g')"
-        NVMEMS=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
-        NVMEMD=$(find /sys/devices -type d -name nvme | awk -F'/' '{print NF}' | sort -n | tail -n1)
-        if [ -n "${IGPUID}" ]; then grep -iq "${IGPUID}" ${WORK_PATH}/i915ids && hasiGPU=1 || hasiGPU=2; else hasiGPU=0; fi
-        if [ ${NVMEMD:-0} -lt 6 ]; then hasNVME=0; elif [ ${NVMEMD:-0} -eq 6 ]; then hasNVME=1; else hasNVME=2; fi
-        [ "$(lspci -d ::104 2>/dev/null | wc -l)" -gt 0 ] || [ "$(lspci -d ::107 2>/dev/null | wc -l)" -gt 0 ] && hasHBA=1 || hasHBA=0
-        while read -r M A; do
-          COMPATIBLE=1
-          if [ ${RESTRICT} -eq 1 ]; then
-            for F in $(readConfigArray "platforms.${A}.flags" "${WORK_PATH}/platforms.yml"); do
-              if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
-                COMPATIBLE=0
-                FLGNEX=1
-                break
-              fi
-            done
-          fi
-          unset DT G N H
-          [ "$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")" = "true" ] && DT="DT" || DT=""
-          [ -z "${G}" ] && [ ${hasiGPU} -eq 1 ] && echo "${IGPU1L[@]}" | grep -wq "${A}" && G="G"
-          [ -z "${G}" ] && [ ${hasiGPU} -eq 2 ] && echo "${IGPU2L[@]}" | grep -wq "${A}" && G="G"
-          [ -z "${N}" ] && [ ${hasNVME} -ne 0 ] && [ "${DT}" = "DT" ] && N="N"
-          [ -z "${N}" ] && [ ${hasNVME} -eq 2 ] && echo "${NVMEMS[@]}" | grep -wq "${M}" && N="N"
-          [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && [ ! "${DT}" = "DT" ] && H="H"
-          [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && echo "${KVER5L[@]}" | grep -wq "${A}" && H="H"
-          [ ${COMPATIBLE} -eq 1 ] && printf "%s \"\Zb%-14s  %-2s  %-3s\Zn\" " "${M}" "${A}" "${DT}" "${G}${N}${H}" >>"${TMP_PATH}/menu"
-        done <"${TMP_PATH}/modellist"
-        [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
-        MSG="$(TEXT "Choose the model")"
-        MSG+="\n\Z1$(TEXT "DT: Disk identification method is device tree")\Zn"
-        MSG+="\n\Z1$(TEXT "G: Support iGPU; N: Support NVMe; H: Support HBA")\Zn"
-        DIALOG --title "$(TEXT "Model")" \
-          --menu "${MSG}" 0 0 20 --file "${TMP_PATH}/menu" \
-          2>"${TMP_PATH}/resp"
-        [ $? -ne 0 ] && return 0
-        resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-        [ -z "${resp}" ] && return 1
-        if [ "${resp}" = "f" ]; then
-          RESTRICT=0
-          continue
-        fi
-        respM="${resp}"
-        break
-      done
-    else
-      respM="${1}"
-    fi
-    respP="$(grep -w "${respM}" "${TMP_PATH}/modellist" 2>/dev/null | awk '{print $2}' | head -1)"
-    [ -z "${respP}" ] && return 1
-  else
-    respM="${1}"
-    respP="${2}"
+      --msgbox "$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")" 0 0
+    return 1
   fi
 
+  echo "${MJ}" | jq -r '.[] | "\(.name) \(.arch)"' >"${TMP_PATH}/modellist"
+
+  RESTRICT=1
+  while true; do
+    rm -f "${TMP_PATH}/menu"
+    FLGNEX=0
+    IGPU1L=(apollolake geminilake epyc7002 geminilakenk r1000nk v1000nk)
+    IGPU2L=(epyc7002 geminilakenk r1000nk v1000nk)
+    KVER5L=(epyc7002 geminilakenk r1000nk v1000nk)
+    IGPUID="$(lspci -nd ::300 2>/dev/null | grep "8086" | cut -d' ' -f3 | sed 's/://g')"
+    NVMEMS=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
+    NVMEMD=$(find /sys/devices -type d -name nvme | awk -F'/' '{print NF}' | sort -n | tail -n1)
+    if [ -n "${IGPUID}" ]; then grep -iq "${IGPUID}" ${WORK_PATH}/i915ids && hasiGPU=1 || hasiGPU=2; else hasiGPU=0; fi
+    if [ ${NVMEMD:-0} -lt 6 ]; then hasNVME=0; elif [ ${NVMEMD:-0} -eq 6 ]; then hasNVME=1; else hasNVME=2; fi
+    [ "$(lspci -d ::104 2>/dev/null | wc -l)" -gt 0 ] || [ "$(lspci -d ::107 2>/dev/null | wc -l)" -gt 0 ] && hasHBA=1 || hasHBA=0
+    while read -r M A; do
+      COMPATIBLE=1
+      if [ ${RESTRICT} -eq 1 ]; then
+        for F in $(readConfigArray "platforms.${A}.flags" "${WORK_PATH}/platforms.yml"); do
+          if ! grep -q "^flags.*${F}.*" /proc/cpuinfo; then
+            COMPATIBLE=0
+            FLGNEX=1
+            break
+          fi
+        done
+      fi
+      unset DT G N H
+      [ "$(readConfigKey "platforms.${A}.dt" "${WORK_PATH}/platforms.yml")" = "true" ] && DT="DT" || DT=""
+      [ -z "${G}" ] && [ ${hasiGPU} -eq 1 ] && echo "${IGPU1L[@]}" | grep -wq "${A}" && G="G"
+      [ -z "${G}" ] && [ ${hasiGPU} -eq 2 ] && echo "${IGPU2L[@]}" | grep -wq "${A}" && G="G"
+      [ -z "${N}" ] && [ ${hasNVME} -ne 0 ] && [ "${DT}" = "DT" ] && N="N"
+      [ -z "${N}" ] && [ ${hasNVME} -eq 2 ] && echo "${NVMEMS[@]}" | grep -wq "${M}" && N="N"
+      [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && [ ! "${DT}" = "DT" ] && H="H"
+      [ -z "${H}" ] && [ ${hasHBA} -eq 1 ] && echo "${KVER5L[@]}" | grep -wq "${A}" && H="H"
+      [ ${COMPATIBLE} -eq 1 ] && printf "%s \"\Zb%-14s  %-2s  %-3s\Zn\" " "${M}" "${A}" "${DT}" "${G}${N}${H}" >>"${TMP_PATH}/menu"
+    done <"${TMP_PATH}/modellist"
+    [ ${FLGNEX} -eq 1 ] && echo "f \"\Z1$(TEXT "Disable flags restriction")\Zn\"" >>"${TMP_PATH}/menu"
+    MSG="$(TEXT "Choose the model")"
+    MSG+="\n\Z1$(TEXT "DT: Disk identification method is device tree")\Zn"
+    MSG+="\n\Z1$(TEXT "G: Support iGPU; N: Support NVMe; H: Support HBA")\Zn"
+
+    VAL=""
+    [ -n "${1}" ] && grep -qw "${1}" "${TMP_PATH}/menu" && VAL="${1}"
+    DIALOG --err "${VAL}" --title "$(TEXT "Model")" \
+      --menu "${MSG}" 0 0 20 --file "${TMP_PATH}/menu" \
+      2>"${TMP_PATH}/resp"
+    [ $? -ne 0 ] && return 0
+    resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
+    [ -z "${resp}" ] && return 1
+    if [ "${resp}" = "f" ]; then
+      RESTRICT=0
+      continue
+    fi
+    respM="${resp}"
+    break
+  done
+
+  respP="$(grep -w "${respM}" "${TMP_PATH}/modellist" 2>/dev/null | awk '{print $2}' | head -1)"
+  rm -f "${TMP_PATH}/modellist"
+  [ -z "${respP}" ] && return 1
+
+  reconfiguringM "${respM}" "${respP}"
+  return 0
+}
+
+###############################################################################
+function reconfiguringM() {
+  respM="${1}"
+  respP="${2}"
   local BASEMODEL="${MODEL}"
   local BASEPLATFORM="${PLATFORM}"
 
@@ -259,7 +305,6 @@ function modelMenu() {
     fi
   fi
   touch "${PART1_PATH}/.build"
-  rm -f "${TMP_PATH}/modellist"
   return 0
 }
 
@@ -267,101 +312,106 @@ function modelMenu() {
 # Shows available buildnumbers from a model to user choose one
 function productversMenu() {
   ITEMS="$(readConfigEntriesArray "platforms.${PLATFORM}.productvers" "${WORK_PATH}/platforms.yml" | sort -r)"
-  if [ -z "${1}" ]; then
-    DIALOG --title "$(TEXT "Product Version")" \
-      --no-items --menu "$(TEXT "Choose a product version")" 0 0 0 ${ITEMS} \
-      2>"${TMP_PATH}/resp"
-    [ $? -ne 0 ] && return 0
-    resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-    [ -z "${resp}" ] && return 1
 
-    if [ "${PRODUCTVER}" = "${resp}" ]; then
-      MSG="$(printf "$(TEXT "The current version has been set to %s. Do you want to reset the version?")" "${PRODUCTVER}")"
-      DIALOG --title "$(TEXT "Product Version")" \
-        --yesno "${MSG}" 0 0
-      [ $? -ne 0 ] && return 0
-    fi
-  else
-    arrayExistItem "$(echo "${1}" | cut -d'.' -f1,2)" ${ITEMS} || return 1
-    resp="$(echo "${1}" | cut -d'.' -f1,2)"
+  VAL=""
+  [ -n "$(echo "${1}" | cut -d'.' -f1,2)" ] && echo "${ITEMS}" | grep -qw "$(echo "${1}" | cut -d'.' -f1,2)" && VAL="$(echo "${1}" | cut -d'.' -f1,2)"
+  DIALOG --err "${VAL}" --title "$(TEXT "Product Version")" \
+    --no-items --menu "$(TEXT "Choose a product version")" 0 0 0 ${ITEMS} \
+    2>"${TMP_PATH}/resp"
+  [ $? -ne 0 ] && return 0
+  resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
+  [ -z "${resp}" ] && return 1
+
+  if [ "${PRODUCTVER}" = "${resp}" ]; then
+    MSG="$(printf "$(TEXT "The current version has been set to %s. Do you want to reset the version?")" "${PRODUCTVER}")"
+    DIALOG --ret 0 --title "$(TEXT "Product Version")" \
+      --yesno "${MSG}" 0 0
+    [ $? -ne 0 ] && return 0
   fi
+
   selver="${resp}"
   urlver=""
   paturl=""
   patsum=""
-  if [ -z "${2}" ] && [ -z "${3}" ]; then
-    while true; do
-      # get online pat data
-      if [ -z "${1}" ]; then
-        DIALOG --title "$(TEXT "Product Version")" \
-          --infobox "$(TEXT "Get pat data ...")" 0 0
-      fi
-      PJ="$(python3 ${WORK_PATH}/include/functions.py getpats4mv -m "${MODEL}" -v "${selver}")"
-      if [ "${PJ:-"{}"}" = "{}" ]; then
-        if [ -z "${1}" ]; then
-          MSG="$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")"
-          DIALOG --title "$(TEXT "Addons")" \
-            --yes-label "$(TEXT "Retry")" \
-            --yesno "${MSG}" 0 0
-          [ $? -eq 0 ] && continue # yes-button
-        fi
-        return 1
-      else
-        PVS="$(echo "${PJ}" | jq -r 'keys | sort | reverse | join(" ")')"
-        if [ -z "${1}" ]; then
-          DIALOG --title "$(TEXT "Product Version")" \
-            --no-items --menu "$(TEXT "Choose a pat version")" 0 0 0 ${PVS} \
-            2>"${TMP_PATH}/resp"
-          RET=$?
-        else
-          PV=""
-          [ -z "${PV}" ] && PV="$(echo "${PVS}" | tr ' ' '\n' | grep -xo "${1}" | head -n 1)"
-          [ -z "${PV}" ] && PV="$(echo "${PVS}" | cut -d' ' -f1)"
-          echo "${PV}" >"${TMP_PATH}/resp"
-          RET=0
-        fi
-        [ ${RET} -ne 0 ] && return
-        resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-        [ -z "${resp}" ] && return
-        PV="${resp}"
-        paturl=$(echo "${PJ}" | jq -r ".\"${PV}\".url")
-        patsum=$(echo "${PJ}" | jq -r ".\"${PV}\".sum")
-        urlver="$(echo "${PV}" | cut -d'.' -f1,2)"
-      fi
-      if [ -z "${1}" ]; then
-        MSG=""
-        MSG+="$(TEXT "Please confirm or modify the URL and md5sum to you need (32 '0's will skip the md5 check).")"
-        if [ ! "${selver}" = "${urlver}" ]; then
-          MSG+="$(printf "$(TEXT "Note: There is no version %s and automatically returns to version %s.")" "${selver}" "${urlver}")"
-          selver=${urlver}
-        fi
-        DIALOG --title "$(TEXT "Product Version")" \
-          --extra-button --extra-label "$(TEXT "Retry")" \
-          --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
-          2>"${TMP_PATH}/resp"
-        RET=$?
-      else
-        echo -e "${paturl}\n${patsum}" >"${TMP_PATH}/resp"
-        RET=0
-      fi
-      [ ${RET} -eq 0 ] && break    # ok-button
-      [ ${RET} -eq 3 ] && continue # extra-button
-      return 0                     # 1 or 255  # cancel-button or ESC
-    done
-    paturl="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
-    patsum="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
-  else
-    paturl="${2}"
-    patsum="${3}"
-  fi
+
+  while true; do
+    # get online pat data
+    DIALOG --title "$(TEXT "Product Version")" \
+      --infobox "$(TEXT "Get pat data ...")" 0 0
+
+    PJ="$(python3 ${WORK_PATH}/include/functions.py getpats4mv -m "${MODEL}" -v "${selver}")"
+    if [ "${PJ:-"{}"}" = "{}" ]; then
+      MSG="$(TEXT "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!")"
+      DIALOG --ret 1 --title "$(TEXT "Addons")" \
+        --yes-label "$(TEXT "Retry")" --yesno "${MSG}" 0 0
+      [ $? -eq 0 ] && continue # yes-button
+      return 1
+    else
+      PVS="$(echo "${PJ}" | jq -r 'keys | sort | reverse | join(" ")')"
+
+      VAL=""
+      [ -n "${1}" ] && echo "${PVS}" | tr ' ' '\n' | grep -qw "${1}" && VAL="$(echo "${PVS}" | tr ' ' '\n' | grep -w "${1}" | head -1)"
+      DIALOG --err "${VAL}" --title "$(TEXT "Product Version")" \
+        --no-items --menu "$(TEXT "Choose a pat version")" 0 0 0 ${PVS} \
+        2>"${TMP_PATH}/resp"
+      [ $? -ne 0 ] && return 1
+      resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
+      [ -z "${resp}" ] && return 1
+      PV="${resp}"
+      paturl=$(echo "${PJ}" | jq -r ".\"${PV}\".url")
+      patsum=$(echo "${PJ}" | jq -r ".\"${PV}\".sum")
+      urlver="$(echo "${PV}" | cut -d'.' -f1,2)"
+    fi
+
+    MSG=""
+    MSG+="$(TEXT "Please confirm or modify the URL and md5sum to you need (32 '0's will skip the md5 check).")"
+    if [ ! "${selver}" = "${urlver}" ]; then
+      MSG+="$(printf "$(TEXT "Note: There is no version %s and automatically returns to version %s.")" "${selver}" "${urlver}")"
+      selver=${urlver}
+    fi
+    VAL="${paturl}"$'\n'"${patsum}"
+    [ -n "${2}" ] && [ -n "${3}" ] && VAL="${2}"$'\n'"${3}"
+    DIALOG --err "${VAL}" --title "$(TEXT "Product Version")" \
+      --extra-button --extra-label "$(TEXT "Retry")" \
+      --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
+      2>"${TMP_PATH}/resp"
+    RET=$?
+    case ${RET} in
+    0)
+      # ok-button
+      paturl="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
+      patsum="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
+      break
+      ;;
+    3)
+      # extra-button
+      continue
+      ;;
+    1)
+      # cancel-button
+      return 0
+      ;;
+    255)
+      # ESC
+      return 0
+      ;;
+    esac
+  done
 
   [ "${paturl:0:1}" = "#" ] && patsum="${paturl}"
   [ -z "${paturl}" ] || [ -z "${patsum}" ] && return 1
 
-  if [ -z "${1}" ]; then
-    DIALOG --title "$(TEXT "Product Version")" \
-      --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules ...")" 0 0
-  fi
+  DIALOG --title "$(TEXT "Product Version")" \
+    --infobox "$(TEXT "Reconfiguring Synoinfo, Addons and Modules ...")" 0 0
+  reconfiguringV "${selver}" "${paturl}" "${patsum}"
+  return 0
+}
+
+###############################################################################
+function reconfiguringV() {
+  selver="${1}"
+  paturl="${2}"
+  patsum="${3}"
   local BASEPATURL BASEPATSUM
   BASEPATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
   BASEPATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
@@ -421,7 +471,6 @@ function productversMenu() {
   fi
 
   touch "${PART1_PATH}/.build"
-  return 0
 }
 
 ###############################################################################
@@ -521,9 +570,9 @@ function setConfigFromDSM() {
 function ParsePat() {
   if [ -n "${MODEL}" ] && [ -n "${PRODUCTVER}" ]; then
     MSG="$(printf "$(TEXT "You have selected the %s and %s.\n'Parse Pat' will overwrite the previous selection.\nDo you want to continue?")" "${MODEL}" "${PRODUCTVER}")"
-    DIALOG --title "$(TEXT "Parse Pat")" \
+    DIALOG --ret 0 --title "$(TEXT "Parse Pat")" \
       --yesno "${MSG}" 0 0
-    [ $? -ne 0 ] && return
+    [ $? -ne 0 ] && return 1
   fi
 
   mkdir -p "${TMP_PATH}/pats"
@@ -532,20 +581,20 @@ function ParsePat() {
     MSG="$(TEXT "No pat file found in /tmp/pats/ folder!\nPlease upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.")"
     DIALOG --title "$(TEXT "Update")" \
       --msgbox "${MSG}" 0 0
-    return
+    return 1
   fi
 
   DIALOG --title "$(TEXT "Parse Pat")" \
     --no-items --menu "$(TEXT "Choose a pat file")" 0 0 0 ${ITEMS} \
     2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-  [ -z "${resp}" ] && return
+  [ -z "${resp}" ] && return 1
   PAT_PATH="${resp}"
   if [ ! -f "${PAT_PATH}" ]; then
     DIALOG --title "$(TEXT "Parse Pat")" \
       --msgbox "$(TEXT "pat Invalid, try again!")" 0 0
-    return
+    return 1
   fi
 
   while true; do
@@ -634,7 +683,7 @@ function addonMenu() {
       --default-item ${NEXT} \
       --menu "$(TEXT "Choose a option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>"${TMP_PATH}/resp"
-    [ $? -ne 0 ] && return
+    [ $? -ne 0 ] && return 1
     case "$(cat "${TMP_PATH}/resp" 2>/dev/null)" in
     a)
       rm -f "${TMP_PATH}/menu"
@@ -730,7 +779,7 @@ function addonMenu() {
           RET=$?
           if [ ${RET} -ne 0 ]; then
             rm -rf "${TMP_UP_PATH}"
-            return
+            return 1
           fi
         fi
         ADDON="$(untarAddon "${USER_FILE}")"
@@ -747,7 +796,7 @@ function addonMenu() {
       fi
       ;;
     e)
-      return
+      return 0
       ;;
     esac
   done
@@ -840,7 +889,7 @@ function moduleMenu() {
         MSG+="$(TEXT "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).")"
         DIALOG --title "$(TEXT "Modules")" \
           --msgbox "${MSG}" 0 0
-        return
+        return 1
       fi
       MSG=""
       MSG+="$(TEXT "This function is experimental and dangerous. If you don't know much, please exit.\n")"
@@ -909,7 +958,7 @@ function moduleMenu() {
         [ $? -ne 0 ] && break
         [ ! -d "${USER_UP_PATH}" ] && mkdir -p "${USER_UP_PATH}"
         mv -f "${TMP_PATH}/modulelist.user" "${USER_UP_PATH}/modulelist"
-        dos2unix "${USER_UP_PATH}/modulelist"
+        dos2unix "${USER_UP_PATH}/modulelist" >/dev/null 2>&1 || true
         touch "${PART1_PATH}/.build"
         break
       done
@@ -1113,7 +1162,7 @@ function cmdlineMenu() {
     #     --msgbox "${ITEMS}" 0 0
     #   ;;
     e)
-      return
+      return 0
       ;;
     esac
   done
@@ -1217,7 +1266,7 @@ function synoinfoMenu() {
       touch "${PART1_PATH}/.build"
       ;;
     e)
-      return
+      return 0
       ;;
     esac
   done
@@ -1440,7 +1489,6 @@ function make() {
     if [ ! -f "${ORI_ZIMAGE_FILE}" ] || [ ! -f "${ORI_RDGZ_FILE}" ]; then
       extractDsmFiles || return 1
     fi
-
     SIZE=256 # initrd-dsm + zImage-dsm ≈ 210M
     SPACELEFT=$(df -m "${PART3_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
     ZIMAGESIZE=$(du -m "${MOD_ZIMAGE_FILE}" 2>/dev/null | awk '{print $1}')
@@ -1450,20 +1498,18 @@ function make() {
       echo -e "$(TEXT "No disk space left, please clean the cache and try again!")" >"${LOG_FILE}"
       return 1
     fi
-
     if [ -f "${PART1_PATH}/.upgraded" ]; then
       echo "$(TEXT "Reconfigure after upgrade ...")"
       PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
       PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
-      modelMenu "${MODEL}" "${PLATFORM}"
-      productversMenu "${PRODUCTVER}" "${PATURL}" "${PATSUM}"
+      reconfiguringM "${MODEL}" "${PLATFORM}"
+      reconfiguringV "${PRODUCTVER}" "${PATURL}" "${PATSUM}"
       if [ $? -ne 0 ]; then
         echo -e "$(TEXT "Reconfiguration failed!")" >"${LOG_FILE}"
         return 1
       fi
       rm -f "${PART1_PATH}/.upgraded"
     fi
-
     ${WORK_PATH}/zimage-patch.sh || {
       printf "%s\n%s\n%s:\n%s\n" "$(TEXT "DSM zImage not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")" >"${LOG_FILE}"
       return 1
@@ -1484,20 +1530,11 @@ function make() {
   }
 
   rm -f "${LOG_FILE}"
-  if [ ! "${1}" = "-1" ]; then
-    __make 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
-      --progressbox "$(TEXT "Making ... ('ctrl + c' to exit)")" 20 100
-  else
-    __make
-  fi
-
+  __make 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
+    --progressbox "$(TEXT "Making ... ('ctrl + c' to exit)")" 20 100
   if [ -f "${LOG_FILE}" ]; then
-    if [ ! "${1}" = "-1" ]; then
-      DIALOG --title "$(TEXT "Error")" \
-        --msgbox "$(cat "${LOG_FILE}")" 0 0
-    else
-      cat "${LOG_FILE}"
-    fi
+    DIALOG --title "$(TEXT "Error")" \
+      --msgbox "$(cat "${LOG_FILE}")" 0 0
     rm -f "${LOG_FILE}"
     return 1
   else
@@ -1512,7 +1549,7 @@ function make() {
 # Calls boot.sh to boot into DSM kernel/ramdisk
 function boot() {
   if [ -f "${PART1_PATH}/.build" ]; then
-    DIALOG --title "$(TEXT "Alert")" \
+    DIALOG --ret 0 --title "$(TEXT "Alert")" \
       --yesno "$(TEXT "Config changed, would you like to rebuild the loader?")" 0 0
     if [ $? -eq 0 ]; then
       make || return 1
@@ -1537,10 +1574,10 @@ function customDTS() {
       echo "i \"$(TEXT "Edit dts file")\""
       echo "e \"$(TEXT "Exit")\""
     } >"${TMP_PATH}/menu"
-    DIALOG --title "$(TEXT "Custom DTS")" \
+    DIALOG --err "${1}" --title "$(TEXT "Custom DTS")" \
       --menu "$(TEXT "Custom dts:") ${CUSTOMDTS}" 0 0 0 --file "${TMP_PATH}/menu" \
       2>"${TMP_PATH}/resp"
-    [ $? -ne 0 ] && return
+    [ $? -ne 0 ] && return 1
     case "$(cat "${TMP_PATH}/resp" 2>/dev/null)" in
     u)
       if ! tty 2>/dev/null | grep -q "/dev/pts"; then #if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
@@ -1549,7 +1586,7 @@ function customDTS() {
         MSG+="$(printf "$(TEXT "Or upload the dts file to %s via DUFS, Will be automatically imported when building.\n")" "${USER_UP_PATH}/model.dts")"
         DIALOG --title "$(TEXT "Custom DTS")" \
           --msgbox "${MSG}" 0 0
-        return
+        return 1
       fi
       DIALOG --title "$(TEXT "Custom DTS")" \
         --msgbox "$(TEXT "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\n(saved in /mnt/p3/users/)\n")" 0 0
@@ -1597,7 +1634,7 @@ function customDTS() {
       while true; do
         DIALOG --title "$(TEXT "Edit with caution")" \
           --editbox "${TMP_PATH}/model.dts" 0 0 2>"${TMP_PATH}/modelEdit.dts"
-        [ $? -ne 0 ] && rm -f "${TMP_PATH}/model.dts" "${TMP_PATH}/modelEdit.dts" && return
+        [ $? -ne 0 ] && rm -f "${TMP_PATH}/model.dts" "${TMP_PATH}/modelEdit.dts" && return 1
         dtc -q -I dts -O dtb "${TMP_PATH}/modelEdit.dts" >"test.dtb" 2>"${DTC_ERRLOG}"
         if [ $? -ne 0 ]; then
           MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Not a valid dts file, please try again!")" "$(TEXT "Error")" "$(cat "${DTC_ERRLOG}")")"
@@ -1613,7 +1650,7 @@ function customDTS() {
       done
       ;;
     e)
-      return
+      return 0
       ;;
     esac
   done
@@ -1719,7 +1756,7 @@ function showDisksInfo() {
   [ ${NUMPORTS} -eq 0 ] && MSG="$(TEXT "No disk found!")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -1731,7 +1768,7 @@ function MountDSMVolume {
   if [ -z "${VOLS}" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No storage pool found!")" 0 0
-    return
+    return 1
   fi
   for I in ${VOLS}; do
     NAME="$(echo "${I}" | awk -F'/' '{print $3"_"$4}')"
@@ -1745,7 +1782,7 @@ function MountDSMVolume {
   MSG+="$(TEXT "For encrypted volume / encrypted shared folder, please refer to https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -1761,21 +1798,21 @@ function formatDisks() {
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
-    return
+    return 1
   fi
   DIALOG --title "$(TEXT "Advanced")" \
     --checklist "$(TEXT "Advanced")" 0 0 0 --file "${TMP_PATH}/opts" \
     2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-  [ -z "${resp}" ] && return
+  [ -z "${resp}" ] && return 1
   DIALOG --title "$(TEXT "Advanced")" \
     --yesno "$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")" 0 0
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   if [ "$(ls /dev/md[0-9]* 2>/dev/null | wc -l)" -gt 0 ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --yesno "$(TEXT "Warning:\nThe current hds is in raid, do you still want to format them?")" 0 0
-    [ $? -ne 0 ] && return
+    [ $? -ne 0 ] && return 1
     for F in /dev/md[0-9]*; do
       [ ! -e "${F}" ] && continue
       mdadm -S "${F}" >/dev/null 2>&1
@@ -1791,7 +1828,7 @@ function formatDisks() {
     --progressbox "$(TEXT "Formatting ...")" 20 100
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "$(TEXT "Formatting is complete.")" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -1822,7 +1859,7 @@ function downloadBackupFiles() {
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "${MSG}" 0 0
   fi
-  return
+  return 0
 }
 
 ###############################################################################
@@ -1831,14 +1868,14 @@ function allowDSMDowngrade() {
   MSG=""
   MSG+="$(TEXT "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\n")"
   MSG+="$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")"
-  DIALOG --title "$(TEXT "Advanced")" \
+  DIALOG --ret 0 --title "$(TEXT "Advanced")" \
     --yesno "${MSG}" 0 0
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   DSMROOTS="$(findDSMRoot)"
   if [ -z "${DSMROOTS}" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
-    return
+    return 1
   fi
   rm -f "${TMP_PATH}/isOk"
   (
@@ -1861,7 +1898,7 @@ function allowDSMDowngrade() {
     MSG="$(TEXT "Remove VERSION file for DSM system partition(md0) failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -1871,7 +1908,7 @@ function resetDSMPassword() {
   if [ -z "${DSMROOTS}" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
-    return
+    return 1
   fi
   rm -f "${TMP_PATH}/menu"
   mkdir -p "${TMP_PATH}/mdX"
@@ -1897,14 +1934,14 @@ function resetDSMPassword() {
   if [ ! -f "${TMP_PATH}/menu" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "All existing users have been disabled. Please try adding new user.")" 0 0
-    return
+    return 1
   fi
   DIALOG --title "$(TEXT "Advanced")" \
     --no-items --menu "$(TEXT "Choose a user name")" 0 0 20 --file "${TMP_PATH}/menu" \
     2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   USER="$(cat "${TMP_PATH}/resp" 2>/dev/null | awk '{print $1}')"
-  [ -z "${USER}" ] && return
+  [ -z "${USER}" ] && return 1
   local STRPASSWD
   while true; do
     DIALOG --title "$(TEXT "Advanced")" \
@@ -1958,7 +1995,7 @@ function resetDSMPassword() {
     MSG="$(printf "$(TEXT "Reset password for user '%s' failed.")" "${USER}")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -1968,13 +2005,13 @@ function addNewDSMUser() {
   if [ -z "${DSMROOTS}" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
-    return
+    return 1
   fi
   MSG="$(TEXT "Add to administrators group by default")"
   DIALOG --title "$(TEXT "Advanced")" \
     --form "${MSG}" 8 60 3 "username:" 1 1 "" 1 10 50 0 "password:" 2 1 "" 2 10 50 0 \
     2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   username="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
   password="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
   rm -f "${TMP_PATH}/isOk"
@@ -2003,7 +2040,7 @@ function addNewDSMUser() {
     MSG="$(printf "$(TEXT "Add new user '%s' failed.")" "${username}")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2013,7 +2050,7 @@ function forceEnableDSMTelnetSSH() {
   if [ -z "${DSMROOTS}" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
-    return
+    return 1
   fi
   rm -f "${TMP_PATH}/isOk"
   (
@@ -2041,7 +2078,7 @@ function forceEnableDSMTelnetSSH() {
     MSG="$(TEXT "Force enable Telnet&SSH of DSM system failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2050,14 +2087,14 @@ function removeBlockIPDB {
   MSG=""
   MSG+="$(TEXT "This feature will removing the blocked ip database from the first partition of all disks.\n")"
   MSG+="$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")"
-  DIALOG --title "$(TEXT "Advanced")" \
+  DIALOG --ret 0 --title "$(TEXT "Advanced")" \
     --yesno "${MSG}" 0 0
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   DSMROOTS="$(findDSMRoot)"
   if [ -z "${DSMROOTS}" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
-    return
+    return 1
   fi
   rm -f "${TMP_PATH}/isOk"
   (
@@ -2080,7 +2117,7 @@ function removeBlockIPDB {
     MSG="$(TEXT "Removing the blocked ip database failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2090,7 +2127,7 @@ function disablescheduledTasks {
   if [ -z "${DSMROOTS}" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
-    return
+    return 1
   fi
   rm -f "${TMP_PATH}/isOk"
   (
@@ -2115,7 +2152,7 @@ function disablescheduledTasks {
     MSG="$(TEXT "Disable all scheduled tasks of DSM failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2124,14 +2161,14 @@ function initDSMNetwork {
   MSG=""
   MSG+="$(TEXT "This option will clear all customized settings of the network card and restore them to the default state.\n")"
   MSG+="$(TEXT "Warning:\nThis operation is irreversible. Please backup important data. Do you want to continue?")"
-  DIALOG --title "$(TEXT "Advanced")" \
+  DIALOG --ret 0 --title "$(TEXT "Advanced")" \
     --yesno "${MSG}" 0 0
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   DSMROOTS="$(findDSMRoot)"
   if [ -z "${DSMROOTS}" ]; then
     DIALOG --title "$(TEXT "Advanced")" \
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
-    return
+    return 1
   fi
   rm -f "${TMP_PATH}/isOk"
   (
@@ -2173,7 +2210,7 @@ function initDSMNetwork {
     MSG="$(TEXT "Initialize DSM network settings failed.")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2185,12 +2222,14 @@ function languageMenu() {
     echo "${L} \"${A:-"anonymous"}\"" >>"${TMP_PATH}/menu"
   done <<<"$(ls ${WORK_PATH}/lang/*/LC_MESSAGES/rr.mo 2>/dev/null | sort | sed -E 's/.*\/lang\/(.*)\/LC_MESSAGES\/rr\.mo$/\1/')"
 
-  DIALOG --title "$(TEXT "Settings")" \
+  VAL=""
+  [ -n "${1%%.*}" ] && grep -qw "${1%%.*}" "${TMP_PATH}/menu" && VAL="${1%%.*}"
+  DIALOG --err "${VAL}" --title "$(TEXT "Settings")" \
     --default-item "${LAYOUT}" --menu "$(TEXT "Choose a language")" 0 0 20 --file "${TMP_PATH}/menu" \
     2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-  [ -z "${resp}" ] && return
+  [ -z "${resp}" ] && return 1
   LANGUAGE="${resp}"
   echo "${LANGUAGE}.UTF-8" >"${PART1_PATH}/.locale"
   export LC_ALL="${LANGUAGE}.UTF-8"
@@ -2200,12 +2239,15 @@ function languageMenu() {
 # Choose a timezone
 function timezoneMenu() {
   OPTIONS="$(find /usr/share/zoneinfo/right -type f | cut -d'/' -f6- | sort | uniq | xargs)"
-  DIALOG --title "$(TEXT "Settings")" \
+
+  VAL=""
+  [ -n "${1}" ] && echo "${OPTIONS}" | grep -qw "${1}" && VAL="${1}"
+  DIALOG --err "${VAL}" --title "$(TEXT "Settings")" \
     --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a timezone")" 0 0 20 ${OPTIONS} \
     2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-  [ -z "${resp}" ] && return
+  [ -z "${resp}" ] && return 1
   TIMEZONE="${resp}"
   echo "${TIMEZONE}" >"${PART1_PATH}/.timezone"
   ln -sf "/usr/share/zoneinfo/right/${TIMEZONE}" /etc/localtime
@@ -2214,22 +2256,18 @@ function timezoneMenu() {
 ###############################################################################
 # Choose a keymap
 function keymapMenu() {
-  OPTIONS="$(ls /usr/share/keymaps/i386 2>/dev/null | grep -v include)"
-  DIALOG --title "$(TEXT "Settings")" \
-    --default-item "${LAYOUT}" --no-items --menu "$(TEXT "Choose a layout")" 0 0 20 ${OPTIONS} \
+  OPTIONS="$(find /usr/share/keymaps/i386/ -maxdepth 2 -type f -name "*.map.gz" | sed 's|/usr/share/keymaps/i386/||; s|\.map\.gz$||' | grep -v "include" | sort)"
+
+  VAL=""
+  [ -n "${1}" ] && echo "${OPTIONS}" | grep -qw "${1}" && VAL="${1}"
+  DIALOG --err "${VAL}" --title "$(TEXT "Settings")" \
+    --default-item "${LAYOUT}/${KEYMAP}" --no-items --menu "$(TEXT "Choose a layout/keymap")" 0 0 20 ${OPTIONS} \
     2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-  [ -z "${resp}" ] && return
-  LAYOUT="${resp}"
-  OPTIONS="$(find "/usr/share/keymaps/i386/${LAYOUT}" -maxdepth 1 -type f -name "*.map.gz" -exec basename {} .map.gz \; | sort)"
-  DIALOG --title "$(TEXT "Settings")" \
-    --default-item "${KEYMAP}" --no-items --menu "$(TEXT "Choice a keymap")" 0 0 20 ${OPTIONS} \
-    2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
-  resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-  [ -z "${resp}" ] && return
-  KEYMAP="${resp}"
+  [ -z "${resp}" ] && return 1
+  LAYOUT="${resp%%/*}"
+  KEYMAP="${resp##*/}"
   writeConfigKey "layout" "${LAYOUT}" "${USER_CONFIG_FILE}"
   writeConfigKey "keymap" "${KEYMAP}" "${USER_CONFIG_FILE}"
   loadkeys "/usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz"
@@ -2285,7 +2323,7 @@ function editUserConfig() {
       --editbox "${USER_CONFIG_FILE}" 0 0 2>"${TMP_PATH}/userconfig"
     [ $? -ne 0 ] && return
     mv -f "${TMP_PATH}/userconfig" "${USER_CONFIG_FILE}"
-    dos2unix "${USER_CONFIG_FILE}"
+    dos2unix "${USER_CONFIG_FILE}" >/dev/null 2>&1 || true
     ERRORS=$(checkConfigFile "${USER_CONFIG_FILE}")
     [ $? -eq 0 ] && break
     DIALOG --title "$(TEXT "Settings")" \
@@ -2313,9 +2351,9 @@ function editGrubCfg() {
   while true; do
     DIALOG --title "$(TEXT "Edit with caution")" \
       --editbox "${USER_GRUB_CONFIG}" 0 0 2>"${TMP_PATH}/usergrub.cfg"
-    [ $? -ne 0 ] && return
+    [ $? -ne 0 ] && return 1
     mv -f "${TMP_PATH}/usergrub.cfg" "${USER_GRUB_CONFIG}"
-    dos2unix "${USER_GRUB_CONFIG}"
+    dos2unix "${USER_GRUB_CONFIG}" >/dev/null 2>&1 || true
     break
   done
 }
@@ -2330,7 +2368,7 @@ function tryRecoveryDSM() {
   if [ -z "${DSMROOTPART}" ]; then
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "No DSM system partition(md0) found!\nPlease insert all disks before continuing.")" 0 0
-    return
+    return 1
   fi
 
   mkdir -p "${TMP_PATH}/mdX"
@@ -2341,7 +2379,7 @@ function tryRecoveryDSM() {
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "Mount DSM system partition(md0) failed!\nPlease insert all disks before continuing.")" 0 0
     rm -rf "${TMP_PATH}/mdX"
-    return
+    return 1
   fi
 
   function __umountDSMRootDisk() {
@@ -2377,7 +2415,7 @@ function tryRecoveryDSM() {
       touch "${PART1_PATH}/.upgraded"
       touch "${PART1_PATH}/.build"
       exec "${0}"
-      return
+      return 0
     fi
   fi
 
@@ -2389,7 +2427,7 @@ function tryRecoveryDSM() {
     __umountDSMRootDisk
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build.")" 0 0
-    return
+    return 1
   fi
 
   if [ -f "${TMP_PATH}/mdX/etc.defaults/synoinfo.conf" ]; then
@@ -2405,7 +2443,7 @@ function tryRecoveryDSM() {
   DIALOG --title "$(TEXT "Settings")" \
     --msgbox "$(TEXT "Found an installed DSM system and restored it. Please rebuild and boot.")" 0 0
 
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2421,32 +2459,34 @@ function cloneBootloaderDisk() {
   if [ ! -f "${TMP_PATH}/opts" ]; then
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "No disk found!")" 0 0
-    return
+    return 1
   fi
 
-  DIALOG --title "$(TEXT "Settings")" \
+  VAL=""
+  [ -n "${1}" ] && grep -qw "${1}" "${TMP_PATH}/opts" && VAL="${1}"
+  DIALOG --err "${VAL}" --title "$(TEXT "Settings")" \
     --radiolist "$(TEXT "Choose a disk to clone to")" 0 0 0 --file "${TMP_PATH}/opts" \
     2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
 
   if [ -z "${resp}" ]; then
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "No disk selected!")" 0 0
-    return
+    return 1
   fi
   TODESK="${resp}"
   SIZE=$(df -m "${TODESK}" 2>/dev/null | awk 'NR==2 {print $2}')
   if [ ${SIZE:-0} -lt 1536 ]; then
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(printf "$(TEXT "Disk %s size is less than 2GB and cannot be cloned!")" "${TODESK}")" 0 0
-    return
+    return 1
   fi
 
   MSG="$(printf "$(TEXT "Warning:\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \nDo you want to continue?")" "${TODESK}")"
-  DIALOG --title "$(TEXT "Settings")" \
+  DIALOG --ret 0 --title "$(TEXT "Settings")" \
     --yesno "${MSG}" 0 0
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
 
   while true; do
     rm -f "${LOG_FILE}"
@@ -2532,7 +2572,7 @@ function cloneBootloaderDisk() {
       --msgbox "$(printf "$(TEXT "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\nReboot?")" "${TODESK}")" 0 0
     rebootTo config
   fi
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2540,10 +2580,10 @@ function cloneBootloaderDisk() {
 function systemReport() {
   data="$(inxi -c 0 -F 2>/dev/null)"
 
-  DIALOG --title "$(TEXT "Settings")" \
+  DIALOG --ret 0 --title "$(TEXT "Settings")" \
     --yes-label "$(TEXT "Download")" --no-label "$(TEXT "Cancel")" \
     --yesno "${data}" 0 0
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
 
   inxi -c 0 -F >"${TMP_PATH}/system.txt" 2>/dev/null
   if [ -z "${SSH_TTY}" ]; then # web
@@ -2556,7 +2596,7 @@ function systemReport() {
   else
     sz -be -B 536870912 "${TMP_PATH}/system.txt"
   fi
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2632,9 +2672,9 @@ function reportBugs() {
 ###############################################################################
 # Install development tools
 function InstallDevTools() {
-  DIALOG --title "$(TEXT "Settings")" \
+  DIALOG --ret 0 --title "$(TEXT "Settings")" \
     --yesno "$(TEXT "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?")" 0 0
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   rm -f "${LOG_FILE}"
   while true; do
     wget http://bin.entware.net/x64-k3.2/installer/generic.sh -O "${TMP_PATH}/generic.sh" >"${LOG_FILE}"
@@ -2651,15 +2691,15 @@ function InstallDevTools() {
   MSG=$([ -f "${LOG_FILE}" ] && printf "%s\n%s:\n%s\n" "$(TEXT "opkg install failed.")" "$(TEXT "Error")" "$(cat "${DTC_ERRLOG}")" || echo "$(TEXT "opkg install complete.")")
   DIALOG --title "$(TEXT "Settings")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
 # Save modifications of '/opt/rr'
 function savemodrr() {
-  DIALOG --title "$(TEXT "Settings")" \
+  DIALOG --ret 0 --title "$(TEXT "Settings")" \
     --yesno "$(TEXT "Warning:\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?")" 0 0
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
 
   DIALOG --title "$(TEXT "Settings")" \
     --infobox "$(TEXT "Saving ...\n(It usually takes 5-10 minutes, please be patient and wait.)")" 0 0
@@ -2682,7 +2722,7 @@ function savemodrr() {
   if [ -z "$(ls -A "$RDXZ_PATH")" ]; then
     DIALOG --title "$(TEXT "Settings")" \
       --msgbox "$(TEXT "initrd-rr file format error!")" 0 0
-    return
+    return 1
   fi
   rm -rf "${RDXZ_PATH}/opt/rr"
   cp -rpf "$(dirname "${WORK_PATH}")" "${RDXZ_PATH}/" 2>/dev/null
@@ -2703,7 +2743,7 @@ function savemodrr() {
   rm -rf "${RDXZ_PATH}"
   DIALOG --title "$(TEXT "Settings")" \
     --msgbox "$(TEXT "Save is complete.")" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2827,7 +2867,7 @@ function setWirelessAccount() {
       ;;
     esac
   done
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2838,7 +2878,7 @@ function setProxy() {
   resp="$(readConfigKey "${1}" "${USER_CONFIG_FILE}")"
   while true; do
     [ "${1}" = "global_proxy" ] && EG="http://192.168.1.1:7981/" || EG="https://mirror.ghproxy.com/"
-    DIALOG --title "$(TEXT "Settings")" \
+    DIALOG --err "${2}" --title "$(TEXT "Settings")" \
       --inputbox "$(printf "$(TEXT "Please enter a proxy server url.(e.g., %s)")" "${EG}")" 0 70 "${resp}" \
       2>"${TMP_PATH}/resp"
     RET=$?
@@ -2849,13 +2889,13 @@ function setProxy() {
     elif echo "${resp}" | grep -Eq "^(https?|socks5)://[^\s/$.?#].[^\s]*$"; then
       break
     else
-      DIALOG --title "$(TEXT "Settings")" \
+      DIALOG --ret 0 --title "$(TEXT "Settings")" \
         --yesno "$(TEXT "Invalid proxy server url, continue?")" 0 0
       RET=$?
       [ ${RET} -eq 0 ] && break
     fi
   done
-  [ ${RET} -ne 0 ] && return
+  [ ${RET} -ne 0 ] && return 1
 
   local PROXY="${resp}"
   if [ -z "${PROXY}" ]; then
@@ -2871,7 +2911,7 @@ function setProxy() {
       export https_proxy="${PROXY}"
     fi
   fi
-  return
+  return 0
 }
 
 ###############################################################################
@@ -2897,11 +2937,11 @@ function changePassword() {
   DIALOG --title "$(TEXT "Settings")" \
     --inputbox "$(TEXT "New password: (Empty for default value 'rr')")" 0 70 \
     2>"${TMP_PATH}/resp"
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   DIALOG --title "$(TEXT "Settings")" \
     --infobox "$(TEXT "Setting ...")" 20 100
   resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
-  [ -z "${resp}" ] && return
+  [ -z "${resp}" ] && return 1
   local STRPASSWD NEWPASSWD
   STRPASSWD="${resp}"
   # local NEWPASSWD="$(python3 -c "from passlib.hash import sha512_crypt;pw=\"${STRPASSWD:-rr}\";print(sha512_crypt.using(rounds=5000).hash(pw))")"
@@ -2957,7 +2997,7 @@ function changePassword() {
   [ "${STRPASSWD:-rr}" = "rr" ] && MSG="$(TEXT "password for root restored.")" || MSG="$(TEXT "password for root changed.")"
   DIALOG --title "$(TEXT "Settings")" \
     --msgbox "${MSG}" 0 0
-  return
+  return 0
 }
 
 ###############################################################################
@@ -3071,7 +3111,7 @@ function changePorts() {
       ;;
     esac
   done
-  return
+  return 0
 }
 
 ###############################################################################
@@ -3122,7 +3162,7 @@ function advancedMenu() {
       echo "e \"$(TEXT "Exit")\""
     } >"${TMP_PATH}/menu"
 
-    DIALOG --title "$(TEXT "Advanced")" \
+    DIALOG --err "${1}" --title "$(TEXT "Advanced")" \
       --default-item "${NEXT}" --menu "$(TEXT "Advanced option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>"${TMP_PATH}/resp"
     [ $? -ne 0 ] && break
@@ -3374,7 +3414,7 @@ function settingsMenu() {
       echo "e \"$(TEXT "Exit")\""
     } >"${TMP_PATH}/menu"
 
-    DIALOG --title "$(TEXT "Settings")" \
+    DIALOG --err "${1}" --title "$(TEXT "Settings")" \
       --default-item "${NEXT}" --menu "$(TEXT "Settings option")" 0 0 0 --file "${TMP_PATH}/menu" \
       2>"${TMP_PATH}/resp"
     [ $? -ne 0 ] && break
@@ -3506,18 +3546,13 @@ function settingsMenu() {
 # 2 - current version
 # 3 - repo url
 # 4 - attachment name
-# 5 - silent
 function downloadExts() {
   PROXY="$(readConfigKey "github_proxy" "${USER_CONFIG_FILE}")"
   [ -n "${PROXY}" ] && [ "${PROXY: -1}" != "/" ] && PROXY="${PROXY}/"
   T="$(printf "$(TEXT "Update %s")" "${1}")"
   MSG="$(TEXT "Checking last version ...")"
-  if [ "${5}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --infobox "${MSG}" 0 0
   TAG=""
   if [ "${PRERELEASE}" = "true" ]; then
     # TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | pup 'a[class="Link--muted"] attr{href}' | grep ".zip" | head -1)"
@@ -3528,31 +3563,16 @@ function downloadExts() {
   [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
   if [ "${TAG:-latest}" = "latest" ]; then
     MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error checking new version.")" "$(TEXT "Error")" "Tag is ${TAG}")"
-    if [ "${5}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    elif [ "${5}" = "0" ]; then
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    else
-      DIALOG --title "${T}" \
-        --infobox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
   if [ "${2}" = "${TAG}" ]; then
     MSG="$(TEXT "No new version.\n")"
-    if [ "${5}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    elif [ "${5}" = "0" ]; then
-      MSG+="$(printf "$(TEXT "Actual version is %s.\nForce update?")" "${2}")"
-      DIALOG --title "${T}" \
-        --yesno "${MSG}" 0 0
-      [ $? -ne 0 ] && return 1
-    else
-      DIALOG --title "${T}" \
-        --infobox "${MSG}" 0 0
-      return 1
-    fi
+    MSG+="$(printf "$(TEXT "Actual version is %s.\nForce update?")" "${2}")"
+    DIALOG --ret 0 --title "${T}" \
+      --yesno "${MSG}" 0 0
+    [ $? -ne 0 ] && return 1
   else
     MSG=""
     MSG+="$(printf "$(TEXT "Latest: %s\n")" "${TAG}")"
@@ -3560,16 +3580,9 @@ function downloadExts() {
     MSG+="$(curl -skL --connect-timeout 10 "${PROXY}${3}/releases/tag/${TAG}" | pup 'div[data-test-selector="body-content"]' | html2text --ignore-links --ignore-images)"
     MSG+="\n"
     MSG+="$(TEXT "Do you want to update?")"
-    if [ "${5}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    elif [ "${5}" = "0" ]; then
-      DIALOG --title "${T}" \
-        --yesno "$(echo -e "${MSG}")" 0 0
-      [ $? -ne 0 ] && return 1
-    else
-      DIALOG --title "${T}" \
-        --infobox "$(echo -e "${MSG}")" 0 0
-    fi
+    DIALOG --ret 0 --title "${T}" \
+      --yesno "$(echo -e "${MSG}")" 0 0
+    [ $? -ne 0 ] && return 1
   fi
   function __download() {
     rm -f ${TMP_PATH}/${4}*.zip
@@ -3585,22 +3598,13 @@ function downloadExts() {
     return 0
   }
   rm -f "${LOG_FILE}"
-  if [ "${5}" = "-1" ]; then
-    __download "$@" 2>&1
-  else
-    __download "$@" 2>&1 | DIALOG --title "${T}" \
-      --progressbox "$(TEXT "Downloading ...")" 20 100
-  fi
+
+  __download "$@" 2>&1 | DIALOG --title "${T}" \
+    --progressbox "$(TEXT "Downloading ...")" 20 100
+
   if [ -f "${LOG_FILE}" ]; then
-    if [ "${5}" = "-1" ]; then
-      echo "${T} - $(cat "${LOG_FILE}")"
-    elif [ "${5}" = "0" ]; then
-      DIALOG --title "${T}" \
-        --msgbox "$(cat "${LOG_FILE}")" 0 0
-    else
-      DIALOG --title "${T}" \
-        --infobox "$(cat "${LOG_FILE}")" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "$(cat "${LOG_FILE}")" 0 0
     return 1
   fi
   return 0
@@ -3608,39 +3612,27 @@ function downloadExts() {
 
 ###############################################################################
 # 1 - update file
-# 2 - silent
 function updateRR() {
   T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
   MSG="$(TEXT "Extracting update file ...")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --infobox "${MSG}" 0 0
+
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
   unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
     MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error extracting update file.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
   # Check checksums
   (cd "${TMP_PATH}/update" && sha256sum --status -c sha256sum)
   if [ $? -ne 0 ]; then
     MSG="$(TEXT "Checksum do not match!")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
   # Check conditions
@@ -3649,12 +3641,8 @@ function updateRR() {
     bash "${TMP_PATH}/update/update-check.sh"
     if [ $? -ne 0 ]; then
       MSG="$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")"
-      if [ "${2}" = "-1" ]; then
-        echo "${T} - ${MSG}"
-      else
-        DIALOG --title "${T}" \
-          --msgbox "${MSG}" 0 0
-      fi
+      DIALOG --title "${T}" \
+        --msgbox "${MSG}" 0 0
       return 1
     fi
   fi
@@ -3670,12 +3658,8 @@ function updateRR() {
       tar -zxf "${TMP_PATH}/update/$(basename "${KEY}").tgz" -C "${TMP_PATH}/update/${VALUE}" >"${LOG_FILE}" 2>&1
       if [ $? -ne 0 ]; then
         MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error extracting update file.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")")"
-        if [ "${2}" = "-1" ]; then
-          echo "${T} - ${MSG}"
-        else
-          DIALOG --title "${T}" \
-            --msgbox "${MSG}" 0 0
-        fi
+        DIALOG --title "${T}" \
+          --msgbox "${MSG}" 0 0
         return 1
       fi
       rm "${TMP_PATH}/update/$(basename "${KEY}").tgz"
@@ -3692,22 +3676,14 @@ function updateRR() {
   SIZESPL=$(df -m "${PART3_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
   if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
     MSG="$(printf "$(TEXT "Failed to install due to insufficient remaining disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "${PART3_PATH}" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
 
   MSG="$(TEXT "Installing new files ...")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --infobox "${MSG}" 0 0
   # Process update-list.yml
   while read -r F; do
     [ -f "${F}" ] && rm -f "${F}"
@@ -3737,41 +3713,29 @@ function updateRR() {
   touch "${PART1_PATH}/.build"
   sync
   MSG="$(printf "$(TEXT "%s updated with success!\n")$(TEXT "Reboot?")" "$(TEXT "RR")")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  else
-    DIALOG --title "${T}" \
-      --msgbox "${MSG}" 0 0
-    DIALOG --title "${T}" \
-      --infobox "$(TEXT "Reboot to RR")" 0 0
-    rebootTo config
-    exit 0
-  fi
+  DIALOG --title "${T}" \
+    --msgbox "${MSG}" 0 0
+  DIALOG --title "${T}" \
+    --infobox "$(TEXT "Reboot to RR")" 0 0
+  rebootTo config
+  exit 0
 }
 
 ###############################################################################
 # 1 - update file
-# 2 - silent
 function updateAddons() {
   T="$(printf "$(TEXT "Update %s")" "$(TEXT "Addons")")"
   MSG="$(TEXT "Extracting update file ...")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --infobox "${MSG}" 0 0
+
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
   unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
     MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error extracting update file.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
 
@@ -3789,12 +3753,8 @@ function updateAddons() {
   SIZESPL=$(df -m "${ADDONS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
   if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
     MSG="$(printf "$(TEXT "Failed to install due to insufficient remaining disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${ADDONS_PATH}")" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
 
@@ -3804,40 +3764,26 @@ function updateAddons() {
   touch "${PART1_PATH}/.build"
   sync
   MSG="$(printf "$(TEXT "%s updated with success!\n")" "$(TEXT "Addons")")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  elif [ "${2}" = "0" ]; then
-    DIALOG --title "${T}" \
-      --msgbox "${MSG}" 0 0
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --msgbox "${MSG}" 0 0
+  return 0
 }
 
 ###############################################################################
 # 1 - update file
-# 2 - silent
 function updateModules() {
   T="$(printf "$(TEXT "Update %s")" "$(TEXT "Modules")")"
   MSG="$(TEXT "Extracting update file ...")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --infobox "${MSG}" 0 0
+
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
   unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
     MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error extracting update file.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
 
@@ -3846,12 +3792,8 @@ function updateModules() {
   SIZESPL=$(df -m "${MODULES_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
   if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
     MSG="$(printf "$(TEXT "Failed to install due to insufficient remaining disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${MODULES_PATH}")" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
 
@@ -3865,40 +3807,26 @@ function updateModules() {
   touch "${PART1_PATH}/.build"
   sync
   MSG="$(printf "$(TEXT "%s updated with success!\n")" "$(TEXT "Modules")")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  elif [ "${2}" = "0" ]; then
-    DIALOG --title "${T}" \
-      --msgbox "${MSG}" 0 0
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --msgbox "${MSG}" 0 0
+  return 0
 }
 
 ###############################################################################
 # 1 - update file
-# 2 - silent
 function updateLKMs() {
   T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
   MSG="$(TEXT "Extracting update file ...")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --infobox "${MSG}" 0 0
+
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
   unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
     MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error extracting update file.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
 
@@ -3907,12 +3835,8 @@ function updateLKMs() {
   SIZESPL=$(df -m "${LKMS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
   if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
     MSG="$(printf "$(TEXT "Failed to install due to insufficient remaining disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${LKMS_PATH}")" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
 
@@ -3922,40 +3846,26 @@ function updateLKMs() {
   touch "${PART1_PATH}/.build"
   sync
   MSG="$(printf "$(TEXT "%s updated with success!\n")" "$(TEXT "LKMs")")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  elif [ "${2}" = "0" ]; then
-    DIALOG --title "${T}" \
-      --msgbox "${MSG}" 0 0
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --msgbox "${MSG}" 0 0
+  return 0
 }
 
 ###############################################################################
 # 1 - update file
-# 2 - silent
 function updateCKs() {
   T="$(printf "$(TEXT "Update %s")" "$(TEXT "CKs")")"
   MSG="$(TEXT "Extracting update file ...")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --infobox "${MSG}" 0 0
+
   rm -rf "${TMP_PATH}/update"
   mkdir -p "${TMP_PATH}/update"
   unzip -oq "${1}" -d "${TMP_PATH}/update" >"${LOG_FILE}" 2>&1
   if [ $? -ne 0 ]; then
     MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error extracting update file.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
 
@@ -3964,12 +3874,8 @@ function updateCKs() {
   SIZESPL=$(df -m "${CKS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
   if [ ${SIZENEW:-0} -ge $((${SIZEOLD:-0} + ${SIZESPL:-0})) ]; then
     MSG="$(printf "$(TEXT "Failed to install due to insufficient remaining disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "$(dirname "${CKS_PATH}")" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
-    if [ "${2}" = "-1" ]; then
-      echo "${T} - ${MSG}"
-    else
-      DIALOG --title "${T}" \
-        --msgbox "${MSG}" 0 0
-    fi
+    DIALOG --title "${T}" \
+      --msgbox "${MSG}" 0 0
     return 1
   fi
 
@@ -3979,19 +3885,14 @@ function updateCKs() {
     writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
     mergeConfigModules "$(getAllModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"
   fi
+
   rm -rf "${TMP_PATH}/update"
   touch "${PART1_PATH}/.build"
   sync
   MSG="$(printf "$(TEXT "%s updated with success!\n")" "$(TEXT "CKs")")"
-  if [ "${2}" = "-1" ]; then
-    echo "${T} - ${MSG}"
-  elif [ "${2}" = "0" ]; then
-    DIALOG --title "${T}" \
-      --msgbox "${MSG}" 0 0
-  else
-    DIALOG --title "${T}" \
-      --infobox "${MSG}" 0 0
-  fi
+  DIALOG --title "${T}" \
+    --msgbox "${MSG}" 0 0
+  return 0
 }
 
 ###############################################################################
@@ -4014,31 +3915,26 @@ function updateMenu() {
       echo "b \"$(TEXT "Pre Release:") \Z4${PRERELEASE}\Zn\""
       echo "e \"$(TEXT "Exit")\""
     } >"${TMP_PATH}/menu"
-    if [ -z "${1}" ]; then
-      SILENT="0"
-      MSG="$(TEXT "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download.\n")"
-      DIALOG --title "$(TEXT "Update")" \
-        --menu "${MSG}" 0 0 0 --file "${TMP_PATH}/menu" \
-        2>"${TMP_PATH}/resp"
-      [ $? -ne 0 ] && return
-    else
-      SILENT="-1"
-      echo "${1}" >"${TMP_PATH}/resp"
-    fi
+    MSG="$(TEXT "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download.\n")"
+    DIALOG --err "${1}" --title "$(TEXT "Update")" \
+      --menu "${MSG}" 0 0 0 --file "${TMP_PATH}/menu" \
+      2>"${TMP_PATH}/resp"
+    [ $? -ne 0 ] && return 1
+
     case "$(cat "${TMP_PATH}/resp" 2>/dev/null)" in
     a)
       F="$(ls ${PART3_PATH}/updateall*.zip ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
-      [ -z "${F}" ] && downloadExts "$(TEXT "All")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "updateall" "${SILENT}"
+      [ -z "${F}" ] && downloadExts "$(TEXT "All")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "updateall"
       F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateRR "${F}" "${SILENT}" && rm -f ${TMP_PATH}/updateall*.zip
+      [ -n "${F}" ] && updateRR "${F}" && rm -f ${TMP_PATH}/updateall*.zip
       ;;
     r)
       F="$(ls ${PART3_PATH}/update*.zip ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
-      [ -z "${F}" ] && downloadExts "$(TEXT "RR")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "update" "${SILENT}"
+      [ -z "${F}" ] && downloadExts "$(TEXT "RR")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "update"
       F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateRR "${F}" "${SILENT}" && rm -f ${TMP_PATH}/update*.zip
+      [ -n "${F}" ] && updateRR "${F}" && rm -f ${TMP_PATH}/update*.zip
       ;;
     d)
       if [ -z "${DEBUG}" ]; then
@@ -4048,9 +3944,9 @@ function updateMenu() {
       fi
       F="$(ls ${PART3_PATH}/addons*.zip ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
-      [ -z "${F}" ] && downloadExts "$(TEXT "Addons")" "${CUR_ADDONS_VER:-None}" "https://github.com/RROrg/rr-addons" "addons" "${SILENT}"
+      [ -z "${F}" ] && downloadExts "$(TEXT "Addons")" "${CUR_ADDONS_VER:-None}" "https://github.com/RROrg/rr-addons" "addons"
       F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateAddons "${F}" "${SILENT}" && rm -f ${TMP_PATH}/addons*.zip
+      [ -n "${F}" ] && updateAddons "${F}" && rm -f ${TMP_PATH}/addons*.zip
       ;;
     m)
       if [ -z "${DEBUG}" ]; then
@@ -4060,9 +3956,9 @@ function updateMenu() {
       fi
       F="$(ls ${PART3_PATH}/modules*.zip ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
-      [ -z "${F}" ] && downloadExts "$(TEXT "Modules")" "${CUR_MODULES_VER:-None}" "https://github.com/RROrg/rr-modules" "modules" "${SILENT}"
+      [ -z "${F}" ] && downloadExts "$(TEXT "Modules")" "${CUR_MODULES_VER:-None}" "https://github.com/RROrg/rr-modules" "modules"
       F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateModules "${F}" "${SILENT}" && rm -f ${TMP_PATH}/modules*.zip
+      [ -n "${F}" ] && updateModules "${F}" && rm -f ${TMP_PATH}/modules*.zip
       ;;
     l)
       if [ -z "${DEBUG}" ]; then
@@ -4072,9 +3968,9 @@ function updateMenu() {
       fi
       F="$(ls ${PART3_PATH}/rp-lkms*.zip ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
-      [ -z "${F}" ] && downloadExts "$(TEXT "LKMs")" "${CUR_LKMS_VER:-None}" "https://github.com/RROrg/rr-lkms" "rp-lkms" "${SILENT}"
+      [ -z "${F}" ] && downloadExts "$(TEXT "LKMs")" "${CUR_LKMS_VER:-None}" "https://github.com/RROrg/rr-lkms" "rp-lkms"
       F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateLKMs "${F}" "${SILENT}" && rm -f ${TMP_PATH}/rp-lkms*.zip
+      [ -n "${F}" ] && updateLKMs "${F}" && rm -f ${TMP_PATH}/rp-lkms*.zip
       ;;
     c)
       if [ -z "${DEBUG}" ]; then
@@ -4084,9 +3980,9 @@ function updateMenu() {
       fi
       F="$(ls ${PART3_PATH}/rr-cks*.zip ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
       [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
-      [ -z "${F}" ] && downloadExts "$(TEXT "CKs")" "${CUR_CKS_VER:-None}" "https://github.com/RROrg/rr-cks" "rr-cks" "${SILENT}"
+      [ -z "${F}" ] && downloadExts "$(TEXT "CKs")" "${CUR_CKS_VER:-None}" "https://github.com/RROrg/rr-cks" "rr-cks"
       F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
-      [ -n "${F}" ] && updateCKs "${F}" "${SILENT}" && rm -f ${TMP_PATH}/rr-cks*.zip
+      [ -n "${F}" ] && updateCKs "${F}" && rm -f ${TMP_PATH}/rr-cks*.zip
       ;;
     u)
       if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
@@ -4095,7 +3991,7 @@ function updateMenu() {
         MSG+="$(TEXT "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download.\n")"
         DIALOG --title "$(TEXT "Update")" \
           --msgbox "${MSG}" 0 0
-        return
+        return 1
       fi
       MSG=""
       MSG+="$(TEXT "Please keep the attachment name consistent with the attachment name on Github.\n")"
@@ -4118,23 +4014,23 @@ function updateMenu() {
         case "${USER_FILE}" in
         *update*.zip)
           rm -f ${TMP_PATH}/update*.zip
-          updateRR "${USER_FILE}" "${SILENT}"
+          updateRR "${USER_FILE}"
           ;;
         *addons*.zip)
           rm -f ${TMP_PATH}/addons*.zip
-          updateAddons "${USER_FILE}" "${SILENT}"
+          updateAddons "${USER_FILE}"
           ;;
         *modules*.zip)
           rm -f ${TMP_PATH}/modules*.zip
-          updateModules "${USER_FILE}" "${SILENT}"
+          updateModules "${USER_FILE}"
           ;;
         *rp-lkms*.zip)
           rm -f ${TMP_PATH}/rp-lkms*.zip
-          updateLKMs "${USER_FILE}" "${SILENT}"
+          updateLKMs "${USER_FILE}"
           ;;
         *rr-cks*.zip)
           rm -f ${TMP_PATH}/rr-cks*.zip
-          updateCKs "${USER_FILE}" "${SILENT}"
+          updateCKs "${USER_FILE}"
           ;;
         *)
           DIALOG --title "$(TEXT "Update")" \
@@ -4150,21 +4046,17 @@ function updateMenu() {
       NEXT="e"
       ;;
     e)
-      return
+      return 0
       ;;
     esac
-    [ -z "${1}" ] || return
+    [ -z "${1}" ] || return 0
   done
 }
 
 ###############################################################################
 function cleanCache() {
-  if [ ! "${1}" = "-1" ]; then
-    rm -rfv "${PART3_PATH}/dl/"* 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
-      --progressbox "$(TEXT "Cleaning cache ...")" 20 100
-  else
-    rm -rfv "${PART3_PATH}/dl/"*
-  fi
+  rm -rfv "${PART3_PATH}/dl/"* 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
+    --progressbox "$(TEXT "Cleaning cache ...")" 20 100
   return 0
 }
 
@@ -4174,9 +4066,10 @@ function notepadMenu() {
   [ -f "${USER_UP_PATH}/notepad" ] || echo "$(TEXT "This person is very lazy and hasn't written anything.")" >"${USER_UP_PATH}/notepad"
   DIALOG --title "$(TEXT "Edit with caution")" \
     --editbox "${USER_UP_PATH}/notepad" 0 0 2>"${TMP_PATH}/notepad"
-  [ $? -ne 0 ] && return
+  [ $? -ne 0 ] && return 1
   mv -f "${TMP_PATH}/notepad" "${USER_UP_PATH}/notepad"
-  dos2unix "${USER_UP_PATH}/notepad"
+  dos2unix "${USER_UP_PATH}/notepad" >/dev/null 2>&1 || true
+  return 0
 }
 
 ###############################################################################

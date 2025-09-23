@@ -148,39 +148,7 @@ jobs:
         run: |
           # 累了, 毁灭吧!
 
-          # yq need sudo !!!
-          function deleteConfigKey() {
-            sudo yq eval "del(.${1})" --inplace "${2}" 2>/dev/null
-          }
-
-          function writeConfigKey() {
-            local value="${2}"
-            [ "${value}" = "{}" ] && sudo yq eval ".${1} = {}" --inplace "${3}" 2>/dev/null || sudo yq eval ".${1} = \"${value}\"" --inplace "${3}" 2>/dev/null
-          }
-
-          function readConfigKey() {
-            local result
-            result=$(sudo yq eval ".${1} | explode(.)" "${2}" 2>/dev/null)
-            [ "${result}" = "null" ] && echo "" || echo "${result}"
-          }
-
-          function mergeConfigModules() {
-            # Error: bad file '-': cannot index array with '8139cp' (strconv.ParseInt: parsing "8139cp": invalid syntax)
-            # When the first key is a pure number, yq will not process it as a string by default. The current solution is to insert a placeholder key.
-            local MS ML XF
-            MS="RRORG\n${1// /\\n}"
-            ML="$(echo -en "${MS}" | awk '{print "modules."$1":"}')"
-            XF=$(mktemp 2>/dev/null)
-            XF=${XF:-/tmp/tmp.XXXXXXXXXX}
-            echo -en "${ML}" | sudo yq -p p -o y >"${XF}"
-            deleteConfigKey "modules.\"RRORG\"" "${XF}"
-            sudo yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${2}" "${XF}" 2>/dev/null
-            rm -f "${XF}"
-          }
-
           REPO="${{ github.server_url }}/${{ github.repository }}"
-          MODEL="${{ env.model }}"
-          VERSION="${{ env.version }}"
           PRERELEASE="true"
 
           TAG=""
@@ -197,105 +165,8 @@ jobs:
             exit 1
           fi
 
-          unzip rr-${TAG}.img.zip -d "rr"
+          unzip rr-${TAG}.img.zip -d rr rr.img
 
-          export TERM=xterm
-
-          sudo ./localbuild.sh create rr/ws rr/rr.img
-          if [ $? -ne 0 ]; then
-            echo "create failed"
-            exit 1
-          fi
-
-          # sudo cp -rf files/initrd/opt/rr/* rr/ws/initrd/opt/rr/
-          # sudo sed -i "s/set -e/set -ex/" rr/ws/initrd/opt/rr/init.sh
-          # sudo sed -i '/^alias/i\set -x' rr/ws/initrd/opt/rr/menu.sh
-
-          [ -n "${{ env.language }}" ] && echo "${{ env.language }}.UTF-8" | sudo tee rr/ws/mnt/p1/.locale
-
-          sudo ./localbuild.sh init
-          if [ $? -ne 0 ]; then
-            echo "init failed"
-            exit 1
-          fi
-
-          if [ -n "${{ env.kernel }}" ]; then
-            echo "set kernel"
-            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
-            writeConfigKey "kernel" "${{ env.kernel }}" "${USER_CONFIG_FILE}"
-          fi
-
-          sudo ./localbuild.sh config "${MODEL}" "${VERSION}"
-          if [ $? -ne 0 ]; then
-            echo "config failed"
-            exit 1
-          fi
-
-          if [ -n "${{ env.sn }}" ]; then
-            echo "set sn: ${{ env.sn }}"
-            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
-            writeConfigKey "sn" "${{ env.sn }}" "${USER_CONFIG_FILE}"
-          fi
-
-          if [ -n "${{ env.macs }}" ]; then
-            echo "set macs: ${{ env.macs }}"
-            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
-            MACS=($(echo "${{ env.macs }}" | sed 's/[:-]//g' | sed 's/.*/\U&/' | sed 's/[;,]/ /g'))
-            writeConfigKey "mac1" "${MACS[0]}" "${USER_CONFIG_FILE}"
-            writeConfigKey "mac2" "${MACS[1]}" "${USER_CONFIG_FILE}"
-          fi
-
-          if [ -n "${{ env.tips }}" ]; then
-            echo "set tips: ${{ env.tips }}"
-            echo -e "${{ env.tips }}" | sudo tee rr/ws/mnt/p3/AddTips
-          fi
-
-          if [ -n "${{ env.addons }}" ]; then
-            echo "set addons: ${{ env.addons }}"
-            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
-            writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
-            IFS=',' read -ra ADDON_ARR <<< "${{ env.addons }}"
-            for A in "${ADDON_ARR[@]}"; do
-              if echo "${A}" | grep -qE '^[^:]+:[^:]+$'; then
-                KEY="$(echo "${A}" | cut -d':' -f1 | xargs)"
-                VAL="$(echo "${A}" | cut -d':' -f2 | xargs)"
-              else
-                KEY="${A}"
-                VAL=""
-              fi
-              writeConfigKey "addons.\"${KEY}\"" "${VAL}" "${USER_CONFIG_FILE}"
-            done
-          fi
-
-          if [ ! "custom" = "${{ env.kernel }}" ] && [ -n "${{ env.modules }}" ]; then
-            echo "set modules: ${{ env.modules }}"
-            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
-            writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-            mergeConfigModules "$(echo "${{ env.modules }}" | sed 's/,/\n/g')" "${USER_CONFIG_FILE}"
-            # for M in $(echo "${{ env.modules }}" | sed 's/,/ /g'); do
-            #   writeConfigKey "modules.\"${M}\"" "" "${USER_CONFIG_FILE}"
-            # done
-          fi
-
-          sudo ./localbuild.sh build
-          if [ $? -ne 0 ]; then
-            echo "build failed"
-            exit 1
-          fi
-
-          if [ "true" = "${{ env.template }}" ]; then
-            echo "set template: ${{ env.template }}"
-            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
-            writeConfigKey "sn" "" "${USER_CONFIG_FILE}"
-            writeConfigKey "mac1" "" "${USER_CONFIG_FILE}"
-            writeConfigKey "mac2" "" "${USER_CONFIG_FILE}"
-          fi
-
-          sudo ./localbuild.sh pack rr/rr.img
-          if [ $? -ne 0 ]; then
-            echo "pack failed"
-            exit 1
-          fi
 
           case "${{ env.size }}" in
             2GB)
@@ -314,22 +185,61 @@ jobs:
               ;;
           esac
 
+          LOOPX=$(sudo losetup -f)
+          sudo losetup -P "${LOOPX}" rr/rr.img
+
+          echo "Building..."
+          {
+            [ -n "${{ env.language }}" ] && echo "echo \"${{ env.language }}.UTF-8\" >/mnt/p1/.locale"
+            [ -n "${{ env.tips }}" ] && echo "echo -e \"${{ env.tips }}\" >/mnt/p3/AddTips"
+            [ -n "${{ env.kernel }}" ] && echo "menu.sh writeConfigKey \"kernel\" \"${{ env.kernel }}\" \"\${USER_CONFIG_FILE}\""
+            echo "menu.sh modelMenu \"${{ env.model }}\""
+            echo "menu.sh productversMenu \"${{ env.version }}\""
+            [ -n "${{ env.addons }}" ] && { 
+              echo "menu.sh writeConfigKey \"addons\" \"{}\" \"\${USER_CONFIG_FILE}\""
+              IFS=',' read -ra ADDON_ARR <<< "${{ env.addons }}"
+              for A in "${ADDON_ARR[@]}"; do
+                if echo "${A}" | grep -qE '^[^:]+:[^:]+$'; then
+                  KEY="$(echo "${A}" | cut -d':' -f1 | xargs)"
+                  VAL="$(echo "${A}" | cut -d':' -f2 | xargs)"
+                else
+                  KEY="${A}"
+                  VAL=""
+                fi
+                echo "menu.sh writeConfigKey \"addons.\\\"${KEY}\\\"\" \"${VAL}\" \"\${USER_CONFIG_FILE}\""
+              done
+            }
+            [ ! "custom" = "${{ env.kernel }}" ] && [ -n "${{ env.modules }}" ] && {
+              echo "menu.sh writeConfigKey \"modules\" \"{}\" \"\${USER_CONFIG_FILE}\""
+              echo "menu.sh mergeConfigModules \"$(echo "${{ env.modules }}" | sed 's/,/\\n/g')\" \"\${USER_CONFIG_FILE}\""
+            }
+            echo "menu.sh make"
+            echo "menu.sh cleanCache"
+            [ -n "${{ env.sn }}" ] && echo "menu.sh writeConfigKey \"sn\" \"${{ env.sn }}\" \"\${USER_CONFIG_FILE}\""
+            [ -n "${{ env.macs }}" ] && {
+              MACS=($(echo "${{ env.macs }}" | sed 's/[:-]//g' | sed 's/.*/\U&/' | sed 's/[;,]/ /g'))
+              [ -n "${MACS[0]}" ] && echo "menu.sh writeConfigKey \"mac1\" \"${MACS[0]}\" \"\${USER_CONFIG_FILE}\""
+              [ -n "${MACS[1]}" ] && echo "menu.sh writeConfigKey \"mac2\" \"${MACS[1]}\" \"\${USER_CONFIG_FILE}\""
+            }
+            [ "true" = "${{ env.template }}" ] && {
+              echo "menu.sh writeConfigKey \"sn\" \"\" \"\${USER_CONFIG_FILE}\""
+              echo "menu.sh writeConfigKey \"mac1\" \"\" \"\${USER_CONFIG_FILE}\""
+              echo "menu.sh writeConfigKey \"mac2\" \"\" \"\${USER_CONFIG_FILE}\""
+            }
+          } > build.sh
+          chmod +x build.sh
+
+          docker pull wjz304/rr:${TAG}
+          docker run -it --rm --privileged -p 7681:7681 -p 7304:7304 -p 7080:7080 -p 7022:22 -v ${PWD}/build.sh:/opt/rr/build.sh wjz304/rr:${TAG} bash build.sh
+
+          sudo losetup --detach "${LOOPX}"
+
           ls rr -al
 
-          RR_VERSION_FILE="rr/ws/mnt/p1/RR_VERSION"
-          USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
           {
             echo "RR: "
-            echo "  VERSION: $(cat "${RR_VERSION_FILE}" 2>/dev/null | head -1)"
+            echo "  VERSION: ${TAG}"
             echo "  CUSTOM:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            echo
-            echo "DSM:"
-            echo "  MODEL:   $(readConfigKey "model" "${USER_CONFIG_FILE}")"
-            echo "  VERSION: $(readConfigKey "productver" "${USER_CONFIG_FILE}")"
-            echo "  KERNEL:  $(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
-            echo "  PATURL:  $(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
-            echo "  PATSUM:  $(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
-            echo
             echo
             echo "After the image is written to the disk, it will boot directly into DSM without the need to compile again."
             echo "Of course, you can also modify the settings yourself."
@@ -341,26 +251,26 @@ jobs:
               . scripts/func.sh "${{ secrets.RRORG }}"
               convertova "rr/rr.img" "rr/rr.ova"
               (cd rr && sha256sum rr.ova >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova ${USER_CONFIG_FILE} sha256sum README.txt
+              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova sha256sum README.txt
               ;;
             vmx)
               echo "VMX"
               . scripts/func.sh "${{ secrets.RRORG }}"
               convertvmx "rr/rr.img" "rr.vmx"  # rr.vmx is a directory
               (cd rr.vmx && sha256sum * >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmx.zip" -r rr.vmx ${USER_CONFIG_FILE} sha256sum README.txt
+              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmx.zip" -r rr.vmx sha256sum README.txt
               ;;
             vmdk)
               echo "VMDK"
               qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' rr/rr.vmdk
               (cd rr && sha256sum rr.vmdk >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk ${USER_CONFIG_FILE} sha256sum README.txt
+              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk sha256sum README.txt
               ;;
             flat)
               echo "FLAT"
               qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=monolithicFlat,compat6' rr/rr.vmdk
               (cd rr && sha256sum rr*.vmdk >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.flat.zip" -j rr/rr*.vmdk ${USER_CONFIG_FILE} sha256sum README.txt
+              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.flat.zip" -j rr/rr*.vmdk sha256sum README.txt
               ;;
             vhd)
               echo "VHD"
@@ -368,18 +278,18 @@ jobs:
               qemu-img convert rr/rr.img -O vpc rr/rr.vhd
               createvmc "rr/rr.vhd" "rr/rr.vmc"
               (cd rr && sha256sum rr.vhd >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhd.zip" -j rr/rr.vmc rr/rr.vhd ${USER_CONFIG_FILE} sha256sum README.txt
+              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhd.zip" -j rr/rr.vmc rr/rr.vhd sha256sum README.txt
               ;;
             vhdx)
               echo "VHDX"
               qemu-img convert rr/rr.img -O vhdx -o subformat=dynamic rr/rr.vhdx
               (cd rr && sha256sum rr.vhdx >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx ${USER_CONFIG_FILE} sha256sum README.txt
+              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx sha256sum README.txt
               ;;
             *)
               echo "IMG"
               (cd rr && sha256sum rr.img >../sha256sum)
-              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img ${USER_CONFIG_FILE} sha256sum README.txt
+              zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img sha256sum README.txt
           esac
 
           echo "TAG=${TAG}" >> $GITHUB_ENV

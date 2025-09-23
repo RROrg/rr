@@ -363,7 +363,7 @@ if [ "${DIRECT}" = "true" ] || [ "${MEV:-physical}" = "parallels" ]; then
   _bootwait || exit 0
 
   printf "\033[1;33m%s\033[0m\n" "$(TEXT "Reboot to boot directly in DSM")"
-  reboot
+  [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ] && reboot
   exit 0
 else
   rm -f "${USER_RSYSENVFILE}" 2>/dev/null || true
@@ -390,9 +390,9 @@ else
     printf "."
     sleep 1
   done
-
-  [ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
-
+  if [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+    [ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
+  fi
   printf "$(TEXT "Waiting IP.\n")"
   for N in ${ETHX}; do
     COUNT=0
@@ -464,22 +464,24 @@ else
     fi
   done
 
-  # Disconnect wireless
-  lsmod | grep -q iwlwifi && for F in /sys/class/net/wlan*; do
-    [ ! -e "${F}" ] && continue
-    connectwlanif "$(basename "${F}")" 0 2>/dev/null
-  done
-  # Unload all network drivers
-  # for F in $(realpath /sys/class/net/*/device/driver); do [ ! -e "${F}" ] && continue; rmmod -f "$(basename ${F})" 2>/dev/null || true; done
+  if [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+    # Disconnect wireless
+    lsmod | grep -q iwlwifi && for F in /sys/class/net/wlan*; do
+      [ ! -e "${F}" ] && continue
+      connectwlanif "$(basename "${F}")" 0 2>/dev/null
+    done
+    # Unload all network drivers
+    # for F in $(realpath /sys/class/net/*/device/driver); do [ ! -e "${F}" ] && continue; rmmod -f "$(basename ${F})" 2>/dev/null || true; done
 
-  # Unload all graphics drivers
-  # for D in $(lsmod | grep -E '^(nouveau|amdgpu|radeon|i915)' | awk '{print $1}'); do rmmod -f "${D}" 2>/dev/null || true; done
-  # for I in $(find /sys/devices -name uevent -exec bash -c 'cat {} 2>/dev/null | grep -Eq "PCI_CLASS=0?30[0|1|2]00" && dirname {}' \;); do
-  #   [ -e ${I}/reset ] && cat "${I}/vendor" >/dev/null | grep -iq 0x10de && echo 1 >${I}/reset || true # Proc open nvidia driver when booting
-  # done
+    # Unload all graphics drivers
+    # for D in $(lsmod | grep -E '^(nouveau|amdgpu|radeon|i915)' | awk '{print $1}'); do rmmod -f "${D}" 2>/dev/null || true; done
+    # for I in $(find /sys/devices -name uevent -exec bash -c 'cat {} 2>/dev/null | grep -Eq "PCI_CLASS=0?30[0|1|2]00" && dirname {}' \;); do
+    #   [ -e ${I}/reset ] && cat "${I}/vendor" >/dev/null | grep -iq 0x10de && echo 1 >${I}/reset || true # Proc open nvidia driver when booting
+    # done
 
-  # Reboot
-  KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
-  [ "${KERNELWAY}" = "kexec" ] && kexec -e || poweroff
+    # Reboot
+    KERNELWAY="$(readConfigKey "kernelway" "${USER_CONFIG_FILE}")"
+    [ "${KERNELWAY}" = "kexec" ] && kexec -e || poweroff
+  fi
   exit 0
 fi
