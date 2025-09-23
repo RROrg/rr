@@ -829,11 +829,9 @@ function moduleMenu() {
       DIALOG --title "$(TEXT "Modules")" \
         --infobox "$(TEXT "Selecting loaded modules")" 0 0
       writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-      for I in $(lsmod 2>/dev/null | awk -F' ' '{print $1}' | grep -v 'Module'); do
-        while read -r J; do
-          writeConfigKey "modules.\"${J}\"" "" "${USER_CONFIG_FILE}"
-        done <<<"$(getdepends "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" "${I}")"
-      done
+      while read -r J; do
+        writeConfigKey "modules.\"${J}\"" "" "${USER_CONFIG_FILE}"
+      done <<<"$(getLoadedModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}")"
       touch "${PART1_PATH}/.build"
       ;;
     u)
