@@ -242,6 +242,35 @@ function getModules() {
   echo "Getting Modules end"
 }
 
+# unpack initrd
+# $1 initrd file
+# $2 output path
+function unpackInitrd() {
+  local INITRD_FILE="${1}"
+  local OUTPUT_PATH="${2}"
+
+  [ -z "${INITRD_FILE}" ] || [ ! -f "${INITRD_FILE}" ] && exit 1
+  [ -z "${OUTPUT_PATH}" ] || [ ! -d "${OUTPUT_PATH}" ] && exit 1
+
+  INITRD_FILE="$(realpath "${INITRD_FILE}")"
+  OUTPUT_PATH="$(realpath "${OUTPUT_PATH}")"
+
+  mkdir -p "${OUTPUT_PATH}"
+  local INITRD_FORMAT
+  INITRD_FORMAT=$(file -b --mime-type "${INITRD_FILE}")
+
+  case "${INITRD_FORMAT}" in
+  *'x-cpio'*) (cd "${OUTPUT_PATH}" && sudo cpio -idm <"${INITRD_FILE}") >/dev/null 2>&1 ;;
+  *'x-xz'*) (cd "${OUTPUT_PATH}" && xz -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *'x-lz4'*) (cd "${OUTPUT_PATH}" && lz4 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *'x-lzma'*) (cd "${OUTPUT_PATH}" && lzma -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *'x-bzip2'*) (cd "${OUTPUT_PATH}" && bzip2 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *'gzip'*) (cd "${OUTPUT_PATH}" && gzip -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *'zstd'*) (cd "${OUTPUT_PATH}" && zstd -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+  *) ;;
+  esac
+}
+
 # repack initrd
 # $1 initrd file
 # $2 plugin path
