@@ -94,7 +94,7 @@ fi
 initConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
 initConfigKey "modblacklist" "evbug,cdc_ether" "${USER_CONFIG_FILE}"
 
-if [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+if [ ! -f "/.dockerenv" ]; then
   if arrayExistItem "sortnetif:" "$(readConfigMap "addons" "${USER_CONFIG_FILE}")"; then
     _sort_netif "$(readConfigKey "addons.sortnetif" "${USER_CONFIG_FILE}")"
   fi
@@ -138,12 +138,7 @@ if [ "${BUS}" = "usb" ]; then
 elif [ "${BUS}" = "docker" ]; then
   TYPE="PC"
 elif ! echo "${BUSLIST}" | grep -wq "${BUS}"; then
-  if [ "LOCALBUILD" = "${LOADER_DISK}" ]; then
-    echo "LOCALBUILD MODE"
-    TYPE="PC"
-  else
-    die "$(printf "$(TEXT "The loader disk does not support the current %s, only %s DoM is supported.")" "${BUS}" "${BUSLIST// /\/}")"
-  fi
+  die "$(printf "$(TEXT "The loader disk does not support the current %s, only %s DoM is supported.")" "${BUS}" "${BUSLIST// /\/}")"
 fi
 
 # Save variables to user config file
@@ -205,7 +200,7 @@ while [ ${COUNT} -lt 30 ]; do
   sleep 1
 done
 
-if [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+if [ ! -f "/.dockerenv" ]; then
   [ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
 fi
 
@@ -262,7 +257,7 @@ fi
 printf "\n"
 
 DSMLOGO="$(readConfigKey "dsmlogo" "${USER_CONFIG_FILE}")"
-if [ "${DSMLOGO}" = "true" ] && [ -c "/dev/fb0" ] && [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+if [ "${DSMLOGO}" = "true" ] && [ -c "/dev/fb0" ] && [ ! -f "/.dockerenv" ]; then
   IP="$(getIP)"
   echo "${IP}" | grep -q "^169\.254\." && IP=""
   [ -n "${IP}" ] && URL="http://${IP}:${TTYD:-7681}" || URL="http://rr:${TTYD:-7681}"
@@ -273,7 +268,7 @@ if [ "${DSMLOGO}" = "true" ] && [ -c "/dev/fb0" ] && [ ! -f "/.dockerenv" ] && [
   [ -f "${TMP_PATH}/qrcode_qhxg.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_qhxg.png" >/dev/null 2>&1 || true
 fi
 WEBHOOKURL="$(readConfigKey "webhookurl" "${USER_CONFIG_FILE}")"
-if [ -n "${WEBHOOKURL}" ] && [ ! -f "${TMP_PATH}/WebhookSent" ] && [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+if [ -n "${WEBHOOKURL}" ] && [ ! -f "${TMP_PATH}/WebhookSent" ] && [ ! -f "/.dockerenv" ]; then
   DMI="$(dmesg 2>/dev/null | grep -i "DMI:" | head -1 | sed 's/\[.*\] DMI: //i')"
   IP="$(getIP)"
   echo "${IP}" | grep -q "^169\.254\." && IP=""

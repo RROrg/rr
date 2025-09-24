@@ -130,9 +130,6 @@ fi
 # Mounts backtitle dynamically
 function backtitle() {
   BACKTITLE=""
-  if [ "LOCALBUILD" = "${LOADER_DISK}" ]; then
-    BACKTITLE="LOCAL "
-  fi
   BACKTITLE+="${RR_TITLE}${RR_RELEASE:+(${RR_RELEASE})}"
   if [ -n "${MODEL}" ]; then
     BACKTITLE+=" ${MODEL}(${PLATFORM})"
@@ -3146,19 +3143,17 @@ function advancedMenu() {
       if [ -n "$(ls /dev/mmcblk* 2>/dev/null)" ]; then
         echo "b \"$(TEXT "Use EMMC as the system disk:") \Z4${EMMCBOOT}\Zn\""
       fi
-      if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
-        echo "s \"$(TEXT "Show disks information")\""
-        echo "t \"$(TEXT "Mounting DSM storage pool")\""
-        echo "f \"$(TEXT "Format disk(s) # Without loader disk")\""
-        echo "g \"$(TEXT "Download DSM config backup files")\""
-        echo "a \"$(TEXT "Allow downgrade installation")\""
-        echo "x \"$(TEXT "Reset DSM system password")\""
-        echo "y \"$(TEXT "Add a new user to DSM system")\""
-        echo "z \"$(TEXT "Force enable Telnet&SSH of DSM system")\""
-        echo "o \"$(TEXT "Remove the blocked IP database of DSM")\""
-        echo "q \"$(TEXT "Disable all scheduled tasks of DSM")\""
-        echo "r \"$(TEXT "Initialize DSM network settings")\""
-      fi
+      echo "s \"$(TEXT "Show disks information")\""
+      echo "t \"$(TEXT "Mounting DSM storage pool")\""
+      echo "f \"$(TEXT "Format disk(s) # Without loader disk")\""
+      echo "g \"$(TEXT "Download DSM config backup files")\""
+      echo "a \"$(TEXT "Allow downgrade installation")\""
+      echo "x \"$(TEXT "Reset DSM system password")\""
+      echo "y \"$(TEXT "Add a new user to DSM system")\""
+      echo "z \"$(TEXT "Force enable Telnet&SSH of DSM system")\""
+      echo "o \"$(TEXT "Remove the blocked IP database of DSM")\""
+      echo "q \"$(TEXT "Disable all scheduled tasks of DSM")\""
+      echo "r \"$(TEXT "Initialize DSM network settings")\""
       echo "e \"$(TEXT "Exit")\""
     } >"${TMP_PATH}/menu"
 
@@ -3394,16 +3389,14 @@ function settingsMenu() {
       echo "p \"$(TEXT "Custom patch script # Developer")\""
       echo "u \"$(TEXT "Edit user config file manually")\""
       echo "g \"$(TEXT "Edit grub.cfg file manually")\""
-      if [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
-        echo "r \"$(TEXT "Try to recovery a installed DSM system")\""
-        echo "c \"$(TEXT "Clone bootloader disk to another disk")\""
-        echo "q \"$(TEXT "System Environment Report")\""
-        echo "v \"$(TEXT "Report bugs to the author")\""
-        echo "d \"$(TEXT "Install development tools")\""
-        echo "s \"$(TEXT "Save modifications of '/opt/rr'")\""
-        echo "i \"$(TEXT "Set static IP")\""
-        echo "w \"$(TEXT "Set wireless account")\""
-      fi
+      echo "r \"$(TEXT "Try to recovery a installed DSM system")\""
+      echo "c \"$(TEXT "Clone bootloader disk to another disk")\""
+      echo "q \"$(TEXT "System Environment Report")\""
+      echo "v \"$(TEXT "Report bugs to the author")\""
+      echo "d \"$(TEXT "Install development tools")\""
+      echo "s \"$(TEXT "Save modifications of '/opt/rr'")\""
+      echo "i \"$(TEXT "Set static IP")\""
+      echo "w \"$(TEXT "Set wireless account")\""
       echo "1 \"$(TEXT "Set global proxy")\""
       echo "2 \"$(TEXT "Set github proxy")\""
       UPDMC="$([ -f "${MC_RAMDISK_FILE}" ] && echo "true" || echo "false")"

@@ -363,7 +363,7 @@ if [ "${DIRECT}" = "true" ] || [ "${MEV:-physical}" = "parallels" ]; then
   _bootwait || exit 0
 
   printf "\033[1;33m%s\033[0m\n" "$(TEXT "Reboot to boot directly in DSM")"
-  [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ] && reboot
+  [ ! -f "/.dockerenv" ] && reboot
   exit 0
 else
   rm -f "${USER_RSYSENVFILE}" 2>/dev/null || true
@@ -390,7 +390,7 @@ else
     printf "."
     sleep 1
   done
-  if [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+  if [ ! -f "/.dockerenv" ]; then
     [ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
   fi
   printf "$(TEXT "Waiting IP.\n")"
@@ -464,7 +464,7 @@ else
     fi
   done
 
-  if [ ! -f "/.dockerenv" ] && [ ! "LOCALBUILD" = "${LOADER_DISK}" ]; then
+  if [ ! -f "/.dockerenv" ]; then
     # Disconnect wireless
     lsmod | grep -q iwlwifi && for F in /sys/class/net/wlan*; do
       [ ! -e "${F}" ] && continue
