@@ -49,12 +49,12 @@ if [ -f "${PART1_PATH}/.upgraded" ]; then
     PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
     PATURL="$(readConfigKey "paturl" "${USER_CONFIG_FILE}")"
     PATSUM="$(readConfigKey "patsum" "${USER_CONFIG_FILE}")"
-    ./menu.sh modelMenu "${MODEL}" "${PLATFORM}" || {
+    ./menu.sh reconfiguringM "${MODEL}" "${PLATFORM}" || {
       echo -e "$(TEXT "Reconfiguration failed!")"
       exit 1
     }
     if [ -n "${PRODUCTVER}" ] && [ -n "${PATURL}" ]; then
-      ./menu.sh productversMenu "${PRODUCTVER}" "${PATURL}" "${PATSUM}" || {
+      ./menu.sh reconfiguringV "${PRODUCTVER}" "${PATURL}" "${PATSUM}" || {
         echo -e "$(TEXT "Reconfiguration failed!")"
         exit 1
       }
