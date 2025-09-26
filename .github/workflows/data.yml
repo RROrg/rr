@@ -62,15 +62,6 @@ jobs:
 
           unzip rr-${TAG}.img.zip -d rr rr.img
 
-          . scripts/func.sh "${{ secrets.RRORG }}"
-
-          LOOPX=$(sudo losetup -f)
-          sudo losetup -P "${LOOPX}" "rr/rr.img"
-          rm -rf "/tmp/mnt/p3"
-          mkdir -p "/tmp/mnt/p3"
-          sudo mount "${LOOPX}p3" "/tmp/mnt/p3"
-          unpackInitrd /tmp/mnt/p3/initrd-rr "rr/initrd"
-
           sudo apt update
           sudo apt install -y locales busybox dialog gettext sed gawk jq curl 
           sudo apt install -y python-is-python3 python3-pip libelf-dev qemu-utils cpio xz-utils lz4 lzma bzip2 gzip zstd
@@ -79,6 +70,15 @@ jobs:
           # Backup the original python3 executable.
           sudo mv -f "$(realpath $(which python3))/EXTERNALLY-MANAGED" "$(realpath $(which python3))/EXTERNALLY-MANAGED.bak" 2>/dev/null || true
           sudo pip3 install -U -r scripts/requirements.txt
+
+          . scripts/func.sh "${{ secrets.RRORG }}"
+
+          LOOPX=$(sudo losetup -f)
+          sudo losetup -P "${LOOPX}" "rr/rr.img"
+          rm -rf "/tmp/mnt/p3"
+          mkdir -p "/tmp/mnt/p3"
+          sudo mount "${LOOPX}p3" "/tmp/mnt/p3"
+          unpackInitrd /tmp/mnt/p3/initrd-rr "rr/initrd"
 
           python3 scripts/func.py getmodels -w "rr/initrd" -j "docs/models.json" -x "docs/models.xlsx"
           python3 scripts/func.py getpats -w "rr/initrd" -j "docs/pats.json" -x "docs/pats.xlsx"
