@@ -4067,8 +4067,9 @@ function notepadMenu() {
 
 ###############################################################################
 ###############################################################################
-if [ $# -ge 1 ]; then
+if [ ! "$(basename -- "${0}")" = "$(basename -- "${BASH_SOURCE[0]}")" ] || [ $# -gt 0 ]; then
   "$@"
+	cleanup_lock
 else
   if [ -z "${MODEL}" ] && [ -z "${PRODUCTVER}" ] && [ -n "$(findDSMRoot)" ]; then
     DIALOG --title "$(TEXT "Main menu")" \

@@ -65,7 +65,7 @@ jobs:
           sudo losetup -P "${LOOPX}" "rr/rr.img"
           rm -rf "/tmp/mnt/p3"
           mkdir -p "/tmp/mnt/p3"
-          mount "${LOOPX}p3" "/tmp/mnt/p3"
+          sudo mount "${LOOPX}p3" "/tmp/mnt/p3"
           unpackInitrd /tmp/mnt/p3/initrd-rr "rr/initrd"
 
           sudo apt update

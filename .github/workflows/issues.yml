@@ -193,7 +193,7 @@ jobs:
 
           echo "Building..."
           {
-            echo ". include/functions.sh"
+            echo ". menu.sh"
             [ -n "${{ env.language }}" ] && echo "echo \"${{ env.language }}.UTF-8\" >/mnt/p1/.locale"
             [ -n "${{ env.tips }}" ] && echo "echo -e \"${{ env.tips }}\" >/mnt/p3/AddTips"
             [ -n "${{ env.kernel }}" ] && echo "writeConfigKey \"kernel\" \"${{ env.kernel }}\" \"\${USER_CONFIG_FILE}\""
