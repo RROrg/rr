@@ -110,16 +110,10 @@ printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "DMI:     ")" "${DMI}"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "CPU:     ")" "${CPU}"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "MEM:     ")" "${MEM}"
 
-if ! readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q nvmesystem; then
-  HASATA=0
-  for D in $(lsblk -dpno KNAME); do
-    [ "${D}" = "${LOADER_DISK}" ] && continue
-    if echo "sata sas scsi" | grep -wq "$(getBus "${D}")"; then
-      HASATA=1
-      break
-    fi
-  done
-  [ ${HASATA} = "0" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one sata/scsi disk for system installation (except for the bootloader disk).")"
+if readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q nvmesystem; then
+  [ -z "$(ls /dev/nvme* | grep -vE "${LOADER_DISK}[0-9]?$" 2>/dev/null)" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one m.2 disk for system installation.")"
+else
+	[ -z "$(ls /dev/sd* | grep -vE "${LOADER_DISK}[0-9]?$" 2>/dev/null)" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one sata disk for system installation.")"
 fi
 
 if checkBIOS_VT_d && [ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ]; then
