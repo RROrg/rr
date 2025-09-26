@@ -193,13 +193,14 @@ jobs:
 
           echo "Building..."
           {
+            echo ". include/functions.sh"
             [ -n "${{ env.language }}" ] && echo "echo \"${{ env.language }}.UTF-8\" >/mnt/p1/.locale"
             [ -n "${{ env.tips }}" ] && echo "echo -e \"${{ env.tips }}\" >/mnt/p3/AddTips"
-            [ -n "${{ env.kernel }}" ] && echo "menu.sh writeConfigKey \"kernel\" \"${{ env.kernel }}\" \"\${USER_CONFIG_FILE}\""
+            [ -n "${{ env.kernel }}" ] && echo "writeConfigKey \"kernel\" \"${{ env.kernel }}\" \"\${USER_CONFIG_FILE}\""
             echo "menu.sh modelMenu \"${{ env.model }}\""
             echo "menu.sh productversMenu \"${{ env.version }}\""
             [ -n "${{ env.addons }}" ] && { 
-              echo "menu.sh writeConfigKey \"addons\" \"{}\" \"\${USER_CONFIG_FILE}\""
+              echo "writeConfigKey \"addons\" \"{}\" \"\${USER_CONFIG_FILE}\""
               IFS=',' read -ra ADDON_ARR <<< "${{ env.addons }}"
               for A in "${ADDON_ARR[@]}"; do
                 if echo "${A}" | grep -qE '^[^:]+:[^:]+$'; then
@@ -209,25 +210,25 @@ jobs:
                   KEY="${A}"
                   VAL=""
                 fi
-                echo "menu.sh writeConfigKey \"addons.\\\"${KEY}\\\"\" \"${VAL}\" \"\${USER_CONFIG_FILE}\""
+                echo "writeConfigKey \"addons.\\\"${KEY}\\\"\" \"${VAL}\" \"\${USER_CONFIG_FILE}\""
               done
             }
             [ ! "custom" = "${{ env.kernel }}" ] && [ -n "${{ env.modules }}" ] && {
-              echo "menu.sh writeConfigKey \"modules\" \"{}\" \"\${USER_CONFIG_FILE}\""
-              echo "menu.sh mergeConfigModules \"$(echo "${{ env.modules }}" | sed 's/,/\\n/g')\" \"\${USER_CONFIG_FILE}\""
+              echo "writeConfigKey \"modules\" \"{}\" \"\${USER_CONFIG_FILE}\""
+              echo "mergeConfigModules \"$(echo "${{ env.modules }}" | tr ',' '\n')\" \"\${USER_CONFIG_FILE}\""
             }
             echo "menu.sh make"
             echo "menu.sh cleanCache"
-            [ -n "${{ env.sn }}" ] && echo "menu.sh writeConfigKey \"sn\" \"${{ env.sn }}\" \"\${USER_CONFIG_FILE}\""
+            [ -n "${{ env.sn }}" ] && echo "writeConfigKey \"sn\" \"${{ env.sn }}\" \"\${USER_CONFIG_FILE}\""
             [ -n "${{ env.macs }}" ] && {
               MACS=($(echo "${{ env.macs }}" | sed 's/[:-]//g' | sed 's/.*/\U&/' | sed 's/[;,]/ /g'))
-              [ -n "${MACS[0]}" ] && echo "menu.sh writeConfigKey \"mac1\" \"${MACS[0]}\" \"\${USER_CONFIG_FILE}\""
-              [ -n "${MACS[1]}" ] && echo "menu.sh writeConfigKey \"mac2\" \"${MACS[1]}\" \"\${USER_CONFIG_FILE}\""
+              [ -n "${MACS[0]}" ] && echo "writeConfigKey \"mac1\" \"${MACS[0]}\" \"\${USER_CONFIG_FILE}\""
+              [ -n "${MACS[1]}" ] && echo "writeConfigKey \"mac2\" \"${MACS[1]}\" \"\${USER_CONFIG_FILE}\""
             }
             [ "true" = "${{ env.template }}" ] && {
-              echo "menu.sh writeConfigKey \"sn\" \"\" \"\${USER_CONFIG_FILE}\""
-              echo "menu.sh writeConfigKey \"mac1\" \"\" \"\${USER_CONFIG_FILE}\""
-              echo "menu.sh writeConfigKey \"mac2\" \"\" \"\${USER_CONFIG_FILE}\""
+              echo "writeConfigKey \"sn\" \"\" \"\${USER_CONFIG_FILE}\""
+              echo "writeConfigKey \"mac1\" \"\" \"\${USER_CONFIG_FILE}\""
+              echo "writeConfigKey \"mac2\" \"\" \"\${USER_CONFIG_FILE}\""
             }
           } > build.sh
           chmod +x build.sh
