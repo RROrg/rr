@@ -1554,6 +1554,50 @@
             "description": "IOSF Mailbox Interface accessor",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ipv6,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
         "ipmi_devintf": {
             "description": "Linux device interface for the IPMI message handler.",
             "depends": "ipmi_msghandler"
@@ -1573,6 +1617,22 @@
         "ipmi_ssif": {
             "description": "IPMI driver for management controllers on a SMBus",
             "depends": "ipmi_msghandler"
+        },
+        "ipt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat_masquerade_ipv4,x_tables"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat_ipv4"
         },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
@@ -1813,6 +1873,82 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_conntrack_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv4"
+        },
+        "nf_conntrack_ipv6": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack,nf_conntrack_proto_gre"
+        },
+        "nf_conntrack_proto_gre": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": "ipv6"
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_ipv4": {
+            "description": "",
+            "depends": "nf_nat,nf_conntrack"
+        },
+        "nf_nat_masquerade_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_nat"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat_proto_gre,nf_nat,nf_conntrack"
+        },
+        "nf_nat_proto_gre": {
+            "description": "Netfilter NAT protocol helper module for GRE",
+            "depends": "nf_nat"
+        },
+        "nf_nat_redirect": {
+            "description": "",
+            "depends": "nf_nat"
+        },
+        "nfnetlink": {
+            "description": "",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -2198,6 +2334,58 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcp_bic": {
+            "description": "BIC TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_cdg": {
+            "description": "TCP CDG (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_dctcp": {
+            "description": "DataCenter TCP (DCTCP) (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_highspeed": {
+            "description": "High Speed TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_htcp": {
+            "description": "H-TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_hybla": {
+            "description": "TCP Hybla (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_illinois": {
+            "description": "TCP Illinois (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_lp": {
+            "description": "TCP Low Priority (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_scalable": {
+            "description": "Scalable TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_vegas": {
+            "description": "TCP Vegas (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_veno": {
+            "description": "TCP Veno (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_westwood": {
+            "description": "TCP Westwood+ (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_yeah": {
+            "description": "YeAH TCP (Compiled by RR for DSM)",
+            "depends": "tcp_vegas"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -2349,6 +2537,86 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat_redirect"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP Maximum Segment Size (MSS) adjustment",
+            "depends": "x_tables"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "",
+            "depends": "x_tables,nf_nat"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "yt6801": {
             "description": "Motorcomm YT6801 Gigabit Ethernet Driver (Compiled by RR for DSM)",
@@ -3782,6 +4050,50 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ipv6,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
         "ipmi_devintf": {
             "description": "Linux device interface for the IPMI message handler.",
             "depends": "ipmi_msghandler"
@@ -3801,6 +4113,22 @@
         "ipmi_ssif": {
             "description": "IPMI driver for management controllers on a SMBus",
             "depends": "ipmi_msghandler"
+        },
+        "ipt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat_masquerade_ipv4,x_tables"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat_ipv4"
         },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
@@ -4045,6 +4373,82 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_conntrack_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv4"
+        },
+        "nf_conntrack_ipv6": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack,nf_conntrack_proto_gre"
+        },
+        "nf_conntrack_proto_gre": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": "ipv6"
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_ipv4": {
+            "description": "",
+            "depends": "nf_nat,nf_conntrack"
+        },
+        "nf_nat_masquerade_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_nat"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat_proto_gre,nf_nat,nf_conntrack"
+        },
+        "nf_nat_proto_gre": {
+            "description": "Netfilter NAT protocol helper module for GRE",
+            "depends": "nf_nat"
+        },
+        "nf_nat_redirect": {
+            "description": "",
+            "depends": "nf_nat"
+        },
+        "nfnetlink": {
+            "description": "",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -4426,6 +4830,58 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcp_bic": {
+            "description": "BIC TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_cdg": {
+            "description": "TCP CDG (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_dctcp": {
+            "description": "DataCenter TCP (DCTCP) (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_highspeed": {
+            "description": "High Speed TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_htcp": {
+            "description": "H-TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_hybla": {
+            "description": "TCP Hybla (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_illinois": {
+            "description": "TCP Illinois (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_lp": {
+            "description": "TCP Low Priority (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_scalable": {
+            "description": "Scalable TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_vegas": {
+            "description": "TCP Vegas (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_veno": {
+            "description": "TCP Veno (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_westwood": {
+            "description": "TCP Westwood+ (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_yeah": {
+            "description": "YeAH TCP (Compiled by RR for DSM)",
+            "depends": "tcp_vegas"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -4561,6 +5017,86 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat_redirect"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP Maximum Segment Size (MSS) adjustment",
+            "depends": "x_tables"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "",
+            "depends": "x_tables,nf_nat"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "yt6801": {
             "description": "Motorcomm YT6801 Gigabit Ethernet Driver (Compiled by RR for DSM)",
@@ -5994,6 +6530,50 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ipv6,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
         "ipmi_devintf": {
             "description": "Linux device interface for the IPMI message handler.",
             "depends": "ipmi_msghandler"
@@ -6013,6 +6593,22 @@
         "ipmi_ssif": {
             "description": "IPMI driver for management controllers on a SMBus",
             "depends": "ipmi_msghandler"
+        },
+        "ipt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat_masquerade_ipv4,x_tables"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat_ipv4"
         },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
@@ -6257,6 +6853,82 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_conntrack_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv4"
+        },
+        "nf_conntrack_ipv6": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack,nf_conntrack_proto_gre"
+        },
+        "nf_conntrack_proto_gre": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": "ipv6"
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_ipv4": {
+            "description": "",
+            "depends": "nf_nat,nf_conntrack"
+        },
+        "nf_nat_masquerade_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_nat"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat_proto_gre,nf_nat,nf_conntrack"
+        },
+        "nf_nat_proto_gre": {
+            "description": "Netfilter NAT protocol helper module for GRE",
+            "depends": "nf_nat"
+        },
+        "nf_nat_redirect": {
+            "description": "",
+            "depends": "nf_nat"
+        },
+        "nfnetlink": {
+            "description": "",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -6638,6 +7310,58 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcp_bic": {
+            "description": "BIC TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_cdg": {
+            "description": "TCP CDG (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_dctcp": {
+            "description": "DataCenter TCP (DCTCP) (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_highspeed": {
+            "description": "High Speed TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_htcp": {
+            "description": "H-TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_hybla": {
+            "description": "TCP Hybla (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_illinois": {
+            "description": "TCP Illinois (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_lp": {
+            "description": "TCP Low Priority (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_scalable": {
+            "description": "Scalable TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_vegas": {
+            "description": "TCP Vegas (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_veno": {
+            "description": "TCP Veno (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_westwood": {
+            "description": "TCP Westwood+ (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_yeah": {
+            "description": "YeAH TCP (Compiled by RR for DSM)",
+            "depends": "tcp_vegas"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -6773,6 +7497,86 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat_redirect"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP Maximum Segment Size (MSS) adjustment",
+            "depends": "x_tables"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "",
+            "depends": "x_tables,nf_nat"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "yt6801": {
             "description": "Motorcomm YT6801 Gigabit Ethernet Driver (Compiled by RR for DSM)",
@@ -8206,6 +9010,50 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ipv6,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
         "ipmi_devintf": {
             "description": "Linux device interface for the IPMI message handler.",
             "depends": "ipmi_msghandler"
@@ -8225,6 +9073,22 @@
         "ipmi_ssif": {
             "description": "IPMI driver for management controllers on a SMBus",
             "depends": "ipmi_msghandler"
+        },
+        "ipt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat_masquerade_ipv4,x_tables"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat_ipv4"
         },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
@@ -8469,6 +9333,82 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_conntrack_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv4"
+        },
+        "nf_conntrack_ipv6": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack,nf_conntrack_proto_gre"
+        },
+        "nf_conntrack_proto_gre": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": "ipv6"
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_ipv4": {
+            "description": "",
+            "depends": "nf_nat,nf_conntrack"
+        },
+        "nf_nat_masquerade_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_nat"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat_proto_gre,nf_nat,nf_conntrack"
+        },
+        "nf_nat_proto_gre": {
+            "description": "Netfilter NAT protocol helper module for GRE",
+            "depends": "nf_nat"
+        },
+        "nf_nat_redirect": {
+            "description": "",
+            "depends": "nf_nat"
+        },
+        "nfnetlink": {
+            "description": "",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -8850,6 +9790,58 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcp_bic": {
+            "description": "BIC TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_cdg": {
+            "description": "TCP CDG (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_dctcp": {
+            "description": "DataCenter TCP (DCTCP) (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_highspeed": {
+            "description": "High Speed TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_htcp": {
+            "description": "H-TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_hybla": {
+            "description": "TCP Hybla (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_illinois": {
+            "description": "TCP Illinois (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_lp": {
+            "description": "TCP Low Priority (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_scalable": {
+            "description": "Scalable TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_vegas": {
+            "description": "TCP Vegas (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_veno": {
+            "description": "TCP Veno (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_westwood": {
+            "description": "TCP Westwood+ (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_yeah": {
+            "description": "YeAH TCP (Compiled by RR for DSM)",
+            "depends": "tcp_vegas"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -8985,6 +9977,86 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat_redirect"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP Maximum Segment Size (MSS) adjustment",
+            "depends": "x_tables"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "",
+            "depends": "x_tables,nf_nat"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "yt6801": {
             "description": "Motorcomm YT6801 Gigabit Ethernet Driver (Compiled by RR for DSM)",
@@ -10438,6 +11510,50 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ipv6,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
         "ipmi_devintf": {
             "description": "Linux device interface for the IPMI message handler.",
             "depends": "ipmi_msghandler"
@@ -10457,6 +11573,22 @@
         "ipmi_ssif": {
             "description": "IPMI driver for management controllers on a SMBus",
             "depends": "ipmi_msghandler"
+        },
+        "ipt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat_masquerade_ipv4,x_tables"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat_ipv4"
         },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
@@ -10701,6 +11833,82 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_conntrack_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv4"
+        },
+        "nf_conntrack_ipv6": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack,nf_conntrack_proto_gre"
+        },
+        "nf_conntrack_proto_gre": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": "ipv6"
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_ipv4": {
+            "description": "",
+            "depends": "nf_nat,nf_conntrack"
+        },
+        "nf_nat_masquerade_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_nat"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat_proto_gre,nf_nat,nf_conntrack"
+        },
+        "nf_nat_proto_gre": {
+            "description": "Netfilter NAT protocol helper module for GRE",
+            "depends": "nf_nat"
+        },
+        "nf_nat_redirect": {
+            "description": "",
+            "depends": "nf_nat"
+        },
+        "nfnetlink": {
+            "description": "",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -11082,6 +12290,58 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcp_bic": {
+            "description": "BIC TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_cdg": {
+            "description": "TCP CDG (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_dctcp": {
+            "description": "DataCenter TCP (DCTCP) (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_highspeed": {
+            "description": "High Speed TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_htcp": {
+            "description": "H-TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_hybla": {
+            "description": "TCP Hybla (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_illinois": {
+            "description": "TCP Illinois (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_lp": {
+            "description": "TCP Low Priority (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_scalable": {
+            "description": "Scalable TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_vegas": {
+            "description": "TCP Vegas (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_veno": {
+            "description": "TCP Veno (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_westwood": {
+            "description": "TCP Westwood+ (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_yeah": {
+            "description": "YeAH TCP (Compiled by RR for DSM)",
+            "depends": "tcp_vegas"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -11213,6 +12473,86 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat_redirect"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP Maximum Segment Size (MSS) adjustment",
+            "depends": "x_tables"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "",
+            "depends": "x_tables,nf_nat"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "yt6801": {
             "description": "Motorcomm YT6801 Gigabit Ethernet Driver (Compiled by RR for DSM)",
@@ -12674,6 +14014,50 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ipv6,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
         "ipmi_devintf": {
             "description": "Linux device interface for the IPMI message handler.",
             "depends": "ipmi_msghandler"
@@ -12693,6 +14077,22 @@
         "ipmi_ssif": {
             "description": "IPMI driver for management controllers on a SMBus",
             "depends": "ipmi_msghandler"
+        },
+        "ipt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat_masquerade_ipv4,x_tables"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat_ipv4"
         },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
@@ -12937,6 +14337,82 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_conntrack_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv4"
+        },
+        "nf_conntrack_ipv6": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack,nf_conntrack_proto_gre"
+        },
+        "nf_conntrack_proto_gre": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": "ipv6"
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_ipv4": {
+            "description": "",
+            "depends": "nf_nat,nf_conntrack"
+        },
+        "nf_nat_masquerade_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_nat"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat_proto_gre,nf_nat,nf_conntrack"
+        },
+        "nf_nat_proto_gre": {
+            "description": "Netfilter NAT protocol helper module for GRE",
+            "depends": "nf_nat"
+        },
+        "nf_nat_redirect": {
+            "description": "",
+            "depends": "nf_nat"
+        },
+        "nfnetlink": {
+            "description": "",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -13318,6 +14794,58 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcp_bic": {
+            "description": "BIC TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_cdg": {
+            "description": "TCP CDG (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_dctcp": {
+            "description": "DataCenter TCP (DCTCP) (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_highspeed": {
+            "description": "High Speed TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_htcp": {
+            "description": "H-TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_hybla": {
+            "description": "TCP Hybla (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_illinois": {
+            "description": "TCP Illinois (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_lp": {
+            "description": "TCP Low Priority (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_scalable": {
+            "description": "Scalable TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_vegas": {
+            "description": "TCP Vegas (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_veno": {
+            "description": "TCP Veno (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_westwood": {
+            "description": "TCP Westwood+ (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_yeah": {
+            "description": "YeAH TCP (Compiled by RR for DSM)",
+            "depends": "tcp_vegas"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -13449,6 +14977,86 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat_redirect"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP Maximum Segment Size (MSS) adjustment",
+            "depends": "x_tables"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "",
+            "depends": "x_tables,nf_nat"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "yt6801": {
             "description": "Motorcomm YT6801 Gigabit Ethernet Driver (Compiled by RR for DSM)",
@@ -18515,6 +20123,50 @@
             "description": "IOSF Mailbox Interface accessor",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ipv6,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
         "ipmi_devintf": {
             "description": "Linux device interface for the IPMI message handler.",
             "depends": "ipmi_msghandler"
@@ -18534,6 +20186,22 @@
         "ipmi_ssif": {
             "description": "IPMI driver for management controllers on a SMBus",
             "depends": "ipmi_msghandler"
+        },
+        "ipt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat_masquerade_ipv4,x_tables"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat_ipv4"
         },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
@@ -18774,6 +20442,82 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_conntrack_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv4"
+        },
+        "nf_conntrack_ipv6": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack,nf_conntrack_proto_gre"
+        },
+        "nf_conntrack_proto_gre": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": "ipv6"
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_ipv4": {
+            "description": "",
+            "depends": "nf_nat,nf_conntrack"
+        },
+        "nf_nat_masquerade_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_nat"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat_proto_gre,nf_nat,nf_conntrack"
+        },
+        "nf_nat_proto_gre": {
+            "description": "Netfilter NAT protocol helper module for GRE",
+            "depends": "nf_nat"
+        },
+        "nf_nat_redirect": {
+            "description": "",
+            "depends": "nf_nat"
+        },
+        "nfnetlink": {
+            "description": "",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -19159,6 +20903,58 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcp_bic": {
+            "description": "BIC TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_cdg": {
+            "description": "TCP CDG (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_dctcp": {
+            "description": "DataCenter TCP (DCTCP) (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_highspeed": {
+            "description": "High Speed TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_htcp": {
+            "description": "H-TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_hybla": {
+            "description": "TCP Hybla (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_illinois": {
+            "description": "TCP Illinois (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_lp": {
+            "description": "TCP Low Priority (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_scalable": {
+            "description": "Scalable TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_vegas": {
+            "description": "TCP Vegas (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_veno": {
+            "description": "TCP Veno (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_westwood": {
+            "description": "TCP Westwood+ (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_yeah": {
+            "description": "YeAH TCP (Compiled by RR for DSM)",
+            "depends": "tcp_vegas"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -19310,6 +21106,86 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat_redirect"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP Maximum Segment Size (MSS) adjustment",
+            "depends": "x_tables"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "",
+            "depends": "x_tables,nf_nat"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "yt6801": {
             "description": "Motorcomm YT6801 Gigabit Ethernet Driver (Compiled by RR for DSM)",
@@ -22445,6 +24321,50 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ipv6,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
         "ipmi_devintf": {
             "description": "Linux device interface for the IPMI message handler.",
             "depends": "ipmi_msghandler"
@@ -22464,6 +24384,22 @@
         "ipmi_ssif": {
             "description": "IPMI driver for management controllers on a SMBus",
             "depends": "ipmi_msghandler"
+        },
+        "ipt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat_masquerade_ipv4,x_tables"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat_ipv4"
         },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
@@ -22708,6 +24644,82 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_conntrack_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv4"
+        },
+        "nf_conntrack_ipv6": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack,nf_conntrack_proto_gre"
+        },
+        "nf_conntrack_proto_gre": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": "ipv6"
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_ipv4": {
+            "description": "",
+            "depends": "nf_nat,nf_conntrack"
+        },
+        "nf_nat_masquerade_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_nat"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat_proto_gre,nf_nat,nf_conntrack"
+        },
+        "nf_nat_proto_gre": {
+            "description": "Netfilter NAT protocol helper module for GRE",
+            "depends": "nf_nat"
+        },
+        "nf_nat_redirect": {
+            "description": "",
+            "depends": "nf_nat"
+        },
+        "nfnetlink": {
+            "description": "",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -23089,6 +25101,58 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcp_bic": {
+            "description": "BIC TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_cdg": {
+            "description": "TCP CDG (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_dctcp": {
+            "description": "DataCenter TCP (DCTCP) (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_highspeed": {
+            "description": "High Speed TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_htcp": {
+            "description": "H-TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_hybla": {
+            "description": "TCP Hybla (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_illinois": {
+            "description": "TCP Illinois (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_lp": {
+            "description": "TCP Low Priority (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_scalable": {
+            "description": "Scalable TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_vegas": {
+            "description": "TCP Vegas (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_veno": {
+            "description": "TCP Veno (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_westwood": {
+            "description": "TCP Westwood+ (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_yeah": {
+            "description": "YeAH TCP (Compiled by RR for DSM)",
+            "depends": "tcp_vegas"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -23220,6 +25284,86 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat_redirect"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP Maximum Segment Size (MSS) adjustment",
+            "depends": "x_tables"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "",
+            "depends": "x_tables,nf_nat"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "yt6801": {
             "description": "Motorcomm YT6801 Gigabit Ethernet Driver (Compiled by RR for DSM)",
@@ -24725,6 +26869,50 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ipv6,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
         "ipmi_devintf": {
             "description": "Linux device interface for the IPMI message handler.",
             "depends": "ipmi_msghandler"
@@ -24744,6 +26932,22 @@
         "ipmi_ssif": {
             "description": "IPMI driver for management controllers on a SMBus",
             "depends": "ipmi_msghandler"
+        },
+        "ipt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat_masquerade_ipv4,x_tables"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat_ipv4"
         },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
@@ -24988,6 +27192,82 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_conntrack_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv4"
+        },
+        "nf_conntrack_ipv6": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack,nf_conntrack_proto_gre"
+        },
+        "nf_conntrack_proto_gre": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": "ipv6"
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_ipv4": {
+            "description": "",
+            "depends": "nf_nat,nf_conntrack"
+        },
+        "nf_nat_masquerade_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_nat"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat_proto_gre,nf_nat,nf_conntrack"
+        },
+        "nf_nat_proto_gre": {
+            "description": "Netfilter NAT protocol helper module for GRE",
+            "depends": "nf_nat"
+        },
+        "nf_nat_redirect": {
+            "description": "",
+            "depends": "nf_nat"
+        },
+        "nfnetlink": {
+            "description": "",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -25373,6 +27653,58 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcp_bic": {
+            "description": "BIC TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_cdg": {
+            "description": "TCP CDG (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_dctcp": {
+            "description": "DataCenter TCP (DCTCP) (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_highspeed": {
+            "description": "High Speed TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_htcp": {
+            "description": "H-TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_hybla": {
+            "description": "TCP Hybla (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_illinois": {
+            "description": "TCP Illinois (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_lp": {
+            "description": "TCP Low Priority (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_scalable": {
+            "description": "Scalable TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_vegas": {
+            "description": "TCP Vegas (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_veno": {
+            "description": "TCP Veno (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_westwood": {
+            "description": "TCP Westwood+ (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_yeah": {
+            "description": "YeAH TCP (Compiled by RR for DSM)",
+            "depends": "tcp_vegas"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -25504,6 +27836,86 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat_redirect"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP Maximum Segment Size (MSS) adjustment",
+            "depends": "x_tables"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "",
+            "depends": "x_tables,nf_nat"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "yt6801": {
             "description": "Motorcomm YT6801 Gigabit Ethernet Driver (Compiled by RR for DSM)",
@@ -28751,6 +31163,50 @@
             "description": "Cpuidle driver for Intel Hardware v0.4.1",
             "depends": ""
         },
+        "ip6_tables": {
+            "description": "IPv6 packet filter",
+            "depends": "x_tables"
+        },
+        "ip6table_filter": {
+            "description": "ip6tables filter table",
+            "depends": "x_tables,ip6_tables"
+        },
+        "ip6table_mangle": {
+            "description": "ip6tables mangle table",
+            "depends": "x_tables,ipv6,ip6_tables"
+        },
+        "ip_set": {
+            "description": "core IP set support",
+            "depends": "nfnetlink"
+        },
+        "ip_set_hash_ip": {
+            "description": "hash:ip type of IP sets, revisions 0-4",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipport": {
+            "description": "hash:ip,port type of IP sets, revisions 0-5",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_ipportnet": {
+            "description": "hash:ip,port,net type of IP sets, revisions 0-7",
+            "depends": "ip_set"
+        },
+        "ip_set_hash_net": {
+            "description": "hash:net type of IP sets, revisions 0-6",
+            "depends": "ip_set"
+        },
+        "ip_tables": {
+            "description": "IPv4 packet filter",
+            "depends": "x_tables"
+        },
+        "ip_vs": {
+            "description": "",
+            "depends": "nf_conntrack,ipv6"
+        },
+        "ip_vs_rr": {
+            "description": "",
+            "depends": "ip_vs"
+        },
         "ipmi_devintf": {
             "description": "Linux device interface for the IPMI message handler.",
             "depends": "ipmi_msghandler"
@@ -28770,6 +31226,22 @@
         "ipmi_ssif": {
             "description": "IPMI driver for management controllers on a SMBus",
             "depends": "ipmi_msghandler"
+        },
+        "ipt_MASQUERADE": {
+            "description": "Xtables: automatic-address SNAT",
+            "depends": "nf_nat_masquerade_ipv4,x_tables"
+        },
+        "iptable_filter": {
+            "description": "iptables filter table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_mangle": {
+            "description": "iptables mangle table",
+            "depends": "x_tables,ip_tables"
+        },
+        "iptable_nat": {
+            "description": "",
+            "depends": "ip_tables,nf_nat_ipv4"
         },
         "ipv6": {
             "description": "IPv6 protocol stack for Linux",
@@ -29018,6 +31490,82 @@
         "netxen_nic": {
             "description": "QLogic/NetXen (1/10) GbE Intelligent Ethernet Driver",
             "depends": ""
+        },
+        "nf_conntrack": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_conntrack_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv4"
+        },
+        "nf_conntrack_ipv6": {
+            "description": "",
+            "depends": "nf_conntrack,nf_defrag_ipv6,ipv6"
+        },
+        "nf_conntrack_pptp": {
+            "description": "Netfilter connection tracking helper module for PPTP",
+            "depends": "nf_conntrack,nf_conntrack_proto_gre"
+        },
+        "nf_conntrack_proto_gre": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_defrag_ipv4": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_defrag_ipv6": {
+            "description": "",
+            "depends": "ipv6"
+        },
+        "nf_log_common": {
+            "description": "",
+            "depends": ""
+        },
+        "nf_log_ipv4": {
+            "description": "Netfilter IPv4 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_log_ipv6": {
+            "description": "Netfilter IPv6 packet logging",
+            "depends": "nf_log_common"
+        },
+        "nf_nat": {
+            "description": "",
+            "depends": "nf_conntrack"
+        },
+        "nf_nat_ipv4": {
+            "description": "",
+            "depends": "nf_nat,nf_conntrack"
+        },
+        "nf_nat_masquerade_ipv4": {
+            "description": "",
+            "depends": "nf_conntrack,nf_nat"
+        },
+        "nf_nat_pptp": {
+            "description": "Netfilter NAT helper module for PPTP",
+            "depends": "nf_conntrack_pptp,nf_nat_proto_gre,nf_nat,nf_conntrack"
+        },
+        "nf_nat_proto_gre": {
+            "description": "Netfilter NAT protocol helper module for GRE",
+            "depends": "nf_nat"
+        },
+        "nf_nat_redirect": {
+            "description": "",
+            "depends": "nf_nat"
+        },
+        "nfnetlink": {
+            "description": "",
+            "depends": ""
+        },
+        "nfnetlink_acct": {
+            "description": "nfacct: Extended Netfilter accounting infrastructure",
+            "depends": "nfnetlink"
+        },
+        "nfnetlink_queue": {
+            "description": "netfilter packet queue handler",
+            "depends": "nfnetlink"
         },
         "ntfs": {
             "description": "NTFS 1.2/3.x driver - Copyright (c) 2001-2014 Anton Altaparmakov and Tuxera Inc. (Compiled by RR for DSM)",
@@ -29407,6 +31955,58 @@
             "description": "1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)",
             "depends": ""
         },
+        "tcp_bic": {
+            "description": "BIC TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_cdg": {
+            "description": "TCP CDG (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_dctcp": {
+            "description": "DataCenter TCP (DCTCP) (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_highspeed": {
+            "description": "High Speed TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_htcp": {
+            "description": "H-TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_hybla": {
+            "description": "TCP Hybla (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_illinois": {
+            "description": "TCP Illinois (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_lp": {
+            "description": "TCP Low Priority (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_scalable": {
+            "description": "Scalable TCP (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_vegas": {
+            "description": "TCP Vegas (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_veno": {
+            "description": "TCP Veno (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_westwood": {
+            "description": "TCP Westwood+ (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "tcp_yeah": {
+            "description": "YeAH TCP (Compiled by RR for DSM)",
+            "depends": "tcp_vegas"
+        },
         "tehuti": {
             "description": "Tehuti Networks(R) Network Driver (Compiled by RR for DSM)",
             "depends": ""
@@ -29538,6 +32138,86 @@
         "wireguard": {
             "description": "WireGuard secure network tunnel",
             "depends": "ipv6,udp_tunnel,ip6_udp_tunnel"
+        },
+        "x_tables": {
+            "description": "{ip,ip6,arp,eb}_tables backend module",
+            "depends": ""
+        },
+        "xt_LOG": {
+            "description": "Xtables: IPv4/IPv6 packet logging",
+            "depends": "x_tables"
+        },
+        "xt_NFQUEUE": {
+            "description": "Xtables: packet forwarding to netlink",
+            "depends": "x_tables"
+        },
+        "xt_REDIRECT": {
+            "description": "Xtables: Connection redirection to localhost",
+            "depends": "x_tables,nf_nat_redirect"
+        },
+        "xt_TCPMSS": {
+            "description": "Xtables: TCP Maximum Segment Size (MSS) adjustment",
+            "depends": "x_tables"
+        },
+        "xt_addrtype": {
+            "description": "Xtables: address type match",
+            "depends": "x_tables"
+        },
+        "xt_conntrack": {
+            "description": "Xtables: connection tracking state match",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_iprange": {
+            "description": "Xtables: arbitrary IPv4 range matching",
+            "depends": "x_tables"
+        },
+        "xt_ipvs": {
+            "description": "Xtables: match IPVS connection properties",
+            "depends": "x_tables,ip_vs"
+        },
+        "xt_l2tp": {
+            "description": "Xtables: L2TP header match",
+            "depends": "x_tables"
+        },
+        "xt_limit": {
+            "description": "Xtables: rate-limit match",
+            "depends": "x_tables"
+        },
+        "xt_mac": {
+            "description": "Xtables: MAC address match",
+            "depends": "x_tables"
+        },
+        "xt_mark": {
+            "description": "Xtables: packet mark operations",
+            "depends": "x_tables"
+        },
+        "xt_multiport": {
+            "description": "Xtables: multiple port matching for TCP, UDP, UDP-Lite, SCTP and DCCP",
+            "depends": "x_tables"
+        },
+        "xt_nat": {
+            "description": "",
+            "depends": "x_tables,nf_nat"
+        },
+        "xt_policy": {
+            "description": "Xtables: IPsec policy match",
+            "depends": "x_tables"
+        },
+        "xt_recent": {
+            "description": "Xtables: \"recently-seen\" host matching",
+            "depends": "x_tables"
+        },
+        "xt_set": {
+            "description": "Xtables: IP set match and target module",
+            "depends": "x_tables,ip_set"
+        },
+        "xt_state": {
+            "description": "ip[6]_tables connection tracking state match module",
+            "depends": "x_tables,nf_conntrack"
+        },
+        "xt_tcpudp": {
+            "description": "Xtables: TCP, UDP and UDP-Lite match",
+            "depends": "x_tables"
         },
         "yt6801": {
             "description": "Motorcomm YT6801 Gigabit Ethernet Driver (Compiled by RR for DSM)",
