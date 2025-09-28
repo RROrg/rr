@@ -466,7 +466,7 @@ function convertova() {
   # Download and install ovftool if it doesn't exist
   if [ ! -x ovftool/ovftool ]; then
     rm -rf ovftool ovftool.zip
-    curl -skL https://github.com/rgl/ovftool-binaries/raw/main/archive/VMware-ovftool-4.6.0-21452615-lin.x86_64.zip -o ovftool.zip
+    curl -skL https://github.com/rgl/ovftool-binaries/raw/main/archive/VMware-ovftool-4.6.3-24031167-lin.x86_64.zip -o ovftool.zip
     if [ $? -ne 0 ]; then
       echo "Failed to download ovftool"
       exit 1
