@@ -336,7 +336,7 @@ function _bootwait() {
 }
 
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
-if [ "${DIRECT}" = "true" ] || [ "${MEV:-physical}" = "parallels" ]; then
+if [ "${DIRECT}" = "true" ] || echo "parallels xen" | grep -qw "${MEV:-physical}"; then
   # grubenv file limit is 1024 bytes.
   grub-editenv "${USER_RSYSENVFILE}" create
   grub-editenv "${USER_RSYSENVFILE}" set rr_version="${WTITLE}"
