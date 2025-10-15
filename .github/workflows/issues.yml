@@ -268,7 +268,7 @@ jobs:
               ;;
             vmdk)
               echo "VMDK"
-              qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' rr/rr.vmdk
+              qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=monolithicSparse,compat6' rr/rr.vmdk
               (cd rr && sha256sum rr.vmdk >../sha256sum)
               zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk sha256sum README.txt
               ;;

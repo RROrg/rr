@@ -49,7 +49,7 @@
   # brew install qemu-img                      # MacOS
 
   # img to vmdk (VMWare / ESXi6 / ESXi7)
-  qemu-img convert -O vmdk -o adapter_type=lsilogic,subformat=streamOptimized,compat6 rr.img rr.vmdk
+  qemu-img convert -O vmdk -o adapter_type=lsilogic,subformat=monolithicSparse,compat6 rr.img rr.vmdk
 
   # img to vmdk (ESXi8)
   qemu-img convert -O vmdk -o adapter_type=lsilogic,subformat=monolithicFlat,compat6 rr.img rr.vmdk

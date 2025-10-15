@@ -365,7 +365,7 @@ function createvmx() {
   # Convert raw image to VMDK
   rm -rf "VMX_${VMNAME}"
   mkdir -p "VMX_${VMNAME}"
-  qemu-img convert -O vmdk -o 'adapter_type=lsilogic,subformat=streamOptimized,compat6' "${BLIMAGE}" "VMX_${VMNAME}/${VMNAME}-disk1.vmdk"
+	qemu-img convert -O vmdk -o 'adapter_type=lsilogic,subformat=monolithicSparse,compat6' "${BLIMAGE}" "VMX_${VMNAME}/${VMNAME}-disk1.vmdk" # 'adapter_type=lsilogic,subformat=streamOptimized,compat6'
   qemu-img create -f vmdk "VMX_${VMNAME}/${VMNAME}-disk2.vmdk" "32G"
 
   # Create VM configuration
