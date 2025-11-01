@@ -61,15 +61,16 @@ function getAllModules() {
   UNPATH="${TMP_PATH}/modules"
   unpackModules "${PLATFORM}" "${PKVER}" "${UNPATH}"
 
-  for F in ${UNPATH}/*.ko; do
-    [ ! -e "${F}" ] && continue
-    local N DESC
-    N="$(basename "${F}" .ko)"
-    DESC="$(modinfo -F description "${F}" 2>/dev/null)"
-    DESC="$(echo "${DESC}" | tr -d '\n\r\t\\' | sed "s/\"/'/g")"
-    echo "${N} \"${DESC:-${N}}\""
+  for D in "" "update"; do
+    for F in ${UNPATH}/${D:+${D}/}*.ko; do
+      [ ! -e "${F}" ] && continue
+      local N DESC
+      N="$(basename "${F}" .ko)"
+      DESC="$(modinfo -F description "${F}" 2>/dev/null)"
+      DESC="$(echo "${DESC}" | tr -d '\n\r\t\\' | sed "s/\"/'/g")"
+      echo "${D:+${D}/}${N} \"${DESC:-${D:+${D}/}${N}}\""
+    done
   done
-
   rm -rf "${UNPATH}"
 }
 
@@ -122,15 +123,18 @@ function installModules() {
   unpackModules "${PLATFORM}" "${PKVER}" "${UNPATH}"
 
   ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")"
-  for F in ${UNPATH}/*.ko; do
-    [ ! -e "${F}" ] && continue
-    M=$(basename "${F}")
-    [ "${ODP}" = "true" ] && [ -f "${RAMDISK_PATH}/usr/lib/modules/${M}" ] && continue
-    if echo "${MLIST}" | grep -wq "$(basename "${M}" .ko)"; then
-      cp -f "${F}" "${RAMDISK_PATH}/usr/lib/modules/${M}" 2>"${LOG_FILE}"
-    else
-      rm -f "${RAMDISK_PATH}/usr/lib/modules/${M}" 2>"${LOG_FILE}"
-    fi
+  for D in "" "update"; do
+    for F in ${UNPATH}/${D:+${D}/}*.ko; do
+      [ ! -e "${F}" ] && continue
+      M=$(basename "${F}")
+      [ "${ODP}" = "true" ] && [ -f "${RAMDISK_PATH}/usr/lib/modules/${D:+${D}/}${M}" ] && continue # TODO: check if module is already loaded
+      if echo "${MLIST}" | grep -wq "${D:+${D}/}$(basename "${M}" .ko)"; then
+        mkdir -p "${RAMDISK_PATH}/usr/lib/modules/${D:+${D}/}"
+        cp -f "${F}" "${RAMDISK_PATH}/usr/lib/modules/${D:+${D}/}${M}" 2>"${LOG_FILE}"
+      else
+        rm -f "${RAMDISK_PATH}/usr/lib/modules/${D:+${D}/}${M}" 2>"${LOG_FILE}"
+      fi
+    done
   done
   rm -rf "${UNPATH}"
 
