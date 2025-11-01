@@ -456,6 +456,7 @@ function reconfiguringV() {
       deleteConfigKey "addons.\"${ADDON}\"" "${USER_CONFIG_FILE}"
     fi
   done <<<"$(readConfigMap "addons" "${USER_CONFIG_FILE}")"
+
   # Rewrite modules
   writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
   mergeConfigModules "$(getAllModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" | awk '{print $1}')" "${USER_CONFIG_FILE}"

@@ -100,6 +100,7 @@ while IFS=': ' read -r KEY VALUE; do
 done <<<"$(readConfigMap "synoinfo" "${USER_CONFIG_FILE}")"
 
 # Patches (diff -Naru OLDFILE NEWFILE > xxx.patch)
+echo -n "."
 PATCHS=(
   "ramdisk-etc-rc-*.patch"
   "ramdisk-init-script-*.patch"
@@ -119,11 +120,26 @@ for PE in "${PATCHS[@]}"; do
   done
   [ ${RET} -ne 0 ] && exit 1
 done
+# for DSM 7.3
+sed -i 's#/usr/syno/sbin/broadcom_update.sh#/usr/syno/sbin/broadcom_update.sh.rr#g' "${RAMDISK_PATH}/linuxrc.syno.impl"
+# LKM
+gzip -dc "${LKMS_PATH}/rp-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko" 2>"${LOG_FILE}" || exit 1
+if [ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ]; then
+  # Copying fake modprobe
+  cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
+else
+  # for issues/313
+  sed -i 's#/dev/console#/var/log/lrc#g' "${RAMDISK_PATH}/usr/bin/busybox"
+  sed -i '/^echo "START/a \\nmknod -m 0666 /dev/console c 1 3' "${RAMDISK_PATH}/linuxrc.syno"
+fi
 
-mkdir -p "${RAMDISK_PATH}/addons"
+if [ "${PLATFORM}" = "broadwellntbap" ]; then
+  sed -i 's/IsUCOrXA="yes"/XIsUCOrXA="yes"/g; s/IsUCOrXA=yes/XIsUCOrXA=yes/g' "${RAMDISK_PATH}/usr/syno/share/environments.sh"
+fi
 
 # Addons
 echo -n "."
+mkdir -p "${RAMDISK_PATH}/addons"
 echo "Create addons.sh" >"${LOG_FILE}"
 {
   echo "#!/bin/sh"
@@ -159,14 +175,17 @@ for ADDON in "${!ADDONS[@]}"; do
   echo "/addons/${ADDON}.sh \${1} ${PARAMS}" >>"${RAMDISK_PATH}/addons/addons.sh" 2>>"${LOG_FILE}" || exit 1
 done
 
-# Extract ck modules to ramdisk
+# Modules
 echo -n "."
 installModules "${PLATFORM}" "${KPRE:+${KPRE}-}${KVER}" "${!MODULES[@]}" || exit 1
-
-# Copying fake modprobe
-[ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ] && cp -f "${WORK_PATH}/patch/iosched-trampoline.sh" "${RAMDISK_PATH}/usr/sbin/modprobe"
-# Copying LKM to /usr/lib/modules
-gzip -dc "${LKMS_PATH}/rp-${PLATFORM}-${KPRE:+${KPRE}-}${KVER}-${LKM}.ko.gz" >"${RAMDISK_PATH}/usr/lib/modules/rp.ko" 2>"${LOG_FILE}" || exit 1
+# Build modules dependencies
+# ${WORK_PATH}/depmod -a -b ${RAMDISK_PATH} 2>/dev/null  # addon eudev will do this
+# Copying modulelist
+if [ -f "${USER_UP_PATH}/modulelist" ]; then
+  cp -f "${USER_UP_PATH}/modulelist" "${RAMDISK_PATH}/addons/modulelist"
+else
+  cp -f "${WORK_PATH}/patch/modulelist" "${RAMDISK_PATH}/addons/modulelist"
+fi
 
 # Patch synoinfo.conf
 echo -n "."
@@ -189,17 +208,7 @@ fi
 echo -n "."
 echo "Modify files" >"${LOG_FILE}"
 # Remove function from scripts
-[ "2" = "${BUILDNUM:0:1}" ] && find "${RAMDISK_PATH}/addons/" -type f -name "*.sh" -exec sed -i 's/function //g' {} \;
-
-# Build modules dependencies
-# ${WORK_PATH}/depmod -a -b ${RAMDISK_PATH} 2>/dev/null  # addon eudev will do this
-
-# Copying modulelist
-if [ -f "${USER_UP_PATH}/modulelist" ]; then
-  cp -f "${USER_UP_PATH}/modulelist" "${RAMDISK_PATH}/addons/modulelist"
-else
-  cp -f "${WORK_PATH}/patch/modulelist" "${RAMDISK_PATH}/addons/modulelist"
-fi
+[ "${BUILDNUM}" -le 25556 ] && find "${RAMDISK_PATH}/addons/" -type f -name "*.sh" -exec sed -i 's/function //g' {} \;
 
 # backup current loader configs
 mkdir -p "${RAMDISK_PATH}/usr/rr"
@@ -231,18 +240,6 @@ done
 for N in $(seq 0 7); do
   echo -e "DEVICE=eth${N}\nBOOTPROTO=dhcp\nONBOOT=yes\nIPV6INIT=auto_dhcp\nIPV6_ACCEPT_RA=1" >"${RAMDISK_PATH}/etc/sysconfig/network-scripts/ifcfg-eth${N}"
 done
-
-# issues/313
-if [ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ]; then
-  :
-else
-  sed -i 's#/dev/console#/var/log/lrc#g' "${RAMDISK_PATH}/usr/bin/busybox"
-  sed -i '/^echo "START/a \\nmknod -m 0666 /dev/console c 1 3' "${RAMDISK_PATH}/linuxrc.syno"
-fi
-
-if [ "${PLATFORM}" = "broadwellntbap" ]; then
-  sed -i 's/IsUCOrXA="yes"/XIsUCOrXA="yes"/g; s/IsUCOrXA=yes/XIsUCOrXA=yes/g' "${RAMDISK_PATH}/usr/syno/share/environments.sh"
-fi
 
 # Call user patch scripts
 echo -n "."
