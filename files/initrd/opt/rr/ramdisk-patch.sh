@@ -37,7 +37,7 @@ KVER="$(readConfigKey "kver" "${USER_CONFIG_FILE}")"
 KPRE="$(readConfigKey "kpre" "${USER_CONFIG_FILE}")"
 
 # Sanity check
-if [ -z "${PLATFORM}" ] || [ -z "${KVER}" ]; then
+if [ -z "${PLATFORM}" ] || [ -z "${KPRE:+${KPRE}-}${KVER}" ]; then
   echo "ERROR: Configuration for model ${MODEL} and productversion ${PRODUCTVER} not found." >"${LOG_FILE}"
   exit 1
 fi
