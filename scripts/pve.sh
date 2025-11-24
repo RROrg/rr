@@ -139,7 +139,14 @@ fi
 echo "Creating VM with RR ... "
 
 # 获取可用的 VMID
-VMID="$(($(qm list | awk 'NR>1{print $1}' | sort -n | tail -1 2>/dev/null || echo 99) + 1))"
+last_vmid=$(qm list | awk 'NR>1{print$1}' | sort -n | tail -1 2>/dev/null)
+if [ -z "$last_vmid" ]; then
+  # 如果 last_vmid 是空字符串，说明没有VM，设置一个起始ID
+  VMID=100 
+else
+  # 否则，在最后一个ID的基础上加1
+  VMID=$((last_vmid + 1))
+fi
 ARGS=""
 SATAIDX=0
 
