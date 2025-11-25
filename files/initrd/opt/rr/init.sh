@@ -263,9 +263,6 @@ if [ "${DSMLOGO}" = "true" ] && [ -c "/dev/fb0" ] && [ ! -f "/.dockerenv" ]; the
   [ -n "${IP}" ] && URL="http://${IP}:${TTYD:-7681}" || URL="http://rr:${TTYD:-7681}"
   python3 "${WORK_PATH}/include/functions.py" makeqr -d "${URL}" -l "0" -o "${TMP_PATH}/qrcode_init.png"
   [ -f "${TMP_PATH}/qrcode_init.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_init.png" >/dev/null 2>&1 || true
-
-  python3 "${WORK_PATH}/include/functions.py" makeqr -f "${WORK_PATH}/include/qhxg.png" -l "7" -o "${TMP_PATH}/qrcode_qhxg.png"
-  [ -f "${TMP_PATH}/qrcode_qhxg.png" ] && echo | fbv -acufi "${TMP_PATH}/qrcode_qhxg.png" >/dev/null 2>&1 || true
 fi
 WEBHOOKURL="$(readConfigKey "webhookurl" "${USER_CONFIG_FILE}")"
 if [ -n "${WEBHOOKURL}" ] && [ ! -f "${TMP_PATH}/WebhookSent" ] && [ ! -f "/.dockerenv" ]; then
