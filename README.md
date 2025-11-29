@@ -45,6 +45,44 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
   --img <path>             Local image path, use local image if set
   ```
 
+- Docker Compose:
+  ```yml
+  # 请从最新版本中下载 rr.img 文件。
+  # 并将 <path_to_rr.img> 替换为你的 rr.img 文件的实际路径.
+  # Please download the rr.img file from the latest release.
+  # And replace <path_to_rr.img> with the actual path to your rr.img file.
+
+  version: "3.9"
+  services:
+    rr:
+      image: qemux/qemu:latest
+      container_name: rr
+      environment:
+        BOOT: ""
+        RAM_SIZE: "4G"  # >= 4G recommended for DSM
+        CPU_CORES: "2"
+        DISK_TYPE: "sata"
+        DISK_SIZE: "32G"  # data disk size
+        ARGUMENTS: "-device nec-usb-xhci,id=usb0,multifunction=on -drive file=/rr.img,media=disk,format=raw,if=none,id=udisk1 -device usb-storage,bus=usb0.0,port=1,drive=udisk1,bootindex=999,removable=on"
+      devices:
+        - /dev/kvm
+        - /dev/net/tun
+      cap_add:
+        - NET_ADMIN
+      ports:
+        - 5000:5000  # For DSM management
+        - 5001:5001  # For DSM management
+        - 7681:7681  # For RR management
+        - 7304:7304  # For RR management
+        - 7080:7080  # For RR management
+        - 8006:8006  # For QEMU management
+      volumes:
+        - ./rr.img:/rr.img  # <path_to_rr.img>:/rr.img
+        - ./data:/storage
+      restart: always
+      stop_grace_period: 2m
+
+  ```
 
 ### 4: GPU:
 
