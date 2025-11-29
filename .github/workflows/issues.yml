@@ -29,11 +29,13 @@ jobs:
           # -*- coding: utf-8 -*-
           import json
           import os
+          import subprocess
 
           def set_env(name, value):
-            with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as f:
-              f.write(f'{name}={value}\n')
-
+              subprocess.call(f'echo "{name}<<EOF" >> $GITHUB_ENV', shell=True)
+              subprocess.call(f'echo "{value}" >> $GITHUB_ENV', shell=True)
+              subprocess.call(f'echo "EOF" >> $GITHUB_ENV', shell=True)
+  
           issuetitle = """${{ github.event.issue.title }}"""
           issuebody = """${{ github.event.issue.body }}"""
 
