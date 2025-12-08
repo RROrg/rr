@@ -3550,11 +3550,10 @@ function downloadExts() {
   TAG=""
   if [ "${PRERELEASE}" = "true" ]; then
     # TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | pup 'a[class="Link--muted"] attr{href}' | grep ".zip" | head -1)"
-    TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | grep "/refs/tags/.*\.zip" | sed -E 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
+    TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | grep "/refs/tags/.*\.zip" | sed -E 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1 | sed 's/^[v|V]//g')"
   else
-    TAG="$(curl -skL --connect-timeout 10 -w "%{url_effective}" -o /dev/null "${PROXY}${3}/releases/latest" | awk -F'/' '{print $NF}')"
+    TAG="$(curl -skL --connect-timeout 10 -w "%{url_effective}" -o /dev/null "${PROXY}${3}/releases/latest" | awk -F'/' '{print $NF}' | sed 's/^[v|V]//g')"
   fi
-  [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
   if [ "${TAG:-latest}" = "latest" ]; then
     MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error checking new version.")" "$(TEXT "Error")" "Tag is ${TAG}")"
     DIALOG --title "${T}" \

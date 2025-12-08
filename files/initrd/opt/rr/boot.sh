@@ -113,7 +113,7 @@ printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "MEM:     ")" "${MEM}"
 if readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q nvmesystem; then
   [ -z "$(ls /dev/nvme* | grep -vE "${LOADER_DISK}[0-9]?$" 2>/dev/null)" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one m.2 disk for system installation.")"
 else
-	[ -z "$(ls /dev/sd* | grep -vE "${LOADER_DISK}[0-9]?$" 2>/dev/null)" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one sata disk for system installation.")"
+  [ -z "$(ls /dev/sd* | grep -vE "${LOADER_DISK}[0-9]?$" 2>/dev/null)" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one sata disk for system installation.")"
 fi
 
 if checkBIOS_VT_d && [ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ]; then
@@ -163,6 +163,15 @@ fi
 [ -n "${MAC2}" ] && CMDLINE['mac2']="${MAC2}" && CMDLINE['netif_num']="2"
 
 CMDLINE['skip_vender_mac_interfaces']="$(seq -s, 0 $((${CMDLINE['netif_num']:-1} - 1)))"
+
+ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort)"
+for N in ${ETHX}; do
+  MAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)" || MAC="00:00:00:00:00:00"
+  BUS="$(ethtool -i "${N}" 2>/dev/null | grep "bus-info" | cut -d' ' -f2)" || BUS="0000:00:00.0"
+  if [ ! "${MAC}" = "00:00:00:00:00:00" ] && [ ! "${BUS}" = "0000:00:00.0" ]; then
+    CMDLINE["R${BUS}"]="${MAC}"
+  fi
+done
 
 # set fixed cmdline
 if grep -q "force_junior" /proc/cmdline; then

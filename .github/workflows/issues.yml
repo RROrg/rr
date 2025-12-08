@@ -161,11 +161,10 @@ jobs:
 
           TAG=""
           if [ "${PRERELEASE}" = "true" ]; then
-            TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep "/refs/tags/.*\.zip" | sed -E 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1)"
+            TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep "/refs/tags/.*\.zip" | sed -E 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1 | sed 's/^[v|V]//g')"
           else
-            TAG="$(curl -skL --connect-timeout 10 -w "%{url_effective}" -o /dev/null "${REPO}/releases/latest" | awk -F'/' '{print $NF}')"
+            TAG="$(curl -skL --connect-timeout 10 -w "%{url_effective}" -o /dev/null "${REPO}/releases/latest" | awk -F'/' '{print $NF}' | sed 's/^[v|V]//g')"
           fi
-          [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
           rm -f rr-${TAG}.img.zip
           STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${REPO}/releases/download/${TAG}/rr-${TAG}.img.zip" -o "rr-${TAG}.img.zip")
           if [ $? -ne 0 ] || [ ${STATUS:-0} -ne 200 ]; then

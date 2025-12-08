@@ -71,8 +71,7 @@ while true; do
     shift 2
     ;;
   --tag)
-    TAG="$2"
-    [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+    TAG="$(echo "$2" | sed 's/^[v|V]//g')"
     shift 2
     ;;
   --img)
@@ -97,8 +96,7 @@ if ! command -v qm >/dev/null 2>&1; then
 fi
 
 if [ -z "$TAG" ]; then
-  TAG="$(curl -skL --connect-timeout 10 -w "%{url_effective}" -o /dev/null "${REPO}/releases/latest" | awk -F'/' '{print $NF}')"
-  [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
+  TAG="$(curl -skL --connect-timeout 10 -w "%{url_effective}" -o /dev/null "${REPO}/releases/latest" | awk -F'/' '{print $NF}' | sed 's/^[v|V]//g')"
 fi
 
 if [ -n "${IMG}" ] && [ -f "${IMG}" ]; then

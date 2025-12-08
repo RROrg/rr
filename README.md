@@ -61,6 +61,7 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
         BOOT: ""
         RAM_SIZE: "4G"  # >= 4G recommended for DSM
         CPU_CORES: "2"
+        DISK_FMT: "qcow2"
         DISK_TYPE: "sata"
         DISK_SIZE: "32G"  # data disk size
         ARGUMENTS: "-device nec-usb-xhci,id=usb0,multifunction=on -drive file=/rr.img,media=disk,format=raw,if=none,id=udisk1 -device usb-storage,bus=usb0.0,port=1,drive=udisk1,bootindex=999,removable=on"
