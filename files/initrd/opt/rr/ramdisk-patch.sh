@@ -59,8 +59,8 @@ mkdir -p "${RAMDISK_PATH}"
 # Check if DSM buildnumber changed
 . "${RAMDISK_PATH}/etc/VERSION"
 
-if [ -n "${PRODUCTVER}" ] && [ -n "${BUILDNUM}" ] && [ -n "${SMALLNUM}" ] &&
-  ([ ! "${PRODUCTVER}" = "${majorversion:-0}.${minorversion:-0}" ] || [ ! "${BUILDNUM}" = "${buildnumber:-0}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber:-0}" ]); then
+if [ -n "${PRODUCTVER}" ] && [ -n "${BUILDNUM}" ] && [ -n "${SMALLNUM}" ] \
+  && ([ ! "${PRODUCTVER}" = "${majorversion:-0}.${minorversion:-0}" ] || [ ! "${BUILDNUM}" = "${buildnumber:-0}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber:-0}" ]); then
   OLDVER="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
   NEWVER="${majorversion}.${minorversion}(${buildnumber}$([ ${smallfixnumber:-0} -ne 0 ] && echo "u${smallfixnumber}"))"
   echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${OLDVER}\033[1;32m to \033[1;31m${NEWVER}\033[0m"
@@ -144,7 +144,7 @@ echo "Create addons.sh" >"${LOG_FILE}"
 {
   echo "#!/bin/sh"
   echo 'echo "addons.sh called with params ${@}"'
-  echo "export LOADERLABEL=\"RR\""
+  echo 'export LOADERLABEL="RR"'
   echo "export LOADERRELEASE=\"${RR_RELEASE}\""
   echo "export LOADERVERSION=\"${RR_VERSION}\""
   echo "export PLATFORM=\"${PLATFORM}\""
@@ -213,7 +213,7 @@ echo "Modify files" >"${LOG_FILE}"
 # backup current loader configs
 mkdir -p "${RAMDISK_PATH}/usr/rr"
 {
-  echo "LOADERLABEL=\"RR\""
+  echo 'LOADERLABEL="RR"'
   echo "LOADERRELEASE=\"${RR_RELEASE}\""
   echo "LOADERVERSION=\"${RR_VERSION}\""
 } >"${RAMDISK_PATH}/usr/rr/VERSION"

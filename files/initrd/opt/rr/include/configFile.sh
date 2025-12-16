@@ -48,7 +48,7 @@ function mergeConfigModules() {
   XF=$(mktemp 2>/dev/null)
   XF=${XF:-/tmp/tmp.XXXXXXXXXX}
   echo -en "${ML}" | yq -p p -o y >"${XF}"
-  deleteConfigKey "modules.\"RRORG\"" "${XF}"
+  deleteConfigKey 'modules."RRORG"' "${XF}"
   yq eval-all --inplace '. as $item ireduce ({}; . * $item)' --inplace "${2}" "${XF}" 2>/dev/null
   rm -f "${XF}"
 }

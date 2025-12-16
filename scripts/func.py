@@ -11,6 +11,7 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry  # type: ignore
 from openpyxl import Workbook
 
+
 @click.group()
 def cli():
     """
@@ -21,8 +22,12 @@ def cli():
 
 @cli.command()
 @click.option("-w", "--workpath", type=str, required=True, help="The workpath of RR.")
-@click.option("-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile.")
-@click.option("-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile.")
+@click.option(
+    "-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile."
+)
+@click.option(
+    "-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile."
+)
 def getmodels(workpath, jsonpath, xlsxpath):
     models = {}
     platforms_yml = os.path.join(workpath, "opt", "rr", "platforms.yml")
@@ -37,19 +42,25 @@ def getmodels(workpath, jsonpath, xlsxpath):
                 productvers[V] = f"{kpre}-{kver}" if kpre else kver
             models[P] = {"productvers": productvers, "models": []}
 
-    adapter = HTTPAdapter(max_retries=Retry(total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504]))
+    adapter = HTTPAdapter(
+        max_retries=Retry(
+            total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504]
+        )
+    )
     session = requests.Session()
     session.mount("http://", adapter)
     session.mount("https://", adapter)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    
+
     try:
         url = "http://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
-        #url = "https://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
+        # url = "https://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
 
         req = session.get(url, timeout=10, verify=False)
         req.encoding = "utf-8"
-        p = re.compile(r"<mUnique>(.*?)</mUnique>.*?<mLink>(.*?)</mLink>", re.MULTILINE | re.DOTALL)
+        p = re.compile(
+            r"<mUnique>(.*?)</mUnique>.*?<mLink>(.*?)</mLink>", re.MULTILINE | re.DOTALL
+        )
         data = p.findall(req.text)
     except Exception as e:
         click.echo(f"Error: {e}")
@@ -80,34 +91,44 @@ def getmodels(workpath, jsonpath, xlsxpath):
 
 @cli.command()
 @click.option("-w", "--workpath", type=str, required=True, help="The workpath of RR.")
-@click.option("-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile.")
-@click.option("-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile.")
+@click.option(
+    "-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile."
+)
+@click.option(
+    "-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile."
+)
 def getpats(workpath, jsonpath, xlsxpath):
     def __fullversion(ver):
-        arr = ver.split('-')
-        a, b, c = (arr[0].split('.') + ['0', '0', '0'])[:3]
-        d = arr[1] if len(arr) > 1 else '00000'
-        e = arr[2] if len(arr) > 2 else '0'
-        return f'{a}.{b}.{c}-{d}-{e}'
+        arr = ver.split("-")
+        a, b, c = (arr[0].split(".") + ["0", "0", "0"])[:3]
+        d = arr[1] if len(arr) > 1 else "00000"
+        e = arr[2] if len(arr) > 2 else "0"
+        return f"{a}.{b}.{c}-{d}-{e}"
 
     platforms_yml = os.path.join(workpath, "opt", "rr", "platforms.yml")
     with open(platforms_yml, "r") as f:
         data = yaml.safe_load(f)
         platforms = data.get("platforms", [])
 
-    adapter = HTTPAdapter(max_retries=Retry(total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504]))
+    adapter = HTTPAdapter(
+        max_retries=Retry(
+            total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504]
+        )
+    )
     session = requests.Session()
     session.mount("http://", adapter)
     session.mount("https://", adapter)
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    
+
     try:
         url = "http://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
-        #url = "https://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
+        # url = "https://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
 
         req = session.get(url, timeout=10, verify=False)
         req.encoding = "utf-8"
-        p = re.compile(r"<mUnique>(.*?)</mUnique>.*?<mLink>(.*?)</mLink>", re.MULTILINE | re.DOTALL)
+        p = re.compile(
+            r"<mUnique>(.*?)</mUnique>.*?<mLink>(.*?)</mLink>", re.MULTILINE | re.DOTALL
+        )
         data = p.findall(req.text)
     except Exception as e:
         click.echo(f"Error: {e}")
@@ -128,62 +149,94 @@ def getpats(workpath, jsonpath, xlsxpath):
     pats = {}
     for M in models:
         pats[M] = {}
-        version = '7'
+        version = "7"
         urlInfo = "https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
         urlSteps = "https://www.synology.com/api/support/findUpgradeSteps?"
-        #urlInfo = "https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn"
-        #urlSteps = "https://www.synology.cn/api/support/findUpgradeSteps?"
+        # urlInfo = "https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn"
+        # urlSteps = "https://www.synology.cn/api/support/findUpgradeSteps?"
 
-        major = f"&major={version.split('.')[0]}" if len(version.split('.')) > 0 else ""
-        minor = f"&minor={version.split('.')[1]}" if len(version.split('.')) > 1 else ""
+        major = f"&major={version.split('.')[0]}" if len(version.split(".")) > 0 else ""
+        minor = f"&minor={version.split('.')[1]}" if len(version.split(".")) > 1 else ""
         try:
-            req = session.get(f"{urlInfo}&product={M.replace('+', '%2B')}{major}{minor}", timeout=10, verify=False)
+            req = session.get(
+                f"{urlInfo}&product={M.replace('+', '%2B')}{major}{minor}",
+                timeout=10,
+                verify=False,
+            )
             req.encoding = "utf-8"
             data = json.loads(req.text)
         except Exception as e:
             click.echo(f"Error: {e}")
             continue
 
-        build_ver = data['info']['system']['detail'][0]['items'][0]['build_ver']
-        build_num = data['info']['system']['detail'][0]['items'][0]['build_num']
-        buildnano = data['info']['system']['detail'][0]['items'][0]['nano']
+        build_ver = data["info"]["system"]["detail"][0]["items"][0]["build_ver"]
+        build_num = data["info"]["system"]["detail"][0]["items"][0]["build_num"]
+        buildnano = data["info"]["system"]["detail"][0]["items"][0]["nano"]
         V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
         if V not in pats[M]:
             pats[M][V] = {
-                'url': data['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0],
-                'sum': data['info']['system']['detail'][0]['items'][0]['files'][0].get('checksum', '0' * 32)
+                "url": data["info"]["system"]["detail"][0]["items"][0]["files"][0][
+                    "url"
+                ].split("?")[0],
+                "sum": data["info"]["system"]["detail"][0]["items"][0]["files"][0].get(
+                    "checksum", "0" * 32
+                ),
             }
 
-        from_ver = min(I['build'] for I in data['info']['pubVers'])
+        from_ver = min(I["build"] for I in data["info"]["pubVers"])
 
-        for I in data['info']['productVers']:
-            if not I['version'].startswith(version):
+        for I in data["info"]["productVers"]:
+            if not I["version"].startswith(version):
                 continue
             if not major or not minor:
-                majorTmp = f"&major={I['version'].split('.')[0]}" if len(I['version'].split('.')) > 0 else ""
-                minorTmp = f"&minor={I['version'].split('.')[1]}" if len(I['version'].split('.')) > 1 else ""
+                majorTmp = (
+                    f"&major={I['version'].split('.')[0]}"
+                    if len(I["version"].split(".")) > 0
+                    else ""
+                )
+                minorTmp = (
+                    f"&minor={I['version'].split('.')[1]}"
+                    if len(I["version"].split(".")) > 1
+                    else ""
+                )
                 try:
-                    reqTmp = session.get(f"{urlInfo}&product={M.replace('+', '%2B')}{majorTmp}{minorTmp}", timeout=10, verify=False)
+                    reqTmp = session.get(
+                        f"{urlInfo}&product={M.replace('+', '%2B')}{majorTmp}{minorTmp}",
+                        timeout=10,
+                        verify=False,
+                    )
                     reqTmp.encoding = "utf-8"
                     dataTmp = json.loads(reqTmp.text)
                 except Exception as e:
                     click.echo(f"Error: {e}")
                     continue
 
-                build_ver = dataTmp['info']['system']['detail'][0]['items'][0]['build_ver']
-                build_num = dataTmp['info']['system']['detail'][0]['items'][0]['build_num']
-                buildnano = dataTmp['info']['system']['detail'][0]['items'][0]['nano']
+                build_ver = dataTmp["info"]["system"]["detail"][0]["items"][0][
+                    "build_ver"
+                ]
+                build_num = dataTmp["info"]["system"]["detail"][0]["items"][0][
+                    "build_num"
+                ]
+                buildnano = dataTmp["info"]["system"]["detail"][0]["items"][0]["nano"]
                 V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
                 if V not in pats[M]:
                     pats[M][V] = {
-                        'url': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0],
-                        'sum': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0].get('checksum', '0' * 32)
+                        "url": dataTmp["info"]["system"]["detail"][0]["items"][0][
+                            "files"
+                        ][0]["url"].split("?")[0],
+                        "sum": dataTmp["info"]["system"]["detail"][0]["items"][0][
+                            "files"
+                        ][0].get("checksum", "0" * 32),
                     }
 
-            for J in I['versions']:
-                to_ver = J['build']
+            for J in I["versions"]:
+                to_ver = J["build"]
                 try:
-                    reqSteps = session.get(f"{urlSteps}&product={M.replace('+', '%2B')}&from_ver={from_ver}&to_ver={to_ver}", timeout=10, verify=False)
+                    reqSteps = session.get(
+                        f"{urlSteps}&product={M.replace('+', '%2B')}&from_ver={from_ver}&to_ver={to_ver}",
+                        timeout=10,
+                        verify=False,
+                    )
                     if reqSteps.status_code != 200:
                         continue
                     reqSteps.encoding = "utf-8"
@@ -192,17 +245,28 @@ def getpats(workpath, jsonpath, xlsxpath):
                     click.echo(f"Error: {e}")
                     continue
 
-                for S in dataSteps['upgrade_steps']:
-                    if not S.get('full_patch') or not S['build_ver'].startswith(version):
+                for S in dataSteps["upgrade_steps"]:
+                    if not S.get("full_patch") or not S["build_ver"].startswith(
+                        version
+                    ):
                         continue
                     V = __fullversion(f"{S['build_ver']}-{S['build_num']}-{S['nano']}")
                     if V not in pats[M]:
-                        reqPat = session.head(S['files'][0]['url'].split('?')[0].replace("global.synologydownload.com", "global.download.synology.com"), timeout=10, verify=False)
+                        reqPat = session.head(
+                            S["files"][0]["url"]
+                            .split("?")[0]
+                            .replace(
+                                "global.synologydownload.com",
+                                "global.download.synology.com",
+                            ),
+                            timeout=10,
+                            verify=False,
+                        )
                         if reqPat.status_code == 403:
                             continue
                         pats[M][V] = {
-                            'url': S['files'][0]['url'].split('?')[0],
-                            'sum': S['files'][0].get('checksum', '0' * 32)
+                            "url": S["files"][0]["url"].split("?")[0],
+                            "sum": S["files"][0].get("checksum", "0" * 32),
                         }
 
     if jsonpath:
@@ -220,8 +284,12 @@ def getpats(workpath, jsonpath, xlsxpath):
 
 @cli.command()
 @click.option("-w", "--workpath", type=str, required=True, help="The workpath of RR.")
-@click.option("-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile.")
-@click.option("-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile.")
+@click.option(
+    "-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile."
+)
+@click.option(
+    "-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile."
+)
 def getaddons(workpath, jsonpath, xlsxpath):
     AS = glob.glob(os.path.join(workpath, "mnt", "p3", "addons", "*", "manifest.yml"))
     AS.sort()
@@ -231,7 +299,9 @@ def getaddons(workpath, jsonpath, xlsxpath):
             A_data = yaml.safe_load(file)
             A_name = A_data.get("name", "")
             A_system = A_data.get("system", False)
-            A_description = A_data.get("description", {"en_US": "Unknown", "zh_CN": "Unknown"})
+            A_description = A_data.get(
+                "description", {"en_US": "Unknown", "zh_CN": "Unknown"}
+            )
             addons[A_name] = {"system": A_system, "description": A_description}
     if jsonpath:
         with open(jsonpath, "w") as f:
@@ -241,14 +311,25 @@ def getaddons(workpath, jsonpath, xlsxpath):
         ws = wb.active
         ws.append(["Name", "system", "en_US", "zh_CN"])
         for k1, v1 in addons.items():
-            ws.append([k1, v1.get("system", False), v1.get("description").get("en_US", ""), v1.get("description").get("zh_CN", "")])
+            ws.append(
+                [
+                    k1,
+                    v1.get("system", False),
+                    v1.get("description").get("en_US", ""),
+                    v1.get("description").get("zh_CN", ""),
+                ]
+            )
         wb.save(xlsxpath)
 
 
 @cli.command()
 @click.option("-w", "--workpath", type=str, required=True, help="The workpath of RR.")
-@click.option("-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile.")
-@click.option("-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile.")
+@click.option(
+    "-j", "--jsonpath", type=str, required=True, help="The output path of jsonfile."
+)
+@click.option(
+    "-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile."
+)
 def getmodules(workpath, jsonpath, xlsxpath):
     MS = glob.glob(os.path.join(workpath, "mnt", "p3", "modules", "*.tgz"))
     MS.sort()

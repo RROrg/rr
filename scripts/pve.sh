@@ -40,53 +40,53 @@ fi
 eval set -- "$ARGS"
 while true; do
   case "$1" in
-  --onboot)
-    ONBOOT="$2"
-    echo "$ONBOOT" | grep -qvE '^(0|1)$' && ONBOOT=1
-    shift 2
-    ;;
-  --efi)
-    EFI="$2"
-    echo "$EFI" | grep -qvE '^(0|1)$' && EFI=1
-    shift 2
-    ;;
-  --bltype)
-    BLTYPE="$2"
-    echo "$BLTYPE" | grep -qvE '^(sata|usb|nvme)$' && BLTYPE="sata"
-    shift 2
-    ;;
-  --storage)
-    STORAGE="$2"
-    [ -n "${STORAGE}" ] && pvesm status -content images | grep -qw "^${STORAGE}" || STORAGE=""
-    shift 2
-    ;;
-  --v9ppath)
-    V9PPATH="$2"
-    [ -d "${V9PPATH}" ] && V9PPATH="$(realpath "${V9PPATH}")" || V9PPATH=""
-    shift 2
-    ;;
-  --vfsdirid)
-    VFSDIRID="$2"
-    [ -n "${VFSDIRID}" ] && pvesh ls /cluster/mapping/dir | grep -qw "${VFSDIRID}" || VFSDIRID=""
-    shift 2
-    ;;
-  --tag)
-    TAG="$(echo "$2" | sed 's/^[v|V]//g')"
-    shift 2
-    ;;
-  --img)
-    IMG="$2"
-    [ -f "${IMG}" ] && IMG="$(realpath "${IMG}")" || IMG=""
-    shift 2
-    ;;
-  --)
-    shift
-    break
-    ;;
-  *)
-    usage
-    exit 1
-    ;;
+    --onboot)
+      ONBOOT="$2"
+      echo "$ONBOOT" | grep -qvE '^(0|1)$' && ONBOOT=1
+      shift 2
+      ;;
+    --efi)
+      EFI="$2"
+      echo "$EFI" | grep -qvE '^(0|1)$' && EFI=1
+      shift 2
+      ;;
+    --bltype)
+      BLTYPE="$2"
+      echo "$BLTYPE" | grep -qvE '^(sata|usb|nvme)$' && BLTYPE="sata"
+      shift 2
+      ;;
+    --storage)
+      STORAGE="$2"
+      [ -n "${STORAGE}" ] && pvesm status -content images | grep -qw "^${STORAGE}" || STORAGE=""
+      shift 2
+      ;;
+    --v9ppath)
+      V9PPATH="$2"
+      [ -d "${V9PPATH}" ] && V9PPATH="$(realpath "${V9PPATH}")" || V9PPATH=""
+      shift 2
+      ;;
+    --vfsdirid)
+      VFSDIRID="$2"
+      [ -n "${VFSDIRID}" ] && pvesh ls /cluster/mapping/dir | grep -qw "${VFSDIRID}" || VFSDIRID=""
+      shift 2
+      ;;
+    --tag)
+      TAG="$(echo "$2" | sed 's/^[v|V]//g')"
+      shift 2
+      ;;
+    --img)
+      IMG="$2"
+      [ -f "${IMG}" ] && IMG="$(realpath "${IMG}")" || IMG=""
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      usage
+      exit 1
+      ;;
   esac
 done
 
@@ -140,7 +140,7 @@ echo "Creating VM with RR ... "
 last_vmid=$(qm list | awk 'NR>1{print$1}' | sort -n | tail -1 2>/dev/null)
 if [ -z "$last_vmid" ]; then
   # 如果 last_vmid 是空字符串，说明没有VM，设置一个起始ID
-  VMID=100 
+  VMID=100
 else
   # 否则，在最后一个ID的基础上加1
   VMID=$((last_vmid + 1))
@@ -182,20 +182,20 @@ if [ "${STATUS:-0}" -ne 0 ] || [ -z "${BLDISK}" ]; then
 fi
 [ -n "${IMG}" ] || rm -f "${IMG_PATH}"
 case "${BLTYPE}" in
-usb)
-  ARGS+="-device nec-usb-xhci,id=usb-bus0,multifunction=on -drive file=$(pvesm path ${BLDISK}),media=disk,format=raw,if=none,id=usb1 -device usb-storage,bus=usb-bus0.0,port=1,drive=usb1,bootindex=999,removable=on "
-  ;;
-nvme)
-  ARGS+="-drive file=$(pvesm path ${BLDISK}),media=disk,format=raw,if=none,id=nvme1 -device nvme,drive=nvme1,serial=nvme001 "
-  ;;
-sata)
-  qm set ${VMID} --sata$((SATAIDX++)) "${BLDISK}"
-  ;;
-*)
-  echo "Setting bootloader disk failed"
-  qm destroy ${VMID} --purge
-  exit 1
-  ;;
+  usb)
+    ARGS+="-device nec-usb-xhci,id=usb-bus0,multifunction=on -drive file=$(pvesm path ${BLDISK}),media=disk,format=raw,if=none,id=usb1 -device usb-storage,bus=usb-bus0.0,port=1,drive=usb1,bootindex=999,removable=on "
+    ;;
+  nvme)
+    ARGS+="-drive file=$(pvesm path ${BLDISK}),media=disk,format=raw,if=none,id=nvme1 -device nvme,drive=nvme1,serial=nvme001 "
+    ;;
+  sata)
+    qm set ${VMID} --sata$((SATAIDX++)) "${BLDISK}"
+    ;;
+  *)
+    echo "Setting bootloader disk failed"
+    qm destroy ${VMID} --purge
+    exit 1
+    ;;
 esac
 
 X86_VENDOR=$(awk -F: '/vendor_id/ {gsub(/^[ \t]+/, "", $2); print $2; exit}' /proc/cpuinfo)

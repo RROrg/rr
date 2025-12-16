@@ -32,7 +32,7 @@ TITLE="$(printf "$(TEXT "Welcome to %s")" "${RR_TITLE}${RR_RELEASE:+(${RR_RELEAS
 DATE="$(date)"
 printf "\033[1;44m%*s\n" "${COLUMNS}" ""
 printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
-printf "\033[1;31m%*s\033[0m\n" "$(((${#TITLE} + ${COLUMNS}) / 2))" "${TITLE}"
+printf "\033[1;31m%*s\033[0m\n" "$(((${#TITLE} + COLUMNS) / 2))" "${TITLE}"
 printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
 printf "\033[1;32m%*s\033[0m\n" "${COLUMNS}" "${DATE}"
 

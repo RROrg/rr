@@ -176,23 +176,6 @@ jobs:
 
           echo "TAG=${TAG}" >> $GITHUB_ENV
 
-          case "${{ env.size }}" in
-            2GB)
-              echo "2GB"
-              ;;
-            4GB)
-              echo "4GB"
-              resizeImg rr/rr.img +2048M
-              ;;
-            8GB)
-              echo "8GB"
-              resizeImg rr/rr.img +6144M
-              ;;
-            *)
-              echo "unknown size"
-              ;;
-          esac
-
           LOOPX=$(sudo losetup -f)
           sudo losetup -P "${LOOPX}" rr/rr.img
 
@@ -253,6 +236,26 @@ jobs:
             echo "After the image is written to the disk, it will boot directly into DSM without the need to compile again."
             echo "Of course, you can also modify the settings yourself."
           } >README.txt
+
+          case "${{ env.size }}" in
+            2GB)
+              echo "2GB"
+              gzip -dc "files/initrd/opt/rr/grub.img.gz" > rr/rr_2GB.img
+              repackImg rr/rr.img rr/rr_2GB.img
+              rm -f rr/rr.img
+              mv -f rr/rr_2GB.img rr/rr.img
+              ;;
+            4GB)
+              echo "4GB"
+              ;;
+            8GB)
+              echo "8GB"
+              resizeImg rr/rr.img +4096M
+              ;;
+            *)
+              echo "unknown size"
+              ;;
+          esac
 
           case "${{ env.format }}" in
             ova)

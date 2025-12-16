@@ -32,14 +32,14 @@ WTITLE="$(printf "$(TEXT "Welcome to %s")" "${RR_TITLE}${RR_RELEASE:+(${RR_RELEA
 DATE="$(date)"
 printf "\033[1;44m%*s\n" "${COLUMNS}" ""
 printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
-printf "\033[1;31m%*s\033[0m\n" "$(((${#WTITLE} + ${COLUMNS}) / 2))" "${WTITLE}"
+printf "\033[1;31m%*s\033[0m\n" "$(((${#WTITLE} + COLUMNS) / 2))" "${WTITLE}"
 printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
 printf "\033[1;32m%*s\033[0m\n" "${COLUMNS}" "${DATE}"
 
 BTITLE="Boot Type:"
 BTITLE+="$([ ${EFI} -eq 1 ] && echo " [UEFI]" || echo " [BIOS]")"
 BTITLE+="$([ "${BUS}" = "usb" ] && echo " [${BUS^^} flashdisk]" || echo " [${BUS^^} DoM]")"
-printf "\033[1;33m%*s\033[0m\n" $(((${#BTITLE} + ${COLUMNS}) / 2)) "${BTITLE}"
+printf "\033[1;33m%*s\033[0m\n" $(((${#BTITLE} + COLUMNS) / 2)) "${BTITLE}"
 
 if [ -f "${PART1_PATH}/.upgraded" ]; then
   MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
@@ -378,7 +378,7 @@ else
   COUNT=0
   BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
   BOOTIPWAIT=${BOOTIPWAIT:-10}
-  while [ ${COUNT} -lt $((${BOOTIPWAIT} + 32)) ]; do
+  while [ ${COUNT} -lt $((BOOTIPWAIT + 32)) ]; do
     MSG=""
     for N in ${ETHX}; do
       if [ "1" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then

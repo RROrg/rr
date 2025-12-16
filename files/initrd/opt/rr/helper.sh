@@ -23,10 +23,10 @@ trap 'flock -u 911; rm -f "${TMP_PATH}/helper.lock"' EXIT INT TERM HUP
 
 {
   printf "$(TEXT "Closing this window or press 'ctrl + c' to exit the assistance.")\n"
-	printf "$(TEXT "Please give the following link to the helper. (Click to open and copy)")\n"
+  printf "$(TEXT "Please give the following link to the helper. (Click to open and copy)")\n"
   printf "        👇\n"
   sshx -q --name "RR-Helper" 2>&1
-	[ $? -ne 0 ] && while true; do sleep 1; done
+  [ $? -ne 0 ] && while true; do sleep 1; done
 } | dialog --colors --aspect 50 --title "$(TEXT "Online Assistance")" --progressbox "$(TEXT "Notice: Please keep this window open.")" 20 100 2>&1
 
 clear

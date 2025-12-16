@@ -259,14 +259,14 @@ function unpackInitrd() {
   INITRD_FORMAT=$(file -b --mime-type "${INITRD_FILE}")
 
   case "${INITRD_FORMAT}" in
-  *'x-cpio'*) (cd "${OUTPUT_PATH}" && sudo cpio -idm <"${INITRD_FILE}") >/dev/null 2>&1 ;;
-  *'x-xz'*) (cd "${OUTPUT_PATH}" && xz -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *'x-lz4'*) (cd "${OUTPUT_PATH}" && lz4 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *'x-lzma'*) (cd "${OUTPUT_PATH}" && lzma -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *'x-bzip2'*) (cd "${OUTPUT_PATH}" && bzip2 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *'gzip'*) (cd "${OUTPUT_PATH}" && gzip -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *'zstd'*) (cd "${OUTPUT_PATH}" && zstd -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *) ;;
+    *'x-cpio'*) (cd "${OUTPUT_PATH}" && sudo cpio -idm <"${INITRD_FILE}") >/dev/null 2>&1 ;;
+    *'x-xz'*) (cd "${OUTPUT_PATH}" && xz -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *'x-lz4'*) (cd "${OUTPUT_PATH}" && lz4 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *'x-lzma'*) (cd "${OUTPUT_PATH}" && lzma -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *'x-bzip2'*) (cd "${OUTPUT_PATH}" && bzip2 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *'gzip'*) (cd "${OUTPUT_PATH}" && gzip -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *'zstd'*) (cd "${OUTPUT_PATH}" && zstd -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *) ;;
   esac
 }
 
@@ -292,30 +292,115 @@ function repackInitrd() {
   INITRD_FORMAT=$(file -b --mime-type "${INITRD_FILE}")
 
   case "${INITRD_FORMAT}" in
-  *'x-cpio'*) (cd "${RDXZ_PATH}" && sudo cpio -idm <"${INITRD_FILE}") >/dev/null 2>&1 ;;
-  *'x-xz'*) (cd "${RDXZ_PATH}" && xz -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *'x-lz4'*) (cd "${RDXZ_PATH}" && lz4 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *'x-lzma'*) (cd "${RDXZ_PATH}" && lzma -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *'x-bzip2'*) (cd "${RDXZ_PATH}" && bzip2 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *'gzip'*) (cd "${RDXZ_PATH}" && gzip -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *'zstd'*) (cd "${RDXZ_PATH}" && zstd -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
-  *) ;;
+    *'x-cpio'*) (cd "${RDXZ_PATH}" && sudo cpio -idm <"${INITRD_FILE}") >/dev/null 2>&1 ;;
+    *'x-xz'*) (cd "${RDXZ_PATH}" && xz -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *'x-lz4'*) (cd "${RDXZ_PATH}" && lz4 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *'x-lzma'*) (cd "${RDXZ_PATH}" && lzma -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *'x-bzip2'*) (cd "${RDXZ_PATH}" && bzip2 -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *'gzip'*) (cd "${RDXZ_PATH}" && gzip -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *'zstd'*) (cd "${RDXZ_PATH}" && zstd -dc "${INITRD_FILE}" | sudo cpio -idm) >/dev/null 2>&1 ;;
+    *) ;;
   esac
 
   sudo cp -rf "${PLUGIN_PATH}/"* "${RDXZ_PATH}/"
   [ -f "${OUTPUT_PATH}" ] && rm -rf "${OUTPUT_PATH}"
   # shellcheck disable=SC2024
   case "${INITRD_FORMAT}" in
-  *'x-cpio'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
-  *'x-xz'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | xz -9 -C crc32 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
-  *'x-lz4'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | lz4 -9 -l -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
-  *'x-lzma'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | lzma -9 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
-  *'x-bzip2'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | bzip2 -9 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
-  *'gzip'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | gzip -9 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
-  *'zstd'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | zstd -19 -T0 -f -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
-  *) ;;
+    *'x-cpio'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+    *'x-xz'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | xz -9 -C crc32 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+    *'x-lz4'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | lz4 -9 -l -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+    *'x-lzma'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | lzma -9 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+    *'x-bzip2'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | bzip2 -9 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+    *'gzip'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | gzip -9 -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+    *'zstd'*) (cd "${RDXZ_PATH}" && sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | zstd -19 -T0 -f -c - >"${OUTPUT_PATH}") >/dev/null 2>&1 ;;
+    *) ;;
   esac
   sudo rm -rf "${RDXZ_PATH}"
+}
+
+function repackImg() {
+  local INPUT_FILE="${1}"
+  local OUTPUT_FILE="${2}"
+
+  [ -z "${INPUT_FILE}" ] && exit 1
+  [ -z "${OUTPUT_FILE}" ] || [ ! -f "${OUTPUT_FILE}" ] && exit 1
+
+  OUTPUT_FILE="$(realpath "${OUTPUT_FILE}")"
+
+  if [ -d "${INPUT_FILE}" ]; then
+    _umount() {
+      for i in {1..3}; do
+        sudo mount | grep -q "/tmp/mnt/p${i}" || continue
+        sudo umount "/tmp/mnt/p${i}"
+        rm -rf "/tmp/mnt/p${i}"
+      done
+    }
+    LOOPX=$(sudo losetup -f)
+    sudo losetup -P "${LOOPX}" "${OUTPUT_FILE}"
+    for i in {1..3}; do
+      [ ! -d "${INPUT_FILE}/mnt/p${i}" ] && continue
+      rm -rf "/tmp/mnt/p${i}" 2>/dev/null
+      mkdir -p "/tmp/mnt/p${i}"
+      sudo mount "${LOOPX}p${i}" "/tmp/mnt/p${i}" || {
+        echo "Mount failed"
+        _umount
+        break
+      }
+      sudo cp -rf "${INPUT_FILE}/mnt/p${i}/". "/tmp/mnt/p${i}" || {
+        echo "Copy failed"
+        _umount
+        break
+      }
+      sudo sync
+      _umount
+    done
+    sudo losetup --detach "${LOOPX}"
+  elif [ -f "${INPUT_FILE}" ]; then
+    _umount() {
+      for i in {1..3}; do
+        sudo mount | grep -q "/tmp/i/mnt/p${i}" || continue
+        sudo umount "/tmp/i/mnt/p${i}"
+        rm -rf "/tmp/i/mnt/p${i}"
+      done
+      for i in {1..3}; do
+        sudo mount | grep -q "/tmp/x/mnt/p${i}" || continue
+        sudo umount "/tmp/x/mnt/p${i}"
+        rm -rf "/tmp/x/mnt/p${i}"
+      done
+    }
+    LOOPI=$(sudo losetup -f)
+    sudo losetup -P "${LOOPI}" "${INPUT_FILE}"
+    LOOPX=$(sudo losetup -f)
+    sudo losetup -P "${LOOPX}" "${OUTPUT_FILE}"
+
+    for i in {1..3}; do
+      rm -rf "/tmp/i/mnt/p${i}" 2>/dev/null
+      mkdir -p "/tmp/i/mnt/p${i}"
+      rm -rf "/tmp/x/mnt/p${i}" 2>/dev/null
+      mkdir -p "/tmp/x/mnt/p${i}"
+      sudo mount "${LOOPI}p${i}" "/tmp/i/mnt/p${i}" || {
+        echo "Mount failed"
+        _umount
+        break
+      }
+      sudo mount "${LOOPX}p${i}" "/tmp/x/mnt/p${i}" || {
+        echo "Mount failed"
+        _umount
+        break
+      }
+      sudo cp -rf "/tmp/i/mnt/p${i}/". "/tmp/x/mnt/p${i}" || {
+        echo "Copy failed"
+        _umount
+        break
+      }
+      sudo sync
+      _umount
+    done
+    sudo losetup --detach "${LOOPX}"
+    sudo losetup --detach "${LOOPI}"
+  else
+    exit 1
+  fi
 }
 
 # resizeimg
@@ -365,7 +450,7 @@ function createvmx() {
   # Convert raw image to VMDK
   rm -rf "VMX_${VMNAME}"
   mkdir -p "VMX_${VMNAME}"
-	qemu-img convert -O vmdk -o 'adapter_type=lsilogic,subformat=monolithicSparse,compat6' "${BLIMAGE}" "VMX_${VMNAME}/${VMNAME}-disk1.vmdk" # 'adapter_type=lsilogic,subformat=streamOptimized,compat6'
+  qemu-img convert -O vmdk -o 'adapter_type=lsilogic,subformat=monolithicSparse,compat6' "${BLIMAGE}" "VMX_${VMNAME}/${VMNAME}-disk1.vmdk" # 'adapter_type=lsilogic,subformat=streamOptimized,compat6'
   qemu-img create -f vmdk "VMX_${VMNAME}/${VMNAME}-disk2.vmdk" "32G"
 
   # Create VM configuration
