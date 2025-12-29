@@ -166,10 +166,10 @@ CMDLINE['skip_vender_mac_interfaces']="$(seq -s, 0 $((${CMDLINE['netif_num']:-1}
 
 ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort)"
 for N in ${ETHX}; do
-  MAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)" || MAC="00:00:00:00:00:00"
-  BUS="$(ethtool -i "${N}" 2>/dev/null | grep "bus-info" | cut -d' ' -f2)" || BUS="0000:00:00.0"
-  if [ ! "${MAC}" = "00:00:00:00:00:00" ] && [ ! "${BUS}" = "0000:00:00.0" ]; then
-    CMDLINE["R${BUS}"]="${MAC}"
+  RMAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)"
+  RBUS="$(ethtool -i "${N}" 2>/dev/null | grep "bus-info" | cut -d' ' -f2)"
+  if [ ! "${RMAC:-"00:00:00:00:00:00"}" = "00:00:00:00:00:00" ] && [ ! "${RBUS:-"0000:00:00.0"}" = "0000:00:00.0" ]; then
+    CMDLINE["R${RBUS}"]="${RMAC}"
   fi
 done
 
