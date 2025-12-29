@@ -99,9 +99,9 @@ if [ -n "${IMG}" ] && [ -f "${IMG}" ]; then
   IMG_PATH="${IMG}"
 else
   if ! command -v curl >/dev/null 2>&1; then
-    apt-get update >/dev/null 2>&1 && apt-get install -y curl >/dev/null 2>&1
+    apt update >/dev/null 2>&1 && apt install -y curl >/dev/null 2>&1
   fi
-  if [ -z "$TAG" ]; then
+  if [ -z "${TAG}" ]; then
     TAG="$(curl -skL --connect-timeout 10 -w "%{url_effective}" -o /dev/null "${REPO}/releases/latest" | awk -F'/' '{print $NF}' | sed 's/^[v|V]//g')"
   fi
   rm -f "/tmp/rr-${TAG}.img.zip"
@@ -113,7 +113,7 @@ else
     exit 1
   fi
   if ! command -v unzip >/dev/null 2>&1; then
-    apt-get update >/dev/null 2>&1 && apt-get install -y unzip >/dev/null 2>&1
+    apt update >/dev/null 2>&1 && apt install -y unzip >/dev/null 2>&1
   fi
   IMG_FILE=$(unzip -l "/tmp/rr-${TAG}.img.zip" | awk '{print $4}' | grep '\.img$' | head -1)
   if [ -z "${IMG_FILE}" ]; then
@@ -136,7 +136,7 @@ fi
 echo "Creating VM with RR ... "
 
 # 获取可用的 VMID
-LAST_VMID=$(qm list | awk 'NR>1{print$1}' | sort -n | tail -1 2>/dev/null)
+LAST_VMID=$(qm list | awk 'NR>1{print $1}' | sort -n | tail -1 2>/dev/null)
 VMID=$((${LAST_VMID:-99} + 1))
 
 ARGS=""
