@@ -196,7 +196,7 @@ function getAddons() {
   unzip "${CACHE_FILE}" -d "${CACHE_DIR}"
   echo "Installing addons to ${DEST_PATH}"
   [ -f "/tmp/addons/VERSION" ] && cp -f "/tmp/addons/VERSION" "${DEST_PATH}/"
-  for F in ${CACHE_DIR}/*.addon; do
+  for F in $(LC_ALL=C printf '%s\n' ${CACHE_DIR}/*.addon | sort -V); do
     [ ! -e "${F}" ] && continue
     ADDON=$(basename "${F}" .addon)
     # shellcheck disable=SC2115

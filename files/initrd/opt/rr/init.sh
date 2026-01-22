@@ -37,7 +37,7 @@ printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
 printf "\033[1;32m%*s\033[0m\n" "${COLUMNS}" "${DATE}"
 
 # Get first MAC address
-ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort)"
+ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort -V)"
 # No network devices
 [ "$(echo "${ETHX}" | wc -w)" -le 0 ] && die "$(TEXT "Network devices not found! Please re execute init.sh after connecting to the network!")"
 

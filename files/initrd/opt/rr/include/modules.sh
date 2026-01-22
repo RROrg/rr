@@ -62,7 +62,7 @@ function getAllModules() {
   unpackModules "${PLATFORM}" "${PKVER}" "${UNPATH}"
 
   for D in "" "update"; do
-    for F in ${UNPATH}/${D:+${D}/}*.ko; do
+    for F in $(LC_ALL=C printf '%s\n' ${UNPATH}/${D:+${D}/}*.ko | sort -V); do
       [ ! -e "${F}" ] && continue
       local N DESC
       N="$(basename "${F}" .ko)"
@@ -124,7 +124,7 @@ function installModules() {
 
   ODP="$(readConfigKey "odp" "${USER_CONFIG_FILE}")"
   for D in "" "update"; do
-    for F in ${UNPATH}/${D:+${D}/}*.ko; do
+    for F in $(LC_ALL=C printf '%s\n' ${UNPATH}/${D:+${D}/}*.ko | sort -V); do
       [ ! -e "${F}" ] && continue
       M=$(basename "${F}")
       [ "${ODP}" = "true" ] && [ -f "${RAMDISK_PATH}/usr/lib/modules/${D:+${D}/}${M}" ] && continue # TODO: check if module is already loaded

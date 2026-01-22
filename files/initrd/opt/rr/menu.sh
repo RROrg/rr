@@ -1811,7 +1811,7 @@ function formatDisks() {
     DIALOG --title "$(TEXT "Advanced")" \
       --yesno "$(TEXT "Warning:\nThe current hds is in raid, do you still want to format them?")" 0 0
     [ $? -ne 0 ] && return 1
-    for F in /dev/md[0-9]*; do
+    for F in $(LC_ALL=C printf '%s\n' /dev/md[0-9]* | sort -V); do
       [ ! -e "${F}" ] && continue
       mdadm -S "${F}" >/dev/null 2>&1
     done
@@ -2176,7 +2176,7 @@ function initDSMNetwork {
       T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
-      for F in ${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-* ${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-*; do
+      for F in $(LC_ALL=C printf '%s\n' ${TMP_PATH}/mdX/etc/sysconfig/network-scripts/ifcfg-* ${TMP_PATH}/mdX/etc.defaults/sysconfig/network-scripts/ifcfg-* | sort -V); do
         [ ! -e "${F}" ] && continue
         ETHX=$(echo "${F}" | sed -E 's/.*ifcfg-(.*)$/\1/')
         case "${ETHX}" in
@@ -2747,7 +2747,7 @@ function savemodrr() {
 ###############################################################################
 # Set static IP
 function setStaticIP() {
-  ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort)"
+  ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort -V)"
   for N in ${ETHX}; do
     MACR="$(cat "/sys/class/net/${N}/address" 2>/dev/null | sed 's/://g')"
     IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
@@ -2832,7 +2832,7 @@ function setWirelessAccount() {
         SSID="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
         PSK="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
         (
-          ETHX=$(ls /sys/class/net/ 2>/dev/null | grep wlan) || true
+          ETHX=$(find /sys/class/net/ -mindepth 1 -maxdepth 1 -name wlan* -exec basename {} \; | sort -V) || true
           if [ -z "${SSID}" ]; then
             rm -f "${PART1_PATH}/wpa_supplicant.conf"
             for N in ${ETHX}; do
@@ -2846,7 +2846,7 @@ function setWirelessAccount() {
               MACR="$(cat /sys/class/net/${N}/address 2>/dev/null | sed 's/://g')"
               IPR="$(readConfigKey "network.${MACR}" "${USER_CONFIG_FILE}")"
               if [ -n "${IPR}" ]; then
-                ip addr add ${IPC}/24 dev ${N}
+                ip addr add ${IPR}/24 dev ${N}
                 sleep 1
               fi
             done
@@ -3732,7 +3732,7 @@ function updateAddons() {
     return 1
   fi
 
-  for F in ${TMP_PATH}/update/*.addon; do
+  for F in $(LC_ALL=C printf '%s\n' ${TMP_PATH}/update/*.addon | sort -V); do
     [ ! -e "${F}" ] && continue
     ADDON=$(basename "${F}" .addon)
     rm -rf "${TMP_PATH}/update/${ADDON}"

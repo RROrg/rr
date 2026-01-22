@@ -243,7 +243,7 @@ done
 
 # Call user patch scripts
 echo -n "."
-for F in ${SCRIPTS_PATH}/*.sh; do
+for F in $(LC_ALL=C printf '%s\n' ${SCRIPTS_PATH}/*.sh | sort -V); do
   [ ! -e "${F}" ] && continue
   echo "Calling ${F}" >"${LOG_FILE}"
   # shellcheck source=/dev/null

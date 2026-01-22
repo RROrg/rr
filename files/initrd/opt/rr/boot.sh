@@ -164,7 +164,7 @@ fi
 
 CMDLINE['skip_vender_mac_interfaces']="$(seq -s, 0 $((${CMDLINE['netif_num']:-1} - 1)))"
 
-ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort)"
+ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort -V)"
 for N in ${ETHX}; do
   RMAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)"
   RBUS="$(ethtool -i "${N}" 2>/dev/null | grep "bus-info" | cut -d' ' -f2)"
@@ -372,7 +372,7 @@ else
   rm -f "${USER_RSYSENVFILE}" 2>/dev/null || true
   grub-editenv "${USER_GRUBENVFILE}" unset dsm_cmdline
   grub-editenv "${USER_GRUBENVFILE}" unset next_entry
-  ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort)"
+  ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort -V)"
   printf "$(TEXT "Detected %s network cards.\n")" "$(echo "${ETHX}" | wc -w)"
   printf "$(TEXT "Checking Connect.")"
   COUNT=0
@@ -466,7 +466,7 @@ else
 
   if [ ! -f "/.dockerenv" ]; then
     # Disconnect wireless
-    lsmod | grep -q iwlwifi && for F in /sys/class/net/wlan*; do
+    lsmod | grep -q iwlwifi && for F in $(LC_ALL=C printf '%s\n' /sys/class/net/wlan* | sort -V); do
       [ ! -e "${F}" ] && continue
       connectwlanif "$(basename "${F}")" 0 2>/dev/null
     done

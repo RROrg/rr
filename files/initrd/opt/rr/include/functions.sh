@@ -244,7 +244,7 @@ function _get_fastest() {
 # @1 -mac1,mac2,mac3...
 function _sort_netif() {
   ETHLIST=""
-  for F in /sys/class/net/eth*; do
+  for F in $(LC_ALL=C printf '%s\n' /sys/class/net/eth* | sort -V); do
     [ ! -e "${F}" ] && continue
     local ETH MAC BUS
     ETH="$(basename "${F}")"
@@ -253,7 +253,7 @@ function _sort_netif() {
     ETHLIST="${ETHLIST}${BUS} ${MAC} ${ETH}\n"
   done
   ETHLISTTMPM=""
-  ETHLISTTMPB="$(echo -e "${ETHLIST}" | sort)"
+  ETHLISTTMPB="$(echo -e "${ETHLIST}" | sort -V)"
   if [ -n "${1}" ]; then
     MACS="$(echo "${1}" | sed 's/://g; s/,/ /g; s/.*/\L&/')"
     for MACX in ${MACS}; do
