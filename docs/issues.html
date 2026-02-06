@@ -213,7 +213,7 @@
       var model = $("#model").val();
       var version = $("#version").val().split(".").slice(0, 2).join(".");
       var kernel = $("#kernel").val();
-      if (model == "SA6400" && version == "7.2") {
+      if (model == "SA6400" && (version == "7.2" || version == "7.3")) {
         $("#kernel_item").show();
         if (kernel == "custom") {
           $('#modules_item').hide();
