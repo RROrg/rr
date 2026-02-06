@@ -164,14 +164,15 @@ fi
 
 CMDLINE['skip_vender_mac_interfaces']="$(seq -s, 0 $((${CMDLINE['netif_num']:-1} - 1)))"
 
-ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort -V)"
-for N in ${ETHX}; do
-  RMAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)"
-  RBUS="$(ethtool -i "${N}" 2>/dev/null | grep "bus-info" | cut -d' ' -f2)"
-  if [ ! "${RMAC:-"00:00:00:00:00:00"}" = "00:00:00:00:00:00" ] && [ ! "${RBUS:-"0000:00:00.0"}" = "0000:00:00.0" ]; then
-    CMDLINE["R${RBUS}"]="${RMAC}"
-  fi
-done
+# Only for reference, not used currently
+# RETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort -V)"
+# for N in ${RETHX}; do
+#   RMAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)"
+#   RBUS="$(ethtool -i "${N}" 2>/dev/null | grep "bus-info" | cut -d' ' -f2)"
+#   if [ ! "${RMAC:-"00:00:00:00:00:00"}" = "00:00:00:00:00:00" ] && [ ! "${RBUS:-"0000:00:00.0"}" = "0000:00:00.0" ]; then
+#     CMDLINE["R${RBUS}"]="${RMAC}"
+#   fi
+# done
 
 # set fixed cmdline
 if grep -q "force_junior" /proc/cmdline; then
