@@ -11,8 +11,6 @@
 [ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 . "${WORK_PATH}/include/functions.sh"
-. "${WORK_PATH}/include/addons.sh"
-. "${WORK_PATH}/include/modules.sh"
 
 set -o pipefail # Get exit code from process piped
 
@@ -51,6 +49,8 @@ if [ ! -f "${ORI_RDGZ_FILE}" ]; then
   exit 1
 fi
 
+echo -n "Patching Ramdisk"
+
 # Unzipping ramdisk
 rm -rf "${RAMDISK_PATH}" # Force clean
 mkdir -p "${RAMDISK_PATH}"
@@ -59,24 +59,8 @@ mkdir -p "${RAMDISK_PATH}"
 # Check if DSM buildnumber changed
 . "${RAMDISK_PATH}/etc/VERSION"
 
-if [ -n "${PRODUCTVER}" ] && [ -n "${BUILDNUM}" ] && [ -n "${SMALLNUM}" ] \
-  && ([ ! "${PRODUCTVER}" = "${majorversion:-0}.${minorversion:-0}" ] || [ ! "${BUILDNUM}" = "${buildnumber:-0}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber:-0}" ]); then
-  OLDVER="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
-  NEWVER="${majorversion}.${minorversion}(${buildnumber}$([ ${smallfixnumber:-0} -ne 0 ] && echo "u${smallfixnumber}"))"
-  echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${OLDVER}\033[1;32m to \033[1;31m${NEWVER}\033[0m"
-  PATURL=""
-  PATSUM=""
-  # Clean old pat file
-  rm -f "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" 2>/dev/null || true
-fi
-
-echo -n "Patching Ramdisk"
-
-# Update new buildnumber
-PRODUCTVER=${majorversion}.${minorversion}
-BUILDNUM=${buildnumber}
-SMALLNUM=${smallfixnumber}
-writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
+BUILDNUM=${buildnumber:-0}
+SMALLNUM=${smallfixnumber:-0}
 writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
 writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
 

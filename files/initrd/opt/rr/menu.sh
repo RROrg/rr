@@ -11,8 +11,6 @@
 [ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 . "${WORK_PATH}/include/functions.sh"
-. "${WORK_PATH}/include/addons.sh"
-. "${WORK_PATH}/include/modules.sh"
 
 [ -z "${LOADER_DISK}" ] && die "$(TEXT "Loader is not init!")"
 
@@ -139,7 +137,7 @@ function backtitle() {
   if [ -n "${PRODUCTVER}" ]; then
     BACKTITLE+=" ${PRODUCTVER}"
     if [ -n "${BUILDNUM}" ]; then
-      BACKTITLE+="(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
+      BACKTITLE+="(${BUILDNUM}$([ "${SMALLNUM:-0}" = "0" ] || echo "u${SMALLNUM:-0}"))"
     else
       BACKTITLE+="(no build)"
     fi
@@ -1508,13 +1506,12 @@ function make() {
       fi
       rm -f "${PART1_PATH}/.upgraded"
     fi
-    ${WORK_PATH}/zimage-patch.sh || {
-      printf "%s\n%s\n%s:\n%s\n" "$(TEXT "DSM zImage not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")" >"${LOG_FILE}"
-      return 1
-    }
-
     ${WORK_PATH}/ramdisk-patch.sh || {
       printf "%s\n%s\n%s:\n%s\n" "$(TEXT "DSM ramdisk not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")" >"${LOG_FILE}"
+      return 1
+    }
+    ${WORK_PATH}/zimage-patch.sh || {
+      printf "%s\n%s\n%s:\n%s\n" "$(TEXT "DSM zImage not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")" >"${LOG_FILE}"
       return 1
     }
 

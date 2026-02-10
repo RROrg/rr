@@ -12,6 +12,7 @@ set -e
 [ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 . "${WORK_PATH}/include/functions.sh"
+
 [ -z "${LOADER_DISK}" ] && die "$(TEXT "Loader is not init!")"
 # Sanity check
 loaderIsConfigured || die "$(TEXT "Loader is not configured!")"
@@ -63,25 +64,18 @@ if [ -f "${PART1_PATH}/.upgraded" ]; then
   rm -f "${PART1_PATH}/.upgraded"
 fi
 # Check if DSM zImage changed, patch it if necessary
-ZIMAGE_HASH="$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")"
-if [ -f "${PART1_PATH}/.build" ] || [ "$(sha256sum "${ORI_ZIMAGE_FILE}" | awk '{print $1}')" != "${ZIMAGE_HASH}" ]; then
-  printf "\033[1;43m%s\033[0m\n" "$(TEXT "DSM zImage changed")"
-  ${WORK_PATH}/zimage-patch.sh || {
-    printf "\033[1;43m%s\n%s\n%s:\n%s\033[0m\n" "$(TEXT "DSM zImage not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")"
-    exit 1
-  }
-fi
-
-# Check if DSM ramdisk changed, patch it if necessary
-RAMDISK_HASH="$(readConfigKey "ramdisk-hash" "${USER_CONFIG_FILE}")"
-if [ -f "${PART1_PATH}/.build" ] || [ "$(sha256sum "${ORI_RDGZ_FILE}" | awk '{print $1}')" != "${RAMDISK_HASH}" ]; then
-  printf "\033[1;43m%s\033[0m\n" "$(TEXT "DSM ramdisk changed")"
+if [ -f "${PART1_PATH}/.build" ]; then
+  printf "\033[1;43m%s\033[0m\n" "$(TEXT "Repatch after configuration changed")"
   ${WORK_PATH}/ramdisk-patch.sh || {
     printf "\033[1;43m%s\n%s\n%s:\n%s\033[0m\n" "$(TEXT "DSM ramdisk not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")"
     exit 1
   }
+  ${WORK_PATH}/zimage-patch.sh || {
+    printf "\033[1;43m%s\n%s\n%s:\n%s\033[0m\n" "$(TEXT "DSM zImage not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")"
+    exit 1
+  }
+  rm -f "${PART1_PATH}/.build"
 fi
-[ -f "${PART1_PATH}/.build" ] && rm -f "${PART1_PATH}/.build"
 
 # Load necessary variables
 PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
@@ -102,7 +96,7 @@ CPU="$(awk -F': ' '/model name/ {print $2}' /proc/cpuinfo | uniq)"
 MEM="$(awk '/MemTotal:/ {printf "%.0f", $2 / 1024}' /proc/meminfo) MB"
 
 printf "%s \033[1;36m%s(%s)\033[0m\n" "$(TEXT "Model:   ")" "${MODEL}" "${PLATFORM}"
-printf "%s \033[1;36m%s(%s%s)\033[0m\n" "$(TEXT "Version: ")" "${PRODUCTVER}" "${BUILDNUM}" "$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}")"
+printf "%s \033[1;36m%s(%s%s)\033[0m\n" "$(TEXT "Version: ")" "${PRODUCTVER}" "${BUILDNUM}" "$([ "${SMALLNUM:-0}" = "0" ] || echo "u${SMALLNUM:-0}")"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "Kernel:  ")" "${KERNEL}"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "LKM:     ")" "${LKM}"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "MEV:     ")" "${MEV:-physical}"
@@ -352,7 +346,7 @@ if [ "${DIRECT}" = "true" ] || echo "parallels xen" | grep -qw "${MEV:-physical}
   grub-editenv "${USER_RSYSENVFILE}" set rr_version="${WTITLE}"
   grub-editenv "${USER_RSYSENVFILE}" set rr_booting="${BTITLE}"
   grub-editenv "${USER_RSYSENVFILE}" set dsm_model="${MODEL}(${PLATFORM})"
-  grub-editenv "${USER_RSYSENVFILE}" set dsm_version="${PRODUCTVER}(${BUILDNUM}$([ ${SMALLNUM:-0} -ne 0 ] && echo "u${SMALLNUM}"))"
+  grub-editenv "${USER_RSYSENVFILE}" set dsm_version="${PRODUCTVER}(${BUILDNUM}$([ "${SMALLNUM:-0}" = "0" ] || echo "u${SMALLNUM:-0}"))"
   grub-editenv "${USER_RSYSENVFILE}" set dsm_kernel="${KERNEL}"
   grub-editenv "${USER_RSYSENVFILE}" set dsm_lkm="${LKM}"
   grub-editenv "${USER_RSYSENVFILE}" set sys_mev="${MEV:-physical}"

@@ -11,6 +11,8 @@
 . "${WORK_PATH}/include/consts.sh"
 . "${WORK_PATH}/include/configFile.sh"
 . "${WORK_PATH}/include/i18n.sh"
+. "${WORK_PATH}/include/addons.sh"
+. "${WORK_PATH}/include/modules.sh"
 
 ###############################################################################
 # Check loader disk
@@ -39,6 +41,23 @@ function loaderIsConfigured() {
   [ -z "$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")" ] && return 1
   [ -z "$(readConfigKey "ramdisk-hash" "${USER_CONFIG_FILE}")" ] && return 1
   return 0 # OK
+}
+
+###############################################################################
+# Check if DSM upgrade happened
+# Returns 0 if upgraded, 1 if not
+function dsmIsUpgraded() {
+  loaderIsConfigured || return 1
+  local ZIMAGE_HASH RAMDISK_HASH NEW_ZIMAGE_HASH NEW_RAMDISK_HASH
+  ZIMAGE_HASH="$(readConfigKey "zimage-hash" "${USER_CONFIG_FILE}")"
+  RAMDISK_HASH="$(readConfigKey "ramdisk-hash" "${USER_CONFIG_FILE}")"
+  NEW_ZIMAGE_HASH="$(sha256sum "${ORI_ZIMAGE_FILE}" 2>/dev/null | awk '{print $1}')"
+  NEW_RAMDISK_HASH="$(sha256sum "${ORI_RDGZ_FILE}" 2>/dev/null | awk '{print $1}')"
+  if [ "${ZIMAGE_HASH}" != "${NEW_ZIMAGE_HASH}" ] || [ "${RAMDISK_HASH}" != "${NEW_RAMDISK_HASH}" ]; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 ###############################################################################

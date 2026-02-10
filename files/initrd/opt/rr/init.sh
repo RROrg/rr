@@ -10,7 +10,6 @@ set -e
 [ -z "${WORK_PATH}" ] || [ ! -d "${WORK_PATH}/include" ] && WORK_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 . "${WORK_PATH}/include/functions.sh"
-. "${WORK_PATH}/include/addons.sh"
 
 if type vmware-toolbox-cmd >/dev/null 2>&1; then
   if [ "Disable" = "$(vmware-toolbox-cmd timesync status 2>/dev/null)" ]; then
@@ -158,6 +157,42 @@ if [ -f "/usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz" ]; then
   zcat "/usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz" | loadkeys
 fi
 
+# Check updates
+if dsmIsUpgraded; then
+  # Get old saved buildnumber
+  PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
+  BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
+  SMALLNUM="$(readConfigKey "smallnum" "${USER_CONFIG_FILE}")"
+
+  # Unzipping ramdisk
+  rm -rf "${RAMDISK_PATH}" # Force clean
+  mkdir -p "${RAMDISK_PATH}"
+  (cd "${RAMDISK_PATH}" && xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm) >/dev/null 2>&1
+
+  # Check if DSM buildnumber changed
+  . "${RAMDISK_PATH}/etc/VERSION"
+
+  if [ -n "${PRODUCTVER}" ] && [ -n "${BUILDNUM}" ] && [ -n "${SMALLNUM}" ] &&
+    ([ ! "${PRODUCTVER}" = "${majorversion:-0}.${minorversion:-0}" ] || [ ! "${BUILDNUM}" = "${buildnumber:-0}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber:-0}" ]); then
+    OLDVER="${PRODUCTVER}(${BUILDNUM}$([ "${SMALLNUM:-0}" = "0" ] || echo "u${SMALLNUM:-0}"))"
+    NEWVER="${majorversion:-0}.${minorversion:-0}(${buildnumber:-0}$([ "${smallfixnumber:-0}" = "0" ] || echo "u${smallfixnumber:-0}"))"
+    echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${OLDVER}\033[1;32m to \033[1;31m${NEWVER}\033[0m"
+
+    # Clean old pat file
+    MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
+    rm -f "${PART3_PATH}/dl/${MODEL}-${PRODUCTVER}.pat" 2>/dev/null || true
+
+    # Update new buildnumber
+    PRODUCTVER="${majorversion:-0}.${minorversion:-0}"
+    writeConfigKey "productver" "${PRODUCTVER}" "${USER_CONFIG_FILE}"
+    writeConfigKey "paturl" "#UPGRADED" "${USER_CONFIG_FILE}"
+    writeConfigKey "patsum" "#UPGRADED" "${USER_CONFIG_FILE}"
+
+    touch "${PART1_PATH}/.upgraded"
+    touch "${PART1_PATH}/.build"
+  fi
+fi
+
 # Decide if boot automatically
 BOOT=1
 if ! loaderIsConfigured; then
@@ -173,7 +208,10 @@ fi
 
 # If is to boot automatically, do it
 if [ ${BOOT} -eq 1 ]; then
-  "${WORK_PATH}/boot.sh" && exit 0
+  "${WORK_PATH}/boot.sh" && exit 0 || {
+    printf "\033[1;43m%s\n%s\n%s:\n%s\033[0m\n" "$(TEXT "Loader boot failed")" "$(TEXT "Please re configure the loader and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")"
+    exit 1
+  }
 fi
 
 HTTP=$(grep -i '^HTTP_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
