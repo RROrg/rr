@@ -1448,10 +1448,15 @@ function extractDsmFiles() {
   fi
 
   printf "$(TEXT "Checking hash of %s:")" "${PAT_FILE}"
-  if [ "00000000000000000000000000000000" != "${PATSUM}" ] && [ "$(md5sum "${PAT_PATH}" | awk '{print $1}')" != "${PATSUM}" ]; then
-    rm -f "${PAT_PATH}"
-    echo -e "$(TEXT "md5 hash of pat not match, Please reget pat data from the version menu and try again!")" >"${LOG_FILE}"
-    return 1
+  PATMD5="$(md5sum "${PAT_PATH}" | awk '{print $1}')"
+  if [ "00000000000000000000000000000000" = "${PATSUM}" ]; then
+    PATSUM="${PATMD5}"
+    writeConfigKey "patsum" "${PATMD5}" "${USER_CONFIG_FILE}"
+  else
+    if [ "${PATMD5}" != "${PATSUM}" ]; then
+      echo -e "$(TEXT "md5 hash of pat not match, Please reget pat data from the version menu and try again!")" >"${LOG_FILE}"
+      return 1
+    fi
   fi
   echo "$(TEXT "OK")"
 
