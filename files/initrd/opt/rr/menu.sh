@@ -3611,6 +3611,7 @@ function downloadExts() {
 ###############################################################################
 # 1 - update file
 function updateRR() {
+  [ -f "${1}" ] || return 1
   T="$(printf "$(TEXT "Update %s")" "$(TEXT "RR")")"
   MSG="$(TEXT "Extracting update file ...")"
   DIALOG --title "${T}" \
@@ -3623,14 +3624,17 @@ function updateRR() {
     MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error extracting update file.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")")"
     DIALOG --title "${T}" \
       --msgbox "${MSG}" 0 0
+    rm -rf "${TMP_PATH}/update"
     return 1
   fi
+  rm -f "${1}"
   # Check checksums
   (cd "${TMP_PATH}/update" && sha256sum --status -c sha256sum)
   if [ $? -ne 0 ]; then
     MSG="$(TEXT "Checksum do not match!")"
     DIALOG --title "${T}" \
       --msgbox "${MSG}" 0 0
+    rm -rf "${TMP_PATH}/update"
     return 1
   fi
   # Check conditions
@@ -3641,6 +3645,7 @@ function updateRR() {
       MSG="$(TEXT "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!")"
       DIALOG --title "${T}" \
         --msgbox "${MSG}" 0 0
+      rm -rf "${TMP_PATH}/update"
       return 1
     fi
   fi
@@ -3658,9 +3663,10 @@ function updateRR() {
         MSG="$(printf "%s\n%s:\n%s\n" "$(TEXT "Error extracting update file.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")")"
         DIALOG --title "${T}" \
           --msgbox "${MSG}" 0 0
+        rm -rf "${TMP_PATH}/update"
         return 1
       fi
-      rm "${TMP_PATH}/update/$(basename "${KEY}").tgz"
+      rm -f "${TMP_PATH}/update/$(basename "${KEY}").tgz"
     else
       mkdir -p "${TMP_PATH}/update/$(dirname "/${VALUE}")"
       mv -f "${TMP_PATH}/update/$(basename "${KEY}")" "${TMP_PATH}/update/${VALUE}"
@@ -3676,6 +3682,7 @@ function updateRR() {
     MSG="$(printf "$(TEXT "Failed to install due to insufficient remaining disk space on local hard drive, consider reallocate your disk %s with at least %sM.")" "${PART3_PATH}" "$((${SIZENEW:-0} - ${SIZEOLD:-0} - ${SIZESPL:-0}))")"
     DIALOG --title "${T}" \
       --msgbox "${MSG}" 0 0
+    rm -rf "${TMP_PATH}/update"
     return 1
   fi
 
@@ -3722,6 +3729,7 @@ function updateRR() {
 ###############################################################################
 # 1 - update file
 function updateAddons() {
+  [ -f "${1}" ] || return 1
   T="$(printf "$(TEXT "Update %s")" "$(TEXT "Addons")")"
   MSG="$(TEXT "Extracting update file ...")"
   DIALOG --title "${T}" \
@@ -3736,7 +3744,7 @@ function updateAddons() {
       --msgbox "${MSG}" 0 0
     return 1
   fi
-
+  rm -f "${1}"
   for F in $(LC_ALL=C printf '%s\n' ${TMP_PATH}/update/*.addon | sort -V); do
     [ ! -e "${F}" ] && continue
     ADDON=$(basename "${F}" .addon)
@@ -3770,6 +3778,7 @@ function updateAddons() {
 ###############################################################################
 # 1 - update file
 function updateModules() {
+  [ -f "${1}" ] || return 1
   T="$(printf "$(TEXT "Update %s")" "$(TEXT "Modules")")"
   MSG="$(TEXT "Extracting update file ...")"
   DIALOG --title "${T}" \
@@ -3784,7 +3793,7 @@ function updateModules() {
       --msgbox "${MSG}" 0 0
     return 1
   fi
-
+  rm -f "${1}"
   SIZENEW="$(du -sm "${TMP_PATH}/update" 2>/dev/null | awk '{print $1}')"
   SIZEOLD="$(du -sm "${MODULES_PATH}" 2>/dev/null | awk '{print $1}')"
   SIZESPL=$(df -m "${MODULES_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
@@ -3813,6 +3822,7 @@ function updateModules() {
 ###############################################################################
 # 1 - update file
 function updateLKMs() {
+  [ -f "${1}" ] || return 1
   T="$(printf "$(TEXT "Update %s")" "$(TEXT "LKMs")")"
   MSG="$(TEXT "Extracting update file ...")"
   DIALOG --title "${T}" \
@@ -3827,7 +3837,7 @@ function updateLKMs() {
       --msgbox "${MSG}" 0 0
     return 1
   fi
-
+  rm -f "${1}"
   SIZENEW="$(du -sm "${TMP_PATH}/update" 2>/dev/null | awk '{print $1}')"
   SIZEOLD="$(du -sm "${LKMS_PATH}" 2>/dev/null | awk '{print $1}')"
   SIZESPL=$(df -m "${LKMS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
@@ -3852,6 +3862,7 @@ function updateLKMs() {
 ###############################################################################
 # 1 - update file
 function updateCKs() {
+  [ -f "${1}" ] || return 1
   T="$(printf "$(TEXT "Update %s")" "$(TEXT "CKs")")"
   MSG="$(TEXT "Extracting update file ...")"
   DIALOG --title "${T}" \
@@ -3866,7 +3877,7 @@ function updateCKs() {
       --msgbox "${MSG}" 0 0
     return 1
   fi
-
+  rm -f "${1}"
   SIZENEW="$(du -sm "${TMP_PATH}/update" 2>/dev/null | awk '{print $1}')"
   SIZEOLD="$(du -sm "${CKS_PATH}" 2>/dev/null | awk '{print $1}')"
   SIZESPL=$(df -m "${CKS_PATH}" 2>/dev/null | awk 'NR==2 {print $4}')
@@ -3925,14 +3936,14 @@ function updateMenu() {
         [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
         [ -z "${F}" ] && downloadExts "$(TEXT "All")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "updateall"
         F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && updateRR "${F}" && rm -f ${TMP_PATH}/updateall*.zip
+        [ -n "${F}" ] && updateRR "${F}" && rm -f ${PART3_PATH}/updateall*.zip ${TMP_PATH}/updateall*.zip
         ;;
       r)
         F="$(ls ${PART3_PATH}/update*.zip ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
         [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
         [ -z "${F}" ] && downloadExts "$(TEXT "RR")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "update"
         F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && updateRR "${F}" && rm -f ${TMP_PATH}/update*.zip
+        [ -n "${F}" ] && updateRR "${F}" && rm -f ${PART3_PATH}/update*.zip ${TMP_PATH}/update*.zip
         ;;
       d)
         if [ -z "${DEBUG}" ]; then
@@ -3944,7 +3955,7 @@ function updateMenu() {
         [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
         [ -z "${F}" ] && downloadExts "$(TEXT "Addons")" "${CUR_ADDONS_VER:-None}" "https://github.com/RROrg/rr-addons" "addons"
         F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && updateAddons "${F}" && rm -f ${TMP_PATH}/addons*.zip
+        [ -n "${F}" ] && updateAddons "${F}" && rm -f ${PART3_PATH}/addons*.zip ${TMP_PATH}/addons*.zip
         ;;
       m)
         if [ -z "${DEBUG}" ]; then
@@ -3956,7 +3967,7 @@ function updateMenu() {
         [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
         [ -z "${F}" ] && downloadExts "$(TEXT "Modules")" "${CUR_MODULES_VER:-None}" "https://github.com/RROrg/rr-modules" "modules"
         F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && updateModules "${F}" && rm -f ${TMP_PATH}/modules*.zip
+        [ -n "${F}" ] && updateModules "${F}" && rm -f ${PART3_PATH}/modules*.zip ${TMP_PATH}/modules*.zip
         ;;
       l)
         if [ -z "${DEBUG}" ]; then
@@ -3968,7 +3979,7 @@ function updateMenu() {
         [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
         [ -z "${F}" ] && downloadExts "$(TEXT "LKMs")" "${CUR_LKMS_VER:-None}" "https://github.com/RROrg/rr-lkms" "rp-lkms"
         F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && updateLKMs "${F}" && rm -f ${TMP_PATH}/rp-lkms*.zip
+        [ -n "${F}" ] && updateLKMs "${F}" && rm -f ${PART3_PATH}/rp-lkms*.zip ${TMP_PATH}/rp-lkms*.zip
         ;;
       c)
         if [ -z "${DEBUG}" ]; then
@@ -3980,7 +3991,7 @@ function updateMenu() {
         [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
         [ -z "${F}" ] && downloadExts "$(TEXT "CKs")" "${CUR_CKS_VER:-None}" "https://github.com/RROrg/rr-cks" "rr-cks"
         F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && updateCKs "${F}" && rm -f ${TMP_PATH}/rr-cks*.zip
+        [ -n "${F}" ] && updateCKs "${F}" && rm -f ${PART3_PATH}/rr-cks*.zip ${TMP_PATH}/rr-cks*.zip
         ;;
       u)
         if ! tty 2>/dev/null | grep -q "/dev/pts" || [ -z "${SSH_TTY}" ]; then
