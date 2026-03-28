@@ -13,6 +13,10 @@ on:
 
   workflow_dispatch:
     inputs:
+      data:
+        description: "models, pats, addons, modules"
+        default: "1111"
+        type: string
       push:
         description: "push"
         default: false
@@ -79,10 +83,11 @@ jobs:
           sudo mount "${LOOPX}p3" "/tmp/mnt/p3"
           unpackInitrd /tmp/mnt/p3/initrd-rr "rr/initrd"
 
-          python3 scripts/func.py getmodels -w "rr/initrd" -j "docs/models.json" -x "docs/models.xlsx"
-          python3 scripts/func.py getpats -w "rr/initrd" -j "docs/pats.json" -x "docs/pats.xlsx"
-          python3 scripts/func.py getaddons -w "/tmp" -j "docs/addons.json" -x "docs/addons.xlsx"
-          python3 scripts/func.py getmodules -w "/tmp" -j "docs/modules.json" -x "docs/modules.xlsx"
+          DATA="${{ inputs.data }}"
+          [ "${DATA:0:1}" = "1" ] && python3 scripts/func.py getmodels -w "rr/initrd" -j "docs/models.json" -x "docs/models.xlsx"
+          [ "${DATA:1:1}" = "1" ] && python3 scripts/func.py getpats -w "rr/initrd" -j "docs/pats.json" -x "docs/pats.xlsx"
+          [ "${DATA:2:1}" = "1" ] && python3 scripts/func.py getaddons -w "/tmp" -j "docs/addons.json" -x "docs/addons.xlsx"
+          [ "${DATA:3:1}" = "1" ] && python3 scripts/func.py getmodules -w "/tmp" -j "docs/modules.json" -x "docs/modules.xlsx"
 
           sudo umount "/tmp/mnt/p3"
           sudo losetup -d "${LOOPX}"
