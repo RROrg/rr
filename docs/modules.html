@@ -36,9 +36,14 @@
       margin-bottom: 0;
     }
 
-    .arch-list {
+    .model-list {
       word-break: break-word;
       white-space: normal;
+      font-size: 13px;
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+      color: var(--fgColor-muted, #59636e);
+      font-weight: 500;
     }
 
     .hint-list {
@@ -187,7 +192,9 @@ color:red;
 
   <script>
     (() => {
-      const JSON_URL = "https://raw.githubusercontent.com/RROrg/rr/refs/heads/main/docs/modules_detailed.json";
+      const MODULES_URL = "https://raw.githubusercontent.com/RROrg/rr/main/docs/modules_detailed.json";
+      const MODELS_URL = "https://raw.githubusercontent.com/RROrg/rr/main/docs/models.json";
+      const DSM_VERSIONS = ["7.0", "7.1", "7.2", "7.3"];
       const vidInput = document.getElementById("vidInput");
       const pidInput = document.getElementById("pidInput");
       const searchButton = document.getElementById("searchButton");
@@ -244,18 +251,44 @@ color:red;
         return false;
       }
 
-      async function fetchModules() {
-        const response = await fetch(JSON_URL, { cache: "no-store" });
+      async function fetchJson(url, label) {
+        const response = await fetch(url, { cache: "no-store" });
         if (!response.ok) {
-          throw new Error(`Failed to load modules_detailed.json: HTTP ${response.status}`);
+          throw new Error(`Failed to load ${label}: HTTP ${response.status}`);
         }
         return response.json();
       }
 
-      function collectMatches(modules, product4, vendor4) {
+      function buildArchModelMap(models) {
+        const archModelMap = new Map();
+
+        for (const [platform, info] of Object.entries(models || {})) {
+          const productvers = info && typeof info === "object" ? info.productvers || {} : {};
+          const modelList = Array.isArray(info && info.models) ? info.models : [];
+
+          for (const [dsmVersion, productVersion] of Object.entries(productvers)) {
+            const archKey = `${platform}-${productVersion}`;
+            if (!archModelMap.has(archKey)) {
+              archModelMap.set(archKey, new Map());
+            }
+            if (!archModelMap.get(archKey).has(dsmVersion)) {
+              archModelMap.get(archKey).set(dsmVersion, new Set());
+            }
+
+            for (const model of modelList) {
+              archModelMap.get(archKey).get(dsmVersion).add(model);
+            }
+          }
+        }
+
+        return archModelMap;
+      }
+
+      function collectMatches(modules, models, product4, vendor4) {
         const product8 = product4.padStart(8, "0");
         const vendor8 = vendor4.padStart(8, "0");
         const grouped = new Map();
+        const archModelMap = buildArchModelMap(models);
 
         for (const [arch, drivers] of Object.entries(modules || {})) {
           if (!drivers || typeof drivers !== "object") {
@@ -281,20 +314,40 @@ color:red;
             const description = String(info.description || "").trim();
             const key = `${driver}\u0000${description}`;
             if (!grouped.has(key)) {
+              const versionModels = {};
+              for (const version of DSM_VERSIONS) {
+                versionModels[version] = new Set();
+              }
               grouped.set(key, {
                 driver,
                 description,
-                architectures: []
+                versionModels
               });
             }
-            grouped.get(key).architectures.push(arch);
+
+            const versionMap = archModelMap.get(arch);
+            if (!versionMap) {
+              continue;
+            }
+
+            for (const version of DSM_VERSIONS) {
+              const modelSet = versionMap.get(version);
+              if (!modelSet) {
+                continue;
+              }
+              for (const model of modelSet) {
+                grouped.get(key).versionModels[version].add(model);
+              }
+            }
           }
         }
 
         return Array.from(grouped.values())
           .map((item) => ({
             ...item,
-            architectures: [...new Set(item.architectures)].sort()
+            versionModels: Object.fromEntries(
+              DSM_VERSIONS.map((version) => [version, [...item.versionModels[version]].sort()])
+            )
           }))
           .sort((a, b) => a.driver.localeCompare(b.driver) || a.description.localeCompare(b.description));
       }
@@ -320,21 +373,24 @@ color:red;
         emptyState.hidden = true;
 
         for (const match of matches) {
+          const versionRows = DSM_VERSIONS.map((version) => `
+            <div class="Box-row">
+              <p class="text-mono f6 color-fg-muted mb-1">${version} Models</p>
+              <p class="model-list">${match.versionModels[version].length ? match.versionModels[version].join(", ") : "N/A"}</p>
+            </div>
+          `).join("");
+
           const box = document.createElement("div");
           box.className = "Box mb-3";
           box.innerHTML = `
-            <div class="Box-header d-flex flex-items-center flex-justify-between">
+            <div class="Box-header">
               <h3 class="Box-title">${match.driver}</h3>
-              <span class="Counter">${match.architectures.length}</span>
             </div>
             <div class="Box-row">
               <p class="text-mono f6 color-fg-muted mb-1">Description</p>
               <p>${match.description || "N/A"}</p>
             </div>
-            <div class="Box-row">
-              <p class="text-mono f6 color-fg-muted mb-1">Architectures</p>
-              <p class="arch-list">${match.architectures.join(", ")}</p>
-            </div>
+            ${versionRows}
           `;
           resultsNode.appendChild(box);
         }
@@ -354,11 +410,14 @@ color:red;
         }
 
         searchButton.disabled = true;
-        setStatus("Loading modules data and matching drivers...", "info");
+        setStatus("Loading modules and models data, then matching drivers...", "info");
 
         try {
-          const modules = await fetchModules();
-          const matches = collectMatches(modules, product4, vendor4);
+          const [modules, models] = await Promise.all([
+            fetchJson(MODULES_URL, "modules_detailed.json"),
+            fetchJson(MODELS_URL, "models.json")
+          ]);
+          const matches = collectMatches(modules, models, product4, vendor4);
           renderResults(matches, product4, vendor4);
 
           const params = new URLSearchParams(window.location.search);
