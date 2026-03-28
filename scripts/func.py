@@ -374,7 +374,10 @@ def getaddons(workpath, jsonpath, xlsxpath):
 @click.option(
     "-x", "--xlsxpath", type=str, required=False, help="The output path of xlsxfile."
 )
-def getmodules(workpath, jsonpath, xlsxpath):
+@click.option(
+    "-d", "--detailed", is_flag=True, required=False, help="Get detailed info of modules.",
+)
+def getmodules(workpath, jsonpath, xlsxpath, detailed: bool = False):
     MS = glob.glob(os.path.join(workpath, "mnt", "p3", "modules", "*.tgz"))
     MS.sort()
     modules = {}
@@ -391,11 +394,28 @@ def getmodules(workpath, jsonpath, xlsxpath):
         KS.sort()
         for K in KS:
             K_name = os.path.splitext(os.path.basename(K))[0]
-            K_path = "" if os.path.basename(os.path.dirname(K)) == "modules" else os.path.basename(os.path.dirname(K)) + "/"
+            K_path = (
+                ""
+                if os.path.basename(os.path.dirname(K)) == "modules"
+                else os.path.basename(os.path.dirname(K)) + "/"
+            )
             K_info = kmodule.modinfo(K, basedir=os.path.dirname(K), kernel=None)[0]
             K_description = K_info.get("description", "")
             K_depends = K_info.get("depends", "")
-            M_modules[K_path + K_name] = {"description": K_description, "depends": K_depends}
+            K_firmware = K_info.get("firmware", "")
+            K_alias = K_info.get("alias", "")
+            if detailed:
+                M_modules[K_path + K_name] = {
+                    "description": K_description,
+                    "depends": K_depends,
+                    "firmware": K_firmware,
+                    "alias": K_alias,
+                }
+            else:
+                M_modules[K_path + K_name] = {
+                    "description": K_description,
+                    "depends": K_depends,
+                }
         modules[M_name] = M_modules
         if os.path.exists(TMP_PATH):
             shutil.rmtree(TMP_PATH)
@@ -405,10 +425,32 @@ def getmodules(workpath, jsonpath, xlsxpath):
     if xlsxpath:
         wb = Workbook()
         ws = wb.active
-        ws.append(["Name", "Arch", "description", "depends"])
-        for k1, v1 in modules.items():
-            for k2, v2 in v1.items():
-                ws.append([k2, k1, v2["description"], v2["depends"]])
+        if detailed:
+            ws.append(["Name", "Arch", "description", "depends", "firmware", "alias"])
+            for k1, v1 in modules.items():
+                for k2, v2 in v1.items():
+                    ws.append(
+                        [
+                            k2,
+                            k1,
+                            str(v2["description"]),
+                            str(v2["depends"]),
+                            str(v2["firmware"]),
+                            str(v2["alias"]),
+                        ]
+                    )
+        else:
+            ws.append(["Name", "Arch", "description", "depends"])
+            for k1, v1 in modules.items():
+                for k2, v2 in v1.items():
+                    ws.append(
+                        [
+                            k2,
+                            k1,
+                            str(v2["description"]),
+                            str(v2["depends"]),
+                        ]
+                    )
         wb.save(xlsxpath)
 
 

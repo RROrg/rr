@@ -14,8 +14,8 @@ on:
   workflow_dispatch:
     inputs:
       data:
-        description: "models, pats, addons, modules"
-        default: "1111"
+        description: "models, pats, addons, modules, modules_detailed"
+        default: "11111"
         type: string
       push:
         description: "push"
@@ -88,6 +88,7 @@ jobs:
           [ "${DATA:1:1}" = "1" ] && python3 scripts/func.py getpats -w "rr/initrd" -j "docs/pats.json" -x "docs/pats.xlsx"
           [ "${DATA:2:1}" = "1" ] && python3 scripts/func.py getaddons -w "/tmp" -j "docs/addons.json" -x "docs/addons.xlsx"
           [ "${DATA:3:1}" = "1" ] && python3 scripts/func.py getmodules -w "/tmp" -j "docs/modules.json" -x "docs/modules.xlsx"
+          [ "${DATA:4:1}" = "1" ] && python3 scripts/func.py getmodules -w "/tmp" -j "docs/modules_detailed.json" -x "docs/modules_detailed.xlsx" -d
 
           sudo umount "/tmp/mnt/p3"
           sudo losetup -d "${LOOPX}"
