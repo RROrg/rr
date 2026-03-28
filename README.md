@@ -31,6 +31,7 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
   - PATs: [pats](https://github.com/RROrg/rr/raw/main/docs/pats.xlsx)
   - Addons: [addons](https://github.com/RROrg/rr/raw/main/docs/addons.xlsx)
   - Modules: [modules](https://github.com/RROrg/rr/raw/main/docs/modules.xlsx)
+  - Driver Lookup: [driver lookup](https://rrorg.github.io/rr/modules.html)
 
 - Proxmox VE One Click Install:
   ```
