@@ -1111,7 +1111,11 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -1863,7 +1867,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
@@ -2354,9 +2358,169 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
         },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd,snd-timer"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-seq-midi-event,snd-seq,snd,snd-rawmidi"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,usbcore,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "usbcore,snd-rawmidi,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "sound_firmware": {
+            "description": "",
+            "depends": ""
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -3739,7 +3903,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -4439,7 +4603,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
@@ -4926,9 +5090,73 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
         },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,usbcore,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "usbcore,snd-rawmidi,snd"
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "sound_firmware": {
+            "description": "",
+            "depends": ""
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -6295,7 +6523,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -6995,7 +7223,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
@@ -7482,9 +7710,73 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
         },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,usbcore,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "usbcore,snd-rawmidi,snd"
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "sound_firmware": {
+            "description": "",
+            "depends": ""
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -8851,7 +9143,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -9551,7 +9843,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
@@ -10038,9 +10330,73 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
         },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,usbcore,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "usbcore,snd-rawmidi,snd"
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "sound_firmware": {
+            "description": "",
+            "depends": ""
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -11415,7 +11771,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -12127,7 +12483,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
@@ -12614,9 +12970,73 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
         },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,usbcore,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "usbcore,snd-rawmidi,snd"
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "sound_firmware": {
+            "description": "",
+            "depends": ""
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -13995,7 +14415,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -14711,7 +15131,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
@@ -15198,9 +15618,73 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
         },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,usbcore,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "usbcore,snd-rawmidi,snd"
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "sound_firmware": {
+            "description": "",
+            "depends": ""
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -15558,6 +16042,10 @@
         },
         "aacraid": {
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -15981,7 +16469,7 @@
             "depends": ""
         },
         "i40e": {
-            "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
+            "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
         },
         "i8042": {
@@ -15997,7 +16485,7 @@
             "depends": "drm_mipi_dsi,ttm,drm,drm_kms_helper,dmabuf,drm_display_helper,i915-compat,intel-gtt,drm_buddy,i2c-algo-bit"
         },
         "iavf": {
-            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver",
+            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
         },
         "ib_cm": {
@@ -16029,11 +16517,11 @@
             "depends": "ide-core"
         },
         "igb": {
-            "description": "Intel(R) Gigabit Ethernet Linux Driver",
+            "description": "Intel(R) Gigabit Ethernet Linux Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igbvf": {
-            "description": "Intel(R) Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igc": {
@@ -16049,7 +16537,7 @@
             "depends": ""
         },
         "intel_auxiliary": {
-            "description": "Auxiliary Bus Standalone",
+            "description": "Auxiliary Bus Standalone (Compiled by RR for DSM)",
             "depends": ""
         },
         "intel_idle": {
@@ -16181,11 +16669,11 @@
             "depends": "cfg80211"
         },
         "ixgbe": {
-            "description": "Intel(R) 10GbE PCI Express Linux Network Driver",
+            "description": "Intel(R) 10GbE PCI Express Linux Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "ixgbevf": {
-            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "jc42": {
@@ -16940,6 +17428,186 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "libphy,usbnet,usbcore"
         },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd,snd-pcm"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd,snd-pcm"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-hdmi": {
+            "description": "HDMI HD-audio codec",
+            "depends": "snd-hda-core,snd,snd-hda-codec,snd-pcm"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec,snd-hda-core,snd-hda-codec-generic"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-ext-core": {
+            "description": "HDA extended core",
+            "depends": "snd-hda-core"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd,snd-intel-dspcfg"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-intel-dspcfg": {
+            "description": "Intel DSP config driver",
+            "depends": ""
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-rawmidi,snd-seq-midi-event,snd-seq,snd"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-soc-ac97": {
+            "description": "Soc Generic AC97 driver",
+            "depends": "snd-ac97-codec,snd-soc-core"
+        },
+        "snd-soc-acpi": {
+            "description": "ALSA SoC ACPI module",
+            "depends": ""
+        },
+        "snd-soc-core": {
+            "description": "Dynamic Audio Power Management core for ALSA SoC",
+            "depends": "snd-pcm,snd-pcm-dmaengine,snd,snd-compress,ac97_bus"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,usbcore,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "snd-rawmidi,usbcore,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "sr9700": {
             "description": "SR9700 one chip USB 1.1 USB to Ethernet device from http://www.corechip-sz.com/ (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
@@ -17378,6 +18046,10 @@
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
             "depends": ""
@@ -17807,7 +18479,7 @@
             "depends": ""
         },
         "i40e": {
-            "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
+            "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
         },
         "i8042": {
@@ -17823,7 +18495,7 @@
             "depends": "drm_mipi_dsi,ttm,drm,drm_kms_helper,dmabuf,drm_display_helper,i915-compat,intel-gtt,drm_buddy,i2c-algo-bit"
         },
         "iavf": {
-            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver",
+            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
         },
         "ib_cm": {
@@ -17855,11 +18527,11 @@
             "depends": "ide-core"
         },
         "igb": {
-            "description": "Intel(R) Gigabit Ethernet Linux Driver",
+            "description": "Intel(R) Gigabit Ethernet Linux Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igbvf": {
-            "description": "Intel(R) Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igc": {
@@ -17875,7 +18547,7 @@
             "depends": ""
         },
         "intel_auxiliary": {
-            "description": "Auxiliary Bus Standalone",
+            "description": "Auxiliary Bus Standalone (Compiled by RR for DSM)",
             "depends": ""
         },
         "intel_idle": {
@@ -18007,11 +18679,11 @@
             "depends": "cfg80211"
         },
         "ixgbe": {
-            "description": "Intel(R) 10GbE PCI Express Linux Network Driver",
+            "description": "Intel(R) 10GbE PCI Express Linux Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "ixgbevf": {
-            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "jc42": {
@@ -18765,6 +19437,186 @@
         "smsc95xx": {
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "libphy,usbnet,usbcore"
+        },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd,snd-pcm"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd,snd-pcm"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-hdmi": {
+            "description": "HDMI HD-audio codec",
+            "depends": "snd-hda-core,snd,snd-hda-codec,snd-pcm"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec,snd-hda-core,snd-hda-codec-generic"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-ext-core": {
+            "description": "HDA extended core",
+            "depends": "snd-hda-core"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd,snd-intel-dspcfg"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-intel-dspcfg": {
+            "description": "Intel DSP config driver",
+            "depends": ""
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-rawmidi,snd-seq-midi-event,snd-seq,snd"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-soc-ac97": {
+            "description": "Soc Generic AC97 driver",
+            "depends": "snd-ac97-codec,snd-soc-core"
+        },
+        "snd-soc-acpi": {
+            "description": "ALSA SoC ACPI module",
+            "depends": ""
+        },
+        "snd-soc-core": {
+            "description": "Dynamic Audio Power Management core for ALSA SoC",
+            "depends": "snd-pcm,snd-pcm-dmaengine,snd,snd-compress,ac97_bus"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,usbcore,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "snd-rawmidi,usbcore,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sr9700": {
             "description": "SR9700 one chip USB 1.1 USB to Ethernet device from http://www.corechip-sz.com/ (Compiled by RR for DSM)",
@@ -19224,6 +20076,10 @@
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
             "depends": ""
@@ -19645,7 +20501,7 @@
             "depends": ""
         },
         "i40e": {
-            "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver",
+            "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
         },
         "i8042": {
@@ -19661,7 +20517,7 @@
             "depends": "drm_mipi_dsi,ttm,drm,drm_kms_helper,dmabuf,drm_display_helper,i915-compat,intel-gtt,drm_buddy,i2c-algo-bit"
         },
         "iavf": {
-            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver",
+            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
         },
         "ib_cm": {
@@ -19693,11 +20549,11 @@
             "depends": "ide-core"
         },
         "igb": {
-            "description": "Intel(R) Gigabit Ethernet Linux Driver",
+            "description": "Intel(R) Gigabit Ethernet Linux Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igbvf": {
-            "description": "Intel(R) Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igc": {
@@ -19713,7 +20569,7 @@
             "depends": ""
         },
         "intel_auxiliary": {
-            "description": "Auxiliary Bus Standalone",
+            "description": "Auxiliary Bus Standalone (Compiled by RR for DSM)",
             "depends": ""
         },
         "intel_idle": {
@@ -19845,11 +20701,11 @@
             "depends": "cfg80211"
         },
         "ixgbe": {
-            "description": "Intel(R) 10GbE PCI Express Linux Network Driver",
+            "description": "Intel(R) 10GbE PCI Express Linux Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "ixgbevf": {
-            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "jc42": {
@@ -20603,6 +21459,186 @@
         "smsc95xx": {
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "libphy,usbnet,usbcore"
+        },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd,snd-pcm"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd,snd-pcm"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-hdmi": {
+            "description": "HDMI HD-audio codec",
+            "depends": "snd-hda-core,snd,snd-hda-codec,snd-pcm"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec,snd-hda-core,snd-hda-codec-generic"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-ext-core": {
+            "description": "HDA extended core",
+            "depends": "snd-hda-core"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd,snd-intel-dspcfg"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-intel-dspcfg": {
+            "description": "Intel DSP config driver",
+            "depends": ""
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-rawmidi,snd-seq-midi-event,snd-seq,snd"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-soc-ac97": {
+            "description": "Soc Generic AC97 driver",
+            "depends": "snd-ac97-codec,snd-soc-core"
+        },
+        "snd-soc-acpi": {
+            "description": "ALSA SoC ACPI module",
+            "depends": ""
+        },
+        "snd-soc-core": {
+            "description": "Dynamic Audio Power Management core for ALSA SoC",
+            "depends": "snd-pcm,snd-pcm-dmaengine,snd,snd-compress,ac97_bus"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,usbcore,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "snd-rawmidi,usbcore,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sr9700": {
             "description": "SR9700 one chip USB 1.1 USB to Ethernet device from http://www.corechip-sz.com/ (Compiled by RR for DSM)",
@@ -22126,7 +23162,11 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -22866,7 +23906,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
@@ -23357,9 +24397,173 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
         },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-hdmi": {
+            "description": "HDMI HD-audio codec",
+            "depends": "snd-hda-core,snd,snd-hda-codec,snd-pcm"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd,snd-timer"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-seq-midi-event,snd-seq,snd,snd-rawmidi"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,usbcore,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "usbcore,snd-rawmidi,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "sound_firmware": {
+            "description": "",
+            "depends": ""
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -23739,6 +24943,10 @@
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
             "depends": ""
@@ -23854,6 +25062,10 @@
         "bnx2x": {
             "description": "QLogic BCM57710/57711/57711E/57712/57712_MF/57800/57800_MF/57810/57810_MF/57840/57840_MF Driver (Compiled by RR for DSM)",
             "depends": "mdio"
+        },
+        "bnxt_en": {
+            "description": "Broadcom BCM573xx network driver",
+            "depends": "devlink,page_pool,dimlib"
         },
         "bochs-drm": {
             "description": "DRM driver for Bochs/QEMU's stdvga display adapter (Compiled by RR for DSM)",
@@ -23981,6 +25193,14 @@
         },
         "cxgb4vf": {
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "devlink": {
+            "description": "Devlink module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "dimlib": {
+            "description": "DIM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "dm9601": {
@@ -24127,6 +25347,10 @@
             "description": "TI HD3SS3220 DRP Port Controller Driver",
             "depends": "regmap-i2c,typec"
         },
+        "hinic": {
+            "description": "Huawei Intelligent NIC driver (Compiled by RR for DSM)",
+            "depends": "devlink"
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -24151,6 +25375,10 @@
             "description": "I801 SMBus driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "i40e": {
+            "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver (Compiled by RR for DSM)",
+            "depends": "intel_auxiliary"
+        },
         "i8042": {
             "description": "i8042 keyboard and mouse controller driver",
             "depends": ""
@@ -24160,8 +25388,24 @@
             "depends": "drm_kms_helper,drm,iosf_mbi,backlight,fb,video,i2c-algo-bit"
         },
         "iavf": {
-            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver",
+            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
+        },
+        "ib_cm": {
+            "description": "InfiniBand CM",
+            "depends": "ib_core"
+        },
+        "ib_core": {
+            "description": "core kernel InfiniBand API",
+            "depends": "ipv6,dimlib"
+        },
+        "ib_umad": {
+            "description": "InfiniBand userspace MAD packet access",
+            "depends": "ib_core"
+        },
+        "ib_uverbs": {
+            "description": "InfiniBand userspace verbs access",
+            "depends": "ib_core"
         },
         "ide-core": {
             "description": "IDE/ATAPI driver (Compiled by RR for DSM)",
@@ -24176,11 +25420,11 @@
             "depends": "ide-core"
         },
         "igb": {
-            "description": "Intel(R) Gigabit Ethernet Linux Driver",
+            "description": "Intel(R) Gigabit Ethernet Linux Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igbvf": {
-            "description": "Intel(R) Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igc": {
@@ -24188,7 +25432,7 @@
             "depends": ""
         },
         "intel_auxiliary": {
-            "description": "Auxiliary Bus Standalone",
+            "description": "Auxiliary Bus Standalone (Compiled by RR for DSM)",
             "depends": ""
         },
         "intel_idle": {
@@ -24307,6 +25551,10 @@
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
         },
+        "iw_cm": {
+            "description": "iWARP CM",
+            "depends": "ib_core"
+        },
         "iwldvm": {
             "description": "Intel(R) Wireless WiFi Link AGN driver for Linux (Compiled by RR for DSM)",
             "depends": "mac80211,iwlwifi,cfg80211"
@@ -24319,8 +25567,12 @@
             "description": "Intel(R) Wireless WiFi driver for Linux (Compiled by RR for DSM)",
             "depends": "cfg80211"
         },
+        "ixgbe": {
+            "description": "Intel(R) 10GbE PCI Express Linux Network Driver (Compiled by RR for DSM)",
+            "depends": "devlink"
+        },
         "ixgbevf": {
-            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "jc42": {
@@ -24450,6 +25702,42 @@
         "mii": {
             "description": "MII hardware support library",
             "depends": ""
+        },
+        "mlx4_core": {
+            "description": "Mellanox ConnectX HCA low-level driver (Compiled by RR for DSM)",
+            "depends": "devlink"
+        },
+        "mlx4_en": {
+            "description": "Mellanox ConnectX HCA Ethernet driver (Compiled by RR for DSM)",
+            "depends": "mlx4_core,devlink"
+        },
+        "mlx4_ib": {
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
+            "depends": "mlx4_core,ib_core,devlink"
+        },
+        "mlx5_core": {
+            "description": "Mellanox 5th generation network adapters (ConnectX series) core driver (Compiled by RR for DSM)",
+            "depends": "devlink,page_pool,dimlib,mlxfw"
+        },
+        "mlx5_ib": {
+            "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver (Compiled by RR for DSM)",
+            "depends": "mlx5_core,ib_core,devlink,ib_uverbs"
+        },
+        "mlxfw": {
+            "description": "Mellanox firmware flash lib",
+            "depends": "xz_dec,devlink"
+        },
+        "mlxsw_core": {
+            "description": "Mellanox switch device core driver",
+            "depends": "devlink,mlxfw"
+        },
+        "mlxsw_i2c": {
+            "description": "Mellanox switch I2C interface driver",
+            "depends": "mlxsw_core"
+        },
+        "mlxsw_pci": {
+            "description": "Mellanox switch PCI interface driver",
+            "depends": "mlxsw_core"
         },
         "mmc_block": {
             "description": "Multimedia Card (MMC) block device driver",
@@ -24599,6 +25887,10 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "page_pool": {
+            "description": "Page pool module (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "pcspeaker": {
             "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
             "depends": ""
@@ -24658,6 +25950,18 @@
         "qca_7k_common": {
             "description": "Qualcomm Atheros QCA7000 common",
             "depends": ""
+        },
+        "qed": {
+            "description": "QLogic FastLinQ 4xxxx Core Module",
+            "depends": "devlink"
+        },
+        "qede": {
+            "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
+            "depends": "ipv6,qed"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ib_core,ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -25023,6 +26327,186 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "libphy,usbnet,usbcore"
         },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd,snd-pcm"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd,snd-pcm"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-hdmi": {
+            "description": "HDMI HD-audio codec",
+            "depends": "snd-hda-core,snd,snd-hda-codec,snd-pcm"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec,snd-hda-core,snd-hda-codec-generic"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-ext-core": {
+            "description": "HDA extended core",
+            "depends": "snd-hda-core"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd,snd-intel-dspcfg"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-intel-dspcfg": {
+            "description": "Intel DSP config driver",
+            "depends": ""
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd,snd-timer"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-rawmidi,snd-seq-midi-event,snd-seq,snd"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-soc-ac97": {
+            "description": "Soc Generic AC97 driver",
+            "depends": "snd-ac97-codec,snd-soc-core"
+        },
+        "snd-soc-acpi": {
+            "description": "ALSA SoC ACPI module",
+            "depends": ""
+        },
+        "snd-soc-core": {
+            "description": "Dynamic Audio Power Management core for ALSA SoC",
+            "depends": "snd-pcm,snd-pcm-dmaengine,snd,snd-compress,ac97_bus"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,usbcore,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "snd-rawmidi,usbcore,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "sr9700": {
             "description": "SR9700 one chip USB 1.1 USB to Ethernet device from http://www.corechip-sz.com/ (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
@@ -25194,6 +26678,50 @@
         "uhci-hcd": {
             "description": "USB Universal Host Controller Interface driver",
             "depends": "usbcore"
+        },
+        "update/dmabuf": {
+            "description": "Intel Graphics",
+            "depends": ""
+        },
+        "update/drm": {
+            "description": "DRM panel infrastructure",
+            "depends": "dmabuf,drm_panel_orientation_quirks"
+        },
+        "update/drm_buddy": {
+            "description": "DRM Buddy Allocator",
+            "depends": "dmabuf,drm"
+        },
+        "update/drm_display_helper": {
+            "description": "DRM display adapter helper",
+            "depends": "drm,drm_kms_helper,dmabuf"
+        },
+        "update/drm_kms_helper": {
+            "description": "DRM KMS helper",
+            "depends": "drm,dmabuf"
+        },
+        "update/drm_panel_orientation_quirks": {
+            "description": "",
+            "depends": ""
+        },
+        "update/i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "update/i915-compat": {
+            "description": "Intel Graphics",
+            "depends": "dmabuf"
+        },
+        "update/i915": {
+            "description": "Intel Graphics",
+            "depends": "ttm,drm,drm_kms_helper,dmabuf,drm_display_helper,iosf_mbi,i915-compat,drm_buddy,intel-gtt,i2c-algo-bit"
+        },
+        "update/intel-gtt": {
+            "description": "",
+            "depends": ""
+        },
+        "update/ttm": {
+            "description": "TTM memory manager subsystem (for DRM device)",
+            "depends": "dmabuf,drm"
         },
         "usbnet": {
             "description": "USB network driver framework",
@@ -25501,6 +27029,10 @@
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
             "depends": ""
@@ -25616,6 +27148,10 @@
         "bnx2x": {
             "description": "QLogic BCM57710/57711/57711E/57712/57712_MF/57800/57800_MF/57810/57810_MF/57840/57840_MF Driver (Compiled by RR for DSM)",
             "depends": "mdio"
+        },
+        "bnxt_en": {
+            "description": "Broadcom BCM573xx network driver",
+            "depends": "devlink,page_pool,dimlib"
         },
         "bochs-drm": {
             "description": "DRM driver for Bochs/QEMU's stdvga display adapter (Compiled by RR for DSM)",
@@ -25743,6 +27279,14 @@
         },
         "cxgb4vf": {
             "description": "Chelsio T4/T5/T6 Virtual Function (VF) Network Driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "devlink": {
+            "description": "Devlink module (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "dimlib": {
+            "description": "DIM driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "dm9601": {
@@ -25889,6 +27433,10 @@
             "description": "TI HD3SS3220 DRP Port Controller Driver",
             "depends": "regmap-i2c,typec"
         },
+        "hinic": {
+            "description": "Huawei Intelligent NIC driver (Compiled by RR for DSM)",
+            "depends": "devlink"
+        },
         "hpilo": {
             "description": "hpilo (Compiled by RR for DSM)",
             "depends": ""
@@ -25913,6 +27461,10 @@
             "description": "I801 SMBus driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "i40e": {
+            "description": "Intel(R) 40-10 Gigabit Ethernet Connection Network Driver (Compiled by RR for DSM)",
+            "depends": "intel_auxiliary"
+        },
         "i8042": {
             "description": "i8042 keyboard and mouse controller driver",
             "depends": ""
@@ -25922,8 +27474,24 @@
             "depends": "drm_kms_helper,drm,iosf_mbi,backlight,fb,video,i2c-algo-bit"
         },
         "iavf": {
-            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver",
+            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
+        },
+        "ib_cm": {
+            "description": "InfiniBand CM",
+            "depends": "ib_core"
+        },
+        "ib_core": {
+            "description": "core kernel InfiniBand API",
+            "depends": "ipv6,dimlib"
+        },
+        "ib_umad": {
+            "description": "InfiniBand userspace MAD packet access",
+            "depends": "ib_core"
+        },
+        "ib_uverbs": {
+            "description": "InfiniBand userspace verbs access",
+            "depends": "ib_core"
         },
         "ide-core": {
             "description": "IDE/ATAPI driver (Compiled by RR for DSM)",
@@ -25938,11 +27506,11 @@
             "depends": "ide-core"
         },
         "igb": {
-            "description": "Intel(R) Gigabit Ethernet Linux Driver",
+            "description": "Intel(R) Gigabit Ethernet Linux Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igbvf": {
-            "description": "Intel(R) Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igc": {
@@ -25950,7 +27518,7 @@
             "depends": ""
         },
         "intel_auxiliary": {
-            "description": "Auxiliary Bus Standalone",
+            "description": "Auxiliary Bus Standalone (Compiled by RR for DSM)",
             "depends": ""
         },
         "intel_idle": {
@@ -26069,6 +27637,10 @@
             "description": "IT8705F/IT871xF/IT872xF hardware monitoring driver (Compiled by RR for DSM)",
             "depends": "hwmon-vid"
         },
+        "iw_cm": {
+            "description": "iWARP CM",
+            "depends": "ib_core"
+        },
         "iwldvm": {
             "description": "Intel(R) Wireless WiFi Link AGN driver for Linux (Compiled by RR for DSM)",
             "depends": "mac80211,iwlwifi,cfg80211"
@@ -26081,8 +27653,12 @@
             "description": "Intel(R) Wireless WiFi driver for Linux (Compiled by RR for DSM)",
             "depends": "cfg80211"
         },
+        "ixgbe": {
+            "description": "Intel(R) 10GbE PCI Express Linux Network Driver (Compiled by RR for DSM)",
+            "depends": "devlink"
+        },
         "ixgbevf": {
-            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "jc42": {
@@ -26212,6 +27788,42 @@
         "mii": {
             "description": "MII hardware support library",
             "depends": ""
+        },
+        "mlx4_core": {
+            "description": "Mellanox ConnectX HCA low-level driver (Compiled by RR for DSM)",
+            "depends": "devlink"
+        },
+        "mlx4_en": {
+            "description": "Mellanox ConnectX HCA Ethernet driver (Compiled by RR for DSM)",
+            "depends": "mlx4_core,devlink"
+        },
+        "mlx4_ib": {
+            "description": "Mellanox ConnectX HCA InfiniBand driver (Compiled by RR for DSM)",
+            "depends": "mlx4_core,ib_core,devlink"
+        },
+        "mlx5_core": {
+            "description": "Mellanox 5th generation network adapters (ConnectX series) core driver (Compiled by RR for DSM)",
+            "depends": "devlink,page_pool,dimlib,mlxfw"
+        },
+        "mlx5_ib": {
+            "description": "Mellanox 5th generation network adapters (ConnectX series) IB driver (Compiled by RR for DSM)",
+            "depends": "mlx5_core,ib_core,devlink,ib_uverbs"
+        },
+        "mlxfw": {
+            "description": "Mellanox firmware flash lib",
+            "depends": "xz_dec,devlink"
+        },
+        "mlxsw_core": {
+            "description": "Mellanox switch device core driver",
+            "depends": "devlink,mlxfw"
+        },
+        "mlxsw_i2c": {
+            "description": "Mellanox switch I2C interface driver",
+            "depends": "mlxsw_core"
+        },
+        "mlxsw_pci": {
+            "description": "Mellanox switch PCI interface driver",
+            "depends": "mlxsw_core"
         },
         "mmc_block": {
             "description": "Multimedia Card (MMC) block device driver",
@@ -26361,6 +27973,10 @@
             "description": "802.2 datalink support (Compiled by RR for DSM)",
             "depends": "llc"
         },
+        "page_pool": {
+            "description": "Page pool module (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "pcspeaker": {
             "description": "PC Speaker Platform Device Module (Compiled by RR for DSM)",
             "depends": ""
@@ -26420,6 +28036,18 @@
         "qca_7k_common": {
             "description": "Qualcomm Atheros QCA7000 common",
             "depends": ""
+        },
+        "qed": {
+            "description": "QLogic FastLinQ 4xxxx Core Module",
+            "depends": "devlink"
+        },
+        "qede": {
+            "description": "QLogic FastLinQ 4xxxx Ethernet Driver",
+            "depends": "ipv6,qed"
+        },
+        "qedr": {
+            "description": "QLogic 40G/100G ROCE Driver",
+            "depends": "ib_core,ipv6,qede,qed"
         },
         "qla3xxx": {
             "description": "QLogic ISP3XXX Network Driver v2.03.00-k5 ",
@@ -26785,6 +28413,186 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "libphy,usbnet,usbcore"
         },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd,snd-pcm"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd,snd-pcm"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-hdmi": {
+            "description": "HDMI HD-audio codec",
+            "depends": "snd-hda-core,snd,snd-hda-codec,snd-pcm"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec,snd-hda-core,snd-hda-codec-generic"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-ext-core": {
+            "description": "HDA extended core",
+            "depends": "snd-hda-core"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd,snd-intel-dspcfg"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-intel-dspcfg": {
+            "description": "Intel DSP config driver",
+            "depends": ""
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd,snd-timer"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-rawmidi,snd-seq-midi-event,snd-seq,snd"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-soc-ac97": {
+            "description": "Soc Generic AC97 driver",
+            "depends": "snd-ac97-codec,snd-soc-core"
+        },
+        "snd-soc-acpi": {
+            "description": "ALSA SoC ACPI module",
+            "depends": ""
+        },
+        "snd-soc-core": {
+            "description": "Dynamic Audio Power Management core for ALSA SoC",
+            "depends": "snd-pcm,snd-pcm-dmaengine,snd,snd-compress,ac97_bus"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,usbcore,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "snd-rawmidi,usbcore,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "sr9700": {
             "description": "SR9700 one chip USB 1.1 USB to Ethernet device from http://www.corechip-sz.com/ (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
@@ -26956,6 +28764,50 @@
         "uhci-hcd": {
             "description": "USB Universal Host Controller Interface driver",
             "depends": "usbcore"
+        },
+        "update/dmabuf": {
+            "description": "Intel Graphics",
+            "depends": ""
+        },
+        "update/drm": {
+            "description": "DRM panel infrastructure",
+            "depends": "dmabuf,drm_panel_orientation_quirks"
+        },
+        "update/drm_buddy": {
+            "description": "DRM Buddy Allocator",
+            "depends": "dmabuf,drm"
+        },
+        "update/drm_display_helper": {
+            "description": "DRM display adapter helper",
+            "depends": "drm,drm_kms_helper,dmabuf"
+        },
+        "update/drm_kms_helper": {
+            "description": "DRM KMS helper",
+            "depends": "drm,dmabuf"
+        },
+        "update/drm_panel_orientation_quirks": {
+            "description": "",
+            "depends": ""
+        },
+        "update/i2c-algo-bit": {
+            "description": "I2C-Bus bit-banging algorithm",
+            "depends": ""
+        },
+        "update/i915-compat": {
+            "description": "Intel Graphics",
+            "depends": "dmabuf"
+        },
+        "update/i915": {
+            "description": "Intel Graphics",
+            "depends": "ttm,drm,drm_kms_helper,dmabuf,drm_display_helper,iosf_mbi,i915-compat,drm_buddy,intel-gtt,i2c-algo-bit"
+        },
+        "update/intel-gtt": {
+            "description": "",
+            "depends": ""
+        },
+        "update/ttm": {
+            "description": "TTM memory manager subsystem (for DRM device)",
+            "depends": "dmabuf,drm"
         },
         "usbnet": {
             "description": "USB network driver framework",
@@ -28282,7 +30134,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -29002,7 +30854,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
@@ -29489,9 +31341,73 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
         },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,usbcore,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "usbcore,snd-rawmidi,snd"
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "sound_firmware": {
+            "description": "",
+            "depends": ""
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -30890,7 +32806,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -31626,7 +33542,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
@@ -32117,9 +34033,73 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet,usbcore,mii"
         },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,usbcore,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "usbcore,snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "usbcore,snd-rawmidi,snd"
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "sound_firmware": {
+            "description": "",
+            "depends": ""
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -32477,6 +34457,10 @@
         },
         "aacraid": {
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -32896,7 +34880,7 @@
             "depends": "drm_mipi_dsi,ttm,drm,drm_kms_helper,dmabuf,drm_display_helper,i915-compat,intel-gtt,drm_buddy,i2c-algo-bit"
         },
         "iavf": {
-            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver",
+            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
         },
         "ib_cm": {
@@ -32928,11 +34912,11 @@
             "depends": "ide-core"
         },
         "igb": {
-            "description": "Intel(R) Gigabit Ethernet Linux Driver",
+            "description": "Intel(R) Gigabit Ethernet Linux Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igbvf": {
-            "description": "Intel(R) Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igc": {
@@ -32948,7 +34932,7 @@
             "depends": ""
         },
         "intel_auxiliary": {
-            "description": "Auxiliary Bus Standalone",
+            "description": "Auxiliary Bus Standalone (Compiled by RR for DSM)",
             "depends": ""
         },
         "intel_idle": {
@@ -33080,7 +35064,7 @@
             "depends": "cfg80211"
         },
         "ixgbevf": {
-            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "jc42": {
@@ -33818,6 +35802,186 @@
         "smsc95xx": {
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet"
+        },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd,snd-pcm"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd,snd-pcm"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-hdmi": {
+            "description": "HDMI HD-audio codec",
+            "depends": "snd-hda-core,snd,snd-hda-codec,snd-pcm"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec,snd-hda-core,snd-hda-codec-generic"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-ext-core": {
+            "description": "HDA extended core",
+            "depends": "snd-hda-core"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd,snd-intel-dspcfg"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-intel-dspcfg": {
+            "description": "Intel DSP config driver",
+            "depends": ""
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-rawmidi,snd-seq-midi-event,snd-seq,snd"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-soc-ac97": {
+            "description": "Soc Generic AC97 driver",
+            "depends": "snd-ac97-codec,snd-soc-core"
+        },
+        "snd-soc-acpi": {
+            "description": "ALSA SoC ACPI module",
+            "depends": ""
+        },
+        "snd-soc-core": {
+            "description": "Dynamic Audio Power Management core for ALSA SoC",
+            "depends": "snd-pcm,snd-pcm-dmaengine,snd,snd-compress,ac97_bus"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "snd-rawmidi,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sr9700": {
             "description": "SR9700 one chip USB 1.1 USB to Ethernet device from http://www.corechip-sz.com/ (Compiled by RR for DSM)",
@@ -34277,6 +36441,10 @@
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
             "depends": ""
@@ -34694,7 +36862,7 @@
             "depends": "drm_mipi_dsi,ttm,drm,drm_kms_helper,dmabuf,drm_display_helper,i915-compat,intel-gtt,drm_buddy,i2c-algo-bit"
         },
         "iavf": {
-            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver",
+            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
         },
         "ib_cm": {
@@ -34726,11 +36894,11 @@
             "depends": "ide-core"
         },
         "igb": {
-            "description": "Intel(R) Gigabit Ethernet Linux Driver",
+            "description": "Intel(R) Gigabit Ethernet Linux Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igbvf": {
-            "description": "Intel(R) Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igc": {
@@ -34746,7 +36914,7 @@
             "depends": ""
         },
         "intel_auxiliary": {
-            "description": "Auxiliary Bus Standalone",
+            "description": "Auxiliary Bus Standalone (Compiled by RR for DSM)",
             "depends": ""
         },
         "intel_idle": {
@@ -34878,7 +37046,7 @@
             "depends": "cfg80211"
         },
         "ixgbevf": {
-            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "jc42": {
@@ -35616,6 +37784,186 @@
         "smsc95xx": {
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet"
+        },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd,snd-pcm"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd,snd-pcm"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-hdmi": {
+            "description": "HDMI HD-audio codec",
+            "depends": "snd-hda-core,snd,snd-hda-codec,snd-pcm"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec,snd-hda-core,snd-hda-codec-generic"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-ext-core": {
+            "description": "HDA extended core",
+            "depends": "snd-hda-core"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd,snd-intel-dspcfg"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-intel-dspcfg": {
+            "description": "Intel DSP config driver",
+            "depends": ""
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-rawmidi,snd-seq-midi-event,snd-seq,snd"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-soc-ac97": {
+            "description": "Soc Generic AC97 driver",
+            "depends": "snd-ac97-codec,snd-soc-core"
+        },
+        "snd-soc-acpi": {
+            "description": "ALSA SoC ACPI module",
+            "depends": ""
+        },
+        "snd-soc-core": {
+            "description": "Dynamic Audio Power Management core for ALSA SoC",
+            "depends": "snd-pcm,snd-pcm-dmaengine,snd,snd-compress,ac97_bus"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "snd-rawmidi,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sr9700": {
             "description": "SR9700 one chip USB 1.1 USB to Ethernet device from http://www.corechip-sz.com/ (Compiled by RR for DSM)",
@@ -37126,7 +39474,7 @@
             "depends": "9pnet,virtio,virtio_ring"
         },
         "aacraid": {
-            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver",
+            "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -37870,7 +40218,7 @@
             "depends": "mmc_core"
         },
         "mmc_core": {
-            "description": "",
+            "description": "MMC/SD/SDIO core (Compiled by RR for DSM)",
             "depends": ""
         },
         "mpt3sas": {
@@ -38365,9 +40713,73 @@
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet,mii"
         },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "snd-rawmidi,snd"
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
         "softcursor": {
             "description": "Generic software cursor",
             "depends": "fb"
+        },
+        "sound_firmware": {
+            "description": "",
+            "depends": ""
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sp2": {
             "description": "CIMaX SP2/HF CI driver",
@@ -38725,6 +41137,10 @@
         },
         "aacraid": {
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
+            "depends": ""
+        },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
             "depends": ""
         },
         "acpi-cpufreq": {
@@ -39148,7 +41564,7 @@
             "depends": "drm_mipi_dsi,ttm,drm,drm_kms_helper,dmabuf,drm_display_helper,i915-compat,intel-gtt,drm_buddy,i2c-algo-bit"
         },
         "iavf": {
-            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver",
+            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
         },
         "ib_cm": {
@@ -39180,11 +41596,11 @@
             "depends": "ide-core"
         },
         "igb": {
-            "description": "Intel(R) Gigabit Ethernet Linux Driver",
+            "description": "Intel(R) Gigabit Ethernet Linux Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igbvf": {
-            "description": "Intel(R) Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igc": {
@@ -39200,7 +41616,7 @@
             "depends": ""
         },
         "intel_auxiliary": {
-            "description": "Auxiliary Bus Standalone",
+            "description": "Auxiliary Bus Standalone (Compiled by RR for DSM)",
             "depends": ""
         },
         "intel_idle": {
@@ -39332,7 +41748,7 @@
             "depends": "cfg80211"
         },
         "ixgbevf": {
-            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "jc42": {
@@ -40078,6 +42494,186 @@
         "smsc95xx": {
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet"
+        },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd,snd-pcm"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd,snd-pcm"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-hdmi": {
+            "description": "HDMI HD-audio codec",
+            "depends": "snd-hda-core,snd,snd-hda-codec,snd-pcm"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec,snd-hda-core,snd-hda-codec-generic"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-ext-core": {
+            "description": "HDA extended core",
+            "depends": "snd-hda-core"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd,snd-intel-dspcfg"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-intel-dspcfg": {
+            "description": "Intel DSP config driver",
+            "depends": ""
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-rawmidi,snd-seq-midi-event,snd-seq,snd"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-soc-ac97": {
+            "description": "Soc Generic AC97 driver",
+            "depends": "snd-ac97-codec,snd-soc-core"
+        },
+        "snd-soc-acpi": {
+            "description": "ALSA SoC ACPI module",
+            "depends": ""
+        },
+        "snd-soc-core": {
+            "description": "Dynamic Audio Power Management core for ALSA SoC",
+            "depends": "snd-pcm,snd-pcm-dmaengine,snd,snd-compress,ac97_bus"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "snd-rawmidi,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sr9700": {
             "description": "SR9700 one chip USB 1.1 USB to Ethernet device from http://www.corechip-sz.com/ (Compiled by RR for DSM)",
@@ -40537,6 +43133,10 @@
             "description": "Dell PERC2, 2/Si, 3/Si, 3/Di, Adaptec Advanced Raid Products, HP NetRAID-4M, IBM ServeRAID & ICP SCSI driver (Compiled by RR for DSM)",
             "depends": ""
         },
+        "ac97_bus": {
+            "description": "AC97 bus interface (Compiled by RR for DSM)",
+            "depends": ""
+        },
         "acpi-cpufreq": {
             "description": "ACPI Processor P-States Driver",
             "depends": ""
@@ -40958,7 +43558,7 @@
             "depends": "drm_mipi_dsi,ttm,drm,drm_kms_helper,dmabuf,drm_display_helper,i915-compat,intel-gtt,drm_buddy,i2c-algo-bit"
         },
         "iavf": {
-            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver",
+            "description": "Intel(R) Ethernet Adaptive Virtual Function Driver (Compiled by RR for DSM)",
             "depends": "intel_auxiliary"
         },
         "ib_cm": {
@@ -40990,11 +43590,11 @@
             "depends": "ide-core"
         },
         "igb": {
-            "description": "Intel(R) Gigabit Ethernet Linux Driver",
+            "description": "Intel(R) Gigabit Ethernet Linux Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igbvf": {
-            "description": "Intel(R) Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "igc": {
@@ -41010,7 +43610,7 @@
             "depends": ""
         },
         "intel_auxiliary": {
-            "description": "Auxiliary Bus Standalone",
+            "description": "Auxiliary Bus Standalone (Compiled by RR for DSM)",
             "depends": ""
         },
         "intel_idle": {
@@ -41142,7 +43742,7 @@
             "depends": "cfg80211"
         },
         "ixgbevf": {
-            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver",
+            "description": "Intel(R) 10 Gigabit Virtual Function Network Driver (Compiled by RR for DSM)",
             "depends": ""
         },
         "jc42": {
@@ -41888,6 +44488,186 @@
         "smsc95xx": {
             "description": "SMSC95XX USB 2.0 Ethernet Devices (Compiled by RR for DSM)",
             "depends": "usbnet"
+        },
+        "snd-ac97-codec": {
+            "description": "Universal interface for Audio Codec '97",
+            "depends": "snd,snd-pcm,ac97_bus"
+        },
+        "snd-compress": {
+            "description": "ALSA Compressed offload framework",
+            "depends": "snd,snd-pcm"
+        },
+        "snd-emu10k1-synth": {
+            "description": "Routines for control of EMU10K1 WaveTable synth",
+            "depends": "snd-emux-synth,snd-emu10k1,snd-seq-device"
+        },
+        "snd-emu10k1": {
+            "description": "EMU10K1",
+            "depends": "snd-pcm,snd-ac97-codec,snd-util-mem,snd,snd-rawmidi,snd-timer,snd-hwdep,snd-seq-device"
+        },
+        "snd-emu10k1x": {
+            "description": "EMU10K1X",
+            "depends": "snd,snd-pcm,snd-rawmidi,snd-ac97-codec"
+        },
+        "snd-emux-synth": {
+            "description": "Routines for control of EMU WaveTable chip",
+            "depends": "snd-util-mem,snd,snd-seq,snd-seq-midi-emul,snd-hwdep,snd-seq-virmidi"
+        },
+        "snd-hda-codec-analog": {
+            "description": "Analog Devices HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core"
+        },
+        "snd-hda-codec-ca0110": {
+            "description": "Creative CA0110-IBG HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-ca0132": {
+            "description": "Creative Sound Core3D codec",
+            "depends": "snd-hda-core,snd-hda-codec,snd,snd-pcm"
+        },
+        "snd-hda-codec-cirrus": {
+            "description": "Cirrus Logic HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-core,snd-hda-codec"
+        },
+        "snd-hda-codec-cmedia": {
+            "description": "C-Media HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec"
+        },
+        "snd-hda-codec-conexant": {
+            "description": "Conexant HD-audio codec",
+            "depends": "snd-hda-codec-generic,snd-hda-codec,snd-hda-core,snd"
+        },
+        "snd-hda-codec-generic": {
+            "description": "Generic HD-audio codec parser",
+            "depends": "snd-hda-core,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-hdmi": {
+            "description": "HDMI HD-audio codec",
+            "depends": "snd-hda-core,snd,snd-hda-codec,snd-pcm"
+        },
+        "snd-hda-codec-idt": {
+            "description": "IDT/Sigmatel HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-realtek": {
+            "description": "Realtek HD-audio codec",
+            "depends": "snd-hda-codec,snd-hda-core,snd-hda-codec-generic"
+        },
+        "snd-hda-codec-si3054": {
+            "description": "Si3054 HD-audio modem codec",
+            "depends": "snd-hda-core,snd-pcm,snd-hda-codec,snd"
+        },
+        "snd-hda-codec-via": {
+            "description": "VIA HD-audio codec",
+            "depends": "snd-hda-core,snd-hda-codec-generic,snd-hda-codec,snd"
+        },
+        "snd-hda-codec": {
+            "description": "HDA codec core (Compiled by RR for DSM)",
+            "depends": "snd-hda-core,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-hda-core": {
+            "description": "HD-audio bus",
+            "depends": "snd-pcm"
+        },
+        "snd-hda-ext-core": {
+            "description": "HDA extended core",
+            "depends": "snd-hda-core"
+        },
+        "snd-hda-intel": {
+            "description": "Intel HDA driver",
+            "depends": "snd-hda-core,snd-hda-codec,snd-pcm,snd,snd-intel-dspcfg"
+        },
+        "snd-hwdep": {
+            "description": "Hardware dependent layer",
+            "depends": "snd"
+        },
+        "snd-intel-dspcfg": {
+            "description": "Intel DSP config driver",
+            "depends": ""
+        },
+        "snd-mixer-oss": {
+            "description": "Mixer OSS emulation for ALSA.",
+            "depends": "snd"
+        },
+        "snd-pcm-dmaengine": {
+            "description": "",
+            "depends": "snd-pcm"
+        },
+        "snd-pcm-oss": {
+            "description": "PCM OSS emulation for ALSA.",
+            "depends": "snd-pcm,snd,snd-mixer-oss"
+        },
+        "snd-pcm": {
+            "description": "Midlevel PCM code for ALSA.",
+            "depends": "snd"
+        },
+        "snd-rawmidi": {
+            "description": "Midlevel RawMidi code for ALSA.",
+            "depends": "snd,snd-seq-device"
+        },
+        "snd-seq-device": {
+            "description": "ALSA sequencer device management",
+            "depends": "snd"
+        },
+        "snd-seq-midi-emul": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI emulation.",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi-event": {
+            "description": "MIDI byte <-> sequencer event coder",
+            "depends": "snd-seq"
+        },
+        "snd-seq-midi": {
+            "description": "Advanced Linux Sound Architecture sequencer MIDI synth.",
+            "depends": "snd-seq-midi-event,snd-seq,snd-rawmidi,snd-seq-device"
+        },
+        "snd-seq-virmidi": {
+            "description": "Virtual Raw MIDI client on Sequencer",
+            "depends": "snd-rawmidi,snd-seq-midi-event,snd-seq,snd"
+        },
+        "snd-seq": {
+            "description": "Advanced Linux Sound Architecture sequencer.",
+            "depends": "snd,snd-seq-device,snd-timer"
+        },
+        "snd-soc-ac97": {
+            "description": "Soc Generic AC97 driver",
+            "depends": "snd-ac97-codec,snd-soc-core"
+        },
+        "snd-soc-acpi": {
+            "description": "ALSA SoC ACPI module",
+            "depends": ""
+        },
+        "snd-soc-core": {
+            "description": "Dynamic Audio Power Management core for ALSA SoC",
+            "depends": "snd-pcm,snd-pcm-dmaengine,snd,snd-compress,ac97_bus"
+        },
+        "snd-timer": {
+            "description": "ALSA timer interface",
+            "depends": "snd"
+        },
+        "snd-usb-audio": {
+            "description": "USB Audio",
+            "depends": "snd-usbmidi-lib,snd-pcm,snd,snd-hwdep"
+        },
+        "snd-usb-hiface": {
+            "description": "M2Tech hiFace USB-SPDIF audio driver",
+            "depends": "snd-pcm,snd"
+        },
+        "snd-usbmidi-lib": {
+            "description": "USB Audio/MIDI helper module",
+            "depends": "snd-rawmidi,snd"
+        },
+        "snd-util-mem": {
+            "description": "Generic memory management routines for soundcard memory allocation",
+            "depends": ""
+        },
+        "snd": {
+            "description": "Advanced Linux Sound Architecture driver for soundcards. (Compiled by RR for DSM)",
+            "depends": "soundcore"
+        },
+        "soundcore": {
+            "description": "Core sound module (Compiled by RR for DSM)",
+            "depends": ""
         },
         "sr9700": {
             "description": "SR9700 one chip USB 1.1 USB to Ethernet device from http://www.corechip-sz.com/ (Compiled by RR for DSM)",
