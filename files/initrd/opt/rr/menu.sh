@@ -491,8 +491,8 @@ function setConfigFromDSM() {
   VS="$(readConfigEntriesArray "platforms.${PLATFORMTMP,,}.productvers" "${WORK_PATH}/platforms.yml" | sort -r)"
   if arrayExistItem "${PLATFORMTMP,,}" ${PS} && arrayExistItem "${majorversion}.${minorversion}" ${VS}; then
     PLATFORM="${PLATFORMTMP,,}"
-    MODEL="$(echo "${MODELTMP}" | sed 's/d$/D/; s/rp$/RP/; s/rp+/RP+/')"
-    MODELID="${MODELTMP}"
+    MODEL="$(echo "${MODELTMP}" | sed 's/^ds/DS/; s/^fs/FS/; s/^rs/RS/; s/^sa/SA/; s/^dva/DVA/; s/d$/D/; s/rp$/RP/; s/rp+$/RP+/')"
+    MODELID=""
     PRODUCTVER="${majorversion}.${minorversion}"
     BUILDNUM="${buildnumber}"
     SMALLNUM="${smallfixnumber}"
@@ -3933,16 +3933,20 @@ function updateMenu() {
     case "$(cat "${TMP_PATH}/resp" 2>/dev/null)" in
       a)
         F="$(ls ${PART3_PATH}/updateall*.zip ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
+        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
+          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
+          F=""
+        }
         [ -z "${F}" ] && downloadExts "$(TEXT "All")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "updateall"
-        F="$(ls ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
         [ -n "${F}" ] && updateRR "${F}" && rm -f ${PART3_PATH}/updateall*.zip ${TMP_PATH}/updateall*.zip
         ;;
       r)
         F="$(ls ${PART3_PATH}/update*.zip ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
+        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
+          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
+          F=""
+        }
         [ -z "${F}" ] && downloadExts "$(TEXT "RR")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "update"
-        F="$(ls ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
         [ -n "${F}" ] && updateRR "${F}" && rm -f ${PART3_PATH}/update*.zip ${TMP_PATH}/update*.zip
         ;;
       d)
@@ -3952,9 +3956,11 @@ function updateMenu() {
           continue
         fi
         F="$(ls ${PART3_PATH}/addons*.zip ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
+        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
+          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
+          F=""
+        }
         [ -z "${F}" ] && downloadExts "$(TEXT "Addons")" "${CUR_ADDONS_VER:-None}" "https://github.com/RROrg/rr-addons" "addons"
-        F="$(ls ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
         [ -n "${F}" ] && updateAddons "${F}" && rm -f ${PART3_PATH}/addons*.zip ${TMP_PATH}/addons*.zip
         ;;
       m)
@@ -3964,9 +3970,11 @@ function updateMenu() {
           continue
         fi
         F="$(ls ${PART3_PATH}/modules*.zip ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
+        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
+          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
+          F=""
+        }
         [ -z "${F}" ] && downloadExts "$(TEXT "Modules")" "${CUR_MODULES_VER:-None}" "https://github.com/RROrg/rr-modules" "modules"
-        F="$(ls ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
         [ -n "${F}" ] && updateModules "${F}" && rm -f ${PART3_PATH}/modules*.zip ${TMP_PATH}/modules*.zip
         ;;
       l)
@@ -3976,9 +3984,11 @@ function updateMenu() {
           continue
         fi
         F="$(ls ${PART3_PATH}/rp-lkms*.zip ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
+        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
+          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
+          F=""
+        }
         [ -z "${F}" ] && downloadExts "$(TEXT "LKMs")" "${CUR_LKMS_VER:-None}" "https://github.com/RROrg/rr-lkms" "rp-lkms"
-        F="$(ls ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
         [ -n "${F}" ] && updateLKMs "${F}" && rm -f ${PART3_PATH}/rp-lkms*.zip ${TMP_PATH}/rp-lkms*.zip
         ;;
       c)
@@ -3988,9 +3998,11 @@ function updateMenu() {
           continue
         fi
         F="$(ls ${PART3_PATH}/rr-cks*.zip ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && rm -f "${F}" && rm -f "${F}.downloading" && F=""
+        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
+          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
+          F=""
+        }
         [ -z "${F}" ] && downloadExts "$(TEXT "CKs")" "${CUR_CKS_VER:-None}" "https://github.com/RROrg/rr-cks" "rr-cks"
-        F="$(ls ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
         [ -n "${F}" ] && updateCKs "${F}" && rm -f ${PART3_PATH}/rr-cks*.zip ${TMP_PATH}/rr-cks*.zip
         ;;
       u)
@@ -4022,23 +4034,23 @@ function updateMenu() {
         else
           case "${USER_FILE}" in
             *update*.zip)
-              rm -f ${TMP_PATH}/update*.zip
+              rm -f ${PART3_PATH}/modules*.zip ${TMP_PATH}/update*.zip
               updateRR "${USER_FILE}"
               ;;
             *addons*.zip)
-              rm -f ${TMP_PATH}/addons*.zip
+              rm -f ${PART3_PATH}/addons*.zip ${TMP_PATH}/addons*.zip
               updateAddons "${USER_FILE}"
               ;;
             *modules*.zip)
-              rm -f ${TMP_PATH}/modules*.zip
+              rm -f ${PART3_PATH}/modules*.zip ${TMP_PATH}/modules*.zip
               updateModules "${USER_FILE}"
               ;;
             *rp-lkms*.zip)
-              rm -f ${TMP_PATH}/rp-lkms*.zip
+              rm -f ${PART3_PATH}/rp-lkms*.zip ${TMP_PATH}/rp-lkms*.zip
               updateLKMs "${USER_FILE}"
               ;;
             *rr-cks*.zip)
-              rm -f ${TMP_PATH}/rr-cks*.zip
+              rm -f ${PART3_PATH}/rr-cks*.zip ${TMP_PATH}/rr-cks*.zip
               updateCKs "${USER_FILE}"
               ;;
             *)
