@@ -324,6 +324,13 @@ function productversMenu() {
     [ $? -ne 0 ] && return 0
   fi
 
+  if ! grep -qw "movbe" "/proc/cpuinfo" && awk "BEGIN {exit !($resp > 7.2)}"; then
+    MSG="$(printf "$(TEXT "The current version %s is not supported on this CPU. Do you want to continue?")" "${PRODUCTVER}")"
+    DIALOG --ret 0 --title "$(TEXT "Product Version")" \
+      --yesno "${MSG}" 0 0
+    [ $? -ne 0 ] && return 0
+  fi
+
   selver="${resp}"
   urlver=""
   paturl=""
