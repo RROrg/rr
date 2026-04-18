@@ -1,0 +1,20 @@
+# GRUB gfxpayload blacklist.  The format is a sequence of lines of the
+# following form, using lower-case hexadecimal for all ID components:
+#
+#   vVENDORdDEVICEsvSUBVENDORsdSUBDEVICEbcBASECLASSscSUBCLASS
+#
+# Blacklist lines are regex-matched (currently using Lua's string.find with
+# the line surrounded by ^ and $) against a corresponding PCI ID string.  In
+# practice this means that you can replace any part of the ID string with .*
+# to match anything.
+#
+# There is no need to customise this file locally.  If you need to disable
+# gfxpayload=keep on your system, just add this line (uncommented) to
+# /etc/default/grub:
+#
+#   GRUB_GFXPAYLOAD_LINUX=text
+
+v15add0710.*
+v15add0405.*
+v80eedbeef.*
+v1002d6738.*

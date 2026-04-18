@@ -27,45 +27,53 @@ jobs:
         shell: python
         run: |
           # -*- coding: utf-8 -*-
-          import json, subprocess
-          def set_output(name, value):
-            subprocess.call(["echo '{}={}' >> $GITHUB_ENV".format(name, value)], shell=True)
+          import json
+          import os
+          import subprocess
 
-          issuetitle = ${{ toJSON(github.event.issue.title) }};
-          issuebody = ${{ toJSON(github.event.issue.body) }};
-          
+          def set_env(name, value):
+              subprocess.call(f'echo "{name}<<EOF" >> $GITHUB_ENV', shell=True)
+              subprocess.call(f'echo "{value}" >> $GITHUB_ENV', shell=True)
+              subprocess.call(f'echo "EOF" >> $GITHUB_ENV', shell=True)
+  
+          issuetitle = """${{ github.event.issue.title }}"""
+          issuebody = """${{ github.event.issue.body }}"""
+
           iscustom = 'false'
           warinfo = 'false'
 
-          language= ''
-          model = ''
-          version = ''
-          addons = ''
-          modules = ''
+          fields = {
+            "format": "",
+            "size": "",
+            "template": "",
+            "language": "",
+            "sn": "",
+            "macs": "",
+            "tips": "",
+            "model": "",
+            "version": "",
+            "kernel": "",
+            "addons": "",
+            "modules": ""
+          }
+
           try:
-              if issuetitle.lower().startswith('custom'):
-                  jsonbody = json.loads(issuebody)
-                  iscustom = 'true'
-                  language = jsonbody.get('language', '')
-                  model = jsonbody.get('model', '')
-                  version = jsonbody.get('version', '')
-                  addons = jsonbody.get('addons', '')
-                  modules = jsonbody.get('modules', '')
-          except ValueError as e:
-              pass
+            if issuetitle.strip().lower().startswith('custom'):
+              jsonbody = json.loads(issuebody)
+              iscustom = 'true'
+              for k in fields:
+                fields[k] = jsonbody.get(k, "")
+          except Exception:
+            pass
 
           if iscustom == 'false':
-              if issuebody.find('DMI') < 0 and issuebody.find('CPU') < 0 and issuebody.find('NIC') < 0:
-                  warinfo = 'true'
-    
-          set_output("iscustom", iscustom)
-          set_output("warinfo", warinfo)  
+            if not any(x in issuebody for x in ['DMI', 'CPU', 'NIC']):
+              warinfo = 'true'
 
-          set_output("language", language)
-          set_output("model", model)
-          set_output("version", version)
-          set_output("addons", addons)
-          set_output("modules", modules)
+          set_env("iscustom", iscustom)
+          set_env("warinfo", warinfo)
+          for k, v in fields.items():
+            set_env(k, v)
 
       - name: Update Comment Warinfo
         if: env.warinfo == 'true'
@@ -83,7 +91,7 @@ jobs:
             Install ENV: (You can find it in the boot interface.)  
             * DMI:  
             * CPU:  
-            * NIC:  
+            * NIC:  (pid & vid)  
 
             RR version: (You can find it in the update menu.)  
             * RR:  
@@ -99,12 +107,17 @@ jobs:
 
             logs:  
 
-            (请先看一下#173、#175、#226的内容)  
+            (## 因为 log中存在 SN/MAC 等一些敏感信息, 当提供完整文件时请自行抹除他们, 当然你也可以发送到我的邮箱. ##)  
+            (## Because the log contains some sensitive information such as SN/MAC, please delete them when providing the complete file. Of course, you can also send it to my email. ##)    
+            ...
+
+            (请先看一下#173、#175、#226 的内容)  
             (Plz review the content of #173, #175, #226 first)  
             ...
 
-            ... 如果你提供不了详细信息，那就等有缘人吧!
-            ... If you can't provide detailed information, then wait for someone who is destined! 
+            (如果你只是说 XXX 不能用, 什么详细信息也不提供, 我也只能说感谢你的反馈.)  
+            (If you just say XXX doesn't work without providing any details, I can only say thank you for your feedback.)  
+            ... 
 
           emoji: heart
 
@@ -127,7 +140,7 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             Hi @${{ github.event.issue.user.login }}.  
-            RR-${{ env.model }} is being build and package and will be sent to your email later..  
+            RR-${{ env.model }} building (Usually about 5 minutes) ...  
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: heart
@@ -137,161 +150,180 @@ jobs:
         run: |
           # 累了, 毁灭吧!
 
-          function writeConfigKey() {
-            [ "${2}" = "{}" ] && sudo yq eval '.'${1}' = {}' --inplace "${3}" 2>/dev/null || sudo yq eval '.'${1}' = "'"${2}"'"' --inplace "${3}" 2>/dev/null
-          }
+          sudo apt update
+          sudo apt install -y locales busybox dialog gettext sed gawk jq curl
+          sudo apt install -y python-is-python3 python3-pip libelf-dev qemu-utils dosfstools cpio xz-utils lz4 lzma bzip2 gzip zstd
+
+          . scripts/func.sh "${{ secrets.RRORG }}"
 
           REPO="${{ github.server_url }}/${{ github.repository }}"
-          MODEL="${{ env.model }}"
-          VERSION="${{ env.version }}"
-          PRERELEASE="false"
+          PRERELEASE="true"
 
           TAG=""
           if [ "${PRERELEASE}" = "true" ]; then
-            TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep /refs/tags/.*\.zip | head -1 | sed -r 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/')"
+            TAG="$(curl -skL --connect-timeout 10 "${REPO}/tags" | grep "/refs/tags/.*\.zip" | sed -E 's/.*\/refs\/tags\/(.*)\.zip.*$/\1/' | sort -rV | head -1 | sed 's/^[v|V]//g')"
           else
-            LATESTURL="$(curl -skL --connect-timeout 10 -w %{url_effective} -o /dev/null "${REPO}/releases/latest")"
-            TAG="${LATESTURL##*/}"
+            TAG="$(curl -skL --connect-timeout 10 -w "%{url_effective}" -o /dev/null "${REPO}/releases/latest" | awk -F'/' '{print $NF}' | sed 's/^[v|V]//g')"
           fi
-          [ "${TAG:0:1}" = "v" ] && TAG="${TAG:1}"
           rm -f rr-${TAG}.img.zip
           STATUS=$(curl -kL --connect-timeout 10 -w "%{http_code}" "${REPO}/releases/download/${TAG}/rr-${TAG}.img.zip" -o "rr-${TAG}.img.zip")
-          if [ $? -ne 0 -o ${STATUS:-0} -ne 200 ]; then
+          if [ $? -ne 0 ] || [ ${STATUS:-0} -ne 200 ]; then
             echo "Download failed"
             exit 1
           fi
-          
-          unzip rr-${TAG}.img.zip -d "rr"
 
-          export TERM=xterm
+          unzip rr-${TAG}.img.zip -d rr rr.img
 
-          sudo ./localbuild.sh create rr/ws rr/rr.img
-          if [ $? -ne 0 ]; then
-            echo "create failed"
-            exit 1
-          fi
+          echo "TAG=${TAG}" >> $GITHUB_ENV
 
-          # sudo cp -rf files/initrd/opt/rr/* rr/ws/initrd/opt/rr/
-          # sudo sed -i "s/set -e/set -ex/" rr/ws/initrd/opt/rr/init.sh
-          # sudo sed -i '/^alias/i\set -x' rr/ws/initrd/opt/rr/menu.sh
-                    
-          [ -n "${{ env.language }}" ] && echo "${{ env.language }}.UTF-8" | sudo tee rr/ws/mnt/p1/.locale
+          LOOPX=$(sudo losetup -f)
+          sudo losetup -P "${LOOPX}" rr/rr.img
 
-          sudo ./localbuild.sh init
-          if [ $? -ne 0 ]; then
-            echo "init failed"
-            exit 1
-          fi
+          echo "Building..."
+          {
+            echo ". menu.sh"
+            [ -n "${{ env.language }}" ] && echo "echo \"${{ env.language }}.UTF-8\" >/mnt/p1/.locale"
+            [ -n "${{ env.tips }}" ] && echo "echo -e \"${{ env.tips }}\" >/mnt/p3/AddTips"
+            [ -n "${{ env.kernel }}" ] && echo "writeConfigKey \"kernel\" \"${{ env.kernel }}\" \"\${USER_CONFIG_FILE}\""
+            echo "menu.sh modelMenu \"${{ env.model }}\""
+            echo "menu.sh productversMenu \"${{ env.version }}\""
+            [ -n "${{ env.addons }}" ] && { 
+              echo "writeConfigKey \"addons\" \"{}\" \"\${USER_CONFIG_FILE}\""
+              IFS=',' read -ra ADDON_ARR <<< "${{ env.addons }}"
+              for A in "${ADDON_ARR[@]}"; do
+                if echo "${A}" | grep -qE '^[^:]+:[^:]+$'; then
+                  KEY="$(echo "${A}" | cut -d':' -f1 | xargs)"
+                  VAL="$(echo "${A}" | cut -d':' -f2 | xargs)"
+                else
+                  KEY="${A}"
+                  VAL=""
+                fi
+                echo "writeConfigKey \"addons.\\\"${KEY}\\\"\" \"${VAL}\" \"\${USER_CONFIG_FILE}\""
+              done
+            }
+            [ ! "custom" = "${{ env.kernel }}" ] && [ -n "${{ env.modules }}" ] && {
+              echo "writeConfigKey \"modules\" \"{}\" \"\${USER_CONFIG_FILE}\""
+              echo "mergeConfigModules \"$(echo "${{ env.modules }}" | tr ',' '\n')\" \"\${USER_CONFIG_FILE}\""
+            }
+            echo "menu.sh make"
+            echo "menu.sh cleanCache"
+            [ -n "${{ env.sn }}" ] && echo "writeConfigKey \"sn\" \"${{ env.sn }}\" \"\${USER_CONFIG_FILE}\""
+            [ -n "${{ env.macs }}" ] && {
+              MACS=($(echo "${{ env.macs }}" | sed 's/[:-]//g' | sed 's/.*/\U&/' | sed 's/[;,]/ /g'))
+              [ -n "${MACS[0]}" ] && echo "writeConfigKey \"mac1\" \"${MACS[0]}\" \"\${USER_CONFIG_FILE}\""
+              [ -n "${MACS[1]}" ] && echo "writeConfigKey \"mac2\" \"${MACS[1]}\" \"\${USER_CONFIG_FILE}\""
+            }
+            [ "true" = "${{ env.template }}" ] && {
+              echo "writeConfigKey \"sn\" \"\" \"\${USER_CONFIG_FILE}\""
+              echo "writeConfigKey \"mac1\" \"\" \"\${USER_CONFIG_FILE}\""
+              echo "writeConfigKey \"mac2\" \"\" \"\${USER_CONFIG_FILE}\""
+            }
+          } > build.sh
+          chmod +x build.sh
 
-          sudo ./localbuild.sh config "${MODEL}" "${VERSION}"
-          if [ $? -ne 0 ]; then
-            echo "config failed"
-            exit 1
-          fi
+          docker pull wjz304/rr:${TAG}
+          docker run --rm --privileged -p 7681:7681 -p 7304:7304 -p 7080:7080 -p 7022:22 -v ${PWD}/build.sh:/opt/rr/build.sh wjz304/rr:${TAG} bash build.sh
 
-          if [ -n "${{ env.addons }}" ]; then
-            echo -en "set addons"
-            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
-            writeConfigKey "addons" "{}" "${USER_CONFIG_FILE}"
-            echo -en ': '
-            for A in $(echo "${{ env.addons }}" | tr ',' ' '); do
-              echo -en "${A} "
-              VALUE=""
-              writeConfigKey "addons.\"${A}\"" "${VALUE}" "${USER_CONFIG_FILE}"
-            done
-            echo ""
-          fi
-          if [ -n "${{ env.modules }}" ]; then
-            echo -en "set modules"
-            USER_CONFIG_FILE="rr/ws/mnt/p1/user-config.yml"
-            writeConfigKey "modules" "{}" "${USER_CONFIG_FILE}"
-            echo -en ': '
-            for M in $(echo "${{ env.modules }}" | tr ',' ' '); do
-              echo -en "${M} "
-              VALUE=""
-              writeConfigKey "modules.\"${M}\"" "${VALUE}" "${USER_CONFIG_FILE}"
-            done
-            echo ""
-          fi
-
-          sudo ./localbuild.sh build
-          if [ $? -ne 0 ]; then
-            echo "build failed"
-            exit 1
-          fi
-
-          sudo ./localbuild.sh pack rr/rr.img
-          if [ $? -ne 0 ]; then
-            echo "pack failed"
-            exit 1
-          fi
+          sudo losetup --detach "${LOOPX}"
 
           ls rr -al
-          zip -9 "rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img
-          
-          UPLOAD="$(curl -k -F "file=@rr-${MODEL}-${TAG}-${{ github.run_id }}.img.zip" -F "token=${{ secrets.TT_TOKEN }}" -F "model=0"  -X POST "https://tmp-cli.vx-cdn.com/app/upload_cli")"
-          if ! echo "${UPLOAD}" | grep -q "Download Page"; then
-            echo "Upload failed"
-            exit 1
-          fi
 
-          EMAIL=$(curl -s -H "Authorization: token ${{ secrets.ACTION }}" "https://api.github.com/users/${{ github.event.issue.user.login }}" | jq -r '.email')
-          TTDLURL="$(echo "${UPLOAD}" | grep "Download Page" | head -1)"
-          echo "TAG=${TAG}" >> $GITHUB_ENV
-          echo "EMAIL=${EMAIL}" >> $GITHUB_ENV
-          echo "TTDLURL=${TTDLURL}" >> $GITHUB_ENV
+          {
+            echo "RR: "
+            echo "  VERSION: ${TAG}"
+            echo "  CUSTOM:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo
+            echo "After the image is written to the disk, it will boot directly into DSM without the need to compile again."
+            echo "Of course, you can also modify the settings yourself."
+          } >README.txt
 
-      - name: Send mail
-        if: env.iscustom == 'true' && success() && env.EMAIL != 'null'
-        uses: dawidd6/action-send-mail@v3
+          case "${{ env.size }}" in
+            2GB)
+              echo "2GB"
+              gzip -dc "files/initrd/opt/rr/grub.img.gz" > rr/rr_2GB.img
+              repackImg rr/rr.img rr/rr_2GB.img
+              rm -f rr/rr.img
+              mv -f rr/rr_2GB.img rr/rr.img
+              ;;
+            4GB)
+              echo "4GB"
+              ;;
+            8GB)
+              echo "8GB"
+              resizeImg rr/rr.img +4096M
+              ;;
+            *)
+              echo "unknown size"
+              ;;
+          esac
+
+          case "${{ env.format }}" in
+            ova)
+              echo "OVA"
+              convertova "rr/rr.img" "rr/rr.ova"
+              (cd rr && sha256sum rr.ova >../sha256sum)
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.ova.zip" -j rr/rr.ova sha256sum README.txt
+              ;;
+            vmx)
+              echo "VMX"
+              convertvmx "rr/rr.img" "rr.vmx"  # rr.vmx is a directory
+              (cd rr.vmx && sha256sum * >../sha256sum)
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.vmx.zip" -r rr.vmx sha256sum README.txt
+              ;;
+            vmdk)
+              echo "VMDK"
+              qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=monolithicSparse,compat6' rr/rr.vmdk
+              (cd rr && sha256sum rr.vmdk >../sha256sum)
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.vmdk.zip" -j rr/rr.vmdk sha256sum README.txt
+              ;;
+            flat)
+              echo "FLAT"
+              qemu-img convert rr/rr.img -O vmdk -o 'adapter_type=lsilogic,subformat=monolithicFlat,compat6' rr/rr.vmdk
+              (cd rr && sha256sum rr*.vmdk >../sha256sum)
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.flat.zip" -j rr/rr*.vmdk sha256sum README.txt
+              ;;
+            vhd)
+              echo "VHD"
+              qemu-img convert rr/rr.img -O vpc rr/rr.vhd
+              createvmc "rr/rr.vhd" "rr/rr.vmc"
+              (cd rr && sha256sum rr.vhd >../sha256sum)
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.vhd.zip" -j rr/rr.vmc rr/rr.vhd sha256sum README.txt
+              ;;
+            vhdx)
+              echo "VHDX"
+              qemu-img convert rr/rr.img -O vhdx -o subformat=dynamic rr/rr.vhdx
+              (cd rr && sha256sum rr.vhdx >../sha256sum)
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.vhdx.zip" -j rr/rr.vhdx sha256sum README.txt
+              ;;
+            *)
+              echo "IMG"
+              (cd rr && sha256sum rr.img >../sha256sum)
+              zip -9 "rr-${{ env.model }}-${TAG}-${{ github.run_id }}.img.zip" -j rr/rr.img sha256sum README.txt
+          esac
+
+      - name: Upload to Artifacts
+        if: env.iscustom == 'true' && success()
+        uses: actions/upload-artifact@v7
         with:
-          server_address: smtp-mail.outlook.com
-          server_port: 587
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: rr-${{ env.model }}-${{ env.TAG }}
-          to: ${{ env.EMAIL }}
-          from: ${{ secrets.MAIL_USERNAME }}
-          body: |
-            ${{ env.TTDLURL }}
+          name: rr-${{ env.model }}-${{ env.TAG }}
+          path: |
+            rr-${{ env.model }}-${{ env.TAG }}*.zip
+          retention-days: 5
 
       - name: Update Comment Success
-        if: env.iscustom == 'true' && success() && env.EMAIL != 'null'
-        uses: actions-cool/issues-helper@v3
-        with:
-          actions: 'update-comment'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          comment-id: ${{ steps.comment.outputs.comment-id }}
-          update-mode: replace
-          body: |
-            Hi @${{ github.event.issue.user.login }}.  
-            RR-${{ env.model }} has been sent to your email.  
-            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
-            ----
-          emoji: hooray
-
-      - name: Update Comment Success
-        if: env.iscustom == 'true' && success() && env.EMAIL == 'null'
-        uses: actions-cool/issues-helper@v3
-        with:
-          actions: 'update-comment'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          comment-id: ${{ steps.comment.outputs.comment-id }}
-          update-mode: replace
-          body: |
-            Hi @${{ github.event.issue.user.login }}.  
-            ${{ env.TTDLURL }}
-            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
-            ----
-          emoji: hooray
-
-      - name: Close Issues
         if: env.iscustom == 'true' && success()
         uses: actions-cool/issues-helper@v3
         with:
-          actions: 'close-issue'
+          actions: 'update-comment'
           token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
+          comment-id: ${{ steps.comment.outputs.comment-id }}
+          update-mode: replace
+          body: |
+            Hi @${{ github.event.issue.user.login }}.  
+            RR-${{ env.model }}-${{ env.TAG }} build success, please download the attachment from the below link (Attachments are only kept for 5 days).
+            > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
+            ----
+          emoji: hooray
 
       - name: Update Comment Fail
         if: env.iscustom == 'true' && failure()
@@ -303,7 +335,15 @@ jobs:
           update-mode: replace
           body: |
             Hi @${{ github.event.issue.user.login }}.  
-            RR-${{ env.model }} failed to build and package, please try again.  
+            RR-${{ env.model }}-${{ env.TAG }} build failed, please try again.  
             > ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}  
             ----
           emoji: confused
+
+      - name: Close Issues
+        if: env.iscustom == 'true'
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'close-issue'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}

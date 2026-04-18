@@ -1,4 +1,15 @@
-RR_VERSION="24.4.4"
+#!/usr/bin/env bash
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
+# shellcheck disable=SC2034
+
+RR_VERSION="26.4.0"
+RR_RELEASE=""
 RR_TITLE="RR v${RR_VERSION}"
 
 # Define paths
@@ -14,6 +25,7 @@ LOG_FILE="${TMP_PATH}/log.txt"
 
 USER_GRUB_CONFIG="${PART1_PATH}/boot/grub/grub.cfg"
 USER_GRUBENVFILE="${PART1_PATH}/boot/grub/grubenv"
+USER_RSYSENVFILE="${PART1_PATH}/boot/grub/rsysenv"
 USER_CONFIG_FILE="${PART1_PATH}/user-config.yml"
 USER_LOCALE_FILE="${PART1_PATH}/.locale"
 
@@ -22,8 +34,11 @@ ORI_RDGZ_FILE="${PART2_PATH}/rd.gz"
 
 RR_BZIMAGE_FILE="${PART3_PATH}/bzImage-rr"
 RR_RAMDISK_FILE="${PART3_PATH}/initrd-rr"
+RR_RAMUSER_FILE="${PART3_PATH}/initrd-rru"
+MC_RAMDISK_FILE="${PART3_PATH}/microcode.img"
 MOD_ZIMAGE_FILE="${PART3_PATH}/zImage-dsm"
 MOD_RDGZ_FILE="${PART3_PATH}/initrd-dsm"
+ADD_TIPS_FILE="${PART3_PATH}/AddTips"
 
 CKS_PATH="${PART3_PATH}/cks"
 LKMS_PATH="${PART3_PATH}/lkms"

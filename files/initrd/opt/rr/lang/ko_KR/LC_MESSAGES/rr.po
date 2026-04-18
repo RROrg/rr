@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 17:11+0800\n"
-"PO-Revision-Date: 2024-04-13 17:18+0800\n"
+"POT-Creation-Date: 2026-04-14 13:30+0800\n"
+"PO-Revision-Date: 2024-05-05 21:52+0800\n"
 "Last-Translator: EXP <jeong1986>\n"
 "Language-Team: 한국인 (대한민국) <EXP>\n"
 "Language: ko_KR\n"
@@ -17,1421 +17,1755 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.2\n"
 
-#: boot.sh:8 init.sh:9 menu.sh:9
+#: boot.sh:16 init.sh:23 menu.sh:15
 msgid "Loader is not init!"
 msgstr "로더가 초기화되지 않았습니다!"
 
-#: boot.sh:10 init.sh:119
+#: boot.sh:18 init.sh:199
 msgid "Loader is not configured!"
 msgstr "로더가 구성되지 않았습니다!"
 
-#: boot.sh:20 init.sh:14
+#: boot.sh:32 init.sh:30
 msgid "Welcome to %s"
 msgstr "Welcome to %s"
 
-#: boot.sh:33
-msgid "DSM zImage changed"
-msgstr "DSM zImage 변경"
+#: boot.sh:49 menu.sh:1510
+msgid "Reconfigure after upgrade ..."
+msgstr "업그레이드 후 재구성 ..."
 
-#: boot.sh:36 menu.sh:1308
-msgid "zImage not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
-msgstr "zImage 패치되지 않았습니다,\\n부트로더 버전을 업그레이드하고 다시 시도해 보세요.\\n패치 오류:\\n"
-
-#: boot.sh:44
-msgid "DSM Ramdisk changed"
-msgstr "DSM Ramdisk 변경"
-
-#: boot.sh:47 menu.sh:1314
-msgid "Ramdisk not patched,\\nPlease upgrade the bootloader version and try again.\\nPatch error:\\n"
-msgstr "Ramdisk 패치되지 않았습니다,\\n부트로더 버전을 업그레이드하고 다시 시도해 보세요.\\n패치 오류:\\n"
-
-#: boot.sh:65
-msgid "Model:   "
-msgstr "Model:   "
-
-#: boot.sh:66
-msgid "Version: "
-msgstr "Version: "
-
-#: boot.sh:67
-msgid "Kernel:  "
-msgstr "Kernel:  "
+#: boot.sh:54 boot.sh:59 menu.sh:1516
+msgid "Reconfiguration failed!"
+msgstr "재구성이 실패했습니다!"
 
 #: boot.sh:68
-msgid "LKM:     "
-msgstr "LKM:     "
-
-#: boot.sh:69
-msgid "DMI:     "
-msgstr "DMI:     "
-
-#: boot.sh:70
-msgid "CPU:     "
-msgstr "CPU:     "
-
-#: boot.sh:71
-msgid "MEM:     "
-msgstr "MEM:     "
-
-#: boot.sh:74
-msgid "The current version of bootloader does not support booting %s-%s, please upgrade and rebuild."
-msgstr "현재 부트로더 버전은 %s-%s 부팅을 지원하지 않습니다. 업그레이드하고 다시 빌드하세요."
-
-#: boot.sh:87
-msgid "Please insert at least one sata/scsi disk for system installation, except for the bootloader disk."
-msgstr "부팅 디스크를 제외하고 시스템 설치를 위해 최소한 하나의 SATA/SCSI 디스크를 장착하세요."
-
-#: boot.sh:173
-msgid "Cmdline:\\n"
-msgstr "Cmdline:\\n"
-
-#: boot.sh:179
-msgid "Reboot to boot directly in DSM"
-msgstr "재부팅 후 DSM 부팅으로 바로 이동하기"
-
-#: boot.sh:185 init.sh:132
-msgid "Detected %s network cards."
-msgstr "%s개의 네트워크 카드가 감지되었습니다."
-
-#: boot.sh:186 init.sh:133
-msgid "Checking Connect."
-msgstr "연결을 확인하는 중입니다."
-
-#: boot.sh:198 init.sh:143
-msgid "connected."
-msgstr "연락이 왔습니다."
-
-#: boot.sh:205 init.sh:150
-msgid "Waiting IP."
-msgstr "IP 주소를 가져옵니다."
-
-#: boot.sh:212 init.sh:157
-msgid "DOWN"
-msgstr "닫기"
-
-#: boot.sh:216 init.sh:161
-msgid "NOT CONNECTED"
-msgstr "연결되지 않음"
-
-#: boot.sh:220 init.sh:165
-msgid "TIMEOUT (Please check the IP on the router.)"
-msgstr "시간 초과 (라우터에서 IP를 확인하세요!!)"
-
-#: boot.sh:226
-msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
-msgstr "웹브라우저에서 \\033[1;34mhttp://%s:5000\\033[0m DSM을 접속하세요."
-
-#: boot.sh:238
-msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
-msgstr "%2ds (ssh/web) 연결 상태가 변경되면 부팅이 중단됩니다"
-
-#: boot.sh:242
-msgid "access(ssh/web) status has changed and booting is interrupted."
-msgstr "(ssh/web) 연결 상태가 변경되어 부팅이 중단되었습니다."
-
-#: boot.sh:252
-msgid "Loading DSM kernel ..."
-msgstr "DSM 커널 로드 중..."
-
-#: boot.sh:268
-msgid "Warning, running kexec with --noefi param, strange things will happen!!"
-msgstr "경고, --noefi 매개 변수를 사용하여 kexec를 실행하면 오류가 발생할 수 있습니다!!!"
-
-#: boot.sh:273
-msgid "Booting ..."
-msgstr "부팅 중..."
-
-#: boot.sh:275
-msgid "[This interface will not be operational. Please wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant and connect.]"
-msgstr "[부팅이 완료되면 이 인터페이스는 작동하지 않습니다. 브라우저를 통해 \\nhttp://find.synology.com/ 또는 Synology Assistant를 사용해 DSM을 연결하세요.]"
-
-#: init.sh:23
-msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
-msgstr "네트워크 장치를 찾을 수 없습니다! 네트워크 연결 후 init.sh를 다시 실행해주세요!"
-
-#: init.sh:95
-msgid "Loader disk neither USB or SATA/SCSI/NVME/MMC DoM"
-msgstr "부팅 디스크는 USB 또는 SATA/SCSI/NVME/MMC DoM만 지원됩니다"
-
-#: init.sh:104
-msgid "Loader disk:"
-msgstr "부팅 디스크:"
-
-#: init.sh:112
-msgid "Loading keymap"
-msgstr "키맵 로드 중"
-
-#: init.sh:122
-msgid "User requested edit settings."
-msgstr "사용자가 설정 변경을 요청했습니다."
-
-#: init.sh:171
-msgid "Access \\033[1;34mhttp://%s:7681\\033[0m to configure the loader via web terminal."
-msgstr "브라우저에서 \\033[1;34mhttp://%s:7681\\033[0m 로 이동하여,웹 터미널을 통해 로더를 구성할 수 있습니다."
-
-#: init.sh:181
-msgid "Call \\033[1;32minit.sh\\033[0m to re get init info"
-msgstr "\\033[1;32minit.sh\\033[0m 초기화 정보를 다시 얻으려면"
-
-#: init.sh:182
-msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader"
-msgstr "\\033[1;32mmenu.sh\\033[0m 명령어를 사용하여 로더를 구성할 수 있습니다"
-
-#: init.sh:184
-msgid "User config is on"
-msgstr "사용자 구성이 활성화되어 있습니다"
-
-#: init.sh:185
-msgid "TTYD: \\033[1;34mhttp://rr:7681/\\033[0m"
-msgstr "TTYD: \\033[1;34mhttp://rr:7681\\033[0m"
-
-#: init.sh:186
-msgid "DUFS: \\033[1;34mhttp://rr:7304/\\033[0m"
-msgstr "DUFS: \\033[1;34mhttp://rr:7304\\033[0m"
-
-#: init.sh:187
-msgid "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
-msgstr "TTYD&DUFS: \\033[1;34mhttp://rr:80/\\033[0m"
-
-#: init.sh:189
-msgid "Default SSH \\033[1;31mroot\\033[0m password is"
-msgstr "기본 SSH \\033[1;31mroot\\033[0m 비밀번호는"
-
-#: init.sh:206
-msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
-msgstr "RAM이 4GB 미만인 경우 부팅을 생성할 때 오류가 발생하면 메모리를 늘리세요."
-
-#: menu.sh:106 menu.sh:140 menu.sh:183
-msgid "Model"
-msgstr "모델"
-
-#: menu.sh:107
-msgid "Reading models"
-msgstr "모델 읽기"
-
-#: menu.sh:117
-msgid "Compatibility judgment"
-msgstr "호환성 검사"
-
-#: menu.sh:138
-msgid "Disable flags restriction"
-msgstr "플래그 제한 비활성화"
-
-#: menu.sh:139
-msgid "Show all models"
-msgstr "모든 모델 보기"
-
-#: menu.sh:141
-msgid "Choose the model"
-msgstr "모델을 선택 하세요"
-
-#: menu.sh:236 menu.sh:244 menu.sh:256 menu.sh:275 menu.sh:312 menu.sh:341 menu.sh:393
-msgid "Product Version"
-msgstr "DSM 버전"
-
-#: menu.sh:237
-msgid "Choose a product version"
-msgstr "버전 선택"
-
-#: menu.sh:245
-msgid "The current version has been set to %s. Do you want to reset the version?"
-msgstr "현재 버전이 %s 로 설정되었습니다. 버전을 재설정 하시겠습니까?"
-
-#: menu.sh:257
-msgid "This version does not support UEFI startup, Please select another version or switch the startup mode."
-msgstr "이 버전은 UEFI 부팅이 지원되지 않습니다. 다른 버전을 선택하거나 부팅 모드를 전환하세요."
-
-#: menu.sh:276
-msgid "Get pat data ..."
-msgstr "pat 데이터 가져오기.."
-
-#: menu.sh:301 menu.sh:1072 menu.sh:1221
-msgid "Network error, please check the network connection and try again."
-msgstr "네트워크 오류입니다. 네트워크 연결을 확인하고 다시 시도하십시오."
-
-#: menu.sh:302
-msgid "Or use 'Parse pat' function for installation."
-msgstr "또는 'Parse pat' 기능을 사용하여 설치합니다."
-
-#: menu.sh:304
-msgid "Failed to get pat data,\\nPlease manually fill in the URL and md5sum of the corresponding version of pat.\\nOr click 'Retry'."
-msgstr "pat 데이터를 가져오지 못했습니다.\\n해당 pat 버전의 URL과 MD5를 수동으로 입력하세요.\\n또는 '재시도' 를 클릭합니다."
-
-#: menu.sh:309
-msgid "Successfully to get pat data, Please confirm.\\nOr modify the URL and md5sum to you need."
-msgstr "pat 데이터를 성공적으로 가져왔습니다,\\n또는 필요에 따라 URL 및 md5sum을 수정합니다."
-
-#: menu.sh:313
-msgid "Retry"
-msgstr "재시도"
-
-#: menu.sh:342 menu.sh:446
-msgid "Reconfiguring Synoinfo, Addons and Modules"
-msgstr "synoinfo, 애드온 및 모듈 재구성"
-
-#: menu.sh:377
-msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
-msgstr "%s 및 %s를 선택했습니다.\\n'Parse pat'이 이전 선택 항목을 덮어씁니다.\\n계속하시겠습니까?"
-
-#: menu.sh:378
-msgid "Parse Pat"
-msgstr "Parse pat"
-
-#: menu.sh:387
-msgid "No pat file found in /tmp/pats/ folder!\\n"
-msgstr "/tmp/pats/ 폴더에 Pat 파일을 찾을 수 없습니다!\\n"
-
-#: menu.sh:388
-msgid "Please upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option.\\n"
-msgstr "DUFS를 통해 /tmp/pats/ 폴더에 Pat 파일을 업로드한 후 이 옵션을 다시 입력하세요.\\n"
-
-#: menu.sh:389 menu.sh:399 menu.sh:3125 menu.sh:3126 menu.sh:3127 menu.sh:3128 menu.sh:3129 menu.sh:3130 menu.sh:3136 menu.sh:3161 menu.sh:3173 menu.sh:3185 menu.sh:3197 menu.sh:3212 menu.sh:3223 menu.sh:3240 menu.sh:3259
-msgid "Update"
-msgstr "업데이트"
-
-#: menu.sh:394
-msgid "Choose a pat file"
-msgstr "Pat 파일 선택"
-
-#: menu.sh:400 menu.sh:412 menu.sh:1176
-msgid "pat Invalid, try again!"
-msgstr "pat 파일이 유효하지 않습니다. 다시 시도하세요!"
-
-#: menu.sh:405
-msgid "Parse %s ..."
-msgstr "%s 분석 ..."
-
-#: menu.sh:430
-msgid "Currently, %s is not supported."
-msgstr "현재 %s는 지원되지 않습니다."
-
-#: menu.sh:442
-msgid "Currently, %s of %s is not supported."
-msgstr "현재 %s-%s는 지원되지 않습니다."
-
-#: menu.sh:503 menu.sh:1327 menu.sh:3282 menu.sh:3350 menu.sh:3368
-msgid "Main menu"
-msgstr "메인 메뉴"
-
-#: menu.sh:504
-msgid "Making ..."
-msgstr "컴파일 중 ..."
-
-#: menu.sh:506 menu.sh:1334
+msgid "Repatch after configuration changed"
+msgstr "패치를 다시 수행합니다"
+
+#: boot.sh:70 menu.sh:1522
+msgid "DSM ramdisk not patched"
+msgstr "DSM ramdisk 가 패치되지 않았습니다"
+
+#: boot.sh:70 boot.sh:74 menu.sh:1522 menu.sh:1526
+msgid "Please upgrade the bootloader version and try again."
+msgstr "부트로더 버전을 업그레이드하고 다시 시도해 보세요."
+
+#: boot.sh:70 boot.sh:74 init.sh:212 menu.sh:68 menu.sh:1301 menu.sh:1385 menu.sh:1450 menu.sh:1522 menu.sh:1526 menu.sh:1543 menu.sh:1609 menu.sh:1647 menu.sh:2701 menu.sh:3570 menu.sh:3600 menu.sh:3631 menu.sh:3670 menu.sh:3749 menu.sh:3798 menu.sh:3842
+#: menu.sh:3882
 msgid "Error"
 msgstr "오류"
 
-#: menu.sh:541 menu.sh:558 menu.sh:563 menu.sh:569 menu.sh:580 menu.sh:588 menu.sh:611 menu.sh:618 menu.sh:622 menu.sh:636 menu.sh:640 menu.sh:648 menu.sh:652 menu.sh:2876 menu.sh:2925 menu.sh:3127 menu.sh:3162 menu.sh:3167
-msgid "Addons"
-msgstr "애드온"
+#: boot.sh:74 menu.sh:1526
+msgid "DSM zImage not patched"
+msgstr "DSM zImage가 패치되지 않았습니다"
 
-#: menu.sh:542 menu.sh:673 menu.sh:853 menu.sh:991 menu.sh:1356 menu.sh:3351
-msgid "Choose a option"
-msgstr "옵션 선택"
+#: boot.sh:98
+msgid "Model:   "
+msgstr "Model:   "
 
-#: menu.sh:543
-msgid "Add an addon"
-msgstr "애드온 추가"
+#: boot.sh:99
+msgid "Version: "
+msgstr "Version: "
 
-#: menu.sh:544
-msgid "Delete addons"
-msgstr "애드온 제거"
+#: boot.sh:100
+msgid "Kernel:  "
+msgstr "Kernel:  "
 
-#: menu.sh:545
-msgid "Show all addons"
-msgstr "모든 애드온 표시"
+#: boot.sh:101
+msgid "LKM:     "
+msgstr "LKM:     "
 
-#: menu.sh:546
-msgid "Upload a external addon"
-msgstr "외부 애드온 업로드"
+#: boot.sh:102
+msgid "MEV:     "
+msgstr "MEV:     "
 
-#: menu.sh:547 menu.sh:680 menu.sh:851 menu.sh:989 menu.sh:1361 menu.sh:2273 menu.sh:3133 menu.sh:3348 menu.sh:3444
-msgid "Exit"
-msgstr "나가기"
+#: boot.sh:103
+msgid "DMI:     "
+msgstr "DMI:     "
 
-#: menu.sh:559
-msgid "No available addons to add"
-msgstr "추가할 수 있는 애드온이 없습니다"
+#: boot.sh:104
+msgid "CPU:     "
+msgstr "CPU:     "
 
-#: menu.sh:564
-msgid "Select an addon"
-msgstr "애드온 선택"
+#: boot.sh:105
+msgid "MEM:     "
+msgstr "MEM:     "
 
-#: menu.sh:570
-msgid "Type a optional params to addon"
-msgstr "애드온에 추가할 환경 변수 입력합니다"
+#: boot.sh:108
+msgid "Notice: Please insert at least one m.2 disk for system installation."
+msgstr "부팅 디스크를 제외하고 시스템 설치를 위해 최소한 하나의 M.2 디스크를 장착하세요."
 
-#: menu.sh:581
-msgid "No user addons to remove"
-msgstr "제거할 사용자 애드온이 없습니다"
+#: boot.sh:110
+msgid "Notice: Please insert at least one sata disk for system installation."
+msgstr "부팅 디스크를 제외하고 시스템 설치를 위해 최소한 하나의 SATA 디스크를 장착하세요."
 
-#: menu.sh:589
-msgid "Select addon to remove"
-msgstr "제거할 애드온 선택 합니다"
+#: boot.sh:114
+msgid "Notice: Please disable Intel(VT-d)/AMD(AMD-Vi) in BIOS/UEFI settings if you encounter a boot failure."
+msgstr "부팅 실패가 발생하면 BIOS/UEFI 설정에서 Intel(VT-d)/AMD(AMD-Vi)를 비활성화하세요."
 
-#: menu.sh:602
-msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"black\" are not added.\\n\\n"
-msgstr "이름 색상이 \"\\Z4파랑색\\Zn\"인 경우 추가됨, \"검은색\"인 경우 추가되지 않음.\\n\\n"
-
-#: menu.sh:617 menu.sh:752 menu.sh:1369 menu.sh:3210
-msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
-msgstr "이 기능은 ssh를 통해서만 액세스할 수 있습니다. (ZModem 프로토콜을 지원하는 터미널이 필요합니다.)\\n"
-
-#: menu.sh:623
-msgid "Please upload the *.addons file."
-msgstr "*.addons 파일을 업로드하세요."
-
-#: menu.sh:637 menu.sh:788 menu.sh:3241 menu.sh:3260
-msgid "Not a valid file, please try again!"
-msgstr "파일이 올바르지 않습니다. 다시 시도하세요!"
-
-#: menu.sh:641
-msgid "The addon already exists. Do you want to overwrite it?"
-msgstr "애드온이 이미 존재합니다. 덮어쓰시겠습니까?"
-
-#: menu.sh:649
-msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
-msgstr "로더에 애드온 '%s'를 추가했습니다. '애드온 추가' 메뉴에서 활성화하세요."
-
-#: menu.sh:653
-msgid "File format not recognized!"
-msgstr "파일 형식이 인식되지 않습니다!"
-
-#: menu.sh:672 menu.sh:686 menu.sh:699 menu.sh:736 menu.sh:753 menu.sh:763 menu.sh:766 menu.sh:782 menu.sh:787 menu.sh:801 menu.sh:807 menu.sh:2940 menu.sh:2992 menu.sh:3128 menu.sh:3174 menu.sh:3179
-msgid "Modules"
-msgstr "모듈"
-
-#: menu.sh:674
-msgid "Show/Select modules"
-msgstr "모듈 표시/선택"
-
-#: menu.sh:675
-msgid "Select loaded modules"
-msgstr "인식된 모듈 선택"
-
-#: menu.sh:676
-msgid "Upload a external module"
-msgstr "외부 모듈 업로드"
-
-#: menu.sh:677
-msgid "Deselect i915 with dependencies"
-msgstr "종속성이 있는 i915 선택 취소"
-
-#: menu.sh:678
-msgid "Priority use of official drivers:"
-msgstr "공식 모듈 우선 사용:"
-
-#: menu.sh:679
-msgid "Edit modules that need to be copied to DSM"
-msgstr "DSM 복사해야 하는 모듈 편집"
-
-#: menu.sh:687
-msgid "Reading modules ..."
-msgstr "모듈을 읽는 중..."
-
-#: menu.sh:700
-msgid "Select all"
-msgstr "모두 선택"
-
-#: menu.sh:701
-msgid "Deselect all"
-msgstr "모두 선택 해제"
-
-#: menu.sh:702
-msgid "Select modules to include"
-msgstr "포함할 모듈 선택"
-
-#: menu.sh:737
-msgid "Selecting loaded modules"
-msgstr "인식된 모듈 선택"
-
-#: menu.sh:758
-msgid "This function is experimental and dangerous. If you don't know much, please exit.\\n"
-msgstr "이 기능은 실험적이고 위험합니다. 모르는 내용이 있으면 종료하시기 바랍니다.\\n"
-
-#: menu.sh:759
-msgid "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\\n"
-msgstr ".ko 파일로 해당 기능을 가져오면 해당 아키텍처의 모듈 패키지에 삽입되어 해당 아키텍처의 모든 모델에 영향을 미칠 것입니다.\\n"
-
-#: menu.sh:760
-msgid "This program will not determine the availability of imported modules or even make type judgments, as please double check if it is correct.\\n"
-msgstr "프로그램은 가져온 모듈의 사용 가능 여부를 확인하거나 유형 판단을 하지 않습니다. 올바른지 다시 확인하십시오.\\n"
-
-#: menu.sh:761
-msgid "If you want to remove it, please go to the \"Update Menu\" -> \"Update modules\" to forcibly update the modules. All imports will be reset.\\n"
-msgstr "제거하려면 \"업데이트 메뉴\" -> \"모듈 업데이트\"로 이동하여 모듈을 강제로 업데이트하세요. 모든 가져오기가 초기화됩니다.\\n"
-
-#: menu.sh:762
-msgid "Do you want to continue?"
-msgstr "계속하시겠습니까?"
-
-#: menu.sh:767
-msgid "Please upload the *.ko file."
-msgstr ".ko 파일을 업로드하세요."
-
-#: menu.sh:783
-msgid "Module '%s' added to %s-%s"
-msgstr "모듈 '%s'가 %s-%s에 추가됨"
-
-#: menu.sh:802
-msgid "No i915 with dependencies module to deselect."
-msgstr "선택을 취소할 종속성 모듈이 있는 i915가 없습니다."
-
-#: menu.sh:808
-msgid "Module %s deselected.\\n"
-msgstr "%s 모듈이 선택 취소되었습니다.\\n"
-
-#: menu.sh:824 menu.sh:1423 menu.sh:1450 menu.sh:1457 menu.sh:1480
-msgid "Edit with caution"
-msgstr "신중하게 편집하세요"
-
-#: menu.sh:845
-msgid "Add/Edit a cmdline item"
-msgstr "명령줄 추가/수정"
-
-#: menu.sh:846
-msgid "Show/Delete cmdline items"
-msgstr "명령줄 보기/삭제"
-
-#: menu.sh:848
-msgid "Define SN/MAC"
-msgstr "SN/MAC 사용자 지정"
-
-#: menu.sh:850
-msgid "Show model inherent cmdline"
-msgstr "모델 기본 명령줄 보기"
-
-#: menu.sh:852 menu.sh:873 menu.sh:882 menu.sh:906 menu.sh:914 menu.sh:931 menu.sh:942 menu.sh:975
+#: boot.sh:310 menu.sh:985 menu.sh:1014 menu.sh:1052 menu.sh:1064 menu.sh:1090 menu.sh:1098 menu.sh:1115 menu.sh:1127
 msgid "Cmdline"
 msgstr "명령줄"
 
-#: menu.sh:859
-msgid "Commonly used cmdlines:\\n"
-msgstr "일반적으로 사용되는 명령줄:\\n"
+#: boot.sh:321
+msgid "%2ds (Changing access(ssh/web) status will interrupt boot)"
+msgstr "%2ds (ssh/web) 연결 상태가 변경되면 부팅이 중단됩니다"
 
-#: menu.sh:860
-msgid " * \\Z4disable_mtrr_trim=\\Zn\\n    disables kernel trim any uncacheable memory out.\\n"
-msgstr " * \\Z4disable_mtrr_trim=\\Zn\\n    커널이 캐시할 수 없는 메모리를 제거하는 것을 비활성화합니다.\\n"
+#: boot.sh:326
+msgid "Access(ssh/web) status has changed and booting is interrupted."
+msgstr "(ssh/web) 연결 상태가 변경되어 부팅이 중단되었습니다."
 
-#: menu.sh:861
-msgid " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Set the maximum C-state depth allowed by the intel_idle driver.\\n"
-msgstr " * \\Z4intel_idle.max_cstate=1\\Zn\\n    intel_idle 드라이브에 허용되는 최대 C-state 깊이를 설정합니다.\\n"
+#: boot.sh:332
+msgid "Menu opened and booting is interrupted."
+msgstr "메뉴가 열려 부팅이 중단되었습니다."
 
-#: menu.sh:862
-msgid " * \\Z4pcie_port_pm=off\\Zn\\n    Turn off the power management of the PCIe port.\\n"
-msgstr " * \\Z4pcie_port_pm=off\\Zn\\n    PCIe 포트의 전원 관리 끄기.\\n"
+#: boot.sh:363
+msgid "Reboot to boot directly in DSM"
+msgstr "재부팅 후 DSM 부팅으로 바로 이동하기"
 
-#: menu.sh:863
-msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
-msgstr " * \\Z4libata.force=noncq\\Zn\\n    모든 SATA 포트에 대해 NCQ를 비활성화합니다.\\n"
+#: boot.sh:371 init.sh:222
+msgid "Detected %s network cards.\\n"
+msgstr "%s 개의 네트워크 카드가 감지되었습니다.\\n"
 
-#: menu.sh:864
-msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.(Not apply to DT models.)\\n"
-msgstr " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map.(DT 모델에는 적용되지 않습니다.)\\n"
+#: boot.sh:372 init.sh:223
+msgid "Checking Connect."
+msgstr "연결을 확인하는 중입니다."
 
-#: menu.sh:865
-msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence.(Not apply to DT models.)\\n"
-msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    디스크 인덱스 맵, 디스크 이름 순서 수정.(DT 모델에는 적용되지 않습니다.)\\n"
+#: boot.sh:384 init.sh:233
+msgid "connected."
+msgstr "연락이 왔습니다."
 
-#: menu.sh:866
-msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence.(Not apply to DT models.)\\n"
-msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    데이터 포트 순서 다시 매핑.(DT 모델에는 적용되지 않습니다.)\\n"
+#: boot.sh:394 init.sh:245
+msgid "Waiting IP.\\n"
+msgstr "IP 주소를 가져옵니다.\\n"
 
-#: menu.sh:867
-msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
-msgstr " * \\Z4i915.enable_guc=2\\Zn\\n    Intel 그래픽 하드웨어에서 GuC 펌웨어를 활성화합니다(값: 1, 2 또는 3)\\n"
+#: boot.sh:402
+msgid "IGNORE (Does not support non-wired network card.)"
+msgstr "무선 네트워크 카드를 지원하지 않습니다."
 
-#: menu.sh:868
-msgid " * \\Z4i915.max_vfs=7\\Zn\\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\\n"
-msgstr " * \\Z4i915.max_vfs=7\\Zn\\n    Intel 그래픽 하드웨어에 대해 생성할 수 있는 최대 가상 기능(VF) 수를 설정합니다.\\n"
+#: boot.sh:406 init.sh:253
+msgid "DOWN"
+msgstr "닫기"
 
-#: menu.sh:869
-msgid " * \\Z4consoleblank=300\\Zn\\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\\n"
-msgstr " * \\Z4consoleblank=300\\Zn\\n    활동이 없으면 300초 후에 디스플레이가 자동으로 꺼지도록 콘솔을 설정합니다(초 단위로 측정).\\n"
+#: boot.sh:410 init.sh:257
+msgid "NOT CONNECTED"
+msgstr "연결되지 않음"
 
-#: menu.sh:870 menu.sh:1003
-msgid "\\nEnter the parameter name and value you need to add.\\n"
-msgstr "\\n추가해야 하는 매개변수 이름과 값을 입력합니다.\\n"
+#: boot.sh:414 init.sh:261
+msgid "TIMEOUT (Please check the IP on the router.)"
+msgstr "시간 초과 (라우터에서 IP를 확인하세요!!)"
 
-#: menu.sh:883 menu.sh:1016
-msgid "Invalid parameter name, retry?"
-msgstr "잘못된 매개변수 이름입니다. 다시 시도하시겠습니까?"
+#: boot.sh:421 init.sh:268
+msgid "LINK LOCAL (No DHCP server detected.)"
+msgstr "LINK LOCAL (DHCP 서버가 감지되지 않았습니다.)"
 
-#: menu.sh:907
-msgid "No user cmdline to remove"
-msgstr "제거할 사용자 명령줄이 없습니다"
+#: boot.sh:423
+msgid "Access \\033[1;34mhttp://%s:5000\\033[0m to connect the DSM via web."
+msgstr "웹브라우저에서 \\033[1;34mhttp://%s:5000\\033[0m DSM을 접속하세요."
 
-#: menu.sh:915
-msgid "Select cmdline to remove"
-msgstr "제거할 명령줄 선택"
+#: boot.sh:434 init.sh:284
+msgid "%s\\n"
+msgstr "%s\\n"
 
-#: menu.sh:926
-msgid "Note: (MAC will not be set to NIC, Only for activation services.)"
-msgstr "참고: (MAC은 NIC로 설정되지 않으며 활성화 서비스에 대해서만 설정됩니다.)"
+#: boot.sh:435
+msgid "Loading DSM kernel ..."
+msgstr "DSM 커널 로드 중..."
 
-#: menu.sh:932
-msgid "Random"
-msgstr "랜덤생성"
+#: boot.sh:449
+msgid "Warning, running kexec with --noefi param, strange things will happen!!"
+msgstr "경고, --noefi 매개 변수를 사용하여 kexec를 실행하면 오류가 발생할 수 있습니다!!!"
 
-#: menu.sh:943
-msgid "Invalid SN/MAC, retry?"
-msgstr "SN/MAC가 잘못되었습니다. 다시 시도하시겠습니까?"
+#: boot.sh:454
+msgid "Booting ..."
+msgstr "부팅 중..."
 
-#: menu.sh:987
-msgid "Add/edit a synoinfo item"
-msgstr "synoinfo 항목 추가/편집"
+#: boot.sh:458
+msgid "Interface not operational. Wait a few minutes.\\nFind DSM via http://find.synology.com/ or Synology Assistant."
+msgstr "인터페이스가 작동하지 않습니다. 몇 분 후 다시 시도하십시오.\\nhttp://find.synology.com/ 또는 Synology Assistant를 통해 DSM을 찾으십시오."
 
-#: menu.sh:988
-msgid "Show/Delete synoinfo items"
-msgstr "synoinfo 항목 보기/삭제"
+#: helper.sh:18
+msgid "Another instance is already running."
+msgstr "이미 다른 인스턴스가 실행 중입니다."
 
-#: menu.sh:990 menu.sh:1006 menu.sh:1015 menu.sh:1040 menu.sh:1048
-msgid "Synoinfo"
-msgstr "synoinfo"
+#: helper.sh:19 helper.sh:30 menu.sh:4146
+msgid "Online Assistance"
+msgstr "온라인 지원"
 
-#: menu.sh:997
-msgid "Commonly used synoinfo:\\n"
-msgstr "일반적으로 사용되는 synoinfo:\\n"
+#: helper.sh:25
+msgid "Closing this window or press 'ctrl + c' to exit the assistance."
+msgstr "이 창을 닫거나 'ctrl + c'를 눌러 도움말을 끝내십시오."
 
-#: menu.sh:998
-msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
-msgstr " * \\Z4maxdisks=??\\Zn\\n    지원되는 최대 하드 디스크 수\\n"
+#: helper.sh:26
+msgid "Please give the following link to the helper. (Click to open and copy)"
+msgstr "도움말을 위한 다음 링크를 제공하십시오. (클릭하여 열고 복사)"
 
-#: menu.sh:999
-msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask.\\n"
-msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    내부(SATA) 디스크 마스크.\\n"
+#: helper.sh:30
+msgid "Notice: Please keep this window open."
+msgstr "참고: 이 창을 열어 두십시오."
 
-#: menu.sh:1000
-msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask.\\n"
-msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Esata 디스크 마스크.\\n"
+#: helper.sh:33 menu.sh:4308
+msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
+msgstr "\\033[1;32mmenu.sh\\033[0m 메뉴로 돌아가기"
 
-#: menu.sh:1001
-msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask.\\n"
-msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    USB 디스크 마스크.\\n"
+#: init.sh:24
+msgid "The loader is corrupted, please rewrite it!"
+msgstr "로더가 손상되었습니다, 다시 작성하세요!"
 
-#: menu.sh:1002
-msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
-msgstr " * \\Z4max_sys_raid_disks=12\\Zn\\n    최대 시스템 파티션(md0) RAID 디스크 수.\\n"
+#: init.sh:41
+msgid "Network devices not found! Please re execute init.sh after connecting to the network!"
+msgstr "네트워크 장치를 찾을 수 없습니다! 네트워크 연결 후 init.sh를 다시 실행해주세요!"
 
-#: menu.sh:1041
-msgid "No synoinfo entries to remove"
-msgstr "제거할 synoinfo 항목이 없습니다"
+#: init.sh:135
+msgid "The loader disk does not support the current USB Portable Hard Disk."
+msgstr "로더 디스크는 현재 USB 포터블 하드 디스크를 지원하지 않습니다."
 
-#: menu.sh:1049
-msgid "Select synoinfo entry to remove"
-msgstr "제거할 synoinfo 항목 선택"
+#: init.sh:140
+msgid "The loader disk does not support the current %s, only %s DoM is supported."
+msgstr "부팅 디스크는 현재 %s 를 지원하지 않습니다. %s DoM만 지원합니다."
 
-#: menu.sh:1084
-msgid "Downloading old pat to extract synology .pat extractor..."
-msgstr "이전 Pat를 다운로드하여 synology .pat 추출기를 추출 중입니다..."
+#: init.sh:148
+msgid "Loader disk:"
+msgstr "부팅 디스크:"
 
-#: menu.sh:1090 menu.sh:1245
-msgid "Check internet or cache disk space.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
-msgstr "인터넷 또는 캐시 디스크 공간을 확인하세요.\\n오류: %d:%d\\n(https://curl.se/libcurl/c/libcurl-errors.html을 통해 오류 설명을 확인하세요.)"
+#: init.sh:156
+msgid "Loading keymap:"
+msgstr "키맵 로드 중:"
 
-#: menu.sh:1130
-msgid "Uncompressed tar"
-msgstr "압축되지 않은 tar"
+#: init.sh:202
+msgid "User requested edit settings."
+msgstr "사용자가 설정 변경을 요청했습니다."
 
-#: menu.sh:1134
-msgid "Compressed tar"
-msgstr "압축된 tar"
+#: init.sh:205
+msgid "Docker edit settings."
+msgstr "Docker 설정 변경."
 
-#: menu.sh:1138
-msgid "Encrypted"
-msgstr "암호화된"
+#: init.sh:212
+msgid "Loader boot failed"
+msgstr "부팅 실패"
 
-#: menu.sh:1142
-msgid "Could not determine if pat file is encrypted or not, maybe corrupted, try again!"
-msgstr "pat 파일이 암호화되었는지 여부를 확인할 수 없습니다. 손상되었을 수 있습니다. 다시 시도하세요!"
+#: init.sh:212
+msgid "Please re configure the loader and try again."
+msgstr "로더를 다시 구성하고 다시 시도하십시오."
 
-#: menu.sh:1149 menu.sh:1261
-msgid "Disassembling %s: "
-msgstr "%s 압축 해제 중: "
+#: init.sh:270
+msgid "Access \\033[1;34mhttp://%s:%d\\033[0m to configure the loader via web terminal."
+msgstr "브라우저에서 \\033[1;34mhttp://%s:%d\\033[0m 로 이동하여,웹 터미널을 통해 로더를 구성할 수 있습니다."
 
-#: menu.sh:1156
-msgid "Extractor cached."
-msgstr "복호화 프로그램이 이미 존재합니다."
+#: init.sh:281
+msgid "Call \\033[1;32minit.sh\\033[0m to re get init info\\n"
+msgstr "\\033[1;32minit.sh\\033[0m 초기화 정보를 다시 얻으려면\\n"
 
-#: menu.sh:1162 menu.sh:1165
-msgid "Extracting ..."
-msgstr "압축 해제 중..."
+#: init.sh:282
+msgid "Call \\033[1;32mmenu.sh\\033[0m to configure loader\\n"
+msgstr "\\033[1;32mmenu.sh\\033[0m 명령어를 사용하여 로더를 구성할 수 있습니다\\n"
 
-#: menu.sh:1197
-msgid "%s cached."
-msgstr "%s가 캐시되었습니다."
+#: init.sh:285
+msgid "User config is on \\033[1;32m%s\\033[0m\\n"
+msgstr "사용자 구성이 \\033[1;32m%s\\033[0m에 있습니다\\n"
 
-#: menu.sh:1200
-msgid "The cache has been cleared. Please re 'Parse pat' before build."
-msgstr "캐시가 지워졌습니다. 빌드하기 전에 'Parse pat'을 다시 실행하세요."
+#: init.sh:286
+msgid "HTTP: \\033[1;34mhttp://%s:%d\\033[0m\\n"
+msgstr "HTTP: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 
-#: menu.sh:1204
-msgid "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build."
-msgstr "캐시가 지워졌습니다.생성하기 전에 설치된 DSM 시스템 복구를 다시 시도하세요."
+#: init.sh:287
+msgid "DUFS: \\033[1;34mhttp://%s:%d\\033[0m\\n"
+msgstr "DUFS: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 
-#: menu.sh:1208
-msgid "The pat url is empty. Please re 'Choose a version' before build."
-msgstr "pat url이 비어 있습니다. 생성하기 전에 버전 선택을 다시 하세요."
+#: init.sh:288
+msgid "TTYD: \\033[1;34mhttp://%s:%d\\033[0m\\n"
+msgstr "TTYD: \\033[1;34mhttp://%s:%d\\033[0m\\n"
 
-#: menu.sh:1213 menu.sh:3283
-msgid "Cleaning cache ..."
-msgstr "캐시 정리 중..."
+#: init.sh:291
+msgid "SSH port is \\033[1;31m%d\\033[0m, The \\033[1;31mroot\\033[0m password has been changed\\n"
+msgstr "SSH 포트는 \\033[1;31m%d\\033[0m이고, \\033[1;31mroot\\033[0m 비밀번호가 변경되었습니다\\n"
 
-#: menu.sh:1227
-msgid "Based on the current network situation, switch to %s mirror to downloading."
-msgstr "현재 네트워크 상황에 따라 %s 미러로 전환하여 다운로드합니다."
+#: init.sh:293
+msgid "SSH port is \\033[1;31m%d\\033[0m, The \\033[1;31mroot\\033[0m password is \\033[1;31m%s\\033[0m\\n"
+msgstr "SSH 포트는 \\033[1;31m%d\\033[0m이고, \\033[1;31mroot\\033[0m 비밀번호는 \\033[1;31m%s\\033[0m입니다\\n"
 
-#: menu.sh:1230
-msgid "Downloading %s ..."
-msgstr "Downloading %s ..."
+#: init.sh:318
+msgid "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory."
+msgstr "RAM이 4GB 미만인 경우 부팅을 생성할 때 오류가 발생하면 메모리를 늘리세요."
 
-#: menu.sh:1251
-msgid "Checking hash of %s: "
-msgstr "%s의 해시를 확인하는 중: "
+#: menu.sh:67
+msgid "The menu.sh instance is already running in another terminal. To avoid conflicts, please operate in one instance only."
+msgstr "menu.sh 인스턴스는 다른 터미널에서 이미 실행 중입니다. 충돌을 피하기 위해 하나의 인스턴스에서만 작동하세요."
 
-#: menu.sh:1254
-msgid "md5 hash of pat not match, Please reget pat data from the version menu and try again!"
-msgstr "PAT의 MD5 해시가 일치하지 않습니다. 버전 메뉴에서 PAT 데이터를 다시 가져와서 다시 시도하세요!"
+#: menu.sh:173 menu.sh:181 menu.sh:229
+msgid "Model"
+msgstr "모델"
 
-#: menu.sh:1257 menu.sh:1273 menu.sh:1283
-msgid "OK"
-msgstr "OK"
+#: menu.sh:174
+msgid "Getting models ..."
+msgstr "모델을 가져오는 중..."
 
-#: menu.sh:1268
-msgid "Setting hash: "
-msgstr "해시 설정: "
+#: menu.sh:182 menu.sh:346
+msgid "Unable to connect to Synology website, Please check the network and try again, or use 'Parse Pat'!"
+msgstr "Synology 사이트에 연결할 수 없습니다. 네트워크를 확인하고 다시 시도하세요. 또는 'Parse Pat'을 사용하세요!"
 
-#: menu.sh:1275
-msgid "Copying files: "
-msgstr "파일 복사 중: "
+#: menu.sh:222
+msgid "Disable flags restriction"
+msgstr "플래그 제한 비활성화"
 
-#: menu.sh:1302
-msgid "No disk space left, please clean the cache and try again!"
-msgstr "남은 디스크 공간이 없습니다. 캐시를 정리하고 다시 시도하세요!"
+#: menu.sh:223
+msgid "Choose the model"
+msgstr "모델을 선택 하세요"
 
-#: menu.sh:1318
-msgid "Cleaning ..."
-msgstr "정리 중..."
+#: menu.sh:224
+msgid "DT: Disk identification method is device tree"
+msgstr "DT: 디바이스 트리를 사용하여 디스크를 식별합니다"
 
-#: menu.sh:1321
+#: menu.sh:225
+msgid "G: Support iGPU; N: Support NVMe; H: Support HBA"
+msgstr "G: iGPU 지원; N: NVMe 지원; H: HBA 지원"
+
+#: menu.sh:313 menu.sh:322 menu.sh:329 menu.sh:341 menu.sh:356 menu.sh:376 menu.sh:406
+msgid "Product Version"
+msgstr "DSM 버전"
+
+#: menu.sh:314
+msgid "Choose a product version"
+msgstr "버전 선택"
+
+#: menu.sh:321
+msgid "The current version has been set to %s. Do you want to reset the version?"
+msgstr "현재 버전이 %s 로 설정되었습니다. 버전을 재설정 하시겠습니까?"
+
+#: menu.sh:328
+msgid "The current version %s is not supported on this CPU. Do you want to continue?"
+msgstr "현재 버전 %s은이 CPU에서 지원되지 않습니다. 계속 하시겠습니까?"
+
+#: menu.sh:342
+msgid "Get pat data ..."
+msgstr "pat 데이터 가져오기.."
+
+#: menu.sh:347 menu.sh:685 menu.sh:698 menu.sh:703 menu.sh:711 menu.sh:727 menu.sh:735 menu.sh:758 menu.sh:764 menu.sh:768 menu.sh:776 menu.sh:780 menu.sh:792 menu.sh:796 menu.sh:3740 menu.sh:3779 menu.sh:3926 menu.sh:3962 menu.sh:3970
+msgid "Addons"
+msgstr "애드온"
+
+#: menu.sh:348 menu.sh:377
+msgid "Retry"
+msgstr "재시도"
+
+#: menu.sh:357
+msgid "Choose a pat version"
+msgstr "pat 버전 선택"
+
+#: menu.sh:369
+msgid "Please confirm or modify the URL and md5sum to you need (32 '0's will skip the md5 check)."
+msgstr "수정하거나 필요한 URL 및 MD5를 입력하세요 (32 '0's 는 md5 검사를 건너뛰게 됩니다)."
+
+#: menu.sh:371
+msgid "Note: There is no version %s and automatically returns to version %s."
+msgstr "주의: %s 버전이 없으므로 자동으로 %s 버전으로 돌아갑니다."
+
+#: menu.sh:407 menu.sh:511
+msgid "Reconfiguring Synoinfo, Addons and Modules ..."
+msgstr "synoinfo, 애드온 및 모듈 재구성 중..."
+
+#: menu.sh:483 menu.sh:494
+msgid "DSM Invalid, try again!"
+msgstr "DSM 버전이 유효하지 않습니다. 다시 시도하세요!"
+
+#: menu.sh:507
+msgid "Currently, %s is not supported."
+msgstr "현재 %s 는 지원되지 않습니다."
+
+#: menu.sh:575
+msgid "You have selected the %s and %s.\\n'Parse Pat' will overwrite the previous selection.\\nDo you want to continue?"
+msgstr "%s 및 %s 를 선택했습니다.\\n'Parse pat'이 이전 선택 항목을 덮어씁니다.\\n계속하시겠습니까?"
+
+#: menu.sh:576 menu.sh:590 menu.sh:598 menu.sh:640 menu.sh:644
+msgid "Parse Pat"
+msgstr "Parse pat"
+
+#: menu.sh:584
+msgid "No pat file found in /tmp/pats/ folder!\\nPlease upload the pat file to /tmp/pats/ folder via DUFS and re-enter this option."
+msgstr "/tmp/pats/ 폴더에 pat 파일이 없습니다!\\nDUFS를 통해 pat 파일을 /tmp/pats/ 폴더에 업로드한 후 다시 이 옵션을 선택하십시오."
+
+#: menu.sh:585 menu.sh:3924 menu.sh:3925 menu.sh:3926 menu.sh:3927 menu.sh:3928 menu.sh:3929 menu.sh:3935 menu.sh:3961 menu.sh:3975 menu.sh:3989 menu.sh:4003 menu.sh:4020 menu.sh:4031 menu.sh:4039 menu.sh:4064
+msgid "Update"
+msgstr "업데이트"
+
+#: menu.sh:591
+msgid "Choose a pat file"
+msgstr "Pat 파일 선택"
+
+#: menu.sh:599 menu.sh:1312 menu.sh:1385
+msgid "pat Invalid, try again!"
+msgstr "pat 파일이 유효하지 않습니다. 다시 시도하세요!"
+
+#: menu.sh:605
+msgid "Parse %s ...\\n"
+msgstr "%s 분석 ...\\n"
+
+#: menu.sh:637 menu.sh:1534
 msgid "Ready!"
 msgstr "준비됨!"
 
-#: menu.sh:1328
+#: menu.sh:641
+msgid "Making ..."
+msgstr "컴파일 중 ..."
+
+#: menu.sh:679
+msgid "Add an addon"
+msgstr "애드온 추가"
+
+#: menu.sh:680
+msgid "Delete addons"
+msgstr "애드온 제거"
+
+#: menu.sh:681
+msgid "Show all addons"
+msgstr "모든 애드온 표시"
+
+#: menu.sh:682
+msgid "Upload a external addon"
+msgstr "외부 애드온 업로드"
+
+#: menu.sh:683 menu.sh:822 menu.sh:1012 menu.sh:1182 menu.sh:1582 menu.sh:3170 menu.sh:3420 menu.sh:3932 menu.sh:4152 menu.sh:4253
+msgid "Exit"
+msgstr "나가기"
+
+#: menu.sh:687 menu.sh:825 menu.sh:1015 menu.sh:1185 menu.sh:4155
+msgid "Choose a option"
+msgstr "옵션 선택"
+
+#: menu.sh:699
+msgid "No available addons to add"
+msgstr "추가할 수 있는 애드온이 없습니다"
+
+#: menu.sh:704
+msgid "Select an addon"
+msgstr "애드온 선택"
+
+#: menu.sh:712
+msgid "Type a optional params to addon"
+msgstr "애드온에 추가할 환경 변수 입력합니다"
+
+#: menu.sh:728
+msgid "No user addons to remove"
+msgstr "제거할 사용자 애드온이 없습니다"
+
+#: menu.sh:736
+msgid "Select addon to remove"
+msgstr "제거할 애드온 선택 합니다"
+
+#: menu.sh:749
+msgid "Name with color \"\\Z4blue\\Zn\" have been added, with color \"\\Z1red\\Zn\" are not added.\\n"
+msgstr "이름에 \"\\Z4파란색\\Zn\" 색상이 추가되었고, \"\\Z1빨간색\\Zn\" 색상은 추가되지 않았습니다.\\n"
+
+#: menu.sh:763 menu.sh:1592 menu.sh:4018
+msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol).\\n"
+msgstr "이 기능은 ssh를 통해서만 액세스할 수 있습니다. (ZModem 프로토콜을 지원하는 터미널이 필요합니다.)\\n"
+
+#: menu.sh:769
+msgid "Please upload the *.addon file."
+msgstr "*.addon 파일을 업로드하세요."
+
+#: menu.sh:777 menu.sh:922 menu.sh:4040 menu.sh:4065
+msgid "Not a valid file, please try again!"
+msgstr "파일이 올바르지 않습니다. 다시 시도하세요!"
+
+#: menu.sh:781
+msgid "The addon already exists. Do you want to overwrite it?"
+msgstr "애드온이 이미 존재합니다. 덮어쓰시겠습니까?"
+
+#: menu.sh:793
+msgid "Addon '%s' added to loader, Please enable it in 'Add an addon' menu."
+msgstr "로더에 애드온 '%s'를 추가했습니다. '애드온 추가' 메뉴에서 활성화하세요."
+
+#: menu.sh:797
+msgid "File format not recognized!"
+msgstr "파일 형식이 인식되지 않습니다!"
+
+#: menu.sh:815
+msgid "Show/Select modules"
+msgstr "모듈 표시/선택"
+
+#: menu.sh:816
+msgid "Select loaded modules"
+msgstr "인식된 모듈 선택"
+
+#: menu.sh:817
+msgid "Upload a external module"
+msgstr "외부 모듈 업로드"
+
+#: menu.sh:818
+msgid "Deselect i915 with dependencies"
+msgstr "종속성이 있는 i915 선택 취소"
+
+#: menu.sh:819
+msgid "Priority use of official drivers:"
+msgstr "공식 모듈 우선 사용:"
+
+#: menu.sh:820
+msgid "Edit modules that need to be copied to DSM"
+msgstr "DSM 복사해야 하는 모듈 편집"
+
+#: menu.sh:821
+msgid "modprobe blacklist"
+msgstr "모듈 프로브 블랙리스트"
+
+#: menu.sh:824 menu.sh:831 menu.sh:844 menu.sh:881 menu.sh:893 menu.sh:903 menu.sh:906 menu.sh:916 menu.sh:921 menu.sh:936 menu.sh:942 menu.sh:977 menu.sh:3789 menu.sh:3823 menu.sh:3927 menu.sh:3976 menu.sh:3984
+msgid "Modules"
+msgstr "모듈"
+
+#: menu.sh:832
+msgid "Reading modules ..."
+msgstr "모듈을 읽는 중..."
+
+#: menu.sh:845
+msgid "Select all"
+msgstr "모두 선택"
+
+#: menu.sh:846
+msgid "Deselect all"
+msgstr "모두 선택 해제"
+
+#: menu.sh:847
+msgid "Select modules to include"
+msgstr "포함할 모듈 선택"
+
+#: menu.sh:882
+msgid "Selecting loaded modules"
+msgstr "인식된 모듈 선택"
+
+#: menu.sh:892
+msgid "This feature is only available when accessed via ssh (Requires a terminal that supports ZModem protocol)."
+msgstr "이 기능은 ssh를 통해서만 액세스할 수 있습니다. (ZModem 프로토콜을 지원하는 터미널이 필요합니다.)"
+
+#: menu.sh:898
+msgid "This function is experimental and dangerous. If you don't know much, please exit.\\n"
+msgstr "이 기능은 실험적이고 위험합니다. 모르는 내용이 있으면 종료하시기 바랍니다.\\n"
+
+#: menu.sh:899
+msgid "The imported .ko of this function will be implanted into the corresponding arch's modules package, which will affect all models of the arch.\\n"
+msgstr ".ko 파일로 해당 기능을 가져오면 해당 아키텍처의 모듈 패키지에 삽입되어 해당 아키텍처의 모든 모델에 영향을 미칠 것입니다.\\n"
+
+#: menu.sh:900
+msgid "This program will not determine the availability of imported modules or even make type judgments, as please double check if it is correct.\\n"
+msgstr "프로그램은 가져온 모듈의 사용 가능 여부를 확인하거나 유형 판단을 하지 않습니다. 올바른지 다시 확인하십시오.\\n"
+
+#: menu.sh:901
+msgid "If you want to remove it, please go to the \"Update Menu\" -> \"Update modules\" to forcibly update the modules. All imports will be reset.\\n"
+msgstr "제거하려면 \"업데이트 메뉴\" -> \"모듈 업데이트\"로 이동하여 모듈을 강제로 업데이트하세요. 모든 가져오기가 초기화됩니다.\\n"
+
+#: menu.sh:902
+msgid "Do you want to continue?"
+msgstr "계속하시겠습니까?"
+
+#: menu.sh:907
+msgid "Please upload the *.ko file."
+msgstr ".ko 파일을 업로드하세요."
+
+#: menu.sh:917
+msgid "Module '%s' added to %s-%s"
+msgstr "모듈 '%s' 가 %s-%s 에 추가됨"
+
+#: menu.sh:937
+msgid "No i915 with dependencies module to deselect."
+msgstr "선택을 취소할 종속성 모듈이 있는 i915가 없습니다."
+
+#: menu.sh:943
+msgid "Module %s deselected."
+msgstr "%s 모듈이 선택 취소되었습니다."
+
+#: menu.sh:959 menu.sh:1642 menu.sh:2329 menu.sh:2359 menu.sh:4095
+msgid "Edit with caution"
+msgstr "신중하게 편집하세요"
+
+#: menu.sh:972
+msgid "The blacklist is used to prevent the kernel from loading specific modules.\\n"
+msgstr "커널이 특정 모듈을 로드하는 것을 방지하기 위해 블랙리스트를 사용합니다.\\n"
+
+#: menu.sh:973
+msgid "The blacklist is a list of module names separated by ','.\\n"
+msgstr "블랙리스트는 ','로 구분된 모듈 이름 목록입니다.\\n"
+
+#: menu.sh:974
+msgid "For example: \\Z4evbug,cdc_ether\\Zn\\n"
+msgstr "예: \\Z4evbug,cdc_ether\\Zn\\n"
+
+#: menu.sh:986
+msgid "Invalid list, No spaces should appear, retry?"
+msgstr "잘못된 목록입니다. 공백이 나타나면 다시 시도하세요."
+
+#: menu.sh:1006
+msgid "Add/Edit a cmdline item"
+msgstr "명령줄 추가/수정"
+
+#: menu.sh:1007
+msgid "Show/Delete cmdline items"
+msgstr "명령줄 보기/삭제"
+
+#: menu.sh:1009
+msgid "Define SN/MAC"
+msgstr "SN/MAC 사용자 지정"
+
+#: menu.sh:1021
+msgid "Commonly used cmdlines:\\n"
+msgstr "일반적으로 사용되는 명령줄:\\n"
+
+#: menu.sh:1022
+msgid " * \\Z4SpectreAll_on=\\Zn\\n    Enable Spectre and Meltdown protection to mitigate the threat of speculative execution vulnerability.\\n"
+msgstr " * \\Z4SpectreAll_on=\\Zn\\n    Spectre 및 Meltdown 보호를 활성화하여 투기적 실행 취약점의 위협을 완화합니다.\\n"
+
+#: menu.sh:1023
+msgid " * \\Z4disable_mtrr_trim=\\Zn\\n    disables kernel trim any uncacheable memory out.\\n"
+msgstr " * \\Z4disable_mtrr_trim=\\Zn\\n    커널이 캐시할 수 없는 메모리를 제거하는 것을 비활성화합니다.\\n"
+
+#: menu.sh:1024
+msgid " * \\Z4intel_idle.max_cstate=1\\Zn\\n    Set the maximum C-state depth allowed by the intel_idle driver.\\n"
+msgstr " * \\Z4intel_idle.max_cstate=1\\Zn\\n    intel_idle 드라이브에 허용되는 최대 C-state 깊이를 설정합니다.\\n"
+
+#: menu.sh:1025
+msgid " * \\Z4pcie_port_pm=off\\Zn\\n    Turn off the power management of the PCIe port.\\n"
+msgstr " * \\Z4pcie_port_pm=off\\Zn\\n    PCIe 포트의 전원 관리 끄기.\\n"
+
+#: menu.sh:1026
+msgid " * \\Z4libata.force=noncq\\Zn\\n    Disable NCQ for all SATA ports.\\n"
+msgstr " * \\Z4libata.force=noncq\\Zn\\n    모든 SATA 포트에 대해 NCQ를 비활성화합니다.\\n"
+
+#: menu.sh:1027
+msgid " * \\Z4SataPortMap=??\\Zn\\n    Sata Port Map(Not apply to DT models).\\n"
+msgstr " * \\Z4SataPortMap=??\\Zn\\n    Sata 포트 매핑(DT 모델에는 적용되지 않습니다.)\\n"
+
+#: menu.sh:1028
+msgid " * \\Z4DiskIdxMap=??\\Zn\\n    Disk Index Map, Modify disk name sequence(Not apply to DT models).\\n"
+msgstr " * \\Z4DiskIdxMap=??\\Zn\\n    디스크 인덱스 매핑, 디스크 이름 순서 변경(DT 모델에는 적용되지 않습니다.)\\n"
+
+#: menu.sh:1029
+msgid " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    Remap data port sequence(Not apply to DT models).\\n"
+msgstr " * \\Z4ahci_remap=4>5:5>8:12>16\\Zn\\n    데이터 포트 순서 재배치(DT 모델에는 적용되지 않습니다.)\\n"
+
+#: menu.sh:1030
+msgid " * \\Z4scsi_mod.scan=sync\\Zn\\n    Synchronize scanning of devices on the SCSI bus during system startup(Resolve the disorderly order of HBA disks).\\n"
+msgstr " * \\Z4scsi_mod.scan=sync\\Zn\\n    시스템 시작 시 SCSI 버스에서 장치 스캔을 동기화합니다(HBA 디스크의 불일치 순서를 해결합니다).\\n"
+
+#: menu.sh:1031
+msgid " * \\Z4i915.enable_guc=2\\Zn\\n    Enable the GuC firmware on Intel graphics hardware.(value: 1,2 or 3)\\n"
+msgstr " * \\Z4i915.enable_guc=2\\Zn\\n    Intel 그래픽 하드웨어에서 GuC 펌웨어를 활성화합니다(값: 1, 2 또는 3)\\n"
+
+#: menu.sh:1032
+msgid " * \\Z4i915.max_vfs=7\\Zn\\n    Set the maximum number of virtual functions (VFs) that can be created for Intel graphics hardware.\\n"
+msgstr " * \\Z4i915.max_vfs=7\\Zn\\n    Intel 그래픽 하드웨어에 대해 생성할 수 있는 최대 가상 기능(VF) 수를 설정합니다.\\n"
+
+#: menu.sh:1033
+msgid " * \\Z4i915.modeset=0\\Zn\\n    Disable the kernel mode setting (KMS) feature of the i915 driver.\\n"
+msgstr " * \\Z4i915.modeset=0\\Zn\\n    i915 드라이버의 KMS 기능을 비활성화합니다.\\n"
+
+#: menu.sh:1034
+msgid " * \\Z4apparmor.mode=complain\\Zn\\n    Set the AppArmor security module to complain mode.\\n"
+msgstr " * \\Z4apparmor.mode=complain\\Zn\\n    AppArmor 보안 모듈을 complain 모드로 설정합니다.\\n"
+
+#: menu.sh:1035
+msgid " * \\Z4acpi_enforce_resources=lax\\Zn\\n    Resolve the issue of some devices (such as fan controllers) not recognizing or using properly.\\n"
+msgstr " * \\Z4acpi_enforce_resources=lax\\Zn\\n    일부 장치( such as fan controllers)가 올바르게 인식하거나 사용하지 못하는 문제를 해결합니다.\\n"
+
+#: menu.sh:1036
+msgid " * \\Z4pci=nommconf\\Zn\\n    Disable the use of Memory-Mapped Configuration for PCI devices(use this parameter cautiously).\\n"
+msgstr " * \\Z4pci=nommconf\\Zn\\n    PCI 장치에 대해 메모리 매핑 구성을 사용하지 않도록 설정합니다(이 매개변수에 주의).\\n"
+
+#: menu.sh:1037
+msgid " * \\Z4consoleblank=300\\Zn\\n    Set the console to auto turnoff display 300 seconds after no activity (measured in seconds).\\n"
+msgstr " * \\Z4consoleblank=300\\Zn\\n    활동이 없으면 300초 후에 디스플레이가 자동으로 꺼지도록 콘솔을 설정합니다(초 단위로 측정).\\n"
+
+#: menu.sh:1038 menu.sh:1047 menu.sh:1198 menu.sh:1207
+msgid "Please enter the parameter key and value you need to add.\\n"
+msgstr "값을 추가하려는 매개변수 키와 값을 입력하십시오.\\n"
+
+#: menu.sh:1065 menu.sh:1225
+msgid "Invalid parameter name, retry?"
+msgstr "잘못된 매개변수 이름입니다. 다시 시도하시겠습니까?"
+
+#: menu.sh:1091
+msgid "No user cmdline to remove"
+msgstr "제거할 사용자 명령줄이 없습니다"
+
+#: menu.sh:1099
+msgid "Select cmdline to remove"
+msgstr "제거할 명령줄 선택"
+
+#: menu.sh:1110
+msgid "Note: (MAC will not be set to NIC, Only for activation services.)"
+msgstr "참고: (MAC은 NIC로 설정되지 않으며 활성화 서비스에 대해서만 설정됩니다.)"
+
+#: menu.sh:1116
+msgid "Random"
+msgstr "랜덤생성"
+
+#: menu.sh:1128
+msgid "Invalid SN/MAC, retry?"
+msgstr "SN/MAC가 잘못되었습니다. 다시 시도하시겠습니까?"
+
+#: menu.sh:1180
+msgid "Add/edit a synoinfo item"
+msgstr "synoinfo 항목 추가/편집"
+
+#: menu.sh:1181
+msgid "Show/Delete synoinfo items"
+msgstr "synoinfo 항목 보기/삭제"
+
+#: menu.sh:1184 menu.sh:1212 menu.sh:1224 menu.sh:1251 menu.sh:1259
+msgid "Synoinfo"
+msgstr "synoinfo"
+
+#: menu.sh:1191
+msgid "Commonly used synoinfo:\\n"
+msgstr "일반적으로 사용되는 synoinfo:\\n"
+
+#: menu.sh:1192
+msgid " * \\Z4support_apparmor=no\\Zn\\n    Disable apparmor.\\n"
+msgstr " * \\Z4support_apparmor=no\\Zn\\n    apparmor 비활성화.\\n"
+
+#: menu.sh:1193
+msgid " * \\Z4maxdisks=??\\Zn\\n    Maximum number of disks supported.\\n"
+msgstr " * \\Z4maxdisks=??\\Zn\\n    지원되는 최대 하드 디스크 수\\n"
+
+#: menu.sh:1194
+msgid " * \\Z4internalportcfg=0x????\\Zn\\n    Internal(sata) disks mask(Not apply to DT models).\\n"
+msgstr " * \\Z4internalportcfg=0x????\\Zn\\n    내부(sata) 디스크 마스크(DT 모델에는 적용되지 않습니다.)\\n"
+
+#: menu.sh:1195
+msgid " * \\Z4esataportcfg=0x????\\Zn\\n    Esata disks mask(Not apply to DT models).\\n"
+msgstr " * \\Z4esataportcfg=0x????\\Zn\\n    Esata 디스크 마스크(DT 모델에는 적용되지 않습니다.)\\n"
+
+#: menu.sh:1196
+msgid " * \\Z4usbportcfg=0x????\\Zn\\n    USB disks mask(Not apply to DT models).\\n"
+msgstr " * \\Z4usbportcfg=0x????\\Zn\\n    USB 디스크 마스크(DT 모델에는 적용되지 않습니다.)\\n"
+
+#: menu.sh:1197
+msgid " * \\Z4max_sys_raid_disks=12\\Zn\\n    Maximum number of system partition(md0) raid disks.\\n"
+msgstr " * \\Z4max_sys_raid_disks=12\\Zn\\n    최대 시스템 파티션(md0) RAID 디스크 수.\\n"
+
+#: menu.sh:1252
+msgid "No synoinfo entries to remove"
+msgstr "제거할 synoinfo 항목이 없습니다"
+
+#: menu.sh:1260
+msgid "Select synoinfo entry to remove"
+msgstr "제거할 synoinfo 항목 선택"
+
+#: menu.sh:1285 menu.sh:1428
+msgid "The current network status is unknown, using the default mirror."
+msgstr "현재 네트워크 상태는 알 수 없습니다. 기본 마이러를 사용합니다."
+
+#: menu.sh:1295
+msgid "Downloading old pat to extract synology .pat extractor..."
+msgstr "이전 Pat를 다운로드하여 synology .pat 추출기를 추출 중입니다..."
+
+#: menu.sh:1301 menu.sh:1450
+msgid "Check internet."
+msgstr "인터넷을 확인하십시오."
+
+#: menu.sh:1301 menu.sh:1450 menu.sh:3600
+msgid "(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
+msgstr "(https://curl.se/libcurl/c/libcurl-errors.html을 통해 오류 설명을 확인하세요.)"
+
+#: menu.sh:1338
+msgid "Uncompressed tar"
+msgstr "압축되지 않은 tar"
+
+#: menu.sh:1342
+msgid "Compressed tar"
+msgstr "압축된 tar"
+
+#: menu.sh:1346
+msgid "Encrypted"
+msgstr "암호화된"
+
+#: menu.sh:1350
+msgid "Could not determine if pat file is encrypted or not, maybe corrupted, try again!"
+msgstr "pat 파일이 암호화되었는지 여부를 확인할 수 없습니다. 손상되었을 수 있습니다. 다시 시도하세요!"
+
+#: menu.sh:1357 menu.sh:1472
+msgid "Disassembling %s:"
+msgstr "%s 압축 해제 중:"
+
+#: menu.sh:1365
+msgid "Extractor cached."
+msgstr "복호화 프로그램이 이미 존재합니다."
+
+#: menu.sh:1371 menu.sh:1375
+msgid "Extracting ..."
+msgstr "압축 해제 중..."
+
+#: menu.sh:1407
+msgid "The cache has been cleared. Please re 'Parse pat' before build."
+msgstr "캐시가 지워졌습니다. 빌드하기 전에 'Parse pat'을 다시 실행하세요."
+
+#: menu.sh:1411
+msgid "The cache has been cleared. Please re 'Try to recovery a installed DSM system' before build."
+msgstr "캐시가 지워졌습니다.생성하기 전에 설치된 DSM 시스템 복구를 다시 시도하세요."
+
+#: menu.sh:1415
+msgid "The pat url is empty. Please re 'Choose a version' before build."
+msgstr "pat url이 비어 있습니다. 생성하기 전에 버전 선택을 다시 하세요."
+
+#: menu.sh:1420 menu.sh:4087
+msgid "Cleaning cache ..."
+msgstr "캐시 정리 중..."
+
+#: menu.sh:1432
+msgid "Based on the current network situation, switch to %s mirror to downloading.\\n"
+msgstr "현재 네트워크 상황에 따라 %s 미러로 전환하여 다운로드합니다.\\n"
+
+#: menu.sh:1435
+msgid "Downloading %s ...\\n"
+msgstr "Downloading %s ...\\n"
+
+#: menu.sh:1454
+msgid "%s cached."
+msgstr "%s 가 캐시되었습니다."
+
+#: menu.sh:1457
+msgid "Checking hash of %s:"
+msgstr "%s 의 해시를 확인하는 중:"
+
+#: menu.sh:1464
+msgid "md5 hash of pat not match, Please reget pat data from the version menu and try again!"
+msgstr "PAT의 MD5 해시가 일치하지 않습니다. 버전 메뉴에서 PAT 데이터를 다시 가져와서 다시 시도하세요!"
+
+#: menu.sh:1468 menu.sh:1484 menu.sh:1489
+msgid "OK"
+msgstr "OK"
+
+#: menu.sh:1479
+msgid "Setting hash:"
+msgstr "해시 설정:"
+
+#: menu.sh:1486
+msgid "Copying files:"
+msgstr "파일 복사 중:"
+
+#: menu.sh:1506
+msgid "No disk space left, please clean the cache and try again!"
+msgstr "남은 디스크 공간이 없습니다. 캐시를 정리하고 다시 시도하세요!"
+
+#: menu.sh:1531
+msgid "Cleaning ..."
+msgstr "정리 중..."
+
+#: menu.sh:1540 menu.sh:4086 menu.sh:4110 menu.sh:4154 menu.sh:4172 menu.sh:4255 menu.sh:4261 menu.sh:4267 menu.sh:4273 menu.sh:4279 menu.sh:4285 menu.sh:4291
+msgid "Main menu"
+msgstr "메인 메뉴"
+
+#: menu.sh:1541
 msgid "Making ... ('ctrl + c' to exit)"
 msgstr "만드는 중... (종료하려면 'ctrl + c')"
 
-#: menu.sh:1355 menu.sh:1371 menu.sh:1375 menu.sh:1392 menu.sh:1397 menu.sh:1416 menu.sh:1428 menu.sh:2237
-msgid "Custom DTS"
-msgstr "사용자 정의 DTS"
-
-#: menu.sh:1357
-msgid "Custom dts: "
-msgstr "사용자 정의 dts: "
-
-#: menu.sh:1358
-msgid "Upload dts file"
-msgstr "dts 파일 업로드"
-
-#: menu.sh:1359
-msgid "Delete dts file"
-msgstr "dts 파일 삭제"
-
-#: menu.sh:1360
-msgid "Edit dts file"
-msgstr "dts 파일 편집"
-
-#: menu.sh:1370
-msgid "Or upload the dts file to %s via DUFS, Will be automatically imported when building."
-msgstr "또는 DUFS를 통해 %s에 dts 파일을 업로드하면 빌드할 때 자동으로 가져옵니다."
-
-#: menu.sh:1376
-msgid "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\\n(saved in /mnt/p3/users/)"
-msgstr "현재는 dts 형식의 파일만 지원됩니다. 준비 후 클릭하여 업로드를 확인해주세요.\\n(/mnt/p3/users/에 저장됨)"
-
-#: menu.sh:1393 menu.sh:1429
-msgid "Not a valid dts file, please try again!"
-msgstr "dts 파일이 유효하지 않습니다. 다시 시도하세요!"
-
-#: menu.sh:1398
-msgid "A valid dts file, Automatically import at compile time."
-msgstr "유효한 dts 파일로 컴파일 시 자동으로 가져옵니다."
-
-#: menu.sh:1417
-msgid "No dts file to edit. Please upload first!"
-msgstr "편집 가능한 dts 파일이 없습니다.먼저 올려주세요!"
-
-#: menu.sh:1492
-msgid "Temporary IP: (UI will not refresh)"
-msgstr "임시 IP: (UI가 새로고침되지 않음)"
-
-#: menu.sh:1504 menu.sh:1528 menu.sh:1536 menu.sh:1548 menu.sh:1557 menu.sh:1579 menu.sh:1672 menu.sh:1689 menu.sh:1693 menu.sh:1694 menu.sh:1699 menu.sh:1703 menu.sh:1718 menu.sh:1720 menu.sh:1731 menu.sh:1739 menu.sh:1903 menu.sh:1907 menu.sh:1921
-#: menu.sh:1923 menu.sh:1932 menu.sh:1956 menu.sh:1960 menu.sh:1967 menu.sh:1973 menu.sh:1991 menu.sh:1993 menu.sh:2002 menu.sh:2007 menu.sh:2035 menu.sh:2038 menu.sh:2047 menu.sh:2072 menu.sh:2075 menu.sh:2086 menu.sh:2090 menu.sh:2103 menu.sh:2106
-#: menu.sh:2121 menu.sh:2125 menu.sh:2131 menu.sh:2137 menu.sh:2143 menu.sh:2174 menu.sh:2190 menu.sh:2201 menu.sh:2275 menu.sh:2296 menu.sh:2321 menu.sh:2333 menu.sh:2353 menu.sh:2390 menu.sh:2453 menu.sh:2457 menu.sh:2467 menu.sh:2479 menu.sh:2483
-#: menu.sh:2493 menu.sh:2499 menu.sh:2513 menu.sh:2520 menu.sh:2525 menu.sh:2528 menu.sh:2544 menu.sh:2565
-msgid "Advanced"
-msgstr "고급"
-
-#: menu.sh:1529
-msgid "Setting IP ..."
-msgstr "IP 설정 중..."
-
-#: menu.sh:1537
-msgid "Scanning ..."
-msgstr "검색 중..."
-
-#: menu.sh:1540
-msgid "Scanned SSIDs:\\n"
-msgstr "검색된 SSIDs:\\n"
-
-#: menu.sh:1558
-msgid "Invalid SSID/PSK, retry?"
-msgstr "SSID/PSK가 잘못되었습니다. 다시 시도하시겠습니까?"
-
-#: menu.sh:1580
-msgid "Setting ..."
-msgstr "설정 중..."
-
-#: menu.sh:1669
-msgid "\\nTotal of ports: %s\\n"
-msgstr "\\n총 포트 : %s\\n"
-
-#: menu.sh:1670
-msgid "\\nPorts with color \\Z1red\\Zn as DUMMY, color \\Z2\\Zbgreen\\Zn has drive connected."
-msgstr "\\n\\Z1 빨간색\\Zn은 아날로그 포트, \\Z2\\Zb 녹색\\Zn은 구동되는 물리적 포트입니다."
-
-#: menu.sh:1671 menu.sh:1690 menu.sh:2122
-msgid "No disk found!"
-msgstr "디스크를 찾을 수 없습니다!"
-
-#: menu.sh:1700 menu.sh:1902 menu.sh:2085
-msgid "Warning:\\nThis operation is irreversible. Please backup important data. Do you want to continue?"
-msgstr "경고:\\n이 작업은 되돌릴 수 없습니다. 중요한 데이터를 백업하십시오. 계속하시겠습니까?"
-
-#: menu.sh:1704
-msgid "Warning:\\nThe current hds is in raid, do you still want to format them?"
-msgstr "경고:\\n현재 하드디스크가 RAID 상태입니다. 그래도 포맷하시겠습니까?"
-
-#: menu.sh:1719
-msgid "Formatting ..."
-msgstr "포맷 중..."
-
-#: menu.sh:1721
-msgid "Formatting is complete."
-msgstr "포맷이 완료되었습니다."
-
-#: menu.sh:1728 menu.sh:1750 menu.sh:1770 menu.sh:1786 menu.sh:1795 menu.sh:1879 menu.sh:1885 menu.sh:1892
-msgid "Try recovery DSM"
-msgstr "복구 DSM 시도 중"
-
-#: menu.sh:1729
-msgid "Trying to recovery a installed DSM system ..."
-msgstr "설치된 DSM 시스템을 복구하려고 합니다..."
-
-#: menu.sh:1732 menu.sh:1908 menu.sh:1933 menu.sh:2003 menu.sh:2048 menu.sh:2091
-msgid "No DSM system partition(md0) found!\\nPlease insert all disks before continuing."
-msgstr "DSM 시스템 파티션(md0)을 찾을 수 없습니다!\\n계속하기 전에 모든 디스크를 삽입하십시오."
-
-#: menu.sh:1740
-msgid "mount DSM system partition(md0) failed!\\nPlease insert all disks before continuing."
-msgstr "DSM 시스템 파티션(md0) 마운트에 실패했습니다!\\n계속하기 전에 모든 디스크를 삽입하십시오."
-
-#: menu.sh:1751
-msgid "Checking for backup of user's configuration for bootloader ..."
-msgstr "부트 로더의 사용자 구성 백업을 검사하는 중..."
-
-#: menu.sh:1771
-msgid "Found a backup of the user's configuration, but the system is damaged and will not be restored. Please reselect model and build."
-msgstr "사용자 구성 백업을 찾았지만 시스템이 손상되어 복구할 수 없습니다.모델을 다시 선택하고 구성하십시오."
-
-#: menu.sh:1787
-msgid "Found a backup of the user's configuration, and restored it. Please rebuild and boot."
-msgstr "사용자가 구성한 백업을 찾아 복원했습니다. 다시 생성하여 시작하십시오."
-
-#: menu.sh:1796
-msgid "Checking for installed DSM system ..."
-msgstr "설치된 DSM 시스템을 확인하는 중..."
-
-#: menu.sh:1880
-msgid "Found a installed DSM system and restored it. Please rebuild and boot."
-msgstr "설치된 DSM 시스템을 찾아 복원합니다. 다시 생성하여 시작하십시오."
-
-#: menu.sh:1886
-msgid "Found a installed DSM system, but the system is damaged and will not be restored. Please reselect model and build."
-msgstr "설치된 DSM 시스템을 찾았지만 시스템이 손상되어 복구할 수 없습니다.모델을 다시 선택하고 구성하십시오."
-
-#: menu.sh:1893
-msgid "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build."
-msgstr "설치된 DSM 시스템을 찾을 수 없거나 시스템이 손상되어 복구할 수 없습니다.모델을 다시 선택하고 구성하십시오."
-
-#: menu.sh:1901
-msgid "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\\n"
-msgstr "이 기능을 사용하면 모든 디스크의 첫 번째 파티션에서 버전 파일을 제거하여 설치를 다운그레이드할 수 있습니다.\\n"
-
-#: menu.sh:1922 menu.sh:2104
-msgid "Removing ..."
-msgstr "제거 중..."
-
-#: menu.sh:1924
-msgid "Remove VERSION file for DSM system partition(md0) completed."
-msgstr "DSM 시스템 파티션(md0)에 대한 버전 파일 제거가 완료되었습니다."
-
-#: menu.sh:1957
-msgid "All existing users have been disabled. Please try adding new user."
-msgstr "기존 사용자는 모두 비활성화되었습니다. 새로운 사용자를 추가해 보세요."
-
-#: menu.sh:1961
-msgid "Choose a user name"
-msgstr "사용자 이름 선택"
-
-#: menu.sh:1968
-msgid "Type a new password for user '%s'"
-msgstr "사용자 '%s'의 새 비밀번호를 입력하세요"
-
-#: menu.sh:1974
-msgid "Invalid password"
-msgstr "잘못된 비밀번호"
-
-#: menu.sh:1992
-msgid "Resetting ..."
-msgstr "재설정 중..."
-
-#: menu.sh:1994
-msgid "Password reset completed."
-msgstr "비밀번호 재설정이 완료되었습니다."
-
-#: menu.sh:2006
-msgid "Add to administrators group by default"
-msgstr "기본적으로 관리자 그룹에 추가"
-
-#: menu.sh:2036
-msgid "Adding ..."
-msgstr "추가 중 ..."
-
-#: menu.sh:2037
-msgid "User added successfully."
-msgstr "사용자가 성공적으로 추가되었습니다."
-
-#: menu.sh:2037
-msgid "User add failed."
-msgstr "사용자 추가에 실패했습니다."
-
-#: menu.sh:2073
-msgid "Enabling ..."
-msgstr "활성화 중..."
-
-#: menu.sh:2074
-msgid "Enabled Telnet&SSH successfully."
-msgstr "Telnet&SSH를 성공적으로 활성화했습니다."
-
-#: menu.sh:2074
-msgid "Enabled Telnet&SSH failed."
-msgstr "활성화된 Telnet&SSH가 실패했습니다."
-
-#: menu.sh:2084
-msgid "This feature will removing the blocked ip database from the first partition of all disks.\\n"
-msgstr "이 기능은 모든 디스크의 첫 번째 파티션에서 차단된 IP 데이터베이스를 제거합니다.\\n"
-
-#: menu.sh:2105
-msgid "The blocked ip database has been deleted."
-msgstr "차단된 IP 데이터베이스가 삭제되었습니다."
-
-#: menu.sh:2126
-msgid "Choose a disk to clone to"
-msgstr "복제할 디스크를 선택합니다"
-
-#: menu.sh:2132
-msgid "No disk selected!"
-msgstr "선택한 디스크가 없습니다!"
-
-#: menu.sh:2138
-msgid "Disk %s size is less than 1GB and cannot be cloned!"
-msgstr "디스크 %s 크기가 1GB 미만이어서 복제할 수 없습니다!"
-
-#: menu.sh:2142
-msgid "Warning:\\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \\nDo you want to continue?"
-msgstr "경고:\\n디스크 %s가 포맷되어 부트 로더에 기록됩니다. 중요한 데이터가 백업되었는지 확인하십시오. \\n계속하시겠습니까?"
-
-#: menu.sh:2175
-msgid "Cloning ..."
-msgstr "복제 중 ..."
-
-#: menu.sh:2177
-msgid "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\\nReboot?"
-msgstr "부트로더가 %s 디스크에 복제되었습니다. 현재 부트로더 디스크를 제거하십시오!\\n재부팅하시겠습니까?"
-
-#: menu.sh:2191
-msgid "Please enter a proxy server url.(e.g., %s)"
-msgstr "프록시 서버 URL을 입력하세요(예: %s)"
-
-#: menu.sh:2202
-msgid "Invalid proxy server url, continue?"
-msgstr "잘못된 프록시 서버 URL입니다. 계속하시겠습니까?"
-
-#: menu.sh:2231
-msgid "Switch LKM version:"
-msgstr "LKM 버전을 전환:"
-
-#: menu.sh:2232
-msgid "HDD sort(hotplug):"
-msgstr "HDD 정렬(Hot Plug):"
-
-#: menu.sh:2234
-msgid "show/modify the current pat data"
-msgstr "현재 pat 다운로드 링크 표시/수정"
-
-#: menu.sh:2239
-msgid "Switch direct boot:"
-msgstr "직접 부팅 전환:"
-
-#: menu.sh:2241
-msgid "Timeout of get ip in boot:"
-msgstr "IP 가져오기 시간(초):"
-
-#: menu.sh:2242
-msgid "Timeout of boot wait:"
-msgstr "부팅 대기 시간(초):"
-
-#: menu.sh:2243
-msgid "kernel switching method:"
-msgstr "커널 전환 방법:"
-
-#: menu.sh:2245
-msgid "Reboot on kernel panic:"
-msgstr "커널패닉 시 재부팅(초):"
-
-#: menu.sh:2247
-msgid "Use EMMC as the system disk:"
-msgstr "EMMC를 시스템 디스크로 사용:"
-
-#: menu.sh:2249
-msgid "Custom patch script # Developer"
-msgstr "사용자 정의 패치 스크립트 # 개발"
-
-#: menu.sh:2250
-msgid "Edit user config file manually"
-msgstr "사용자 구성 config 편집"
-
-#: menu.sh:2251
-msgid "Edit grub.cfg file manually"
-msgstr "grub.cfg 파일을 수동으로 편집하기"
-
-#: menu.sh:2253
-msgid "Set static IP"
-msgstr "고정 IP 설정"
-
-#: menu.sh:2254
-msgid "Set wireless account"
-msgstr "무선 계정 설정"
-
-#: menu.sh:2255
-msgid "Show disks information"
-msgstr "디스크 정보 표시"
-
-#: menu.sh:2256
-msgid "Format disk(s) # Without loader disk"
-msgstr "포맷 디스크 # 로더 디스크 없음"
-
-#: menu.sh:2257
-msgid "Try to recovery a installed DSM system"
-msgstr "설치된 DSM 시스템 복구 시도"
-
-#: menu.sh:2258
-msgid "Allow downgrade installation"
-msgstr "다운그레이드 설치 허용"
-
-#: menu.sh:2259
-msgid "Reset DSM system password"
-msgstr "DSM 시스템 비밀번호 재설정"
-
-#: menu.sh:2260
-msgid "Add a new user to DSM system"
-msgstr "DSM 시스템에 새 사용자 추가"
-
-#: menu.sh:2261
-msgid "Force enable Telnet&SSH of DSM system"
-msgstr "DSM 시스템의 Telnet&SSH를 강제로 활성화합니다"
-
-#: menu.sh:2262
-msgid "Remove the blocked ip database of DSM"
-msgstr "DSM의 차단된 IP 데이터베이스 제거"
-
-#: menu.sh:2263
-msgid "Clone bootloader disk to another disk"
-msgstr "부트로더 디스크를 다른 디스크에 복제"
-
-#: menu.sh:2264
-msgid "Report bugs to the author"
-msgstr "개발자에게 버그 신고하기"
-
-#: menu.sh:2265
-msgid "Download DSM config backup files"
-msgstr "DSM 구성 백업 파일 다운로드"
-
-#: menu.sh:2266
-msgid "Install development tools"
-msgstr "개발자 도구 설치"
-
-#: menu.sh:2267
-msgid "Save modifications of '/opt/rr'"
-msgstr "'/opt/rr'의 수정 사항 저장"
-
-#: menu.sh:2269
-msgid "Show QR logo:"
-msgstr "QR 로고 표시:"
-
-#: menu.sh:2270
-msgid "Set global proxy"
-msgstr "글로벌 프록시 설정"
-
-#: menu.sh:2271
-msgid "Set github proxy"
-msgstr "Github 프록시 설정"
-
-#: menu.sh:2272
-msgid "Vigorously miracle"
-msgstr "Vigorously miracle"
-
-#: menu.sh:2276
-msgid "Advanced option"
-msgstr "고급 설정"
-
-#: menu.sh:2295
-msgid "pat: (editable)"
-msgstr "pat: (편집가능)"
-
-#: menu.sh:2322 menu.sh:2334 menu.sh:2354
-msgid "Choose a time(seconds)"
-msgstr "시간(초) 선택"
-
-#: menu.sh:2386
-msgid "This option is only informative.\\n\\n"
-msgstr "이 옵션은 정보 제공용입니다.\\n\\n"
-
-#: menu.sh:2387
-msgid "This program reserves an interface for ramdisk custom patch scripts.\\n"
-msgstr "이 프로그램은 램디스크 사용자 지정 패치 스크립트를 위한 인터페이스를 예약합니다.\\n"
-
-#: menu.sh:2388
-msgid "Call timing: called before ramdisk packaging.\\n"
-msgstr "호출 타이밍: 램디스크 패키징 전에 호출됩니다.\\n"
-
-#: menu.sh:2389
-msgid "Location: /mnt/p3/scripts/*.sh\\n"
-msgstr "위치: /mnt/p3/scripts/*.sh\\n"
-
-#: menu.sh:2454
-msgid "Please via %s to download the logs,\\nAnd go to github to create an issue and upload the logs."
-msgstr "%s를 통해 로그를 다운로드하고, \\ngithub로 이동하여 이슈를 생성하고 로그를 업로드하세요."
-
-#: menu.sh:2458
-msgid "Please go to github to create an issue and upload the logs."
-msgstr "Github로 이동하여 이슈를 생성하고 로그를 업로드하세요."
-
-#: menu.sh:2462
-msgid "\\Z1No logs found!\\Zn\\n\\n"
-msgstr "\\Z1로그를 찾을 수 없습니다!\\Zn\\n\\n"
-
-#: menu.sh:2463 menu.sh:2489
-msgid "Please do as follows:\\n"
-msgstr "다음과 같이 하세요:\\n"
-
-#: menu.sh:2464
-msgid " 1. Add dbgutils in addons and rebuild.\\n"
-msgstr " 1. 애드온에 dbgutils를 추가하고 다시 빌드하세요.\\n"
-
-#: menu.sh:2465
-msgid " 2. Wait 10 minutes after booting.\\n"
-msgstr " 2. 부팅 후 10분간 기다립니다.\\n"
-
-#: menu.sh:2466 menu.sh:2492
-msgid " 3. Reboot into RR and go to this option.\\n"
-msgstr " 3. RR로 재부팅하고 이 옵션으로 이동합니다.\\n"
-
-#: menu.sh:2480
-msgid "Please via %s to download the scbk,\\nAnd unzip it and back it up in order by file name."
-msgstr "%s을(를) 통해 scbk를 다운로드한 후\\n압축을 풀고 파일 이름 순서대로 백업하세요."
-
-#: menu.sh:2484
-msgid "Please unzip it and back it up in order by file name."
-msgstr "압축을 풀고 파일명 순서대로 백업하시기 바랍니다."
-
-#: menu.sh:2488
-msgid "\\Z1No scbk found!\\Zn\\n\\n"
-msgstr "\\Z1scbk를 찾을 수 없습니다!\\Zn\\n\\n"
-
-#: menu.sh:2490
-msgid " 1. Add synoconfbkp in addons and rebuild.\\n"
-msgstr " 1. 애드온에 synoconfbkp를 추가하고 다시 빌드하세요.\\n"
-
-#: menu.sh:2491
-msgid " 2. Normal use.\\n"
-msgstr " 2. 일반적인 사용.\\n"
-
-#: menu.sh:2500
-msgid "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?"
-msgstr "이 옵션은 opkg 패키지 관리만 설치하므로 사용 및 디버깅을 위한 더 많은 도구를 설치할 수 있습니다. 계속하시겠습니까?"
-
-#: menu.sh:2514
-msgid "opkg installing ..."
-msgstr "opkg 설치 중 ..."
-
-#: menu.sh:2516
-msgid "opkg install failed."
-msgstr "opkg 설치에 실패했습니다."
-
-#: menu.sh:2518
-msgid "opkg install complete."
-msgstr "opkg 설치가 완료되었습니다."
-
-#: menu.sh:2526
-msgid "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?"
-msgstr "경고:\\n중간에 종료하지 마십시오. 그렇지 않으면 RR 부팅이 손상이 발생할 수 있습니다. 계속하시겠습니까?"
-
-#: menu.sh:2529
-msgid "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
-msgstr "저장 중...\\n(보통 5~10분 정도 소요되니 조금만 기다려 주세요.)"
-
-#: menu.sh:2545
-msgid "Save is complete."
-msgstr "저장이 완료되었습니다."
-
-#: menu.sh:2577
+#: menu.sh:1559
 msgid "Alert"
 msgstr "알림"
 
-#: menu.sh:2578
+#: menu.sh:1560
 msgid "Config changed, would you like to rebuild the loader?"
 msgstr "구성이 변경되었습니다. 로더를 다시 빌드하시겠습니까?"
 
-#: menu.sh:2595 menu.sh:3341
+#: menu.sh:1579
+msgid "Upload dts file"
+msgstr "dts 파일 업로드"
+
+#: menu.sh:1580
+msgid "Delete dts file"
+msgstr "dts 파일 삭제"
+
+#: menu.sh:1581
+msgid "Edit dts file"
+msgstr "dts 파일 편집"
+
+#: menu.sh:1584 menu.sh:1594 menu.sh:1598 menu.sh:1610 menu.sh:1615 menu.sh:1635 menu.sh:1648 menu.sh:3142
+msgid "Custom DTS"
+msgstr "사용자 정의 DTS"
+
+#: menu.sh:1585
+msgid "Custom dts:"
+msgstr "사용자 정의 dts:"
+
+#: menu.sh:1593
+msgid "Or upload the dts file to %s via DUFS, Will be automatically imported when building.\\n"
+msgstr "또는 DUFS를 통해 %s 에 dts 파일을 업로드하면 빌드할 때 자동으로 가져옵니다.\\n"
+
+#: menu.sh:1599
+msgid "Currently, only dts format files are supported. Please prepare and click to confirm uploading.\\n(saved in /mnt/p3/users/)\\n"
+msgstr "현재는 dts 형식의 파일만 지원됩니다. 준비 후 클릭하여 업로드를 확인해주세요.\\n(/mnt/p3/users/에 저장됨)\\n"
+
+#: menu.sh:1609 menu.sh:1647
+msgid "Not a valid dts file, please try again!"
+msgstr "dts 파일이 유효하지 않습니다. 다시 시도하세요!"
+
+#: menu.sh:1616
+msgid "A valid dts file, Automatically import at compile time."
+msgstr "유효한 dts 파일로 컴파일 시 자동으로 가져옵니다."
+
+#: menu.sh:1636
+msgid "No dts file to edit. Please upload first!"
+msgstr "편집 가능한 dts 파일이 없습니다.먼저 올려주세요!"
+
+#: menu.sh:1760
+msgid "Total of ports: %s\\n"
+msgstr "총 포트 : %s\\n"
+
+#: menu.sh:1762
+msgid "Ports with color \\Z1red\\Zn as DUMMY, color \\Z2green\\Zn has drive connected."
+msgstr "\\Z1 빨간색\\Zn은 아날로그 포트, \\Z2 녹색\\Zn은 구동되는 물리적 포트입니다."
+
+#: menu.sh:1763 menu.sh:1807 menu.sh:2471
+msgid "No disk found!"
+msgstr "디스크를 찾을 수 없습니다!"
+
+#: menu.sh:1764 menu.sh:1776 menu.sh:1790 menu.sh:1806 menu.sh:1810 menu.sh:1811 menu.sh:1816 menu.sh:1820 menu.sh:1834 menu.sh:1836 menu.sh:1851 menu.sh:1855 menu.sh:1866 menu.sh:1878 menu.sh:1883 menu.sh:1901 menu.sh:1906 menu.sh:1916 menu.sh:1942
+#: menu.sh:1946 menu.sh:1954 menu.sh:1960 menu.sh:1998 menu.sh:2003 menu.sh:2013 menu.sh:2018 menu.sh:2043 menu.sh:2048 menu.sh:2058 menu.sh:2081 menu.sh:2086 menu.sh:2097 menu.sh:2102 menu.sh:2120 menu.sh:2125 menu.sh:2135 menu.sh:2155 menu.sh:2160
+#: menu.sh:2171 menu.sh:2176 menu.sh:2213 menu.sh:2218 menu.sh:3173 menu.sh:3200 menu.sh:3220 menu.sh:3234 menu.sh:3241 menu.sh:3262 menu.sh:3274 menu.sh:3308
+msgid "Advanced"
+msgstr "고급"
+
+#: menu.sh:1777
+msgid "No storage pool found!"
+msgstr "스토리지 풀을 찾을 수 없습니다!"
+
+#: menu.sh:1788
+msgid "All storage pools are mounted under /mnt/DSM. Please check them yourself via shell/DUFS."
+msgstr "모든 스토리지 풀은 /mnt/DSM 아래에 마운트되어 있습니다. shell/DUFS를 통해 직접 확인하세요."
+
+#: menu.sh:1789
+msgid "For encrypted volume / encrypted shared folder, please refer to https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC"
+msgstr "암호화 볼륨 / 암호화 공유 폴더는 https://kb.synology.com/en-us/DSM/tutorial/How_can_I_recover_data_from_my_DiskStation_using_a_PC를 참조하십시오."
+
+#: menu.sh:1817 menu.sh:1877 menu.sh:2096 menu.sh:2170
+msgid "Warning:\\nThis operation is irreversible. Please backup important data. Do you want to continue?"
+msgstr "경고:\\n이 작업은 되돌릴 수 없습니다. 중요한 데이터를 백업하십시오. 계속하시겠습니까?"
+
+#: menu.sh:1821
+msgid "Warning:\\nThe current hds is in raid, do you still want to format them?"
+msgstr "경고:\\n현재 하드디스크가 RAID 상태입니다. 그래도 포맷하시겠습니까?"
+
+#: menu.sh:1835
+msgid "Formatting ..."
+msgstr "포맷 중..."
+
+#: menu.sh:1837
+msgid "Formatting is complete."
+msgstr "포맷이 완료되었습니다."
+
+#: menu.sh:1852
+msgid "Please via %s to download the scbk,\\nAnd unzip it and back it up in order by file name."
+msgstr "%s 을(를) 통해 scbk를 다운로드한 후\\n압축을 풀고 파일 이름 순서대로 백업하세요."
+
+#: menu.sh:1856
+msgid "Please unzip it and back it up in order by file name."
+msgstr "압축을 풀고 파일명 순서대로 백업하시기 바랍니다."
+
+#: menu.sh:1860
+msgid "\\Z1No scbk found!\\Zn\\n"
+msgstr "\\Z1scbk를 찾을 수 없습니다!\\Zn\\n"
+
+#: menu.sh:1862 menu.sh:2655
+msgid "Please do as follows:\\n"
+msgstr "다음과 같이 하세요:\\n"
+
+#: menu.sh:1863
+msgid " 1. Add synoconfbkp in addons and rebuild.\\n"
+msgstr " 1. 애드온에 synoconfbkp를 추가하고 다시 빌드하세요.\\n"
+
+#: menu.sh:1864
+msgid " 2. Normal use.\\n"
+msgstr " 2. 일반적인 사용.\\n"
+
+#: menu.sh:1865 menu.sh:2658
+msgid " 3. Reboot into RR and go to this option.\\n"
+msgstr " 3. RR로 재부팅하고 이 옵션으로 이동합니다.\\n"
+
+#: menu.sh:1876
+msgid "This feature will allow you to downgrade the installation by removing the VERSION file from the first partition of all disks.\\n"
+msgstr "이 기능을 사용하면 모든 디스크의 첫 번째 파티션에서 버전 파일을 제거하여 설치를 다운그레이드할 수 있습니다.\\n"
+
+#: menu.sh:1884 menu.sh:1917 menu.sh:2014 menu.sh:2059 menu.sh:2103 menu.sh:2136 menu.sh:2177 menu.sh:2377
+msgid "No DSM system partition(md0) found!\\nPlease insert all disks before continuing."
+msgstr "DSM 시스템 파티션(md0)을 찾을 수 없습니다!\\n계속하기 전에 모든 디스크를 삽입하십시오."
+
+#: menu.sh:1902 menu.sh:2121
+msgid "Removing ..."
+msgstr "제거 중..."
+
+#: menu.sh:1904
+msgid "Remove VERSION file for DSM system partition(md0) completed."
+msgstr "DSM 시스템 파티션(md0)에 대한 버전 파일 제거가 완료되었습니다."
+
+#: menu.sh:1905
+msgid "Remove VERSION file for DSM system partition(md0) failed."
+msgstr "DSM 시스템 파티션(md0)에 대한 버전 파일 제거에 실패했습니다."
+
+#: menu.sh:1943
+msgid "All existing users have been disabled. Please try adding new user."
+msgstr "기존 사용자는 모두 비활성화되었습니다. 새로운 사용자를 추가해 보세요."
+
+#: menu.sh:1947
+msgid "Choose a user name"
+msgstr "사용자 이름 선택"
+
+#: menu.sh:1955
+msgid "Type a new password for user '%s'"
+msgstr "사용자 '%s' 의 새 비밀번호를 입력하세요"
+
+#: menu.sh:1961
+msgid "Invalid password"
+msgstr "잘못된 비밀번호"
+
+#: menu.sh:1999
+msgid "Resetting ..."
+msgstr "재설정 중..."
+
+#: menu.sh:2001
+msgid "Reset password for user '%s' completed."
+msgstr "사용자 '%s' 의 새 비밀번호가 설정되었습니다."
+
+#: menu.sh:2002
+msgid "Reset password for user '%s' failed."
+msgstr "사용자 '%s' 의 새 비밀번호 설정에 실패했습니다."
+
+#: menu.sh:2017
+msgid "Add to administrators group by default"
+msgstr "기본적으로 관리자 그룹에 추가"
+
+#: menu.sh:2044
+msgid "Adding ..."
+msgstr "추가 중 ..."
+
+#: menu.sh:2046
+msgid "Add new user '%s' completed."
+msgstr "새 사용자 '%s' 가 추가되었습니다."
+
+#: menu.sh:2047
+msgid "Add new user '%s' failed."
+msgstr "새 사용자 '%s' 추가에 실패했습니다."
+
+#: menu.sh:2082 menu.sh:2156
+msgid "Enabling ..."
+msgstr "활성화 중..."
+
+#: menu.sh:2084
+msgid "Force enable Telnet&SSH of DSM system completed."
+msgstr "DSM 시스템의 Telnet&SSH를 강제로 활성화합니다."
+
+#: menu.sh:2085
+msgid "Force enable Telnet&SSH of DSM system failed."
+msgstr "DSM 시스템의 Telnet&SSH 강제 활성화에 실패했습니다."
+
+#: menu.sh:2095
+msgid "This feature will removing the blocked ip database from the first partition of all disks.\\n"
+msgstr "이 기능은 모든 디스크의 첫 번째 파티션에서 차단된 IP 데이터베이스를 제거합니다.\\n"
+
+#: menu.sh:2123
+msgid "Removing the blocked ip database completed."
+msgstr "차단된 IP 데이터베이스가 제거되었습니다."
+
+#: menu.sh:2124
+msgid "Removing the blocked ip database failed."
+msgstr "차단된 IP 데이터베이스 제거에 실패했습니다."
+
+#: menu.sh:2158
+msgid "Disable all scheduled tasks of DSM completed."
+msgstr "DSM의 모든 예약 작업이 비활성화되었습니다."
+
+#: menu.sh:2159
+msgid "Disable all scheduled tasks of DSM failed."
+msgstr "DSM의 모든 예약 작업 비활성화에 실패했습니다."
+
+#: menu.sh:2169
+msgid "This option will clear all customized settings of the network card and restore them to the default state.\\n"
+msgstr "이 옵션은 네트워크 카드의 모든 사용자 정의 설정을 지우고 기본 상태로 복원합니다.\\n"
+
+#: menu.sh:2214
+msgid "Recovering ..."
+msgstr "복구 중 ..."
+
+#: menu.sh:2216
+msgid "Initialize DSM network settings completed."
+msgstr "DSM 네트워크 설정 초기화가 완료되었습니다."
+
+#: menu.sh:2217
+msgid "Initialize DSM network settings failed."
+msgstr "DSM 네트워크 설정 초기화에 실패했습니다."
+
+#: menu.sh:2234 menu.sh:2252 menu.sh:2270 menu.sh:2293 menu.sh:2336 menu.sh:2371 menu.sh:2376 menu.sh:2386 menu.sh:2397 menu.sh:2423 menu.sh:2432 menu.sh:2438 menu.sh:2453 menu.sh:2470 menu.sh:2477 menu.sh:2484 menu.sh:2491 menu.sh:2497 menu.sh:2574
+#: menu.sh:2578 menu.sh:2581 menu.sh:2593 menu.sh:2604 menu.sh:2678 menu.sh:2685 menu.sh:2699 menu.sh:2702 menu.sh:2710 menu.sh:2714 menu.sh:2733 menu.sh:2754 menu.sh:2770 menu.sh:2808 menu.sh:2828 menu.sh:2837 menu.sh:2866 menu.sh:2891 menu.sh:2902
+#: menu.sh:2947 menu.sh:2951 menu.sh:3008 menu.sh:3024 menu.sh:3048 menu.sh:3052 menu.sh:3102 menu.sh:3423 menu.sh:3456 menu.sh:3539
+msgid "Settings"
+msgstr "설정"
+
+#: menu.sh:2235 menu.sh:3397
 msgid "Choose a language"
-msgstr "언어 선택"
+msgstr "Choose a language"
 
-#: menu.sh:2610
-msgid "Choose a layout"
-msgstr "레이아웃 선택"
+#: menu.sh:2253 menu.sh:3398
+msgid "Choose a timezone"
+msgstr "타임존 선택"
 
-#: menu.sh:2622
-msgid "Choice a keymap"
-msgstr "키맵 선택"
+#: menu.sh:2271
+msgid "Choose a layout/keymap"
+msgstr "레이아웃/키맵 선택"
 
-#: menu.sh:2641 menu.sh:2738 menu.sh:2876 menu.sh:2940 menu.sh:3007 menu.sh:3063
-msgid "Update %s"
-msgstr "업데이트 %s"
+#: menu.sh:2287
+msgid "Please enter the webhook url and content text.\\n"
+msgstr "웹훅 URL과 메세지를 입력하세요.\\n"
 
-#: menu.sh:2642
-msgid "Checking last version ..."
-msgstr "새 버전 확인 중..."
+#: menu.sh:2288
+msgid "The webhook url must be a valid URL (Reference https://webhook-test.com/).\\n"
+msgstr "웹훅 URL은 유효한 URL이어야 합니다 (https://webhook-test.com/ 참고).\\n"
 
-#: menu.sh:2659
-msgid "Error checking new version.\\nError: TAG is %s"
-msgstr "새 버전을 확인하는 동안 오류가 발생했습니다.\\n오류: 태그는 %s입니다"
+#: menu.sh:2289
+msgid "The notify text is not currently supported, please ignore.\\n"
+msgstr "현재 알림 텍스트는 지원되지 않습니다, 무시하세요.\\n"
+
+#: menu.sh:2294
+msgid "Test"
+msgstr "테스트"
+
+#: menu.sh:2372
+msgid "Trying to recover an installed DSM system ..."
+msgstr "설치된 DSM 시스템을 복구하려고 합니다..."
+
+#: menu.sh:2387
+msgid "Mount DSM system partition(md0) failed!\\nPlease insert all disks before continuing."
+msgstr "DSM 시스템 파티션(md0) 마운트에 실패했습니다!\\n계속하기 전에 모든 디스크를 삽입하십시오."
+
+#: menu.sh:2398
+msgid "Checking for backup of user's configuration for bootloader ..."
+msgstr "부트 로더의 사용자 구성 백업을 검사하는 중..."
+
+#: menu.sh:2424
+msgid "Found a backup of the user's configuration, and restored it. Please rebuild and boot."
+msgstr "사용자가 구성한 백업을 찾아 복원했습니다. 다시 생성하여 시작하십시오."
+
+#: menu.sh:2433
+msgid "Checking for installed DSM system ..."
+msgstr "설치된 DSM 시스템을 확인하는 중..."
+
+#: menu.sh:2439
+msgid "The installed DSM system was not found, or the system is damaged and cannot be recovered. Please reselect model and build."
+msgstr "설치된 DSM 시스템을 찾을 수 없거나 시스템이 손상되어 복구할 수 없습니다.모델을 다시 선택하고 구성하십시오."
+
+#: menu.sh:2454
+msgid "Found an installed DSM system and restored it. Please rebuild and boot."
+msgstr "설치된 DSM 시스템을 찾아 복원합니다. 다시 생성하여 시작하십시오."
+
+#: menu.sh:2478
+msgid "Choose a disk to clone to"
+msgstr "복제할 디스크를 선택합니다"
+
+#: menu.sh:2485
+msgid "No disk selected!"
+msgstr "선택한 디스크가 없습니다!"
+
+#: menu.sh:2492
+msgid "Disk %s size is less than 2GB and cannot be cloned!"
+msgstr "디스크 %s 크기가 2GB 미만이어서 복제할 수 없습니다!"
+
+#: menu.sh:2496
+msgid "Warning:\\nDisk %s will be formatted and written to the bootloader. Please confirm that important data has been backed up. \\nDo you want to continue?"
+msgstr "경고:\\n디스크 %s 가 포맷되어 부트 로더에 기록됩니다. 중요한 데이터가 백업되었는지 확인하십시오. \\n계속하시겠습니까?"
+
+#: menu.sh:2542
+msgid "Can't mount %s."
+msgstr "%s 을(를) 마운트할 수 없습니다."
+
+#: menu.sh:2556
+msgid "Cloning failed due to insufficient remaining disk space on the selected hard drive."
+msgstr "선택한 하드 드라이브에 남은 디스크 공간이 부족하여 복제에 실패했습니다."
+
+#: menu.sh:2565
+msgid "Can't copy to %s."
+msgstr "%s 에 복사할 수 없습니다."
+
+#: menu.sh:2575
+msgid "Cloning ..."
+msgstr "복제 중 ..."
+
+#: menu.sh:2582
+msgid "Bootloader has been cloned to disk %s, please remove the current bootloader disk!\\nReboot?"
+msgstr "부트로더가 %s 디스크에 복제되었습니다. 현재 부트로더 디스크를 제거하십시오!\\n재부팅하시겠습니까?"
+
+#: menu.sh:2594
+msgid "Download"
+msgstr "다운로드"
+
+#: menu.sh:2594
+msgid "Cancel"
+msgstr "취소"
+
+#: menu.sh:2603
+msgid "Please via %s to download the system.txt."
+msgstr "%s 를 통해 시스템.txt를 다운로드하십시오."
+
+#: menu.sh:2634
+msgid "Find the system logs!\\n"
+msgstr "system 로그를 찾았습니다!\\n"
+
+#: menu.sh:2634
+msgid "Not Find system logs!\\n"
+msgstr "system 로그를 찾지 못했습니다!\\n"
+
+#: menu.sh:2643
+msgid "Find the pstore logs!\\n"
+msgstr "pstore 로그를 찾았습니다!\\n"
+
+#: menu.sh:2643
+msgid "Not Find pstore logs!\\n"
+msgstr "pstore 로그를 찾지 못했습니다!\\n"
+
+#: menu.sh:2652
+msgid "Find the addons logs!\\n"
+msgstr "addons 로그를 찾았습니다!\\n"
+
+#: menu.sh:2654
+msgid "Not Find addons logs!\\n"
+msgstr "addons 로그를 찾지 못했습니다!\\n"
+
+#: menu.sh:2656
+msgid " 1. Add dbgutils in addons and rebuild.\\n"
+msgstr " 1. 애드온에 dbgutils를 추가하고 다시 빌드하세요.\\n"
+
+#: menu.sh:2657
+msgid " 2. Wait 10 minutes after booting.\\n"
+msgstr " 2. 부팅 후 10분간 기다립니다.\\n"
 
 #: menu.sh:2672
-msgid "No new version."
-msgstr "새 버전이 없습니다."
+msgid "Please via %s to download the logs,\\nAnd go to github to create an issue and upload the logs.\\n"
+msgstr "%s 를 통해 로그를 다운로드하고, \\ngithub로 이동하여 이슈를 생성하고 로그를 업로드하세요.\\n"
 
-#: menu.sh:2676
-msgid "Actual version is %s.\\nForce update?"
-msgstr "실제 버전은 %s.\\n강제로 업데이트하시겠습니까?"
+#: menu.sh:2675
+msgid "Please go to github to create an issue and upload the logs.\\n"
+msgstr "Github로 이동하여 이슈를 생성하고 로그를 업로드하세요.\\n"
 
-#: menu.sh:2689
-msgid "Do you want to update?"
-msgstr "업데이트하시겠습니까?"
+#: menu.sh:2686
+msgid "This option only installs opkg package management, allowing you to install more tools for use and debugging. Do you want to continue?"
+msgstr "이 옵션은 opkg 패키지 관리만 설치하므로 사용 및 디버깅을 위한 더 많은 도구를 설치할 수 있습니다. 계속하시겠습니까?"
 
-#: menu.sh:2717
-msgid "Downloading ..."
-msgstr "다운로드 중..."
+#: menu.sh:2700
+msgid "opkg installing ..."
+msgstr "opkg 설치 중 ..."
 
-#: menu.sh:2720
-msgid "Error downloading new version.\\nError: %d:%d\\n(Please via https://curl.se/libcurl/c/libcurl-errors.html check error description.)"
-msgstr "새 버전을 다운로드하는 동안 오류가 발생했습니다.\\n오류: %d:%d\\n(https://curl.se/libcurl/c/libcurl-errors.html을 통해 오류 설명을 확인하세요.)"
+#: menu.sh:2701
+msgid "opkg install failed."
+msgstr "opkg 설치에 실패했습니다."
 
-#: menu.sh:2738 menu.sh:2863 menu.sh:3126 menu.sh:3155
-msgid "RR"
-msgstr "RR"
+#: menu.sh:2701
+msgid "opkg install complete."
+msgstr "opkg 설치가 완료되었습니다."
 
-#: menu.sh:2739 menu.sh:2877 menu.sh:2941 menu.sh:3008 menu.sh:3064
-msgid "Extracting update file ..."
-msgstr "업데이트 파일 추출 중 ..."
+#: menu.sh:2711
+msgid "Warning:\\nDo not terminate midway, otherwise it may cause damage to the RR. Do you want to continue?"
+msgstr "경고:\\n중간에 종료하지 마십시오. 그렇지 않으면 RR 부팅이 손상이 발생할 수 있습니다. 계속하시겠습니까?"
 
-#: menu.sh:2750 menu.sh:2795 menu.sh:2888 menu.sh:2952 menu.sh:3019 menu.sh:3075
-msgid "Error extracting update file."
-msgstr "업데이트 파일 추출 중 오류 발생."
+#: menu.sh:2715
+msgid "Saving ...\\n(It usually takes 5-10 minutes, please be patient and wait.)"
+msgstr "저장 중...\\n(보통 5~10분 정도 소요되니 조금만 기다려 주세요.)"
 
-#: menu.sh:2762
-msgid "Checksum do not match!"
-msgstr "체크섬이 일치하지 않습니다!"
+#: menu.sh:2734
+msgid "initrd-rr file format error!"
+msgstr "initrd-rr 파일 형식 오류!"
 
-#: menu.sh:2776
-msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
-msgstr "현재 버전은 최신 update.zip으로 업그레이드를 지원하지 않습니다. 부트로더 디스크를 다시 제작하세요!"
+#: menu.sh:2755
+msgid "Save is complete."
+msgstr "저장이 완료되었습니다."
 
-#: menu.sh:2815 menu.sh:2910 menu.sh:2966 menu.sh:3033 menu.sh:3089
-msgid "Failed to install due to insufficient remaning disk space on local hard drive, consider reallocate your disk %s with at least %sM."
-msgstr "로컬 하드 드라이브에 남은 디스크 공간이 부족하여 설치하지 못했습니다. 디스크 %s을(를) 최소 %sM로 재할당하는 것이 좋습니다."
+#: menu.sh:2768
+msgid "Set to %s: (Delete if empty)"
+msgstr "%s 로 설정: (비어 있으면 삭제)"
 
-#: menu.sh:2825
-msgid "Installing new files ..."
-msgstr "새 파일 설치 중 ..."
+#: menu.sh:2809 menu.sh:2867 menu.sh:2952 menu.sh:3053
+msgid "Setting ..."
+msgstr "설정 중..."
 
-#: menu.sh:2863 menu.sh:2925 menu.sh:2992 menu.sh:3048 menu.sh:3104
-msgid "%s updated with success!"
-msgstr "s가 성공적으로 업데이트되었습니다!"
+#: menu.sh:2829
+msgid "Scanning ..."
+msgstr "검색 중..."
 
-#: menu.sh:2863
-msgid "Reboot?"
-msgstr "재부팅?"
+#: menu.sh:2831
+msgid "Scanned SSIDs:\\n"
+msgstr "검색된 SSIDs:\\n"
 
-#: menu.sh:3007 menu.sh:3048 menu.sh:3129 menu.sh:3186 menu.sh:3191
-msgid "LKMs"
-msgstr "LKMs"
+#: menu.sh:2892
+msgid "Please enter a proxy server url.(e.g., %s)"
+msgstr "프록시 서버 URL을 입력하세요(예: %s)"
 
-#: menu.sh:3063 menu.sh:3104 menu.sh:3130 menu.sh:3198 menu.sh:3203
-msgid "CKs"
-msgstr "CKs"
+#: menu.sh:2903
+msgid "Invalid proxy server url, continue?"
+msgstr "잘못된 프록시 서버 URL입니다. 계속하시겠습니까?"
 
-#: menu.sh:3125 menu.sh:3148
-msgid "All"
-msgstr "전부의"
+#: menu.sh:2948
+msgid "New password: (Empty for default value 'rr')"
+msgstr "새 비밀번호: (빈 값으로 기본값 'rr' 설정)"
 
-#: menu.sh:3131
-msgid "Local upload"
-msgstr "로컬 업로드"
+#: menu.sh:3007
+msgid "password for root restored."
+msgstr "root 비밀번호가 복원되었습니다."
 
-#: menu.sh:3132
-msgid "Pre Release:"
-msgstr "사전 릴리즈:"
+#: menu.sh:3007
+msgid "password for root changed."
+msgstr "root 비밀번호가 변경되었습니다."
 
-#: menu.sh:3137 menu.sh:3211
-msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download."
-msgstr "update.zip, addons*.zip, modules*.zip, rp-lkms*.zip, rr-cks*.zip을 /tmp/에 수동으로 업로드하면 다운로드가 건너뛰게 됩니다."
+#: menu.sh:3016
+msgid "Please fill in a number between 0-65535: (Empty for default value.)"
+msgstr "0-65535 사이의 숫자를 입력하세요: (빈 값으로 기본값 설정)"
 
-#: menu.sh:3162 menu.sh:3174 menu.sh:3186 menu.sh:3198
-msgid "No longer supports update %s separately. Please choose to update All/RR"
-msgstr "%s 단독 업데이트는 더 이상 지원되지 않습니다.모든 /RR 업데이트 선택"
+#: menu.sh:3049
+msgid "Invalid %s port number, retry?"
+msgstr "%s 포트 번호가 잘못되었습니다. 다시 시도하시겠습니까?"
 
-#: menu.sh:3217
-msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
-msgstr "첨부 파일 이름은 Github의 첨부 파일 이름과 일치하도록 유지하세요.\\n"
+#: menu.sh:3101
+msgid "Ports for TTYD/DUFS/HTTP restored."
+msgstr "TTYD/DUFS/HTTP 포트가 복원되었습니다."
 
-#: menu.sh:3218
-msgid "Upload update*.zip will update RR.\\n"
-msgstr "update*.zip을 업로드하면 RR이 업데이트됩니다.\\n"
+#: menu.sh:3101
+msgid "Ports for TTYD/DUFS/HTTP changed."
+msgstr "TTYD/DUFS/HTTP 포트가 변경되었습니다."
 
-#: menu.sh:3219
-msgid "Upload addons*.zip will update Addons.\\n"
-msgstr "addons*.zip을 업로드하면 Addons 기능이 업데이트됩니다.\\n"
+#: menu.sh:3134
+msgid "DSM rd compression:"
+msgstr "DSM rd 압축:"
 
-#: menu.sh:3220
-msgid "Upload modules*.zip will update Modules.\\n"
-msgstr "modules*.zip을 업로드하면 Modules이 업데이트됩니다.\\n"
+#: menu.sh:3135
+msgid "Switch LKM version:"
+msgstr "LKM 버전을 전환:"
 
-#: menu.sh:3221
-msgid "Upload rp-lkms*.zip will update LKMs.\\n"
-msgstr "rp-lkms*.zip을 업로드하면 LKMs이 업데이트됩니다.\\n"
+#: menu.sh:3136
+msgid "HDD sort(hotplug):"
+msgstr "HDD 정렬(Hot Plug):"
 
-#: menu.sh:3222
-msgid "Upload rr-cks*.zip will update CKs.\\n"
-msgstr "rr-cks*.zip을 업로드하면 CKs이 업데이트됩니다.\\n"
+#: menu.sh:3138
+msgid "Show/modify the current pat data"
+msgstr "현재 pat 다운로드 링크 표시/수정"
 
-#: menu.sh:3294
-msgid "This person is very lazy and hasn't written anything."
-msgstr "이 사람은 매우 게으르고 아무것도 쓰지 않았습니다."
+#: menu.sh:3139
+msgid "Switch SATADOM mode:"
+msgstr "SATADOM 모드 전환:"
 
-#: menu.sh:3314
-msgid "Choose a model"
-msgstr "모델 선택"
+#: menu.sh:3143
+msgid "USB disk as internal disk:"
+msgstr "USB 디스크를 내부 디스크로 사용:"
 
-#: menu.sh:3316
-msgid "Choose a version"
-msgstr "버전 선택"
+#: menu.sh:3146
+msgid "DSM automatic update:"
+msgstr "DSM 자동 업데이트:"
 
-#: menu.sh:3318
-msgid "Parse pat"
-msgstr "Parse pat"
+#: menu.sh:3147
+msgid "Timeout of boot wait:"
+msgstr "부팅 대기 시간(초):"
 
-#: menu.sh:3325
-msgid "Kernel:"
-msgstr "Kernel:"
+#: menu.sh:3149
+msgid "Timeout of get IP in boot:"
+msgstr "IP 가져오기 시간(초):"
 
-#: menu.sh:3327
-msgid "Addons menu"
-msgstr "애드온 설정"
+#: menu.sh:3150
+msgid "Kernel switching method:"
+msgstr "커널 전환 방법:"
 
-#: menu.sh:3328
-msgid "Modules menu"
-msgstr "모듈 설정"
+#: menu.sh:3155
+msgid "Reboot on kernel panic:"
+msgstr "커널패닉 시 재부팅(초):"
 
-#: menu.sh:3329
-msgid "Cmdline menu"
-msgstr "명령줄 설정"
+#: menu.sh:3157
+msgid "Use EMMC as the system disk:"
+msgstr "EMMC를 시스템 디스크로 사용:"
 
-#: menu.sh:3330
-msgid "Synoinfo menu"
-msgstr "synoinfo"
+#: menu.sh:3159
+msgid "Show disks information"
+msgstr "디스크 정보 표시"
 
-#: menu.sh:3332
-msgid "Advanced menu"
+#: menu.sh:3160
+msgid "Mounting DSM storage pool"
+msgstr "DSM 스토리지 풀 마운트"
+
+#: menu.sh:3161
+msgid "Format disk(s) # Without loader disk"
+msgstr "포맷 디스크 # 로더 디스크 없음"
+
+#: menu.sh:3162
+msgid "Download DSM config backup files"
+msgstr "DSM 구성 백업 파일 다운로드"
+
+#: menu.sh:3163
+msgid "Allow downgrade installation"
+msgstr "다운그레이드 설치 허용"
+
+#: menu.sh:3164
+msgid "Reset DSM system password"
+msgstr "DSM 시스템 비밀번호 재설정"
+
+#: menu.sh:3165
+msgid "Add a new user to DSM system"
+msgstr "DSM 시스템에 새 사용자 추가"
+
+#: menu.sh:3166
+msgid "Force enable Telnet&SSH of DSM system"
+msgstr "DSM 시스템의 Telnet&SSH를 강제로 활성화합니다"
+
+#: menu.sh:3167
+msgid "Remove the blocked IP database of DSM"
+msgstr "DSM의 차단된 IP 데이터베이스 제거"
+
+#: menu.sh:3168
+msgid "Disable all scheduled tasks of DSM"
+msgstr "DSM의 일정 작업 강제 비활성화"
+
+#: menu.sh:3169
+msgid "Initialize DSM network settings"
+msgstr "DSM 네트워크 설정 초기화"
+
+#: menu.sh:3174
+msgid "Advanced option"
 msgstr "고급 설정"
 
-#: menu.sh:3335
-msgid "Build the loader"
-msgstr "로더 빌드"
+#: menu.sh:3199
+msgid "pat: (editable)"
+msgstr "pat: (편집가능)"
 
-#: menu.sh:3339
-msgid "Boot the loader"
-msgstr "로더 부팅"
+#: menu.sh:3221
+msgid "Choose a mode(Only supported for kernel version 4)"
+msgstr "모드 선택(커널 버전 4만 지원)"
 
-#: menu.sh:3342
+#: menu.sh:3235
+msgid "Custom DTS is not supported for current model."
+msgstr "사용자 정의 DTS는 현재 모델에서 지원되지 않습니다."
+
+#: menu.sh:3242
+msgid "USB disk as internal disk is not supported for current model."
+msgstr "USB 디스크를 내부 디스크로 사용할 수 없습니다."
+
+#: menu.sh:3263 menu.sh:3275 menu.sh:3309
+msgid "Choose a time(seconds)"
+msgstr "시간(초) 선택"
+
+#: menu.sh:3399
 msgid "Choose a keymap"
 msgstr "키맵 선택"
 
-#: menu.sh:3344
-msgid "Clean disk cache"
-msgstr "디스크 캐시 지우기"
+#: menu.sh:3400
+msgid "Show QR logo:"
+msgstr "QR 로고 표시:"
 
-#: menu.sh:3346
-msgid "Update menu"
-msgstr "업데이트"
+#: menu.sh:3401
+msgid "Bootloader notifications (Webhook)"
+msgstr "부트로더 알림 (Webhook)"
 
-#: menu.sh:3347
-msgid "Notepad"
-msgstr "메모장"
+#: menu.sh:3402
+msgid "Custom patch script # Developer"
+msgstr "사용자 정의 패치 스크립트 # 개발"
 
-#: menu.sh:3369
-msgid "Change ..."
-msgstr "변화 ..."
+#: menu.sh:3403
+msgid "Edit user config file manually"
+msgstr "사용자 구성 config 편집"
 
-#: menu.sh:3437
-msgid "Choose a action"
-msgstr "작업 선택"
+#: menu.sh:3404
+msgid "Edit grub.cfg file manually"
+msgstr "grub.cfg 파일을 수동으로 편집하기"
 
-#: menu.sh:3438
-msgid "Poweroff"
-msgstr "전원 끄기"
+#: menu.sh:3405
+msgid "Try to recovery a installed DSM system"
+msgstr "설치된 DSM 시스템 복구 시도"
 
-#: menu.sh:3439
-msgid "Reboot"
-msgstr "재부팅"
+#: menu.sh:3406
+msgid "Clone bootloader disk to another disk"
+msgstr "부트로더 디스크를 다른 디스크에 복제"
 
-#: menu.sh:3440
+#: menu.sh:3407
+msgid "System Environment Report"
+msgstr "시스템 환경 보고서"
+
+#: menu.sh:3408
+msgid "Report bugs to the author"
+msgstr "개발자에게 버그 신고하기"
+
+#: menu.sh:3409
+msgid "Install development tools"
+msgstr "개발자 도구 설치"
+
+#: menu.sh:3410
+msgid "Save modifications of '/opt/rr'"
+msgstr "'/opt/rr'의 수정 사항 저장"
+
+#: menu.sh:3411
+msgid "Set static IP"
+msgstr "고정 IP 설정"
+
+#: menu.sh:3412
+msgid "Set wireless account"
+msgstr "무선 계정 설정"
+
+#: menu.sh:3413
+msgid "Set global proxy"
+msgstr "글로벌 프록시 설정"
+
+#: menu.sh:3414
+msgid "Set github proxy"
+msgstr "Github 프록시 설정"
+
+#: menu.sh:3416
+msgid "Update microcode:"
+msgstr "마이크로코드 업데이트:"
+
+#: menu.sh:3417
+msgid "Change root password # Only RR"
+msgstr "root 비밀번호 변경 # RR만"
+
+#: menu.sh:3418
+msgid "Change ports of TTYD/DUFS/HTTP"
+msgstr "TTYD/DUFS/HTTP 포트 변경"
+
+#: menu.sh:3419
+msgid "Vigorously miracle"
+msgstr "Vigorously miracle"
+
+#: menu.sh:3424
+msgid "Settings option"
+msgstr "환경 설정"
+
+#: menu.sh:3451
+msgid "This option provides information about custom patch scripts for the ramdisk.\\n"
+msgstr "이 옵션은 램 디스크에 대한 사용자 지정 패치 스크립트에 대한 정보를 제공합니다.\\n"
+
+#: menu.sh:3453
+msgid "These scripts are executed before the ramdisk is packaged.\\n"
+msgstr "이 스크립트는 램 디스크 패키징 전에 실행됩니다.\\n"
+
+#: menu.sh:3454
+msgid "You can place your custom scripts in the following location:\\n"
+msgstr "사용자 지정 스크립트를 다음 위치에 배치할 수 있습니다:\\n"
+
+#: menu.sh:3455
+msgid "/mnt/p3/scripts/*.sh\\n"
+msgstr "/mnt/p3/scripts/*.sh\\n"
+
+#: menu.sh:3558 menu.sh:3622 menu.sh:3740 menu.sh:3789 menu.sh:3833 menu.sh:3873
+msgid "Update %s"
+msgstr "업데이트 %s"
+
+#: menu.sh:3559
+msgid "Checking last version ..."
+msgstr "새 버전 확인 중..."
+
+#: menu.sh:3570
+msgid "Error checking new version."
+msgstr "새 버전 확인 중 오류가 발생했습니다."
+
+#: menu.sh:3576
+msgid "No new version.\\n"
+msgstr "새 버전이 없습니다.\\n"
+
+#: menu.sh:3577
+msgid "Actual version is %s.\\nForce update?"
+msgstr "실제 버전은 %s.\\n강제로 업데이트하시겠습니까?"
+
+#: menu.sh:3583
+msgid "Latest: %s\\n"
+msgstr "최신: %s\\n"
+
+#: menu.sh:3587
+msgid "Do you want to update?"
+msgstr "업데이트하시겠습니까?"
+
+#: menu.sh:3600
+msgid "Error downloading new version."
+msgstr "새 버전 다운로드 오류."
+
+#: menu.sh:3608
+msgid "Downloading ..."
+msgstr "다운로드 중..."
+
+#: menu.sh:3622 menu.sh:3727 menu.sh:3925 menu.sh:3956
+msgid "RR"
+msgstr "RR"
+
+#: menu.sh:3623 menu.sh:3741 menu.sh:3790 menu.sh:3834 menu.sh:3874
+msgid "Extracting update file ..."
+msgstr "업데이트 파일 추출 중 ..."
+
+#: menu.sh:3631 menu.sh:3670 menu.sh:3749 menu.sh:3798 menu.sh:3842 menu.sh:3882
+msgid "Error extracting update file."
+msgstr "업데이트 파일 추출 중 오류 발생."
+
+#: menu.sh:3641
+msgid "Checksum do not match!"
+msgstr "체크섬이 일치하지 않습니다!"
+
+#: menu.sh:3652
+msgid "The current version does not support upgrading to the latest update.zip. Please remake the bootloader disk!"
+msgstr "현재 버전은 최신 update.zip으로 업그레이드를 지원하지 않습니다. 부트로더 디스크를 다시 제작하세요!"
+
+#: menu.sh:3689 menu.sh:3768 menu.sh:3808 menu.sh:3852 menu.sh:3892
+msgid "Failed to install due to insufficient remaining disk space on local hard drive, consider reallocate your disk %s with at least %sM."
+msgstr "로컬 하드 드라이브에 남은 디스크 공간이 부족하여 설치하지 못했습니다. 디스크 %s을(를) 최소 %sM로 재할당하는 것이 좋습니다."
+
+#: menu.sh:3696
+msgid "Installing new files ..."
+msgstr "새 파일 설치 중 ..."
+
+#: menu.sh:3727 menu.sh:3779 menu.sh:3823 menu.sh:3863 menu.sh:3908
+msgid "%s updated with success!\\n"
+msgstr "s가 성공적으로 업데이트되었습니다!\\n"
+
+#: menu.sh:3727
+msgid "Reboot?"
+msgstr "재부팅?"
+
+#: menu.sh:3731 menu.sh:4246 menu.sh:4274
 msgid "Reboot to RR"
 msgstr "RR로 재부팅"
 
-#: menu.sh:3441
+#: menu.sh:3833 menu.sh:3863 menu.sh:3928 menu.sh:3990 menu.sh:3998
+msgid "LKMs"
+msgstr "LKMs"
+
+#: menu.sh:3873 menu.sh:3908 menu.sh:3929 menu.sh:4004 menu.sh:4012
+msgid "CKs"
+msgstr "CKs"
+
+#: menu.sh:3924 menu.sh:3947
+msgid "All"
+msgstr "전부의"
+
+#: menu.sh:3930
+msgid "Local upload"
+msgstr "로컬 업로드"
+
+#: menu.sh:3931
+msgid "Pre Release:"
+msgstr "사전 릴리즈:"
+
+#: menu.sh:3934 menu.sh:4019
+msgid "Manually uploading update*.zip,addons*.zip,modules*.zip,rp-lkms*.zip,rr-cks*.zip to /tmp/ will skip the download.\\n"
+msgstr "update.zip, addons*.zip, modules*.zip, rp-lkms*.zip, rr-cks*.zip을 /tmp/에 수동으로 업로드하면 다운로드가 건너뛰게 됩니다.\\n"
+
+#: menu.sh:3962 menu.sh:3976 menu.sh:3990 menu.sh:4004
+msgid "No longer supports update %s separately. Please choose to update All/RR"
+msgstr "%s 단독 업데이트는 더 이상 지원되지 않습니다.모든 /RR 업데이트 선택"
+
+#: menu.sh:4025
+msgid "Please keep the attachment name consistent with the attachment name on Github.\\n"
+msgstr "첨부 파일 이름은 Github의 첨부 파일 이름과 일치하도록 유지하세요.\\n"
+
+#: menu.sh:4026
+msgid "Upload update*.zip will update RR.\\n"
+msgstr "update*.zip을 업로드하면 RR이 업데이트됩니다.\\n"
+
+#: menu.sh:4027
+msgid "Upload addons*.zip will update Addons.\\n"
+msgstr "addons*.zip을 업로드하면 Addons 기능이 업데이트됩니다.\\n"
+
+#: menu.sh:4028
+msgid "Upload modules*.zip will update Modules.\\n"
+msgstr "modules*.zip을 업로드하면 Modules이 업데이트됩니다.\\n"
+
+#: menu.sh:4029
+msgid "Upload rp-lkms*.zip will update LKMs.\\n"
+msgstr "rp-lkms*.zip을 업로드하면 LKMs이 업데이트됩니다.\\n"
+
+#: menu.sh:4030
+msgid "Upload rr-cks*.zip will update CKs.\\n"
+msgstr "rr-cks*.zip을 업로드하면 CKs이 업데이트됩니다.\\n"
+
+#: menu.sh:4094
+msgid "This person is very lazy and hasn't written anything."
+msgstr "이 사람은 매우 게으르고 아무것도 쓰지 않았습니다."
+
+#: menu.sh:4111
+msgid "An installed DSM system is detected on the hard disk. Do you want to try to restore it first?"
+msgstr "하드 디스크에 DSM 시스템이 설치되었습니다. 먼저 복원하시겠습니까?"
+
+#: menu.sh:4122
+msgid "Choose a model"
+msgstr "모델 선택"
+
+#: menu.sh:4124
+msgid "Choose a version"
+msgstr "버전 선택"
+
+#: menu.sh:4126
+msgid "Parse pat"
+msgstr "Parse pat"
+
+#: menu.sh:4130
+msgid "Kernel:"
+msgstr "Kernel:"
+
+#: menu.sh:4132
+msgid "Addons menu"
+msgstr "애드온 설정"
+
+#: menu.sh:4133
+msgid "Modules menu"
+msgstr "모듈 설정"
+
+#: menu.sh:4134
+msgid "Cmdline menu"
+msgstr "명령줄 설정"
+
+#: menu.sh:4135
+msgid "Synoinfo menu"
+msgstr "synoinfo"
+
+#: menu.sh:4137
+msgid "Advanced menu"
+msgstr "고급 설정"
+
+#: menu.sh:4139
+msgid "Build the loader"
+msgstr "로더 빌드"
+
+#: menu.sh:4142
+msgid "Direct boot:"
+msgstr "직접 부팅:"
+
+#: menu.sh:4143
+msgid "Boot the loader"
+msgstr "로더 부팅"
+
+#: menu.sh:4145
+msgid "Settings menu"
+msgstr "Settings menu"
+
+#: menu.sh:4148
+msgid "Clean disk cache"
+msgstr "디스크 캐시 지우기"
+
+#: menu.sh:4150
+msgid "Update menu"
+msgstr "업데이트"
+
+#: menu.sh:4151
+msgid "Notepad"
+msgstr "메모장"
+
+#: menu.sh:4173
+msgid "Change ..."
+msgstr "변화 ..."
+
+#: menu.sh:4244 menu.sh:4262
+msgid "Power off"
+msgstr "전원 끄기"
+
+#: menu.sh:4245 menu.sh:4268
+msgid "Reboot"
+msgstr "재부팅"
+
+#: menu.sh:4247 menu.sh:4280
 msgid "Reboot to Recovery"
 msgstr "Recovery로 재부팅"
 
-#: menu.sh:3442
+#: menu.sh:4248 menu.sh:4286
 msgid "Reboot to Junior"
 msgstr "Junior로 재부팅"
 
-#: menu.sh:3443
+#: menu.sh:4250 menu.sh:4292
+msgid "Reboot to UEFI"
+msgstr "UEFI로 재부팅"
+
+#: menu.sh:4252
 msgid "Back to shell"
 msgstr "Shell로 돌아가기"
 
-#: menu.sh:3480
-msgid "Call \\033[1;32mmenu.sh\\033[0m to return to menu"
-msgstr "\\033[1;32mmenu.sh\\033[0m 메뉴로 돌아가기"
+#: menu.sh:4256
+msgid "Choose a action"
+msgstr "작업 선택"

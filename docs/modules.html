@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-CN" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark"
+  data-a11y-animated-images="system">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="dns-prefetch" href="https://github.githubassets.com" />
+  <link rel="dns-prefetch" href="https://avatars.githubusercontent.com" />
+  <link rel="preconnect" href="https://github.githubassets.com" crossorigin />
+  <link rel="preconnect" href="https://avatars.githubusercontent.com" />
+
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/light-0eace2597ca3.css" />
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/dark-a167e256da9c.css" />
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/primer-711f412bb361.css" />
+  <link crossorigin="anonymous" media="all" rel="stylesheet"
+    href="https://github.githubassets.com/assets/global-78704364aaba.css" />
+
+  <title>RR Modules Lookup</title>
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/151816514?s=200&v=4" />
+
+  <style>
+    select,
+    .input-style {
+      width: 100%;
+    }
+
+    .result-box {
+      margin-top: 16px;
+    }
+
+    .result-box .Box-row p:last-child {
+      margin-bottom: 0;
+    }
+
+    .model-list {
+      word-break: break-word;
+      white-space: normal;
+      font-size: 13px;
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+      color: var(--fgColor-muted, #59636e);
+      font-weight: 500;
+    }
+
+    .hint-list {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .hint-list li {
+      margin: 4px 0;
+    }
+
+    code {
+      padding: 2px 6px;
+      border: 1px solid var(--borderColor-muted, #d0d7de);
+      border-radius: 6px;
+      background: rgba(175, 184, 193, 0.12);
+      color: var(--fgColor-accent, #0969da);
+      font-size: 0.92em;
+      font-weight: 600;
+    }
+
+    #logo {
+      text-align: center;
+      margin: 20px auto !important;
+    }
+
+    #labels {
+      text-align: center;
+      margin: 20px auto !important;
+      height: auto !important;
+    }
+
+    #products {
+      text-align: center;
+      margin: 20px auto !important;
+      height: auto !important;
+    }
+  </style>
+</head>
+
+<body class="logged-in env-production page-responsive" style="word-wrap: break-word">
+  <div class="application-main left-0 text-left p-3 mx-auto container-xl px-3 px-md-4 px-lg-5 mt-4">
+    <pre id="logo" style="
+display:block;
+font-family:ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace !important;
+font-size:12px !important;
+line-height:12px !important;
+margin:15px 10px;
+color:red;
+">
+██████╗ ██████╗       ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗
+██╔══██╗██╔══██╗      ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝
+██████╔╝██████╔╝█████╗██╔████╔██║██║   ██║██║  ██║██║   ██║██║     █████╗  ███████╗
+██╔══██╗██╔══██╗╚════╝██║╚██╔╝██║██║   ██║██║  ██║██║   ██║██║     ██╔══╝  ╚════██║
+██║  ██║██║  ██║      ██║ ╚═╝ ██║╚██████╔╝██████╔╝╚██████╔╝███████╗███████╗███████║
+╚═╝  ╚═╝╚═╝  ╚═╝      ╚═╝     ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝╚══════╝
+                                                                                   
+    </pre>
+
+    <div class="shields" id="labels">
+      <a href="https://github.com/RROrg/rr">
+        <img alt="GitHub Release"
+          src="https://img.shields.io/github/v/release/rrorg/rr?include_prereleases&style=flat-square&label=current">
+      </a>
+      <a href="https://github.com/RROrg/rr/raw/main/docs/modules.xlsx">
+        <img alt="Modules Details" src="https://img.shields.io/badge/Modules-Details-2da44e?style=flat-square">
+      </a>
+    </div>
+
+    <div class="Box">
+      <div class="Box-header">
+        <h1 class="Box-title">VID / PID Driver Lookup for DSM Modules</h1>
+      </div>
+
+      <div class="Box-body">
+        <p class="color-fg-muted mb-3">
+          How to get <code>VID</code> and <code>PID</code> before searching.
+        </p>
+
+        <div class="flash flash-warn mb-3">
+          <ul class="hint-list">
+            <li>Windows: Device Manager → device → Properties → Details → Hardware Ids, for example
+              <code>VID_10EC&amp;PID_8139</code>
+            </li>
+            <li>Linux PCI: run <code>lspci -nn</code>, for example <code>[10ec:8139]</code></li>
+            <li>Linux USB: run <code>lsusb</code>, for example <code>ID 1c04:0015</code></li>
+          </ul>
+        </div>
+
+        <div class="form-group mt-1 mb-3" id="vid_item">
+          <div class="form-group-header">
+            <label class="color-fg-default text-mono f6" for="vidInput">VID:</label>
+          </div>
+          <div class="form-group-body">
+            <input class="form-control input-contrast input-style" type="text" id="vidInput"
+              placeholder="10ec or 0x10ec" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="form-group mt-1 mb-3" id="pid_item">
+          <div class="form-group-header">
+            <label class="color-fg-default text-mono f6" for="pidInput">PID:</label>
+          </div>
+          <div class="form-group-body">
+            <input class="form-control input-contrast input-style" type="text" id="pidInput"
+              placeholder="8139 or 0x8139" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <button id="searchButton" type="button" class="btn btn-primary">Search</button>
+          <button id="resetButton" type="button" class="btn">Reset</button>
+        </div>
+
+        <div id="status" class="flash flash-full mb-3" hidden></div>
+
+        <div id="summaryBox" class="Box result-box" hidden>
+          <div class="Box-header">
+            <h2 id="summaryTitle" class="Box-title">0 results</h2>
+          </div>
+          <div class="Box-body">
+            <p id="summaryText" class="mb-0 color-fg-muted">Waiting for query.</p>
+          </div>
+        </div>
+
+        <div id="emptyState" class="flash flash-info">
+          Enter VID and PID, then click <strong>Search</strong>.
+        </div>
+
+        <div id="results" class="result-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer width-full container-xl mt-3 text-center color-fg-muted">
+    <a aria-label="RROrg" title="GitHub" class="footer-octicon mr-2" href="https://github.com/RROrg">
+      <img class="avatar rounded-2 avatar-user" src="https://avatars.githubusercontent.com/u/151816514?s=88&amp;v=4"
+        width="40" height="40" alt="@RROrg" />
+    </a>
+    <a aria-label="wjz304" title="GitHub" class="footer-octicon mr-2" href="https://github.com/wjz304">
+      <img class="avatar rounded-2 avatar-user" src="https://avatars.githubusercontent.com/u/5615843?s=88&amp;v=4"
+        width="40" height="40" alt="@wjz304" />
+    </a>
+    <span> Copyright 2022 RROrg, Ing, Inc. </span>
+  </footer>
+
+  <script>
+    (() => {
+      const MODULES_URL = "https://raw.githubusercontent.com/RROrg/rr/main/docs/modules_detailed.json";
+      const MODELS_URL = "https://raw.githubusercontent.com/RROrg/rr/main/docs/models.json";
+      const DSM_VERSIONS = ["7.0", "7.1", "7.2", "7.3"];
+      const vidInput = document.getElementById("vidInput");
+      const pidInput = document.getElementById("pidInput");
+      const searchButton = document.getElementById("searchButton");
+      const resetButton = document.getElementById("resetButton");
+      const statusNode = document.getElementById("status");
+      const summaryBox = document.getElementById("summaryBox");
+      const summaryTitle = document.getElementById("summaryTitle");
+      const summaryText = document.getElementById("summaryText");
+      const emptyState = document.getElementById("emptyState");
+      const resultsNode = document.getElementById("results");
+
+      function setStatus(message, kind = "info") {
+        statusNode.hidden = !message;
+        statusNode.textContent = message;
+        statusNode.className = "flash flash-full mb-3";
+        if (!message) {
+          return;
+        }
+        if (kind === "error") {
+          statusNode.classList.add("flash-error");
+        } else if (kind === "success") {
+          statusNode.classList.add("flash-success");
+        } else if (kind === "warn") {
+          statusNode.classList.add("flash-warn");
+        } else {
+          statusNode.classList.add("flash-info");
+        }
+      }
+
+      function normalizeHex(value, width) {
+        const cleaned = value.trim().toLowerCase().replace(/^0x/, "").replace(/[^0-9a-f]/g, "");
+        if (!cleaned) {
+          throw new Error("VID and PID must be hexadecimal values.");
+        }
+        return cleaned.length > width ? cleaned.slice(-width) : cleaned.padStart(width, "0");
+      }
+
+      function wildcardToRegex(pattern) {
+        return new RegExp(`^${pattern.replace(/\*/g, "[0-9a-f]*")}$`);
+      }
+
+      function aliasMatches(alias, vendor4, product4, vendor8, product8) {
+        const normalized = alias.toLowerCase();
+        const pciMatch = normalized.match(/pci:v([0-9a-f*]{8})d([0-9a-f*]{8})/);
+        if (pciMatch) {
+          return wildcardToRegex(pciMatch[1]).test(vendor8) && wildcardToRegex(pciMatch[2]).test(product8);
+        }
+
+        const usbMatch = normalized.match(/usb:v([0-9a-f*]{4})p([0-9a-f*]{4})/);
+        if (usbMatch) {
+          return wildcardToRegex(usbMatch[1]).test(vendor4) && wildcardToRegex(usbMatch[2]).test(product4);
+        }
+
+        return false;
+      }
+
+      async function fetchJson(url, label) {
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`Failed to load ${label}: HTTP ${response.status}`);
+        }
+        return response.json();
+      }
+
+      function buildArchModelMap(models) {
+        const archModelMap = new Map();
+
+        for (const [platform, info] of Object.entries(models || {})) {
+          const productvers = info && typeof info === "object" ? info.productvers || {} : {};
+          const modelList = Array.isArray(info && info.models) ? info.models : [];
+
+          for (const [dsmVersion, productVersion] of Object.entries(productvers)) {
+            const archKey = `${platform}-${productVersion}`;
+            if (!archModelMap.has(archKey)) {
+              archModelMap.set(archKey, new Map());
+            }
+            if (!archModelMap.get(archKey).has(dsmVersion)) {
+              archModelMap.get(archKey).set(dsmVersion, new Set());
+            }
+
+            for (const model of modelList) {
+              archModelMap.get(archKey).get(dsmVersion).add(model);
+            }
+          }
+        }
+
+        return archModelMap;
+      }
+
+      function collectMatches(modules, models, product4, vendor4) {
+        const product8 = product4.padStart(8, "0");
+        const vendor8 = vendor4.padStart(8, "0");
+        const grouped = new Map();
+        const archModelMap = buildArchModelMap(models);
+
+        for (const [arch, drivers] of Object.entries(modules || {})) {
+          if (!drivers || typeof drivers !== "object") {
+            continue;
+          }
+
+          for (const [driver, info] of Object.entries(drivers)) {
+            if (!info || typeof info !== "object") {
+              continue;
+            }
+
+            const rawAliases = info.alias;
+            const aliases = Array.isArray(rawAliases)
+              ? rawAliases.filter((item) => typeof item === "string" && item)
+              : typeof rawAliases === "string" && rawAliases
+                ? [rawAliases]
+                : [];
+
+            if (!aliases.some((alias) => aliasMatches(alias, vendor4, product4, vendor8, product8))) {
+              continue;
+            }
+
+            const description = String(info.description || "").trim();
+            const key = `${driver}\u0000${description}`;
+            if (!grouped.has(key)) {
+              const versionModels = {};
+              for (const version of DSM_VERSIONS) {
+                versionModels[version] = new Set();
+              }
+              grouped.set(key, {
+                driver,
+                description,
+                versionModels
+              });
+            }
+
+            const versionMap = archModelMap.get(arch);
+            if (!versionMap) {
+              continue;
+            }
+
+            for (const version of DSM_VERSIONS) {
+              const modelSet = versionMap.get(version);
+              if (!modelSet) {
+                continue;
+              }
+              for (const model of modelSet) {
+                grouped.get(key).versionModels[version].add(model);
+              }
+            }
+          }
+        }
+
+        return Array.from(grouped.values())
+          .map((item) => ({
+            ...item,
+            versionModels: Object.fromEntries(
+              DSM_VERSIONS.map((version) => [version, [...item.versionModels[version]].sort()])
+            )
+          }))
+          .sort((a, b) => a.driver.localeCompare(b.driver) || a.description.localeCompare(b.description));
+      }
+
+      function renderEmpty(message) {
+        summaryBox.hidden = true;
+        resultsNode.innerHTML = "";
+        emptyState.hidden = false;
+        emptyState.textContent = message;
+      }
+
+      function renderResults(matches, product4, vendor4) {
+        resultsNode.innerHTML = "";
+
+        if (!matches.length) {
+          renderEmpty(`No supported drivers found: vid=${vendor4.toUpperCase()} pid=${product4.toUpperCase()}`);
+          return;
+        }
+
+        summaryBox.hidden = false;
+        summaryTitle.textContent = `${matches.length} result(s)`;
+        summaryText.textContent = `vid=${vendor4.toUpperCase()} / pid=${product4.toUpperCase()}`;
+        emptyState.hidden = true;
+
+        for (const match of matches) {
+          const versionRows = DSM_VERSIONS.map((version) => `
+            <div class="Box-row">
+              <p class="text-mono f6 color-fg-muted mb-1">${version} Models</p>
+              <p class="model-list">${match.versionModels[version].length ? match.versionModels[version].join(", ") : "N/A"}</p>
+            </div>
+          `).join("");
+
+          const box = document.createElement("div");
+          box.className = "Box mb-3";
+          box.innerHTML = `
+            <div class="Box-header">
+              <h3 class="Box-title">${match.driver}</h3>
+            </div>
+            <div class="Box-row">
+              <p class="text-mono f6 color-fg-muted mb-1">Description</p>
+              <p>${match.description || "N/A"}</p>
+            </div>
+            ${versionRows}
+          `;
+          resultsNode.appendChild(box);
+        }
+      }
+
+      async function runLookup() {
+        let vendor4;
+        let product4;
+
+        try {
+          vendor4 = normalizeHex(vidInput.value, 4);
+          product4 = normalizeHex(pidInput.value, 4);
+        } catch (error) {
+          renderEmpty("Please enter valid VID and PID values.");
+          setStatus(error.message, "error");
+          return;
+        }
+
+        searchButton.disabled = true;
+        setStatus("Loading modules and models data, then matching drivers...", "info");
+
+        try {
+          const [modules, models] = await Promise.all([
+            fetchJson(MODULES_URL, "modules_detailed.json"),
+            fetchJson(MODELS_URL, "models.json")
+          ]);
+          const matches = collectMatches(modules, models, product4, vendor4);
+          renderResults(matches, product4, vendor4);
+
+          const params = new URLSearchParams(window.location.search);
+          params.set("vid", vidInput.value.trim());
+          params.set("pid", pidInput.value.trim());
+          history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
+
+          setStatus(matches.length ? "Lookup completed." : "Lookup completed with no matching drivers.", "success");
+        } catch (error) {
+          renderEmpty("Unable to load remote modules data. Please try again later.");
+          setStatus(error.message || "Lookup failed.", "error");
+        } finally {
+          searchButton.disabled = false;
+        }
+      }
+
+      function resetLookup() {
+        vidInput.value = "";
+        pidInput.value = "";
+        summaryBox.hidden = true;
+        resultsNode.innerHTML = "";
+        emptyState.hidden = false;
+        emptyState.textContent = "Enter VID and PID, then click Search.";
+        setStatus("");
+        history.replaceState(null, "", window.location.pathname);
+        vidInput.focus();
+      }
+
+      searchButton.addEventListener("click", runLookup);
+      resetButton.addEventListener("click", resetLookup);
+
+      [vidInput, pidInput].forEach((input) => {
+        input.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            runLookup();
+          }
+        });
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      const vidParam = params.get("vid");
+      const pidParam = params.get("pid");
+      if (vidParam) {
+        vidInput.value = vidParam;
+      }
+      if (pidParam) {
+        pidInput.value = pidParam;
+      }
+      if (vidParam && pidParam) {
+        runLookup();
+      }
+    })();
+  </script>
+</body>
+
+</html>

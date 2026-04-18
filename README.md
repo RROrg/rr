@@ -2,33 +2,91 @@
 
 <h1>RR: <small>redpill’s preinstallation and recovery environment</small></h1>
 
-[![点击数](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/rrorg/rr&edge_flat=true)](https://github.com/rrorg/rr)
-[![翻译状态](https://hosted.weblate.org/widget/RROrg/svg-badge.svg)](https://hosted.weblate.org/engage/RROrg/")
-[![GitHub Release](https://img.shields.io/github/v/release/rrorg/rr?style=flat-square)](https://github.com/rrorg/rr/releases/latest)
-[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/rrorg/rr/total?style=flat-square)](https://github.com/rrorg/rr/releases)
-[![GitHub Issues or Pull Requests by label](https://img.shields.io/github/issues-closed-raw/rrorg/rr/custom?style=flat-square&label=custom)](https://rrorg.github.io/rr/)
+[![GitHub Release](https://img.shields.io/github/v/release/rrorg/rr?logo=github&style=flat-square)](https://github.com/rrorg/rr/releases/latest)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/rrorg/rr/total?logo=github&style=flat-square)](https://github.com/rrorg/rr/releases)
+[![GitHub Issues or Pull Requests by label](https://img.shields.io/github/issues-closed-raw/rrorg/rr/custom?logo=github&style=flat-square&label=custom)](https://rrorg.github.io/rr/)
 
 > The ultimate solution to self-centralized Synology DSM OS on any local machine with any x86/x64 CPU architecture via a single flash of bootload pre-installation process in addition within recovery environment.
 
 ### 1: Disclaimer
 
-硬盘有价，数据无价，任何对引导的修改都是有风险的，本人/组织不承担数据丢失的责任。本工具仅用作学习交流，严禁用于商业用途。
+* 硬盘有价，数据无价，任何对引导的修改都是有风险的，本人/组织不承担数据丢失的责任。本工具仅用作学习交流，严禁用于商业用途。
 ----
-Hardware/hard-drives are priced whilst data are priceless, any user-specific custom modification of the tested & prebuilt bootloader images could potentially cause irreversible data destruction towards your local machine. Us, as (RROrg) are not responsibly liable for damage nor personal loss of any types. The project with its affiliation is released for educational and learning purpose only, commercial application of the software is strictly prohibited.
+* Hardware/hard-drives are priced whilst data are priceless, any user-specific custom modification of the tested & prebuilt bootloader images could potentially cause irreversible data destruction towards your local machine. Us, as (RROrg) are not responsibly liable for damage nor personal loss of any types. The project with its affiliation is released for educational and learning purpose only, commercial application of the software is strictly prohibited.
 
 
 ### 2: Documentation & FAQ
 
 - [RRManager](https://github.com/T-REX-XP/RRManager)
-- [blog](https://rrorg.cn:521/)
-- [docs](https://rrorg.github.io/rr-docs/)
+- [rr-tools](https://github.com/RROrg/rr-tools)
+- [blog](https://rrorg.cn)
+- [docs](https://rrorg.github.io/rr-docs)
 - [📣](https://github.com/orgs/RROrg/discussions)
 
 ### 3: Components
 
-For the packag of has been initialized and build image, please go to [RR-CUSTOM](https://rrorg.github.io/rr/).
+- During the compilation process, you need to connect to the Internet to obtain model and version information and download the corresponding ROM.
+If you cannot connect to the Internet, please build a pre-compiled bootloader through [RR-CUSTOM](https://rrorg.github.io/rr/).
+  - Models: [models](https://github.com/RROrg/rr/raw/main/docs/models.xlsx)
+  - PATs: [pats](https://github.com/RROrg/rr/raw/main/docs/pats.xlsx)
+  - Addons: [addons](https://github.com/RROrg/rr/raw/main/docs/addons.xlsx)
+  - Modules: [modules](https://github.com/RROrg/rr/raw/main/docs/modules.xlsx)
+  - Driver Lookup: [driver lookup](https://rrorg.github.io/rr/modules.html)
 
-### 4: GPU: 
+- Proxmox VE One Click Install:
+  ```
+  curl -fsSL https://github.com/RROrg/rr/raw/refs/heads/main/scripts/pve.sh | bash -s -- --bltype usb
+
+  # Optional Parameters:
+  --onboot <0|1>           Enable VM on boot, default 1 (enable)
+  --efi <0|1>              Enable UEFI boot, default 1 (enable)
+  --bltype <sata|usb|nvme> Bootloader disk type, default sata
+  --9ppath <path>          Set to /path/to/9p to mount 9p share
+  --tag <tag>              Image tag, download latest release if not set
+  --img <path>             Local image path, use local image if set
+  ```
+
+- Docker Compose:
+  ```yml
+  # 请从最新版本中下载 rr.img 文件。
+  # 并将 <path_to_rr.img> 替换为你的 rr.img 文件的实际路径.
+  # Please download the rr.img file from the latest release.
+  # And replace <path_to_rr.img> with the actual path to your rr.img file.
+
+  version: "3.9"
+  services:
+    rr:
+      image: qemux/qemu:latest
+      container_name: rr
+      environment:
+        BOOT: ""
+        RAM_SIZE: "4G"  # >= 4G recommended for DSM
+        CPU_CORES: "2"
+        DISK_FMT: "qcow2"
+        DISK_TYPE: "sata"
+        DISK_SIZE: "32G"  # data disk size
+        ARGUMENTS: "-device nec-usb-xhci,id=usb0,multifunction=on -drive file=/rr.img,media=disk,format=raw,if=none,id=udisk1 -device usb-storage,bus=usb0.0,port=1,drive=udisk1,bootindex=999,removable=on"
+      devices:
+        - /dev/kvm
+        - /dev/net/tun
+      cap_add:
+        - NET_ADMIN
+      ports:
+        - 5000:5000  # For DSM management
+        - 5001:5001  # For DSM management
+        - 7681:7681  # For RR management
+        - 7304:7304  # For RR management
+        - 7080:7080  # For RR management
+        - 8006:8006  # For QEMU management
+      volumes:
+        - ./rr.img:/rr.img  # <path_to_rr.img>:/rr.img
+        - ./data:/storage
+      restart: always
+      stop_grace_period: 2m
+
+  ```
+
+### 4: GPU:
 
 - vGPU:
   - [蔚然小站](https://blog.kkk.rs/) 
@@ -39,12 +97,7 @@ For the packag of has been initialized and build image, please go to [RR-CUSTOM]
   - [intel-gpu-i915-backports](https://github.com/MoetaYuko/intel-gpu-i915-backports)
 
 ## 5: Contributing
-- [Weblate mode](https://hosted.weblate.org/engage/RROrg/)
-<a href="https://hosted.weblate.org/engage/RROrg/">
-<img src="https://hosted.weblate.org/widget/RROrg/multi-auto.svg" alt="翻译状态" />
-</a>
 
-- Manual mode: 
   * The following is a roughly truncated guide to involve in project localization for internationalization.
 
   ```shell
@@ -57,18 +110,23 @@ For the packag of has been initialized and build image, please go to [RR-CUSTOM]
   # If you have to replace certain language string of the project, please suggest and modify translation changes within each correlated PO file
   mkdir -p lang/zh_CN/LC_MESSAGES
   msginit -i lang/rr.pot -l zh_CN.UTF-8 -o lang/zh_CN/LC_MESSAGES/rr.po
+  # Update translation files
+  for I in $(find lang -path *rr.po); do msgmerge --width=256 -U ${I} lang/rr.pot; done
   # This formatting process will be automatically conducted during packaging.
-  msgfmt lang/zh_CN/LC_MESSAGES/rr.po -o lang/zh_CN/LC_MESSAGES/rr.mo
+  for I in $(find lang -path *rr.po); do msgfmt ${I} -o ${I/.po/.mo}; done
   ```
 
 - PRs of new language translations towards the project is welcomed with appreciation.
 
 - Community maintainers of each supporting list of languages are accredited below.
 
+  - `de_DE`: `@Tim Krämer`: [Tim Krämer](https://tim-kraemer.de)
   - `en_US`: `@rrorg`
   - `ja_JP`: `@andatoshiki` & `@toshikidev`
   - `ko_KR`: `@EXP` : jeong1986
   - `ru_RU`: `@Alex`: TG
+  - `tr_TR`: `@miraç bahadır öztürk`: miracozturk
+  - `vi_VN`: `@Ngọc Anh Trần`: mr.ngocanhtran
   - `zh_CN`: `@rrorg`
   - `zh_HK`: `@rrorg`
   - `zh_TW`: `@March Fun`: [豪客幫](<https://cyber.suma.tw/>)
@@ -103,6 +161,8 @@ For the packag of has been initialized and build image, please go to [RR-CUSTOM]
 - `QQ群2: 73119176` [`点击加入QQ群`](https://qm.qq.com/q/YV1B0NFvWK)
 - `QQ群3: 51929774` [`点击加入QQ群`](https://qm.qq.com/q/aVjM3Wb6KY)
 - `QQ群4: 49756829` [`点击加入QQ群`](https://qm.qq.com/q/9PHzmZDkqI)
+- `QQ群5: 30267817` [`点击加入QQ群`](https://qm.qq.com/q/6RgVDfOSXe)
+- `QQ群6: 68640297` [`点击加入QQ群`](https://qm.qq.com/q/PU71eSXAic)
 - `QQ Channel: RROrg` [`点击加入QQ频道`](https://pd.qq.com/s/aklqb0uij)
 - `Telegram Channel: RROrg` [`Click to join`](https://t.me/RR_Org)
 
