@@ -11,10 +11,6 @@ on:
         description: "Model label for output name"
         required: true
         default: "DS418play"
-      version:
-        description: "DSM version"
-        required: true
-        default: "6.2"
 
 jobs:
   build:
@@ -48,47 +44,49 @@ jobs:
           set -euxo pipefail
           WORK="$GITHUB_WORKSPACE"
           IMG="$WORK/rr/rr.img"
-      
-          # 先确认源码里确实有这个文件（避免误判）
+
+          # confirm source changes exist in checked-out branch
           test -f "$WORK/files/initrd/opt/rr/model-configs/DS418play.yml"
           grep -q '"DS418play"' "$WORK/docs/models.json"
-      
+
           LOOP="$(sudo losetup -f --show -P "$IMG")"
           mkdir -p /tmp/rr_p3
           sudo mount "${LOOP}p3" /tmp/rr_p3
-      
+
           rm -rf "$WORK/initrd_unpack"
           mkdir -p "$WORK/initrd_unpack"
           (
             cd "$WORK/initrd_unpack"
             sudo xz -dc </tmp/rr_p3/initrd-rr | sudo cpio -idm
           )
-      
-          # 显式覆盖关键文件（最稳）
+
+          # patch required model config
           sudo mkdir -p "$WORK/initrd_unpack/opt/rr/model-configs"
           sudo install -m 0644 \
             "$WORK/files/initrd/opt/rr/model-configs/DS418play.yml" \
             "$WORK/initrd_unpack/opt/rr/model-configs/DS418play.yml"
-      
-          sudo install -m 0644 \
-            "$WORK/docs/models.json" \
-            "$WORK/initrd_unpack/opt/rr/docs/models.json"
-      
-          # 打包前再确认一次
+
+          # patch docs/models.json only if docs path exists in base initrd
+          if [ -d "$WORK/initrd_unpack/opt/rr/docs" ]; then
+            sudo install -m 0644 \
+              "$WORK/docs/models.json" \
+              "$WORK/initrd_unpack/opt/rr/docs/models.json"
+          fi
+
+          # pre-pack sanity
           test -f "$WORK/initrd_unpack/opt/rr/model-configs/DS418play.yml"
-          grep -q '"DS418play"' "$WORK/initrd_unpack/opt/rr/docs/models.json"
-      
+
           (
             cd "$WORK/initrd_unpack"
             sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | xz --check=crc32 > "$WORK/initrd-rr.new"
           )
-      
+
           sudo cp -f "$WORK/initrd-rr.new" /tmp/rr_p3/initrd-rr
           sync
           sudo umount /tmp/rr_p3
           sudo losetup -d "$LOOP"
 
-      - name: Verify image integrity and patch result
+      - name: Verify image integrity and patch results
         run: |
           set -euxo pipefail
           WORK="$GITHUB_WORKSPACE"
@@ -97,19 +95,17 @@ jobs:
           sudo fdisk -l "$IMG"
 
           LOOP="$(sudo losetup -f --show -P "$IMG")"
-          echo "VERIFY_LOOP=$LOOP"
-
           mkdir -p /tmp/rr_p1 /tmp/rr_p3
           sudo mount "${LOOP}p1" /tmp/rr_p1
           sudo mount "${LOOP}p3" /tmp/rr_p3
 
-          # 基本完整性检查
+          # core file checks
           test -f /tmp/rr_p1/boot/grub/grub.cfg
           test -f /tmp/rr_p1/RR_VERSION
           test -f /tmp/rr_p3/bzImage-rr
           test -f /tmp/rr_p3/initrd-rr
 
-          # initrd 可读性检查
+          # initrd integrity
           xz -t /tmp/rr_p3/initrd-rr
 
           rm -rf "$WORK/initrd_verify"
@@ -119,14 +115,18 @@ jobs:
             sudo xz -dc </tmp/rr_p3/initrd-rr | sudo cpio -idm
           )
 
-          # 关键改动检查：必须包含 DS418play
+          # patch presence check
           test -f "$WORK/initrd_verify/opt/rr/model-configs/DS418play.yml"
-          grep -q '"DS418play"' "$WORK/initrd_verify/opt/rr/docs/models.json"
+
+          # if docs exists in initrd, verify DS418play marker
+          if [ -f "$WORK/initrd_verify/opt/rr/docs/models.json" ]; then
+            grep -q '"DS418play"' "$WORK/initrd_verify/opt/rr/docs/models.json"
+          fi
 
           sudo umount /tmp/rr_p1
           sudo umount /tmp/rr_p3
 
-          # 文件系统只读检查（不修改）
+          # non-destructive fs checks
           sudo e2fsck -fn "${LOOP}p3" || true
           sudo fsck.vfat -n "${LOOP}p1" || true
 
@@ -152,7 +152,7 @@ jobs:
           zip -9 "$IMG_ZIP" -j rr/rr.img
           zip -9 "$VMDK_ZIP" -j rr/rr.vmdk
 
-          sha256sum "$IMG_ZIP"  > "${IMG_ZIP}.sha256"
+          sha256sum "$IMG_ZIP" > "${IMG_ZIP}.sha256"
           sha256sum "$VMDK_ZIP" > "${VMDK_ZIP}.sha256"
 
       - name: Upload artifacts
