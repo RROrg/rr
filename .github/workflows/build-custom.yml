@@ -44,47 +44,47 @@ jobs:
           set -euxo pipefail
           WORK="$GITHUB_WORKSPACE"
           IMG="$WORK/rr/rr.img"
-
-          # confirm source changes exist in checked-out branch
+          
           test -f "$WORK/files/initrd/opt/rr/model-configs/DS418play.yml"
-          grep -q '"DS418play"' "$WORK/docs/models.json"
-
+          
           LOOP="$(sudo losetup -f --show -P "$IMG")"
           mkdir -p /tmp/rr_p3
           sudo mount "${LOOP}p3" /tmp/rr_p3
-
-          rm -rf "$WORK/initrd_unpack"
-          mkdir -p "$WORK/initrd_unpack"
+          
+          rm -rf "$WORK/initrd_unpack" "$WORK/initrd_check"
+          mkdir -p "$WORK/initrd_unpack" "$WORK/initrd_check"
+          
+          # unpack original
           (
             cd "$WORK/initrd_unpack"
             sudo xz -dc </tmp/rr_p3/initrd-rr | sudo cpio -idm
           )
-
-          # patch required model config
+          
+          # minimal patch: only one file
           sudo mkdir -p "$WORK/initrd_unpack/opt/rr/model-configs"
-          sudo install -m 0644 \
-            "$WORK/files/initrd/opt/rr/model-configs/DS418play.yml" \
+          sudo cp -f "$WORK/files/initrd/opt/rr/model-configs/DS418play.yml" \
             "$WORK/initrd_unpack/opt/rr/model-configs/DS418play.yml"
-
-          # patch docs/models.json only if docs path exists in base initrd
-          if [ -d "$WORK/initrd_unpack/opt/rr/docs" ]; then
-            sudo install -m 0644 \
-              "$WORK/docs/models.json" \
-              "$WORK/initrd_unpack/opt/rr/docs/models.json"
-          fi
-
-          # pre-pack sanity
-          test -f "$WORK/initrd_unpack/opt/rr/model-configs/DS418play.yml"
-
+          
+          # repack
           (
             cd "$WORK/initrd_unpack"
             sudo find . 2>/dev/null | sudo cpio -o -H newc -R root:root | xz --check=crc32 > "$WORK/initrd-rr.new"
           )
-
+          
+          # sanity-check repacked initrd before replace
+          xz -t "$WORK/initrd-rr.new"
+          (
+            cd "$WORK/initrd_check"
+            sudo xz -dc <"$WORK/initrd-rr.new" | sudo cpio -idm
+          )
+          test -x "$WORK/initrd_check/init"
+          test -f "$WORK/initrd_check/opt/rr/model-configs/DS418play.yml"
+          
           sudo cp -f "$WORK/initrd-rr.new" /tmp/rr_p3/initrd-rr
           sync
           sudo umount /tmp/rr_p3
           sudo losetup -d "$LOOP"
+
 
       - name: Verify image integrity and patch results
         run: |
