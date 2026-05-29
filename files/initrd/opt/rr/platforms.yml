@@ -53,6 +53,10 @@ productvers5-73: &productvers5-73
   "7.3":
     kpre: "7.3"
     kver: "5.10.55"
+productvers5-74: &productvers5-74
+  "7.4":
+    kpre: "7.4"
+    kver: "5.10.55"
 
 platforms:
   apollolake:
@@ -143,6 +147,14 @@ platforms:
       netif_seq_by_dts: "no"
     productvers:
       <<: [*productvers5-71, *productvers5-72, *productvers5-73]
+  epyc7003ntb:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+      support_sed: "no"
+      netif_seq_by_dts: "no"
+    productvers:
+      <<: [*productvers5-74]
   geminilakenk:
     dt: true
     noflags: ["x2apic"]

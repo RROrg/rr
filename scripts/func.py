@@ -70,7 +70,10 @@ def getmodels(workpath, jsonpath, xlsxpath):
         if not "DSM" in item[1]:
             continue
         arch = item[0].split("_")[1]
-        name = item[1].split("/")[-1].split("_")[1].replace("%2B", "+")
+        if "enterprise" in item[1].split("/")[-1].lower():
+            name = item[1].split("/")[-1].split("_")[2].replace("%2B", "+")
+        else:
+            name = item[1].split("/")[-1].split("_")[1].replace("%2B", "+")
         if arch not in models:
             continue
         if name in (A for B in models for A in models[B]["models"]):
@@ -176,7 +179,10 @@ def getpats(workpath, jsonpath, xlsxpath):
         if not "DSM" in item[1]:
             continue
         arch = item[0].split("_")[1]
-        name = item[1].split("/")[-1].split("_")[1].replace("%2B", "+")
+        if "enterprise" in item[1].split("/")[-1].lower():
+            name = item[1].split("/")[-1].split("_")[2].replace("%2B", "+")
+        else:
+            name = item[1].split("/")[-1].split("_")[1].replace("%2B", "+")
         if arch not in platforms:
             continue
         if name in models:
@@ -211,10 +217,15 @@ def getpats(workpath, jsonpath, xlsxpath):
             click.echo(f"Error: Failed to find system release info for {M}")
             continue
 
+        dname = system_item["dname"]
         build_ver = system_item["build_ver"]
         build_num = system_item["build_num"]
         buildnano = system_item["nano"]
-        V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
+        required_ver = system_item["required_ver"]
+        if "enterprise" in dname.lower():
+            V = __fullversion(f"{required_ver}-{build_num}-{buildnano}")
+        else:
+            V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
         if V not in pats[M]:
             pats[M][V] = {
                 "url": system_item["files"][0]["url"].split("?")[0],
@@ -263,10 +274,15 @@ def getpats(workpath, jsonpath, xlsxpath):
                     )
                     continue
 
+                dname = system_item_tmp["dname"]
                 build_ver = system_item_tmp["build_ver"]
                 build_num = system_item_tmp["build_num"]
                 buildnano = system_item_tmp["nano"]
-                V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
+                required_ver = system_item_tmp["required_ver"]
+                if "enterprise" in dname.lower():
+                    V = __fullversion(f"{required_ver}-{build_num}-{buildnano}")
+                else:
+                    V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
                 if V not in pats[M]:
                     pats[M][V] = {
                         "url": system_item_tmp["files"][0]["url"].split("?")[0],
@@ -294,7 +310,10 @@ def getpats(workpath, jsonpath, xlsxpath):
                         version
                     ):
                         continue
-                    V = __fullversion(f"{S['build_ver']}-{S['build_num']}-{S['nano']}")
+                    if "enterprise" in S["dname"].lower():
+                        V = __fullversion(f"{S['required_ver']}-{S['build_num']}-{S['nano']}")
+                    else:
+                        V = __fullversion(f"{S['build_ver']}-{S['build_num']}-{S['nano']}")
                     if V not in pats[M]:
                         reqPat = session.head(
                             S["files"][0]["url"]

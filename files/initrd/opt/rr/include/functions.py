@@ -138,7 +138,10 @@ def getmodels(platforms=None):
             if not "DSM" in item[1]:
                 continue
             arch = item[0].split("_")[1]
-            name = item[1].split("/")[-1].split("_")[1].replace("%2B", "+")
+            if "enterprise" in item[1].split("/")[-1].lower():
+                name = item[1].split("/")[-1].split("_")[2].replace("%2B", "+")
+            else:
+                name = item[1].split("/")[-1].split("_")[1].replace("%2B", "+")
             if PS and arch.lower() not in PS:
                 continue
             if not any(m["name"] == name for m in models):
@@ -227,10 +230,15 @@ def getpats4mv(model, version):
         req.encoding = "utf-8"
         data = json.loads(req.text)
 
+        dname = data['info']['system']['detail'][0]['items'][0]['dname']
         build_ver = data['info']['system']['detail'][0]['items'][0]['build_ver']
         build_num = data['info']['system']['detail'][0]['items'][0]['build_num']
         buildnano = data['info']['system']['detail'][0]['items'][0]['nano']
-        V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
+        required_ver = data['info']['system']['detail'][0]['items'][0]['required_ver']
+        if "enterprise" in dname.lower():
+            V = __fullversion(f"{required_ver}-{build_num}-{buildnano}")
+        else:
+            V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
         if V not in pats:
             pats[V] = {
                 'url': data['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0],
@@ -249,10 +257,15 @@ def getpats4mv(model, version):
                 reqTmp.encoding = "utf-8"
                 dataTmp = json.loads(reqTmp.text)
 
+                dname = dataTmp['info']['system']['detail'][0]['items'][0]['dname']
                 build_ver = dataTmp['info']['system']['detail'][0]['items'][0]['build_ver']
                 build_num = dataTmp['info']['system']['detail'][0]['items'][0]['build_num']
                 buildnano = dataTmp['info']['system']['detail'][0]['items'][0]['nano']
-                V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
+                required_ver = dataTmp['info']['system']['detail'][0]['items'][0]['required_ver']
+                if "enterprise" in dname.lower():
+                    V = __fullversion(f"{required_ver}-{build_num}-{buildnano}")
+                else:
+                    V = __fullversion(f"{build_ver}-{build_num}-{buildnano}")
                 if V not in pats:
                     pats[V] = {
                         'url': dataTmp['info']['system']['detail'][0]['items'][0]['files'][0]['url'].split('?')[0],
@@ -269,7 +282,10 @@ def getpats4mv(model, version):
                 for S in dataSteps['upgrade_steps']:
                     if not S.get('full_patch') or not S['build_ver'].startswith(version):
                         continue
-                    V = __fullversion(f"{S['build_ver']}-{S['build_num']}-{S['nano']}")
+                    if "enterprise" in S['dname'].lower():
+                        V = __fullversion(f"{S['required_ver']}-{S['build_num']}-{S['nano']}")
+                    else:
+                        V = __fullversion(f"{S['build_ver']}-{S['build_num']}-{S['nano']}")
                     if V not in pats:
                         reqPat = session.head(S['files'][0]['url'].split('?')[0], timeout=10, verify=False)
                         if reqPat.status_code == 403:
@@ -283,55 +299,6 @@ def getpats4mv(model, version):
         pass
 
     pats = {k: pats[k] for k in sorted(pats.keys(), reverse=True)}
-    print(json.dumps(pats, indent=4))
-
-
-@cli.command()
-@click.option("-p", "--models", type=str, help="The models of Syno.")
-def getpats(models=None):
-    import re, json, requests, urllib3
-    from bs4 import BeautifulSoup
-    from requests.adapters import HTTPAdapter
-    from requests.packages.urllib3.util.retry import Retry  # type: ignore
-
-    adapter = HTTPAdapter(max_retries=Retry(total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504]))
-    session = requests.Session()
-    session.mount("http://", adapter)
-    session.mount("https://", adapter)
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-    MS = models.lower().replace(",", " ").split() if models else []
-
-    pats = {}
-    try:
-        req = session.get('https://archive.synology.com/download/Os/DSM', timeout=10, verify=False)
-        req.encoding = 'utf-8'
-        bs = BeautifulSoup(req.text, 'html.parser')
-        p = re.compile(r"(.*?)-(.*?)", re.MULTILINE | re.DOTALL)
-        l = bs.find_all('a', string=p)
-        for i in l:
-            ver = i.attrs['href'].split('/')[-1]
-            if not ver.startswith('7'):
-                continue
-            req = session.get(f'https://archive.synology.com{i.attrs["href"]}', timeout=10, verify=False)
-            req.encoding = 'utf-8'
-            bs = BeautifulSoup(req.text, 'html.parser')
-            p = re.compile(r"DSM_(.*?)_(.*?).pat", re.MULTILINE | re.DOTALL)
-            data = bs.find_all('a', string=p)
-            for item in data:
-                rels = p.search(item.attrs['href'])
-                if rels:
-                    model, _ = rels.groups()
-                    model = model.replace('%2B', '+')
-                    if MS and model.lower() not in MS:
-                        continue
-                    if model not in pats:
-                        pats[model] = {}
-                    pats[model][__fullversion(ver)] = item.attrs['href']
-    except Exception as e:
-        # click.echo(f"Error: {e}")
-        pass
-
     print(json.dumps(pats, indent=4))
 
 

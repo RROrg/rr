@@ -375,7 +375,7 @@ function productversMenu() {
     [ -n "${2}" ] && [ -n "${3}" ] && VAL="${2}"$'\n'"${3}"
     DIALOG --err "${VAL}" --title "$(TEXT "Product Version")" \
       --extra-button --extra-label "$(TEXT "Retry")" \
-      --form "${MSG}" 10 110 2 "URL" 1 1 "${paturl}" 1 5 100 0 "MD5" 2 1 "${patsum}" 2 5 100 0 \
+      --form "${MSG}" 10 138 2 "URL" 1 1 "${paturl}" 1 5 128 0 "MD5" 2 1 "${patsum}" 2 5 128 0 \
       2>"${TMP_PATH}/resp"
     RET=$?
     case ${RET} in
@@ -1279,7 +1279,7 @@ function synoinfoMenu() {
 # Extract linux and ramdisk files from the DSM .pat
 function getSynoExtractor() {
   rm -f "${LOG_FILE}"
-  mirrors=("global.download.synology.com" "global.synologydownload.com" "cndl.synology.cn")
+  mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
   fastest=$(_get_fastest "${mirrors[@]}")
   if [ $? -ne 0 ]; then
     echo -e "$(TEXT "The current network status is unknown, using the default mirror.")"
@@ -1422,7 +1422,7 @@ function extractDsmFiles() {
       CLEARCACHE=0
     fi
     mkdir -p "${PART3_PATH}/dl"
-    mirrors=("global.download.synology.com" "global.synologydownload.com" "cndl.synology.cn")
+    mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
     fastest=$(_get_fastest "${mirrors[@]}")
     if [ $? -ne 0 ]; then
       echo -e "$(TEXT "The current network status is unknown, using the default mirror.")"
