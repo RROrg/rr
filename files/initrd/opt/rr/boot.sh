@@ -105,9 +105,9 @@ printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "CPU:     ")" "${CPU}"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "MEM:     ")" "${MEM}"
 
 if readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q nvmesystem; then
-  [ -z "$(ls /dev/nvme* | grep -vE "${LOADER_DISK}[0-9]?$" 2>/dev/null)" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one m.2 disk for system installation.")"
+  [ -z "$(ls /dev/nvme* 2>/dev/null | grep -vE "${LOADER_DISK}[0-9]?$")" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one m.2 disk for system installation.")"
 else
-  [ -z "$(ls /dev/sd* | grep -vE "${LOADER_DISK}[0-9]?$" 2>/dev/null)" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one sata disk for system installation.")"
+  [ -z "$(ls /dev/sd* 2>/dev/null | grep -vE "${LOADER_DISK}[0-9]?$")" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one sata disk for system installation.")"
 fi
 
 if checkBIOS_VT_d && [ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ]; then
