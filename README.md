@@ -41,7 +41,9 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
   --onboot <0|1>           Enable VM on boot, default 1 (enable)
   --efi <0|1>              Enable UEFI boot, default 1 (enable)
   --bltype <sata|usb|nvme> Bootloader disk type, default sata
-  --9ppath <path>          Set to /path/to/9p to mount 9p share
+  --storage <name>         Storage name for images, as local-lvm, default auto get
+  --v9ppath <path>         Set to /path/to/9p to mount virtio 9p share
+  --vfsdirid <dirid>       Set to <dirid> to mount virtio fs share
   --tag <tag>              Image tag, download latest release if not set
   --img <path>             Local image path, use local image if set
   ```
@@ -97,6 +99,31 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
   - [intel-gpu-i915-backports](https://github.com/MoetaYuko/intel-gpu-i915-backports)
 
 ## 5: Contributing
+
+  * Run the basic local checks before submitting changes to scripts or data files.
+
+  ```shell
+  python3 -m pip install -r scripts/requirements.txt
+  python3 -m py_compile scripts/func.py files/initrd/opt/rr/include/functions.py
+  python3 - <<'PY'
+  import json
+  from pathlib import Path
+
+  import yaml
+
+  for path in Path("docs").glob("*.json"):
+      with path.open(encoding="utf-8") as fp:
+          json.load(fp)
+
+  for path in [
+      Path("update-list.yml"),
+      Path("files/initrd/opt/rr/platforms.yml"),
+      Path("files/initrd/opt/rr/serialnumber.yml"),
+  ]:
+      with path.open(encoding="utf-8") as fp:
+          yaml.safe_load(fp)
+  PY
+  ```
 
   * The following is a roughly truncated guide to involve in project localization for internationalization.
 
