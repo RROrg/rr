@@ -100,31 +100,6 @@ If you cannot connect to the Internet, please build a pre-compiled bootloader th
 
 ## 5: Contributing
 
-  * Run the basic local checks before submitting changes to scripts or data files.
-
-  ```shell
-  python3 -m pip install -r scripts/requirements.txt
-  python3 -m py_compile scripts/func.py files/initrd/opt/rr/include/functions.py
-  python3 - <<'PY'
-  import json
-  from pathlib import Path
-
-  import yaml
-
-  for path in Path("docs").glob("*.json"):
-      with path.open(encoding="utf-8") as fp:
-          json.load(fp)
-
-  for path in [
-      Path("update-list.yml"),
-      Path("files/initrd/opt/rr/platforms.yml"),
-      Path("files/initrd/opt/rr/serialnumber.yml"),
-  ]:
-      with path.open(encoding="utf-8") as fp:
-          yaml.safe_load(fp)
-  PY
-  ```
-
   * The following is a roughly truncated guide to involve in project localization for internationalization.
 
   ```shell

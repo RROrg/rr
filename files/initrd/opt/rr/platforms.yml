@@ -40,7 +40,11 @@ productvers4-73: &productvers4-73
   "7.3":
     kpre: "7.3"
     kver: "4.4.302"
-
+productvers4-74: &productvers4-74
+  "7.4":
+    kpre: "7.4"
+    kver: "4.4.302"
+  
 productvers5-71: &productvers5-71
   "7.1":
     kpre: "7.1"
@@ -67,12 +71,12 @@ platforms:
       <<: *synoinfo
       HddEnableDynamicPower: "no"
     productvers:
-      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73]
+      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
   broadwell:
     dt: false
     synoinfo: *synoinfo
     productvers:
-      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73]
+      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
   broadwellnk:
     dt: false
     synoinfo:
@@ -80,7 +84,7 @@ platforms:
       support_bde_internal_10g: "no"
       supportsas: "no"
     productvers:
-      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73]
+      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
   broadwellnkv2:
     dt: true
     synoinfo:
@@ -90,7 +94,7 @@ platforms:
       supportsas_v2_r1: "no"
       support_multipath: "yes"
     productvers:
-      <<: [*productvers4-71, *productvers4-72, *productvers4-73]
+      <<: [*productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
   broadwellntbap:
     dt: false
     synoinfo:
@@ -103,19 +107,27 @@ platforms:
       support_install_only_dev: "no"
       required_system_disk_number: "0"
     productvers:
-      <<: [*productvers4-71, *productvers4-72, *productvers4-73]
+      <<: [*productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
   denverton:
     dt: false
     flags: ["movbe"]
     synoinfo: *synoinfo
     productvers:
-      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73]
+      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
   geminilake:
     dt: true
     noflags: ["x2apic"]
     synoinfo: *synoinfo
     productvers:
-      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73]
+      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
+  icelaked:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+      support_sed: "no"
+      netif_seq_by_dts: "no"
+    productvers:
+      <<: [*productvers5-74]
   purley:
     dt: true
     noflags: ["x2apic"]
@@ -129,24 +141,24 @@ platforms:
       required_system_disk_number: "0"
       internal_disk_without_led_mask: "no"
     productvers:
-      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73]
+      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
   r1000:
     dt: true
     synoinfo: *synoinfo
     productvers:
-      <<: [*productvers4-71, *productvers4-72, *productvers4-73]
+      <<: [*productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
   v1000:
     dt: true
     synoinfo: *synoinfo
     productvers:
-      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73]
+      <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
   epyc7002:
     dt: true
     synoinfo:
       <<: *synoinfo
       netif_seq_by_dts: "no"
     productvers:
-      <<: [*productvers5-71, *productvers5-72, *productvers5-73]
+      <<: [*productvers5-71, *productvers5-72, *productvers5-73, *productvers5-74]
   epyc7003ntb:
     dt: true
     synoinfo:
@@ -163,7 +175,7 @@ platforms:
       netif_seq_by_dts: "no"
       show_autoupdatetype_notify: "yes"
     productvers:
-      <<: [*productvers5-72, *productvers5-73]
+      <<: [*productvers5-72, *productvers5-73, *productvers5-74]
   r1000nk:
     dt: true
     synoinfo:
@@ -171,7 +183,7 @@ platforms:
       netif_seq_by_dts: "no"
       show_autoupdatetype_notify: "yes"
     productvers:
-      <<: [*productvers5-72, *productvers5-73]
+      <<: [*productvers5-72, *productvers5-73, *productvers5-74]
   v1000nk:
     dt: true
     synoinfo:
@@ -179,4 +191,4 @@ platforms:
       netif_seq_by_dts: "no"
       show_autoupdatetype_notify: "yes"
     productvers:
-      <<: [*productvers5-72, *productvers5-73]
+      <<: [*productvers5-72, *productvers5-73, *productvers5-74]
