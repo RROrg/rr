@@ -1947,12 +1947,12 @@ function resetDSMPassword() {
     --no-items --menu "$(TEXT "Choose a user name")" 0 0 20 --file "${TMP_PATH}/menu" \
     2>"${TMP_PATH}/resp"
   [ $? -ne 0 ] && return 1
-  USER="$(cat "${TMP_PATH}/resp" 2>/dev/null | awk '{print $1}')"
-  [ -z "${USER}" ] && return 1
+  M_USER="$(cat "${TMP_PATH}/resp" 2>/dev/null | awk '{print $1}')"
+  [ -z "${M_USER}" ] && return 1
   local STRPASSWD
   while true; do
     DIALOG --title "$(TEXT "Advanced")" \
-      --inputbox "$(printf "$(TEXT "Type a new password for user '%s'")" "${USER}")" 0 70 "" \
+      --inputbox "$(printf "$(TEXT "Type a new password for user '%s'")" "${M_USER}")" 0 70 "" \
       2>"${TMP_PATH}/resp"
     [ $? -ne 0 ] && break 2
     resp="$(cat "${TMP_PATH}/resp" 2>/dev/null)"
@@ -1976,9 +1976,9 @@ function resetDSMPassword() {
       T="$(blkid -o value -s TYPE "${I}" 2>/dev/null | sed 's/linux_raid_member/ext4/')"
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
-      sed -i "s|^${USER}:[^:]*|${USER}:${NEWPASSWD}|" "${TMP_PATH}/mdX/etc/shadow"
-      sed -i "/^${USER}:/ s/^\(${USER}:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\)[^:]*:/\1:/" "${TMP_PATH}/mdX/etc/shadow"
-      sed -i "s|status=on|status=off|g" "${TMP_PATH}/mdX/usr/syno/etc/packages/SecureSignIn/preference/${USER}/method.config" 2>/dev/null
+      sed -i "s|^${M_USER}:[^:]*|${M_USER}:${NEWPASSWD}|" "${TMP_PATH}/mdX/etc/shadow"
+      sed -i "/^${M_USER}:/ s/^\(${M_USER}:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\)[^:]*:/\1:/" "${TMP_PATH}/mdX/etc/shadow"	
+      sed -i "s|status=on|status=off|g" "${TMP_PATH}/mdX/usr/syno/etc/packages/SecureSignIn/preference/${M_USER}/method.config" 2>/dev/null
       sed -i "s|list=*$|list=|; s|type=*$|type=none|" "${TMP_PATH}/mdX/usr/syno/etc/packages/SecureSignIn/secure_signin.conf" 2>/dev/null
 
       mkdir -p "${TMP_PATH}/mdX/usr/rr/once.d"
@@ -1987,7 +1987,7 @@ function resetDSMPassword() {
         echo "synowebapi -s --exec api=SYNO.Core.OTP.EnforcePolicy method=set version=1 enable_otp_enforcement=false otp_enforce_option='\"none\"'"
         echo "synowebapi -s --exec api=SYNO.SecureSignIn.AMFA.Policy method=set version=1 type='\"none\"'"
         echo "synowebapi -s --exec api=SYNO.Core.SmartBlock method=set version=1 enabled=false untrust_try=5 untrust_minute=1 untrust_lock=30 trust_try=10 trust_minute=1 trust_lock=30"
-        echo "synowebapi -s --exec api=SYNO.SecureSignIn.Method.Admin method=reset version=1 account='\"${USER}\"' keep_amfa_settings=true"
+        echo "synowebapi -s --exec api=SYNO.SecureSignIn.Method.Admin method=reset version=1 account='\"${M_USER}\"' keep_amfa_settings=true"
       } >"${TMP_PATH}/mdX/usr/rr/once.d/addNewDSMUser.sh"
 
       sync
@@ -1998,8 +1998,8 @@ function resetDSMPassword() {
   ) 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Resetting ...")" 20 100
   [ -f "${TMP_PATH}/isOk" ] \
-    && MSG="$(printf "$(TEXT "Reset password for user '%s' completed.")" "${USER}")" \
-    || MSG="$(printf "$(TEXT "Reset password for user '%s' failed.")" "${USER}")"
+    && MSG="$(printf "$(TEXT "Reset password for user '%s' completed.")" "${M_USER}")" \
+    || MSG="$(printf "$(TEXT "Reset password for user '%s' failed.")" "${M_USER}")"
   DIALOG --title "$(TEXT "Advanced")" \
     --msgbox "${MSG}" 0 0
   return 0
