@@ -3912,6 +3912,17 @@ function updateCKs() {
 }
 
 ###############################################################################
+# 1 - update file
+function checkUpdateFile() {
+  F="$(ls ${PART3_PATH}/${1}*.zip ${TMP_PATH}/${1}*.zip 2>/dev/null | sort -V | tail -n 1)"
+  [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
+    rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
+    F=""
+  }
+  echo "${F}"
+}
+
+###############################################################################
 function updateMenu() {
   while true; do
     CUR_RR_VER="${RR_VERSION:-0}"
@@ -3939,21 +3950,15 @@ function updateMenu() {
 
     case "$(cat "${TMP_PATH}/resp" 2>/dev/null)" in
       a)
-        F="$(ls ${PART3_PATH}/updateall*.zip ${TMP_PATH}/updateall*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
-          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
-          F=""
-        }
+        F="$(checkUpdateFile "updateall")"
         [ -z "${F}" ] && downloadExts "$(TEXT "All")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "updateall"
+        F="$(checkUpdateFile "updateall")"
         [ -n "${F}" ] && updateRR "${F}" && rm -f ${PART3_PATH}/updateall*.zip ${TMP_PATH}/updateall*.zip
         ;;
       r)
-        F="$(ls ${PART3_PATH}/update*.zip ${TMP_PATH}/update*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
-          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
-          F=""
-        }
+        F="$(checkUpdateFile "update")"
         [ -z "${F}" ] && downloadExts "$(TEXT "RR")" "${CUR_RR_VER:-None}" "https://github.com/RROrg/rr" "update"
+        F="$(checkUpdateFile "update")"
         [ -n "${F}" ] && updateRR "${F}" && rm -f ${PART3_PATH}/update*.zip ${TMP_PATH}/update*.zip
         ;;
       d)
@@ -3962,12 +3967,9 @@ function updateMenu() {
             --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "Addons")")" 0 0
           continue
         fi
-        F="$(ls ${PART3_PATH}/addons*.zip ${TMP_PATH}/addons*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
-          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
-          F=""
-        }
+        F="$(checkUpdateFile "addons")"
         [ -z "${F}" ] && downloadExts "$(TEXT "Addons")" "${CUR_ADDONS_VER:-None}" "https://github.com/RROrg/rr-addons" "addons"
+        F="$(checkUpdateFile "addons")"
         [ -n "${F}" ] && updateAddons "${F}" && rm -f ${PART3_PATH}/addons*.zip ${TMP_PATH}/addons*.zip
         ;;
       m)
@@ -3976,12 +3978,9 @@ function updateMenu() {
             --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "Modules")")" 0 0
           continue
         fi
-        F="$(ls ${PART3_PATH}/modules*.zip ${TMP_PATH}/modules*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
-          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
-          F=""
-        }
+        F="$(checkUpdateFile "modules")"
         [ -z "${F}" ] && downloadExts "$(TEXT "Modules")" "${CUR_MODULES_VER:-None}" "https://github.com/RROrg/rr-modules" "modules"
+        F="$(checkUpdateFile "modules")"
         [ -n "${F}" ] && updateModules "${F}" && rm -f ${PART3_PATH}/modules*.zip ${TMP_PATH}/modules*.zip
         ;;
       l)
@@ -3990,12 +3989,9 @@ function updateMenu() {
             --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "LKMs")")" 0 0
           continue
         fi
-        F="$(ls ${PART3_PATH}/rp-lkms*.zip ${TMP_PATH}/rp-lkms*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
-          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
-          F=""
-        }
+        F="$(checkUpdateFile "rp-lkms")"
         [ -z "${F}" ] && downloadExts "$(TEXT "LKMs")" "${CUR_LKMS_VER:-None}" "https://github.com/RROrg/rr-lkms" "rp-lkms"
+        F="$(checkUpdateFile "rp-lkms")"
         [ -n "${F}" ] && updateLKMs "${F}" && rm -f ${PART3_PATH}/rp-lkms*.zip ${TMP_PATH}/rp-lkms*.zip
         ;;
       c)
@@ -4004,12 +4000,9 @@ function updateMenu() {
             --msgbox "$(printf "$(TEXT "No longer supports update %s separately. Please choose to update All/RR")" "$(TEXT "CKs")")" 0 0
           continue
         fi
-        F="$(ls ${PART3_PATH}/rr-cks*.zip ${TMP_PATH}/rr-cks*.zip 2>/dev/null | sort -V | tail -n 1)"
-        [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
-          rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
-          F=""
-        }
+        F="$(checkUpdateFile "rr-cks")"
         [ -z "${F}" ] && downloadExts "$(TEXT "CKs")" "${CUR_CKS_VER:-None}" "https://github.com/RROrg/rr-cks" "rr-cks"
+        F="$(checkUpdateFile "rr-cks")"
         [ -n "${F}" ] && updateCKs "${F}" && rm -f ${PART3_PATH}/rr-cks*.zip ${TMP_PATH}/rr-cks*.zip
         ;;
       u)
