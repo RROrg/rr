@@ -21,6 +21,7 @@ fi
 echo -n "Patching zImage"
 rm -f "${MOD_ZIMAGE_FILE}"
 
+PLATFORM="$(readConfigKey "platform" "${USER_CONFIG_FILE}")"
 KERNEL="$(readConfigKey "kernel" "${USER_CONFIG_FILE}")"
 
 if [ "${KERNEL}" = "custom" ]; then
@@ -40,7 +41,11 @@ else
   kpatch "${TMP_PATH}/vmlinux" "${TMP_PATH}/vmlinux-mod" >"${LOG_FILE}" 2>&1 || exit 1
   echo -n "."
   # Rebuild zImage
-  rebuild-bzimage "${ORI_ZIMAGE_FILE}" "${TMP_PATH}/vmlinux-mod" "${MOD_ZIMAGE_FILE}" >"${LOG_FILE}" 2>&1 || exit 1
+  if echo "epyc7003ntb" | grep -wq "${PLATFORM}"; then
+    rebuild-bzimage "${ORI_ZIMAGE_FILE}" "${TMP_PATH}/vmlinux-mod" "${MOD_ZIMAGE_FILE}" >"${LOG_FILE}" 2>&1 || exit 1
+  else
+    "${WORK_PATH}/vmlinux-to-bzImage.sh" "${TMP_PATH}/vmlinux-mod" "${MOD_ZIMAGE_FILE}" >"${LOG_FILE}" 2>&1 || exit 1
+  fi
   echo -n "."
 fi
 
