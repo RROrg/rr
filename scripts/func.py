@@ -193,7 +193,7 @@ def getpats(workpath, jsonpath, xlsxpath):
     for M in models:
         pats[M] = {}
         version = "7"
-        urlInfo = "https://www.synology.com/api/support/findDownloadInfo?lang=en-us"
+        urlInfo = "https://www.synology.com/api/support/findDownloadInfo?lang=zh-tw"
         urlSteps = "https://www.synology.com/api/support/findUpgradeSteps?"
         # urlInfo = "https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn"
         # urlSteps = "https://www.synology.cn/api/support/findUpgradeSteps?"

@@ -120,14 +120,6 @@ platforms:
     synoinfo: *synoinfo
     productvers:
       <<: [*productvers4-70, *productvers4-71, *productvers4-72, *productvers4-73, *productvers4-74]
-  icelaked:
-    dt: true
-    synoinfo:
-      <<: *synoinfo
-      support_sed: "no"
-      netif_seq_by_dts: "no"
-    productvers:
-      <<: [*productvers5-74]
   purley:
     dt: true
     noflags: ["x2apic"]
@@ -159,6 +151,13 @@ platforms:
       netif_seq_by_dts: "no"
     productvers:
       <<: [*productvers5-71, *productvers5-72, *productvers5-73, *productvers5-74]
+  epyc7003:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+      netif_seq_by_dts: "no"
+    productvers:
+      <<: [*productvers5-74]
   epyc7003ntb:
     dt: true
     synoinfo:
@@ -176,6 +175,13 @@ platforms:
       show_autoupdatetype_notify: "yes"
     productvers:
       <<: [*productvers5-72, *productvers5-73, *productvers5-74]
+  icelaked:
+    dt: true
+    synoinfo:
+      <<: *synoinfo
+      netif_seq_by_dts: "no"
+    productvers:
+      <<: [*productvers5-74]
   r1000nk:
     dt: true
     synoinfo:

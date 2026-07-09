@@ -189,9 +189,9 @@ function modelMenu() {
   while true; do
     rm -f "${TMP_PATH}/menu"
     FLGNEX=0
-    IGPU1L=(apollolake geminilake epyc7002 geminilakenk r1000nk v1000nk)
-    IGPU2L=(epyc7002 geminilakenk r1000nk v1000nk)
-    KVER5L=(epyc7002 geminilakenk r1000nk v1000nk)
+    IGPU1L=(apollolake geminilake)
+    IGPU2L=(epyc7002 epyc7003 epyc7003ntb geminilakenk icelaked r1000nk v1000nk)
+    KVER5L=(epyc7002 epyc7003 epyc7003ntb geminilakenk icelaked r1000nk v1000nk)
     IGPUID="$(lspci -nd ::300 2>/dev/null | grep "8086" | cut -d' ' -f3 | sed 's/://g')"
     NVMEMS=(DS918+ RS1619xs+ DS419+ DS1019+ DS719+ DS1621xs+)
     NVMEMD=$(find /sys/devices -type d -name nvme | awk -F'/' '{print NF}' | sort -n | tail -n1)

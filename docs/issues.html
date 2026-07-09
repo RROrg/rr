@@ -213,6 +213,10 @@
       var model = $("#model").val();
       var version = $("#version").val().split(".").slice(0, 2).join(".");
       var kernel = $("#kernel").val();
+      var kernelPlatforms = {
+        epyc7002: ["7.2", "7.3", "7.4"],
+        geminilakenk: ["7.3", "7.4"]
+      };
       var p = "";
       for (var P in _models) {
         if (_models[P]["models"].includes(model)) {
@@ -220,7 +224,8 @@
           break;
         }
       }
-      if ((p == "epyc7002" && (version == "7.2" || version == "7.3")) || (p == "geminilakenk" && version == "7.3")) {
+      var supportsKernelSwitch = kernelPlatforms[p] && kernelPlatforms[p].includes(version);
+      if (supportsKernelSwitch) {
         $("#kernel_item").show();
         if (kernel == "custom") {
           $('#modules_item').hide();
@@ -466,7 +471,7 @@
       </div>
       <div class="form-group-body">
         <select class="form-select form-control select-sm input-contrast" id="version" name="inputs[version]" value="">
-          <option selected="selected" value="7.2">7.2</option>
+          <option selected="selected" value="7.4">7.4</option>
         </select>
       </div>
     </div>

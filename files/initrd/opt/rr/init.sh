@@ -28,10 +28,10 @@ mkdir -p "${LKMS_PATH}"
 mkdir -p "${ADDONS_PATH}"
 mkdir -p "${MODULES_PATH}"
 
-# for DSM 7.4 temporary countermeasures
-for I in "${CKS_PATH}"/* "${LKMS_PATH}"/* "${ADDONS_PATH}"/* "${MODULES_PATH}"/*; do
-  echo "${I}" | grep -Eq -- "-7\.3-" && [ ! -f "${I/-7.3-/-7.4-}" ] && ln -sf "${I}" "${I/-7.3-/-7.4-}" || true
-done
+# # for DSM 7.4 temporary countermeasures
+# for I in "${CKS_PATH}"/* "${LKMS_PATH}"/* "${ADDONS_PATH}"/* "${MODULES_PATH}"/*; do
+#   echo "${I}" | grep -Eq -- "-7\.3-" && [ ! -f "${I/-7.3-/-7.4-}" ] && ln -sf "${I}" "${I/-7.3-/-7.4-}" || true
+# done
 
 # Shows title
 clear

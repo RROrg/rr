@@ -41,7 +41,9 @@ else
   kpatch "${TMP_PATH}/vmlinux" "${TMP_PATH}/vmlinux-mod" >"${LOG_FILE}" 2>&1 || exit 1
   echo -n "."
   # Rebuild zImage
-  if echo "epyc7003ntb" | grep -wq "${PLATFORM}"; then
+  KVER="$(readConfigKey "kver" "${USER_CONFIG_FILE}")"
+  VMLINUX_MOD_SIZE="$(stat -c "%s" "${TMP_PATH}/vmlinux-mod")"
+  if [ "${VMLINUX_MOD_SIZE}" -gt "$([ "$(echo "${KVER:-4}" | cut -d'.' -f1)" -lt 5 ] && echo "15728640" || echo "34448860")" ]; then
     rebuild-bzimage "${ORI_ZIMAGE_FILE}" "${TMP_PATH}/vmlinux-mod" "${MOD_ZIMAGE_FILE}" >"${LOG_FILE}" 2>&1 || exit 1
   else
     "${WORK_PATH}/vmlinux-to-bzImage.sh" "${TMP_PATH}/vmlinux-mod" "${MOD_ZIMAGE_FILE}" >"${LOG_FILE}" 2>&1 || exit 1
