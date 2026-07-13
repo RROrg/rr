@@ -272,6 +272,10 @@ if [ "${DT}" = "true" ] && ! echo "purley broadwellnkv2 epyc7002 epyc7003 epyc70
 #  CMDLINE['scsi_mod.scan']="sync"  # TODO: redpill panic of vmware scsi? (add to cmdline)
 fi
 
+if echo "broadwell broadwellnk broadwellnkv2 icelaked purley" | grep -wq "${PLATFORM}"; then
+  CMDLINE['initcall_blacklist']="i2c_i801_init"
+fi
+
 # CMDLINE['kvm.ignore_msrs']="1"
 # CMDLINE['kvm.report_ignored_msrs']="0"
 
