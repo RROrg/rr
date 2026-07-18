@@ -243,10 +243,46 @@ function _set_conf_kv() {
 }
 
 ###############################################################################
+# Get platform
+function _get_platform() {
+  for P in $(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort); do
+    [ -n "$(find "${LKMS_PATH}" -name "rp-${P}-*.ko.gz" -print -quit 2>/dev/null)" ] && echo "${P}"
+  done
+}
+
+###############################################################################
+# Get platform
+# 1 - domain
+function _resolve_and_set_hosts() {
+  __setHosts() {
+    local IP="${1}"
+    local DOMAIN="${2}"
+    [ -z "${IP}" ] || [ -z "${DOMAIN}" ] && return 1
+    # Remove existing entry for this domain
+    sed -i "/[[:space:]]${DOMAIN//./\\.}[[:space:]]*$/d" /etc/hosts 2>/dev/null || true
+    # Add new entry
+    echo "${IP}    ${DOMAIN}" | tee -a /etc/hosts >/dev/null 2>&1
+    return 0
+  }
+  local DOMAIN="${1}"
+  local IP=""
+  [ -z "${DOMAIN}" ] && return 1
+  # Try Cloudflare DoH
+  [ -z "${IP}" ] && IP="$(curl -skL "https://cloudflare-dns.com/dns-query?name=${DOMAIN}&type=A" -H "accept: application/dns-json" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
+  # Try Google DoH
+  [ -z "${IP}" ] && IP="$(curl -skL "https://dns.google/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
+  # Try AliDNS
+  [ -z "${IP}" ] && IP="$(curl -skL "https://dns.alidns.com/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
+  [ -n "${IP}" ] && __setHosts "${IP}" "${DOMAIN}"
+  return 0
+}
+
+###############################################################################
 # Get fastest url in list
 # @ - url list
 function _get_fastest() {
   local speedlist=""
+  for I in "$@"; do _resolve_and_set_hosts "${I}" >/dev/null 2>&1; done
   if type ping >/dev/null 2>&1; then
     for I in "$@"; do
       speed=$(LC_ALL=C ping -c 1 -W 5 "${I}" 2>/dev/null | awk -F'[= ]' '/time=/ {for(i=1;i<=NF;i++) if ($i=="time") print $(i+1)}')

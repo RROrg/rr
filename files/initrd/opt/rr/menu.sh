@@ -174,7 +174,7 @@ function modelMenu() {
     --infobox "$(TEXT "Getting models ...")" 0 0
 
   rm -f "${TMP_PATH}/modellist"
-  PS="$(readConfigEntriesArray "platforms" "${WORK_PATH}/platforms.yml" | sort)"
+  PS="$(_get_platform)"
   MJ="$(python3 ${WORK_PATH}/include/functions.py getmodels -p "${PS[*]}")"
 
   if [ "${MJ:-"[]"}" = "[]" ]; then
@@ -1977,7 +1977,7 @@ function resetDSMPassword() {
       mount -t "${T:-ext4}" "${I}" "${TMP_PATH}/mdX"
       [ $? -ne 0 ] && continue
       sed -i "s|^${M_USER}:[^:]*|${M_USER}:${NEWPASSWD}|" "${TMP_PATH}/mdX/etc/shadow"
-      sed -i "/^${M_USER}:/ s/^\(${M_USER}:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\)[^:]*:/\1:/" "${TMP_PATH}/mdX/etc/shadow"	
+      sed -i "/^${M_USER}:/ s/^\(${M_USER}:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\)[^:]*:/\1:/" "${TMP_PATH}/mdX/etc/shadow"
       sed -i "s|status=on|status=off|g" "${TMP_PATH}/mdX/usr/syno/etc/packages/SecureSignIn/preference/${M_USER}/method.config" 2>/dev/null
       sed -i "s|list=*$|list=|; s|type=*$|type=none|" "${TMP_PATH}/mdX/usr/syno/etc/packages/SecureSignIn/secure_signin.conf" 2>/dev/null
 
@@ -3559,6 +3559,7 @@ function downloadExts() {
   MSG="$(TEXT "Checking last version ...")"
   DIALOG --title "${T}" \
     --infobox "${MSG}" 0 0
+  for I in "github.com release-assets.githubusercontent.com"; do _resolve_and_set_hosts "${I}" >/dev/null 2>&1; done
   TAG=""
   if [ "${PRERELEASE}" = "true" ]; then
     # TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | pup 'a[class="Link--muted"] attr{href}' | grep ".zip" | head -1)"
@@ -4078,6 +4079,19 @@ function updateMenu() {
 function cleanCache() {
   rm -rfv "${PART3_PATH}/dl/"* 2>&1 | DIALOG --title "$(TEXT "Main menu")" \
     --progressbox "$(TEXT "Cleaning cache ...")" 20 100
+  return 0
+}
+
+###############################################################################
+function onePlatform() {
+  if [ -n "${PLATFORM}" ]; then
+    for I in "${LKMS_PATH}"/* "${MODULES_PATH}"/* "${CKS_PATH}"/*; do
+      [ ! -f "${I}" ] && continue
+      echo "${I}" | grep -Eq "(${PLATFORM}-|firmware|VERSION)" && continue
+      rm -f "${I}" 2>/dev/null || true
+    done | DIALOG --title "$(TEXT "Main menu")" \
+      --progressbox "$(TEXT "OnePlatform ...")" 20 100
+  fi
   return 0
 }
 

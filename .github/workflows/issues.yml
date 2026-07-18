@@ -207,6 +207,7 @@ jobs:
             }
             echo "menu.sh make"
             echo "menu.sh cleanCache"
+            [ "2GB" = "${{ env.size }}" ] && echo "menu.sh onePlatform"
             [ -n "${{ env.sn }}" ] && echo "writeConfigKey \"sn\" \"${{ env.sn }}\" \"\${USER_CONFIG_FILE}\""
             [ -n "${{ env.macs }}" ] && {
               MACS=($(echo "${{ env.macs }}" | sed 's/[:-]//g' | sed 's/.*/\U&/' | sed 's/[;,]/ /g'))

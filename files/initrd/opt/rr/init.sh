@@ -29,7 +29,7 @@ mkdir -p "${ADDONS_PATH}"
 mkdir -p "${MODULES_PATH}"
 
 # # for DSM 7.4 temporary countermeasures
-# for I in "${CKS_PATH}"/* "${LKMS_PATH}"/* "${ADDONS_PATH}"/* "${MODULES_PATH}"/*; do
+# for I in "${LKMS_PATH}"/* "${MODULES_PATH}"/* "${CKS_PATH}"/*; do
 #   echo "${I}" | grep -Eq -- "-7\.3-" && [ ! -f "${I/-7.3-/-7.4-}" ] && ln -sf "${I}" "${I/-7.3-/-7.4-}" || true
 # done
 
@@ -183,8 +183,8 @@ if dsmIsUpgraded; then
   # Check if DSM buildnumber changed
   . "${RAMDISK_PATH}/etc/VERSION"
 
-  if [ -n "${PRODUCTVER}" ] && [ -n "${BUILDNUM}" ] && [ -n "${SMALLNUM}" ] &&
-    ([ ! "${PRODUCTVER}" = "${majorversion:-0}.${minorversion:-0}" ] || [ ! "${BUILDNUM}" = "${buildnumber:-0}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber:-0}" ]); then
+  if [ -n "${PRODUCTVER}" ] && [ -n "${BUILDNUM}" ] && [ -n "${SMALLNUM}" ] \
+    && ([ ! "${PRODUCTVER}" = "${majorversion:-0}.${minorversion:-0}" ] || [ ! "${BUILDNUM}" = "${buildnumber:-0}" ] || [ ! "${SMALLNUM}" = "${smallfixnumber:-0}" ]); then
     OLDVER="${PRODUCTVER}(${BUILDNUM}$([ "${SMALLNUM:-0}" = "0" ] || echo "u${SMALLNUM:-0}"))"
     NEWVER="${majorversion:-0}.${minorversion:-0}(${buildnumber:-0}$([ "${smallfixnumber:-0}" = "0" ] || echo "u${smallfixnumber:-0}"))"
     echo -e "\033[A\n\033[1;32mBuild number changed from \033[1;31m${OLDVER}\033[1;32m to \033[1;31m${NEWVER}\033[0m"
@@ -327,6 +327,9 @@ fi
 RAM="$(awk '/MemTotal:/ {printf "%.0f", $2 / 1024}' /proc/meminfo 2>/dev/null)"
 if [ "${RAM:-0}" -le 3500 ]; then
   printf "\033[1;33m%s\033[0m\n" "$(TEXT "You have less than 4GB of RAM, if errors occur in loader creation, please increase the amount of memory.")"
+fi
+if [ "${RAM:-0}" -le 7000 ]; then
+  mount -o remount,size=${RAM}M /tmp 2>/dev/null || true
 fi
 
 exit 0

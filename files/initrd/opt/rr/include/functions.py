@@ -33,8 +33,38 @@ def mutually_exclusive_options(ctx, param, value):
 
 def validate_required_param(ctx, param, value):
     if not value and "file" not in ctx.params and "data" not in ctx.params:
-        raise click.MissingParameter(param_decls=[param.name])
+        raise click.UsageError(f"Missing required parameter: {param.name}")
     return value
+
+
+def _resolve_and_set_hosts(domain):
+    """Resolve domain via DoH and set /etc/hosts entry. Returns True if successful."""
+    import subprocess, requests
+
+    doh_services = [
+        ("https://cloudflare-dns.com/dns-query?name={}&type=A", {"accept": "application/dns-json"}),
+        ("https://dns.google/resolve?name={}&type=A", {}),
+        ("https://dns.alidns.com/resolve?name={}&type=A", {}),
+    ]
+
+    for url_tpl, headers in doh_services:
+        try:
+            r = requests.get(url_tpl.format(domain), headers=headers, timeout=5, verify=False)
+            data = r.json()
+            for ans in data.get("Answer", []):
+                if ans.get("type") == 1:
+                    ip = ans["data"]
+                    escaped = domain.replace(".", "\\.")
+                    subprocess.run(
+                        ["sed", "-i", f"/[[:space:]]{escaped}[[:space:]]*$/d", "/etc/hosts"],
+                        capture_output=True, timeout=5
+                    )
+                    with open("/etc/hosts", "a") as f:
+                        f.write(f"{ip}    {domain}\n")
+                    return True
+        except Exception:
+            continue
+    return False
 
 
 def __fullversion(ver):
@@ -127,8 +157,8 @@ def getmodels(platforms=None):
 
     models = []
     try:
-        url = "http://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
-        #url = "https://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
+        _resolve_and_set_hosts("update7.synology.com")
+        url = "https://update7.synology.com/autoupdate/genRSS.php?include_beta=1"
 
         req = session.get(url, timeout=10, verify=False)
         req.encoding = "utf-8"
@@ -177,7 +207,9 @@ def getmodelsbykb(platforms=None):
 
     models = []
     try:
+        _resolve_and_set_hosts("kb.synology.com")
         url = "https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have"
+        #_resolve_and_set_hosts("kb.synology.cn")
         #url = "https://kb.synology.cn/zh-cn/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have"
 
         req = session.get(url, timeout=10, verify=False)
@@ -219,8 +251,10 @@ def getpats4mv(model, version):
 
     pats = {}
     try:
+        _resolve_and_set_hosts("www.synology.com")
         urlInfo = "https://www.synology.com/api/support/findDownloadInfo?lang=zh-tw"
         urlSteps = "https://www.synology.com/api/support/findUpgradeSteps?"
+        #_resolve_and_set_hosts("www.synology.cn")
         #urlInfo = "https://www.synology.cn/api/support/findDownloadInfo?lang=zh-cn"
         #urlSteps = "https://www.synology.cn/api/support/findUpgradeSteps?"
 
