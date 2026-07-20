@@ -38,8 +38,18 @@ def validate_required_param(ctx, param, value):
 
 
 def _resolve_and_set_hosts(domain):
-    """Resolve domain via DoH and set /etc/hosts entry. Returns True if successful."""
-    import subprocess, requests
+    """
+    Resolve domain via DoH and set /etc/hosts entry. Returns True if successful.
+    """
+    import json, requests, urllib3, subprocess
+    from requests.adapters import HTTPAdapter
+    from requests.packages.urllib3.util.retry import Retry  # type: ignore
+
+    adapter = HTTPAdapter(max_retries=Retry(total=1, backoff_factor=1, status_forcelist=[500, 502, 503, 504]))
+    session = requests.Session()
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     doh_services = [
         ("https://cloudflare-dns.com/dns-query?name={}&type=A", {"accept": "application/dns-json"}),
@@ -49,8 +59,9 @@ def _resolve_and_set_hosts(domain):
 
     for url_tpl, headers in doh_services:
         try:
-            r = requests.get(url_tpl.format(domain), headers=headers, timeout=5, verify=False)
-            data = r.json()
+            req = session.get(url_tpl.format(domain), headers=headers, timeout=5, verify=False)
+            req.encoding = "utf-8"
+            data = json.loads(req.text)
             for ans in data.get("Answer", []):
                 if ans.get("type") == 1:
                     ip = ans["data"]

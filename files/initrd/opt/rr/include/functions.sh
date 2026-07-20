@@ -268,11 +268,11 @@ function _resolve_and_set_hosts() {
   local IP=""
   [ -z "${DOMAIN}" ] && return 1
   # Try Cloudflare DoH
-  [ -z "${IP}" ] && IP="$(curl -skL "https://cloudflare-dns.com/dns-query?name=${DOMAIN}&type=A" -H "accept: application/dns-json" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
+  [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 10 "https://cloudflare-dns.com/dns-query?name=${DOMAIN}&type=A" -H "accept: application/dns-json" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
   # Try Google DoH
-  [ -z "${IP}" ] && IP="$(curl -skL "https://dns.google/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
+  [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 10 "https://dns.google/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
   # Try AliDNS
-  [ -z "${IP}" ] && IP="$(curl -skL "https://dns.alidns.com/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
+  [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 10 "https://dns.alidns.com/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
   [ -n "${IP}" ] && __setHosts "${IP}" "${DOMAIN}"
   return 0
 }
@@ -567,6 +567,6 @@ function sendWebhook() {
 
   [ -z "${URL}" ] && return 1
 
-  curl -skL -X POST -H "Content-Type: application/json" -d "{\"title\":\"${MSGT}\", \"text\":\"${MSGC}\"}" "${URL}" >/dev/null 2>&1
+  curl -skL --connect-timeout 10 -X POST -H "Content-Type: application/json" -d "{\"title\":\"${MSGT}\", \"text\":\"${MSGC}\"}" "${URL}" >/dev/null 2>&1
   return $?
 }
