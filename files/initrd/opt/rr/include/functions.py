@@ -71,7 +71,7 @@ def _resolve_and_set_hosts(domain):
                         capture_output=True, timeout=5
                     )
                     with open("/etc/hosts", "a") as f:
-                        f.write(f"{ip}    {domain}\n")
+                        f.write(f"{ip:<16s}{domain}\n")
                     return True
         except Exception:
             continue

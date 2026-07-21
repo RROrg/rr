@@ -3559,7 +3559,7 @@ function downloadExts() {
   MSG="$(TEXT "Checking last version ...")"
   DIALOG --title "${T}" \
     --infobox "${MSG}" 0 0
-  for I in "github.com release-assets.githubusercontent.com"; do _resolve_and_set_hosts "${I}" >/dev/null 2>&1; done
+  for I in "github.com" "release-assets.githubusercontent.com"; do _resolve_and_set_hosts "${I}" >/dev/null 2>&1; done
   TAG=""
   if [ "${PRERELEASE}" = "true" ]; then
     # TAG="$(curl -skL --connect-timeout 10 "${PROXY}${3}/tags" | pup 'a[class="Link--muted"] attr{href}' | grep ".zip" | head -1)"

@@ -261,18 +261,18 @@ function _resolve_and_set_hosts() {
     # Remove existing entry for this domain
     sed -i "/[[:space:]]${DOMAIN//./\\.}[[:space:]]*$/d" /etc/hosts 2>/dev/null || true
     # Add new entry
-    echo "${IP}    ${DOMAIN}" | tee -a /etc/hosts >/dev/null 2>&1
+    printf '%- 16s%s\n' "${IP}" "${DOMAIN}" | tee -a /etc/hosts >/dev/null 2>&1
     return 0
   }
   local DOMAIN="${1}"
   local IP=""
   [ -z "${DOMAIN}" ] && return 1
   # Try Cloudflare DoH
-  [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 10 "https://cloudflare-dns.com/dns-query?name=${DOMAIN}&type=A" -H "accept: application/dns-json" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
+  [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 5 "https://cloudflare-dns.com/dns-query?name=${DOMAIN}&type=A" -H "accept: application/dns-json" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
   # Try Google DoH
-  [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 10 "https://dns.google/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
+  [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 5 "https://dns.google/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
   # Try AliDNS
-  [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 10 "https://dns.alidns.com/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
+  [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 5 "https://dns.alidns.com/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
   [ -n "${IP}" ] && __setHosts "${IP}" "${DOMAIN}"
   return 0
 }
