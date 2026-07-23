@@ -57,6 +57,18 @@ def _resolve_and_set_hosts(domain):
         ("https://dns.alidns.com/resolve?name={}&type=A", {}),
     ]
 
+    # Check if domain is already reachable via ping
+    try:
+        ret = subprocess.run(
+            ["ping", "-c", "1", "-W", "1", domain],
+            capture_output=True, text=True, timeout=5,
+            env={"LC_ALL": "C"}
+        )
+        if ret.returncode == 0:
+            return True  # Already reachable
+    except Exception:
+        pass
+
     for url_tpl, headers in doh_services:
         try:
             req = session.get(url_tpl.format(domain), headers=headers, timeout=5, verify=False)
