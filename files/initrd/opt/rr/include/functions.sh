@@ -251,30 +251,54 @@ function _get_platform() {
 }
 
 ###############################################################################
-# Get platform
+# Resolve a domain over DoH and pin the result in /etc/hosts
 # 1 - domain
 function _resolve_and_set_hosts() {
-  __setHosts() {
-    local IP="${1}"
-    local DOMAIN="${2}"
-    [ -z "${IP}" ] || [ -z "${DOMAIN}" ] && return 1
-    # Remove existing entry for this domain
-    sed -i "/[[:space:]]${DOMAIN//./\\.}[[:space:]]*$/d" /etc/hosts 2>/dev/null || true
-    # Add new entry
-    printf '%- 16s%s\n' "${IP}" "${DOMAIN}" | tee -a /etc/hosts >/dev/null 2>&1
-    return 0
-  }
   local DOMAIN="${1}"
   local IP=""
   [ -z "${DOMAIN}" ] && return 1
-  LC_ALL=C ping -c 1 -W 1 "${DOMAIN}" >/dev/null 2>&1 && return 0
+  # 'ping -W' only bounds the ICMP reply wait, not the name lookup: with a dead
+  # nameserver getaddrinfo blocks for timeout*attempts (~10s) before ping even
+  # starts. Cap the whole probe so the DoH fallback below is reached promptly.
+  LC_ALL=C timeout 2 ping -c 1 -W 1 "${DOMAIN}" >/dev/null 2>&1 && return 0
   # Try Cloudflare DoH
   [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 5 "https://cloudflare-dns.com/dns-query?name=${DOMAIN}&type=A" -H "accept: application/dns-json" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
   # Try Google DoH
   [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 5 "https://dns.google/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
   # Try AliDNS
   [ -z "${IP}" ] && IP="$(curl -skL --connect-timeout 5 "https://dns.alidns.com/resolve?name=${DOMAIN}&type=A" 2>/dev/null | jq -r '.Answer[]? | select(.type == 1) | .data' 2>/dev/null | head -1)"
-  [ -n "${IP}" ] && __setHosts "${IP}" "${DOMAIN}"
+  [ -n "${IP}" ] && _set_hosts "${IP}" "${DOMAIN}"
+  return 0
+}
+
+###############################################################################
+# Pin an ip/domain pair in /etc/hosts, replacing any previous entry
+# 1 - ip
+# 2 - domain
+function _set_hosts() {
+  local IP="${1}"
+  local DOMAIN="${2}"
+  local TF=""
+  [ -z "${IP}" ] || [ -z "${DOMAIN}" ] && return 1
+  # Drop every existing entry for this domain. The name is compared field by field
+  # instead of being interpolated into a regex: bash strips the backslash out of
+  # "${DOMAIN//./\\.}", so the dots stayed live wildcards and pinning
+  # www.synology.com would also delete an unrelated wwwXsynologyYcom. Aliases after
+  # the canonical name count as a match, comment lines never do.
+  TF="$(mktemp 2>/dev/null)" || TF=""
+  TF="${TF:-/tmp/hosts.$$}"
+  if [ -f /etc/hosts ] && awk -v d="${DOMAIN}" '
+    /^[[:space:]]*#/ { print; next }
+    { for (i = 2; i <= NF; i++) if ($i == d) next } 1
+  ' /etc/hosts >"${TF}" 2>/dev/null; then
+    cat "${TF}" >/etc/hosts 2>/dev/null || true # Truncate in place to keep the inode
+  fi
+  rm -f "${TF}" 2>/dev/null || true
+  # A file whose last line has no newline would otherwise be merged with ours
+  if [ -s /etc/hosts ] && [ -n "$(tail -c 1 /etc/hosts 2>/dev/null)" ]; then
+    echo "" >>/etc/hosts 2>/dev/null || true
+  fi
+  printf '%-16s%s\n' "${IP}" "${DOMAIN}" >>/etc/hosts 2>/dev/null || true
   return 0
 }
 
@@ -296,12 +320,18 @@ function _get_fastest() {
       speedlist+="${I} ${speed:-999}\n" # Assign default value 999 if speed is empty
     done
   fi
-  local fastest
+  local fastest URL SPD
   fastest="$(echo -e "${speedlist}" | tr -s '\n' | awk '$2 != "999"' | sort -k2n | head -1)"
   URL="$(echo "${fastest}" | awk '{print $1}')"
   SPD="$(echo "${fastest}" | awk '{print $2}')" # It is a float type
   echo "${URL:-${1}}"
-  [ "$(echo "${SPD:-999}" | cut -d'.' -f1)" -ge 999 ] && return 1 || return 0
+  # Keep only the integer part, and treat anything non-numeric as a failure so
+  # that a garbled measurement is not reported as success.
+  SPD="$(echo "${SPD:-999}" | cut -d'.' -f1)"
+  case "${SPD}" in
+    '' | *[!0-9]*) return 1 ;;
+  esac
+  [ "${SPD}" -ge 999 ] && return 1 || return 0
 }
 
 ###############################################################################
@@ -319,23 +349,29 @@ function _sort_netif() {
   done
   ETHLISTTMPM=""
   ETHLISTTMPB="$(echo -e "${ETHLIST}" | sort -V)"
+  # init.sh runs with 'set -e' and a grep that matches nothing exits 1, which in an
+  # assignment is the status of the whole command: an unmatched mac in the sortnetif
+  # list, or no interfaces at all, would abort the boot here. Keep every grep quiet.
   if [ -n "${1}" ]; then
     MACS="$(echo "${1}" | sed 's/://g; s/,/ /g; s/.*/\L&/')"
     for MACX in ${MACS}; do
-      ETHLISTTMPM="${ETHLISTTMPM}$(echo -e "${ETHLISTTMPB}" | grep "${MACX}")\n"
-      ETHLISTTMPB="$(echo -e "${ETHLISTTMPB}" | grep -v "${MACX}")\n"
+      ETHLISTTMPM="${ETHLISTTMPM}$(echo -e "${ETHLISTTMPB}" | grep "${MACX}" || true)\n"
+      ETHLISTTMPB="$(echo -e "${ETHLISTTMPB}" | grep -v "${MACX}" || true)\n"
     done
   fi
-  ETHLIST="$(echo -e "${ETHLISTTMPM}${ETHLISTTMPB}" | grep -v '^$')"
+  ETHLIST="$(echo -e "${ETHLISTTMPM}${ETHLISTTMPB}" | grep -v '^$' || true)"
   ETHSEQ="$(echo -e "${ETHLIST}" | awk '{print $3}' | sed 's/eth//g')"
-  ETHNUM="$(echo -e "${ETHLIST}" | wc -l)"
+  # 'echo -e "" | wc -l' is 1, so count the non-empty lines instead: an empty
+  # ETHLIST must yield 0 or the block below renames interfaces that do not exist.
+  # awk is used rather than 'grep -c' because it still exits 0 on a zero count.
+  ETHNUM="$(echo -e "${ETHLIST}" | awk 'NF{c++} END{print c+0}')"
 
   # echo "${ETHSEQ}"
   # sort
-  if [ ! "${ETHSEQ}" = "$(seq 0 $((${ETHNUM:0} - 1)))" ]; then
+  if [ "${ETHNUM:-0}" -gt 0 ] && [ ! "${ETHSEQ}" = "$(seq 0 $((${ETHNUM:-0} - 1)))" ]; then
     /etc/init.d/S41dhcpcd stop >/dev/null 2>&1
     /etc/init.d/S40network stop >/dev/null 2>&1
-    for i in $(seq 0 $((${ETHNUM:0} - 1))); do
+    for i in $(seq 0 $((${ETHNUM:-0} - 1))); do
       ip link set dev "eth${i}" name "tmp${i}"
     done
     I=0
@@ -370,10 +406,10 @@ function getBus() {
 function getIP() {
   local IP=""
   if [ -n "${1}" ] && [ -d "/sys/class/net/${1}" ]; then
-    IP=$(ip addr show "${1}" scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -d'/' -f1 | head -1)
+    IP=$(ip addr show "${1}" scope global 2>/dev/null | grep -E "inet .* (eth|wlan)" | awk '{print $2}' | cut -d'/' -f1 | head -1)
     [ -z "${IP}" ] && IP=$(ip route show dev "${1}" 2>/dev/null | sed -n 's/.* via .* src \(.*\) metric .*/\1/p' | head -1)
   else
-    IP=$(ip addr show scope global 2>/dev/null | grep -E "inet .* eth" | awk '{print $2}' | cut -d'/' -f1 | head -1)
+    IP=$(ip addr show scope global 2>/dev/null | grep -E "inet .* (eth|wlan)" | awk '{print $2}' | cut -d'/' -f1 | head -1)
     [ -z "${IP}" ] && IP=$(ip route show 2>/dev/null | sed -n 's/.* via .* src \(.*\) metric .*/\1/p' | head -1)
   fi
   echo "${IP}"
@@ -448,15 +484,21 @@ function delCmdline() {
 # check CPU Intel(VT-d)/AMD(AMD-Vi)
 function checkCPU_VT_d() {
   lsmod | grep -q msr || modprobe msr 2>/dev/null
+  local MSRVAL
+  # rdmsr prints bare hex with no 0x prefix. Bash arithmetic reads such a word as
+  # an identifier, so "ff07 & 0x5" is 0 and the check always reported VT-d off;
+  # a zero padded value like 0000000000000008 is instead parsed as octal and errors
+  # out. Add the prefix and reject anything that is not hex.
   if grep -q "GenuineIntel" /proc/cpuinfo 2>/dev/null; then
-    VT_D_ENABLED=$(rdmsr 0x3a 2>/dev/null)
-    [ "$((${VT_D_ENABLED:-0x0} & 0x5))" -eq $((0x5)) ] && return 0
+    MSRVAL="$(rdmsr 0x3a 2>/dev/null | tr -d '[:space:]')"
+    case "${MSRVAL}" in '' | *[!0-9A-Fa-f]*) return 1 ;; esac
+    [ "$((0x${MSRVAL} & 0x5))" -eq "$((0x5))" ] && return 0
   elif grep -q "AuthenticAMD" /proc/cpuinfo 2>/dev/null; then
-    IOMMU_ENABLED=$(rdmsr 0xC0010114 2>/dev/null)
-    [ "$((${IOMMU_ENABLED:-0x0} & 0x1))" -eq $((0x1)) ] && return 0
-  else
-    return 1
+    MSRVAL="$(rdmsr 0xC0010114 2>/dev/null | tr -d '[:space:]')"
+    case "${MSRVAL}" in '' | *[!0-9A-Fa-f]*) return 1 ;; esac
+    [ "$((0x${MSRVAL} & 0x1))" -eq "$((0x1))" ] && return 0
   fi
+  return 1
 }
 
 ###############################################################################

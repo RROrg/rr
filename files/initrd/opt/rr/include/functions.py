@@ -62,7 +62,9 @@ def _resolve_and_set_hosts(domain):
         ret = subprocess.run(
             ["ping", "-c", "1", "-W", "1", domain],
             capture_output=True, text=True, timeout=5,
-            env={"LC_ALL": "C"}
+            # Passing a bare dict would replace the whole environment, so PATH is
+            # lost and only os.defpath is searched for the ping binary.
+            env={**os.environ, "LC_ALL": "C"}
         )
         if ret.returncode == 0:
             return True  # Already reachable
@@ -77,11 +79,25 @@ def _resolve_and_set_hosts(domain):
             for ans in data.get("Answer", []):
                 if ans.get("type") == 1:
                     ip = ans["data"]
-                    escaped = domain.replace(".", "\\.")
-                    subprocess.run(
-                        ["sed", "-i", f"/[[:space:]]{escaped}[[:space:]]*$/d", "/etc/hosts"],
-                        capture_output=True, timeout=5
-                    )
+                    # Drop stale entries for this domain, otherwise they keep
+                    # shadowing the one appended below. The name is compared field by
+                    # field rather than through a regex so that a dot cannot act as a
+                    # wildcard and take unrelated hosts with it. Comments are kept.
+                    try:
+                        with open("/etc/hosts", "r") as f:
+                            lines = f.readlines()
+                        kept = [
+                            l for l in lines
+                            if l.lstrip().startswith("#") or domain not in l.split()[1:]
+                        ]
+                        # A last line without a newline would be merged with ours.
+                        if kept and not kept[-1].endswith("\n"):
+                            kept[-1] += "\n"
+                        if kept != lines:
+                            with open("/etc/hosts", "w") as f:
+                                f.writelines(kept)
+                    except OSError:
+                        pass
                     with open("/etc/hosts", "a") as f:
                         f.write(f"{ip:<16s}{domain}\n")
                     return True

@@ -21,7 +21,10 @@ function deleteConfigKey() {
 # 3 - Path of yaml config file
 function writeConfigKey() {
   local value="${2}"
-  [ "${value}" = "{}" ] && yq eval ".${1} = {}" --inplace "${3}" 2>/dev/null || yq eval ".${1} = \"${value}\"" --inplace "${3}" 2>/dev/null
+  # The value is data, not part of the expression: interpolating it lets a quote in
+  # a serial, password or webhook url break the yq expression (silently losing the
+  # write) or inject further yq operators. strenv() passes it through untouched.
+  [ "${value}" = "{}" ] && yq eval ".${1} = {}" --inplace "${3}" 2>/dev/null || VALUE="${value}" yq eval ".${1} = strenv(VALUE)" --inplace "${3}" 2>/dev/null
 }
 
 ###############################################################################

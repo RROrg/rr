@@ -54,13 +54,24 @@ echo -n "Patching Ramdisk"
 # Unzipping ramdisk
 rm -rf "${RAMDISK_PATH}" # Force clean
 mkdir -p "${RAMDISK_PATH}"
-(cd "${RAMDISK_PATH}" && xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm) >/dev/null 2>&1
+if ! (cd "${RAMDISK_PATH}" && xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm) >/dev/null 2>&1; then
+  echo "ERROR: Failed to extract ${ORI_RDGZ_FILE}!" >"${LOG_FILE}"
+  exit 1
+fi
 
-# Check if DSM buildnumber changed
+# Check if DSM buildnumber changed. Without 'set -e' a failed extraction above used
+# to fall through to here, leave buildnumber unset, and overwrite the good buildnum
+# in the user config with 0 - which then re-enables patches meant for old builds.
+if [ ! -f "${RAMDISK_PATH}/etc/VERSION" ]; then
+  echo "ERROR: ${RAMDISK_PATH}/etc/VERSION not found, ramdisk extraction failed!" >"${LOG_FILE}"
+  exit 1
+fi
 . "${RAMDISK_PATH}/etc/VERSION"
 
 BUILDNUM=${buildnumber:-0}
 SMALLNUM=${smallfixnumber:-0}
+case "${BUILDNUM}" in '' | *[!0-9]*) BUILDNUM=0 ;; esac
+case "${SMALLNUM}" in '' | *[!0-9]*) SMALLNUM=0 ;; esac
 writeConfigKey "buildnum" "${BUILDNUM}" "${USER_CONFIG_FILE}"
 writeConfigKey "smallnum" "${SMALLNUM}" "${USER_CONFIG_FILE}"
 
