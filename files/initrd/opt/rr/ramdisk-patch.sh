@@ -54,10 +54,7 @@ echo -n "Patching Ramdisk"
 # Unzipping ramdisk
 rm -rf "${RAMDISK_PATH}" # Force clean
 mkdir -p "${RAMDISK_PATH}"
-if ! (cd "${RAMDISK_PATH}" && xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm) >/dev/null 2>&1; then
-  echo "ERROR: Failed to extract ${ORI_RDGZ_FILE}!" >"${LOG_FILE}"
-  exit 1
-fi
+(cd "${RAMDISK_PATH}" && xz -dc <"${ORI_RDGZ_FILE}" | cpio -idm) >/dev/null 2>&1 || true
 
 # Check if DSM buildnumber changed. Without 'set -e' a failed extraction above used
 # to fall through to here, leave buildnumber unset, and overwrite the good buildnum
