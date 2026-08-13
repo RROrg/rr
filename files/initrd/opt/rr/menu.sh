@@ -1284,6 +1284,8 @@ function getSynoExtractor() {
   if [ $? -ne 0 ]; then
     echo -e "$(TEXT "The current network status is unknown, using the default mirror.")"
   fi
+  # _get_fastest echoes the first mirror when every measurement fails, so fastest is
+  # always a usable host and needs no further guard here.
   OLDPAT_URL="https://${fastest}/download/DSM/release/7.0.1/42218/DSM_DS3622xs%2B_42218.pat"
   OLDPAT_PATH="${TMP_PATH}/DS3622xs+-42218.pat"
   EXTRACTOR_PATH="${PART3_PATH}/extractor"
@@ -1424,11 +1426,15 @@ function extractDsmFiles() {
     mkdir -p "${PART3_PATH}/dl"
     mirrors=("global.synologydownload.com" "global.download.synology.com" "cndl.synology.cn")
     fastest=$(_get_fastest "${mirrors[@]}")
-    if [ $? -ne 0 ]; then
+    FASTESTRC=$?
+    if [ ${FASTESTRC} -ne 0 ]; then
       echo -e "$(TEXT "The current network status is unknown, using the default mirror.")"
     fi
     mirror="$(echo "${PATURL}" | sed 's|^http[s]*://\([^/]*\).*|\1|')"
-    if echo "${mirrors[@]}" | grep -wq "${mirror}" && [ ! "${mirror}" = "${fastest}" ]; then
+    # Only switch mirrors when a latency measurement actually succeeded. When ICMP is
+    # blocked _get_fastest falls back to the first mirror in the list, and rewriting
+    # the url to it would move the download off the one mirror the user can reach.
+    if [ ${FASTESTRC} -eq 0 ] && echo "${mirrors[@]}" | grep -wq "${mirror}" && [ ! "${mirror}" = "${fastest}" ]; then
       printf "$(TEXT "Based on the current network situation, switch to %s mirror to downloading.\n")" "${fastest}"
       PATURL="$(echo "${PATURL}" | sed "s/${mirror}/${fastest}/")"
     fi
@@ -2795,9 +2801,15 @@ function setStaticIP() {
                 if [ -n "${gateway}" ]; then
                   ip route add default via ${gateway} dev ${N}
                 fi
-                if [ -n "${dnsname:-${gateway}}" ]; then
-                  sed -i "/nameserver ${dnsname:-${gateway}}/d" /etc/resolv.conf
-                  echo "nameserver ${dnsname:-${gateway}}" >>/etc/resolv.conf
+                DNSSRV="${dnsname:-${gateway}}"
+                if [ -n "${DNSSRV}" ]; then
+                  # resolv.conf may not exist yet on a static-only box. Anchor the
+                  # whole nameserver line so that removing 192.168.1.1 does not also
+                  # remove 192.168.1.100, and escape the dots with four backslashes:
+                  # bash reduces "\\." in a replacement back to a bare dot.
+                  touch /etc/resolv.conf 2>/dev/null || true
+                  sed -i -E "/^[[:space:]]*nameserver[[:space:]]+${DNSSRV//./\\\\.}[[:space:]]*$/d" /etc/resolv.conf 2>/dev/null || true
+                  echo "nameserver ${DNSSRV}" >>/etc/resolv.conf 2>/dev/null || true
                 fi
               fi
               writeConfigKey "network.${MACR}" "${address}/${netmask}/${gateway}/${dnsname}" "${USER_CONFIG_FILE}"
@@ -3915,7 +3927,10 @@ function updateCKs() {
 ###############################################################################
 # 1 - update file
 function checkUpdateFile() {
-  F="$(ls ${PART3_PATH}/${1}*.zip ${TMP_PATH}/${1}*.zip 2>/dev/null | sort -V | tail -n 1)"
+  # Downloads are named "<name>-<tag>.zip", so a bare "${1}*" glob makes the "update"
+  # entry pick up "updateall-*.zip" as well. Anchor the name so each menu entry only
+  # ever sees its own archive.
+  F="$(ls ${PART3_PATH}/${1}*.zip ${TMP_PATH}/${1}*.zip 2>/dev/null | grep -E "/${1}(-[^/]*)?\.zip$" | sort -V | tail -n 1)"
   [ -n "${F}" ] && [ -f "${F}.downloading" ] && {
     rm -f "${F}" "${F}.downloading" >/dev/null 2>&1
     F=""

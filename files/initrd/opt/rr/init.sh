@@ -121,9 +121,16 @@ if [ ! -f "/.dockerenv" ]; then
       if [ -n "${IPRA[2]}" ]; then
         ip route add default via "${IPRA[2]}" dev "${N}" 2>/dev/null || true
       fi
-      if [ -n "${IPRA[3]:-${IPRA[2]}}" ]; then
-        sed -i "/nameserver ${IPRA[3]:-${IPRA[2]}}/d" /etc/resolv.conf
-        echo "nameserver ${IPRA[3]:-${IPRA[2]}}" >>/etc/resolv.conf
+      DNSSRV="${IPRA[3]:-${IPRA[2]:-}}"
+      if [ -n "${DNSSRV}" ]; then
+        # With a static address udhcpc never runs, so /etc/resolv.conf may not exist
+        # yet. 'sed -i' on a missing file exits 2 and the 'set -e' above would abort
+        # the rest of the boot. Anchor the whole nameserver line so that deleting
+        # 192.168.1.1 does not also drop 192.168.1.100, and escape the dots with
+        # four backslashes: bash reduces "\\." in a replacement back to a bare dot.
+        touch /etc/resolv.conf 2>/dev/null || true
+        sed -i -E "/^[[:space:]]*nameserver[[:space:]]+${DNSSRV//./\\\\.}[[:space:]]*$/d" /etc/resolv.conf 2>/dev/null || true
+        echo "nameserver ${DNSSRV}" >>/etc/resolv.conf 2>/dev/null || true
       fi
       sleep 1
     fi
