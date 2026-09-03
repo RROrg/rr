@@ -239,7 +239,7 @@ function _set_conf_kv() {
   # Add if doesn't exist
   mkdir -p "$(dirname "${1}" 2>/dev/null)" 2>/dev/null
   echo "${2}=\"${3}\"" >>"${1}" 2>/dev/null
-  return $?
+  return 0
 }
 
 ###############################################################################

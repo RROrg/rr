@@ -105,8 +105,10 @@ printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "CPU:     ")" "${CPU}"
 printf "%s \033[1;36m%s\033[0m\n" "$(TEXT "MEM:     ")" "${MEM}"
 
 if readConfigMap "addons" "${USER_CONFIG_FILE}" | grep -q nvmesystem; then
+  # shellcheck disable=SC2010
   [ -z "$(ls /dev/nvme* 2>/dev/null | grep -vE "${LOADER_DISK}[0-9]?$")" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one m.2 disk for system installation.")"
 else
+  # shellcheck disable=SC2010
   [ -z "$(ls /dev/sd* 2>/dev/null | grep -vE "${LOADER_DISK}[0-9]?$")" ] && printf "\033[1;33m*** %s ***\033[0m\n" "$(TEXT "Notice: Please insert at least one sata disk for system installation.")"
 fi
 

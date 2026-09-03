@@ -1832,11 +1832,11 @@ function formatDisks() {
     done
   fi
   for I in ${resp}; do
-    if [ "${I:0:8}" = "/dev/mmc" ]; then
-      echo y | mkfs.ext4 -T largefile4 -E nodiscard "${I}"
-    else
-      echo y | mkfs.ext4 -T largefile4 "${I}"
-    fi
+    # eMMC 不支持 discard, 用 nodiscard 避免 unmap 失败
+    case "${I}" in
+      /dev/mmc*) echo y | mkfs.ext4 -T largefile4 -E nodiscard "${I}" ;;
+      *) echo y | mkfs.ext4 -T largefile4 "${I}" ;;
+    esac
   done 2>&1 | DIALOG --title "$(TEXT "Advanced")" \
     --progressbox "$(TEXT "Formatting ...")" 20 100
   DIALOG --title "$(TEXT "Advanced")" \
@@ -2510,7 +2510,11 @@ function cloneBootloaderDisk() {
     CLEARCACHE=0
 
     gzip -dc "${WORK_PATH}/grub.img.gz" | dd of="${TODESK}" bs=1M conv=fsync status=progress
-    hdparm -z "${TODESK}" # reset disk cache
+    # hdparm 使用 ATA 命令集, 对 eMMC/nvme 等设备无效, 跳过
+    case "${TODESK}" in
+      *mmcblk* | *nvme[0-9]* | *loop[0-9]* | *nbd[0-9]*) ;;
+      *) hdparm -z "${TODESK}" ;; # reset disk cache
+    esac
     fdisk -l "${TODESK}"
     sleep 1
 
@@ -2520,17 +2524,47 @@ function cloneBootloaderDisk() {
     SIZEOFDISK=$(blockdev --getsz "${TODESK}" 2>/dev/null) # SIZEOFDISK=$(cat /sys/block/${TODESK/\/dev\//}/size)
     ENDSECTOR=$(fdisk -l "${TODESK}" | grep "${NEW_BLDISK_P3}" | awk '{print $(NF-4)}')
     if [ ${SIZEOFDISK:-0} -ne $((${ENDSECTOR:-0} + 1)) ]; then
-      if [ -f "/mnt/p1/.noresize" ] || [ ${SIZEOFDISK:-0} -gt $((32 * 1024 * 1024 * 2)) ]; then
-        # Create partition 4 with remaining space
-        echo -e "\033[1;36mCreating partition 4 with remaining space.\033[0m"
-        echo -e "n\n\n\n\n\nw" | fdisk "${TODESK}" >/dev/null 2>&1
-        PART4="${TODESK}4"
-        mkfs.ext4 -F "${PART4}" # mkfs.ext4 -F -L "RR4" "${PART4}"
-      else
-        echo -e "\033[1;36mResizing ${NEW_BLDISK_P3}\033[0m"
-        echo -e "d\n\nn\n\n\n\n\nn\nw" | fdisk "${TODESK}" >/dev/null 2>&1
+      if [ -f "/mnt/p1/.noresize" ]; then
+        echo -e "\033[1;33mnoresize file exists, skipping resize.\033[0m"
+      elif [ ${SIZEOFDISK:-0} -lt $((32 * 1024 * 1024 * 1024 / 512)) ]; then
+        # 拷贝盘 < 32 GiB: 分区 3 直接扩展到磁盘剩余空间
+        echo -e "\033[1;36mResizing ${NEW_BLDISK_P3} with remaining space.\033[0m"
+        # 分区 3 扩展到磁盘末尾(最后一个扇区 = SIZEOFDISK - 1)
+        parted -s "${TODESK}" unit s resizepart 3 $((SIZEOFDISK - 1)) >/dev/null 2>&1
+        e2fsck -fy "${NEW_BLDISK_P3}" >/dev/null 2>&1
         resize2fs "${NEW_BLDISK_P3}"
         fdisk -l "${TODESK}"
+      else
+        # 拷贝盘 >= 32 GiB: 分区 3 扩充到 8G-100M, 剩余空间创建分区 4
+        echo -e "\033[1;36mResizing ${NEW_BLDISK_P3} to 8G-100M, creating partition 4 with remaining space.\033[0m"
+        # 解析分区 3 的起始扇区(第2列)与当前结束扇区(第3列)
+        P3START="$(fdisk -l "${TODESK}" 2>/dev/null | grep -E "^${NEW_BLDISK_P3}" | awk '{print $2}')"
+        P3OLDEND="${ENDSECTOR}"
+        # 8G-100M 换算为 512 字节扇区数(安全目标)
+        P3SIZE=$((8 * 1024 * 1024 * 1024 / 512 - 100 * 1024 * 1024 / 512))
+        P3NEWEND=$((P3START + P3SIZE - 1))
+        # 若分区 3 未达 8G-100M: 用 parted resizepart 直接扩到目标结束扇区
+        if [ -n "${P3START}" ] && [ "${P3OLDEND}" -lt "${P3NEWEND}" ]; then
+          parted -s "${TODESK}" unit s resizepart 3 "${P3NEWEND}" >/dev/null 2>&1
+          e2fsck -fy "${NEW_BLDISK_P3}" >/dev/null 2>&1
+          resize2fs "${NEW_BLDISK_P3}"
+          fdisk -l "${TODESK}"
+        fi
+        # 剩余空间 > 1 GiB: 用 parted 在剩余空间创建分区 4 (紧接分区 3 之后)
+        P3REAEND=$(parted -s "${TODESK}" unit s print 2>/dev/null | awk '$1=="3"{gsub(/s$/,"",$3); print $3}')
+        P4START=$((P3REAEND + 1))
+        P4AVAIL=$((SIZEOFDISK - P4START))
+        if [ -n "${P3START}" ] && [ "${P4AVAIL:-0}" -gt $((1 * 1024 * 1024 * 1024 / 512)) ]; then
+          parted -s "${TODESK}" unit s mkpart primary ${P4START} 100% >/dev/null 2>&1
+          sleep 1
+          partprobe "${TODESK}" 2>/dev/null || udevadm settle 2>/dev/null || true
+          NEW_BLDISK_P4="$(echo "${NEW_BLDISK_P3}" | sed 's/3$/4/')"
+          # eMMC 不支持 discard, 用 nodiscard 避免 unmap 失败
+          case "${TODESK}" in
+            *mmcblk*) mkfs.ext4 -F -E nodiscard "${NEW_BLDISK_P4}" ;; # mkfs.ext4 -F -L "RR4" -E nodiscard "${NEW_BLDISK_P4}" ;;
+            *) mkfs.ext4 -F "${NEW_BLDISK_P4}" ;;                     # mkfs.ext4 -F -L "RR4" "${NEW_BLDISK_P4}" ;;
+          esac
+        fi
       fi
     fi
 
@@ -2780,6 +2814,7 @@ function setStaticIP() {
       case ${RET} in
         0)
           # ok-button
+          local address netmask gateway dnsname
           address="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
           netmask="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
           gateway="$(sed -n '3p' "${TMP_PATH}/resp" 2>/dev/null)"
@@ -2801,7 +2836,7 @@ function setStaticIP() {
                 if [ -n "${gateway}" ]; then
                   ip route add default via ${gateway} dev ${N}
                 fi
-                DNSSRV="${dnsname:-${gateway}}"
+                local DNSSRV="${dnsname:-${gateway}}"
                 if [ -n "${DNSSRV}" ]; then
                   # resolv.conf may not exist yet on a static-only box. Anchor the
                   # whole nameserver line so that removing 192.168.1.1 does not also
@@ -2856,7 +2891,7 @@ function setWirelessAccount() {
         SSID="$(sed -n '1p' "${TMP_PATH}/resp" 2>/dev/null)"
         PSK="$(sed -n '2p' "${TMP_PATH}/resp" 2>/dev/null)"
         (
-          ETHX=$(find /sys/class/net/ -mindepth 1 -maxdepth 1 -name wlan* -exec basename {} \; | sort -V) || true
+          ETHX=$(find /sys/class/net/ -mindepth 1 -maxdepth 1 -name "wlan*" -exec basename {} \; | sort -V) || true
           if [ -z "${SSID}" ]; then
             rm -f "${PART1_PATH}/wpa_supplicant.conf"
             for N in ${ETHX}; do

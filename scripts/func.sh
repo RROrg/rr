@@ -6,7 +6,7 @@
 # See /LICENSE for more information.
 #
 # sudo apt install -y locales busybox dialog gettext sed gawk jq curl
-# sudo apt install -y python-is-python3 python3-pip libelf-dev qemu-utils cpio xz-utils lz4 lzma bzip2 gzip zstd
+# sudo apt install -y python-is-python3 python3-pip libelf-dev qemu-utils parted dosfstools cpio xz-utils lz4 lzma bzip2 gzip zstd
 
 [ -n "${1}" ] && export TOKEN="${1}"
 
@@ -405,7 +405,7 @@ function repackImg() {
 
 # resizeimg
 # $1 input file
-# $2 changsize MB eg: +50M -50M
+# $2 changsize MB eg: +50M
 # $3 output file
 function resizeImg() {
   local INPUT_FILE="${1}"
@@ -418,21 +418,44 @@ function resizeImg() {
   INPUT_FILE="$(realpath "${INPUT_FILE}")"
   OUTPUT_FILE="$(realpath "${OUTPUT_FILE}")"
 
-  local SIZE=$(($(du -sm "${INPUT_FILE}" 2>/dev/null | awk '{print $1}')$(echo "${CHANGE_SIZE}" | sed 's/M//g; s/b//g')))
+  local CURSIZE
+  CURSIZE="$(du -sm "${INPUT_FILE}" 2>/dev/null | awk '{print $1}')"
+  local SIZE=$((${CURSIZE:-0}$(echo "${CHANGE_SIZE}" | sed 's/M//g; s/b//g')))
   [ "${SIZE:-0}" -lt 0 ] && exit 1
+  # 缩小不支持: 当前流程是先 truncate 截断文件再改分区表, 缩小会直接截掉分区数据
+  if [ "${SIZE:-0}" -lt "${CURSIZE:-0}" ]; then
+    echo "resizeImg does not support shrinking (would truncate partition data)."
+    exit 1
+  fi
 
   if [ ! "${INPUT_FILE}" = "${OUTPUT_FILE}" ]; then
     sudo cp -f "${INPUT_FILE}" "${OUTPUT_FILE}"
   fi
 
   sudo truncate -s ${SIZE}M "${OUTPUT_FILE}"
-  echo -e "d\n\nn\n\n\n\n\nn\nw" | sudo fdisk "${OUTPUT_FILE}" >/dev/null 2>&1
+
+  # 用 parted 找到最后一个分区号并将它扩展到磁盘末尾(保留起始扇区不动)
+  local LASTPARTNUM
+  LASTPARTNUM="$(sudo parted -m -s "${OUTPUT_FILE}" unit s print 2>/dev/null | awk -F: 'NR>2 && $2 ~ /^[0-9]+s$/ && $1 != "" {n=$1} END {print n}')"
+  if [ -z "${LASTPARTNUM}" ]; then
+    echo "Failed to find last partition number!"
+    exit 1
+  fi
+
+  # 将最后一个分区扩展到磁盘末尾, 保留起始扇区
+  sudo parted -s "${OUTPUT_FILE}" unit s resizepart "${LASTPARTNUM}" 100%
+  if [ $? -ne 0 ]; then
+    echo "parted resizepart failed!"
+    exit 1
+  fi
+
+  # 通过 loop 设备挂载最后一个分区并扩展文件系统
   local LOOPX LOOPXPY
   LOOPX=$(sudo losetup -f)
   sudo losetup -P "${LOOPX}" "${OUTPUT_FILE}"
   LOOPXPY="$(find "${LOOPX}p"* -maxdepth 0 2>/dev/null | sort -n | tail -1)"
-  sudo e2fsck -fp "${LOOPXPY:-${LOOPX}p3}"
-  sudo resize2fs "${LOOPXPY:-${LOOPX}p3}"
+  sudo e2fsck -fp "${LOOPXPY:-${LOOPX}p${LASTPARTNUM}}"
+  sudo resize2fs "${LOOPXPY:-${LOOPX}p${LASTPARTNUM}}"
   sudo losetup -d "${LOOPX}"
 }
 
