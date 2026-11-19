@@ -1,0 +1,225 @@
+#!/usr/bin/env python3
+"""Offline RR administration: plan a driver set without modifying configuration."""
+import argparse
+from collections import defaultdict
+import json
+import re
+import sys
+
+
+MODULE = re.compile(r"(?:update/)?[A-Za-z0-9][A-Za-z0-9_.+-]*\Z")
+
+
+def name(value):
+    if not isinstance(value, str) or not MODULE.fullmatch(value):
+        raise ValueError("Invalid module name: {!r}".format(value))
+    return value
+
+
+def logical(key):
+    # Kernel dependency names treat hyphens and underscores as equivalent.
+    # Do not discard provider paths/spellings when returning installable keys.
+    return key.rsplit("/", 1)[-1].replace("-", "_")
+
+
+def unique_keys(pairs):
+    obj = {}
+    for key, value in pairs:
+        if key in obj:
+            raise ValueError("Duplicate JSON key: {!r}".format(key))
+        obj[key] = value
+    return obj
+
+
+def load_catalog(path, platform):
+    with open(path, encoding="utf-8") as stream:
+        catalogs = json.load(stream, object_pairs_hook=unique_keys)
+    if not isinstance(catalogs, dict):
+        raise ValueError("Catalog must be a JSON object keyed by platform")
+    if platform not in catalogs:
+        raise ValueError("Unknown platform: " + platform)
+    entries = catalogs[platform]
+    if not isinstance(entries, dict):
+        raise ValueError("Expected a module map for platform: " + platform)
+    graph = {}
+    for key, entry in entries.items():
+        name(key)
+        if not isinstance(entry, dict) or not isinstance(entry.get("depends"), str):
+            raise ValueError("Expected string 'depends' metadata for " + key)
+        raw = entry["depends"].strip()
+        graph[key] = sorted({name(dep.strip()) for dep in raw.split(",")}) if raw else []
+    return graph
+
+
+class Resolver:
+    def __init__(self, graph, roots, builtins):
+        self.graph = graph
+        self.providers = defaultdict(list)
+        for key in graph:
+            self.providers[logical(key)].append(key)
+        self.pinned = {}
+        self.builtins = {}
+        for key in builtins:
+            if "/" in key:
+                raise ValueError("A built-in name cannot have a provider prefix: " + key)
+            self.builtins.setdefault(logical(key), key)
+        # Pin all exact roots before traversing any dependency. A current/old
+        # selection is not a pin: it is an independent comparison baseline.
+        for key in roots:
+            if key in graph:
+                self.pin(key)
+
+    def pin(self, key):
+        module = logical(key)
+        if module in self.pinned and self.pinned[module] != key:
+            raise ValueError("Conflicting providers requested: {} and {}".format(
+                self.pinned[module], key))
+        self.pinned[module] = key
+
+    def resolve(self, key, parent=None):
+        module = logical(key)
+        context = " required by " + parent if parent else " requested as a root"
+        if "/" in key:
+            if key not in self.graph:
+                raise ValueError("Missing provider: " + key + context)
+            if module in self.pinned and self.pinned[module] != key:
+                raise ValueError("Conflicting provider {}{}; pinned {}".format(
+                    key, context, self.pinned[module]))
+            return key
+        if module in self.pinned:
+            return self.pinned[module]
+        choices = self.providers.get(module, [])
+        if len(choices) == 1:
+            return choices[0]
+        if len(choices) > 1:
+            raise ValueError("Ambiguous provider for {}{}: {}; choose an exact --root".format(
+                key, context, ", ".join(sorted(choices))))
+        if module in self.builtins:
+            return self.builtins[module]
+        raise ValueError("Missing module: {}{} (not listed as a built-in)".format(key, context))
+
+    def walk(self, roots, explain):
+        owners, parents = defaultdict(set), defaultdict(set)
+        edges, chosen = {}, {}
+        roots_resolved = [(key, self.resolve(key)) for key in roots]
+        for root, provider in roots_resolved:
+            if explain:
+                owners[provider].add(root)
+
+        def children(node):
+            previous = chosen.setdefault(logical(node), node)
+            if node != previous:
+                raise ValueError("Conflicting providers in closure: {} and {}".format(previous, node))
+            result = sorted({self.resolve(dep, node) for dep in self.graph.get(node, ())})
+            if explain:
+                for dep in result:
+                    parents[dep].add(node)
+            edges[node] = result
+            return iter(result)
+
+        # Iterative depth-first search: detect cycles on active path; expand
+        # shared dependencies just once, independently of recursion depth.
+        done, order = set(), []
+        for root, node in roots_resolved:
+            if node in done:
+                continue
+            stack = [(node, children(node))]
+            active = {node: 0}
+            while stack:
+                current, it = stack[-1]
+                dep = next(it, None)
+                if dep is None:
+                    stack.pop()
+                    del active[current]
+                    done.add(current)
+                    order.append(current)
+                elif dep in active:
+                    cycle = [k for k, _ in stack[active[dep]:]] + [dep]
+                    raise ValueError("Dependency cycle: " + " -> ".join(cycle))
+                elif dep not in done:
+                    active[dep] = len(stack)
+                    stack.append((dep, children(dep)))
+
+        reasons = {}
+        if explain:
+            for node in reversed(order):  # all parents processed before children
+                for dep in edges[node]:
+                    owners[dep].update(owners[node])
+            reasons = {k: {"roots": sorted(owners[k]), "required_by": sorted(parents[k])}
+                       for k in sorted(done)}
+        return sorted(k for k in done if k in self.graph), sorted(done - self.graph.keys()), reasons
+
+
+def run_plan(args):
+    roots = sorted(set(args.root))
+    result = {"platform": args.platform, "roots": roots, "modules": [],
+              "builtins": [], "diff": None, "problems": []}
+    if args.explain:
+        result["reasons"] = {}
+    try:
+        for key in roots:
+            name(key)
+        known_builtins = sorted({name(k) for k in args.builtin})
+        selected = {name(k) for k in (args.selected or ())}
+        if args.selected_file is not None:
+            with open(args.selected_file, encoding="utf-8") as selected_file:
+                selected.update(name(line.strip()) for line in selected_file if line.strip())
+        graph = load_catalog(args.catalog, args.platform)
+        modules, builtins, reasons = Resolver(graph, roots, known_builtins).walk(roots, args.explain)
+        result.update(modules=modules, builtins=builtins)
+        if args.explain:
+            result["reasons"] = reasons
+        if args.selected is not None or args.selected_file is not None:
+            result["diff"] = {"add": sorted(set(modules) - selected),
+                              "remove": sorted(selected - set(modules))}
+    except (ValueError, OSError, RecursionError) as error:
+        result["problems"].append(str(error))
+    return result
+
+
+def print_text(plan):
+    for label, key in [("Platform", "platform"), ("Requested roots", "roots")]:
+        value = plan[key]
+        print("{}: {}".format(label, ", ".join(value) if isinstance(value, list) else value))
+    if plan["problems"]:
+        for problem in plan["problems"]:
+            print("Cannot plan: " + problem, file=sys.stderr)
+        return
+    print("Modules: " + ", ".join(plan["modules"]))
+    print("Built-ins (no file to install): " + (", ".join(plan["builtins"]) or "(none)"))
+    if plan["diff"] is not None:
+        for key in ["add", "remove"]:
+            print("{}: {}".format(key.capitalize(), ", ".join(plan["diff"][key]) or "(none)"))
+    for key, why in plan.get("reasons", {}).items():
+        print("  {}: roots={}{}".format(key, ",".join(why["roots"]),
+              "; required by " + ",".join(why["required_by"]) if why["required_by"] else ""))
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    plan = parser.add_subparsers(dest="command").add_parser("plan", help="preview a driver set")
+    plan.add_argument("--catalog", required=True, help="modules.json or modules_detailed.json")
+    plan.add_argument("--platform", required=True, help="exact target platform/version/ABI catalog key")
+    plan.add_argument("--root", action="append", required=True, metavar="NAME",
+                      help="requested root; exact provider keys pin a variant (repeatable)")
+    plan.add_argument("--selected", action="append", metavar="NAME",
+                      help="current effective module key for comparison only (repeatable)")
+    plan.add_argument("--selected-file", metavar="FILE",
+                      help="additional current keys, one per line; empty file compares to no selection")
+    plan.add_argument("--builtin", action="append", default=[], metavar="NAME",
+                      help="known target built-in for a name absent from the catalog (repeatable)")
+    plan.add_argument("--explain", action="store_true", help="show requesting roots and direct dependents")
+    plan.add_argument("--json", action="store_true", help="emit machine-readable results")
+    args = parser.parse_args()
+    if args.command != "plan":
+        parser.error("expected subcommand: plan")
+    result = run_plan(args)
+    if args.json:
+        print(json.dumps(result, indent=2, sort_keys=True))
+    else:
+        print_text(result)
+    return 1 if result["problems"] else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

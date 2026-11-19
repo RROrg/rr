@@ -17,6 +17,7 @@
 
 ### 2: Documentation & FAQ
 
+- [Preview driver selections (read-only CLI)](docs/driver-plan.md)
 - [RRManager](https://github.com/T-REX-XP/RRManager)
 - [rr-tools](https://github.com/RROrg/rr-tools)
 - [blog](https://rrorg.cn)

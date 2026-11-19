@@ -1,0 +1,41 @@
+name: Config and driver plan
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/config-plan.yml'
+      - 'files/initrd/opt/rr/menu.sh'
+      - 'files/initrd/opt/rr/include/configFile.sh'
+      - 'files/initrd/opt/rr/include/userConfigEditor.sh'
+      - 'files/initrd/opt/rr/rrctl'
+      - 'docs/modules*.json'
+      - 'tests/test_*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Install pinned yq for config tests
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/rr-tools"
+          cd "$RUNNER_TEMP/rr-tools"
+          curl --fail --silent --show-error --location --retry 3 \
+            https://github.com/mikefarah/yq/releases/download/v4.54.3/yq_linux_amd64 -o yq
+          echo '129534601871538efe0ba4c5e62a34fb1d5f469bcb975c4fddeb467d82974973  yq' | sha256sum -c -
+          chmod +x yq
+          echo "$PWD" >> "$GITHUB_PATH"
+      - name: Test configuration edits and driver preview
+        run: |
+          bash -n files/initrd/opt/rr/menu.sh
+          bash -n files/initrd/opt/rr/include/configFile.sh
+          bash -n files/initrd/opt/rr/include/userConfigEditor.sh
+          bash tests/test_edit_user_config.sh
+          python3 -m unittest discover -s tests -p 'test_driver_plan.py' -v
