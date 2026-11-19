@@ -65,6 +65,7 @@ if [ -f "${PART1_PATH}/.upgraded" ]; then
 fi
 # Check if DSM zImage changed, patch it if necessary
 if [ -f "${PART1_PATH}/.build" ]; then
+  rrBootStage patch-dsm
   printf "\033[1;43m%s\033[0m\n" "$(TEXT "Repatch after configuration changed")"
   ${WORK_PATH}/ramdisk-patch.sh || {
     printf "\033[1;43m%s\n%s\n%s:\n%s\033[0m\n" "$(TEXT "DSM ramdisk not patched")" "$(TEXT "Please upgrade the bootloader version and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")"
@@ -345,8 +346,31 @@ function _bootwait() {
   return 0
 }
 
+# A configured VM can hand off to DSM without a loader IP address.
+function _wait_for_vm_network() {
+  local INTERFACES="$1" BUDGET="$2" DEADLINE N IP
+
+  [ -n "${INTERFACES}" ] || return 0
+  DEADLINE=$((SECONDS + BUDGET))
+  while :; do
+    for N in ${INTERFACES}; do
+      [ "1" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ] || continue
+      IP="$(getIP "${N}")" || continue
+      case "${IP}" in
+        ""|169.254.*|fe80:*) continue ;;
+      esac
+      printf "%s\n" "$(printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}")"
+      return 0
+    done
+    [ "${SECONDS}" -lt "${DEADLINE}" ] || break
+    sleep 1
+  done
+}
+
 DIRECT="$(readConfigKey "directboot" "${USER_CONFIG_FILE}")"
 if [ "${DIRECT}" = "true" ] || echo "parallels xen" | grep -qw "${MEV:-physical}"; then
+  _bootwait || exit 0
+
   # grubenv file limit is 1024 bytes.
   grub-editenv "${USER_RSYSENVFILE}" create
   grub-editenv "${USER_RSYSENVFILE}" set rr_version="${WTITLE}"
@@ -361,11 +385,9 @@ if [ "${DIRECT}" = "true" ] || echo "parallels xen" | grep -qw "${MEV:-physical}
   grub-editenv "${USER_RSYSENVFILE}" set sys_mem="${MEM}"
 
   CMDLINE_DIRECT=$(echo "${CMDLINE_LINE}" | sed 's/>/\\\\>/g') # Escape special chars
-  grub-editenv "${USER_GRUBENVFILE}" set dsm_cmdline="${CMDLINE_DIRECT}"
-  grub-editenv "${USER_GRUBENVFILE}" set next_entry="direct"
+  grub-editenv "${USER_GRUBENVFILE}" set dsm_cmdline="${CMDLINE_DIRECT}" next_entry="direct"
 
-  _bootwait || exit 0
-
+  rrBootStage direct-reboot
   printf "\033[1;33m%s\033[0m\n" "$(TEXT "Reboot to boot directly in DSM")"
   [ ! -f "/.dockerenv" ] && reboot
   exit 0
@@ -375,65 +397,78 @@ else
   grub-editenv "${USER_GRUBENVFILE}" unset next_entry
   ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort -V)"
   printf "$(TEXT "Detected %s network cards.\n")" "$(echo "${ETHX}" | wc -w)"
-  printf "$(TEXT "Checking Connect.")"
-  COUNT=0
+
+  rrBootStage network-start
   BOOTIPWAIT="$(readConfigKey "bootipwait" "${USER_CONFIG_FILE}")"
-  BOOTIPWAIT=${BOOTIPWAIT:-10}
-  while [ ${COUNT} -lt $((BOOTIPWAIT + 32)) ]; do
-    MSG=""
-    for N in ${ETHX}; do
-      if [ "1" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
-        MSG+="${N} "
-      fi
-    done
-    if [ -n "${MSG}" ]; then
-      printf "\r%s%s                  \n" "${MSG}" "$(TEXT "connected.")"
-      break
-    fi
-    COUNT=$((COUNT + 1))
-    printf "."
-    sleep 1
-  done
-  if [ ! -f "/.dockerenv" ]; then
-    [ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
-  fi
-  printf "$(TEXT "Waiting IP.\n")"
-  for N in ${ETHX}; do
+  [[ "${BOOTIPWAIT}" =~ ^[0-9]{1,3}$ ]] || BOOTIPWAIT=10
+  BOOTIPWAIT=$((10#${BOOTIPWAIT}))
+
+  if [ -z "${ETHX}" ]; then
+    rrBootStage no-network-interface
+  elif [[ "${MEV}" = "kvm" || "${MEV}" = "qemu" ]] &&
+    ! grep -Eq '(^|[[:space:]])(recovery|force_junior)([[:space:]]|$)' /proc/cmdline; then
+    # Give initramfs networking one shared window during normal VM startup.
+    _wait_for_vm_network "${ETHX}" "${BOOTIPWAIT}"
+  else
+    printf "$(TEXT "Checking Connect.")"
     COUNT=0
-    DRIVER="$(basename "$(realpath "/sys/class/net/${N}/device/driver" 2>/dev/null)" 2>/dev/null)"
-    MAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)" || MAC="00:00:00:00:00:00"
-    printf "%s(%s): " "${N}" "${MAC}@${DRIVER}"
-    while true; do
-      if false && [ ! "${N::3}" = "eth" ]; then
-        printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "IGNORE (Does not support non-wired network card.)")"
-        break
-      fi
-      if [ -z "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
-        printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "DOWN")"
-        break
-      fi
-      if [ "0" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
-        printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "NOT CONNECTED")"
-        break
-      fi
-      if [ ${COUNT} -eq ${BOOTIPWAIT} ]; then # Under normal circumstances, no errors should occur here.
-        printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "TIMEOUT (Please check the IP on the router.)")"
+    while [ ${COUNT} -lt $((BOOTIPWAIT + 32)) ]; do
+      MSG=""
+      for N in ${ETHX}; do
+        if [ "1" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
+          MSG+="${N} "
+        fi
+      done
+      if [ -n "${MSG}" ]; then
+        printf "\r%s%s                  \n" "${MSG}" "$(TEXT "connected.")"
         break
       fi
       COUNT=$((COUNT + 1))
-      IP="$(getIP "${N}")"
-      if [ -n "${IP}" ]; then
-        if echo "${IP}" | grep -q "^169\.254\."; then
-          printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "LINK LOCAL (No DHCP server detected.)")"
-        else
-          printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}")"
-        fi
-        break
-      fi
       printf "."
       sleep 1
     done
-  done
+    if [ ! -f "/.dockerenv" ]; then
+      [ ! -f /var/run/dhcpcd/pid ] && /etc/init.d/S41dhcpcd restart >/dev/null 2>&1 || true
+    fi
+    printf "$(TEXT "Waiting IP.\n")"
+    for N in ${ETHX}; do
+      COUNT=0
+      DRIVER="$(basename "$(realpath "/sys/class/net/${N}/device/driver" 2>/dev/null)" 2>/dev/null)"
+      MAC="$(cat "/sys/class/net/${N}/address" 2>/dev/null)" || MAC="00:00:00:00:00:00"
+      printf "%s(%s): " "${N}" "${MAC}@${DRIVER}"
+      while true; do
+        if false && [ ! "${N::3}" = "eth" ]; then
+          printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "IGNORE (Does not support non-wired network card.)")"
+          break
+        fi
+        if [ -z "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
+          printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "DOWN")"
+          break
+        fi
+        if [ "0" = "$(cat "/sys/class/net/${N}/carrier" 2>/dev/null)" ]; then
+          printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "NOT CONNECTED")"
+          break
+        fi
+        if [ ${COUNT} -eq ${BOOTIPWAIT} ]; then # Under normal circumstances, no errors should occur here.
+          printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "TIMEOUT (Please check the IP on the router.)")"
+          break
+        fi
+        COUNT=$((COUNT + 1))
+        IP="$(getIP "${N}")"
+        if [ -n "${IP}" ]; then
+          if echo "${IP}" | grep -q "^169\.254\."; then
+            printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(TEXT "LINK LOCAL (No DHCP server detected.)")"
+          else
+            printf "\r%s(%s): %s\n" "${N}" "${MAC}@${DRIVER}" "$(printf "$(TEXT "Access \033[1;34mhttp://%s:5000\033[0m to connect the DSM via web.")" "${IP}")"
+          fi
+          break
+        fi
+        printf "."
+        sleep 1
+      done
+    done
+  fi
+  rrBootStage network-end
 
   _bootwait || exit 0
 
@@ -457,6 +492,7 @@ else
   fi
   kexec ${KEXECARGS} -l "${MOD_ZIMAGE_FILE}" --initrd "${MOD_RDGZ_FILE}" --command-line="${CMDLINE_LINE} kexecboot" >"${LOG_FILE}" 2>&1 || dieLog
 
+  rrBootStage dsm-kernel-loaded
   printf "\033[1;37m%s\033[0m\n" "$(TEXT "Booting ...")"
   # show warning message
   for T in $(busybox w 2>/dev/null | grep -v 'TTY' | awk '{print $2}'); do
