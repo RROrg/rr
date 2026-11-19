@@ -2329,34 +2329,7 @@ function notificationsMenu() {
 }
 
 ###############################################################################
-# Permits user edit the user config
-function editUserConfig() {
-  while true; do
-    DIALOG --title "$(TEXT "Edit with caution")" \
-      --editbox "${USER_CONFIG_FILE}" 0 0 2>"${TMP_PATH}/userconfig"
-    [ $? -ne 0 ] && return
-    mv -f "${TMP_PATH}/userconfig" "${USER_CONFIG_FILE}"
-    dos2unix "${USER_CONFIG_FILE}" >/dev/null 2>&1 || true
-    ERRORS=$(checkConfigFile "${USER_CONFIG_FILE}")
-    [ $? -eq 0 ] && break
-    DIALOG --title "$(TEXT "Settings")" \
-      --msgbox "${ERRORS}" 0 0
-  done
-  OLDMODEL=${MODEL}
-  OLDPRODUCTVER=${PRODUCTVER}
-  OLDBUILDNUM=${BUILDNUM}
-  MODEL="$(readConfigKey "model" "${USER_CONFIG_FILE}")"
-  PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
-  BUILDNUM="$(readConfigKey "buildnum" "${USER_CONFIG_FILE}")"
-  SN="$(readConfigKey "sn" "${USER_CONFIG_FILE}")"
-
-  if [ ! "${MODEL}" = "${OLDMODEL}" ] || [ ! "${PRODUCTVER}" = "${OLDPRODUCTVER}" ] || [ ! "${BUILDNUM}" = "${OLDBUILDNUM}" ]; then
-    # Remove old files
-    rm -f "${MOD_ZIMAGE_FILE}"
-    rm -f "${MOD_RDGZ_FILE}"
-  fi
-  touch "${PART1_PATH}/.build"
-}
+. "${WORK_PATH}/include/userConfigEditor.sh"
 
 ###############################################################################
 # Permits user edit the grub.cfg
