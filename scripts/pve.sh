@@ -149,6 +149,14 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+function set_vm() {
+  if ! qm set "${VMID}" "$@"; then
+    printf 'Could not configure VM %s (%s).\n' "${VMID}" "$1" >&2
+    qm destroy "${VMID}" --purge || printf 'Could not clean up VM %s.\n' "${VMID}" >&2
+    exit 1
+  fi
+}
+
 # 获取 存储
 [ -z "${STORAGE}" ] && STORAGE=$(pvesm status -content images | awk 'NR>1 {print $1}' | grep local | tail -1)
 if [ -z "${STORAGE}" ]; then
@@ -183,7 +191,9 @@ case "${BLTYPE}" in
     ARGS+="-drive file=$(pvesm path ${BLDISK}),media=disk,format=raw,if=none,id=nvme1 -device nvme,drive=nvme1,serial=nvme001 "
     ;;
   sata)
-    qm set ${VMID} --sata$((SATAIDX++)) "${BLDISK}"
+    set_vm "--sata${SATAIDX}" "${BLDISK}"
+    set_vm --boot "order=sata${SATAIDX}"
+    SATAIDX=$((SATAIDX + 1))
     ;;
   *)
     echo "Setting bootloader disk failed"
@@ -210,11 +220,11 @@ fi
 
 if [ -n "${VFSDIRID}" ]; then
   # pvesh create /cluster/mapping/dir --id "${VFSDIRID}" -map node=node1,path=/path/to/share1 --map node=node2,path=/path/to/share2
-  qm set ${VMID} --virtiofs0 dirid=${VFSDIRID},cache=always,direct-io=1
+  set_vm --virtiofs0 "dirid=${VFSDIRID},cache=always,direct-io=1"
 fi
 
 # 添加 32G 数据盘
-qm set ${VMID} --sata$((SATAIDX++)) ${STORAGE}:32
+set_vm "--sata${SATAIDX}" "${STORAGE}:32"
 
 BRIDGE=$(awk -F: '/^iface vmbr/ {print $1}' /etc/network/interfaces | awk '{print $2}' | head -1)
 if [ -z "${BRIDGE}" ]; then
@@ -222,11 +232,11 @@ if [ -z "${BRIDGE}" ]; then
   qm destroy ${VMID} --purge
   exit 1
 fi
-qm set ${VMID} --net0 virtio,bridge=${BRIDGE}
+set_vm --net0 "virtio,bridge=${BRIDGE}"
 
-qm set ${VMID} --serial0 socket
-qm set ${VMID} --agent enabled=1
-qm set ${VMID} --smbios1 "uuid=$(cat /proc/sys/kernel/random/uuid),manufacturer=$(echo -n "RROrg" | base64),product=$(echo -n "RR" | base64),version=$(echo -n "${TAG:-local}" | base64),base64=1"
-qm set ${VMID} --onboot "${ONBOOT}"
+set_vm --serial0 socket
+set_vm --agent enabled=1
+set_vm --smbios1 "uuid=$(cat /proc/sys/kernel/random/uuid),manufacturer=$(echo -n "RROrg" | base64),product=$(echo -n "RR" | base64),version=$(echo -n "${TAG:-local}" | base64),base64=1"
+set_vm --onboot "${ONBOOT}"
 
 echo "Created success, VMID=${VMID}"

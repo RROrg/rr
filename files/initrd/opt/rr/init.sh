@@ -44,11 +44,10 @@ printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
 printf "\033[1;31m%*s\033[0m\n" "$(((${#TITLE} + COLUMNS) / 2))" "${TITLE}"
 printf "\033[1;44m%*s\033[A\n" "${COLUMNS}" ""
 printf "\033[1;32m%*s\033[0m\n" "${COLUMNS}" "${DATE}"
+rrBootStage init
 
 # Get first MAC address
 ETHX="$(find /sys/class/net/ -mindepth 1 -maxdepth 1 ! -name lo -exec basename {} \; | sort -V)"
-# No network devices
-[ "$(echo "${ETHX}" | wc -w)" -le 0 ] && die "$(TEXT "Network devices not found! Please re execute init.sh after connecting to the network!")"
 
 # If user config file not exists, initialize it
 if [ ! -f "${USER_CONFIG_FILE}" ]; then
@@ -176,6 +175,7 @@ if [ -f "/usr/share/keymaps/i386/${LAYOUT}/${KEYMAP}.map.gz" ]; then
 fi
 
 # Check updates
+rrBootStage dsm-update-check
 if dsmIsUpgraded; then
   # Get old saved buildnumber
   PRODUCTVER="$(readConfigKey "productver" "${USER_CONFIG_FILE}")"
@@ -226,11 +226,14 @@ fi
 
 # If is to boot automatically, do it
 if [ ${BOOT} -eq 1 ]; then
+  rrBootStage dsm-autoboot
   "${WORK_PATH}/boot.sh" && exit 0 || {
     printf "\033[1;43m%s\n%s\n%s:\n%s\033[0m\n" "$(TEXT "Loader boot failed")" "$(TEXT "Please re configure the loader and try again.")" "$(TEXT "Error")" "$(cat "${LOG_FILE}")"
     exit 1
   }
 fi
+
+[ -z "${ETHX}" ] && die "$(TEXT "Network devices not found! Please re execute init.sh after connecting to the network!")"
 
 HTTP=$(grep -i '^HTTP_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)
 DUFS=$(grep -i '^DUFS_PORT=' /etc/rrorg.conf 2>/dev/null | cut -d'=' -f2)

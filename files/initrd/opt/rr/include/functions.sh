@@ -14,6 +14,14 @@
 . "${WORK_PATH}/include/addons.sh"
 . "${WORK_PATH}/include/modules.sh"
 
+# Uptime lets the serial log correlate RR stages without a synchronized clock.
+function rrBootStage() {
+  local UPTIME
+  if read -r UPTIME _ 2>/dev/null </proc/uptime; then
+    printf '[RR %ss] %s\n' "${UPTIME}" "$1"
+  fi
+}
+
 ###############################################################################
 # Check loader disk
 function checkBootLoader() {
