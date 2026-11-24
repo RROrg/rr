@@ -93,9 +93,20 @@ function readConfigEntriesArray() {
 }
 
 ###############################################################################
-# Check yaml config file
-# 1 - Path of yaml config file
-# Returns error information
+# Validate an edited user configuration, not an arbitrary YAML document.
+# Unknown/extension keys and legacy scalar representations remain untouched.
+# Do not emit the document or parser errors: either can contain credentials.
 function checkConfigFile() {
-  yq eval "${1}" 2>&1
+  yq eval-all -e '
+    [.] | .[0] as $raw | (
+      (length == 1) and ($raw | kind == "map") and
+      ($raw | ((keys | length) == (keys | unique | length))) and
+      ($raw | explode(.) | (
+        ([.model, .productver, .buildnum, .sn] | all_c(kind == "scalar")) and
+        ([to_entries | .[] | select(
+          .key == "cmdline" or .key == "synoinfo" or .key == "addons" or
+          .key == "modules" or .key == "network"
+        ) | .value] | all_c(kind == "map"))
+      ))
+    )' "${1}" >/dev/null 2>&1
 }
